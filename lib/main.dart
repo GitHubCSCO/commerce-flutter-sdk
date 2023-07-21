@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MainApp());
+  runApp(const MaterialApp(
+    home: MainApp(),
+  ));
 }
 
 class MainApp extends StatelessWidget {
-  MainApp({super.key});
-
-  // Remove anything related to TestableUnit later
-  final testableUnit = TestableUnit('Hello World!');
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text(testableUnit.getPrompt),
-        ),
+    return Scaffold(
+      body: Center(
+        child: TestableWidget('Hello B2B!'), // only for setting up testing
       ),
     );
   }
@@ -30,5 +27,18 @@ class TestableUnit {
 
   String get getPrompt {
     return _string;
+  }
+}
+
+// Dummy Widget to test
+class TestableWidget extends StatelessWidget {
+  TestableWidget(this.message, {super.key});
+
+  final String message;
+  late final testableUnit = TestableUnit(message);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(testableUnit.getPrompt, textDirection: TextDirection.ltr);
   }
 }
