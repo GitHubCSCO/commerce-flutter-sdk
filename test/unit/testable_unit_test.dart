@@ -12,7 +12,7 @@ void main() {
 
               final testableUnit = TestableUnit(checker);
 
-              expect(testableUnit.getPrompt, 'Ohe');
+              expect(testableUnit.getPrompt, 'OXE');
             })
           });
 }
