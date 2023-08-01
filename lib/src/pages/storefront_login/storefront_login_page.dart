@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -70,17 +71,15 @@ class _StorefrontButton extends StatelessWidget {
   final String bodyText;
   final bool fill;
 
-  void onEvent() {
-    debugPrint('Hello world');
-  }
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: fill
           ? FilledButton(
-              onPressed: onEvent,
+              onPressed: () {
+                context.go('/connect_store');
+              },
               child: Container(
                 padding: const EdgeInsets.all(1),
                 child: Text(bodyText),
