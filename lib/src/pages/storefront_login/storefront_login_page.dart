@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StorefrontLoginPage extends StatelessWidget {
   const StorefrontLoginPage({super.key});
@@ -26,9 +27,6 @@ class StorefrontLoginPage extends StatelessWidget {
                 child: Card(
                   elevation: 5,
                   shape: RoundedRectangleBorder(
-                    // side: BorderSide(
-                    //   color: Theme.of(context).colorScheme.outline,
-                    // ),
                     borderRadius: BorderRadius.all(Radius.circular(12)),
                   ),
                   child: Padding(
@@ -89,7 +87,7 @@ class _StorefrontButton extends StatelessWidget {
               ),
             )
           : OutlinedButton(
-              onPressed: onEvent,
+              onPressed: _launchOptimizelyUrl,
               child: Container(
                 padding: const EdgeInsets.all(1),
                 child: Text(bodyText),
@@ -141,5 +139,14 @@ class _StorefrontWelcome extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+final Uri _url = Uri.parse(
+    'https://www.episerver.com/products/capabilities/native-mobile-app-add-on-b2b/');
+
+Future<void> _launchOptimizelyUrl() async {
+  if (!await launchUrl(_url)) {
+    throw Exception('Could not launch $_url');
   }
 }
