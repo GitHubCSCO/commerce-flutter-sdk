@@ -1,5 +1,5 @@
+import 'package:commerce_flutter_app/src/app.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:commerce_flutter_app/main.dart';
 
 void main() {
   group('TestableWidget', () {
