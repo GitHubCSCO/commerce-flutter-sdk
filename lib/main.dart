@@ -2,7 +2,5 @@ import 'package:commerce_flutter_app/src/app.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MaterialApp(
-    home: CommerceApp(),
-  ));
+  runApp(const CommerceApp());
 }
