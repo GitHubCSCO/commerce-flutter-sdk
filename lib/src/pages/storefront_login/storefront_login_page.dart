@@ -87,6 +87,11 @@ class _StorefrontButton extends StatelessWidget {
             )
           : OutlinedButton(
               onPressed: _launchOptimizelyUrl,
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
               child: Container(
                 padding: const EdgeInsets.all(1),
                 child: Text(bodyText),
