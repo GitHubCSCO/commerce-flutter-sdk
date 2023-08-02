@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ConnectStorePage extends StatefulWidget {
@@ -10,7 +11,10 @@ class ConnectStorePage extends StatefulWidget {
 
 class _ConnectStorePageState extends State<ConnectStorePage> {
   final _urlFieldController = TextEditingController();
+  final _urlFieldFocusNode = FocusNode();
+
   bool _isButtonEnabled = false;
+  bool _isStorefrontLoading = false;
 
   @override
   void initState() {
@@ -20,18 +24,29 @@ class _ConnectStorePageState extends State<ConnectStorePage> {
 
   void _onTextNotEmpty() {
     setState(() {
-        _isButtonEnabled = _urlFieldController.text.isNotEmpty;
-      });
+      _isButtonEnabled = _urlFieldController.text.isNotEmpty;
+    });
   }
 
   void _onSubmitUrl() {
-    debugPrint(_urlFieldController.text);
+    _urlFieldFocusNode.unfocus();
+    setState(() {
+      _isStorefrontLoading = true;
+    });
+
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        _isStorefrontLoading = false;
+        context.go('/connect_store/storefront_welcome');
+      });
+    });
   }
 
   @override
   void dispose() {
     _urlFieldController.removeListener(_onTextNotEmpty);
     _urlFieldController.dispose();
+    _urlFieldFocusNode.dispose();
     super.dispose();
   }
 
@@ -76,6 +91,7 @@ class _ConnectStorePageState extends State<ConnectStorePage> {
                           height: 25,
                         ),
                         TextField(
+                          focusNode: _urlFieldFocusNode,
                           controller: _urlFieldController,
                           decoration: const InputDecoration(
                             alignLabelWithHint: false,
@@ -89,19 +105,20 @@ class _ConnectStorePageState extends State<ConnectStorePage> {
                         SizedBox(
                           width: double.infinity,
                           child: FilledButton(
-                            onPressed:
-                                _isButtonEnabled ? _onSubmitUrl : null,
+                            onPressed: _isButtonEnabled ? _onSubmitUrl : null,
                             child: Container(
                               padding: const EdgeInsets.all(1),
                               child: const Text('Continue'),
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
+              const SizedBox(height: 30),
+              if (_isStorefrontLoading) const CircularProgressIndicator(),
             ],
           ),
         ),
