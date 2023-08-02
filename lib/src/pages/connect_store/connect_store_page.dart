@@ -1,8 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ConnectStorePage extends StatelessWidget {
+class ConnectStorePage extends StatefulWidget {
   const ConnectStorePage({super.key});
+
+  @override
+  State<ConnectStorePage> createState() => _ConnectStorePageState();
+}
+
+class _ConnectStorePageState extends State<ConnectStorePage> {
+  final _urlFieldController = TextEditingController();
+  bool _isButtonEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _urlFieldController.addListener(_onTextNotEmpty);
+  }
+
+  void _onTextNotEmpty() {
+    setState(() {
+        _isButtonEnabled = _urlFieldController.text.isNotEmpty;
+      });
+  }
+
+  void _onSubmitUrl() {
+    debugPrint(_urlFieldController.text);
+  }
+
+  @override
+  void dispose() {
+    _urlFieldController.removeListener(_onTextNotEmpty);
+    _urlFieldController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +75,9 @@ class ConnectStorePage extends StatelessWidget {
                         const SizedBox(
                           height: 25,
                         ),
-                        const TextField(
-                          decoration: InputDecoration(
+                        TextField(
+                          controller: _urlFieldController,
+                          decoration: const InputDecoration(
                             alignLabelWithHint: false,
                             labelText: 'Enter Store URL',
                             hintText: 'Example store.optimizely.com',
@@ -57,7 +89,8 @@ class ConnectStorePage extends StatelessWidget {
                         SizedBox(
                           width: double.infinity,
                           child: FilledButton(
-                            onPressed: () {},
+                            onPressed:
+                                _isButtonEnabled ? _onSubmitUrl : null,
                             child: Container(
                               padding: const EdgeInsets.all(1),
                               child: const Text('Continue'),
