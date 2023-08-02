@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/src/pages/storefront_welcome/storefront_welcome_page.dart';
+import 'package:commerce_flutter_app/src/pages/storefront/storefront_page.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:commerce_flutter_app/src/pages/storefront_login/storefront_login_page.dart';
@@ -13,14 +13,12 @@ final GoRouter globalRouter = GoRouter(
         GoRoute(
           path: 'connect_store',
           builder: (context, state) => const ConnectStorePage(),
-          routes: [
-            GoRoute(
-              path: 'storefront_welcome',
-              builder: (context, state) => const StorefrontWelcomePage(),
-            ),
-          ],
         )
       ],
+    ),
+    GoRoute(
+      path: '/storefront',
+      builder: (context, state) => const StorefrontPage(),
     ),
   ],
 );

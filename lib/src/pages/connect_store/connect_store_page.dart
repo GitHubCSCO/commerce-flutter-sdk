@@ -37,7 +37,7 @@ class _ConnectStorePageState extends State<ConnectStorePage> {
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         _isStorefrontLoading = false;
-        context.go('/connect_store/storefront_welcome');
+        context.go('/storefront');
       });
     });
   }
