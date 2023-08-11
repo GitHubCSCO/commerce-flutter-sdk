@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/main.dart';
+import 'package:commerce_flutter_app/src/app.dart';
 import 'package:test/test.dart';
 
 void main() {
