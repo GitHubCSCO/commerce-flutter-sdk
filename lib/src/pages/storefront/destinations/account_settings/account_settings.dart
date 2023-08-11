@@ -38,7 +38,32 @@ class AccountSettingsPage extends StatelessWidget {
               ),
             ),
             const Divider(),
-            const _UrlTextConsumer(),
+            Expanded(
+                child: Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  color: Theme.of(context).colorScheme.onInverseSurface,
+                ),
+                Column(
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const _UrlTextConsumer(),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(
+                          top: 10, bottom: 10, left: 20, right: 20),
+                      child: OutlinedButton(
+                        onPressed: () {},
+                        child: const Text('CHANGE DOMAIN'),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            )),
           ],
         ),
       ),
