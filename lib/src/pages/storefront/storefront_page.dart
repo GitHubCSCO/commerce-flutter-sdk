@@ -24,7 +24,7 @@ class _StorefrontPageState extends State<StorefrontPage> {
   final List<Widget> _destinations = [
     const ShopDestination(),
     const SearchDestination(),
-    const AccountDestination(),
+    AccountDestination(),
     const CartDestination(),
   ];
 
