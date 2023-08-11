@@ -50,14 +50,19 @@ class AccountSettingsPage extends StatelessWidget {
                 Column(
                   children: [
                     const SizedBox(
-                      height: 15,
+                      height: 20,
                     ),
                     const _UrlTextConsumer(),
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.only(
-                          top: 10, bottom: 10, left: 20, right: 20),
+                          top: 10, bottom: 10, left: 25, right: 25),
                       child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
                         onPressed: () {},
                         child: const Text('CHANGE DOMAIN'),
                       ),
