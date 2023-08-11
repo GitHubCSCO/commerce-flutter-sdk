@@ -108,6 +108,7 @@ class ConnectStorePageState extends ConsumerState<ConnectStorePage> {
                           ),
                           onSubmitted: (value) {
                             _setUrl(value);
+                            _onSubmitUrl();
                           },
                         ),
                         const SizedBox(height: 25),
