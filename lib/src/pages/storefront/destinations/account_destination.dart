@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AccountDestination extends StatelessWidget {
   AccountDestination({super.key});
@@ -19,6 +20,28 @@ class AccountDestination extends StatelessWidget {
     Icons.sell_outlined,
     Icons.explore_outlined,
     Icons.settings_outlined,
+  ];
+
+  final List<Function(BuildContext)> onTapFunctions = [
+    (BuildContext context) {
+      debugPrint('Index 0');
+    },
+    (BuildContext context) {
+      debugPrint('Index 1');
+    },
+    (BuildContext context) {
+      debugPrint('Index 2');
+    },
+    (BuildContext context) {
+      debugPrint('Index 3');
+    },
+    (BuildContext context) {
+      debugPrint('Index 4');
+    },
+    (BuildContext context) {
+      debugPrint('Index 5');
+      context.go('/storefront/account_settings');
+    },
   ];
 
   @override
@@ -63,8 +86,10 @@ class AccountDestination extends StatelessWidget {
             ),
             Expanded(
                 child: _MenuItemsListView(
-                    menuItemsList: menuItemsList,
-                    menuIconsList: menuIconsList)),
+              menuItemsList: menuItemsList,
+              menuIconsList: menuIconsList,
+              onTapFunctions: onTapFunctions,
+            )),
           ],
         ),
       ),
@@ -74,21 +99,27 @@ class AccountDestination extends StatelessWidget {
 
 class _MenuItemsListView extends StatelessWidget {
   const _MenuItemsListView(
-      {required this.menuItemsList, required this.menuIconsList});
+      {required this.menuItemsList,
+      required this.menuIconsList,
+      required this.onTapFunctions});
 
   final List<String> menuItemsList;
   final List<IconData> menuIconsList;
+  final List<Function(BuildContext)> onTapFunctions;
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
       itemCount: menuItemsList.length,
       itemBuilder: (context, index) {
-        return Padding(
-          padding:
-              const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
-          child: SizedBox(
+        return InkWell(
+          onTap: () {
+            onTapFunctions[index](context);
+          },
+          child: Container(
             width: double.infinity,
+            padding:
+                const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
             child: Row(
               children: [
                 Icon(

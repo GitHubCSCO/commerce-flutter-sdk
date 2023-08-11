@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:commerce_flutter_app/src/providers/url_provider.dart';
 
-class ConnectStorePage extends StatefulWidget {
+class ConnectStorePage extends ConsumerStatefulWidget {
   const ConnectStorePage({super.key});
 
   @override
-  State<ConnectStorePage> createState() => _ConnectStorePageState();
+  ConnectStorePageState createState() => ConnectStorePageState();
 }
 
-class _ConnectStorePageState extends State<ConnectStorePage> {
+class ConnectStorePageState extends ConsumerState<ConnectStorePage> {
   final _urlFieldController = TextEditingController();
   final _urlFieldFocusNode = FocusNode();
 
@@ -29,6 +31,7 @@ class _ConnectStorePageState extends State<ConnectStorePage> {
   }
 
   void _onSubmitUrl() {
+    _setUrl(_urlFieldController.text);
     _urlFieldFocusNode.unfocus();
     setState(() {
       _isStorefrontLoading = true;
@@ -48,6 +51,10 @@ class _ConnectStorePageState extends State<ConnectStorePage> {
     _urlFieldController.dispose();
     _urlFieldFocusNode.dispose();
     super.dispose();
+  }
+
+  void _setUrl(String urlValue) {
+    ref.read(urlProvider.notifier).state = urlValue;
   }
 
   @override
@@ -99,7 +106,9 @@ class _ConnectStorePageState extends State<ConnectStorePage> {
                             hintText: 'Example store.optimizely.com',
                             border: OutlineInputBorder(),
                           ),
-                          // controller: usernameController,
+                          onSubmitted: (value) {
+                            _setUrl(value);
+                          },
                         ),
                         const SizedBox(height: 25),
                         SizedBox(
