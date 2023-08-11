@@ -37,7 +37,9 @@ class AccountSettingsPage extends StatelessWidget {
                 child: Divider(),
               ),
             ),
-            const Divider(),
+            const SizedBox(
+              height: 10,
+            ),
             Expanded(
                 child: Stack(
               children: [
@@ -48,7 +50,7 @@ class AccountSettingsPage extends StatelessWidget {
                 Column(
                   children: [
                     const SizedBox(
-                      height: 20,
+                      height: 15,
                     ),
                     const _UrlTextConsumer(),
                     Container(
