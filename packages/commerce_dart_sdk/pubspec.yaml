@@ -1,4 +1,4 @@
-name: commerce_flutter_sdk
+name: commerce_dart_sdk
 description: SDK for Optimizely Configured Commerce
 publish_to: 'none'
 version: 0.1.0
