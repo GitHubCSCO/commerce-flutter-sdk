@@ -1,0 +1,25 @@
+part of commerce_dart_sdk.models;
+
+class Warehouse extends Availability {
+  late Uuid id;
+  late String name;
+  late String address1;
+  late String address2;
+  late String city;
+  late String contactName;
+  late Uuid? countryId;
+  late DateTime? deactivateOn;
+  late String description;
+  late String phone;
+  late String postalCode;
+  late String shipSite;
+  late String state;
+  late bool isDefault;
+  late List<Warehouse> alternateWarehouses;
+  late num latitude;
+  late num longitude;
+  late String hours;
+  late double distance;
+  late bool allowPickup;
+  late Uuid? pickupShipViaId;
+}
