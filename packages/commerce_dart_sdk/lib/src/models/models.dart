@@ -1,8 +1,6 @@
-library commerce_dart_sdk.models;
+export 'package:uuid/uuid.dart';
 
-import 'package:uuid/uuid.dart';
-
-part 'properties.dart';
-part 'base_model.dart';
-part 'availability.dart';
-part 'warehouse.dart';
+export 'properties.dart';
+export 'base_model.dart';
+export 'availability.dart';
+export 'warehouse.dart';

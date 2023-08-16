@@ -1,4 +1,4 @@
-part of commerce_dart_sdk.models;
+import 'models.dart';
 
 class Availability extends BaseModel {
   late int messageType;

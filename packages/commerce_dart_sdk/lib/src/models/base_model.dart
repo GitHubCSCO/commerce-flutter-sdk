@@ -1,4 +1,4 @@
-part of commerce_dart_sdk.models;
+import 'models.dart';
 
 abstract class BaseModel {
   late String uri;
