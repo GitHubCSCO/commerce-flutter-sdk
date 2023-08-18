@@ -13,7 +13,6 @@ dependencies:
   flutter_svg: ^2.0.7
   go_router: ^10.0.0
   google_fonts: ^5.1.0
-  json_annotation: ^4.8.1
   url_launcher: ^6.1.12
 
 dev_dependencies:
@@ -23,8 +22,6 @@ dev_dependencies:
   test: ^1.24.1
   commerce_dart_sdk: 
     path: ./packages/commerce_dart_sdk
-  build_runner: ^2.4.6
-  json_serializable: ^6.7.1
 
 flutter:
   uses-material-design: true
