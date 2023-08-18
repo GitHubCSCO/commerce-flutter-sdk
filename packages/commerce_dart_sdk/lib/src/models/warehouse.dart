@@ -1,6 +1,11 @@
 import 'models.dart';
 
+part 'warehouse.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class Warehouse extends Availability {
+  Warehouse();
+
   late String id;
   late String name;
   late String address1;
@@ -22,4 +27,8 @@ class Warehouse extends Availability {
   late double distance;
   late bool allowPickup;
   late String? pickupShipViaId;
+
+  factory Warehouse.fromJson(Map<String, dynamic> json) =>
+      _$WarehouseFromJson(json);
+  Map<String, dynamic> toJson() => _$WarehouseToJson(this);
 }
