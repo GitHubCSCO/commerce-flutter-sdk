@@ -10,7 +10,6 @@ dependencies:
   flutter:
     sdk: flutter
   json_annotation: ^4.8.1
-  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_test:

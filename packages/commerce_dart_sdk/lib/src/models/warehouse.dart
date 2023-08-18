@@ -1,13 +1,13 @@
 import 'models.dart';
 
 class Warehouse extends Availability {
-  late Uuid id;
+  late String id;
   late String name;
   late String address1;
   late String address2;
   late String city;
   late String contactName;
-  late Uuid? countryId;
+  late String? countryId;
   late DateTime? deactivateOn;
   late String description;
   late String phone;
@@ -21,5 +21,5 @@ class Warehouse extends Availability {
   late String hours;
   late double distance;
   late bool allowPickup;
-  late Uuid? pickupShipViaId;
+  late String? pickupShipViaId;
 }
