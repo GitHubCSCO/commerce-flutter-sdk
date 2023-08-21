@@ -4,31 +4,60 @@ part 'account.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Account extends BaseModel {
-  Account();
+  Account({
+    this.accessToken,
+    this.activationStatus,
+    this.approver,
+    this.availableApprovers,
+    this.availableRoles,
+    this.billToId,
+    this.canApproveOrders,
+    this.canViewApprovalOrders,
+    this.defaultCustomerId,
+    this.defaultFulfillmentMethod,
+    this.defaultLocation,
+    this.defaultWarehouse,
+    this.defaultWarehouseId,
+    this.email,
+    this.firstName,
+    this.id,
+    this.isApproved,
+    this.isGuest,
+    this.isSubscribed,
+    this.lastLoginOn,
+    this.lastName,
+    this.password,
+    this.requiresActivation,
+    this.role,
+    this.setDefaultCustomer,
+    this.shipToId,
+    this.userName,
+    this.vmiRole,
+  });
 
   ///  Gets or sets the identifier.
-  late String id;
+  late String? id;
 
   ///  Gets or sets the email.
-  late String email;
+  late String? email;
 
   ///  Gets or sets the name of the user.
-  late String userName;
+  late String? userName;
 
   ///  Gets or sets the password.
-  late String password;
+  late String? password;
 
   ///  Gets or sets a value indicating whether this instance is subscribed.
   late bool? isSubscribed;
 
   ///  Gets or sets a value indicating whether this instance is guest.
-  late bool isGuest;
+  late bool? isGuest;
 
   ///  Gets or sets a value indicating whether this instance can approve orders.
-  late bool canApproveOrders;
+  late bool? canApproveOrders;
 
   ///  Gets or sets a value indicating whether this instance can view approval orders.
-  late bool canViewApprovalOrders;
+  late bool? canViewApprovalOrders;
 
   ///  Gets or sets the bill to id.  Returned from creating a new account to return the new bill to id.
   late String? billToId;
@@ -37,59 +66,59 @@ class Account extends BaseModel {
   late String? shipToId;
 
   ///  Gets or sets the first name.
-  late String firstName;
+  late String? firstName;
 
   ///  Gets or sets the last name.
-  late String lastName;
+  late String? lastName;
 
   ///  Gets or sets the role.
-  late String role;
+  late String? role;
 
   ///  Gets or sets the approver.
-  late String approver;
+  late String? approver;
 
   ///  Gets or sets a value indicating whether is approved.
   late bool? isApproved;
 
   ///  Gets or sets the activation status
-  late String activationStatus;
+  late String? activationStatus;
 
   ///  Gets or sets the default location.
-  late String defaultLocation;
+  late String? defaultLocation;
 
   ///  Gets or sets a last login on.
   late DateTime? lastLoginOn;
 
   ///  Gets or sets the available approvers.
-  late List<String> availableApprovers;
+  late List<String>? availableApprovers;
 
   ///  Gets or sets the available roles.
-  late List<String> availableRoles;
+  late List<String>? availableRoles;
 
   ///  Gets or sets a value indicating whether this account requires activation via email
   @JsonKey(includeFromJson: false, includeToJson: false)
   late bool? requiresActivation;
 
   ///  Gets or sets a value indicating whether set default customer.
-  late bool setDefaultCustomer;
+  late bool? setDefaultCustomer;
 
   ///  Gets or sets the default customer id.
-  late String defaultCustomerId;
+  late String? defaultCustomerId;
 
   ///  Gets or sets the default fulfillment method.
-  late String defaultFulfillmentMethod;
+  late String? defaultFulfillmentMethod;
 
   ///  Gets or sets the default warehouse.
-  late Warehouse defaultWarehouse;
+  late Warehouse? defaultWarehouse;
 
   ///  Gets or sets the default warehouse id.
-  late String defaultWarehouseId;
+  late String? defaultWarehouseId;
 
   ///  Gets or sets the AccessToken
-  late String accessToken;
+  late String? accessToken;
 
   ///  Gets or sets the VmiRole
-  late String vmiRole;
+  late String? vmiRole;
 
   factory Account.fromJson(Map<String, dynamic> json) =>
       _$AccountFromJson(json);
@@ -98,9 +127,9 @@ class Account extends BaseModel {
 
 @JsonSerializable(explicitToJson: true)
 class Vmi extends BaseModel {
-  Vmi();
+  Vmi({this.vmiUsers});
 
-  late List<VmiUser> vmiUsers;
+  late List<VmiUser>? vmiUsers;
 
   factory Vmi.fromJson(Map<String, dynamic> json) => _$VmiFromJson(json);
   Map<String, dynamic> toJson() => _$VmiToJson(this);
@@ -108,11 +137,15 @@ class Vmi extends BaseModel {
 
 @JsonSerializable(explicitToJson: true)
 class VmiUser extends BaseModel {
-  VmiUser();
+  VmiUser({
+    this.userId,
+    this.vmiLocationNames,
+    this.vmiRoles,
+  });
 
-  late String userId;
-  late List<String> vmiLocationNames;
-  late List<String> vmiRoles;
+  late String? userId;
+  late List<String>? vmiLocationNames;
+  late List<String>? vmiRoles;
 
   factory VmiUser.fromJson(Map<String, dynamic> json) =>
       _$VmiUserFromJson(json);
