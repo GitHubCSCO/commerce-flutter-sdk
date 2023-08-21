@@ -7,8 +7,10 @@ part of 'account.dart';
 // **************************************************************************
 
 Account _$AccountFromJson(Map<String, dynamic> json) => Account()
-  ..uri = json['uri'] as String
-  ..properties = Map<String, String>.from(json['properties'] as Map)
+  ..uri = json['uri'] as String?
+  ..properties = (json['properties'] as Map<String, dynamic>?)?.map(
+    (k, e) => MapEntry(k, e as String),
+  )
   ..id = json['id'] as String
   ..email = json['email'] as String
   ..userName = json['userName'] as String
@@ -76,8 +78,10 @@ Map<String, dynamic> _$AccountToJson(Account instance) => <String, dynamic>{
     };
 
 Vmi _$VmiFromJson(Map<String, dynamic> json) => Vmi()
-  ..uri = json['uri'] as String
-  ..properties = Map<String, String>.from(json['properties'] as Map)
+  ..uri = json['uri'] as String?
+  ..properties = (json['properties'] as Map<String, dynamic>?)?.map(
+    (k, e) => MapEntry(k, e as String),
+  )
   ..vmiUsers = (json['vmiUsers'] as List<dynamic>)
       .map((e) => VmiUser.fromJson(e as Map<String, dynamic>))
       .toList();
@@ -89,8 +93,10 @@ Map<String, dynamic> _$VmiToJson(Vmi instance) => <String, dynamic>{
     };
 
 VmiUser _$VmiUserFromJson(Map<String, dynamic> json) => VmiUser()
-  ..uri = json['uri'] as String
-  ..properties = Map<String, String>.from(json['properties'] as Map)
+  ..uri = json['uri'] as String?
+  ..properties = (json['properties'] as Map<String, dynamic>?)?.map(
+    (k, e) => MapEntry(k, e as String),
+  )
   ..userId = json['userId'] as String
   ..vmiLocationNames = (json['vmiLocationNames'] as List<dynamic>)
       .map((e) => e as String)
