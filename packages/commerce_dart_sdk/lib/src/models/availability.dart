@@ -1,7 +1,7 @@
 import 'models.dart';
 
 class Availability extends BaseModel {
-  late int? messageType;
-  late String? message;
-  late bool? requiresRealTimeInventory;
+  int? messageType;
+  String? message;
+  bool? requiresRealTimeInventory;
 }

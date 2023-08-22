@@ -28,27 +28,27 @@ class Warehouse extends Availability {
     this.pickupShipViaId,
   });
 
-  late String? id;
-  late String? name;
-  late String? address1;
-  late String? address2;
-  late String? city;
-  late String? contactName;
-  late String? countryId;
-  late DateTime? deactivateOn;
-  late String? description;
-  late String? phone;
-  late String? postalCode;
-  late String? shipSite;
-  late String? state;
-  late bool? isDefault;
-  late List<Warehouse>? alternateWarehouses;
-  late num? latitude;
-  late num? longitude;
-  late String? hours;
-  late double? distance;
-  late bool? allowPickup;
-  late String? pickupShipViaId;
+  String? id;
+  String? name;
+  String? address1;
+  String? address2;
+  String? city;
+  String? contactName;
+  String? countryId;
+  DateTime? deactivateOn;
+  String? description;
+  String? phone;
+  String? postalCode;
+  String? shipSite;
+  String? state;
+  bool? isDefault;
+  List<Warehouse>? alternateWarehouses;
+  num? latitude;
+  num? longitude;
+  String? hours;
+  double? distance;
+  bool? allowPickup;
+  String? pickupShipViaId;
 
   factory Warehouse.fromJson(Map<String, dynamic> json) =>
       _$WarehouseFromJson(json);

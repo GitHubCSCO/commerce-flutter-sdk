@@ -36,89 +36,89 @@ class Account extends BaseModel {
   });
 
   ///  Gets or sets the identifier.
-  late String? id;
+  String? id;
 
   ///  Gets or sets the email.
-  late String? email;
+  String? email;
 
   ///  Gets or sets the name of the user.
-  late String? userName;
+  String? userName;
 
   ///  Gets or sets the password.
-  late String? password;
+  String? password;
 
   ///  Gets or sets a value indicating whether this instance is subscribed.
-  late bool? isSubscribed;
+  bool? isSubscribed;
 
   ///  Gets or sets a value indicating whether this instance is guest.
-  late bool? isGuest;
+  bool? isGuest;
 
   ///  Gets or sets a value indicating whether this instance can approve orders.
-  late bool? canApproveOrders;
+  bool? canApproveOrders;
 
   ///  Gets or sets a value indicating whether this instance can view approval orders.
-  late bool? canViewApprovalOrders;
+  bool? canViewApprovalOrders;
 
   ///  Gets or sets the bill to id.  Returned from creating a new account to return the new bill to id.
-  late String? billToId;
+  String? billToId;
 
   ///  Gets or sets the ship to id.  Returned from creating a new account to return the new ship to id.
-  late String? shipToId;
+  String? shipToId;
 
   ///  Gets or sets the first name.
-  late String? firstName;
+  String? firstName;
 
   ///  Gets or sets the last name.
-  late String? lastName;
+  String? lastName;
 
   ///  Gets or sets the role.
-  late String? role;
+  String? role;
 
   ///  Gets or sets the approver.
-  late String? approver;
+  String? approver;
 
   ///  Gets or sets a value indicating whether is approved.
-  late bool? isApproved;
+  bool? isApproved;
 
   ///  Gets or sets the activation status
-  late String? activationStatus;
+  String? activationStatus;
 
   ///  Gets or sets the default location.
-  late String? defaultLocation;
+  String? defaultLocation;
 
   ///  Gets or sets a last login on.
-  late DateTime? lastLoginOn;
+  DateTime? lastLoginOn;
 
   ///  Gets or sets the available approvers.
-  late List<String>? availableApprovers;
+  List<String>? availableApprovers;
 
   ///  Gets or sets the available roles.
-  late List<String>? availableRoles;
+  List<String>? availableRoles;
 
   ///  Gets or sets a value indicating whether this account requires activation via email
   @JsonKey(includeFromJson: false, includeToJson: false)
-  late bool? requiresActivation;
+  bool? requiresActivation;
 
   ///  Gets or sets a value indicating whether set default customer.
-  late bool? setDefaultCustomer;
+  bool? setDefaultCustomer;
 
   ///  Gets or sets the default customer id.
-  late String? defaultCustomerId;
+  String? defaultCustomerId;
 
   ///  Gets or sets the default fulfillment method.
-  late String? defaultFulfillmentMethod;
+  String? defaultFulfillmentMethod;
 
   ///  Gets or sets the default warehouse.
-  late Warehouse? defaultWarehouse;
+  Warehouse? defaultWarehouse;
 
   ///  Gets or sets the default warehouse id.
-  late String? defaultWarehouseId;
+  String? defaultWarehouseId;
 
   ///  Gets or sets the AccessToken
-  late String? accessToken;
+  String? accessToken;
 
   ///  Gets or sets the VmiRole
-  late String? vmiRole;
+  String? vmiRole;
 
   factory Account.fromJson(Map<String, dynamic> json) =>
       _$AccountFromJson(json);
@@ -129,7 +129,7 @@ class Account extends BaseModel {
 class Vmi extends BaseModel {
   Vmi({this.vmiUsers});
 
-  late List<VmiUser>? vmiUsers;
+  List<VmiUser>? vmiUsers;
 
   factory Vmi.fromJson(Map<String, dynamic> json) => _$VmiFromJson(json);
   Map<String, dynamic> toJson() => _$VmiToJson(this);
@@ -143,9 +143,9 @@ class VmiUser extends BaseModel {
     this.vmiRoles,
   });
 
-  late String? userId;
-  late List<String>? vmiLocationNames;
-  late List<String>? vmiRoles;
+  String? userId;
+  List<String>? vmiLocationNames;
+  List<String>? vmiRoles;
 
   factory VmiUser.fromJson(Map<String, dynamic> json) =>
       _$VmiUserFromJson(json);
