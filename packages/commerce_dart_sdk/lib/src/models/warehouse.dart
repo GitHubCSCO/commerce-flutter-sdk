@@ -52,5 +52,7 @@ class Warehouse extends Availability {
 
   factory Warehouse.fromJson(Map<String, dynamic> json) =>
       _$WarehouseFromJson(json);
+
+  @override
   Map<String, dynamic> toJson() => _$WarehouseToJson(this);
 }
