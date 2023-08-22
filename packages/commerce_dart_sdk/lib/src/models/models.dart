@@ -6,3 +6,4 @@ export 'availability.dart';
 export 'warehouse.dart';
 export 'break_price_dto.dart';
 export 'product_price.dart';
+export 'legacy_configuration.dart';
