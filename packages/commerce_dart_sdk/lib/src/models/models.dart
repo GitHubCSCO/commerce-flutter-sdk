@@ -14,3 +14,4 @@ export 'product_image.dart';
 export 'styled_product.dart';
 export 'attribute_value.dart';
 export 'attribute_type.dart';
+export 'document.dart';
