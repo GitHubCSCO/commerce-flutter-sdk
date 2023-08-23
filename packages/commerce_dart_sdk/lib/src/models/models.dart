@@ -10,3 +10,4 @@ export 'legacy_configuration.dart';
 export 'style_value.dart';
 export 'style_trait.dart';
 export 'product_unit_of_measure.dart';
+export 'product_image.dart';
