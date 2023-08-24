@@ -28,7 +28,7 @@ final GoRouter globalRouter = GoRouter(
           routes: [
             GoRoute(
               path: 'languages',
-              builder: (context, state) => LanguagesPages(),
+              builder: (context, state) => const LanguagesPages(),
             )
           ],
         ),

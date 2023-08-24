@@ -65,10 +65,10 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.1"
-  commerce_flutter_sdk:
-    dependency: "direct dev"
+  commerce_dart_sdk:
+    dependency: "direct main"
     description:
-      path: "packages/commerce_flutter_sdk"
+      path: "packages/commerce_dart_sdk"
       relative: true
     source: path
     version: "0.1.0"
@@ -215,6 +215,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.18.1"
   io:
     dependency: transitive
     description:
@@ -231,6 +239,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.7"
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
+      sha256: b10a7b2ff83d83c777edba3c6a0f97045ddadd56c944e1a23a3fdf43a1bf4467
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.8.1"
   lints:
     dependency: transitive
     description:
