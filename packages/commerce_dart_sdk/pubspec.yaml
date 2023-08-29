@@ -17,6 +17,3 @@ dev_dependencies:
   test: ^1.24.1
   build_runner: ^2.4.6
   json_serializable: ^6.7.1
-
-flutter:
-  uses-material-design: true
