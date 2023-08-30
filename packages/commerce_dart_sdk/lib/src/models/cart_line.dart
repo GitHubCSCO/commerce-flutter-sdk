@@ -1,4 +1,4 @@
-import 'models.dart';
+import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 
 part 'cart_line.g.dart';
 
@@ -164,7 +164,7 @@ class CartLine extends AddCartLine {
   Brand? brand;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
-  bool get hasLinenotes => !(notes == null || notes!.trim().isEmpty);
+  bool get hasLinenotes => !notes.isNullorWhitespace;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   String? status;

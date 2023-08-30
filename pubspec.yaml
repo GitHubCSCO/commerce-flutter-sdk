@@ -16,6 +16,7 @@ dependencies:
   url_launcher: ^6.1.12
   commerce_dart_sdk: 
     path: ./packages/commerce_dart_sdk
+  shared_preferences: ^2.2.0
 
 dev_dependencies:
   flutter_test:
