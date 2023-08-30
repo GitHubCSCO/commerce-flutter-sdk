@@ -11,7 +11,7 @@ class ProductService extends ServiceBase implements IProductService {
     // };
 
     var request = http.Request(
-        'GET', Uri.parse('${ClientConfig.hostUrl as String}/api/v1/products'));
+        'GET', Uri.parse('${ClientConfig.hostUrl}/api/v1/products'));
 
     // request.headers.addAll(headers);
 
