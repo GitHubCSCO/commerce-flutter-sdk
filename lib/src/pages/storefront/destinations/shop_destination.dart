@@ -1,24 +1,26 @@
+import 'package:commerce_flutter_app/src/providers/service_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ShopDestination extends StatefulWidget {
+class ShopDestination extends ConsumerStatefulWidget {
   const ShopDestination({super.key});
 
   @override
-  State<ShopDestination> createState() => _ShopDestinationState();
+  ShopDestinationState createState() => ShopDestinationState();
 }
 
-class _ShopDestinationState extends State<ShopDestination> {
+class ShopDestinationState extends ConsumerState<ShopDestination> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Shop')),
       body: FutureBuilder(
-          future: getProducts(),
+          future: ref.read(productInterfaceProvider).getProducts(),
           builder: (_, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              var productsList = snapshot.data as List<Product>;
+              var productsList = snapshot.data?.model as List<Product>;
               if (productsList.isEmpty) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
