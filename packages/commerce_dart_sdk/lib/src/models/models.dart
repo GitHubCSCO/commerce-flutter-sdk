@@ -27,3 +27,4 @@ export 'product_detail.dart';
 export 'product_content.dart';
 export 'child_trait_value.dart';
 export 'product.dart';
+export 'client_config.dart';
