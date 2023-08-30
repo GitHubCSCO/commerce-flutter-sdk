@@ -1,8 +1,9 @@
+import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
+import 'package:commerce_flutter_app/src/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:commerce_flutter_app/src/providers/url_provider.dart';
 
 class ConnectStorePage extends ConsumerStatefulWidget {
   const ConnectStorePage({super.key});
@@ -31,13 +32,16 @@ class ConnectStorePageState extends ConsumerState<ConnectStorePage> {
   }
 
   void _onSubmitUrl() {
-    _setUrl(_urlFieldController.text);
     _urlFieldFocusNode.unfocus();
     setState(() {
       _isStorefrontLoading = true;
     });
 
     Future.delayed(const Duration(seconds: 2), () {
+      final String url = 'https://${_urlFieldController.text}';
+      ref.read(localStorageInterfaceProvider).save('hostUrl', url);
+
+      ClientConfig.hostUrl = url;
       setState(() {
         _isStorefrontLoading = false;
         context.go('/storefront');
@@ -51,10 +55,6 @@ class ConnectStorePageState extends ConsumerState<ConnectStorePage> {
     _urlFieldController.dispose();
     _urlFieldFocusNode.dispose();
     super.dispose();
-  }
-
-  void _setUrl(String urlValue) {
-    ref.read(urlProvider.notifier).state = urlValue;
   }
 
   @override
@@ -107,7 +107,6 @@ class ConnectStorePageState extends ConsumerState<ConnectStorePage> {
                             border: OutlineInputBorder(),
                           ),
                           onSubmitted: (value) {
-                            _setUrl(value);
                             _onSubmitUrl();
                           },
                         ),

@@ -1,7 +1,7 @@
 class ClientConfig {
   ClientConfig._();
 
-  static String? hostUrl = 'https://mobilespire.commerce.insitesandbox.com/';
+  static String? hostUrl;
   static String? clientId;
   static String? clientSecret;
   static bool isCachingEnabled = true;
@@ -13,4 +13,6 @@ class ClientConfig {
     clientSecret = clientSecret;
     isCachingEnabled = isCachingEnabled;
   }
+
+  static final instance = ClientConfig._();
 }

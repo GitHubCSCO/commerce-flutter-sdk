@@ -1,13 +1,23 @@
+import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
+import 'package:commerce_flutter_app/src/pages/storefront/storefront_page.dart';
+import 'package:commerce_flutter_app/src/providers/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class StorefrontLoginPage extends StatelessWidget {
+class StorefrontLoginPage extends ConsumerWidget {
   const StorefrontLoginPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var hostUrl = ref.watch(localStorageInterfaceProvider).load('hostUrl');
+    if (hostUrl != null) {
+      ClientConfig.hostUrl = hostUrl;
+      return const StorefrontPage();
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Center(

@@ -4,3 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final productInterfaceProvider = Provider<IProductService>((ref) {
   return throw UnimplementedError();
 });
+
+final localStorageInterfaceProvider = Provider<ILocalStorageService>((ref) {
+  return throw UnimplementedError();
+});
