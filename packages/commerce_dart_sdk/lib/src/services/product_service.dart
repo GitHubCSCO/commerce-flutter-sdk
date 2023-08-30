@@ -3,6 +3,7 @@ import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 import 'package:commerce_dart_sdk/src/services/service_base.dart';
 import 'package:http/http.dart' as http;
 
+@Deprecated('Will deprecate soon')
 Future<List<Product>> getProducts() async {
   var headers = {
     'Cookie':
