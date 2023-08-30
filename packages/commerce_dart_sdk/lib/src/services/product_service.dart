@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
-import 'package:commerce_dart_sdk/src/services/service_base.dart';
 import 'package:http/http.dart' as http;
 
 class ProductService extends ServiceBase implements IProductService {
@@ -12,9 +11,7 @@ class ProductService extends ServiceBase implements IProductService {
     // };
 
     var request = http.Request(
-        'GET',
-        Uri.parse(
-            'https://mobilespire.commerce.insitesandbox.com/api/v1/products'));
+        'GET', Uri.parse('${ClientConfig.hostUrl as String}/api/v1/products'));
 
     // request.headers.addAll(headers);
 
