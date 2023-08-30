@@ -52,11 +52,10 @@ class ProductService extends ServiceBase implements IProductService {
           jsonResponse['products'].map((x) => Product.fromJson(x)));
 
       return ServiceResponse<List<Product>>(
-          model: productList,
-          statusCode: response.statusCode as HttpStatusCode);
+          model: productList, statusCode: response.statusCode);
     } else {
       return ServiceResponse<List<Product>>(
-        statusCode: response.statusCode as HttpStatusCode,
+        statusCode: response.statusCode,
       );
     }
   }

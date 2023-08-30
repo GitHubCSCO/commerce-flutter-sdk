@@ -15,7 +15,8 @@ class ServiceResponse<T> {
 
   Exception? exception;
 
-  HttpStatusCode? statusCode;
+  // HttpStatusCode? statusCode;
+  int? statusCode;
 
   bool? isCached = false;
 }
