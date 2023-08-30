@@ -1,7 +1,5 @@
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 
-import 'models.dart';
-
 part 'cart_line.g.dart';
 
 /// Subset of cartline needed to add a new cartline
