@@ -1,6 +1,6 @@
+import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:commerce_flutter_app/src/providers/url_provider.dart';
 import 'package:go_router/go_router.dart';
 
 class AccountSettingsPage extends StatelessWidget {
@@ -93,7 +93,7 @@ class _UrlTextConsumer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    String url = ref.watch(urlProvider);
+    String url = ClientConfig.hostUrl!;
     return Text('Current Domain: $url');
   }
 }
