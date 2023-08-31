@@ -17,8 +17,6 @@ class ProductService extends ServiceBase implements IProductService {
 
     http.StreamedResponse response = await request.send();
 
-    print("#################Status CODE: ${response.statusCode}");
-
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(await response.stream.bytesToString());
       var productList = List<Product>.from(
@@ -33,6 +31,7 @@ class ProductService extends ServiceBase implements IProductService {
     }
   }
 
+  @override
   Future<ServiceResponse>? getProductsV2() async {
     //   var headers = {
     //   'Cookie':
