@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:commerce_flutter_app/src/providers/url_provider.dart';
+import 'package:go_router/go_router.dart';
 
 class AccountSettingsPage extends StatelessWidget {
   const AccountSettingsPage({super.key});
@@ -63,7 +64,7 @@ class AccountSettingsPage extends StatelessWidget {
                             color: Theme.of(context).primaryColor,
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () => context.go('/connect_store'),
                         child: const Text('CHANGE DOMAIN'),
                       ),
                     ),

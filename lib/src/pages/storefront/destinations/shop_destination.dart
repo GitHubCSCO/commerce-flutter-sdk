@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/src/pages/storefront/destinations/product_details/product_details_page.dart';
 import 'package:commerce_flutter_app/src/providers/service_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -46,13 +47,17 @@ class ShopDestinationState extends ConsumerState<ShopDestination> {
                   ),
                   itemCount: productsList.length,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(
-                          top: 10, bottom: 10, left: 20, right: 20),
-                      child: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                              productsList[index].shortDescription as String)),
+                    return InkWell(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            top: 10, bottom: 10, left: 20, right: 20),
+                        child: SizedBox(
+                            width: double.infinity,
+                            child: Text(productsList[index].shortDescription ?? index.toString())),
+                      ),
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ProductDetailsPage(
+                              product: productsList[index]))),
                     );
                   },
                 );
