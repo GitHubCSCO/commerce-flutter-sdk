@@ -53,6 +53,7 @@ class ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
               children: [
                 _getImage(product.mediumImagePath!),
                 Text(product.productTitle ?? "No Title"),
+                Text(product.unitListPriceDisplay ?? "\$0.00"),
                 const Divider(),
                 Text(product.content!.htmlContent!),
               ],
