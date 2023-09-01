@@ -48,16 +48,50 @@ class ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
           var product = snapshot.data?.model as Product;
           return Scaffold(
             appBar: AppBar(),
-            body: SingleChildScrollView(
-                child: Column(
-              children: [
-                _getImage(product.mediumImagePath!),
-                Text(product.productTitle ?? "No Title"),
-                Text(product.unitListPriceDisplay ?? "\$0.00"),
-                const Divider(),
-                Text(product.content!.htmlContent!),
-              ],
-            )),
+            body: SafeArea(
+              child: Column(children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _getImage(product.mediumImagePath!),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 20,
+                            right: 20,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                product.productTitle ?? "No Title",
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                              Text(product.unitListPriceDisplay ?? "\$0.00"),
+                              const Divider(),
+                              Text(product.content!.htmlContent!),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(
+                    bottom: 10,
+                    top: 10,
+                  ),
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    right: 20,
+                  ),
+                  child: FilledButton(
+                      onPressed: () {}, child: const Text('Add to Cart')),
+                )
+              ]),
+            ),
           );
         } else {
           return const Center(child: CircularProgressIndicator());
