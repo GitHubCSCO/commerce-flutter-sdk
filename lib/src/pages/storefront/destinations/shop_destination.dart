@@ -13,12 +13,20 @@ class ShopDestination extends ConsumerStatefulWidget {
 }
 
 class ShopDestinationState extends ConsumerState<ShopDestination> {
+  Future<ServiceResponse<List<Product>>>? _getProductsResponse;
+
+  @override
+  void initState() {
+    super.initState();
+    _getProductsResponse = ref.read(productInterfaceProvider).getProductsV2();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Shop')),
       body: FutureBuilder(
-          future: ref.read(productInterfaceProvider).getProductListV2(),
+          future: _getProductsResponse,
           builder: (_, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               var productsList = snapshot.data?.model as List<Product>;

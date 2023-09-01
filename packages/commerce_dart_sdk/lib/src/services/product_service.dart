@@ -86,7 +86,7 @@ class ProductService extends ServiceBase implements IProductService {
   }
 
   @override
-  Future<ServiceResponse<List<Product>>>? getProductListV2() async {
+  Future<ServiceResponse<List<Product>>>? getProductsV2() async {
     //   var headers = {
     //   'Cookie':
     //       'CurrentCurrencyId=30b432b9-a104-e511-96f5-ac9e17867f77; CurrentLanguageId=a26095ef-c714-e311-ba31-d43d7e4e88b2; InsiteCacheId=28ba8f65-1019-4d99-a077-95af571cdde0; SetContextLanguageCode=en-us; SetContextPersonaIds=d06988c0-9358-4dbb-aa3d-b7be5b6a7fd9'

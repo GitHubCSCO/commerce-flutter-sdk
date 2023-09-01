@@ -13,6 +13,15 @@ class ProductDetailsPage extends ConsumerStatefulWidget {
 }
 
 class ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
+  Future<ServiceResponse<Product>>? _getProductResponse;
+
+  @override
+  void initState() {
+    super.initState();
+    _getProductResponse = ref.read(productInterfaceProvider).getProductV2(
+        '${widget.id}?expand=detail%2Cspecifications%2Ccontent%2Cimages');
+  }
+
   Widget _getImage(String mediumImagePath) {
     String url =
         ImageUtils.createImageUrl(ClientConfig.hostUrl!, mediumImagePath);
@@ -33,8 +42,7 @@ class ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: ref.read(productInterfaceProvider).getProductV2(
-          '${widget.id}?expand=detail%2Cspecifications%2Ccontent%2Cimages'),
+      future: _getProductResponse,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           var product = snapshot.data?.model as Product;
