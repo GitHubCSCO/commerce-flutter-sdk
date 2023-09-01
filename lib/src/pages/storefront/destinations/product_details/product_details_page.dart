@@ -1,14 +1,21 @@
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
+import 'package:commerce_flutter_app/src/providers/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProductDetailsPage extends StatelessWidget {
-  const ProductDetailsPage({super.key, required this.product});
+class ProductDetailsPage extends ConsumerStatefulWidget {
+  const ProductDetailsPage({super.key, required this.id});
 
-  final Product product;
+  final String id;
 
-  Widget _getImage() {
-    String url = ImageUtils.createImageUrl(
-        ClientConfig.hostUrl!, product.mediumImagePath!);
+  @override
+  ProductDetailsPageState createState() => ProductDetailsPageState();
+}
+
+class ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
+  Widget _getImage(String mediumImagePath) {
+    String url =
+        ImageUtils.createImageUrl(ClientConfig.hostUrl!, mediumImagePath);
     Widget returnVal;
     try {
       returnVal = Image.network(url);
@@ -25,19 +32,28 @@ class ProductDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _getImage(),
-            const Divider(),
-            Text(product.shortDescription ?? ""),
-            const Divider(),
-            Text(product.shortDescription ?? ""),
-          ],
-        ),
-      ),
+    return FutureBuilder(
+      future: ref.read(productInterfaceProvider).getProductV2(
+          '${widget.id}?expand=detail%2Cspecifications%2Ccontent%2Cimages'),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          var product = snapshot.data?.model as Product;
+          return Scaffold(
+            appBar: AppBar(),
+            body: SingleChildScrollView(
+                child: Column(
+              children: [
+                _getImage(product.mediumImagePath!),
+                Text(product.productTitle ?? "No Title"),
+                const Divider(),
+                Text(product.content!.htmlContent!),
+              ],
+            )),
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }

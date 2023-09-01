@@ -18,7 +18,7 @@ class ShopDestinationState extends ConsumerState<ShopDestination> {
     return Scaffold(
       appBar: AppBar(title: const Text('Shop')),
       body: FutureBuilder(
-          future: ref.read(productInterfaceProvider).getProducts(),
+          future: ref.read(productInterfaceProvider).getProductListV2(),
           builder: (_, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               var productsList = snapshot.data?.model as List<Product>;
@@ -53,11 +53,12 @@ class ShopDestinationState extends ConsumerState<ShopDestination> {
                             top: 10, bottom: 10, left: 20, right: 20),
                         child: SizedBox(
                             width: double.infinity,
-                            child: Text(productsList[index].shortDescription ?? index.toString())),
+                            child: Text(productsList[index].productTitle ??
+                                index.toString())),
                       ),
                       onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ProductDetailsPage(
-                              product: productsList[index]))),
+                          builder: (context) =>
+                              ProductDetailsPage(id: productsList[index].id!))),
                     );
                   },
                 );
