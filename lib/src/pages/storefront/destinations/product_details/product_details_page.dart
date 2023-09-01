@@ -47,50 +47,39 @@ class ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
         if (snapshot.connectionState == ConnectionState.done) {
           var product = snapshot.data?.model as Product;
           return Scaffold(
+            floatingActionButton: FloatingActionButton.extended(
+              onPressed: () {},
+              label: const Text('Add to Cart'),
+              icon: const Icon(Icons.add_shopping_cart_outlined),
+              tooltip: 'Add to Cart',
+            ),
             appBar: AppBar(),
             body: SafeArea(
-              child: Column(children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        _getImage(product.mediumImagePath!),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 20,
-                            right: 20,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _getImage(product.mediumImagePath!),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            product.productTitle ?? "No Title",
+                            style: const TextStyle(fontSize: 20),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                product.productTitle ?? "No Title",
-                                style: const TextStyle(fontSize: 20),
-                              ),
-                              Text(product.unitListPriceDisplay ?? "\$0.00"),
-                              const Divider(),
-                              Text(product.content!.htmlContent!),
-                            ],
-                          ),
-                        ),
-                      ],
+                          Text(product.unitListPriceDisplay ?? "\$0.00"),
+                          const Divider(),
+                          Text(product.content!.htmlContent!),
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(
-                    bottom: 10,
-                    top: 10,
-                  ),
-                  padding: const EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                  ),
-                  child: FilledButton(
-                      onPressed: () {}, child: const Text('Add to Cart')),
-                )
-              ]),
+              ),
             ),
           );
         } else {
