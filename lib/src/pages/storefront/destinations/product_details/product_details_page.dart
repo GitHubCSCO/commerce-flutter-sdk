@@ -83,7 +83,12 @@ class ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
             ),
           );
         } else {
-          return const Center(child: CircularProgressIndicator());
+          return Scaffold(
+            appBar: AppBar(),
+            body: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
         }
       },
     );
