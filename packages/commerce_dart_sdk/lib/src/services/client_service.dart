@@ -6,8 +6,6 @@ import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 
-import '../models/session.dart';
-
 class RequestMessage {
   final String method;
   final String path;

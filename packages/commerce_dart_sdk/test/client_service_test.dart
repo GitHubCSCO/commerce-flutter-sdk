@@ -1,8 +1,7 @@
-import 'dart:convert';
+// ignore_for_file: avoid_print
 
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 import 'package:commerce_dart_sdk/src/services/client_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MockLocalStorageService implements ILocalStorageService {
   Map<String, String?> store = {};
