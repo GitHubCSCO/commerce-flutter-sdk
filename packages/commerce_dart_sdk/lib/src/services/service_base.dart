@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
+import 'package:http/http.dart' as http;
 
 part 'service_base.g.dart';
 
@@ -55,4 +58,35 @@ class ErrorResponse {
   Map<String, dynamic> toJson() => _$ErrorResponseToJson(this);
 }
 
-class ServiceBase {}
+class ServiceBase {
+  T deserializeFromResponse<T>(http.Response response, T Function(Map<String, dynamic>) fromJson) {
+    String jsonString = response.body;
+    return deserializeFromString(jsonString, fromJson);
+  }
+
+  Future<T> deserializeFromStreamedResponse<T>(http.StreamedResponse streamedResponse, T Function(Map<String, dynamic>) fromJson) async {
+    String jsonString = await streamedResponse.stream.bytesToString();
+    return deserializeFromString(jsonString, fromJson);
+  }
+
+  T deserializeFromString<T>(String jsonString, T Function(Map<String, dynamic>) fromJson) {
+    var jsonMap = json.decode(jsonString);
+    var x = fromJson(jsonMap);
+    return x;
+  }
+
+  T deserializeFromMap<T>(Map <String, dynamic> jsonMap, T Function(Map<String, dynamic>) fromJson) {
+    return fromJson(jsonMap);
+  }
+
+  String serializeModel<T>(T model) {
+    return jsonEncode(model);
+  }
+
+  Future<ServiceResponse<T>> getAsyncNoCache<T>(String url, T Function(Map<String, dynamic>) fromJson, {Duration? timeout}) {
+    /// TODO - implement get 
+    
+    
+    throw UnimplementedError();
+  }
+}

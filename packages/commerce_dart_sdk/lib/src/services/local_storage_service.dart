@@ -1,7 +1,7 @@
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LocalStorageService extends ServiceBase implements ILocalStorageService {
+class LocalStorageService implements ILocalStorageService {
   LocalStorageService(this.preferences);
 
   final SharedPreferences preferences;
@@ -14,5 +14,10 @@ class LocalStorageService extends ServiceBase implements ILocalStorageService {
   @override
   Future<void> save(String key, String value) async {
     await preferences.setString(key, value);
+  }
+
+  @override
+  Future<void> remove(String key) async {
+    await preferences.remove(key);
   }
 }
