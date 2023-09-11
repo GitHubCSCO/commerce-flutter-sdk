@@ -1,10 +1,11 @@
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
+import 'package:dio/dio.dart';
 
 abstract class IClientService {
   String? host;
-  Uri? url;
+  Uri? get url;
   bool? isSecure;
-  String? sessionStateKey;
+  String? get sessionStateKey;
   String? errorMessage;
 
   Future<ServiceResponse<TokenResult>> generate(
@@ -19,4 +20,6 @@ abstract class IClientService {
   Future<void> removeAccessToken();
 
   bool isExistsAccessToken();
+
+  Dio getHttpClient();
 }

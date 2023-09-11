@@ -1,22 +1,61 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:cookie_jar/cookie_jar.dart';
+
+import '../models/session.dart';
+
+class RequestMessage {
+  final String method;
+  final String path;
+  final Map<dynamic, dynamic>? data;
+  final Options? options;
+
+  RequestMessage({
+    required this.method,
+    required this.path,
+    this.data,
+    this.options,
+  });
+
+  RequestMessage copyWith(
+      {String? method,
+      String? path,
+      Map<dynamic, dynamic>? data,
+      Options? options}) {
+    return RequestMessage(
+      method: method ?? this.method,
+      path: path ?? this.path,
+      data: data ?? this.data,
+      options: options ?? this.options,
+    );
+  }
+}
 
 class ClientService implements IClientService {
   ILocalStorageService localStorageService;
+  ISecureStorageService secureStorageService;
 
-  ClientService({required this.localStorageService}) {
-    createClient();
+  ClientService({
+    required this.localStorageService,
+    required this.secureStorageService,
+  }) {
+    _createClient();
   }
 
-  void createClient() {
-    client = http.Client();
+  void _createClient() {
+    client = Dio();
+    cookieJar = CookieJar();
+    client.interceptors.add(CookieManager(cookieJar));
+    host = ClientConfig.hostUrl;
   }
 
-  late http.Client client;
-  Map<String, String> headers = {};
+  late Dio client;
+  late CookieJar cookieJar;
+  // Map<String, String> headers = {};
 
   String? get clientId => ClientConfig.clientId;
   set clientID(clientId) => ClientConfig.clientId = clientId;
@@ -30,48 +69,176 @@ class ClientService implements IClientService {
   String get apiScopeKey => "iscapi";
   String get cookiesStorageKey => "cookies";
 
+  List<Cookie> cookies = [];
+  final List<String> storedCookiesName = [
+    "CurrentPickUpWarehouseId",
+    "CurrentFulfillmentMethod",
+    "CurrentBillToId",
+    "CurrentShipToId",
+    "BillToIdShipToId",
+    "CurrentLanguageId",
+    "SetContextLanguageCode",
+    "SetContextPersonaIds",
+  ];
+
   @override
   String? errorMessage;
 
+  String? _host;
+
   @override
-  String? host;
+  set host(String? value) {
+    if (value == null) {
+      _host = value;
+      return;
+    }
+
+    void f(String val) {
+      _host = val;
+      client.options.baseUrl = host!;
+      ClientConfig.hostUrl = host!;
+      loadSessionState();
+    }
+
+    if (_host.isNullOrEmpty) {
+      f(value);
+    } else if (_host != value) {
+      f(value);
+    }
+  }
+
+  @override
+  String? get host => _host;
 
   @override
   bool? isSecure;
 
   @override
-  String? sessionStateKey;
+  String? get sessionStateKey {
+    String result = '+cookies:';
+    if (cookies.isEmpty) return result;
+
+    for (String storedCookieName in storedCookiesName) {
+      for (Cookie cookie in cookies) {
+        if (cookie.name == storedCookieName) {
+          result += '${cookie.name}=${cookie.value}|';
+          break;
+        }
+      }
+    }
+
+    return result;
+  }
 
   @override
-  Uri? url;
-  
-  void setBasicAuthorizationHeader() {
+  Uri? get url => Uri.parse(host!);
+
+  Future<void> storeSessionState({Session? currentSession}) async {
+    await _storeCookies(currentSession: currentSession);
+  }
+
+  Future<void> _storeCookies({Session? currentSession}) async {
+    if (cookies.isEmpty) return;
+
+    String cookieValues = '';
+    for (Cookie cookie in cookies) {
+      if (storedCookiesName.contains(cookie.name)) {
+        if (currentSession != null &&
+            cookie.name == 'CurrentShipToId' &&
+            currentSession.shipTo != null) {
+          cookie.value = currentSession.shipTo!.id!;
+        }
+
+        cookieValues += '${cookie.name}=${cookie.value}|';
+      }
+    }
+
+    await localStorageService.save(cookiesStorageKey, cookieValues);
+  }
+
+  void setCookie(Cookie cookie) {
+    cookies.add(cookie);
+    cookieJar.saveFromResponse(url!, cookies);
+  }
+
+  void _loadCookies() {
+    String cookieValues = (localStorageService.load(cookiesStorageKey)) ?? '';
+    if (cookieValues.isEmpty) return;
+
+    for (String cookieValue in cookieValues.split('|')) {
+      if (cookieValue.contains('=')) {
+        String name = cookieValue.split('=')[0];
+        String value = cookieValue.split('=')[1];
+
+        cookies.add(Cookie(name, value));
+      }
+    }
+
+    cookieJar.saveFromResponse(url!, cookies);
+  }
+
+  void loadSessionState() {
+    String accessToken = secureStorageService.load(bearerTokenStorageKey) ?? '';
+    if (accessToken.isNotEmpty) _setBearerAuthorizationHeader(accessToken);
+
+    _loadCookies();
+  }
+
+  void _setBasicAuthorizationHeader() {
     final authorizationHeaderSuffix = '$clientId:$clientSecret';
 
-    headers['Authorization'] =
+    client.options.headers[HttpHeaders.authorizationHeader] =
         'Basic ${base64Encode(authorizationHeaderSuffix)}';
   }
 
-  void setBearerAuthorizationHeader(String token) {
-    headers['Authorization'] = 'Bearer $token';
+  void _setBearerAuthorizationHeader(String token) {
+    client.options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
   }
 
-  Future<http.Response> sendRequestUpToTwiceIfNeededAsync(
-      http.Request request) async {
+  Future<Response> _sendRequestUpToTwiceIfNeededAsync(RequestMessage request,
+      {CancelToken? cancelToken}) async {
+    Future<Response> requestSwitcher(RequestMessage request) async {
+      if (request.method == 'GET') {
+        return await client.get(
+          request.path,
+          cancelToken: cancelToken,
+          options: request.options,
+        );
+      } else if (request.method == 'POST') {
+        return await client.post(
+          request.path,
+          cancelToken: cancelToken,
+          data: request.data,
+          options: request.options,
+        );
+      } else if (request.method == 'PATCH') {
+        return await client.patch(
+          request.path,
+          cancelToken: cancelToken,
+          data: request.data,
+          options: request.options,
+        );
+      } else {
+        return Response(requestOptions: RequestOptions());
+      }
+    }
 
-    request.headers.addAll(headers);    
-    var response = await client.send(request);
+    var response = await requestSwitcher(request);
 
     if (response.statusCode == HttpStatus.forbidden ||
         response.statusCode == HttpStatus.unauthorized) {
-      String? token = localStorageService.load(bearerTokenStorageKey);
-      if (token.isNullOrEmpty) return await http.Response.fromStream(response);
+      String? token = secureStorageService.load(bearerTokenStorageKey);
+      if (token.isNullOrEmpty) return response;
 
-      request.headers.addAll(headers);
-      response = await client.send(request);
+      if (cancelToken!.isCancelled) {
+        throw cancelToken.cancelError!;
+      }
+
+      var newRequest = request.copyWith();
+      response = await requestSwitcher(newRequest);
     }
 
-    return await http.Response.fromStream(response);
+    return response;
   }
 
   @override
@@ -84,22 +251,20 @@ class ClientService implements IClientService {
       'Authorization': 'Basic ${base64Encode(authorizationHeaderSuffix)}',
     };
 
-    var request = http.Request(
-        'POST', Uri.parse('${ClientConfig.hostUrl}/identity/connect/token'));
+    var response = await client.postUri(
+      Uri.parse('$host/${CommerceAPIConstants.tokenUrl}'),
+      data: {
+        'grant_type': 'password',
+        'username': userName!,
+        'password': password!,
+        'scope': 'iscapi offline_access',
+      },
+      options: Options(headers: headers),
+    );
 
-    request.bodyFields = {
-      'grant_type': 'password',
-      'username': userName!,
-      'password': password!,
-      'scope': 'iscapi offline_access'
-    };
+    String responseStr = response.data;
 
-    request.headers.addAll(headers);
-    http.StreamedResponse response = await request.send();
-
-    String responseStr = await response.stream.bytesToString();
-
-    if (response.statusCode != 200) {
+    if (!StatusCodeExtension.isSuccessStatusCode(response.statusCode!)) {
       ErrorResponse error = ErrorResponse.fromJson(json.decode(responseStr));
       return ServiceResponse<TokenResult>(
           error: error, statusCode: response.statusCode);
@@ -116,7 +281,7 @@ class ClientService implements IClientService {
 
   @override
   Future<String?> getAccessToken() async {
-    String? timestampStr = localStorageService.load('expiresIn');
+    String? timestampStr = secureStorageService.load('expiresIn');
     if (!timestampStr.isNullOrEmpty) {
       double timestamp = double.parse(timestampStr!);
       if (timestamp < DateTime.now().toUtc().millisecond) {
@@ -125,31 +290,31 @@ class ClientService implements IClientService {
       }
     }
 
-    return localStorageService.load('bearerToken');
+    return secureStorageService.load('bearerToken');
   }
 
   @override
   bool isExistsAccessToken() {
-    var bearerToken = localStorageService.load('bearerToken');
+    var bearerToken = secureStorageService.load('bearerToken');
     return !bearerToken.isNullOrEmpty;
   }
 
   @override
   Future<void> removeAccessToken() async {
-    localStorageService.remove('bearerToken');
-    localStorageService.remove('refreshToken');
-    localStorageService.remove('expiresIn');
+    secureStorageService.remove('bearerToken');
+    secureStorageService.remove('refreshToken');
+    secureStorageService.remove('expiresIn');
   }
 
   @override
   Future<void> storeAccessToken(TokenResult token) async {
-    localStorageService.save('bearerToken', token.accessToken!);
-    localStorageService.save('refreshToken', token.refreshToken!);
+    secureStorageService.save('bearerToken', token.accessToken!);
+    secureStorageService.save('refreshToken', token.refreshToken!);
 
     var timeSpan =
         DateTime.now().toUtc().add(Duration(seconds: token.expiresIn!));
 
-    localStorageService.save('expiresIn', timeSpan.millisecond.toString());
+    secureStorageService.save('expiresIn', timeSpan.millisecond.toString());
   }
 
   String? base64Encode(String? plainText) {
@@ -161,44 +326,52 @@ class ClientService implements IClientService {
 
   @override
   Future<bool> renewAuthenticationTokens() async {
-    String refreshToken = localStorageService.load('refreshToken')!;
+    // client.options.headers.remove(HttpHeaders.authorizationHeader);
+    String refreshToken = secureStorageService.load('refreshToken')!;
 
-    headers = {};
+    var response = await client.postUri(
+        Uri.parse('$host/${CommerceAPIConstants.tokenUrl}'),
+        data: {
+          'grant_type': 'refresh_token',
+          'refresh_token': refreshToken,
+          'client_id': ClientConfig.clientId ?? '',
+          'client_secret': ClientConfig.clientSecret ?? '',
+        },
+        options: Options(contentType: Headers.formUrlEncodedContentType));
 
-    var request = http.Request(
-        'POST', Uri.parse('${ClientConfig.hostUrl}/identity/connect/token'));
-
-    request.bodyFields = {
-      'grant_type': 'refresh_token',
-      'refresh_token': refreshToken,
-      'client_id': ClientConfig.clientId ?? '',
-      'client_secret': ClientConfig.clientSecret ?? '',
-    };
-
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (!(response.statusCode >= 200 && response.statusCode < 300)) {
+    if (!StatusCodeExtension.isSuccessStatusCode(response.statusCode!)) {
       return false;
     }
 
-    var responseStr = await response.stream.bytesToString();
-
-    TokenResult token = TokenResult.fromJson(json.decode(responseStr));
+    var responseStr = response.data;
+    TokenResult token = TokenResult.fromJson(jsonDecode(responseStr));
 
     storeAccessToken(token);
-    setBearerAuthorizationHeader(token.accessToken!);
-
-    /// TODO - storeSessionState
+    _setBearerAuthorizationHeader(token.accessToken!);
+    storeSessionState();
 
     return true;
   }
 
-  Future<http.Response> getAsync(String path, {Duration? timeout}) async {
-    var request = http.Request('GET', Uri.parse(path));
-    var response = await sendRequestUpToTwiceIfNeededAsync(request);
+  Future<Response> getAsync(String path,
+      {Duration? timeout, CancelToken? cancelToken}) async {
+    // var request = RequestOptions(
+    //     path: path, cancelToken: cancelToken, receiveTimeout: timeout);
+
+    var request = RequestMessage(
+      method: 'GET',
+      path: path,
+      options: Options(receiveTimeout: timeout),
+    );
+
+    var response = await _sendRequestUpToTwiceIfNeededAsync(request,
+        cancelToken: cancelToken);
 
     return response;
+  }
+
+  @override
+  Dio getHttpClient() {
+    return client;
   }
 }
