@@ -216,6 +216,12 @@ class ClientService implements IClientService {
           data: request.data,
           options: request.options,
         );
+      } else if (request.method == 'DELETE') {
+        return await client.delete(
+          request.path,
+          cancelToken: cancelToken,
+          options: request.options,
+        );
       } else {
         return Response(requestOptions: RequestOptions());
       }
@@ -366,6 +372,31 @@ class ClientService implements IClientService {
         cancelToken: cancelToken);
 
     return response;
+  }
+
+  Future<Response> postAsync(String path, Map<String, dynamic> data,
+      {Duration? timeout, CancelToken? cancelToken}) async {
+    var request = RequestMessage(
+      method: 'POST',
+      path: path,
+      options: Options(receiveTimeout: timeout),
+      data: data,
+    );
+
+    return await _sendRequestUpToTwiceIfNeededAsync(request,
+        cancelToken: cancelToken);
+  }
+
+  Future<Response> deleteAsync(String path,
+      {Duration? timeout, CancelToken? cancelToken}) async {
+    var request = RequestMessage(
+      method: 'DELETE',
+      path: path,
+      options: Options(receiveTimeout: timeout),
+    );
+
+    return await _sendRequestUpToTwiceIfNeededAsync(request,
+        cancelToken: cancelToken);
   }
 
   @override
