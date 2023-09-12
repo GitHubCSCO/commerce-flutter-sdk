@@ -22,4 +22,7 @@ abstract class IClientService {
   bool isExistsAccessToken();
 
   Dio getHttpClient();
+
+  Future<Response> getAsync(String path,
+      {Duration? timeout, CancelToken? cancelToken});
 }

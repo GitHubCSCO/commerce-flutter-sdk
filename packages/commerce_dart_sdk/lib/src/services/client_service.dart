@@ -357,6 +357,7 @@ class ClientService implements IClientService {
     return true;
   }
 
+  @override
   Future<Response> getAsync(String path,
       {Duration? timeout, CancelToken? cancelToken}) async {
     // var request = RequestOptions(

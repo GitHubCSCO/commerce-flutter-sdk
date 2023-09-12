@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 import 'package:http/http.dart' as http;
 
-class ProductService extends ServiceBase implements IProductService {
+/// TODO - add new ServiceBase
+class ProductService implements IProductService {
   @override
   Future<ServiceResponse<Product>>? getProduct(String queryParameters) async {
     //   var headers = {

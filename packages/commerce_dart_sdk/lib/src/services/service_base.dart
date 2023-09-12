@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
-import 'package:http/http.dart' as http;
+import 'package:commerce_dart_sdk/src/services/client_service.dart';
+import 'package:dio/dio.dart';
 
 part 'service_base.g.dart';
 
@@ -59,34 +62,51 @@ class ErrorResponse {
 }
 
 class ServiceBase {
-  T deserializeFromResponse<T>(http.Response response, T Function(Map<String, dynamic>) fromJson) {
-    String jsonString = response.body;
-    return deserializeFromString(jsonString, fromJson);
+  ServiceBase({required this.clientService});
+
+  IClientService clientService;
+
+  T deserializeFromResponse<T>(
+      Response response, T Function(Map<String, dynamic>) fromJson) {
+    var jsonData = response.data;
+    return deserializeFromMap(jsonData, fromJson);
   }
 
-  Future<T> deserializeFromStreamedResponse<T>(http.StreamedResponse streamedResponse, T Function(Map<String, dynamic>) fromJson) async {
-    String jsonString = await streamedResponse.stream.bytesToString();
-    return deserializeFromString(jsonString, fromJson);
-  }
-
-  T deserializeFromString<T>(String jsonString, T Function(Map<String, dynamic>) fromJson) {
-    var jsonMap = json.decode(jsonString);
+  T deserializeFromString<T>(
+      String jsonString, T Function(Map<String, dynamic>) fromJson) {
+    var jsonMap = jsonDecode(jsonString);
     var x = fromJson(jsonMap);
     return x;
   }
 
-  T deserializeFromMap<T>(Map <String, dynamic> jsonMap, T Function(Map<String, dynamic>) fromJson) {
+  T deserializeFromMap<T>(
+      Map<String, dynamic> jsonMap, T Function(Map<String, dynamic>) fromJson) {
     return fromJson(jsonMap);
   }
 
-  String serializeModel<T>(T model) {
+  Map<String, dynamic> serializeToJson<T>(
+      T model, Map<String, dynamic> Function(T model) toJson) {
+    return toJson(model);
+  }
+
+  String serializeToString<T>(T model) {
     return jsonEncode(model);
   }
 
-  Future<ServiceResponse<T>> getAsyncNoCache<T>(String url, T Function(Map<String, dynamic>) fromJson, {Duration? timeout}) {
-    /// TODO - implement get 
-    
-    
-    throw UnimplementedError();
+  Future<ServiceResponse<T>> getAsyncNoCache<T>(
+      String path, T Function(Map<String, dynamic>) fromJson,
+      {Duration? timeout}) async {
+    var response = await clientService.getAsync(path, timeout: timeout);
+    if (response.statusCode == HttpStatus.ok) {
+      var model = deserializeFromMap(response.data, fromJson);
+      return ServiceResponse<T>(model: model, statusCode: response.statusCode);
+    } else {
+      ErrorResponse errorResponse =
+          deserializeFromResponse(response, ErrorResponse.fromJson);
+      return ServiceResponse<T>(
+        error: errorResponse,
+        statusCode: response.statusCode,
+      );
+    }
   }
 }
