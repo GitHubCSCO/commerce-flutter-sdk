@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
-import 'package:commerce_dart_sdk/src/services/client_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
