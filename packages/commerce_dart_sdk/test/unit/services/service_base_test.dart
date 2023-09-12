@@ -51,7 +51,7 @@ void main() {
   group(
       'Warehouse Test',
       () => {
-            test('FromJSON', () {
+            test('FromJSON', () async {
               Warehouse inputWarehouse =
                   serviceBase.deserializeFromString<Warehouse>(
                       jsonString, Warehouse.fromJson);
@@ -63,7 +63,7 @@ void main() {
               print(expectedJson);
 
               Warehouse outputWarehouse =
-                  serviceBase.deserializeFromMap<Warehouse>(
+                  await serviceBase.deserializeFromMap<Warehouse>(
                       expectedJson, Warehouse.fromJson);
 
               print('---\n');

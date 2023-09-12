@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 import 'package:commerce_dart_sdk/src/services/client_service.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 part 'service_base.g.dart';
 
@@ -66,10 +67,10 @@ class ServiceBase {
 
   IClientService clientService;
 
-  T deserializeFromResponse<T>(
+  Future<T> deserializeFromResponse<T>(
       Response response, T Function(Map<String, dynamic>) fromJson) {
     var jsonData = response.data;
-    return deserializeFromMap(jsonData, fromJson);
+    return compute(fromJson, jsonData as Map<String, dynamic>);
   }
 
   T deserializeFromString<T>(
@@ -79,9 +80,9 @@ class ServiceBase {
     return x;
   }
 
-  T deserializeFromMap<T>(
+  Future<T> deserializeFromMap<T>(
       Map<String, dynamic> jsonMap, T Function(Map<String, dynamic>) fromJson) {
-    return fromJson(jsonMap);
+    return compute(fromJson, jsonMap);
   }
 
   Map<String, dynamic> serializeToJson<T>(
@@ -98,11 +99,19 @@ class ServiceBase {
       {Duration? timeout}) async {
     var response = await clientService.getAsync(path, timeout: timeout);
     if (response.statusCode == HttpStatus.ok) {
-      var model = deserializeFromMap(response.data, fromJson);
-      return ServiceResponse<T>(model: model, statusCode: response.statusCode);
+      try {
+        var model = await deserializeFromMap(response.data, fromJson);
+        return ServiceResponse<T>(
+            model: model, statusCode: response.statusCode);
+      } catch (e) {
+        return ServiceResponse<T>(
+          statusCode: response.statusCode,
+          exception: e as Exception,
+        );
+      }
     } else {
       ErrorResponse errorResponse =
-          deserializeFromResponse(response, ErrorResponse.fromJson);
+          await deserializeFromResponse(response, ErrorResponse.fromJson);
       return ServiceResponse<T>(
         error: errorResponse,
         statusCode: response.statusCode,
