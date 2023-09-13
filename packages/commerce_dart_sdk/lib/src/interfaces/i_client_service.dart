@@ -25,4 +25,10 @@ abstract class IClientService {
 
   Future<Response> getAsync(String path,
       {Duration? timeout, CancelToken? cancelToken});
+
+  Future<Response> postAsync(String path, Map<String, dynamic> data,
+      {Duration? timeout, CancelToken? cancelToken});
+
+  Future<Response> deleteAsync(String path,
+      {Duration? timeout, CancelToken? cancelToken});
 }
