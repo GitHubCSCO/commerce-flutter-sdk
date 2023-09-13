@@ -55,7 +55,7 @@ void main() {
               Warehouse inputWarehouse =
                   serviceBase.deserializeFromString<Warehouse>(
                       jsonString, Warehouse.fromJson);
-              var expectedJson = serviceBase.serializeToJson<Warehouse>(
+              var expectedJson = await serviceBase.serializeToJson<Warehouse>(
                   inputWarehouse, (Warehouse w) => w.toJson());
 
               print(inputWarehouse.toJson());

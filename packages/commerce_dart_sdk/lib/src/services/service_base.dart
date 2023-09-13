@@ -83,9 +83,10 @@ class ServiceBase {
     return compute(fromJson, jsonMap);
   }
 
-  Map<String, dynamic> serializeToJson<T>(
+  Future<Map<String, dynamic>> serializeToJson<T>(
       T model, Map<String, dynamic> Function(T model) toJson) {
-    return toJson(model);
+    // return toJson(model);
+    return compute(toJson, model);
   }
 
   String serializeToString<T>(T model) {
