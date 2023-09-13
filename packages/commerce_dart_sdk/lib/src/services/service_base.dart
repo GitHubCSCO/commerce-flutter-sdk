@@ -94,8 +94,9 @@ class ServiceBase {
 
   Future<ServiceResponse<T>> getAsyncNoCache<T>(
       String path, T Function(Map<String, dynamic>) fromJson,
-      {Duration? timeout}) async {
-    var response = await clientService.getAsync(path, timeout: timeout);
+      {Duration? timeout, CancelToken? cancelToken}) async {
+    var response = await clientService.getAsync(path,
+        timeout: timeout, cancelToken: cancelToken);
     if (response.statusCode == HttpStatus.ok) {
       try {
         var model = await deserializeFromMap(response.data, fromJson);
@@ -119,8 +120,9 @@ class ServiceBase {
 
   Future<ServiceResponse<T>> postAsyncNoCache<T>(String path,
       Map<String, dynamic> data, T Function(Map<String, dynamic>) fromJson,
-      {Duration? timeout}) async {
-    var response = await clientService.postAsync(path, data, timeout: timeout);
+      {Duration? timeout, CancelToken? cancelToken}) async {
+    var response = await clientService.postAsync(path, data,
+        timeout: timeout, cancelToken: cancelToken);
     if (response.statusCode == HttpStatus.ok ||
         response.statusCode == HttpStatus.created) {
       try {
@@ -145,8 +147,9 @@ class ServiceBase {
 
   Future<ServiceResponse<T>> patchAsyncNoCache<T>(String path,
       Map<String, dynamic> data, T Function(Map<String, dynamic>) fromJson,
-      {Duration? timeout}) async {
-    var response = await clientService.patchAsync(path, data, timeout: timeout);
+      {Duration? timeout, CancelToken? cancelToken}) async {
+    var response = await clientService.patchAsync(path, data,
+        timeout: timeout, cancelToken: cancelToken);
     if (response.statusCode == HttpStatus.ok) {
       try {
         var model = await deserializeFromMap(response.data, fromJson);
