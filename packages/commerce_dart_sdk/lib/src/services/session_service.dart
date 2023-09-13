@@ -10,7 +10,8 @@ class SessionService extends ServiceBase implements ISessionService {
   @override
   Future<ServiceResponse<Session>> deleteCurrentSession() async {
     currentSession = null;
-    var response = await deleteAsync(CommerceAPIConstants.currentSessionUrl);
+    var response =
+        await deleteAsync<Session>(CommerceAPIConstants.currentSessionUrl);
     return ServiceResponse<Session>(statusCode: response.statusCode);
   }
 
@@ -75,30 +76,11 @@ class SessionService extends ServiceBase implements ISessionService {
   @override
   Future<ServiceResponse<Session>> postSession(Session session) async {
     try {
-      var bearerToken = await clientService.getAccessToken();
-      var headers = {
-        'Authorization': 'Bearer $bearerToken',
-      };
-
-      var request = http.Request(
-          'POST', Uri.parse('${ClientConfig.hostUrl}/api/v1/sessions/current'));
-
-      request.body = json.encode(currentSession?.toJson());
-
-      request.headers.addAll(headers);
-      http.StreamedResponse response = await request.send();
-
-      String responseStr = await response.stream.bytesToString();
-
-      var sessionResponse = ServiceResponse<Session>(
-          statusCode: response.statusCode,
-          model: Session.fromJson(json.decode(responseStr)));
-
-      if (sessionResponse.model != null) {
-        currentSession = sessionResponse.model;
-      }
-
-      return sessionResponse;
+      var jsonData = await serializeToJson<Session>(
+          session, (Session session) => session.toJson());
+      var result = await postAsyncNoCache<Session>(
+          CommerceAPIConstants.postSessionUrl, jsonData, Session.fromJson);
+      return result;
     } catch (e) {
       return ServiceResponse<Session>(exception: e as Exception);
     }
