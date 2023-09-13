@@ -167,4 +167,12 @@ class ServiceBase {
       );
     }
   }
+
+  Future<ServiceResponse<T>> deleteAsync<T>(String path,
+      {Duration? timeout, CancelToken? cancelToken}) async {
+    var response = await clientService.deleteAsync(path,
+        timeout: timeout, cancelToken: cancelToken);
+
+    return ServiceResponse<T>(statusCode: response.statusCode);
+  }
 }
