@@ -142,4 +142,29 @@ class ServiceBase {
       );
     }
   }
+
+  Future<ServiceResponse<T>> patchAsyncNoCache<T>(String path,
+      Map<String, dynamic> data, T Function(Map<String, dynamic>) fromJson,
+      {Duration? timeout}) async {
+    var response = await clientService.patchAsync(path, data, timeout: timeout);
+    if (response.statusCode == HttpStatus.ok) {
+      try {
+        var model = await deserializeFromMap(response.data, fromJson);
+        return ServiceResponse<T>(
+            model: model, statusCode: response.statusCode);
+      } catch (e) {
+        return ServiceResponse<T>(
+          statusCode: response.statusCode,
+          exception: e as Exception,
+        );
+      }
+    } else {
+      ErrorResponse errorResponse =
+          await deserializeFromResponse(response, ErrorResponse.fromJson);
+      return ServiceResponse<T>(
+        error: errorResponse,
+        statusCode: response.statusCode,
+      );
+    }
+  }
 }

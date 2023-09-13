@@ -375,6 +375,7 @@ class ClientService implements IClientService {
     return response;
   }
 
+  @override
   Future<Response> postAsync(String path, Map<String, dynamic> data,
       {Duration? timeout, CancelToken? cancelToken}) async {
     var request = RequestMessage(
@@ -388,12 +389,27 @@ class ClientService implements IClientService {
         cancelToken: cancelToken);
   }
 
+  @override
   Future<Response> deleteAsync(String path,
       {Duration? timeout, CancelToken? cancelToken}) async {
     var request = RequestMessage(
       method: 'DELETE',
       path: path,
       options: Options(receiveTimeout: timeout),
+    );
+
+    return await _sendRequestUpToTwiceIfNeededAsync(request,
+        cancelToken: cancelToken);
+  }
+
+  @override
+  Future<Response> patchAsync(String path, Map<String, dynamic> data,
+      {Duration? timeout, CancelToken? cancelToken}) async {
+    var request = RequestMessage(
+      method: 'PATCH',
+      path: path,
+      options: Options(receiveTimeout: timeout),
+      data: data,
     );
 
     return await _sendRequestUpToTwiceIfNeededAsync(request,

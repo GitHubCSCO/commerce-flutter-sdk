@@ -31,4 +31,7 @@ abstract class IClientService {
 
   Future<Response> deleteAsync(String path,
       {Duration? timeout, CancelToken? cancelToken});
+
+  Future<Response> patchAsync(String path, Map<String, dynamic> data,
+      {Duration? timeout, CancelToken? cancelToken});
 }
