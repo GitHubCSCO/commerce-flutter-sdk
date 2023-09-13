@@ -1,5 +1,4 @@
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
-import 'package:http/http.dart' as http;
 
 abstract class ISessionService {
   Session? currentSession;
