@@ -45,7 +45,11 @@ class ClientService implements IClientService {
   }
 
   void _createClient() {
-    client = Dio();
+    client = Dio(BaseOptions(
+      headers: {
+        Headers.contentTypeHeader: Headers.jsonContentType,
+      },
+    ));
     cookieJar = CookieJar();
     client.interceptors.add(CookieManager(cookieJar));
     host = ClientConfig.hostUrl;
@@ -67,7 +71,11 @@ class ClientService implements IClientService {
   String get apiScopeKey => "iscapi";
   String get cookiesStorageKey => "cookies";
 
-  List<Cookie> cookies = [];
+  Future<List<Cookie>> get cookies async {
+    var cookiesFuture = cookieJar.loadForRequest(url!);
+    return await cookiesFuture;
+  }
+
   final List<String> storedCookiesName = [
     "CurrentPickUpWarehouseId",
     "CurrentFulfillmentMethod",
@@ -112,8 +120,9 @@ class ClientService implements IClientService {
   bool? isSecure;
 
   @override
-  String? get sessionStateKey {
+  Future<String?> get sessionStateKey async {
     String result = '+cookies:';
+    var cookies = await this.cookies;
     if (cookies.isEmpty) return result;
 
     for (String storedCookieName in storedCookiesName) {
@@ -137,6 +146,7 @@ class ClientService implements IClientService {
   }
 
   Future<void> _storeCookies({Session? currentSession}) async {
+    var cookies = await this.cookies;
     if (cookies.isEmpty) return;
 
     String cookieValues = '';
@@ -155,12 +165,14 @@ class ClientService implements IClientService {
     await localStorageService.save(cookiesStorageKey, cookieValues);
   }
 
-  void setCookie(Cookie cookie) {
+  Future<void> setCookie(Cookie cookie) async {
+    var cookies = await this.cookies;
     cookies.add(cookie);
-    cookieJar.saveFromResponse(url!, cookies);
+    await cookieJar.saveFromResponse(url!, cookies);
   }
 
-  void _loadCookies() {
+  Future<void> _loadCookies() async {
+    var cookies = await this.cookies;
     String cookieValues = (localStorageService.load(cookiesStorageKey)) ?? '';
     if (cookieValues.isEmpty) return;
 
@@ -173,14 +185,14 @@ class ClientService implements IClientService {
       }
     }
 
-    cookieJar.saveFromResponse(url!, cookies);
+    await cookieJar.saveFromResponse(url!, cookies);
   }
 
-  void loadSessionState() {
+  Future<void> loadSessionState() async {
     String accessToken = secureStorageService.load(bearerTokenStorageKey) ?? '';
     if (accessToken.isNotEmpty) _setBearerAuthorizationHeader(accessToken);
 
-    _loadCookies();
+    await _loadCookies();
   }
 
   void _setBasicAuthorizationHeader() {
@@ -277,7 +289,7 @@ class ClientService implements IClientService {
 
     TokenResult token = TokenResult.fromJson(json.decode(responseStr));
 
-    storeAccessToken(token);
+    await storeAccessToken(token);
     return ServiceResponse<TokenResult>(
       model: token,
       statusCode: response.statusCode,
@@ -306,20 +318,21 @@ class ClientService implements IClientService {
 
   @override
   Future<void> removeAccessToken() async {
-    secureStorageService.remove('bearerToken');
-    secureStorageService.remove('refreshToken');
-    secureStorageService.remove('expiresIn');
+    await secureStorageService.remove('bearerToken');
+    await secureStorageService.remove('refreshToken');
+    await secureStorageService.remove('expiresIn');
   }
 
   @override
   Future<void> storeAccessToken(TokenResult token) async {
-    secureStorageService.save('bearerToken', token.accessToken!);
-    secureStorageService.save('refreshToken', token.refreshToken!);
+    await secureStorageService.save('bearerToken', token.accessToken!);
+    await secureStorageService.save('refreshToken', token.refreshToken!);
 
     var timeSpan =
         DateTime.now().toUtc().add(Duration(seconds: token.expiresIn!));
 
-    secureStorageService.save('expiresIn', timeSpan.millisecond.toString());
+    await secureStorageService.save(
+        'expiresIn', timeSpan.millisecond.toString());
   }
 
   String? base64Encode(String? plainText) {
@@ -351,9 +364,9 @@ class ClientService implements IClientService {
     var responseStr = response.data;
     TokenResult token = TokenResult.fromJson(jsonDecode(responseStr));
 
-    storeAccessToken(token);
+    await storeAccessToken(token);
     _setBearerAuthorizationHeader(token.accessToken!);
-    storeSessionState();
+    await storeSessionState();
 
     return true;
   }

@@ -84,7 +84,7 @@ class SessionService extends ServiceBase implements ISessionService {
           CommerceAPIConstants.postSessionUrl, jsonData, Session.fromJson);
 
       if (result.model != null) {
-        clientService.storeSessionState(currentSession: result.model);
+        await clientService.storeSessionState(currentSession: result.model);
         currentSession = result.model;
       }
 

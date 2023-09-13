@@ -5,7 +5,7 @@ abstract class IClientService {
   String? host;
   Uri? get url;
   bool? isSecure;
-  String? get sessionStateKey;
+  Future<String?> get sessionStateKey;
   String? errorMessage;
 
   Future<ServiceResponse<TokenResult>> generate(
