@@ -8,21 +8,10 @@ class SessionService extends ServiceBase implements ISessionService {
       : super(clientService: clientService);
 
   @override
-  Future<http.BaseResponse> deleteCurrentSession() async {
+  Future<ServiceResponse<Session>> deleteCurrentSession() async {
     currentSession = null;
-    var bearerToken = await clientService.getAccessToken();
-
-    var headers = {
-      'Authorization': 'Bearer $bearerToken',
-    };
-
-    var request = http.Request(
-        'DELETE', Uri.parse('${ClientConfig.hostUrl}/api/v1/sessions/current'));
-
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-    return response;
+    var response = await deleteAsync(CommerceAPIConstants.currentSessionUrl);
+    return ServiceResponse<Session>(statusCode: response.statusCode);
   }
 
   @override

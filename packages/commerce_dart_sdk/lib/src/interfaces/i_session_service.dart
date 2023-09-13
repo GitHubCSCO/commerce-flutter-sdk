@@ -12,5 +12,5 @@ abstract class ISessionService {
 
   Future<ServiceResponse<Session>> getCurrentSession();
 
-  Future<http.BaseResponse> deleteCurrentSession();
+  Future<ServiceResponse<Session>> deleteCurrentSession();
 }
