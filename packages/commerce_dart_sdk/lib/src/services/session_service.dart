@@ -51,23 +51,25 @@ class SessionService extends ServiceBase implements ISessionService {
   @override
   Future<ServiceResponse<Session>> patchSession(Session session) async {
     try {
-      var bearerToken = await clientService.getAccessToken();
-      var headers = {
-        'Authorization': 'Bearer $bearerToken',
-      };
+      var jsonData = await serializeToJson<Session>(
+          session, (Session session) => session.toJson());
+      var result = await patchAsyncNoCache<Session>(
+          CommerceAPIConstants.currentSessionUrl, jsonData, Session.fromJson);
 
-      var request = http.Request(
-          'PATCH', Uri.parse('${ClientConfig.hostUrl}/api/v1/sessions'));
+      if (result.model != null) {
+        var sessionResponse = await getCurrentSession();
+        currentSession = sessionResponse.model;
 
-      request.body = json.encode(currentSession?.toJson());
+        return sessionResponse;
+      }
 
-      request.headers.addAll(headers);
-      await request.send();
-
-      var sessionResponse = await getCurrentSession();
-      currentSession = sessionResponse.model;
-
-      return sessionResponse;
+      return ServiceResponse<Session>(
+        model: currentSession,
+        error: result.error,
+        exception: result.exception,
+        statusCode: result.statusCode,
+        isCached: result.isCached,
+      );
     } catch (e) {
       return ServiceResponse<Session>(exception: e as Exception);
     }
