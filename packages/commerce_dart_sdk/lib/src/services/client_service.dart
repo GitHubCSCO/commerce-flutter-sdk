@@ -131,6 +131,7 @@ class ClientService implements IClientService {
   @override
   Uri? get url => Uri.parse(host!);
 
+  @override
   Future<void> storeSessionState({Session? currentSession}) async {
     await _storeCookies(currentSession: currentSession);
   }

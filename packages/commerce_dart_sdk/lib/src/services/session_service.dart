@@ -80,6 +80,12 @@ class SessionService extends ServiceBase implements ISessionService {
           session, (Session session) => session.toJson());
       var result = await postAsyncNoCache<Session>(
           CommerceAPIConstants.postSessionUrl, jsonData, Session.fromJson);
+
+      if (result.model != null) {
+        clientService.storeSessionState(currentSession: result.model);
+        currentSession = result.model;
+      }
+
       return result;
     } catch (e) {
       return ServiceResponse<Session>(exception: e as Exception);

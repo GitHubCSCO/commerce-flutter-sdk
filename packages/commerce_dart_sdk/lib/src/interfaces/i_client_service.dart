@@ -17,6 +17,8 @@ abstract class IClientService {
 
   Future<void> storeAccessToken(TokenResult tokens);
 
+  Future<void> storeSessionState({Session? currentSession});
+
   Future<void> removeAccessToken();
 
   bool isExistsAccessToken();
