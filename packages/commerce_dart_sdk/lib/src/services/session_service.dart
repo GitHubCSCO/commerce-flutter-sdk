@@ -1,13 +1,11 @@
 import 'dart:convert';
 
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
-import 'package:commerce_dart_sdk/src/models/session.dart';
 import 'package:http/http.dart' as http;
 
-class SessionService extends ISessionService {
-  SessionService({required this.clientService});
-
-  IClientService clientService;
+class SessionService extends ServiceBase implements ISessionService {
+  SessionService({required IClientService clientService})
+      : super(clientService: clientService);
 
   @override
   Future<http.BaseResponse> deleteCurrentSession() async {
@@ -116,4 +114,7 @@ class SessionService extends ISessionService {
       return ServiceResponse<Session>(exception: e as Exception);
     }
   }
+
+  @override
+  Session? currentSession;
 }
