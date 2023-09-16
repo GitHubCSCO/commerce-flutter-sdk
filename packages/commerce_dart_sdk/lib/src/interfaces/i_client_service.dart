@@ -25,6 +25,10 @@ abstract class IClientService {
 
   Dio getHttpClient();
 
+  void setBearerAuthorizationHeader(String token);
+
+  void setBasicAuthorizationHeader();
+
   Future<Response> getAsync(String path,
       {Duration? timeout, CancelToken? cancelToken});
 

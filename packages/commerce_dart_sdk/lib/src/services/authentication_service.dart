@@ -47,7 +47,33 @@ class AuthenticationService extends ServiceBase
       );
     }
 
-    /// TODO - add SessionService implementation
+    clientService.setBearerAuthorizationHeader(tokenResult.accessToken!);
+    await clientService.storeSessionState();
+
+    var session = Session(userName: userName, password: password);
+    var sessionCreatedResult = await sessionService.postSession(session);
+
+    var createdSession = sessionCreatedResult.model;
+    if (createdSession == null) {
+      clientService.setBasicAuthorizationHeader();
+      return ServiceResponse<bool>(
+        model: false,
+        error: sessionCreatedResult.error ?? ErrorResponse.empty(),
+        statusCode: sessionCreatedResult.statusCode,
+      );
+    }
+
+    var response = await sessionService.patchSession(createdSession);
+    var sessionPatchResult = response.model;
+
+    if (sessionPatchResult == null) {
+      clientService.setBasicAuthorizationHeader();
+      return ServiceResponse<bool>(
+        model: false,
+        error: ErrorResponse.empty(),
+        statusCode: response.statusCode,
+      );
+    }
 
     return ServiceResponse<bool>(
       model: true,

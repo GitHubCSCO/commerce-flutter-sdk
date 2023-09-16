@@ -190,19 +190,21 @@ class ClientService implements IClientService {
 
   Future<void> loadSessionState() async {
     String accessToken = secureStorageService.load(bearerTokenStorageKey) ?? '';
-    if (accessToken.isNotEmpty) _setBearerAuthorizationHeader(accessToken);
+    if (accessToken.isNotEmpty) setBearerAuthorizationHeader(accessToken);
 
     await _loadCookies();
   }
 
-  void _setBasicAuthorizationHeader() {
+  @override
+  void setBasicAuthorizationHeader() {
     final authorizationHeaderSuffix = '$clientId:$clientSecret';
 
     client.options.headers[HttpHeaders.authorizationHeader] =
         'Basic ${base64Encode(authorizationHeaderSuffix)}';
   }
 
-  void _setBearerAuthorizationHeader(String token) {
+  @override
+  void setBearerAuthorizationHeader(String token) {
     client.options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
   }
 
@@ -365,7 +367,7 @@ class ClientService implements IClientService {
     TokenResult token = TokenResult.fromJson(jsonDecode(responseStr));
 
     await storeAccessToken(token);
-    _setBearerAuthorizationHeader(token.accessToken!);
+    setBearerAuthorizationHeader(token.accessToken!);
     await storeSessionState();
 
     return true;
