@@ -1,13 +1,11 @@
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 
-class AuthenticationService implements IAuthenticationService {
+class AuthenticationService extends ServiceBase
+    implements IAuthenticationService {
   AuthenticationService({
-    required this.localStorageService,
-    required this.clientService,
-  });
-
-  ILocalStorageService localStorageService;
-  IClientService clientService;
+    required IClientService clientService,
+    required ISessionService sessionService,
+  }) : super(clientService: clientService);
 
   @override
   Future<ServiceResponse<bool>> isAuthenticatedAsync() {
