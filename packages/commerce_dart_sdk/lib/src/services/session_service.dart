@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
-import 'package:http/http.dart' as http;
 
 class SessionService extends ServiceBase implements ISessionService {
   SessionService({required IClientService clientService})
@@ -18,25 +15,22 @@ class SessionService extends ServiceBase implements ISessionService {
   @override
   Future<ServiceResponse<Session>> getCurrentSession() async {
     try {
-      var bearerToken = await clientService.getAccessToken();
-      var headers = {
-        'Authorization': 'Bearer $bearerToken',
-      };
+      var result = await getAsyncNoCache<Session>(
+          CommerceAPIConstants.currentSessionUrl, Session.fromJson);
+      if (result.model != null) {
+        if (currentSession != null) {
+          if ((currentSession?.persona != result.model?.persona) ||
+              !(currentSession?.personas != null &&
+                  result.model?.personas != null)) {
+            /// TODO - Notify Session Changed
+          }
+        }
 
-      var request = http.Request(
-          'GET', Uri.parse('${ClientConfig.hostUrl}/api/v1/sessions/current'));
+        await clientService.storeSessionState(currentSession: result.model);
+        currentSession = result.model;
+      }
 
-      request.headers.addAll(headers);
-      http.StreamedResponse response = await request.send();
-
-      String responseStr = await response.stream.bytesToString();
-
-      var sessionResponse = ServiceResponse<Session>(
-          statusCode: response.statusCode,
-          model: Session.fromJson(json.decode(responseStr)));
-
-      currentSession = sessionResponse.model;
-      return sessionResponse;
+      return result;
     } catch (e) {
       return ServiceResponse<Session>(exception: e as Exception);
     }
