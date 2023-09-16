@@ -4,13 +4,33 @@ class AuthenticationService extends ServiceBase
     implements IAuthenticationService {
   AuthenticationService({
     required IClientService clientService,
-    required ISessionService sessionService,
+    required this.sessionService,
   }) : super(clientService: clientService);
 
+  ISessionService sessionService;
+
   @override
-  Future<ServiceResponse<bool>> isAuthenticatedAsync() {
-    // TODO: implement isAuthenticatedAsync
-    throw UnimplementedError();
+  Future<ServiceResponse<bool>> isAuthenticatedAsync() async {
+    if (clientService.isExistsAccessToken()) {
+      var response = await sessionService.getCurrentSession();
+      var currentSession = response.model;
+
+      if (currentSession != null) {
+        if (currentSession.isAuthenticated!) {
+          return ServiceResponse<bool>(
+            model: true,
+            error: response.error,
+            exception: response.exception,
+            statusCode: response.statusCode,
+            isCached: response.isCached,
+          );
+        }
+      }
+
+      await clientService.removeAccessToken();
+    }
+
+    return ServiceResponse<bool>(model: false);
   }
 
   @override
