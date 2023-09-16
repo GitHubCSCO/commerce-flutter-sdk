@@ -43,12 +43,14 @@ class MockSecureStorageService implements ISecureStorageService {
 }
 
 void main() {
+  ILocalStorageService localStorageService = MockLocalStorageService();
+  ISecureStorageService secureStorageService = MockSecureStorageService();
 
   // used Implementation rather than Interface of clientService
   // to get the cookies
-  ClientService clientService = ClientService( 
-    localStorageService: MockLocalStorageService(),
-    secureStorageService: MockSecureStorageService(),
+  ClientService clientService = ClientService(
+    localStorageService: localStorageService,
+    secureStorageService: secureStorageService,
   );
 
   ISessionService sessionService = SessionService(clientService: clientService);
@@ -82,12 +84,18 @@ void main() {
         print(session);
         print(session.toJson());
       }),
-      test('Stored cookies', () async {
+      test('Recieved cookies', () async {
         var cookiesList = await clientService.cookies;
         if (cookiesList.isEmpty) return;
         for (Cookie cookie in cookiesList) {
           print('${cookie.name} ${cookie.value}');
         }
+      }),
+      test('Stored cookies', () async {
+        var cookiesStr = localStorageService.load('cookies');
+        if (cookiesStr == null) return;
+
+        print(cookiesStr);
       })
     },
   );
