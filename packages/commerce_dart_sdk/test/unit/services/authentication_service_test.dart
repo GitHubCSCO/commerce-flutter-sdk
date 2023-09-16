@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'dart:io';
+
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 import 'package:commerce_dart_sdk/src/services/client_service.dart';
 import 'package:commerce_dart_sdk/src/services/session_service.dart';
@@ -41,7 +43,10 @@ class MockSecureStorageService implements ISecureStorageService {
 }
 
 void main() {
-  IClientService clientService = ClientService(
+
+  // used Implementation rather than Interface of clientService
+  // to get the cookies
+  ClientService clientService = ClientService( 
     localStorageService: MockLocalStorageService(),
     secureStorageService: MockSecureStorageService(),
   );
@@ -62,20 +67,28 @@ void main() {
   var password = 'tester1';
 
   group(
-      'LoginTest',
-      () => {
-            test('Login and session', () async {
-              authService.logInAsync(userName, password);
-              var sessionResponse = await sessionService.getCurrentSession();
-              var session = sessionResponse.model;
+    'LoginTest',
+    () => {
+      test('Login and session', () async {
+        authService.logInAsync(userName, password);
+        var sessionResponse = await sessionService.getCurrentSession();
+        var session = sessionResponse.model;
 
-              if (session == null) {
-                print('NULL SESSION!');
-                return;
-              }
+        if (session == null) {
+          print('NULL SESSION!');
+          return;
+        }
 
-              print(session);
-              print(session.toJson());
-            })
-          });
+        print(session);
+        print(session.toJson());
+      }),
+      test('Stored cookies', () async {
+        var cookiesList = await clientService.cookies;
+        if (cookiesList.isEmpty) return;
+        for (Cookie cookie in cookiesList) {
+          print('${cookie.name} ${cookie.value}');
+        }
+      })
+    },
+  );
 }
