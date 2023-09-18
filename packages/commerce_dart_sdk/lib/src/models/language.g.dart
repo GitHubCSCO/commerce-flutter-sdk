@@ -20,14 +20,23 @@ Language _$LanguageFromJson(Map<String, dynamic> json) => Language(
         (k, e) => MapEntry(k, e as String),
       );
 
-Map<String, dynamic> _$LanguageToJson(Language instance) => <String, dynamic>{
-      'uri': instance.uri,
-      'properties': instance.properties,
-      'id': instance.id,
-      'languageCode': instance.languageCode,
-      'cultureCode': instance.cultureCode,
-      'description': instance.description,
-      'imageFilePath': instance.imageFilePath,
-      'isDefault': instance.isDefault,
-      'isLive': instance.isLive,
-    };
+Map<String, dynamic> _$LanguageToJson(Language instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('uri', instance.uri);
+  writeNotNull('properties', instance.properties);
+  writeNotNull('id', instance.id);
+  writeNotNull('languageCode', instance.languageCode);
+  writeNotNull('cultureCode', instance.cultureCode);
+  writeNotNull('description', instance.description);
+  writeNotNull('imageFilePath', instance.imageFilePath);
+  writeNotNull('isDefault', instance.isDefault);
+  writeNotNull('isLive', instance.isLive);
+  return val;
+}

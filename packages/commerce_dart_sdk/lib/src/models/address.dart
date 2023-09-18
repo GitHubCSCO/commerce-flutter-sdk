@@ -78,7 +78,7 @@ class Address extends BaseModel {
 
   String? fax;
 
-  String? isVmiLocation;
+  bool? isVmiLocation;
 
   factory Address.fromJson(Map<String, dynamic> json) =>
       _$AddressFromJson(json);

@@ -67,24 +67,32 @@ CustomerValidationDto _$CustomerValidationDtoFromJson(
     );
 
 Map<String, dynamic> _$CustomerValidationDtoToJson(
-        CustomerValidationDto instance) =>
-    <String, dynamic>{
-      'firstName': instance.firstName?.toJson(),
-      'lastName': instance.lastName?.toJson(),
-      'companyName': instance.companyName?.toJson(),
-      'attention': instance.attention?.toJson(),
-      'address1': instance.address1?.toJson(),
-      'address2': instance.address2?.toJson(),
-      'address3': instance.address3?.toJson(),
-      'address4': instance.address4?.toJson(),
-      'country': instance.country?.toJson(),
-      'state': instance.state?.toJson(),
-      'city': instance.city?.toJson(),
-      'postalCode': instance.postalCode?.toJson(),
-      'phone': instance.phone?.toJson(),
-      'email': instance.email?.toJson(),
-      'fax': instance.fax?.toJson(),
-    };
+    CustomerValidationDto instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('firstName', instance.firstName?.toJson());
+  writeNotNull('lastName', instance.lastName?.toJson());
+  writeNotNull('companyName', instance.companyName?.toJson());
+  writeNotNull('attention', instance.attention?.toJson());
+  writeNotNull('address1', instance.address1?.toJson());
+  writeNotNull('address2', instance.address2?.toJson());
+  writeNotNull('address3', instance.address3?.toJson());
+  writeNotNull('address4', instance.address4?.toJson());
+  writeNotNull('country', instance.country?.toJson());
+  writeNotNull('state', instance.state?.toJson());
+  writeNotNull('city', instance.city?.toJson());
+  writeNotNull('postalCode', instance.postalCode?.toJson());
+  writeNotNull('phone', instance.phone?.toJson());
+  writeNotNull('email', instance.email?.toJson());
+  writeNotNull('fax', instance.fax?.toJson());
+  return val;
+}
 
 FieldValidationDto _$FieldValidationDtoFromJson(Map<String, dynamic> json) =>
     FieldValidationDto(
@@ -93,9 +101,17 @@ FieldValidationDto _$FieldValidationDtoFromJson(Map<String, dynamic> json) =>
       maxLength: json['maxLength'] as int?,
     );
 
-Map<String, dynamic> _$FieldValidationDtoToJson(FieldValidationDto instance) =>
-    <String, dynamic>{
-      'isRequired': instance.isRequired,
-      'isDisabled': instance.isDisabled,
-      'maxLength': instance.maxLength,
-    };
+Map<String, dynamic> _$FieldValidationDtoToJson(FieldValidationDto instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('isRequired', instance.isRequired);
+  writeNotNull('isDisabled', instance.isDisabled);
+  writeNotNull('maxLength', instance.maxLength);
+  return val;
+}

@@ -13,10 +13,18 @@ TokenResult _$TokenResultFromJson(Map<String, dynamic> json) => TokenResult(
       tokenType: json['token_type'] as String?,
     );
 
-Map<String, dynamic> _$TokenResultToJson(TokenResult instance) =>
-    <String, dynamic>{
-      'access_token': instance.accessToken,
-      'expires_in': instance.expiresIn,
-      'token_type': instance.tokenType,
-      'refresh_token': instance.refreshToken,
-    };
+Map<String, dynamic> _$TokenResultToJson(TokenResult instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('access_token', instance.accessToken);
+  writeNotNull('expires_in', instance.expiresIn);
+  writeNotNull('token_type', instance.tokenType);
+  writeNotNull('refresh_token', instance.refreshToken);
+  return val;
+}

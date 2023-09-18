@@ -49,37 +49,46 @@ Account _$AccountFromJson(Map<String, dynamic> json) => Account(
         (k, e) => MapEntry(k, e as String),
       );
 
-Map<String, dynamic> _$AccountToJson(Account instance) => <String, dynamic>{
-      'uri': instance.uri,
-      'properties': instance.properties,
-      'id': instance.id,
-      'email': instance.email,
-      'userName': instance.userName,
-      'password': instance.password,
-      'isSubscribed': instance.isSubscribed,
-      'isGuest': instance.isGuest,
-      'canApproveOrders': instance.canApproveOrders,
-      'canViewApprovalOrders': instance.canViewApprovalOrders,
-      'billToId': instance.billToId,
-      'shipToId': instance.shipToId,
-      'firstName': instance.firstName,
-      'lastName': instance.lastName,
-      'role': instance.role,
-      'approver': instance.approver,
-      'isApproved': instance.isApproved,
-      'activationStatus': instance.activationStatus,
-      'defaultLocation': instance.defaultLocation,
-      'lastLoginOn': instance.lastLoginOn?.toIso8601String(),
-      'availableApprovers': instance.availableApprovers,
-      'availableRoles': instance.availableRoles,
-      'setDefaultCustomer': instance.setDefaultCustomer,
-      'defaultCustomerId': instance.defaultCustomerId,
-      'defaultFulfillmentMethod': instance.defaultFulfillmentMethod,
-      'defaultWarehouse': instance.defaultWarehouse?.toJson(),
-      'defaultWarehouseId': instance.defaultWarehouseId,
-      'accessToken': instance.accessToken,
-      'vmiRole': instance.vmiRole,
-    };
+Map<String, dynamic> _$AccountToJson(Account instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('uri', instance.uri);
+  writeNotNull('properties', instance.properties);
+  writeNotNull('id', instance.id);
+  writeNotNull('email', instance.email);
+  writeNotNull('userName', instance.userName);
+  writeNotNull('password', instance.password);
+  writeNotNull('isSubscribed', instance.isSubscribed);
+  writeNotNull('isGuest', instance.isGuest);
+  writeNotNull('canApproveOrders', instance.canApproveOrders);
+  writeNotNull('canViewApprovalOrders', instance.canViewApprovalOrders);
+  writeNotNull('billToId', instance.billToId);
+  writeNotNull('shipToId', instance.shipToId);
+  writeNotNull('firstName', instance.firstName);
+  writeNotNull('lastName', instance.lastName);
+  writeNotNull('role', instance.role);
+  writeNotNull('approver', instance.approver);
+  writeNotNull('isApproved', instance.isApproved);
+  writeNotNull('activationStatus', instance.activationStatus);
+  writeNotNull('defaultLocation', instance.defaultLocation);
+  writeNotNull('lastLoginOn', instance.lastLoginOn?.toIso8601String());
+  writeNotNull('availableApprovers', instance.availableApprovers);
+  writeNotNull('availableRoles', instance.availableRoles);
+  writeNotNull('setDefaultCustomer', instance.setDefaultCustomer);
+  writeNotNull('defaultCustomerId', instance.defaultCustomerId);
+  writeNotNull('defaultFulfillmentMethod', instance.defaultFulfillmentMethod);
+  writeNotNull('defaultWarehouse', instance.defaultWarehouse?.toJson());
+  writeNotNull('defaultWarehouseId', instance.defaultWarehouseId);
+  writeNotNull('accessToken', instance.accessToken);
+  writeNotNull('vmiRole', instance.vmiRole);
+  return val;
+}
 
 Vmi _$VmiFromJson(Map<String, dynamic> json) => Vmi(
       vmiUsers: (json['vmiUsers'] as List<dynamic>?)
@@ -91,11 +100,20 @@ Vmi _$VmiFromJson(Map<String, dynamic> json) => Vmi(
         (k, e) => MapEntry(k, e as String),
       );
 
-Map<String, dynamic> _$VmiToJson(Vmi instance) => <String, dynamic>{
-      'uri': instance.uri,
-      'properties': instance.properties,
-      'vmiUsers': instance.vmiUsers?.map((e) => e.toJson()).toList(),
-    };
+Map<String, dynamic> _$VmiToJson(Vmi instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('uri', instance.uri);
+  writeNotNull('properties', instance.properties);
+  writeNotNull('vmiUsers', instance.vmiUsers?.map((e) => e.toJson()).toList());
+  return val;
+}
 
 VmiUser _$VmiUserFromJson(Map<String, dynamic> json) => VmiUser(
       userId: json['userId'] as String?,
@@ -111,10 +129,19 @@ VmiUser _$VmiUserFromJson(Map<String, dynamic> json) => VmiUser(
         (k, e) => MapEntry(k, e as String),
       );
 
-Map<String, dynamic> _$VmiUserToJson(VmiUser instance) => <String, dynamic>{
-      'uri': instance.uri,
-      'properties': instance.properties,
-      'userId': instance.userId,
-      'vmiLocationNames': instance.vmiLocationNames,
-      'vmiRoles': instance.vmiRoles,
-    };
+Map<String, dynamic> _$VmiUserToJson(VmiUser instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('uri', instance.uri);
+  writeNotNull('properties', instance.properties);
+  writeNotNull('userId', instance.userId);
+  writeNotNull('vmiLocationNames', instance.vmiLocationNames);
+  writeNotNull('vmiRoles', instance.vmiRoles);
+  return val;
+}

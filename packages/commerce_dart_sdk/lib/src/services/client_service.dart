@@ -281,15 +281,15 @@ class ClientService implements IClientService {
       options: Options(headers: headers),
     );
 
-    String responseStr = response.data;
+    var responseData = response.data;
 
     if (!StatusCodeExtension.isSuccessStatusCode(response.statusCode!)) {
-      ErrorResponse error = ErrorResponse.fromJson(json.decode(responseStr));
+      ErrorResponse error = ErrorResponse.fromJson(responseData);
       return ServiceResponse<TokenResult>(
           error: error, statusCode: response.statusCode);
     }
 
-    TokenResult token = TokenResult.fromJson(json.decode(responseStr));
+    TokenResult token = TokenResult.fromJson(responseData);
 
     await storeAccessToken(token);
     return ServiceResponse<TokenResult>(

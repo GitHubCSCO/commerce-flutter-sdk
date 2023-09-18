@@ -18,12 +18,21 @@ Currency _$CurrencyFromJson(Map<String, dynamic> json) => Currency(
         (k, e) => MapEntry(k, e as String),
       );
 
-Map<String, dynamic> _$CurrencyToJson(Currency instance) => <String, dynamic>{
-      'uri': instance.uri,
-      'properties': instance.properties,
-      'iD': instance.iD,
-      'currencyCode': instance.currencyCode,
-      'description': instance.description,
-      'currencySymbol': instance.currencySymbol,
-      'isDefault': instance.isDefault,
-    };
+Map<String, dynamic> _$CurrencyToJson(Currency instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('uri', instance.uri);
+  writeNotNull('properties', instance.properties);
+  writeNotNull('iD', instance.iD);
+  writeNotNull('currencyCode', instance.currencyCode);
+  writeNotNull('description', instance.description);
+  writeNotNull('currencySymbol', instance.currencySymbol);
+  writeNotNull('isDefault', instance.isDefault);
+  return val;
+}

@@ -43,26 +43,37 @@ StyledProduct _$StyledProductFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String),
       );
 
-Map<String, dynamic> _$StyledProductToJson(StyledProduct instance) =>
-    <String, dynamic>{
-      'uri': instance.uri,
-      'properties': instance.properties,
-      'productId': instance.productId,
-      'name': instance.name,
-      'shortDescription': instance.shortDescription,
-      'erpNumber': instance.erpNumber,
-      'mediumImagePath': instance.mediumImagePath,
-      'smallImagePath': instance.smallImagePath,
-      'largeImagePath': instance.largeImagePath,
-      'qtyOnHand': instance.qtyOnHand,
-      'numberInCart': instance.numberInCart,
-      'pricing': instance.pricing?.toJson(),
-      'quoteRequired': instance.quoteRequired,
-      'styleValues': instance.styleValues?.map((e) => e.toJson()).toList(),
-      'availability': instance.availability?.toJson(),
-      'productUnitOfMeasures':
-          instance.productUnitOfMeasures?.map((e) => e.toJson()).toList(),
-      'productImages': instance.productImages?.map((e) => e.toJson()).toList(),
-      'warehouses': instance.warehouses?.map((e) => e.toJson()).toList(),
-      'trackInventory': instance.trackInventory,
-    };
+Map<String, dynamic> _$StyledProductToJson(StyledProduct instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('uri', instance.uri);
+  writeNotNull('properties', instance.properties);
+  writeNotNull('productId', instance.productId);
+  writeNotNull('name', instance.name);
+  writeNotNull('shortDescription', instance.shortDescription);
+  writeNotNull('erpNumber', instance.erpNumber);
+  writeNotNull('mediumImagePath', instance.mediumImagePath);
+  writeNotNull('smallImagePath', instance.smallImagePath);
+  writeNotNull('largeImagePath', instance.largeImagePath);
+  writeNotNull('qtyOnHand', instance.qtyOnHand);
+  writeNotNull('numberInCart', instance.numberInCart);
+  writeNotNull('pricing', instance.pricing?.toJson());
+  writeNotNull('quoteRequired', instance.quoteRequired);
+  writeNotNull(
+      'styleValues', instance.styleValues?.map((e) => e.toJson()).toList());
+  writeNotNull('availability', instance.availability?.toJson());
+  writeNotNull('productUnitOfMeasures',
+      instance.productUnitOfMeasures?.map((e) => e.toJson()).toList());
+  writeNotNull(
+      'productImages', instance.productImages?.map((e) => e.toJson()).toList());
+  writeNotNull(
+      'warehouses', instance.warehouses?.map((e) => e.toJson()).toList());
+  writeNotNull('trackInventory', instance.trackInventory);
+  return val;
+}

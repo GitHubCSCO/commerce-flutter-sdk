@@ -72,17 +72,21 @@ void main() {
     'LoginTest',
     () => {
       test('Login and session', () async {
-        authService.logInAsync(userName, password);
-        var sessionResponse = await sessionService.getCurrentSession();
-        var session = sessionResponse.model;
+        await authService.logInAsync(userName, password);
+        // var sessionResponse = await sessionService.getCurrentSession();
+        // var session = sessionResponse.model;
 
-        if (session == null) {
-          print('NULL SESSION!');
-          return;
-        }
+        bool flag = (await authService.isAuthenticatedAsync()).model!;
 
-        print(session);
-        print(session.toJson());
+        // if (session == null) {
+        //   print('NULL SESSION!');
+        //   return;
+        // }
+
+        // print(session);
+        // print(session.toJson());
+
+        expect(flag, true);
       }),
       test('Recieved cookies', () async {
         var cookiesList = await clientService.cookies;

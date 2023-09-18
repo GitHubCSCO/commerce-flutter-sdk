@@ -57,44 +57,54 @@ BillTo _$BillToFromJson(Map<String, dynamic> json) => BillTo(
       ..fullAddress = json['fullAddress'] as String?
       ..email = json['email'] as String?
       ..fax = json['fax'] as String?
-      ..isVmiLocation = json['isVmiLocation'] as String?;
+      ..isVmiLocation = json['isVmiLocation'] as bool?;
 
-Map<String, dynamic> _$BillToToJson(BillTo instance) => <String, dynamic>{
-      'uri': instance.uri,
-      'properties': instance.properties,
-      'id': instance.id,
-      'customerNumber': instance.customerNumber,
-      'customerSequence': instance.customerSequence,
-      'customerName': instance.customerName,
-      'label': instance.label,
-      'firstName': instance.firstName,
-      'lastName': instance.lastName,
-      'companyName': instance.companyName,
-      'attention': instance.attention,
-      'address1': instance.address1,
-      'address2': instance.address2,
-      'address3': instance.address3,
-      'address4': instance.address4,
-      'city': instance.city,
-      'postalCode': instance.postalCode,
-      'state': instance.state?.toJson(),
-      'country': instance.country?.toJson(),
-      'phone': instance.phone,
-      'fullAddress': instance.fullAddress,
-      'email': instance.email,
-      'fax': instance.fax,
-      'isVmiLocation': instance.isVmiLocation,
-      'shipTosUri': instance.shipTosUri,
-      'isGuest': instance.isGuest,
-      'budgetEnforcementLevel': instance.budgetEnforcementLevel,
-      'costCodeTitle': instance.costCodeTitle,
-      'customerCurrencySymbol': instance.customerCurrencySymbol,
-      'costCodes': instance.costCodes?.map((e) => e.toJson()).toList(),
-      'shipTos': instance.shipTos?.map((e) => e.toJson()).toList(),
-      'validation': instance.validation?.toJson(),
-      'isDefault': instance.isDefault,
-      'accountsReceivable': instance.accountsReceivable?.toJson(),
-    };
+Map<String, dynamic> _$BillToToJson(BillTo instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('uri', instance.uri);
+  writeNotNull('properties', instance.properties);
+  writeNotNull('id', instance.id);
+  writeNotNull('customerNumber', instance.customerNumber);
+  writeNotNull('customerSequence', instance.customerSequence);
+  writeNotNull('customerName', instance.customerName);
+  writeNotNull('label', instance.label);
+  writeNotNull('firstName', instance.firstName);
+  writeNotNull('lastName', instance.lastName);
+  writeNotNull('companyName', instance.companyName);
+  writeNotNull('attention', instance.attention);
+  writeNotNull('address1', instance.address1);
+  writeNotNull('address2', instance.address2);
+  writeNotNull('address3', instance.address3);
+  writeNotNull('address4', instance.address4);
+  writeNotNull('city', instance.city);
+  writeNotNull('postalCode', instance.postalCode);
+  writeNotNull('state', instance.state?.toJson());
+  writeNotNull('country', instance.country?.toJson());
+  writeNotNull('phone', instance.phone);
+  writeNotNull('fullAddress', instance.fullAddress);
+  writeNotNull('email', instance.email);
+  writeNotNull('fax', instance.fax);
+  writeNotNull('isVmiLocation', instance.isVmiLocation);
+  writeNotNull('shipTosUri', instance.shipTosUri);
+  writeNotNull('isGuest', instance.isGuest);
+  writeNotNull('budgetEnforcementLevel', instance.budgetEnforcementLevel);
+  writeNotNull('costCodeTitle', instance.costCodeTitle);
+  writeNotNull('customerCurrencySymbol', instance.customerCurrencySymbol);
+  writeNotNull(
+      'costCodes', instance.costCodes?.map((e) => e.toJson()).toList());
+  writeNotNull('shipTos', instance.shipTos?.map((e) => e.toJson()).toList());
+  writeNotNull('validation', instance.validation?.toJson());
+  writeNotNull('isDefault', instance.isDefault);
+  writeNotNull('accountsReceivable', instance.accountsReceivable?.toJson());
+  return val;
+}
 
 CostCode _$CostCodeFromJson(Map<String, dynamic> json) => CostCode(
       code: json['CostCode'] as String?,
@@ -103,9 +113,18 @@ CostCode _$CostCodeFromJson(Map<String, dynamic> json) => CostCode(
       isActive: json['isActive'] as bool?,
     );
 
-Map<String, dynamic> _$CostCodeToJson(CostCode instance) => <String, dynamic>{
-      'id': instance.id,
-      'CostCode': instance.code,
-      'description': instance.description,
-      'isActive': instance.isActive,
-    };
+Map<String, dynamic> _$CostCodeToJson(CostCode instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('CostCode', instance.code);
+  writeNotNull('description', instance.description);
+  writeNotNull('isActive', instance.isActive);
+  return val;
+}

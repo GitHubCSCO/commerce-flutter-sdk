@@ -21,9 +21,18 @@ AccountsReceivable _$AccountsReceivableFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$AccountsReceivableToJson(AccountsReceivable instance) =>
-    <String, dynamic>{
-      'agingBuckets': instance.agingBuckets?.map((e) => e.toJson()).toList(),
-      'agingBucketTotal': instance.agingBucketTotal?.toJson(),
-      'agingBucketFuture': instance.agingBucketFuture?.toJson(),
-    };
+Map<String, dynamic> _$AccountsReceivableToJson(AccountsReceivable instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(
+      'agingBuckets', instance.agingBuckets?.map((e) => e.toJson()).toList());
+  writeNotNull('agingBucketTotal', instance.agingBucketTotal?.toJson());
+  writeNotNull('agingBucketFuture', instance.agingBucketFuture?.toJson());
+  return val;
+}

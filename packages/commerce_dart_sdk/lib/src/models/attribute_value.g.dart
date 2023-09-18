@@ -18,14 +18,22 @@ AttributeValue _$AttributeValueFromJson(Map<String, dynamic> json) =>
       valueDisplay: json['valueDisplay'] as String?,
     );
 
-Map<String, dynamic> _$AttributeValueToJson(AttributeValue instance) =>
-    <String, dynamic>{
-      'attributeValueId': instance.attributeValueId,
-      'value': instance.value,
-      'valueDisplay': instance.valueDisplay,
-      'sortOrder': instance.sortOrder,
-      'isActive': instance.isActive,
-      'id': instance.id,
-      'count': instance.count,
-      'selected': instance.selected,
-    };
+Map<String, dynamic> _$AttributeValueToJson(AttributeValue instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('attributeValueId', instance.attributeValueId);
+  writeNotNull('value', instance.value);
+  writeNotNull('valueDisplay', instance.valueDisplay);
+  writeNotNull('sortOrder', instance.sortOrder);
+  writeNotNull('isActive', instance.isActive);
+  writeNotNull('id', instance.id);
+  writeNotNull('count', instance.count);
+  writeNotNull('selected', instance.selected);
+  return val;
+}
