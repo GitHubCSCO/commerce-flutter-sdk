@@ -10,6 +10,7 @@ dependencies:
   cookie_jar: ^4.0.8
   dio: ^5.3.2
   dio_cookie_manager: ^3.1.0+1
+  dio_intercept_to_curl: ^0.1.0
   flutter:
       sdk: flutter
   http: ^1.1.0

@@ -201,6 +201,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0+1"
+  dio_intercept_to_curl:
+    dependency: "direct main"
+    description:
+      name: dio_intercept_to_curl
+      sha256: "4f3871f68c250bef7bd2bd198be0cc7e82b5aa1984c93e0d5c36d27c54f25fd5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   fake_async:
     dependency: transitive
     description:
