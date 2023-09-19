@@ -436,4 +436,10 @@ class ClientService implements IClientService {
   Dio getHttpClient() {
     return client;
   }
+
+  @override
+  Future<void> reset() async {
+    await _storeCookies();
+    _createClient();
+  }
 }

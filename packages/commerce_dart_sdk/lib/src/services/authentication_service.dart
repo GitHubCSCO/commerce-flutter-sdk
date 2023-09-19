@@ -82,8 +82,10 @@ class AuthenticationService extends ServiceBase
   }
 
   @override
-  Future<void> logoutAsync({bool isRefreshTokenExpired = false}) {
-    // TODO: implement logoutAsync
-    throw UnimplementedError();
+  Future<void> logoutAsync({bool isRefreshTokenExpired = false}) async {
+    await sessionService.deleteCurrentSession();
+    await clientService.reset();
+
+    await clientService.removeAccessToken();
   }
 }

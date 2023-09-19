@@ -29,6 +29,8 @@ abstract class IClientService {
 
   void setBasicAuthorizationHeader();
 
+  Future<void> reset();
+
   Future<Response> getAsync(String path,
       {Duration? timeout, CancelToken? cancelToken});
 

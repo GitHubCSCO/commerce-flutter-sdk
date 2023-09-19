@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:io';
+import 'dart:math';
 
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 import 'package:commerce_dart_sdk/src/services/client_service.dart';
@@ -69,7 +70,7 @@ void main() {
   var password = 'tester1';
 
   group(
-    'LoginTest',
+    'Authentication Test',
     () => {
       test('Login and session', () async {
         await authService.logInAsync(userName, password);
@@ -100,6 +101,16 @@ void main() {
         if (cookiesStr == null) return;
 
         print(cookiesStr);
+      }),
+      test('Logout', () async {
+        await authService.logoutAsync();
+        var sessionResponse = await sessionService.getCurrentSession();
+        var session = sessionResponse.model;
+
+        print(session);
+
+        bool flag = (await authService.isAuthenticatedAsync()).model!;
+        expect(flag, false);
       })
     },
   );
