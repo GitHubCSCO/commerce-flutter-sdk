@@ -41,3 +41,4 @@ export 'currency.dart';
 export 'session.dart';
 
 export './results/results.dart';
+export './parameters/parameters.dart';
