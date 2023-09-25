@@ -70,7 +70,9 @@ class AccountDestination extends StatelessWidget {
                         height: 12,
                       ),
                       FilledButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          context.go('/storefront/user_login');
+                        },
                         child: const SizedBox(
                           width: double.infinity,
                           child: Center(child: Text('SIGN IN')),

@@ -40,33 +40,41 @@ ProductDetail _$ProductDetailFromJson(Map<String, dynamic> json) =>
       vatCodeId: json['vatCodeId'] as String?,
     );
 
-Map<String, dynamic> _$ProductDetailToJson(ProductDetail instance) =>
-    <String, dynamic>{
-      'name': instance.name,
-      'modelNumber': instance.modelNumber,
-      'sku': instance.sku,
-      'upcCode': instance.upcCode,
-      'unspsc': instance.unspsc,
-      'productCode': instance.productCode,
-      'priceCode': instance.priceCode,
-      'sortOrder': instance.sortOrder,
-      'multipleSaleQty': instance.multipleSaleQty,
-      'canBackOrder': instance.canBackOrder,
-      'roundingRule': instance.roundingRule,
-      'replacementProductId': instance.replacementProductId,
-      'isHazardousGood': instance.isHazardousGood,
-      'hasMsds': instance.hasMsds,
-      'isSpecialOrder': instance.isSpecialOrder,
-      'isGiftCard': instance.isGiftCard,
-      'allowAnyGiftCardAmount': instance.allowAnyGiftCardAmount,
-      'taxCode1': instance.taxCode1,
-      'taxCode2': instance.taxCode2,
-      'taxCategory': instance.taxCategory,
-      'vatCodeId': instance.vatCodeId,
-      'shippingClassification': instance.shippingClassification,
-      'shippingLength': instance.shippingLength,
-      'shippingWidth': instance.shippingWidth,
-      'shippingHeight': instance.shippingHeight,
-      'shippingWeight': instance.shippingWeight,
-      'configuration': instance.configuration?.toJson(),
-    };
+Map<String, dynamic> _$ProductDetailToJson(ProductDetail instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('name', instance.name);
+  writeNotNull('modelNumber', instance.modelNumber);
+  writeNotNull('sku', instance.sku);
+  writeNotNull('upcCode', instance.upcCode);
+  writeNotNull('unspsc', instance.unspsc);
+  writeNotNull('productCode', instance.productCode);
+  writeNotNull('priceCode', instance.priceCode);
+  writeNotNull('sortOrder', instance.sortOrder);
+  writeNotNull('multipleSaleQty', instance.multipleSaleQty);
+  writeNotNull('canBackOrder', instance.canBackOrder);
+  writeNotNull('roundingRule', instance.roundingRule);
+  writeNotNull('replacementProductId', instance.replacementProductId);
+  writeNotNull('isHazardousGood', instance.isHazardousGood);
+  writeNotNull('hasMsds', instance.hasMsds);
+  writeNotNull('isSpecialOrder', instance.isSpecialOrder);
+  writeNotNull('isGiftCard', instance.isGiftCard);
+  writeNotNull('allowAnyGiftCardAmount', instance.allowAnyGiftCardAmount);
+  writeNotNull('taxCode1', instance.taxCode1);
+  writeNotNull('taxCode2', instance.taxCode2);
+  writeNotNull('taxCategory', instance.taxCategory);
+  writeNotNull('vatCodeId', instance.vatCodeId);
+  writeNotNull('shippingClassification', instance.shippingClassification);
+  writeNotNull('shippingLength', instance.shippingLength);
+  writeNotNull('shippingWidth', instance.shippingWidth);
+  writeNotNull('shippingHeight', instance.shippingHeight);
+  writeNotNull('shippingWeight', instance.shippingWeight);
+  writeNotNull('configuration', instance.configuration?.toJson());
+  return val;
+}

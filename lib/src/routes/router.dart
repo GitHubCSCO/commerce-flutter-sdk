@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/src/pages/storefront/storefront_page.dart';
+import 'package:commerce_flutter_app/src/pages/user_login/user_login_page.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:commerce_flutter_app/src/pages/storefront_login/storefront_login_page.dart';
@@ -31,6 +32,10 @@ final GoRouter globalRouter = GoRouter(
               builder: (context, state) => const LanguagesPages(),
             )
           ],
+        ),
+        GoRoute(
+          path: 'user_login',
+          builder: (context, state) => const UserLoginPage(),
         ),
       ],
     ),

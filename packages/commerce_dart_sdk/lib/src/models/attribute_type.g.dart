@@ -26,20 +26,28 @@ AttributeType _$AttributeTypeFromJson(Map<String, dynamic> json) =>
       sortOrder: json['sortOrder'] as int?,
     );
 
-Map<String, dynamic> _$AttributeTypeToJson(AttributeType instance) =>
-    <String, dynamic>{
-      'attributeTypeId': instance.attributeTypeId,
-      'name': instance.name,
-      'nameDisplay': instance.nameDisplay,
-      'sort': instance.sort,
-      'attributeValueFacets':
-          instance.attributeValueFacets?.map((e) => e.toJson()).toList(),
-      'id': instance.id,
-      'label': instance.label,
-      'isFilter': instance.isFilter,
-      'isComparable': instance.isComparable,
-      'isActive': instance.isActive,
-      'sortOrder': instance.sortOrder,
-      'attributeValues':
-          instance.attributeValues?.map((e) => e.toJson()).toList(),
-    };
+Map<String, dynamic> _$AttributeTypeToJson(AttributeType instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('attributeTypeId', instance.attributeTypeId);
+  writeNotNull('name', instance.name);
+  writeNotNull('nameDisplay', instance.nameDisplay);
+  writeNotNull('sort', instance.sort);
+  writeNotNull('attributeValueFacets',
+      instance.attributeValueFacets?.map((e) => e.toJson()).toList());
+  writeNotNull('id', instance.id);
+  writeNotNull('label', instance.label);
+  writeNotNull('isFilter', instance.isFilter);
+  writeNotNull('isComparable', instance.isComparable);
+  writeNotNull('isActive', instance.isActive);
+  writeNotNull('sortOrder', instance.sortOrder);
+  writeNotNull('attributeValues',
+      instance.attributeValues?.map((e) => e.toJson()).toList());
+  return val;
+}

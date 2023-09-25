@@ -21,18 +21,26 @@ AddCartLine _$AddCartLineFromJson(Map<String, dynamic> json) => AddCartLine(
         (k, e) => MapEntry(k, e as String),
       );
 
-Map<String, dynamic> _$AddCartLineToJson(AddCartLine instance) =>
-    <String, dynamic>{
-      'uri': instance.uri,
-      'properties': instance.properties,
-      'productId': instance.productId,
-      'qtyOrdered': instance.qtyOrdered,
-      'unitOfMeasure': instance.unitOfMeasure,
-      'notes': instance.notes,
-      'vmiBinId': instance.vmiBinId,
-      'sectionOptions':
-          instance.sectionOptions?.map((e) => e.toJson()).toList(),
-    };
+Map<String, dynamic> _$AddCartLineToJson(AddCartLine instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('uri', instance.uri);
+  writeNotNull('properties', instance.properties);
+  writeNotNull('productId', instance.productId);
+  writeNotNull('qtyOrdered', instance.qtyOrdered);
+  writeNotNull('unitOfMeasure', instance.unitOfMeasure);
+  writeNotNull('notes', instance.notes);
+  writeNotNull('vmiBinId', instance.vmiBinId);
+  writeNotNull('sectionOptions',
+      instance.sectionOptions?.map((e) => e.toJson()).toList());
+  return val;
+}
 
 CartLineList _$CartLineListFromJson(Map<String, dynamic> json) => CartLineList(
       cartLines: (json['cartLines'] as List<dynamic>?)
@@ -44,12 +52,21 @@ CartLineList _$CartLineListFromJson(Map<String, dynamic> json) => CartLineList(
         (k, e) => MapEntry(k, e as String),
       );
 
-Map<String, dynamic> _$CartLineListToJson(CartLineList instance) =>
-    <String, dynamic>{
-      'uri': instance.uri,
-      'properties': instance.properties,
-      'cartLines': instance.cartLines?.map((e) => e.toJson()).toList(),
-    };
+Map<String, dynamic> _$CartLineListToJson(CartLineList instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('uri', instance.uri);
+  writeNotNull('properties', instance.properties);
+  writeNotNull(
+      'cartLines', instance.cartLines?.map((e) => e.toJson()).toList());
+  return val;
+}
 
 CartLine _$CartLineFromJson(Map<String, dynamic> json) => CartLine(
       altText: json['altText'] as String?,
@@ -113,53 +130,63 @@ CartLine _$CartLineFromJson(Map<String, dynamic> json) => CartLine(
           ?.map((e) => SectionOptionDto.fromJson(e as Map<String, dynamic>))
           .toList();
 
-Map<String, dynamic> _$CartLineToJson(CartLine instance) => <String, dynamic>{
-      'uri': instance.uri,
-      'properties': instance.properties,
-      'productId': instance.productId,
-      'qtyOrdered': instance.qtyOrdered,
-      'unitOfMeasure': instance.unitOfMeasure,
-      'notes': instance.notes,
-      'vmiBinId': instance.vmiBinId,
-      'sectionOptions':
-          instance.sectionOptions?.map((e) => e.toJson()).toList(),
-      'productUri': instance.productUri,
-      'id': instance.id,
-      'line': instance.line,
-      'requisitionId': instance.requisitionId,
-      'smallImagePath': instance.smallImagePath,
-      'altText': instance.altText,
-      'productName': instance.productName,
-      'manufacturerItem': instance.manufacturerItem,
-      'customerName': instance.customerName,
-      'shortDescription': instance.shortDescription,
-      'erpNumber': instance.erpNumber,
-      'unitOfMeasureDisplay': instance.unitOfMeasureDisplay,
-      'unitOfMeasureDescription': instance.unitOfMeasureDescription,
-      'baseUnitOfMeasure': instance.baseUnitOfMeasure,
-      'baseUnitOfMeasureDisplay': instance.baseUnitOfMeasureDisplay,
-      'qtyPerBaseUnitOfMeasure': instance.qtyPerBaseUnitOfMeasure,
-      'costCode': instance.costCode,
-      'qtyLeft': instance.qtyLeft,
-      'pricing': instance.pricing?.toJson(),
-      'isPromotionItem': instance.isPromotionItem,
-      'isDiscounted': instance.isDiscounted,
-      'isFixedConfiguration': instance.isFixedConfiguration,
-      'quoteRequired': instance.quoteRequired,
-      'breakPrices': instance.breakPrices?.map((e) => e.toJson()).toList(),
-      'availability': instance.availability?.toJson(),
-      'qtyOnHand': instance.qtyOnHand,
-      'canAddToCart': instance.canAddToCart,
-      'isQtyAdjusted': instance.isQtyAdjusted,
-      'hasInsufficientInventory': instance.hasInsufficientInventory,
-      'canBackOrder': instance.canBackOrder,
-      'salePriceLabel': instance.salePriceLabel,
-      'isSubscription': instance.isSubscription,
-      'productSubscription': instance.productSubscription?.toJson(),
-      'isRestricted': instance.isRestricted,
-      'isActive': instance.isActive,
-      'brand': instance.brand?.toJson(),
-    };
+Map<String, dynamic> _$CartLineToJson(CartLine instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('uri', instance.uri);
+  writeNotNull('properties', instance.properties);
+  writeNotNull('productId', instance.productId);
+  writeNotNull('qtyOrdered', instance.qtyOrdered);
+  writeNotNull('unitOfMeasure', instance.unitOfMeasure);
+  writeNotNull('notes', instance.notes);
+  writeNotNull('vmiBinId', instance.vmiBinId);
+  writeNotNull('sectionOptions',
+      instance.sectionOptions?.map((e) => e.toJson()).toList());
+  writeNotNull('productUri', instance.productUri);
+  writeNotNull('id', instance.id);
+  writeNotNull('line', instance.line);
+  writeNotNull('requisitionId', instance.requisitionId);
+  writeNotNull('smallImagePath', instance.smallImagePath);
+  writeNotNull('altText', instance.altText);
+  writeNotNull('productName', instance.productName);
+  writeNotNull('manufacturerItem', instance.manufacturerItem);
+  writeNotNull('customerName', instance.customerName);
+  writeNotNull('shortDescription', instance.shortDescription);
+  writeNotNull('erpNumber', instance.erpNumber);
+  writeNotNull('unitOfMeasureDisplay', instance.unitOfMeasureDisplay);
+  writeNotNull('unitOfMeasureDescription', instance.unitOfMeasureDescription);
+  writeNotNull('baseUnitOfMeasure', instance.baseUnitOfMeasure);
+  writeNotNull('baseUnitOfMeasureDisplay', instance.baseUnitOfMeasureDisplay);
+  writeNotNull('qtyPerBaseUnitOfMeasure', instance.qtyPerBaseUnitOfMeasure);
+  writeNotNull('costCode', instance.costCode);
+  writeNotNull('qtyLeft', instance.qtyLeft);
+  writeNotNull('pricing', instance.pricing?.toJson());
+  writeNotNull('isPromotionItem', instance.isPromotionItem);
+  writeNotNull('isDiscounted', instance.isDiscounted);
+  writeNotNull('isFixedConfiguration', instance.isFixedConfiguration);
+  writeNotNull('quoteRequired', instance.quoteRequired);
+  writeNotNull(
+      'breakPrices', instance.breakPrices?.map((e) => e.toJson()).toList());
+  writeNotNull('availability', instance.availability?.toJson());
+  writeNotNull('qtyOnHand', instance.qtyOnHand);
+  writeNotNull('canAddToCart', instance.canAddToCart);
+  writeNotNull('isQtyAdjusted', instance.isQtyAdjusted);
+  writeNotNull('hasInsufficientInventory', instance.hasInsufficientInventory);
+  writeNotNull('canBackOrder', instance.canBackOrder);
+  writeNotNull('salePriceLabel', instance.salePriceLabel);
+  writeNotNull('isSubscription', instance.isSubscription);
+  writeNotNull('productSubscription', instance.productSubscription?.toJson());
+  writeNotNull('isRestricted', instance.isRestricted);
+  writeNotNull('isActive', instance.isActive);
+  writeNotNull('brand', instance.brand?.toJson());
+  return val;
+}
 
 SectionOptionDto _$SectionOptionDtoFromJson(Map<String, dynamic> json) =>
     SectionOptionDto(
@@ -168,12 +195,20 @@ SectionOptionDto _$SectionOptionDtoFromJson(Map<String, dynamic> json) =>
       sectionOptionId: json['sectionOptionId'] as String?,
     );
 
-Map<String, dynamic> _$SectionOptionDtoToJson(SectionOptionDto instance) =>
-    <String, dynamic>{
-      'sectionOptionId': instance.sectionOptionId,
-      'sectionName': instance.sectionName,
-      'optionName': instance.optionName,
-    };
+Map<String, dynamic> _$SectionOptionDtoToJson(SectionOptionDto instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('sectionOptionId', instance.sectionOptionId);
+  writeNotNull('sectionName', instance.sectionName);
+  writeNotNull('optionName', instance.optionName);
+  return val;
+}
 
 ProductSubscriptionDto _$ProductSubscriptionDtoFromJson(
         Map<String, dynamic> json) =>
@@ -201,25 +236,35 @@ ProductSubscriptionDto _$ProductSubscriptionDtoFromJson(
     );
 
 Map<String, dynamic> _$ProductSubscriptionDtoToJson(
-        ProductSubscriptionDto instance) =>
-    <String, dynamic>{
-      'subscriptionAddToInitialOrder': instance.subscriptionAddToInitialOrder,
-      'subscriptionAllMonths': instance.subscriptionAllMonths,
-      'subscriptionApril': instance.subscriptionApril,
-      'subscriptionAugust': instance.subscriptionAugust,
-      'subscriptionCyclePeriod': instance.subscriptionCyclePeriod,
-      'subscriptionDecember': instance.subscriptionDecember,
-      'subscriptionFebruary': instance.subscriptionFebruary,
-      'subscriptionFixedPrice': instance.subscriptionFixedPrice,
-      'subscriptionJanuary': instance.subscriptionJanuary,
-      'subscriptionJuly': instance.subscriptionJuly,
-      'subscriptionJune': instance.subscriptionJune,
-      'subscriptionMarch': instance.subscriptionMarch,
-      'subscriptionMay': instance.subscriptionMay,
-      'subscriptionNovember': instance.subscriptionNovember,
-      'subscriptionOctober': instance.subscriptionOctober,
-      'subscriptionPeriodsPerCycle': instance.subscriptionPeriodsPerCycle,
-      'subscriptionSeptember': instance.subscriptionSeptember,
-      'subscriptionShipViaId': instance.subscriptionShipViaId,
-      'subscriptionTotalCycles': instance.subscriptionTotalCycles,
-    };
+    ProductSubscriptionDto instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull(
+      'subscriptionAddToInitialOrder', instance.subscriptionAddToInitialOrder);
+  writeNotNull('subscriptionAllMonths', instance.subscriptionAllMonths);
+  writeNotNull('subscriptionApril', instance.subscriptionApril);
+  writeNotNull('subscriptionAugust', instance.subscriptionAugust);
+  writeNotNull('subscriptionCyclePeriod', instance.subscriptionCyclePeriod);
+  writeNotNull('subscriptionDecember', instance.subscriptionDecember);
+  writeNotNull('subscriptionFebruary', instance.subscriptionFebruary);
+  writeNotNull('subscriptionFixedPrice', instance.subscriptionFixedPrice);
+  writeNotNull('subscriptionJanuary', instance.subscriptionJanuary);
+  writeNotNull('subscriptionJuly', instance.subscriptionJuly);
+  writeNotNull('subscriptionJune', instance.subscriptionJune);
+  writeNotNull('subscriptionMarch', instance.subscriptionMarch);
+  writeNotNull('subscriptionMay', instance.subscriptionMay);
+  writeNotNull('subscriptionNovember', instance.subscriptionNovember);
+  writeNotNull('subscriptionOctober', instance.subscriptionOctober);
+  writeNotNull(
+      'subscriptionPeriodsPerCycle', instance.subscriptionPeriodsPerCycle);
+  writeNotNull('subscriptionSeptember', instance.subscriptionSeptember);
+  writeNotNull('subscriptionShipViaId', instance.subscriptionShipViaId);
+  writeNotNull('subscriptionTotalCycles', instance.subscriptionTotalCycles);
+  return val;
+}

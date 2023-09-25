@@ -27,16 +27,24 @@ ProductUnitOfMeasure _$ProductUnitOfMeasureFromJson(
       );
 
 Map<String, dynamic> _$ProductUnitOfMeasureToJson(
-        ProductUnitOfMeasure instance) =>
-    <String, dynamic>{
-      'uri': instance.uri,
-      'properties': instance.properties,
-      'productUnitOfMeasureId': instance.productUnitOfMeasureId,
-      'unitOfMeasure': instance.unitOfMeasure,
-      'unitOfMeasureDisplay': instance.unitOfMeasureDisplay,
-      'description': instance.description,
-      'qtyPerBaseUnitOfMeasure': instance.qtyPerBaseUnitOfMeasure,
-      'roundingRule': instance.roundingRule,
-      'isDefault': instance.isDefault,
-      'availability': instance.availability?.toJson(),
-    };
+    ProductUnitOfMeasure instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('uri', instance.uri);
+  writeNotNull('properties', instance.properties);
+  writeNotNull('productUnitOfMeasureId', instance.productUnitOfMeasureId);
+  writeNotNull('unitOfMeasure', instance.unitOfMeasure);
+  writeNotNull('unitOfMeasureDisplay', instance.unitOfMeasureDisplay);
+  writeNotNull('description', instance.description);
+  writeNotNull('qtyPerBaseUnitOfMeasure', instance.qtyPerBaseUnitOfMeasure);
+  writeNotNull('roundingRule', instance.roundingRule);
+  writeNotNull('isDefault', instance.isDefault);
+  writeNotNull('availability', instance.availability?.toJson());
+  return val;
+}

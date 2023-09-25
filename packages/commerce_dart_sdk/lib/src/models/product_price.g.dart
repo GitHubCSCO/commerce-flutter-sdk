@@ -63,48 +63,60 @@ ProductPrice _$ProductPriceFromJson(Map<String, dynamic> json) => ProductPrice(
         (k, e) => MapEntry(k, e as String),
       );
 
-Map<String, dynamic> _$ProductPriceToJson(ProductPrice instance) =>
-    <String, dynamic>{
-      'uri': instance.uri,
-      'properties': instance.properties,
-      'productId': instance.productId,
-      'isOnSale': instance.isOnSale,
-      'requiresRealTimePrice': instance.requiresRealTimePrice,
-      'quoteRequired': instance.quoteRequired,
-      'additionalResults': instance.additionalResults,
-      'unitCost': instance.unitCost,
-      'unitCostDisplay': instance.unitCostDisplay,
-      'unitListPrice': instance.unitListPrice,
-      'unitListPriceDisplay': instance.unitListPriceDisplay,
-      'extendedUnitListPrice': instance.extendedUnitListPrice,
-      'extendedUnitListPriceDisplay': instance.extendedUnitListPriceDisplay,
-      'unitRegularPrice': instance.unitRegularPrice,
-      'unitRegularPriceDisplay': instance.unitRegularPriceDisplay,
-      'extendedUnitRegularPrice': instance.extendedUnitRegularPrice,
-      'extendedUnitRegularPriceDisplay':
-          instance.extendedUnitRegularPriceDisplay,
-      'unitNetPrice': instance.unitNetPrice,
-      'unitNetPriceDisplay': instance.unitNetPriceDisplay,
-      'extendedUnitNetPrice': instance.extendedUnitNetPrice,
-      'extendedUnitNetPriceDisplay': instance.extendedUnitNetPriceDisplay,
-      'unitOfMeasure': instance.unitOfMeasure,
-      'vatRate': instance.vatRate,
-      'vatAmount': instance.vatAmount,
-      'vatAmountDisplay': instance.vatAmountDisplay,
-      'unitListBreakPrices':
-          instance.unitListBreakPrices?.map((e) => e.toJson()).toList(),
-      'unitRegularBreakPrices':
-          instance.unitRegularBreakPrices?.map((e) => e.toJson()).toList(),
-      'regularPrice': instance.regularPrice,
-      'regularPriceDisplay': instance.regularPriceDisplay,
-      'extendedRegularPrice': instance.extendedRegularPrice,
-      'extendedRegularPriceDisplay': instance.extendedRegularPriceDisplay,
-      'actualPrice': instance.actualPrice,
-      'actualPriceDisplay': instance.actualPriceDisplay,
-      'extendedActualPrice': instance.extendedActualPrice,
-      'extendedActualPriceDisplay': instance.extendedActualPriceDisplay,
-      'regularBreakPrices':
-          instance.regularBreakPrices?.map((e) => e.toJson()).toList(),
-      'actualBreakPrices':
-          instance.actualBreakPrices?.map((e) => e.toJson()).toList(),
-    };
+Map<String, dynamic> _$ProductPriceToJson(ProductPrice instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('uri', instance.uri);
+  writeNotNull('properties', instance.properties);
+  writeNotNull('productId', instance.productId);
+  writeNotNull('isOnSale', instance.isOnSale);
+  writeNotNull('requiresRealTimePrice', instance.requiresRealTimePrice);
+  writeNotNull('quoteRequired', instance.quoteRequired);
+  writeNotNull('additionalResults', instance.additionalResults);
+  writeNotNull('unitCost', instance.unitCost);
+  writeNotNull('unitCostDisplay', instance.unitCostDisplay);
+  writeNotNull('unitListPrice', instance.unitListPrice);
+  writeNotNull('unitListPriceDisplay', instance.unitListPriceDisplay);
+  writeNotNull('extendedUnitListPrice', instance.extendedUnitListPrice);
+  writeNotNull(
+      'extendedUnitListPriceDisplay', instance.extendedUnitListPriceDisplay);
+  writeNotNull('unitRegularPrice', instance.unitRegularPrice);
+  writeNotNull('unitRegularPriceDisplay', instance.unitRegularPriceDisplay);
+  writeNotNull('extendedUnitRegularPrice', instance.extendedUnitRegularPrice);
+  writeNotNull('extendedUnitRegularPriceDisplay',
+      instance.extendedUnitRegularPriceDisplay);
+  writeNotNull('unitNetPrice', instance.unitNetPrice);
+  writeNotNull('unitNetPriceDisplay', instance.unitNetPriceDisplay);
+  writeNotNull('extendedUnitNetPrice', instance.extendedUnitNetPrice);
+  writeNotNull(
+      'extendedUnitNetPriceDisplay', instance.extendedUnitNetPriceDisplay);
+  writeNotNull('unitOfMeasure', instance.unitOfMeasure);
+  writeNotNull('vatRate', instance.vatRate);
+  writeNotNull('vatAmount', instance.vatAmount);
+  writeNotNull('vatAmountDisplay', instance.vatAmountDisplay);
+  writeNotNull('unitListBreakPrices',
+      instance.unitListBreakPrices?.map((e) => e.toJson()).toList());
+  writeNotNull('unitRegularBreakPrices',
+      instance.unitRegularBreakPrices?.map((e) => e.toJson()).toList());
+  writeNotNull('regularPrice', instance.regularPrice);
+  writeNotNull('regularPriceDisplay', instance.regularPriceDisplay);
+  writeNotNull('extendedRegularPrice', instance.extendedRegularPrice);
+  writeNotNull(
+      'extendedRegularPriceDisplay', instance.extendedRegularPriceDisplay);
+  writeNotNull('actualPrice', instance.actualPrice);
+  writeNotNull('actualPriceDisplay', instance.actualPriceDisplay);
+  writeNotNull('extendedActualPrice', instance.extendedActualPrice);
+  writeNotNull(
+      'extendedActualPriceDisplay', instance.extendedActualPriceDisplay);
+  writeNotNull('regularBreakPrices',
+      instance.regularBreakPrices?.map((e) => e.toJson()).toList());
+  writeNotNull('actualBreakPrices',
+      instance.actualBreakPrices?.map((e) => e.toJson()).toList());
+  return val;
+}

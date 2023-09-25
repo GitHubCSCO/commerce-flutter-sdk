@@ -15,13 +15,20 @@ LegacyConfiguration _$LegacyConfigurationFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$LegacyConfigurationToJson(
-        LegacyConfiguration instance) =>
-    <String, dynamic>{
-      'sections': instance.sections?.map((e) => e.toJson()).toList(),
-      'hasDefaults': instance.hasDefaults,
-      'isKit': instance.isKit,
-    };
+Map<String, dynamic> _$LegacyConfigurationToJson(LegacyConfiguration instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('sections', instance.sections?.map((e) => e.toJson()).toList());
+  writeNotNull('hasDefaults', instance.hasDefaults);
+  writeNotNull('isKit', instance.isKit);
+  return val;
+}
 
 ConfigSection _$ConfigSectionFromJson(Map<String, dynamic> json) =>
     ConfigSection(
@@ -33,13 +40,21 @@ ConfigSection _$ConfigSectionFromJson(Map<String, dynamic> json) =>
       sortOrder: json['sortOrder'] as int?,
     );
 
-Map<String, dynamic> _$ConfigSectionToJson(ConfigSection instance) =>
-    <String, dynamic>{
-      'sectionName': instance.sectionName,
-      'options': instance.options?.map((e) => e.toJson()).toList(),
-      'id': instance.id,
-      'sortOrder': instance.sortOrder,
-    };
+Map<String, dynamic> _$ConfigSectionToJson(ConfigSection instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('sectionName', instance.sectionName);
+  writeNotNull('options', instance.options?.map((e) => e.toJson()).toList());
+  writeNotNull('id', instance.id);
+  writeNotNull('sortOrder', instance.sortOrder);
+  return val;
+}
 
 ConfigSectionOption _$ConfigSectionOptionFromJson(Map<String, dynamic> json) =>
     ConfigSectionOption(
@@ -57,19 +72,26 @@ ConfigSectionOption _$ConfigSectionOptionFromJson(Map<String, dynamic> json) =>
       userProductPrice: json['userProductPrice'] as bool?,
     );
 
-Map<String, dynamic> _$ConfigSectionOptionToJson(
-        ConfigSectionOption instance) =>
-    <String, dynamic>{
-      'sectionOptionId': instance.sectionOptionId,
-      'sectionName': instance.sectionName,
-      'productName': instance.productName,
-      'productId': instance.productId,
-      'description': instance.description,
-      'price': instance.price,
-      'userProductPrice': instance.userProductPrice,
-      'selected': instance.selected,
-      'sortOrder': instance.sortOrder,
-      'id': instance.id,
-      'name': instance.name,
-      'quantity': instance.quantity,
-    };
+Map<String, dynamic> _$ConfigSectionOptionToJson(ConfigSectionOption instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('sectionOptionId', instance.sectionOptionId);
+  writeNotNull('sectionName', instance.sectionName);
+  writeNotNull('productName', instance.productName);
+  writeNotNull('productId', instance.productId);
+  writeNotNull('description', instance.description);
+  writeNotNull('price', instance.price);
+  writeNotNull('userProductPrice', instance.userProductPrice);
+  writeNotNull('selected', instance.selected);
+  writeNotNull('sortOrder', instance.sortOrder);
+  writeNotNull('id', instance.id);
+  writeNotNull('name', instance.name);
+  writeNotNull('quantity', instance.quantity);
+  return val;
+}

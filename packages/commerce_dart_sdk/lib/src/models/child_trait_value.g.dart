@@ -14,10 +14,18 @@ ChildTraitValue _$ChildTraitValueFromJson(Map<String, dynamic> json) =>
       valueDisplay: json['valueDisplay'] as String?,
     );
 
-Map<String, dynamic> _$ChildTraitValueToJson(ChildTraitValue instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'styleTraitId': instance.styleTraitId,
-      'value': instance.value,
-      'valueDisplay': instance.valueDisplay,
-    };
+Map<String, dynamic> _$ChildTraitValueToJson(ChildTraitValue instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('styleTraitId', instance.styleTraitId);
+  writeNotNull('value', instance.value);
+  writeNotNull('valueDisplay', instance.valueDisplay);
+  return val;
+}

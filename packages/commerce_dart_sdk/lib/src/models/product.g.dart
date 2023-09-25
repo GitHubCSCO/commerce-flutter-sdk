@@ -185,131 +185,150 @@ Product _$ProductFromJson(Map<String, dynamic> json) => Product(
         (k, e) => MapEntry(k, e as String),
       );
 
-Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
-      'uri': instance.uri,
-      'properties': instance.properties,
-      'id': instance.id,
-      'orderLineId': instance.orderLineId,
-      'name': instance.name,
-      'customerName': instance.customerName,
-      'shortDescription': instance.shortDescription,
-      'erpNumber': instance.erpNumber,
-      'erpDescription': instance.erpDescription,
-      'urlSegment': instance.urlSegment,
-      'basicListPrice': instance.basicListPrice,
-      'basicSalePrice': instance.basicSalePrice,
-      'basicSaleStartDate': instance.basicSaleStartDate?.toIso8601String(),
-      'basicSaleEndDate': instance.basicSaleEndDate?.toIso8601String(),
-      'smallImagePath': instance.smallImagePath,
-      'mediumImagePath': instance.mediumImagePath,
-      'largeImagePath': instance.largeImagePath,
-      'pricing': instance.pricing?.toJson(),
-      'currencySymbol': instance.currencySymbol,
-      'qtyOnHand': instance.qtyOnHand,
-      'isConfigured': instance.isConfigured,
-      'isFixedConfiguration': instance.isFixedConfiguration,
-      'isActive': instance.isActive,
-      'isHazardousGood': instance.isHazardousGood,
-      'isDiscontinued': instance.isDiscontinued,
-      'isSpecialOrder': instance.isSpecialOrder,
-      'isGiftCard': instance.isGiftCard,
-      'isBeingCompared': instance.isBeingCompared,
-      'isSponsored': instance.isSponsored,
-      'isSubscription': instance.isSubscription,
-      'quoteRequired': instance.quoteRequired,
-      'manufacturerItem': instance.manufacturerItem,
-      'packDescription': instance.packDescription,
-      'altText': instance.altText,
-      'customerUnitOfMeasure': instance.customerUnitOfMeasure,
-      'canBackOrder': instance.canBackOrder,
-      'trackInventory': instance.trackInventory,
-      'multipleSaleQty': instance.multipleSaleQty,
-      'minimumOrderQty': instance.minimumOrderQty,
-      'htmlContent': instance.htmlContent,
-      'productCode': instance.productCode,
-      'priceCode': instance.priceCode,
-      'sku': instance.sku,
-      'upcCode': instance.upcCode,
-      'modelNumber': instance.modelNumber,
-      'taxCode1': instance.taxCode1,
-      'taxCode2': instance.taxCode2,
-      'taxCategory': instance.taxCategory,
-      'shippingClassification': instance.shippingClassification,
-      'shippingLength': instance.shippingLength,
-      'shippingWidth': instance.shippingWidth,
-      'shippingHeight': instance.shippingHeight,
-      'shippingWeight': instance.shippingWeight,
-      'qtyPerShippingPackage': instance.qtyPerShippingPackage,
-      'shippingAmountOverride': instance.shippingAmountOverride,
-      'handlingAmountOverride': instance.handlingAmountOverride,
-      'metaDescription': instance.metaDescription,
-      'metaKeywords': instance.metaKeywords,
-      'pageTitle': instance.pageTitle,
-      'allowAnyGiftCardAmount': instance.allowAnyGiftCardAmount,
-      'sortOrder': instance.sortOrder,
-      'hasMsds': instance.hasMsds,
-      'unspsc': instance.unspsc,
-      'roundingRule': instance.roundingRule,
-      'vendorNumber': instance.vendorNumber,
-      'configurationDto': instance.configurationDto?.toJson(),
-      'unitOfMeasure': instance.unitOfMeasure,
-      'unitOfMeasureDisplay': instance.unitOfMeasureDisplay,
-      'unitOfMeasureDescription': instance.unitOfMeasureDescription,
-      'selectedUnitOfMeasure': instance.selectedUnitOfMeasure,
-      'selectedUnitOfMeasureDisplay': instance.selectedUnitOfMeasureDisplay,
-      'productDetailUrl': instance.productDetailUrl,
-      'canAddToCart': instance.canAddToCart,
-      'allowedAddToCart': instance.allowedAddToCart,
-      'canAddToWishlist': instance.canAddToWishlist,
-      'canViewDetails': instance.canViewDetails,
-      'canShowPrice': instance.canShowPrice,
-      'canShowUnitOfMeasure': instance.canShowUnitOfMeasure,
-      'canEnterQuantity': instance.canEnterQuantity,
-      'canConfigure': instance.canConfigure,
-      'isStyleProductParent': instance.isStyleProductParent,
-      'styleParentId': instance.styleParentId,
-      'requiresRealTimeInventory': instance.requiresRealTimeInventory,
-      'availability': instance.availability?.toJson(),
-      'styleTraits': instance.styleTraits?.map((e) => e.toJson()).toList(),
-      'styledProducts':
-          instance.styledProducts?.map((e) => e.toJson()).toList(),
-      'attributeTypes':
-          instance.attributeTypes?.map((e) => e.toJson()).toList(),
-      'documents': instance.documents?.map((e) => e.toJson()).toList(),
-      'specifications':
-          instance.specifications?.map((e) => e.toJson()).toList(),
-      'crossSells': instance.crossSells?.map((e) => e.toJson()).toList(),
-      'accessories': instance.accessories?.map((e) => e.toJson()).toList(),
-      'productUnitOfMeasures':
-          instance.productUnitOfMeasures?.map((e) => e.toJson()).toList(),
-      'productImages': instance.productImages?.map((e) => e.toJson()).toList(),
-      'score': instance.score,
-      'searchBoost': instance.searchBoost,
-      'salePriceLabel': instance.salePriceLabel,
-      'productSubscription': instance.productSubscription?.toJson(),
-      'replacementProductId': instance.replacementProductId,
-      'warehouses': instance.warehouses?.map((e) => e.toJson()).toList(),
-      'brand': instance.brand?.toJson(),
-      'productNumber': instance.productNumber,
-      'customerProductNumber': instance.customerProductNumber,
-      'productTitle': instance.productTitle,
-      'canonicalUrl': instance.canonicalUrl,
-      'unitListPrice': instance.unitListPrice,
-      'unitListPriceDisplay': instance.unitListPriceDisplay,
-      'priceFacet': instance.priceFacet,
-      'imageAltText': instance.imageAltText,
-      'configurationType': instance.configurationType,
-      'isVariantParent': instance.isVariantParent,
-      'variantTypeId': instance.variantTypeId,
-      'cantBuy': instance.cantBuy,
-      'productLine': instance.productLine?.toJson(),
-      'unitOfMeasures':
-          instance.unitOfMeasures?.map((e) => e.toJson()).toList(),
-      'scoreExplanation': instance.scoreExplanation?.toJson(),
-      'detail': instance.detail?.toJson(),
-      'content': instance.content?.toJson(),
-      'images': instance.images?.map((e) => e.toJson()).toList(),
-      'variantTraits': instance.variantTraits?.map((e) => e.toJson()).toList(),
-      'childTraitValues':
-          instance.childTraitValues?.map((e) => e.toJson()).toList(),
-    };
+Map<String, dynamic> _$ProductToJson(Product instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('uri', instance.uri);
+  writeNotNull('properties', instance.properties);
+  writeNotNull('id', instance.id);
+  writeNotNull('orderLineId', instance.orderLineId);
+  writeNotNull('name', instance.name);
+  writeNotNull('customerName', instance.customerName);
+  writeNotNull('shortDescription', instance.shortDescription);
+  writeNotNull('erpNumber', instance.erpNumber);
+  writeNotNull('erpDescription', instance.erpDescription);
+  writeNotNull('urlSegment', instance.urlSegment);
+  writeNotNull('basicListPrice', instance.basicListPrice);
+  writeNotNull('basicSalePrice', instance.basicSalePrice);
+  writeNotNull(
+      'basicSaleStartDate', instance.basicSaleStartDate?.toIso8601String());
+  writeNotNull(
+      'basicSaleEndDate', instance.basicSaleEndDate?.toIso8601String());
+  writeNotNull('smallImagePath', instance.smallImagePath);
+  writeNotNull('mediumImagePath', instance.mediumImagePath);
+  writeNotNull('largeImagePath', instance.largeImagePath);
+  writeNotNull('pricing', instance.pricing?.toJson());
+  writeNotNull('currencySymbol', instance.currencySymbol);
+  writeNotNull('qtyOnHand', instance.qtyOnHand);
+  writeNotNull('isConfigured', instance.isConfigured);
+  writeNotNull('isFixedConfiguration', instance.isFixedConfiguration);
+  writeNotNull('isActive', instance.isActive);
+  writeNotNull('isHazardousGood', instance.isHazardousGood);
+  writeNotNull('isDiscontinued', instance.isDiscontinued);
+  writeNotNull('isSpecialOrder', instance.isSpecialOrder);
+  writeNotNull('isGiftCard', instance.isGiftCard);
+  writeNotNull('isBeingCompared', instance.isBeingCompared);
+  writeNotNull('isSponsored', instance.isSponsored);
+  writeNotNull('isSubscription', instance.isSubscription);
+  writeNotNull('quoteRequired', instance.quoteRequired);
+  writeNotNull('manufacturerItem', instance.manufacturerItem);
+  writeNotNull('packDescription', instance.packDescription);
+  writeNotNull('altText', instance.altText);
+  writeNotNull('customerUnitOfMeasure', instance.customerUnitOfMeasure);
+  writeNotNull('canBackOrder', instance.canBackOrder);
+  writeNotNull('trackInventory', instance.trackInventory);
+  writeNotNull('multipleSaleQty', instance.multipleSaleQty);
+  writeNotNull('minimumOrderQty', instance.minimumOrderQty);
+  writeNotNull('htmlContent', instance.htmlContent);
+  writeNotNull('productCode', instance.productCode);
+  writeNotNull('priceCode', instance.priceCode);
+  writeNotNull('sku', instance.sku);
+  writeNotNull('upcCode', instance.upcCode);
+  writeNotNull('modelNumber', instance.modelNumber);
+  writeNotNull('taxCode1', instance.taxCode1);
+  writeNotNull('taxCode2', instance.taxCode2);
+  writeNotNull('taxCategory', instance.taxCategory);
+  writeNotNull('shippingClassification', instance.shippingClassification);
+  writeNotNull('shippingLength', instance.shippingLength);
+  writeNotNull('shippingWidth', instance.shippingWidth);
+  writeNotNull('shippingHeight', instance.shippingHeight);
+  writeNotNull('shippingWeight', instance.shippingWeight);
+  writeNotNull('qtyPerShippingPackage', instance.qtyPerShippingPackage);
+  writeNotNull('shippingAmountOverride', instance.shippingAmountOverride);
+  writeNotNull('handlingAmountOverride', instance.handlingAmountOverride);
+  writeNotNull('metaDescription', instance.metaDescription);
+  writeNotNull('metaKeywords', instance.metaKeywords);
+  writeNotNull('pageTitle', instance.pageTitle);
+  writeNotNull('allowAnyGiftCardAmount', instance.allowAnyGiftCardAmount);
+  writeNotNull('sortOrder', instance.sortOrder);
+  writeNotNull('hasMsds', instance.hasMsds);
+  writeNotNull('unspsc', instance.unspsc);
+  writeNotNull('roundingRule', instance.roundingRule);
+  writeNotNull('vendorNumber', instance.vendorNumber);
+  writeNotNull('configurationDto', instance.configurationDto?.toJson());
+  writeNotNull('unitOfMeasure', instance.unitOfMeasure);
+  writeNotNull('unitOfMeasureDisplay', instance.unitOfMeasureDisplay);
+  writeNotNull('unitOfMeasureDescription', instance.unitOfMeasureDescription);
+  writeNotNull('selectedUnitOfMeasure', instance.selectedUnitOfMeasure);
+  writeNotNull(
+      'selectedUnitOfMeasureDisplay', instance.selectedUnitOfMeasureDisplay);
+  writeNotNull('productDetailUrl', instance.productDetailUrl);
+  writeNotNull('canAddToCart', instance.canAddToCart);
+  writeNotNull('allowedAddToCart', instance.allowedAddToCart);
+  writeNotNull('canAddToWishlist', instance.canAddToWishlist);
+  writeNotNull('canViewDetails', instance.canViewDetails);
+  writeNotNull('canShowPrice', instance.canShowPrice);
+  writeNotNull('canShowUnitOfMeasure', instance.canShowUnitOfMeasure);
+  writeNotNull('canEnterQuantity', instance.canEnterQuantity);
+  writeNotNull('canConfigure', instance.canConfigure);
+  writeNotNull('isStyleProductParent', instance.isStyleProductParent);
+  writeNotNull('styleParentId', instance.styleParentId);
+  writeNotNull('requiresRealTimeInventory', instance.requiresRealTimeInventory);
+  writeNotNull('availability', instance.availability?.toJson());
+  writeNotNull(
+      'styleTraits', instance.styleTraits?.map((e) => e.toJson()).toList());
+  writeNotNull('styledProducts',
+      instance.styledProducts?.map((e) => e.toJson()).toList());
+  writeNotNull('attributeTypes',
+      instance.attributeTypes?.map((e) => e.toJson()).toList());
+  writeNotNull(
+      'documents', instance.documents?.map((e) => e.toJson()).toList());
+  writeNotNull('specifications',
+      instance.specifications?.map((e) => e.toJson()).toList());
+  writeNotNull(
+      'crossSells', instance.crossSells?.map((e) => e.toJson()).toList());
+  writeNotNull(
+      'accessories', instance.accessories?.map((e) => e.toJson()).toList());
+  writeNotNull('productUnitOfMeasures',
+      instance.productUnitOfMeasures?.map((e) => e.toJson()).toList());
+  writeNotNull(
+      'productImages', instance.productImages?.map((e) => e.toJson()).toList());
+  writeNotNull('score', instance.score);
+  writeNotNull('searchBoost', instance.searchBoost);
+  writeNotNull('salePriceLabel', instance.salePriceLabel);
+  writeNotNull('productSubscription', instance.productSubscription?.toJson());
+  writeNotNull('replacementProductId', instance.replacementProductId);
+  writeNotNull(
+      'warehouses', instance.warehouses?.map((e) => e.toJson()).toList());
+  writeNotNull('brand', instance.brand?.toJson());
+  writeNotNull('productNumber', instance.productNumber);
+  writeNotNull('customerProductNumber', instance.customerProductNumber);
+  writeNotNull('productTitle', instance.productTitle);
+  writeNotNull('canonicalUrl', instance.canonicalUrl);
+  writeNotNull('unitListPrice', instance.unitListPrice);
+  writeNotNull('unitListPriceDisplay', instance.unitListPriceDisplay);
+  writeNotNull('priceFacet', instance.priceFacet);
+  writeNotNull('imageAltText', instance.imageAltText);
+  writeNotNull('configurationType', instance.configurationType);
+  writeNotNull('isVariantParent', instance.isVariantParent);
+  writeNotNull('variantTypeId', instance.variantTypeId);
+  writeNotNull('cantBuy', instance.cantBuy);
+  writeNotNull('productLine', instance.productLine?.toJson());
+  writeNotNull('unitOfMeasures',
+      instance.unitOfMeasures?.map((e) => e.toJson()).toList());
+  writeNotNull('scoreExplanation', instance.scoreExplanation?.toJson());
+  writeNotNull('detail', instance.detail?.toJson());
+  writeNotNull('content', instance.content?.toJson());
+  writeNotNull('images', instance.images?.map((e) => e.toJson()).toList());
+  writeNotNull(
+      'variantTraits', instance.variantTraits?.map((e) => e.toJson()).toList());
+  writeNotNull('childTraitValues',
+      instance.childTraitValues?.map((e) => e.toJson()).toList());
+  return val;
+}
