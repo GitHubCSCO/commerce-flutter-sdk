@@ -6,13 +6,6 @@ part of 'base_query_parameters.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-BaseQueryParameters _$BaseQueryParametersFromJson(Map<String, dynamic> json) =>
-    BaseQueryParameters(
-      page: json['page'] as int?,
-      pageSize: json['pageSize'] as int?,
-      sort: json['sort'] as String?,
-    );
-
 Map<String, dynamic> _$BaseQueryParametersToJson(BaseQueryParameters instance) {
   final val = <String, dynamic>{};
 
