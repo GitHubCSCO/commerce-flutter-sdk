@@ -45,6 +45,7 @@ export 'category_facet.dart';
 export 'generic_facet.dart';
 export 'suggestion_dto.dart';
 export 'price_facet.dart';
+export 'price_range.dart';
 
 export './results/results.dart';
 export './parameters/parameters.dart';
