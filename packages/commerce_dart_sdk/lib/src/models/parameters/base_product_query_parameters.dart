@@ -46,7 +46,8 @@ class BaseProductsQueryParameters extends BaseQueryParameters {
   // Similar to [QueryParameter(queryType: QueryListParameterType.CommaSeparated)]
   @JsonKey(toJson: _commaSeparatedJson)
   List<String>? expand;
-  static String? _commaSeparatedJson(List<String>? expand) => expand?.join(',');
+  static String? _commaSeparatedJson(List<String>? stringList) =>
+      stringList?.join(',');
 
   String? categoryId;
   String? searchWithin;
