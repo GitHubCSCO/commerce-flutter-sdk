@@ -47,9 +47,28 @@ class ProductService extends ServiceBase implements IProductService {
 
   @override
   Future<ServiceResponse<ProductPrice>> getProductPrice(
-      String productId, ProductPriceQueryParameter parameters) {
-    // TODO: implement getProductPrice
-    throw UnimplementedError();
+      String productId, ProductPriceQueryParameter parameters) async {
+    try {
+      var url =
+          Uri.parse('${CommerceAPIConstants.productsUrl}/$productId/price');
+      if (parameters.configuration != null) {
+        if (parameters.configuration!.isNotEmpty) {
+          final Map<String, dynamic> parametersMap = await compute(
+              (ProductPriceQueryParameter parameters) => parameters.toJson(),
+              parameters);
+
+          url.replace(queryParameters: parametersMap);
+        }
+      }
+
+      final urlString = url.toString();
+      final response = await getAsyncWithCachedResponse<ProductPrice>(
+          urlString, ProductPrice.fromJson);
+
+      return response;
+    } catch (e) {
+      return ServiceResponse<ProductPrice>(exception: e as Exception);
+    }
   }
 
   @Deprecated('Caution: Will be removed in a future release.')
