@@ -119,6 +119,13 @@ class ServiceBase {
     }
   }
 
+  Future<ServiceResponse<T>> getAsyncWithCachedResponse<T>(
+      String path, T Function(Map<String, dynamic>) fromJson,
+      {Duration? timeout, CancelToken? cancelToken}) async {
+    /// TODO: implement caching
+    return await getAsyncNoCache<T>(path, fromJson);
+  }
+
   Future<ServiceResponse<T>> postAsyncNoCache<T>(String path,
       Map<String, dynamic> data, T Function(Map<String, dynamic>) fromJson,
       {Duration? timeout, CancelToken? cancelToken}) async {
