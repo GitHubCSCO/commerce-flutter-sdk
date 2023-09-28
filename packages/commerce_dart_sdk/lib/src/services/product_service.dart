@@ -12,10 +12,30 @@ class ProductService extends ServiceBase implements IProductService {
   }
 
   @override
-  Future<ServiceResponse<Product>> getProduct(String productId,
-      {ProductsQueryParameters? parameters}) {
-    // TODO: implement getProduct
-    throw UnimplementedError();
+  Future<ServiceResponse<GetProductResult>> getProduct(String productId,
+      {ProductsQueryParameters? parameters}) async {
+    try {
+      var url = Uri.parse('${CommerceAPIConstants.productsUrl}/$productId');
+      if (parameters != null) {
+        Map<String, dynamic> parametersMap = await compute(
+            (ProductsQueryParameters parameters) => parameters.toJson(),
+            parameters);
+
+        url.replace(queryParameters: parametersMap);
+      }
+
+      String urlString = url.toString();
+      final response = await getAsyncWithCachedResponse<GetProductResult>(
+          urlString, GetProductResult.fromJson);
+
+      final productResult = response.model;
+      if (productResult == null) return response;
+      if (productResult.product != null) _fixProduct(productResult.product!);
+
+      return response;
+    } catch (e) {
+      return ServiceResponse<GetProductResult>(exception: e as Exception);
+    }
   }
 
   @override
@@ -52,8 +72,8 @@ class ProductService extends ServiceBase implements IProductService {
           .replace(queryParameters: parametersMap)
           .toString();
 
-      final response =
-          await getAsyncNoCache(url, GetProductCollectionResult.fromJson);
+      final response = await getAsyncNoCache<GetProductCollectionResult>(
+          url, GetProductCollectionResult.fromJson);
       final productResult = response.model;
 
       if (productResult == null) return response;
