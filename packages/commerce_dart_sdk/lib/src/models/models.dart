@@ -43,6 +43,7 @@ export 'sort_options.dart';
 export 'pagination.dart';
 export 'category_facet.dart';
 export 'generic_facet.dart';
+export 'suggestion_dto.dart';
 
 export './results/results.dart';
 export './parameters/parameters.dart';
