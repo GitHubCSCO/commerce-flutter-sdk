@@ -93,8 +93,29 @@ class ProductService extends ServiceBase implements IProductService {
   @override
   Future<ServiceResponse<GetProductCollectionResult>> getProducts(
       ProductsQueryParameters parameters) async {
-    // TODO: implement getProducts
-    throw UnimplementedError();
+    try {
+      var url = Uri.parse('${CommerceAPIConstants.productsUrl}/');
+      final parametersMap = await compute(
+          (ProductsQueryParameters parameters) => parameters.toJson(),
+          parameters);
+      url = url.replace(queryParameters: parametersMap);
+      final urlString = url.toString();
+      final response =
+          await getAsyncWithCachedResponse<GetProductCollectionResult>(
+              urlString, GetProductCollectionResult.fromJson);
+      final productsResult = response.model;
+      if (productsResult == null) return response;
+      if (productsResult.products == null) return response;
+
+      for (Product product in productsResult.products!) {
+        _fixProduct(product);
+      }
+
+      return response;
+    } catch (e) {
+      return ServiceResponse<GetProductCollectionResult>(
+          exception: e as Exception);
+    }
   }
 
   @override
