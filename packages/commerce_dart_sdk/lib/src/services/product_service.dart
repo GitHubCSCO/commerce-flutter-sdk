@@ -40,9 +40,27 @@ class ProductService extends ServiceBase implements IProductService {
 
   @override
   Future<ServiceResponse<GetProductCollectionResult>> getProductCrossSells(
-      String productId) {
-    // TODO: implement getProductCrossSells
-    throw UnimplementedError();
+      String productId) async {
+    try {
+      final urlString =
+          '${CommerceAPIConstants.productsUrl}/$productId/crosssells';
+      var response =
+          await getAsyncWithCachedResponse<GetProductCollectionResult>(
+              urlString, GetProductCollectionResult.fromJson);
+
+      final productsResult = response.model;
+      if (productsResult == null) return response;
+      if (productsResult.products == null) return response;
+
+      for (Product product in productsResult.products!) {
+        _fixProduct(product);
+      }
+
+      return response;
+    } catch (e) {
+      return ServiceResponse<GetProductCollectionResult>(
+          exception: e as Exception);
+    }
   }
 
   @override
