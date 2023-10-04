@@ -17,14 +17,22 @@ StyleValue _$StyleValueFromJson(Map<String, dynamic> json) => StyleValue(
       valueDisplay: json['valueDisplay'] as String?,
     );
 
-Map<String, dynamic> _$StyleValueToJson(StyleValue instance) =>
-    <String, dynamic>{
-      'styleTraitName': instance.styleTraitName,
-      'styleTraitId': instance.styleTraitId,
-      'styleTraitValueId': instance.styleTraitValueId,
-      'value': instance.value,
-      'valueDisplay': instance.valueDisplay,
-      'sortOrder': instance.sortOrder,
-      'isDefault': instance.isDefault,
-      'id': instance.id,
-    };
+Map<String, dynamic> _$StyleValueToJson(StyleValue instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('styleTraitName', instance.styleTraitName);
+  writeNotNull('styleTraitId', instance.styleTraitId);
+  writeNotNull('styleTraitValueId', instance.styleTraitValueId);
+  writeNotNull('value', instance.value);
+  writeNotNull('valueDisplay', instance.valueDisplay);
+  writeNotNull('sortOrder', instance.sortOrder);
+  writeNotNull('isDefault', instance.isDefault);
+  writeNotNull('id', instance.id);
+  return val;
+}

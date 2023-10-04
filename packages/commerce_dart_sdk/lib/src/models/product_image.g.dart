@@ -17,14 +17,22 @@ ProductImage _$ProductImageFromJson(Map<String, dynamic> json) => ProductImage(
       sortOrder: json['sortOrder'] as int?,
     );
 
-Map<String, dynamic> _$ProductImageToJson(ProductImage instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'sortOrder': instance.sortOrder,
-      'name': instance.name,
-      'smallImagePath': instance.smallImagePath,
-      'mediumImagePath': instance.mediumImagePath,
-      'largeImagePath': instance.largeImagePath,
-      'altText': instance.altText,
-      'imageType': instance.imageType,
-    };
+Map<String, dynamic> _$ProductImageToJson(ProductImage instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('sortOrder', instance.sortOrder);
+  writeNotNull('name', instance.name);
+  writeNotNull('smallImagePath', instance.smallImagePath);
+  writeNotNull('mediumImagePath', instance.mediumImagePath);
+  writeNotNull('largeImagePath', instance.largeImagePath);
+  writeNotNull('altText', instance.altText);
+  writeNotNull('imageType', instance.imageType);
+  return val;
+}

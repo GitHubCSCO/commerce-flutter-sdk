@@ -20,14 +20,22 @@ InventoryWarehouse _$InventoryWarehouseFromJson(Map<String, dynamic> json) =>
       ..message = json['message'] as String?
       ..requiresRealTimeInventory = json['requiresRealTimeInventory'] as bool?;
 
-Map<String, dynamic> _$InventoryWarehouseToJson(InventoryWarehouse instance) =>
-    <String, dynamic>{
-      'uri': instance.uri,
-      'properties': instance.properties,
-      'messageType': instance.messageType,
-      'message': instance.message,
-      'requiresRealTimeInventory': instance.requiresRealTimeInventory,
-      'name': instance.name,
-      'description': instance.description,
-      'qty': instance.qty,
-    };
+Map<String, dynamic> _$InventoryWarehouseToJson(InventoryWarehouse instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('uri', instance.uri);
+  writeNotNull('properties', instance.properties);
+  writeNotNull('messageType', instance.messageType);
+  writeNotNull('message', instance.message);
+  writeNotNull('requiresRealTimeInventory', instance.requiresRealTimeInventory);
+  writeNotNull('name', instance.name);
+  writeNotNull('description', instance.description);
+  writeNotNull('qty', instance.qty);
+  return val;
+}

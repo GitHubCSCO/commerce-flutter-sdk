@@ -28,24 +28,33 @@ Brand _$BrandFromJson(Map<String, dynamic> json) => Brand(
         (k, e) => MapEntry(k, e as String),
       );
 
-Map<String, dynamic> _$BrandToJson(Brand instance) => <String, dynamic>{
-      'uri': instance.uri,
-      'properties': instance.properties,
-      'id': instance.id,
-      'name': instance.name,
-      'manufacturer': instance.manufacturer,
-      'externalUrl': instance.externalUrl,
-      'detailPagePath': instance.detailPagePath,
-      'productListPagePage': instance.productListPagePage,
-      'logoSmallImagePath': instance.logoSmallImagePath,
-      'logoLargeImagePath': instance.logoLargeImagePath,
-      'logoAltText': instance.logoAltText,
-      'featuredImagePath': instance.featuredImagePath,
-      'featuredImageAltText': instance.featuredImageAltText,
-      'htmlContent': instance.htmlContent,
-      'topSellerProducts':
-          instance.topSellerProducts?.map((e) => e.toJson()).toList(),
-    };
+Map<String, dynamic> _$BrandToJson(Brand instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('uri', instance.uri);
+  writeNotNull('properties', instance.properties);
+  writeNotNull('id', instance.id);
+  writeNotNull('name', instance.name);
+  writeNotNull('manufacturer', instance.manufacturer);
+  writeNotNull('externalUrl', instance.externalUrl);
+  writeNotNull('detailPagePath', instance.detailPagePath);
+  writeNotNull('productListPagePage', instance.productListPagePage);
+  writeNotNull('logoSmallImagePath', instance.logoSmallImagePath);
+  writeNotNull('logoLargeImagePath', instance.logoLargeImagePath);
+  writeNotNull('logoAltText', instance.logoAltText);
+  writeNotNull('featuredImagePath', instance.featuredImagePath);
+  writeNotNull('featuredImageAltText', instance.featuredImageAltText);
+  writeNotNull('htmlContent', instance.htmlContent);
+  writeNotNull('topSellerProducts',
+      instance.topSellerProducts?.map((e) => e.toJson()).toList());
+  return val;
+}
 
 BrandAlphabet _$BrandAlphabetFromJson(Map<String, dynamic> json) =>
     BrandAlphabet(
@@ -53,8 +62,16 @@ BrandAlphabet _$BrandAlphabetFromJson(Map<String, dynamic> json) =>
       letter: json['letter'] as String?,
     );
 
-Map<String, dynamic> _$BrandAlphabetToJson(BrandAlphabet instance) =>
-    <String, dynamic>{
-      'letter': instance.letter,
-      'count': instance.count,
-    };
+Map<String, dynamic> _$BrandAlphabetToJson(BrandAlphabet instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('letter', instance.letter);
+  writeNotNull('count', instance.count);
+  return val;
+}

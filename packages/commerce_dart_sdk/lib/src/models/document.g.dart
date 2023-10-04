@@ -1,7 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: deprecated_member_use_from_same_package
-
 part of 'document.dart';
 
 // **************************************************************************
@@ -22,14 +20,23 @@ Document _$DocumentFromJson(Map<String, dynamic> json) => Document(
       fileUrl: json['fileUrl'] as String?,
     );
 
-Map<String, dynamic> _$DocumentToJson(Document instance) => <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'description': instance.description,
-      'createdOn': instance.createdOn?.toIso8601String(),
-      'filePath': instance.filePath,
-      'fileUrl': instance.fileUrl,
-      'documentType': instance.documentType,
-      'languageId': instance.languageId,
-      'fileTypeString': instance.fileTypeString,
-    };
+Map<String, dynamic> _$DocumentToJson(Document instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('name', instance.name);
+  writeNotNull('description', instance.description);
+  writeNotNull('createdOn', instance.createdOn?.toIso8601String());
+  writeNotNull('filePath', instance.filePath);
+  writeNotNull('fileUrl', instance.fileUrl);
+  writeNotNull('documentType', instance.documentType);
+  writeNotNull('languageId', instance.languageId);
+  writeNotNull('fileTypeString', instance.fileTypeString);
+  return val;
+}

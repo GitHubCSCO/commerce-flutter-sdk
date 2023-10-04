@@ -41,32 +41,41 @@ Warehouse _$WarehouseFromJson(Map<String, dynamic> json) => Warehouse(
       ..message = json['message'] as String?
       ..requiresRealTimeInventory = json['requiresRealTimeInventory'] as bool?;
 
-Map<String, dynamic> _$WarehouseToJson(Warehouse instance) => <String, dynamic>{
-      'uri': instance.uri,
-      'properties': instance.properties,
-      'messageType': instance.messageType,
-      'message': instance.message,
-      'requiresRealTimeInventory': instance.requiresRealTimeInventory,
-      'id': instance.id,
-      'name': instance.name,
-      'address1': instance.address1,
-      'address2': instance.address2,
-      'city': instance.city,
-      'contactName': instance.contactName,
-      'countryId': instance.countryId,
-      'deactivateOn': instance.deactivateOn?.toIso8601String(),
-      'description': instance.description,
-      'phone': instance.phone,
-      'postalCode': instance.postalCode,
-      'shipSite': instance.shipSite,
-      'state': instance.state,
-      'isDefault': instance.isDefault,
-      'alternateWarehouses':
-          instance.alternateWarehouses?.map((e) => e.toJson()).toList(),
-      'latitude': instance.latitude,
-      'longitude': instance.longitude,
-      'hours': instance.hours,
-      'distance': instance.distance,
-      'allowPickup': instance.allowPickup,
-      'pickupShipViaId': instance.pickupShipViaId,
-    };
+Map<String, dynamic> _$WarehouseToJson(Warehouse instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('uri', instance.uri);
+  writeNotNull('properties', instance.properties);
+  writeNotNull('messageType', instance.messageType);
+  writeNotNull('message', instance.message);
+  writeNotNull('requiresRealTimeInventory', instance.requiresRealTimeInventory);
+  writeNotNull('id', instance.id);
+  writeNotNull('name', instance.name);
+  writeNotNull('address1', instance.address1);
+  writeNotNull('address2', instance.address2);
+  writeNotNull('city', instance.city);
+  writeNotNull('contactName', instance.contactName);
+  writeNotNull('countryId', instance.countryId);
+  writeNotNull('deactivateOn', instance.deactivateOn?.toIso8601String());
+  writeNotNull('description', instance.description);
+  writeNotNull('phone', instance.phone);
+  writeNotNull('postalCode', instance.postalCode);
+  writeNotNull('shipSite', instance.shipSite);
+  writeNotNull('state', instance.state);
+  writeNotNull('isDefault', instance.isDefault);
+  writeNotNull('alternateWarehouses',
+      instance.alternateWarehouses?.map((e) => e.toJson()).toList());
+  writeNotNull('latitude', instance.latitude);
+  writeNotNull('longitude', instance.longitude);
+  writeNotNull('hours', instance.hours);
+  writeNotNull('distance', instance.distance);
+  writeNotNull('allowPickup', instance.allowPickup);
+  writeNotNull('pickupShipViaId', instance.pickupShipViaId);
+  return val;
+}

@@ -17,13 +17,21 @@ ProductContent _$ProductContentFromJson(Map<String, dynamic> json) =>
       openGraphUrl: json['openGraphUrl'] as String?,
     );
 
-Map<String, dynamic> _$ProductContentToJson(ProductContent instance) =>
-    <String, dynamic>{
-      'htmlContent': instance.htmlContent,
-      'pageTitle': instance.pageTitle,
-      'metaDescription': instance.metaDescription,
-      'metaKeywords': instance.metaKeywords,
-      'openGraphTitle': instance.openGraphTitle,
-      'openGraphUrl': instance.openGraphUrl,
-      'openGraphImage': instance.openGraphImage,
-    };
+Map<String, dynamic> _$ProductContentToJson(ProductContent instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('htmlContent', instance.htmlContent);
+  writeNotNull('pageTitle', instance.pageTitle);
+  writeNotNull('metaDescription', instance.metaDescription);
+  writeNotNull('metaKeywords', instance.metaKeywords);
+  writeNotNull('openGraphTitle', instance.openGraphTitle);
+  writeNotNull('openGraphUrl', instance.openGraphUrl);
+  writeNotNull('openGraphImage', instance.openGraphImage);
+  return val;
+}

@@ -21,14 +21,24 @@ StyleTrait _$StyleTraitFromJson(Map<String, dynamic> json) => StyleTrait(
       unselectedValue: json['unselectedValue'] as String?,
     );
 
-Map<String, dynamic> _$StyleTraitToJson(StyleTrait instance) =>
-    <String, dynamic>{
-      'styleTraitId': instance.styleTraitId,
-      'name': instance.name,
-      'nameDisplay': instance.nameDisplay,
-      'unselectedValue': instance.unselectedValue,
-      'sortOrder': instance.sortOrder,
-      'styleValues': instance.styleValues?.map((e) => e.toJson()).toList(),
-      'id': instance.id,
-      'traitValues': instance.traitValues?.map((e) => e.toJson()).toList(),
-    };
+Map<String, dynamic> _$StyleTraitToJson(StyleTrait instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('styleTraitId', instance.styleTraitId);
+  writeNotNull('name', instance.name);
+  writeNotNull('nameDisplay', instance.nameDisplay);
+  writeNotNull('unselectedValue', instance.unselectedValue);
+  writeNotNull('sortOrder', instance.sortOrder);
+  writeNotNull(
+      'styleValues', instance.styleValues?.map((e) => e.toJson()).toList());
+  writeNotNull('id', instance.id);
+  writeNotNull(
+      'traitValues', instance.traitValues?.map((e) => e.toJson()).toList());
+  return val;
+}
