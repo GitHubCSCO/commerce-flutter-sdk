@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/src/pages/storefront/destinations/product_details/product_details_page.dart';
 import 'package:commerce_flutter_app/src/providers/service_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,12 +13,20 @@ class ShopDestination extends ConsumerStatefulWidget {
 }
 
 class ShopDestinationState extends ConsumerState<ShopDestination> {
+  Future<ServiceResponse<List<Product>>>? _getProductsResponse;
+
+  @override
+  void initState() {
+    super.initState();
+    _getProductsResponse = ref.read(productInterfaceProvider).getProductsV2();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Shop')),
       body: FutureBuilder(
-          future: ref.read(productInterfaceProvider).getProducts(),
+          future: _getProductsResponse,
           builder: (_, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               var productsList = snapshot.data?.model as List<Product>;
@@ -38,22 +47,11 @@ class ShopDestinationState extends ConsumerState<ShopDestination> {
                   ],
                 );
               } else {
-                return ListView.separated(
+                return ListView.builder(
                   shrinkWrap: true,
-                  separatorBuilder: (context, index) => const Padding(
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                    child: Divider(),
-                  ),
                   itemCount: productsList.length,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(
-                          top: 10, bottom: 10, left: 20, right: 20),
-                      child: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                              productsList[index].shortDescription as String)),
-                    );
+                    return _ProductCard(product: productsList[index]);
                   },
                 );
               }
@@ -62,5 +60,50 @@ class ShopDestinationState extends ConsumerState<ShopDestination> {
             }
           }),
     );
+  }
+}
+
+class _ProductCard extends StatelessWidget {
+  const _ProductCard({required this.product});
+
+  final Product product;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: double.infinity,
+        height: 300,
+        margin: const EdgeInsets.all(10),
+        child: GestureDetector(
+          child: Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: const BoxDecoration(color: Colors.white),
+                  height: 200,
+                  width: double.infinity,
+                  child: Image.network(ImageUtils.createImageUrl(
+                      ClientConfig.hostUrl!, product.mediumImagePath!)),
+                ),
+                const Divider(),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: Text(
+                    product.productTitle!,
+                    style: const TextStyle(
+                        fontSize: 17, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8, right: 8),
+                  child: Text(product.unitListPriceDisplay!),
+                ),
+              ],
+            ),
+          ),
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => ProductDetailsPage(id: product.id!))),
+        ));
   }
 }
