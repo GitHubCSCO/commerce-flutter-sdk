@@ -27,6 +27,9 @@ class BaseProductsQueryParameters extends BaseQueryParameters {
     this.includeSuggestions,
     this.includeAttributes,
     this.filter,
+    super.page,
+    super.pageSize,
+    super.sort,
   });
 
   @override
@@ -88,6 +91,23 @@ class ProductsQueryParameters extends BaseProductsQueryParameters {
     this.topSellersMaxResults,
     this.previouslyPurchasedProducts,
     this.stockedItemsOnly,
+    super.attributeValueIds,
+    super.brandIds,
+    super.categoryId,
+    super.expand,
+    super.extendedNames,
+    super.filter,
+    super.includeAttributes,
+    super.includeSuggestions,
+    super.names,
+    super.priceFilters,
+    super.productIds,
+    super.productLineIds,
+    super.searchWithin,
+    super.topSellersCategoryIds,
+    super.page,
+    super.pageSize,
+    super.sort,
   });
 
   List<String?>? erpNumbers;
@@ -128,6 +148,23 @@ class ProductsQueryV2Parameters extends BaseProductsQueryParameters {
     this.cardId,
     this.stockedItemsOnly,
     this.previouslyPurchasedProducts,
+    super.attributeValueIds,
+    super.brandIds,
+    super.categoryId,
+    super.expand,
+    super.extendedNames,
+    super.filter,
+    super.includeAttributes,
+    super.includeSuggestions,
+    super.names,
+    super.priceFilters,
+    super.productIds,
+    super.productLineIds,
+    super.searchWithin,
+    super.topSellersCategoryIds,
+    super.page,
+    super.pageSize,
+    super.sort,
   });
 
   String? search;

@@ -11,6 +11,12 @@ part 'base_query_parameters.g.dart';
 /// the object is automatically converted to be used as query parameter.
 @JsonSerializable(createFactory: false)
 class BaseQueryParameters {
+  BaseQueryParameters({
+    this.page,
+    this.pageSize,
+    this.sort,
+  });
+
   int? page;
   int? pageSize;
   String? sort;
