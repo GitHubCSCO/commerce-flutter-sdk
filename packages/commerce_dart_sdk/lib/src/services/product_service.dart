@@ -34,7 +34,8 @@ class ProductService extends ServiceBase implements IProductService {
 
       return response;
     } catch (e) {
-      return ServiceResponse<GetProductResult>(exception: e as Exception);
+      return ServiceResponse<GetProductResult>(
+          exception: Exception(e.toString()));
     }
   }
 
@@ -59,7 +60,7 @@ class ProductService extends ServiceBase implements IProductService {
       return response;
     } catch (e) {
       return ServiceResponse<GetProductCollectionResult>(
-          exception: e as Exception);
+          exception: Exception(e.toString()));
     }
   }
 
@@ -85,7 +86,7 @@ class ProductService extends ServiceBase implements IProductService {
 
       return response;
     } catch (e) {
-      return ServiceResponse<ProductPrice>(exception: e as Exception);
+      return ServiceResponse<ProductPrice>(exception: Exception(e.toString()));
     }
   }
 
@@ -114,7 +115,7 @@ class ProductService extends ServiceBase implements IProductService {
       return response;
     } catch (e) {
       return ServiceResponse<GetProductCollectionResult>(
-          exception: e as Exception);
+          exception: Exception(e.toString()));
     }
   }
 
@@ -144,7 +145,7 @@ class ProductService extends ServiceBase implements IProductService {
       return response;
     } catch (e) {
       return ServiceResponse<GetProductCollectionResult>(
-          exception: e as Exception);
+          exception: Exception(e.toString()));
     }
   }
 
