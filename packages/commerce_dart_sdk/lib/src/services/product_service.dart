@@ -6,7 +6,7 @@ class ProductService extends ServiceBase implements IProductService {
     required super.clientService,
   });
 
-  void _fixProduct(Product product) {
+  void fixProduct(Product product) {
     product.pricing ??= ProductPrice();
     product.availability ??= Availability();
   }
@@ -30,7 +30,7 @@ class ProductService extends ServiceBase implements IProductService {
 
       final productResult = response.model;
       if (productResult == null) return response;
-      if (productResult.product != null) _fixProduct(productResult.product!);
+      if (productResult.product != null) fixProduct(productResult.product!);
 
       return response;
     } catch (e) {
@@ -54,7 +54,7 @@ class ProductService extends ServiceBase implements IProductService {
       if (productsResult.products == null) return response;
 
       for (Product product in productsResult.products!) {
-        _fixProduct(product);
+        fixProduct(product);
       }
 
       return response;
@@ -109,7 +109,7 @@ class ProductService extends ServiceBase implements IProductService {
       if (productsResult.products == null) return response;
 
       for (Product product in productsResult.products!) {
-        _fixProduct(product);
+        fixProduct(product);
       }
 
       return response;
@@ -139,7 +139,7 @@ class ProductService extends ServiceBase implements IProductService {
       if (productResult.products == null) return response;
 
       for (Product product in productResult.products!) {
-        _fixProduct(product);
+        fixProduct(product);
       }
 
       return response;
