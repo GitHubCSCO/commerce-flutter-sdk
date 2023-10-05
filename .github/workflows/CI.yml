@@ -44,7 +44,7 @@ jobs:
         run: flutter pub get
 
       - name: Generate missing code
-        run: cd packages/commerce_dart_sdk/ && dart run build_runner build && cd ../../
+        run: cd packages/commerce_dart_sdk/ && dart run build_runner build --delete-conflicting-outputs
 
       - name: Run Tests
         run: flutter test
