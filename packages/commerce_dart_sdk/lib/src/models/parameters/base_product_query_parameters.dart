@@ -1,11 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:json_annotation/json_annotation.dart';
-
-import 'parameters.dart';
+import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 
 part 'base_product_query_parameters.g.dart';
 
-// Doesn't create fromJson
+/// The base class for all products related query parameters
+///
+/// Doesn't create [fromJson].
+/// [JsonSerializable] is required to convert an object to a map
+/// while requesting with an [Uri], the [queryparameters] need to be a map
+/// so by using [Uri("...", queryParameter: BaseProductsQueryParameters.toJson())]
+/// the object is automatically converted to be used as query parameter.
 @JsonSerializable(createFactory: false)
 class BaseProductsQueryParameters extends BaseQueryParameters {
   BaseProductsQueryParameters({
@@ -55,11 +59,23 @@ class BaseProductsQueryParameters extends BaseQueryParameters {
   String? includeAttributes;
   String? filter;
 
+  // Automatic conversion of map values ([int], [bool] etc.) to [String]
+  // this is required since [toJson()] method converts an object to [Map]
+  // and for sending request, the [queryParameters] needs to be set with a [Map]
+  // and [queryParameters] Map cannot have any value that is in types like [int] or [bool]
   @override
-  Map<String, dynamic> toJson() => _$BaseProductsQueryParametersToJson(this);
+  Map<String, dynamic> toJson() =>
+      JsonEncodingMethods.convertAttributesToString(
+          _$BaseProductsQueryParametersToJson(this));
 }
 
-// Doesn't create fromJson
+/// The class for all products V1 related query parameters
+///
+/// Doesn't create [fromJson].
+/// [JsonSerializable] is required to convert an object to a map
+/// while requesting with an [Uri], the [queryparameters] need to be a map
+/// so by using [Uri("...", queryParameter: ProductsQueryParameters.toJson())]
+/// the object is automatically converted to be used as query parameter.
 @JsonSerializable(createFactory: false)
 class ProductsQueryParameters extends BaseProductsQueryParameters {
   ProductsQueryParameters({
@@ -84,11 +100,23 @@ class ProductsQueryParameters extends BaseProductsQueryParameters {
   bool? previouslyPurchasedProducts;
   bool? stockedItemsOnly;
 
+  //  Automatic conversion of map values ([int], [bool] etc.) to [String]
+  //  this is required since [toJson()] method converts an object to [Map]
+  //  and for sending request, the [queryParameters] needs to be set with a [Map]
+  //  and [queryParameters] Map cannot have any value that is in types like [int] or [bool]
   @override
-  Map<String, dynamic> toJson() => _$ProductsQueryParametersToJson(this);
+  Map<String, dynamic> toJson() =>
+      JsonEncodingMethods.convertAttributesToString(
+          _$ProductsQueryParametersToJson(this));
 }
 
-// Doesn't create fromJson
+/// The class for all products V2 related query parameters
+///
+/// Doesn't create [fromJson].
+/// [JsonSerializable] is required to convert an object to a map
+/// while requesting with an [Uri], the [queryparameters] need to be a map
+/// so by using [Uri("...", queryParameter: ProductsQueryV2Parameters.toJson())]
+/// the object is automatically converted to be used as query parameter.
 @JsonSerializable(createFactory: false)
 class ProductsQueryV2Parameters extends BaseProductsQueryParameters {
   ProductsQueryV2Parameters({
@@ -111,6 +139,12 @@ class ProductsQueryV2Parameters extends BaseProductsQueryParameters {
   bool? stockedItemsOnly;
   bool? previouslyPurchasedProducts;
 
+  // Automatic conversion of map values ([int], [bool] etc.) to [String]
+  // this is required since [toJson()] method converts an object to [Map]
+  // and for sending request, the [queryParameters] needs to be set with a [Map]
+  // and [queryParameters] Map cannot have any value that is in types like [int] or [bool]
   @override
-  Map<String, dynamic> toJson() => _$ProductsQueryV2ParametersToJson(this);
+  Map<String, dynamic> toJson() =>
+      JsonEncodingMethods.convertAttributesToString(
+          _$ProductsQueryV2ParametersToJson(this));
 }
