@@ -106,7 +106,7 @@ class ServiceBase {
       } catch (e) {
         return ServiceResponse<T>(
           statusCode: response.statusCode,
-          exception: e as Exception,
+          exception: Exception(e.toString()),
         );
       }
     } else {
@@ -140,7 +140,7 @@ class ServiceBase {
       } catch (e) {
         return ServiceResponse<T>(
           statusCode: response.statusCode,
-          exception: e as Exception,
+          exception: Exception(e.toString()),
         );
       }
     } else {
@@ -166,7 +166,7 @@ class ServiceBase {
       } catch (e) {
         return ServiceResponse<T>(
           statusCode: response.statusCode,
-          exception: e as Exception,
+          exception: Exception(e.toString()),
         );
       }
     } else {

@@ -32,7 +32,7 @@ class SessionService extends ServiceBase implements ISessionService {
 
       return result;
     } catch (e) {
-      return ServiceResponse<Session>(exception: e as Exception);
+      return ServiceResponse<Session>(exception: Exception(e.toString()));
     }
   }
 
@@ -65,7 +65,7 @@ class SessionService extends ServiceBase implements ISessionService {
         isCached: result.isCached,
       );
     } catch (e) {
-      return ServiceResponse<Session>(exception: e as Exception);
+      return ServiceResponse<Session>(exception: Exception(e.toString()));
     }
   }
 
@@ -84,7 +84,7 @@ class SessionService extends ServiceBase implements ISessionService {
 
       return result;
     } catch (e) {
-      return ServiceResponse<Session>(exception: e as Exception);
+      return ServiceResponse<Session>(exception: Exception(e.toString()));
     }
   }
 
