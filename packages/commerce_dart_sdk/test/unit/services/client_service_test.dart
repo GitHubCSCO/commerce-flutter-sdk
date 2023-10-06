@@ -1,8 +1,5 @@
 // ignore_for_file: avoid_print
 
-import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
-import 'package:commerce_dart_sdk/src/services/client_service.dart';
-
 Future<void> main() async {
   // String urlString = '/api/v1/warehouses/126729d8-8e2b-48f3-94fe-af42004af05b';
 

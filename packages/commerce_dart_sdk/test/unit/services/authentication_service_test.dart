@@ -1,13 +1,5 @@
 // ignore_for_file: avoid_print
 
-import 'dart:io';
-
-import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
-import 'package:commerce_dart_sdk/src/services/client_service.dart';
-import 'package:commerce_dart_sdk/src/services/session_service.dart';
-
-import 'package:test/test.dart';
-
 // class MockLocalStorageService implements ILocalStorageService {
 //   Map<String, String?> store = {};
 
