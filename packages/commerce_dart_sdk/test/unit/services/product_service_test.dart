@@ -3,15 +3,34 @@ import 'package:test/test.dart';
 import '../../mocks/mocks.dart';
 
 void main() {
-  late ProductService sutProductservice;
+  late ProductService sut;
   late IClientService clientService;
+
+  final productList = [
+    Product(),
+  ];
 
   setUp(() {
     clientService = MockClientService();
-    sutProductservice = ProductService(clientService: clientService);
+    sut = ProductService(clientService: clientService);
   });
 
-  group('ProductService', () => {});
+  group(
+      'fixProduct()',
+      () => {
+            test('check for empty product', () {
+              var product = Product();
+              sut.fixProduct(product);
+              expect(
+                product,
+                Product(
+                  pricing: ProductPrice(),
+                  availability: Availability(),
+                ),
+              );
+            })
+          });
+}
 
   // DO NOT Remove - the following is a flaky test intended to observe how to
   // use this particular service in actual app
@@ -38,4 +57,4 @@ void main() {
   //             }
   //           })
   //         });
-}
+// }
