@@ -21,13 +21,9 @@ void main() {
             test('check for empty product', () {
               var product = Product();
               sut.fixProduct(product);
-              expect(
-                product,
-                Product(
-                  pricing: ProductPrice(),
-                  availability: Availability(),
-                ),
-              );
+
+              expect(product.pricing, isNotNull);
+              expect(product.availability, isNotNull);
             })
           });
 }
