@@ -1,4 +1,7 @@
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
+import 'package:dio/dio.dart';
+// import 'package:flutter/foundation.dart'; // required for listEquals test which is currently deactivated
+import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 import '../../mocks/mocks.dart';
 
@@ -7,50 +10,159 @@ void main() {
   late IClientService clientService;
 
   final productList = [
-    Product(),
+    Product(
+      altText: 'fakeProduct1',
+      id: '001',
+    ),
+    Product(
+      altText: 'fakeProduct2',
+      id: '002',
+      qtyOnHand: 5,
+    ),
+    Product(
+      altText: 'fakeProduct3',
+      id: '003',
+      brand: Brand(name: 'fakeBrand1'),
+    ),
+    Product(
+      altText: 'fakeProduct4',
+      id: '004',
+      unitOfMeasures: [
+        ProductUnitOfMeasure(description: 'fakeDescription1'),
+        ProductUnitOfMeasure(unitOfMeasureDisplay: '\$'),
+      ],
+    ),
   ];
 
+  final productListMap =
+      productList.map((product) => product.toJson()).toList();
+
   setUp(() {
+    ClientConfig.hostUrl = 'example.com';
     clientService = MockClientService();
+    clientService.host = ClientConfig.hostUrl;
     sut = ProductService(clientService: clientService);
   });
 
   group(
-      'fixProduct()',
-      () => {
-            test('check for empty product', () {
-              var product = Product();
-              sut.fixProduct(product);
+    'fixProduct()',
+    () => {
+      test(
+        'check for empty product',
+        () {
+          var product = Product();
+          sut.fixProduct(product);
 
-              expect(product.pricing, isNotNull);
-              expect(product.availability, isNotNull);
-            })
-          });
+          expect(product.pricing, isNotNull);
+          expect(product.availability, isNotNull);
+        },
+      ),
+    },
+  );
+
+  group(
+    'getProductsNoCache()',
+    () => {
+      test(
+        'recieve actual data',
+        () async {
+          /// ARRANGE
+          ///
+          when(
+            () => clientService.getAsync(
+              any(
+                that: startsWith(
+                  CommerceAPIConstants.productsUrl,
+                ),
+              ),
+            ),
+          ).thenAnswer(
+            (_) => Future.value(
+              Response(
+                data: {'products': productListMap},
+                requestOptions: RequestOptions(),
+                statusCode: 200,
+              ),
+            ),
+          );
+
+          /// ACT
+          ///
+          final response =
+              await sut.getProductsNoCache(ProductsQueryParameters());
+          final productCollectionResult = response.model;
+
+          /// ASSERT
+          ///
+          // Check whether
+          verify(() => clientService.getAsync(any())).called(1);
+
+          // Check whether recieved products list is not null
+          expect(productCollectionResult, isNotNull);
+
+          // Check if the recieved list is similar to the expected list
+          // currently disabled due to unimplemented operator==
+          // expect(
+          //   listEquals(productCollectionResult?.products, productList),
+          //   true,
+          // );
+        },
+      ),
+      test(
+        'invoke exception',
+        () async {
+          /// ARRANGE
+          ///
+          when(
+            () => clientService.getAsync(
+              any(
+                that: startsWith(
+                  CommerceAPIConstants.productsUrl,
+                ),
+              ),
+            ),
+          ).thenThrow(Exception('FakeException'));
+
+          /// ACT
+          ///
+          final response =
+              await sut.getProductsNoCache(ProductsQueryParameters());
+          final productCollectionResult = response.model;
+
+          expect(productCollectionResult, isNull);
+          expect(response.exception, isNotNull);
+
+          expect(response.exception.toString(),
+              'Exception: Exception: FakeException');
+        },
+      )
+    },
+  );
 }
 
-  // DO NOT Remove - the following is a flaky test intended to observe how to
-  // use this particular service in actual app
-  //
-  // group(
-  //     'ProductService',
-  //     () => {
-  //           test('Check if getting response is possible', () async {
-  //             final response = await sutProductservice
-  //                 .getProductsNoCache(ProductsQueryParameters(pageSize: 2));
-  //             final productCollectionResult = response.model;
+// DO NOT Remove - the following is a flaky test intended to observe how to
+// use this particular service in actual app
+//
+// group(
+//     'ProductService',
+//     () => {
+//           test('Check if getting response is possible', () async {
+//             final response = await sutProductservice
+//                 .getProductsNoCache(ProductsQueryParameters(pageSize: 2));
+//             final productCollectionResult = response.model;
 
-  //             if (productCollectionResult == null) expect(true, false);
-  //             if (productCollectionResult?.products == null) {
-  //               expect(true, false);
-  //             }
+//             if (productCollectionResult == null) expect(true, false);
+//             if (productCollectionResult?.products == null) {
+//               expect(true, false);
+//             }
 
-  //             final productList = productCollectionResult?.products;
-  //             for (Product product in productList!) {
-  //               print(product.altText ??
-  //                   product.productTitle ??
-  //                   product.pageTitle ??
-  //                   "No title");
-  //             }
-  //           })
-  //         });
+//             final productList = productCollectionResult?.products;
+//             for (Product product in productList!) {
+//               print(product.altText ??
+//                   product.productTitle ??
+//                   product.pageTitle ??
+//                   "No title");
+//             }
+//           })
+//         });
 // }
