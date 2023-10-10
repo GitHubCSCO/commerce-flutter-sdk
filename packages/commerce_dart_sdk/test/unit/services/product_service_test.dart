@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 // import 'package:flutter/foundation.dart'; // required for listEquals test which is currently deactivated
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
@@ -53,8 +56,14 @@ void main() {
           var product = Product();
           sut.fixProduct(product);
 
+          var expectedProduct = Product(
+            pricing: ProductPrice(),
+            availability: Availability(),
+          );
+
           expect(product.pricing, isNotNull);
           expect(product.availability, isNotNull);
+          expect(product.toJson(), expectedProduct.toJson());
         },
       ),
     },
@@ -99,13 +108,24 @@ void main() {
 
           // Check whether recieved products list is not null
           expect(productCollectionResult, isNotNull);
+          expect(productCollectionResult?.products, isNotNull);
 
           // Check if the recieved list is similar to the expected list
           // currently disabled due to unimplemented operator==
-          // expect(
-          //   listEquals(productCollectionResult?.products, productList),
-          //   true,
-          // );
+
+          final actualList = productCollectionResult?.products!
+              .map((product) => product.toJson())
+              .toList();
+
+          // print(actualList);
+          // print(productListMap);
+
+          expect(actualList!.length, productList.length);
+          for (int i = 0; i < productList.length; i++) {
+            Product expectedProduct = productList[i];
+            sut.fixProduct(expectedProduct);
+            expect(jsonEncode(actualList[i]), jsonEncode(expectedProduct));
+          }
         },
       ),
       test(
