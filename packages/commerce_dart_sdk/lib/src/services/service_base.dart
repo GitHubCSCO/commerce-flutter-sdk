@@ -106,7 +106,7 @@ class ServiceBase {
       } catch (e) {
         return ServiceResponse<T>(
           statusCode: response.statusCode,
-          exception: e as Exception,
+          exception: Exception(e.toString()),
         );
       }
     } else {
@@ -117,6 +117,13 @@ class ServiceBase {
         statusCode: response.statusCode,
       );
     }
+  }
+
+  Future<ServiceResponse<T>> getAsyncWithCachedResponse<T>(
+      String path, T Function(Map<String, dynamic>) fromJson,
+      {Duration? timeout, CancelToken? cancelToken}) async {
+    /// TODO: implement caching
+    return await getAsyncNoCache<T>(path, fromJson);
   }
 
   Future<ServiceResponse<T>> postAsyncNoCache<T>(String path,
@@ -133,7 +140,7 @@ class ServiceBase {
       } catch (e) {
         return ServiceResponse<T>(
           statusCode: response.statusCode,
-          exception: e as Exception,
+          exception: Exception(e.toString()),
         );
       }
     } else {
@@ -159,7 +166,7 @@ class ServiceBase {
       } catch (e) {
         return ServiceResponse<T>(
           statusCode: response.statusCode,
-          exception: e as Exception,
+          exception: Exception(e.toString()),
         );
       }
     } else {

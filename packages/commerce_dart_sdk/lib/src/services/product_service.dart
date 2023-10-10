@@ -1,116 +1,157 @@
-import 'dart:convert';
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
 
-/// TODO - add new ServiceBase
-class ProductService implements IProductService {
+class ProductService extends ServiceBase implements IProductService {
+  ProductService({
+    required super.clientService,
+  });
+
+  void _fixProduct(Product product) {
+    product.pricing ??= ProductPrice();
+    product.availability ??= Availability();
+  }
+
   @override
-  Future<ServiceResponse<Product>>? getProduct(String queryParameters) async {
-    //   var headers = {
-    //   'Cookie':
-    //       'CurrentCurrencyId=30b432b9-a104-e511-96f5-ac9e17867f77; CurrentLanguageId=a26095ef-c714-e311-ba31-d43d7e4e88b2; InsiteCacheId=28ba8f65-1019-4d99-a077-95af571cdde0; SetContextLanguageCode=en-us; SetContextPersonaIds=d06988c0-9358-4dbb-aa3d-b7be5b6a7fd9'
-    // };
+  Future<ServiceResponse<GetProductResult>> getProduct(String productId,
+      {ProductsQueryParameters? parameters}) async {
+    try {
+      var url = Uri.parse('${CommerceAPIConstants.productsUrl}/$productId');
+      if (parameters != null) {
+        Map<String, dynamic> parametersMap = await compute(
+            (ProductsQueryParameters parameters) => parameters.toJson(),
+            parameters);
 
-    var request = http.Request('GET',
-        Uri.parse('${ClientConfig.hostUrl}/api/v1/products/$queryParameters'));
+        url.replace(queryParameters: parametersMap);
+      }
 
-    // request.headers.addAll(headers);
+      String urlString = url.toString();
+      final response = await getAsyncWithCachedResponse<GetProductResult>(
+          urlString, GetProductResult.fromJson);
 
-    http.StreamedResponse response = await request.send();
+      final productResult = response.model;
+      if (productResult == null) return response;
+      if (productResult.product != null) _fixProduct(productResult.product!);
 
-    if (response.statusCode == 200) {
-      var jsonResponse = json.decode(await response.stream.bytesToString());
-      var product = Product.fromJson(jsonResponse);
-
-      return ServiceResponse<Product>(
-          model: product, statusCode: response.statusCode);
-    } else {
-      return ServiceResponse<Product>(
-        statusCode: response.statusCode,
-      );
+      return response;
+    } catch (e) {
+      return ServiceResponse<GetProductResult>(
+          exception: Exception(e.toString()));
     }
   }
 
   @override
-  Future<ServiceResponse<Product>>? getProductV2(String queryParameters) async {
-    //   var headers = {
-    //   'Cookie':
-    //       'CurrentCurrencyId=30b432b9-a104-e511-96f5-ac9e17867f77; CurrentLanguageId=a26095ef-c714-e311-ba31-d43d7e4e88b2; InsiteCacheId=28ba8f65-1019-4d99-a077-95af571cdde0; SetContextLanguageCode=en-us; SetContextPersonaIds=d06988c0-9358-4dbb-aa3d-b7be5b6a7fd9'
-    // };
+  Future<ServiceResponse<GetProductCollectionResult>> getProductCrossSells(
+      String productId) async {
+    try {
+      final urlString =
+          '${CommerceAPIConstants.productsUrl}/$productId/crosssells';
+      var response =
+          await getAsyncWithCachedResponse<GetProductCollectionResult>(
+              urlString, GetProductCollectionResult.fromJson);
 
-    var request = http.Request('GET',
-        Uri.parse('${ClientConfig.hostUrl}/api/v2/products/$queryParameters'));
+      final productsResult = response.model;
+      if (productsResult == null) return response;
+      if (productsResult.products == null) return response;
 
-    // request.headers.addAll(headers);
+      for (Product product in productsResult.products!) {
+        _fixProduct(product);
+      }
 
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      var jsonResponse = json.decode(await response.stream.bytesToString());
-      var product = Product.fromJson(jsonResponse);
-
-      return ServiceResponse<Product>(
-          model: product, statusCode: response.statusCode);
-    } else {
-      return ServiceResponse<Product>(
-        statusCode: response.statusCode,
-      );
+      return response;
+    } catch (e) {
+      return ServiceResponse<GetProductCollectionResult>(
+          exception: Exception(e.toString()));
     }
   }
 
   @override
-  Future<ServiceResponse<List<Product>>>? getProducts() async {
-    //   var headers = {
-    //   'Cookie':
-    //       'CurrentCurrencyId=30b432b9-a104-e511-96f5-ac9e17867f77; CurrentLanguageId=a26095ef-c714-e311-ba31-d43d7e4e88b2; InsiteCacheId=28ba8f65-1019-4d99-a077-95af571cdde0; SetContextLanguageCode=en-us; SetContextPersonaIds=d06988c0-9358-4dbb-aa3d-b7be5b6a7fd9'
-    // };
+  Future<ServiceResponse<ProductPrice>> getProductPrice(
+      String productId, ProductPriceQueryParameter parameters) async {
+    try {
+      var url =
+          Uri.parse('${CommerceAPIConstants.productsUrl}/$productId/price');
+      if (parameters.configuration != null) {
+        if (parameters.configuration!.isNotEmpty) {
+          final Map<String, dynamic> parametersMap = await compute(
+              (ProductPriceQueryParameter parameters) => parameters.toJson(),
+              parameters);
 
-    var request = http.Request(
-        'GET', Uri.parse('${ClientConfig.hostUrl}/api/v1/products'));
+          url.replace(queryParameters: parametersMap);
+        }
+      }
 
-    // request.headers.addAll(headers);
+      final urlString = url.toString();
+      final response = await getAsyncWithCachedResponse<ProductPrice>(
+          urlString, ProductPrice.fromJson);
 
-    http.StreamedResponse response = await request.send();
+      return response;
+    } catch (e) {
+      return ServiceResponse<ProductPrice>(exception: Exception(e.toString()));
+    }
+  }
 
-    if (response.statusCode == 200) {
-      var jsonResponse = json.decode(await response.stream.bytesToString());
-      var productList = List<Product>.from(
-          jsonResponse['products'].map((x) => Product.fromJson(x)));
+  @Deprecated('Caution: Will be removed in a future release.')
+  @override
+  Future<ServiceResponse<GetProductCollectionResult>> getProducts(
+      ProductsQueryParameters parameters) async {
+    try {
+      var url = Uri.parse('${CommerceAPIConstants.productsUrl}/');
+      final parametersMap = await compute(
+          (ProductsQueryParameters parameters) => parameters.toJson(),
+          parameters);
+      url = url.replace(queryParameters: parametersMap);
+      final urlString = url.toString();
+      final response =
+          await getAsyncWithCachedResponse<GetProductCollectionResult>(
+              urlString, GetProductCollectionResult.fromJson);
+      final productsResult = response.model;
+      if (productsResult == null) return response;
+      if (productsResult.products == null) return response;
 
-      return ServiceResponse<List<Product>>(
-          model: productList, statusCode: response.statusCode);
-    } else {
-      return ServiceResponse<List<Product>>(
-        statusCode: response.statusCode,
-      );
+      for (Product product in productsResult.products!) {
+        _fixProduct(product);
+      }
+
+      return response;
+    } catch (e) {
+      return ServiceResponse<GetProductCollectionResult>(
+          exception: Exception(e.toString()));
     }
   }
 
   @override
-  Future<ServiceResponse<List<Product>>>? getProductsV2() async {
-    //   var headers = {
-    //   'Cookie':
-    //       'CurrentCurrencyId=30b432b9-a104-e511-96f5-ac9e17867f77; CurrentLanguageId=a26095ef-c714-e311-ba31-d43d7e4e88b2; InsiteCacheId=28ba8f65-1019-4d99-a077-95af571cdde0; SetContextLanguageCode=en-us; SetContextPersonaIds=d06988c0-9358-4dbb-aa3d-b7be5b6a7fd9'
-    // };
+  Future<ServiceResponse<GetProductCollectionResult>> getProductsNoCache(
+      ProductsQueryParameters parameters) async {
+    try {
+      Map<String, dynamic> parametersMap = await compute(
+          (ProductsQueryParameters parameters) => parameters.toJson(),
+          parameters);
 
-    var request = http.Request(
-        'GET', Uri.parse('${ClientConfig.hostUrl}/api/v2/products/'));
+      String url = Uri.parse(CommerceAPIConstants.productsUrl)
+          .replace(queryParameters: parametersMap)
+          .toString();
 
-    // request.headers.addAll(headers);
+      final response = await getAsyncNoCache<GetProductCollectionResult>(
+          url, GetProductCollectionResult.fromJson);
+      final productResult = response.model;
 
-    http.StreamedResponse response = await request.send();
+      if (productResult == null) return response;
+      if (productResult.products == null) return response;
 
-    if (response.statusCode == 200) {
-      var jsonResponse = json.decode(await response.stream.bytesToString());
-      var productList = List<Product>.from(
-          jsonResponse['products'].map((x) => Product.fromJson(x)));
+      for (Product product in productResult.products!) {
+        _fixProduct(product);
+      }
 
-      return ServiceResponse<List<Product>>(
-          model: productList, statusCode: response.statusCode);
-    } else {
-      return ServiceResponse<List<Product>>(
-        statusCode: response.statusCode,
-      );
+      return response;
+    } catch (e) {
+      return ServiceResponse<GetProductCollectionResult>(
+          exception: Exception(e.toString()));
     }
+  }
+
+  @override
+  Future<bool> hasProductCache(ProductsQueryParameters parameters) {
+    // TODO: implement hasProductCache
+    throw UnimplementedError();
   }
 }
