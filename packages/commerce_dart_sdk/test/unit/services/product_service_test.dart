@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
-// import 'package:flutter/foundation.dart'; // required for listEquals test which is currently deactivated
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 import '../../mocks/mocks.dart';
@@ -117,9 +115,6 @@ void main() {
               .map((product) => product.toJson())
               .toList();
 
-          // print(actualList);
-          // print(productListMap);
-
           expect(actualList!.length, productList.length);
           for (int i = 0; i < productList.length; i++) {
             Product expectedProduct = productList[i];
@@ -159,30 +154,3 @@ void main() {
     },
   );
 }
-
-// DO NOT Remove - the following is a flaky test intended to observe how to
-// use this particular service in actual app
-//
-// group(
-//     'ProductService',
-//     () => {
-//           test('Check if getting response is possible', () async {
-//             final response = await sutProductservice
-//                 .getProductsNoCache(ProductsQueryParameters(pageSize: 2));
-//             final productCollectionResult = response.model;
-
-//             if (productCollectionResult == null) expect(true, false);
-//             if (productCollectionResult?.products == null) {
-//               expect(true, false);
-//             }
-
-//             final productList = productCollectionResult?.products;
-//             for (Product product in productList!) {
-//               print(product.altText ??
-//                   product.productTitle ??
-//                   product.pageTitle ??
-//                   "No title");
-//             }
-//           })
-//         });
-// }
