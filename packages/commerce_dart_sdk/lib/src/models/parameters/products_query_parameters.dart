@@ -1,7 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 
-part 'base_product_query_parameters.g.dart';
+part 'products_query_parameters.g.dart';
 
 /// The base class for all products related query parameters
 ///
