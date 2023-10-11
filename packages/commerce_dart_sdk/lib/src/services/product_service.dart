@@ -13,12 +13,12 @@ class ProductService extends ServiceBase implements IProductService {
 
   @override
   Future<ServiceResponse<GetProductResult>> getProduct(String productId,
-      {ProductsQueryParameters? parameters}) async {
+      {ProductQueryParameters? parameters}) async {
     try {
       var url = Uri.parse('${CommerceAPIConstants.productsUrl}/$productId');
       if (parameters != null) {
         Map<String, dynamic> parametersMap = await compute(
-            (ProductsQueryParameters parameters) => parameters.toJson(),
+            (ProductQueryParameters parameters) => parameters.toJson(),
             parameters);
 
         url.replace(queryParameters: parametersMap);

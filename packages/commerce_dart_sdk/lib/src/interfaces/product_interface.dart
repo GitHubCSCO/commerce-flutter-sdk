@@ -10,7 +10,7 @@ abstract class IProductService {
   Future<bool> hasProductCache(ProductsQueryParameters parameters);
 
   Future<ServiceResponse<GetProductResult>> getProduct(String productId,
-      {ProductsQueryParameters? parameters});
+      {ProductQueryParameters? parameters});
 
   Future<ServiceResponse<GetProductCollectionResult>> getProductCrossSells(
       String productId);
