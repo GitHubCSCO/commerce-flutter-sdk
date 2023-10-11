@@ -1,9 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 
+part 'cart_query_parameters.g.dart';
+
 @JsonSerializable(createFactory: false)
 class CartQueryParameters extends BaseQueryParameters {
-  // [QueryParameter(QueryOptions.DoNotQuery)]
+  // Similar to: [QueryParameter(QueryOptions.DoNotQuery)]
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String? cartId;
 
   int? alsoPurchasedMaxResults;
@@ -15,10 +18,14 @@ class CartQueryParameters extends BaseQueryParameters {
   /// Here are parameters to be passed in the Expand List.
   /// Options: cartlines, costcodes, shipping, tax, carriers, paymentoptions,
   /// shiptos, validation, restrictions, creditcardbillingaddress, warehouses,
-  /// alsopurchased, hiddenproducts, paymentoptions
-
-  // [QueryParameter(queryType: QueryListParameterType.CommaSeparated)]
+  /// alsopurchased, hiddenproducts, paymentoptions.
+  /// Since it is only a single element, no need to use comma separated
+  // Similar to: [QueryParameter(queryType: QueryListParameterType.CommaSeparated)]
+  // @JsonKey(toJson: _commaSeparatedJson)
   List<String>? expand;
+  // static String? _commaSeparatedJson(List<String>? stringList) =>
+  //     stringList?.join(',');
+
   CartQueryParameters({
     this.cartId,
     this.alsoPurchasedMaxResults,
@@ -29,4 +36,9 @@ class CartQueryParameters extends BaseQueryParameters {
     super.pageSize,
     super.sort,
   });
+
+  @override
+  Map<String, dynamic> toJson() =>
+      JsonEncodingMethods.convertAttributesToString(
+          _$CartQueryParametersToJson(this));
 }
