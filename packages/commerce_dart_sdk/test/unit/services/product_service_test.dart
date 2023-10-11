@@ -1,78 +1,156 @@
+import 'dart:convert';
+
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
+import 'package:dio/dio.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
-
-class MockLocalStorageService implements ILocalStorageService {
-  Map<String, String?> store = {};
-
-  @override
-  String? load(String key) => store[key];
-
-  @override
-  Future<void> remove(String key) async {
-    store.remove(key);
-  }
-
-  @override
-  Future<void> save(String key, String value) async {
-    store[key] = value;
-  }
-}
-
-class MockSecureStorageService implements ISecureStorageService {
-  Map<String, String?> store = {};
-
-  @override
-  String? load(String key) => store[key];
-
-  @override
-  Future<void> remove(String key) async {
-    store.remove(key);
-  }
-
-  @override
-  Future<void> save(String key, String value) async {
-    store[key] = value;
-  }
-}
+import '../../mocks/mocks.dart';
 
 void main() {
-  ILocalStorageService localStorageService = MockLocalStorageService();
-  ISecureStorageService secureStorageService = MockSecureStorageService();
+  late ProductService sut;
+  late IClientService clientService;
 
-  // used Implementation rather than Interface of clientService
-  // to get the cookies
-  IClientService clientService = ClientService(
-    localStorageService: localStorageService,
-    secureStorageService: secureStorageService,
+  final productList = [
+    Product(
+      altText: 'fakeProduct1',
+      id: '001',
+    ),
+    Product(
+      altText: 'fakeProduct2',
+      id: '002',
+      qtyOnHand: 5,
+    ),
+    Product(
+      altText: 'fakeProduct3',
+      id: '003',
+      brand: Brand(name: 'fakeBrand1'),
+    ),
+    Product(
+      altText: 'fakeProduct4',
+      id: '004',
+      unitOfMeasures: [
+        ProductUnitOfMeasure(description: 'fakeDescription1'),
+        ProductUnitOfMeasure(unitOfMeasureDisplay: '\$'),
+      ],
+    ),
+  ];
+
+  final productListMap =
+      productList.map((product) => product.toJson()).toList();
+
+  setUp(() {
+    ClientConfig.hostUrl = 'example.com';
+    clientService = MockClientService();
+    clientService.host = ClientConfig.hostUrl;
+    sut = ProductService(clientService: clientService);
+  });
+
+  group(
+    'fixProduct()',
+    () => {
+      test(
+        'check for empty product',
+        () {
+          var product = Product();
+          sut.fixProduct(product);
+
+          var expectedProduct = Product(
+            pricing: ProductPrice(),
+            availability: Availability(),
+          );
+
+          expect(product.pricing, isNotNull);
+          expect(product.availability, isNotNull);
+          expect(product.toJson(), expectedProduct.toJson());
+        },
+      ),
+    },
   );
 
-  clientService.host = 'https://mobilespire.commerce.insitesandbox.com';
-  ClientConfig.hostUrl = 'https://mobilespire.commerce.insitesandbox.com';
-  ClientConfig.clientId = 'fluttermobile';
-  ClientConfig.clientSecret = 'd66d0479-07f7-47b2-ee1e-0d3a536e6091';
-
-  ProductService sutProductservice =
-      ProductService(clientService: clientService);
   group(
-      'ProductService',
-      () => {
-            test('Check if getting response is possible', () async {
-              final response = await sutProductservice
-                  .getProductsNoCache(ProductsQueryParameters(pageSize: 2));
-              final productCollectionResult = response.model;
+    'getProductsNoCache()',
+    () => {
+      test(
+        'recieve actual data',
+        () async {
+          /// ARRANGE
+          ///
+          when(
+            () => clientService.getAsync(
+              any(
+                that: startsWith(
+                  CommerceAPIConstants.productsUrl,
+                ),
+              ),
+            ),
+          ).thenAnswer(
+            (_) => Future.value(
+              Response(
+                data: {'products': productListMap},
+                requestOptions: RequestOptions(),
+                statusCode: 200,
+              ),
+            ),
+          );
 
-              if (productCollectionResult == null) expect(true, false);
-              if (productCollectionResult?.products == null) {
-                expect(true, false);
-              }
+          /// ACT
+          ///
+          final response =
+              await sut.getProductsNoCache(ProductsQueryParameters());
+          final productCollectionResult = response.model;
 
-              final productList = productCollectionResult?.products;
-              for (Product product in productList!) {
-                print(product.altText ??
-                    product.productTitle ??
-                    product.pageTitle ??
-                    "No title");
-              }
-            })
-          });
+          /// ASSERT
+          ///
+          // Check whether
+          verify(() => clientService.getAsync(any())).called(1);
+
+          // Check whether recieved products list is not null
+          expect(productCollectionResult, isNotNull);
+          expect(productCollectionResult?.products, isNotNull);
+
+          // Check if the recieved list is similar to the expected list
+          // currently disabled due to unimplemented operator==
+
+          final actualList = productCollectionResult?.products!
+              .map((product) => product.toJson())
+              .toList();
+
+          expect(actualList!.length, productList.length);
+          for (int i = 0; i < productList.length; i++) {
+            Product expectedProduct = productList[i];
+            sut.fixProduct(expectedProduct);
+            expect(jsonEncode(actualList[i]), jsonEncode(expectedProduct));
+          }
+        },
+      ),
+      test(
+        'invoke exception',
+        () async {
+          /// ARRANGE
+          ///
+          when(
+            () => clientService.getAsync(
+              any(
+                that: startsWith(
+                  CommerceAPIConstants.productsUrl,
+                ),
+              ),
+            ),
+          ).thenThrow(Exception('FakeException'));
+
+          /// ACT
+          ///
+          final response =
+              await sut.getProductsNoCache(ProductsQueryParameters());
+          final productCollectionResult = response.model;
+
+          expect(productCollectionResult, isNull);
+          expect(response.exception, isNotNull);
+
+          expect(response.exception.toString(),
+              'Exception: Exception: FakeException');
+        },
+      )
+    },
+  );
 }
