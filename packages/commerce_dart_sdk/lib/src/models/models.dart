@@ -48,6 +48,7 @@ export 'price_facet.dart';
 export 'price_range.dart';
 export 'credit_card_billing_address.dart';
 export 'cart.dart';
+export 'add_cart_model.dart';
 
 export './results/results.dart';
 export './parameters/parameters.dart';
