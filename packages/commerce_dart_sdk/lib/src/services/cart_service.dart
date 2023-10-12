@@ -170,9 +170,10 @@ class CartService extends ServiceBase implements ICartService {
   }
 
   @override
-  Future<ServiceResponse<Cart>> getRegularCart(CartQueryParameters parameters) {
-    // TODO: implement getRegularCart
-    throw UnimplementedError();
+  Future<ServiceResponse<Cart>> getRegularCart(
+    CartQueryParameters parameters,
+  ) async {
+    return await _getCart(parameters: parameters, cartType: CartType.regular);
   }
 
   @override
