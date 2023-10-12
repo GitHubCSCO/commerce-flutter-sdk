@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
+import 'package:flutter/foundation.dart';
 
 class RequestMessage {
   final String method;
@@ -441,5 +442,21 @@ class ClientService implements IClientService {
   Future<void> reset() async {
     await _storeCookies();
     _createClient();
+  }
+
+  @override
+  Future<void> removeAlternateCartCookie() async {
+    var cookies = await this.cookies;
+
+    await compute((_) {
+      for (Cookie cookie in cookies) {
+        if (cookie.name.contains('AlternateCart')) {
+          cookie.expires = DateTime.now().subtract(const Duration(days: 1));
+          break;
+        }
+      }
+    }, null);
+
+    await cookieJar.saveFromResponse(url!, cookies);
   }
 }

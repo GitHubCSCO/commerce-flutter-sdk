@@ -42,4 +42,7 @@ abstract class IClientService {
 
   Future<Response> patchAsync(String path, Map<String, dynamic> data,
       {Duration? timeout, CancelToken? cancelToken});
+
+  /// Removes AlternateCart cookie from CookieCollection that was set by CreateAlternateCart from ICartService
+  Future<void> removeAlternateCartCookie();
 }
