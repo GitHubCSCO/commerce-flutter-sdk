@@ -57,9 +57,13 @@ class CartService extends ServiceBase implements ICartService {
   }
 
   @override
-  Future<ServiceResponse<Cart>> createAlternateCart(AddCartModel addCartModel) {
-    // TODO: implement createAlternateCart
-    throw UnimplementedError();
+  Future<ServiceResponse<Cart>> createAlternateCart(
+      AddCartModel addCartModel) async {
+    return await _getCart(
+      addCartModel,
+      parameters: null,
+      cartType: CartType.alternate,
+    );
   }
 
   @override
@@ -95,9 +99,9 @@ class CartService extends ServiceBase implements ICartService {
     }
   }
 
-  Future<ServiceResponse<Cart>> _getCart(
-      CartQueryParameters parameters, AddCartModel addCartModel,
-      {CartType cartType = CartType.regular}) async {
+  Future<ServiceResponse<Cart>> _getCart(AddCartModel addCartModel,
+      {CartType cartType = CartType.regular,
+      CartQueryParameters? parameters}) async {
     try {
       var url = Uri.parse(CommerceAPIConstants.cartCurrentUrl);
       final ServiceResponse<Cart> response;
@@ -114,8 +118,12 @@ class CartService extends ServiceBase implements ICartService {
           await clientService.removeAlternateCartCookie();
         }
 
-        String urlString =
-            url.replace(queryParameters: parameters.toJson()).toString();
+        String urlString = url.toString();
+        if (parameters != null) {
+          urlString =
+              url.replace(queryParameters: parameters.toJson()).toString();
+        }
+
         response = await getAsyncNoCache<Cart>(urlString, Cart.fromJson);
       }
 
