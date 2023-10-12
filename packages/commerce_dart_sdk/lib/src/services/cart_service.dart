@@ -60,8 +60,7 @@ class CartService extends ServiceBase implements ICartService {
   Future<ServiceResponse<Cart>> createAlternateCart(
       AddCartModel addCartModel) async {
     return await _getCart(
-      addCartModel,
-      parameters: null,
+      addCartModel: addCartModel,
       cartType: CartType.alternate,
     );
   }
@@ -99,17 +98,19 @@ class CartService extends ServiceBase implements ICartService {
     }
   }
 
-  Future<ServiceResponse<Cart>> _getCart(AddCartModel addCartModel,
-      {CartType cartType = CartType.regular,
-      CartQueryParameters? parameters}) async {
+  Future<ServiceResponse<Cart>> _getCart({
+    AddCartModel? addCartModel,
+    CartType cartType = CartType.regular,
+    CartQueryParameters? parameters,
+  }) async {
     try {
       var url = Uri.parse(CommerceAPIConstants.cartCurrentUrl);
       final ServiceResponse<Cart> response;
 
       if (cartType == CartType.alternate) {
         url = Uri.parse(CommerceAPIConstants.cartsUrl);
-        final data = await serializeToJson(
-            addCartModel, (AddCartModel addCartModel) => addCartModel.toJson());
+        final data = await serializeToJson(addCartModel!,
+            (AddCartModel addCartModel) => addCartModel.toJson());
 
         response =
             await postAsyncNoCache<Cart>(url.toString(), data, Cart.fromJson);
@@ -157,9 +158,9 @@ class CartService extends ServiceBase implements ICartService {
   }
 
   @override
-  Future<ServiceResponse<Cart>> getCurrentCart(CartQueryParameters parameters) {
-    // TODO: implement getCurrentCart
-    throw UnimplementedError();
+  Future<ServiceResponse<Cart>> getCurrentCart(
+      CartQueryParameters parameters) async {
+    return await _getCart(parameters: parameters, cartType: CartType.current);
   }
 
   @override
