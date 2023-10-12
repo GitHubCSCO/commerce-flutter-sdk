@@ -53,3 +53,4 @@ export 'promotion.dart';
 
 export './results/results.dart';
 export './parameters/parameters.dart';
+export './enums/enums.dart';
