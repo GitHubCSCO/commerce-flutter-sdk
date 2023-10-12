@@ -138,9 +138,20 @@ class CartService extends ServiceBase implements ICartService {
   }
 
   @override
-  Future<ServiceResponse<GetCartLinesResult>> getCartLines() {
-    // TODO: implement getCartLines
-    throw UnimplementedError();
+  Future<ServiceResponse<GetCartLinesResult>> getCartLines() async {
+    try {
+      var url = Uri.parse(CommerceAPIConstants.cartCurrentCartLinesUrl);
+      final response = await getAsyncNoCache<GetCartLinesResult>(
+          url.toString(), GetCartLinesResult.fromJson);
+
+      isCartEmpty = response.model?.cartLines == null ||
+          response.model!.cartLines!.isEmpty;
+
+      return response;
+    } catch (e) {
+      return ServiceResponse<GetCartLinesResult>(
+          exception: Exception(e.toString()));
+    }
   }
 
   @override
