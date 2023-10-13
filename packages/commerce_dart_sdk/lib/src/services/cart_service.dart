@@ -7,8 +7,18 @@ class CartService extends ServiceBase implements ICartService {
   List<AddCartLine> _addToCartRequests = [];
   bool _isAddingToCartSlow = false;
 
+  bool? _isCartEmpty;
+
   @override
-  bool? isCartEmpty;
+  bool? get isCartEmpty => _isCartEmpty;
+
+  @override
+  set isCartEmpty(bool? value) {
+    if (_isCartEmpty != value) {
+      _isCartEmpty = value;
+      isCartEmptyPropertyChanged?.call();
+    }
+  }
 
   @override
   Future<ServiceResponse<CartLine>> addCartLine(AddCartLine cartLine) {
