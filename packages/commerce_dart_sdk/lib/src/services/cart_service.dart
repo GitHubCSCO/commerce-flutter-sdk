@@ -99,9 +99,19 @@ class CartService extends ServiceBase implements ICartService {
   }
 
   @override
-  Future<bool> deleteCart(String cartId) {
-    // TODO: implement deleteCart
-    throw UnimplementedError();
+  Future<bool> deleteCart(String cartId) async {
+    if (cartId.isEmpty) throw Exception('cartId is empty');
+
+    try {
+      var url = Uri.parse('${CommerceAPIConstants.cartsUrl}/$cartId');
+      final deleteCartResponse = await deleteAsync(url.toString());
+
+      return deleteCartResponse.model != null &&
+          StatusCodeExtension.isSuccessStatusCode(
+              deleteCartResponse.model!.statusCode);
+    } catch (e) {
+      return false;
+    }
   }
 
   @override
