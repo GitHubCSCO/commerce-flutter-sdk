@@ -62,6 +62,9 @@ abstract class ICartService {
 
   int get addToCartRequestsCount;
 
+  VoidCallback? onAddToCartRequestsCountChange;
+  void removeAddToCartRequestsCountChange();
+
   Future<ServiceResponse<CartLine>> addCartLine(AddCartLine cartLine);
 
   void cancelAllAddCartLineFutures();

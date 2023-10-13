@@ -325,4 +325,12 @@ class CartService extends ServiceBase implements ICartService {
   void removeIsAddingToCartSlowChange() {
     onIsAddingToCartSlowChange = null;
   }
+
+  @override
+  VoidCallback? onAddToCartRequestsCountChange;
+
+  @override
+  void removeAddToCartRequestsCountChange() {
+    onAddToCartRequestsCountChange = null;
+  }
 }
