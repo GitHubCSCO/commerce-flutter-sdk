@@ -309,4 +309,12 @@ class CartService extends ServiceBase implements ICartService {
     // TODO: implement updateCartLine
     throw UnimplementedError();
   }
+
+  @override
+  VoidCallback? isCartEmptyPropertyChanged;
+
+  @override
+  void removeIsCartEmptyPropertyChanged() {
+    isCartEmptyPropertyChanged = null;
+  }
 }

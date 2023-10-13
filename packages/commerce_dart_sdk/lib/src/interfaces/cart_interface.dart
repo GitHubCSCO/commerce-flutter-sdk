@@ -1,4 +1,5 @@
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
+import 'package:flutter/foundation.dart';
 
 ///
 /// A service which manages the shopping cart
@@ -8,6 +9,9 @@ abstract class ICartService {
   /// Indicate last known IsCartEmpty state
   ///
   bool? isCartEmpty;
+
+  VoidCallback? isCartEmptyPropertyChanged;
+  void removeIsCartEmptyPropertyChanged();
 
   Future<ServiceResponse<Cart>> getCart(
       String cartId, CartQueryParameters parameters);
