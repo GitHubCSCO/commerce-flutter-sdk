@@ -28,9 +28,17 @@ class CartService extends ServiceBase implements ICartService {
 
   @override
   Future<ServiceResponse<CartLineCollectionDto>> addWishListToCart(
-      String wishListId) {
-    // TODO: implement addWishListToCart
-    throw UnimplementedError();
+      String wishListId) async {
+    try {
+      return await postAsyncNoCache<CartLineCollectionDto>(
+        "api/v1/carts/current/cartlines/wishlist/$wishListId",
+        {},
+        CartLineCollectionDto.fromJson,
+      );
+    } catch (e) {
+      return ServiceResponse<CartLineCollectionDto>(
+          exception: Exception(e.toString()));
+    }
   }
 
   @override
