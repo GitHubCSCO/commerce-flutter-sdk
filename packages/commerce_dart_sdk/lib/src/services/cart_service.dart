@@ -1,8 +1,11 @@
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 class CartService extends ServiceBase implements ICartService {
   CartService({required super.clientService});
+
+  CancelToken _cancellationTokenSource = CancelToken();
 
   List<AddCartLine> _addToCartRequests = [];
   bool _isAddingToCartSlow = false;
@@ -20,10 +23,43 @@ class CartService extends ServiceBase implements ICartService {
     }
   }
 
-  @override
-  Future<ServiceResponse<CartLine>> addCartLine(AddCartLine cartLine) {
-    // TODO: implement addCartLine
+  @Deprecated('Caution: Will be removed in a future release.')
+  void _markCurrentlyAddingCartLinesFlagToTrueIfNeeded() {
+    /// TODO: implement markCurrentlyAddingCartLinesFlagToTrueIfNeeded
     throw UnimplementedError();
+  }
+
+  @Deprecated('Caution: Will be removed in a future release.')
+  void _markCurrentlyAddingCartLinesFlagToFalseIfPossible() {
+    /// TODO: implement markCurrentlyAddingCartLinesFlagTоFalseIfPossible
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ServiceResponse<CartLine>> addCartLine(AddCartLine cartLine) async {
+    final ServiceResponse<CartLine> response;
+    try {
+      _addToCartRequests.add(cartLine);
+      onAddToCartRequestsCountChange?.call();
+      _markCurrentlyAddingCartLinesFlagToTrueIfNeeded();
+
+      var url = Uri.parse(CommerceAPIConstants.cartCurrentCartLineUrl);
+      final data = await serializeToJson(
+          cartLine, (AddCartLine addCartLine) => addCartLine.toJson());
+
+      response = await postAsyncNoCache<CartLine>(
+        url.toString(),
+        data,
+        CartLine.fromJson,
+        cancelToken: _cancellationTokenSource,
+      );
+    } finally {
+      _addToCartRequests.remove(cartLine);
+      onAddToCartRequestsCountChange?.call();
+      _markCurrentlyAddingCartLinesFlagToFalseIfPossible();
+    }
+
+    return response;
   }
 
   @override
