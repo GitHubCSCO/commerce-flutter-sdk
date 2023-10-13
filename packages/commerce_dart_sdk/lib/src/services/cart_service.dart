@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -64,9 +66,28 @@ class CartService extends ServiceBase implements ICartService {
 
   @override
   Future<ServiceResponse<List<CartLine>>> addCartLineCollection(
-      List<AddCartLine> cartLineCollection) {
-    // TODO: implement addCartLineCollection
-    throw UnimplementedError();
+    List<AddCartLine> cartLineCollection,
+  ) async {
+    try {
+      final data = {'cartLines': cartLineCollection};
+
+      final response = await postAsyncNoCache<CartLineList>(
+        '${CommerceAPIConstants.cartCurrentCartLineUrl}/batch',
+        data,
+        CartLineList.fromJson,
+      );
+
+      return ServiceResponse<List<CartLine>>(
+        model: response.model?.cartLines,
+        statusCode: response.statusCode,
+        error: response.error,
+        exception: response.exception,
+        isCached: response.isCached,
+      );
+    } catch (e) {
+      return ServiceResponse<List<CartLine>>(
+          exception: Exception(e.toString()));
+    }
   }
 
   @override
