@@ -317,4 +317,12 @@ class CartService extends ServiceBase implements ICartService {
   void removeIsCartEmptyPropertyChanged() {
     isCartEmptyPropertyChanged = null;
   }
+
+  @override
+  VoidCallback? onIsAddingToCartSlowChange;
+
+  @override
+  void removeIsAddingToCartSlowChange() {
+    onIsAddingToCartSlowChange = null;
+  }
 }

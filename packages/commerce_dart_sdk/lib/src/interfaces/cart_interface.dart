@@ -55,6 +55,9 @@ abstract class ICartService {
   /// CartLineService
   ///
 
+  VoidCallback? onIsAddingToCartSlowChange;
+  void removeIsAddingToCartSlowChange();
+
   bool get isAddingToCartSlow;
 
   int get addToCartRequestsCount;
