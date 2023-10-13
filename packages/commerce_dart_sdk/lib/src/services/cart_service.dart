@@ -208,10 +208,30 @@ class CartService extends ServiceBase implements ICartService {
   }
 
   @override
-  Future<ServiceResponse<CartCollectionModel>> getCarts(
-      {CartsQueryParameters? parameters}) {
-    // TODO: implement getCarts
-    throw UnimplementedError();
+  Future<ServiceResponse<CartCollectionModel>> getCarts({
+    CartsQueryParameters? parameters,
+  }) async {
+    try {
+      var url = Uri.parse(CommerceAPIConstants.cartsUrl);
+
+      if (parameters != null) {
+        final parametersMap = await compute(
+            (CartsQueryParameters parameters) => parameters.toJson(),
+            parameters);
+
+        url = url.replace(queryParameters: parametersMap);
+      }
+
+      final urlString = url.toString();
+
+      final response = await getAsyncNoCache<CartCollectionModel>(
+          urlString, CartCollectionModel.fromJson);
+
+      return response;
+    } catch (e) {
+      return ServiceResponse<CartCollectionModel>(
+          exception: Exception(e.toString()));
+    }
   }
 
   @override
