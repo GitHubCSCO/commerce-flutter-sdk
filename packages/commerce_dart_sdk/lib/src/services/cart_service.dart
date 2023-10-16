@@ -142,8 +142,10 @@ class CartService extends ServiceBase implements ICartService {
   }
 
   @override
+  @Deprecated('Caution: Will be removed in a future release.')
   void cancelAllAddCartLineFutures() {
-    // TODO: implement cancelAllAddCartLineFutures
+    _cancellationTokenSource.cancel();
+    _cancellationTokenSource = CancelToken();
   }
 
   @override
