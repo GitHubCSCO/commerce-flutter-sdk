@@ -36,8 +36,10 @@ class CartService extends ServiceBase implements ICartService {
 
   @Deprecated('Caution: Will be removed in a future release.')
   void _markCurrentlyAddingCartLinesFlagToFalseIfPossible() {
-    /// TODO: implement markCurrentlyAddingCartLinesFlagTоFalseIfPossible
-    throw UnimplementedError();
+    if (_addToCartRequests.isEmpty) {
+      _isAddingToCartSlow = false;
+      onIsAddingToCartSlowChange?.call();
+    }
   }
 
   @override
