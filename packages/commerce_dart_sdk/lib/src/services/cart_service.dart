@@ -379,9 +379,20 @@ class CartService extends ServiceBase implements ICartService {
   }
 
   @override
-  Future<ServiceResponse<CartLine>> updateCartLine(CartLine cartLine) {
-    // TODO: implement updateCartLine
-    throw UnimplementedError();
+  Future<ServiceResponse<CartLine>> updateCartLine(CartLine cartLine) async {
+    try {
+      var url = Uri.parse(
+          '${CommerceAPIConstants.cartCurrentCartLineUrl}/${cartLine.id}');
+      final data = await serializeToJson(
+          cartLine, (CartLine cartLine) => cartLine.toJson());
+
+      final response = await patchAsyncNoCache<CartLine>(
+          url.toString(), data, CartLine.fromJson);
+
+      return response;
+    } catch (e) {
+      return ServiceResponse<CartLine>(exception: Exception(e.toString()));
+    }
   }
 
   @override
