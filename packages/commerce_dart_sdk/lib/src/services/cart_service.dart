@@ -7,7 +7,7 @@ class CartService extends ServiceBase implements ICartService {
 
   CancelToken _cancellationTokenSource = CancelToken();
 
-  List<AddCartLine> _addToCartRequests = [];
+  final List<AddCartLine> _addToCartRequests = [];
   bool _isAddingToCartSlow = false;
 
   bool? _isCartEmpty;
