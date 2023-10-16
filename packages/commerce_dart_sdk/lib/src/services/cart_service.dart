@@ -24,9 +24,14 @@ class CartService extends ServiceBase implements ICartService {
   }
 
   @Deprecated('Caution: Will be removed in a future release.')
-  void _markCurrentlyAddingCartLinesFlagToTrueIfNeeded() {
-    /// TODO: implement markCurrentlyAddingCartLinesFlagToTrueIfNeeded
-    throw UnimplementedError();
+  void _markCurrentlyAddingCartLinesFlagToTrueIfNeeded() async {
+    await Future.delayed(const Duration(
+        milliseconds: CommerceAPIConstants.addingToCartMillisecondsDelay));
+
+    if (_addToCartRequests.isNotEmpty) {
+      _isAddingToCartSlow = true;
+      onIsAddingToCartSlowChange?.call();
+    }
   }
 
   @Deprecated('Caution: Will be removed in a future release.')
