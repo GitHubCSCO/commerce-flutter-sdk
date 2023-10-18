@@ -5,3 +5,4 @@ export 'authentication_service.dart';
 export 'secure_storage_service.dart';
 export 'client_service.dart';
 export 'network_service.dart';
+export 'cart_service.dart';
