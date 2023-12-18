@@ -6,6 +6,7 @@ version: 0.1.0
 environment:
   sdk: '>=3.0.6 <4.0.0'
 
+
 dependencies:
   flutter:
     sdk: flutter
@@ -15,7 +16,9 @@ dependencies:
   google_fonts: ^5.1.0
   url_launcher: ^6.1.12
   commerce_dart_sdk: 
-    path: ./packages/commerce_dart_sdk
+    git:
+      url: git@github.com:InsiteSoftware/commerce-dart-sdk.git
+      ref: ICM-4058/story/dart
   shared_preferences: ^2.2.0
 
 dev_dependencies:
