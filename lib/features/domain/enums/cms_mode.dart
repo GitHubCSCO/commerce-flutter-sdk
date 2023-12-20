@@ -1,0 +1,1 @@
+enum CMSMode { classic, spire }

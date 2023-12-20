@@ -1,0 +1,1 @@
+enum ContentMode { preview, live }
