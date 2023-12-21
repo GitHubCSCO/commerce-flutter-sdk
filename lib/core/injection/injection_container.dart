@@ -8,7 +8,7 @@ import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 
 final sl = GetIt.instance;
 
-Future<void> init() async {
+Future<void> initInjectionContainer() async {
   sl
     ..registerLazySingleton<IMobileSpireContentService>(
         () => MobileSpireContentService(
@@ -29,7 +29,6 @@ Future<void> init() async {
           cacheService: sl(),
           networkService: sl(),
         ))
-
     //product page
     ..registerLazySingleton<ICacheService>(() => FakeCacheService())
     ..registerLazySingleton<INetworkService>(() => FakeNetworkService(true))
