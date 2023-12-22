@@ -10,4 +10,8 @@ class LoginUsecase {
     final result = await _authenticationService.logInAsync(username, password);
     return result;
   }
+
+  Future<void> logoutAsync() async {
+    return _authenticationService.logoutAsync();
+  }
 }

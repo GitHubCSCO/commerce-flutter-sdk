@@ -1,4 +1,8 @@
+import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_event.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AccountScreen extends StatelessWidget {
   @override
@@ -7,9 +11,11 @@ class AccountScreen extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            // Add your button's onPressed logic here
+            BlocProvider.of<LoginBloc>(context).add(
+              const LogoutSubmitEvent(),
+            );
           },
-          child: Text('account'),
+          child: Text('Logout'),
         ),
       ),
     );

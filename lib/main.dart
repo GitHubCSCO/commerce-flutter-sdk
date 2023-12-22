@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
           sl<LoginBloc>(), // Replace YourBloc with your actual bloc class
       child: MaterialApp.router(
         title: 'My App',
-        routerConfig: router,
+        routerConfig: Approuter().router,
       ),
     );
   }
@@ -59,20 +59,20 @@ class NavBarScreen extends StatelessWidget {
           type: BottomNavigationBarType.fixed, // This is all you need!
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
+              icon: Icon(Icons.shop),
+              label: 'Shop',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.business),
-              label: 'Business',
+              icon: Icon(Icons.search),
+              label: 'Search',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.school),
-              label: 'School',
+              icon: Icon(Icons.account_circle),
+              label: 'Account',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.face),
-              label: 'Profile',
+              icon: Icon(Icons.shopping_cart),
+              label: 'Cart',
             ),
           ],
           currentIndex: navigationShell.currentIndex,
