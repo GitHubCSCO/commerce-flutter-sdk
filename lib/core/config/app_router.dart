@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
@@ -12,13 +14,39 @@ import 'package:commerce_flutter_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+class GoRouterRefreshStream extends ChangeNotifier {
+  /// Creates a [GoRouterRefreshStream].
+  ///
+  /// Every time the [stream] receives an event the [GoRouter] will refresh its
+  /// current route.
+  GoRouterRefreshStream(Stream<dynamic> stream) {
+    notifyListeners();
+    _subscription = stream.asBroadcastStream().listen(
+          (dynamic _) => notifyListeners(),
+        );
+  }
+
+  late final StreamSubscription<dynamic> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+}
+
 class Approuter {
   LoginBloc loginBloc = sl<LoginBloc>();
 
   late final GoRouter router = GoRouter(
       initialLocation: '/',
+      refreshListenable: GoRouterRefreshStream(loginBloc.stream),
       redirect: (BuildContext context, GoRouterState state) {
+        print("a");
         if (loginBloc.state is AuthenticationAuthState) {
+          print("b");
+
+          print(loginBloc.state);
           AuthenticationAuthState authState =
               loginBloc.state as AuthenticationAuthState;
           final bool loggedIn = authState.status == AuthStatus.authenticated;

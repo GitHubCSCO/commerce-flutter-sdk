@@ -34,10 +34,19 @@ class LoginScreen extends StatelessWidget {
               listener: (context, state) {
                 if (state is LoginSuccessState) {
                   context.go('/a');
+                } else if (state is LoginFailureState) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Login failed. Please try again.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
                 }
               },
               builder: (context, state) {
-                if (state is LoginInitialState) {
+                if (state is LoginLoadingState) {
+                  return const CircularProgressIndicator(); // Display a loading indicator
+                } else {
                   return ElevatedButton(
                     onPressed: () {
                       BlocProvider.of<LoginBloc>(context).add(
@@ -50,13 +59,7 @@ class LoginScreen extends StatelessWidget {
                     },
                     child: const Text('Login'),
                   );
-                } else if (state is LoginLoadingState) {
-                  return const CircularProgressIndicator(); // Display a loading indicator
-                } else if (state is LoginFailureState) {
-                  return const Text('failure');
                 }
-
-                return Container();
               },
             ),
           ],

@@ -28,10 +28,8 @@ class LoginBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
 
   Future<void> _onLogoutSubmit(
       LogoutSubmitEvent event, Emitter<AuthenticationState> emit) async {
-    emit(const AuthenticationAuthState());
-
-    // emit(LogoutLoadingState());
-    // await _loginUsecase.logoutAsync();
-    // emit(const AuthenticationAuthState());
+    emit(LogoutLoadingState());
+    await _loginUsecase.logoutAsync();
+    emit(const AuthenticationAuthState.unauthenticated());
   }
 }
