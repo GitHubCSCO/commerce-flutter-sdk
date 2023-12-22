@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          LoginBloc(), // Replace YourBloc with your actual bloc class
+          sl<LoginBloc>(), // Replace YourBloc with your actual bloc class
       child: MaterialApp.router(
         title: 'My App',
         routerConfig: router,

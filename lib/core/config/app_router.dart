@@ -1,8 +1,8 @@
-import 'package:commerce_flutter_app/features/presentation/screens/account_screen.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/cart_screen.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/login_screen.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/search_screen.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/shop_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/search/search_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/shop/shop_screen.dart';
 import 'package:commerce_flutter_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
