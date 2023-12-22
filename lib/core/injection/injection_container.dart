@@ -10,14 +10,8 @@ final sl = GetIt.instance;
 
 Future<void> initInjectionContainer() async {
   sl
-    ..registerLazySingleton<IMobileSpireContentService>(
-        () => MobileSpireContentService(
-              clientService: sl(),
-              cacheService: sl(),
-              networkService: sl(),
-            ))
-    ..registerLazySingleton<IClientService>(() =>
-        ClientService(localStorageService: sl(), secureStorageService: sl()))
+
+    //login
     ..registerLazySingleton<IAuthenticationService>(() => AuthenticationService(
           sessionService: sl(),
           clientService: sl(),
@@ -29,6 +23,15 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
+    ..registerLazySingleton<IMobileSpireContentService>(
+        () => MobileSpireContentService(
+              clientService: sl(),
+              cacheService: sl(),
+              networkService: sl(),
+            ))
+    ..registerLazySingleton<IClientService>(() =>
+        ClientService(localStorageService: sl(), secureStorageService: sl()))
+
     //product page
     ..registerLazySingleton<ICacheService>(() => FakeCacheService())
     ..registerLazySingleton<INetworkService>(() => FakeNetworkService(true))

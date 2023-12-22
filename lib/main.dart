@@ -1,6 +1,10 @@
 import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
+import 'package:commerce_flutter_app/core/config/app_router.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 void main() {
   initCommerceSDK();
@@ -17,30 +21,32 @@ void initCommerceSDK() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'My App',
-      home: MainWidget(),
+    return BlocProvider(
+      create: (context) =>
+          LoginBloc(), // Replace YourBloc with your actual bloc class
+      child: MaterialApp.router(
+        title: 'My App',
+        routerConfig: router,
+      ),
     );
   }
 }
 
-class MainWidget extends StatefulWidget {
-  const MainWidget({
+class NavBarScreen extends StatelessWidget {
+  final StatefulNavigationShell navigationShell;
+
+  const NavBarScreen({
     super.key,
+    required this.navigationShell,
   });
 
-  @override
-  State<MainWidget> createState() => _MainWidgetState();
-}
-
-class _MainWidgetState extends State<MainWidget> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    print(index);
-    setState(() {
-      _selectedIndex = index;
-    });
+  /// Navigate to the current location of the branch at the provided index when
+  /// tapping an item in the BottomNavigationBar.
+  void _onTap(BuildContext context, int index) {
+    navigationShell.goBranch(
+      index,
+      initialLocation: index == navigationShell.currentIndex,
+    );
   }
 
   @override
@@ -50,32 +56,28 @@ class _MainWidgetState extends State<MainWidget> {
           title: const Text('My App'),
         ),
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.blue,
           type: BottomNavigationBarType.fixed, // This is all you need!
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.white,
-          onTap: _onItemTapped,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label: 'Shop',
+              label: 'Home',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.business),
-              label: 'Search',
+              label: 'Business',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.school),
-              label: 'Account',
+              label: 'School',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.face),
-              label: 'Cart',
+              label: 'Profile',
             ),
           ],
+          currentIndex: navigationShell.currentIndex,
+          onTap: (int index) => _onTap(context, index),
         ),
-        body: const Center(
-          child: Text('Hello, World!'),
-        ));
+        body: navigationShell);
   }
 }
