@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/route_names.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_state.dart';
@@ -33,7 +34,7 @@ class LoginScreen extends StatelessWidget {
             BlocConsumer<LoginBloc, AuthenticationState>(
               listener: (context, state) {
                 if (state is LoginSuccessState) {
-                  context.go('/a');
+                  context.goNamed(RouteNames.shop);
                 }
               },
               builder: (context, state) {

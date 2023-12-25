@@ -1,4 +1,4 @@
-import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:test/fake.dart';
 
 class FakeSecureStorageService extends Fake implements ISecureStorageService {

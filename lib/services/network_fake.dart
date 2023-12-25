@@ -1,6 +1,5 @@
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:test/fake.dart';
-
-import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 
 class FakeNetworkService extends Fake implements INetworkService {
   bool _isOnline;

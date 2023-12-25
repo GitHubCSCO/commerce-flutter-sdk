@@ -153,15 +153,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.18.0"
-  commerce_dart_sdk:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: develop
-      resolved-ref: "039259ee0ff0f8c92e1553b45032771eaebefdd2"
-      url: "git@github.com:InsiteSoftware/commerce-dart-sdk.git"
-    source: git
-    version: "0.1.0"
   convert:
     dependency: transitive
     description:
@@ -481,6 +472,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.2"
+  optimizely_commerce_api:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: develop
+      resolved-ref: "6108c43741941047ce4d55c7d97e0e9bdd841cd0"
+      url: "git@github.com:InsiteSoftware/commerce-dart-sdk.git"
+    source: git
+    version: "0.1.0-dev.1"
   package_config:
     dependency: transitive
     description:

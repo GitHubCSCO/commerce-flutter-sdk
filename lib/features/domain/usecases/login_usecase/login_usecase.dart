@@ -1,5 +1,5 @@
-import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class LoginUsecase {
   final IAuthenticationService _authenticationService =

@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class FakeCacheService implements ICacheService {
   Map<String, dynamic> cache = {};
