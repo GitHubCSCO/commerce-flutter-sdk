@@ -8,29 +8,32 @@ import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_scr
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/search_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/shop/shop_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_screen.dart';
 import 'package:commerce_flutter_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class Approuter {
-  LoginBloc loginBloc = sl<LoginBloc>();
+  // LoginBloc loginBloc = sl<LoginBloc>();
 
   late final GoRouter router = GoRouter(
       initialLocation: '/',
       redirect: (BuildContext context, GoRouterState state) {
-        if (loginBloc.state is AuthenticationAuthState) {
-          AuthenticationAuthState authState =
-              loginBloc.state as AuthenticationAuthState;
-          final bool loggedIn = authState.status == AuthStatus.authenticated;
-          if (loggedIn) {
-            return '/shop';
-          } else {
-            return '/';
-          }
-        }
+        // if (loginBloc.state is AuthenticationAuthState) {
+        //   AuthenticationAuthState authState =
+        //       loginBloc.state as AuthenticationAuthState;
+        //   final bool loggedIn = authState.status == AuthStatus.authenticated;
+        //   if (loggedIn) {
+        //     return '/welcome';
+        //   } else {
+        //     return '/';
+        //   }
+        // }
+        return null;
       },
       routes: <RouteBase>[
-        GoRoute(name: RouteNames.login, path: '/', builder: (context, state) => LoginScreen()),
+        GoRoute(name: RouteNames.welcome, path: '/', builder: (context, state) => const WelcomeScreen()),
+        GoRoute(name: RouteNames.login, path: '/login', builder: (context, state) => const LoginScreen()),
         StatefulShellRoute.indexedStack(
           builder: (BuildContext context, GoRouterState state,
               StatefulNavigationShell navigationShell) {
