@@ -1,6 +1,5 @@
 import 'dart:async';
-
-import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
+import 'package:commerce_flutter_app/core/constants/route_names.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_state.dart';
@@ -10,6 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_scr
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/search_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/shop/shop_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_screen.dart';
 import 'package:commerce_flutter_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -51,14 +51,15 @@ class Approuter {
               loginBloc.state as AuthenticationAuthState;
           final bool loggedIn = authState.status == AuthStatus.authenticated;
           if (loggedIn) {
-            return '/a';
+            return '/shop';
           } else {
             return '/';
           }
         }
       },
       routes: <RouteBase>[
-        GoRoute(path: '/', builder: (context, state) => LoginScreen()),
+        GoRoute(name: RouteNames.welcome, path: '/', builder: (context, state) => const WelcomeScreen()),
+        GoRoute(name: RouteNames.login, path: '/login', builder: (context, state) => const LoginScreen()),
         StatefulShellRoute.indexedStack(
           builder: (BuildContext context, GoRouterState state,
               StatefulNavigationShell navigationShell) {
@@ -71,7 +72,8 @@ class Approuter {
                 GoRoute(
                   // The screen to display as the root in the first tab of the
                   // bottom navigation bar.
-                  path: '/a',
+                  name: RouteNames.shop,
+                  path: '/shop',
                   builder: (BuildContext context, GoRouterState state) =>
                       ShopScreen(),
                 )
@@ -80,7 +82,8 @@ class Approuter {
             StatefulShellBranch(
               routes: <RouteBase>[
                 GoRoute(
-                  path: '/b',
+                  name: RouteNames.search,
+                  path: '/search',
                   builder: (BuildContext context, GoRouterState state) =>
                       SearchScreen(),
                 )
@@ -89,7 +92,8 @@ class Approuter {
             StatefulShellBranch(
               routes: <RouteBase>[
                 GoRoute(
-                  path: '/c',
+                  name: RouteNames.account,
+                  path: '/account',
                   builder: (BuildContext context, GoRouterState state) =>
                       AccountScreen(),
                 )
@@ -98,7 +102,8 @@ class Approuter {
             StatefulShellBranch(
               routes: <RouteBase>[
                 GoRoute(
-                  path: '/d',
+                  name: RouteNames.cart,
+                  path: '/cart',
                   builder: (BuildContext context, GoRouterState state) =>
                       CartScreen(),
                 )

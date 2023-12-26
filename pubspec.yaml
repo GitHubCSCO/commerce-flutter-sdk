@@ -14,7 +14,7 @@ dependencies:
   go_router: ^10.0.0
   google_fonts: ^5.1.0
   url_launcher: ^6.1.12
-  commerce_dart_sdk: 
+  optimizely_commerce_api:
     git:
       url: git@github.com:InsiteSoftware/commerce-dart-sdk.git
       ref: develop

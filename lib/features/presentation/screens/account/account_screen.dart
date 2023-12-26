@@ -1,4 +1,3 @@
-import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
 import 'package:flutter/material.dart';

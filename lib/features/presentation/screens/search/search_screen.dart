@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SearchScreen extends StatelessWidget {
+  const SearchScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -9,7 +11,7 @@ class SearchScreen extends StatelessWidget {
           onPressed: () {
             // Add your button's onPressed logic here
           },
-          child: Text('search'),
+          child: const Text('search'),
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/route_names.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_state.dart';
@@ -6,6 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +36,7 @@ class LoginScreen extends StatelessWidget {
             BlocConsumer<LoginBloc, AuthenticationState>(
               listener: (context, state) {
                 if (state is LoginSuccessState) {
-                  context.go('/a');
+                  context.goNamed(RouteNames.shop);
                 } else if (state is LoginFailureState) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(

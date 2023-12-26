@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:commerce_dart_sdk/commerce_dart_sdk.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_state.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class LoginBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   final LoginUsecase _loginUsecase;
