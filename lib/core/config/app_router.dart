@@ -36,7 +36,7 @@ class GoRouterRefreshStream extends ChangeNotifier {
 }
 
 class Approuter {
-  // LoginBloc loginBloc = sl<LoginBloc>();
+  LoginBloc loginBloc = sl<LoginBloc>();
 
   late final GoRouter router = GoRouter(
       initialLocation: '/',
