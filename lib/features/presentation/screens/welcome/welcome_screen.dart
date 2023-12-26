@@ -1,6 +1,5 @@
-import 'package:commerce_flutter_app/core/constants/route_names.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -13,10 +12,10 @@ class WelcomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            const Text("Welcome to Optimizely B2B Mobile App") ,
+            const Text("Welcome to Optimizely B2B Mobile App"),
             ElevatedButton(
                 onPressed: () {
-                  context.goNamed(RouteNames.shop);
+                  AppRoute.shop.navigate(context);
                 },
                 child: const Text("Go to B2B Store")),
           ],
@@ -24,7 +23,6 @@ class WelcomeScreen extends StatelessWidget {
       ),
     );
   }
-
 
   // Text("Welcome to Optimizely B2B Mobile App")
 }

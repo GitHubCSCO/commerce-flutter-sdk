@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:commerce_flutter_app/core/constants/route_names.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_state.dart';
@@ -39,27 +39,31 @@ class Approuter {
   LoginBloc loginBloc = sl<LoginBloc>();
 
   late final GoRouter router = GoRouter(
-      initialLocation: '/',
+      initialLocation: AppRoute.welcome.path,
       refreshListenable: GoRouterRefreshStream(loginBloc.stream),
       redirect: (BuildContext context, GoRouterState state) {
-        print("a");
+        debugPrint("a");
         if (loginBloc.state is AuthenticationAuthState) {
-          print("b");
+          debugPrint("b");
 
-          print(loginBloc.state);
+          debugPrint('${loginBloc.state}');
           AuthenticationAuthState authState =
               loginBloc.state as AuthenticationAuthState;
           final bool loggedIn = authState.status == AuthStatus.authenticated;
           if (loggedIn) {
-            return '/shop';
+            return AppRoute.shop.path;
           } else {
-            return '/';
+            return AppRoute.welcome.path;
           }
         }
       },
       routes: <RouteBase>[
-        GoRoute(name: RouteNames.welcome, path: '/', builder: (context, state) => const WelcomeScreen()),
-        GoRoute(name: RouteNames.login, path: '/login', builder: (context, state) => const LoginScreen()),
+        AppRoute.welcome.createRoute(
+          (context, state) => const WelcomeScreen(),
+        ),
+        AppRoute.login.createRoute(
+          (context, state) => const LoginScreen(),
+        ),
         StatefulShellRoute.indexedStack(
           builder: (BuildContext context, GoRouterState state,
               StatefulNavigationShell navigationShell) {
@@ -69,44 +73,30 @@ class Approuter {
             // The route branch for the first tab of the bottom navigation bar.
             StatefulShellBranch(
               routes: <RouteBase>[
-                GoRoute(
-                  // The screen to display as the root in the first tab of the
-                  // bottom navigation bar.
-                  name: RouteNames.shop,
-                  path: '/shop',
-                  builder: (BuildContext context, GoRouterState state) =>
-                      ShopScreen(),
-                )
+                AppRoute.shop.createRoute(
+                  (context, state) => ShopScreen(),
+                ),
               ],
             ),
             StatefulShellBranch(
               routes: <RouteBase>[
-                GoRoute(
-                  name: RouteNames.search,
-                  path: '/search',
-                  builder: (BuildContext context, GoRouterState state) =>
-                      SearchScreen(),
-                )
+                AppRoute.search.createRoute(
+                  (context, state) => const SearchScreen(),
+                ),
               ],
             ),
             StatefulShellBranch(
               routes: <RouteBase>[
-                GoRoute(
-                  name: RouteNames.account,
-                  path: '/account',
-                  builder: (BuildContext context, GoRouterState state) =>
-                      AccountScreen(),
-                )
+                AppRoute.account.createRoute(
+                  (context, state) => AccountScreen(),
+                ),
               ],
             ),
             StatefulShellBranch(
               routes: <RouteBase>[
-                GoRoute(
-                  name: RouteNames.cart,
-                  path: '/cart',
-                  builder: (BuildContext context, GoRouterState state) =>
-                      CartScreen(),
-                )
+                AppRoute.cart.createRoute(
+                  (context, state) => CartScreen(),
+                ),
               ],
             ),
           ],
