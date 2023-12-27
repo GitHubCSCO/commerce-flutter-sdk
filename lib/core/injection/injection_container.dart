@@ -14,7 +14,7 @@ Future<void> initInjectionContainer() async {
 
     //login
     ..registerLazySingleton(() => LoginBloc(
-          LoginUsecase(),
+          LoginUsecase(sl()),
         ))
     ..registerLazySingleton<IAuthenticationService>(() => AuthenticationService(
           sessionService: sl(),
