@@ -1,6 +1,5 @@
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -13,13 +12,11 @@ void main() {
 
   setUp(() {
     mockAuthService = MockAuthenticationService();
-    // GetIt.I.registerLazySingleton<IAuthenticationService>(() => mockAuthService);
-
     loginUsecase = LoginUsecase(mockAuthService);
   });
 
   tearDown(() {
-    // GetIt.I.reset();
+
   });
 
   test('logInAsync should return Result with bool on successful login', () async {
