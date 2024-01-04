@@ -1,3 +1,5 @@
+import 'package:commerce_flutter_app/features/domain/service/content_configuration_service.dart';
+import 'package:commerce_flutter_app/features/domain/service/content_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
 import 'package:commerce_flutter_app/services/cache_fake.dart';
@@ -27,6 +29,8 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
+    ..registerLazySingleton<IContentConfigurationService>(
+        () => ContentConfigurationService(sl()))
     ..registerLazySingleton<IMobileSpireContentService>(
         () => MobileSpireContentService(
               clientService: sl(),
