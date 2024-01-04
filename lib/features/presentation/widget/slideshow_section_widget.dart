@@ -12,9 +12,11 @@ class SlideShowSectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        CarouselSlider(
+    return SizedBox(
+      height: 180,
+      child: ListView(
+        children: [
+          CarouselSlider(
             items: [1,2,3,4,5].map((i) {
               return Builder(
                 builder: (BuildContext context) {
@@ -25,15 +27,16 @@ class SlideShowSectionWidget extends StatelessWidget {
             options: CarouselOptions(
               height: 180.0,
               enlargeCenterPage: true,
-              autoPlay: true,
+              autoPlay: false,
               aspectRatio: 16 / 9,
               autoPlayCurve: Curves.fastOutSlowIn,
               enableInfiniteScroll: true,
               autoPlayAnimationDuration: const Duration(milliseconds: 1200),
               viewportFraction: 1.0,
             ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 
