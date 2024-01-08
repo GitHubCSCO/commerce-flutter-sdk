@@ -13,7 +13,7 @@ class SliderItemWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
         image: DecorationImage(
           image: NetworkImage(imageUrl),
-          fit: BoxFit.cover,
+          fit: BoxFit.fill,
         ),
       ),
     );

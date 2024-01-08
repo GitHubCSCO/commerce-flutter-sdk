@@ -1,10 +1,8 @@
-import 'package:commerce_flutter_app/features/presentation/widget/product_carousel_item_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/search_history_item_widget.dart';
 import 'package:flutter/material.dart';
 
-class ProductCarouselSectionWidget extends StatelessWidget {
-  final String title;
-
-  const ProductCarouselSectionWidget({super.key, required this.title});
+class SearchHistorySectionWidget extends StatelessWidget {
+  const SearchHistorySectionWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +16,7 @@ class ProductCarouselSectionWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             child: Text(
-              title,
+              "Search History",
               style: const TextStyle(
                 color: Color(0xFF222222),
                 fontSize: 18,
@@ -26,19 +24,15 @@ class ProductCarouselSectionWidget extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
-            height: 168,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(color: Colors.white),
             child: ListView.builder(
-              padding: const EdgeInsets.only(
-                left: 8,
-                right: 8,
-                bottom: 8,
-              ),
-              scrollDirection: Axis.horizontal,
+              itemCount: 4,
               shrinkWrap: true,
-              itemCount: 8,
+              scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
-                return ProductCarouselItemWidget();
+                return SearchHisotoryItemWidget();
               },
             ),
           )
@@ -46,4 +40,5 @@ class ProductCarouselSectionWidget extends StatelessWidget {
       ),
     );
   }
+
 }

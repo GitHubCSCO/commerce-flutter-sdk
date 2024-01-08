@@ -27,7 +27,7 @@ class ProductCarouselItemWidget extends StatelessWidget {
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(
-                    "https://images.unsplash.com/photo-1611451444023-7fe9d86fe1d0?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXQlMjB3b21hbnxlbnwwfHwwfHx8MA%3D%3D"),
+                    "https://www.deere.com/assets/images/region-3/products/tractors/heavy-tractors/tractor-8270r-estudio.png"),
                 fit: BoxFit.fitHeight,
               ),
             ),

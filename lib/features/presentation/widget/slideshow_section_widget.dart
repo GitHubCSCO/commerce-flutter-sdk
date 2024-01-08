@@ -27,7 +27,7 @@ class SlideShowSectionWidget extends StatelessWidget {
             options: CarouselOptions(
               height: 180.0,
               enlargeCenterPage: true,
-              autoPlay: false,
+              autoPlay: true,
               aspectRatio: 16 / 9,
               autoPlayCurve: Curves.fastOutSlowIn,
               enableInfiniteScroll: true,
