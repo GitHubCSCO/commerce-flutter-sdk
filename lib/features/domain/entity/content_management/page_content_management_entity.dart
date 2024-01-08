@@ -1,3 +1,8 @@
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
+
 class PageContentManagementEntity {
   PageInformationEntity? page;
   int? statusCode;
@@ -23,7 +28,7 @@ class PageContentManagementEntity {
 class PageInformationEntity {
   String? nodeId;
   String? name;
-  String? type;
+  PageType? type;
   String? parentId;
   int? sortOrder;
   String? websiteId;
@@ -82,7 +87,7 @@ class PageSettingsEntity {
 
 class PageWidgetEntity {
   String? parentId;
-  String? type;
+  WidgetType? type;
   String? zone;
   bool? isLayout;
   String? id;
@@ -129,13 +134,14 @@ class LocalizationEntity {
 class PageWidgetFieldsEntity {
   int? timerSpeed;
   int? animationSpeed;
-  String? carouselType;
-  String? displayProductsFrom;
+  ProductCarouselType? carouselType;
+  TopSellersCategoriesSpan? displayProductsFrom;
   List<String>? selectedCategoryIds;
   bool? showImage;
   bool? showTitle;
   bool? showPrice;
-  String? layout;
+  ActionsLayout? layout;
+  
 
   PageWidgetFieldsEntity({
     this.timerSpeed,

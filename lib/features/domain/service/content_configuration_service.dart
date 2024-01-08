@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:async';
-
 import 'package:commerce_flutter_app/features/domain/entity/content_management/page_content_management_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/cms_mode.dart';
 import 'package:commerce_flutter_app/features/domain/enums/content_mode.dart';
@@ -37,14 +35,14 @@ class ContentConfigurationService implements IContentConfigurationService {
 
   @override
   Future<Result<PageContentManagementEntity, ErrorResponse>>
-      getPersistedLiveContentManagement(ContentType contentType) {
+      getPersistedLiveContentManagement(PageContentType contentType) {
     // TODO: implement getPersistedLiveContentManagement
     throw UnimplementedError();
   }
 
   @override
   Future<Result<PageContentManagementEntity, ErrorResponse>>
-      loadAndPersistLiveContentManagement(ContentType contentType,
+      loadAndPersistLiveContentManagement(PageContentType contentType,
           {bool useCache = true}) {
     // TODO: implement loadAndPersistLiveContentManagement
     throw UnimplementedError();
@@ -52,7 +50,7 @@ class ContentConfigurationService implements IContentConfigurationService {
 
   @override
   Future<Result<PageContentManagementEntity, ErrorResponse>>
-      loadPreviewContentManagement(ContentType contentType,
+      loadPreviewContentManagement(PageContentType contentType,
           {bool useCache = false}) async {
     final String pageKey = getPageKeyForContentType(contentType);
 
@@ -74,30 +72,30 @@ class ContentConfigurationService implements IContentConfigurationService {
     }
   }
 
-  String getPageKeyForContentType(ContentType contentType) {
+  String getPageKeyForContentType(PageContentType contentType) {
     switch (contentType) {
-      case ContentType.shop:
+      case PageContentType.shop:
         return shopContentPageName;
-      case ContentType.searchLanding:
+      case PageContentType.searchLanding:
         return searchLandingContentPageName;
-      case ContentType.account:
+      case PageContentType.account:
         return accountContentPageName;
-      case ContentType.vmiMain:
+      case PageContentType.vmiMain:
         return vmiMainContentPageName;
       default:
         return '';
     }
   }
 
-  String getPersistenceKeyForContentType(ContentType contentType) {
+  String getPersistenceKeyForContentType(PageContentType contentType) {
     switch (contentType) {
-      case ContentType.shop:
+      case PageContentType.shop:
         return shopContentManagementPersistenceKey;
-      case ContentType.searchLanding:
+      case PageContentType.searchLanding:
         return searchLandingContentManagementPersistenceKey;
-      case ContentType.account:
+      case PageContentType.account:
         return accountContentManagementPersistenceKey;
-      case ContentType.vmiMain:
+      case PageContentType.vmiMain:
         return vmiMainContentManagementPersistenceKey;
       default:
         return '';

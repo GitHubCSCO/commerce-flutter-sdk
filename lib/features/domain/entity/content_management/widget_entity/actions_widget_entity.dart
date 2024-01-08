@@ -31,10 +31,7 @@ enum ActionType {
   changeLocation,
 }
 
-enum ActionsLayout {
-  list,
-  grid,
-}
+enum ActionsLayout { list, grid }
 
 class Action extends Equatable {
   final ActionType type;
