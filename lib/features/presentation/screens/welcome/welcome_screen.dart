@@ -1,19 +1,33 @@
+import 'package:commerce_flutter_app/core/config/app_router.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_components.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_style.dart';
 import 'package:flutter/material.dart';
 
+enum WelcomeScreenType {
+  welcomePage,
+  storefrontUrlPage,
+}
+
 class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
+  const WelcomeScreen({
+    super.key,
+    this.welcomeScreenType = WelcomeScreenType.welcomePage,
+  });
+
+  final WelcomeScreenType welcomeScreenType;
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+      appBar: AppBar(backgroundColor: Colors.transparent),
       backgroundColor: Colors.yellow,
-      body: WelcomeFirstPage(),
+      body: welcomeScreenType == WelcomeScreenType.welcomePage
+          ? const WelcomeFirstPage()
+          : const StorefrontUrlPage(),
     );
   }
-
-  // Text("Welcome to Optimizely B2B Mobile App")
 }
 
 class WelcomeFirstPage extends StatelessWidget {
@@ -28,72 +42,45 @@ class WelcomeFirstPage extends StatelessWidget {
           children: [
             const Text(
               LocalizationKeyword.firstTimeWelcome,
-              style: TextStyle(
-                fontSize: 33,
-                fontWeight: FontWeight.w200,
-              ),
+              style: WelcomeStyle.welcomeCardHeaderStyle,
             ),
-            const SizedBox(height: 15),
+            WelcomeStyle.welcomeCardTextSpacer,
             const Text(
               'This app enables Optimizely customers to easily access their B2B Commerce application.',
-              style: TextStyle(
-                fontWeight: FontWeight.w300,
-              ),
+              style: WelcomeStyle.welcomeCardTextStyle,
             ),
-            const SizedBox(height: 15),
+            WelcomeStyle.welcomeCardTextSpacer,
             const Text(
               'If you\'re new to Optimizely and would like access to the mobile app version of your storefront, visit our website.',
-              style: TextStyle(
-                fontWeight: FontWeight.w300,
-              ),
+              style: WelcomeStyle.welcomeCardTextStyle,
             ),
-            const SizedBox(height: 15),
+            WelcomeStyle.welcomeCardTextSpacer,
             const Text(
               'Sign in below if you are an existing customer.',
-              style: TextStyle(
-                fontWeight: FontWeight.w300,
-              ),
+              style: WelcomeStyle.welcomeCardTextStyle,
             ),
             const Expanded(child: SizedBox()),
-            FilledButton(
-              onPressed: () {},
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                  Colors.deepPurple,
-                ),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0)),
-                ),
-              ),
-              child: const SizedBox(
-                width: double.infinity,
-                child: Center(
-                  child: Text(
-                    LocalizationKeyword.signInPrompt,
+            WelcomePrimaryButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const WelcomeScreen(
+                      welcomeScreenType: WelcomeScreenType.storefrontUrlPage,
+                    ),
                   ),
-                ),
+                );
+              },
+              child: const Text(
+                LocalizationKeyword.signInPrompt,
               ),
             ),
-            ElevatedButton(
+            const SizedBox(
+              height: 2,
+            ),
+            WelcomeSecondaryButton(
               onPressed: () {},
-              style: ButtonStyle(
-                elevation: MaterialStateProperty.all(0),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    side: const BorderSide(color: Colors.deepPurple),
-                    borderRadius: BorderRadius.circular(0),
-                  ),
-                ),
-                foregroundColor: MaterialStateProperty.all(
-                  Colors.deepPurple,
-                ),
-              ),
-              child: const SizedBox(
-                width: double.infinity,
-                child: Center(
-                  child: Text(LocalizationKeyword.visitWebsite),
-                ),
+              child: const Text(
+                LocalizationKeyword.visitWebsite,
               ),
             ),
           ],
@@ -103,24 +90,62 @@ class WelcomeFirstPage extends StatelessWidget {
   }
 }
 
-class WelcomeCard extends StatelessWidget {
-  const WelcomeCard({super.key, this.child});
+class StorefrontUrlPage extends StatefulWidget {
+  const StorefrontUrlPage({super.key});
 
-  final Widget? child;
+  @override
+  State<StorefrontUrlPage> createState() => _StorefrontUrlPageState();
+}
+
+class _StorefrontUrlPageState extends State<StorefrontUrlPage> {
+  final TextEditingController _textEditingController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _textEditingController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.removeListener(() {});
+    _textEditingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 360, maxHeight: 500),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(0),
-        ),
-        elevation: 0,
-        color: const Color.fromRGBO(255, 255, 255, 0.8),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-          child: child,
+    return Center(
+      child: WelcomeCard(
+        constraints: WelcomeStyle.welcomeSecondPageCardConstraints,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              LocalizationKeyword.existingCustomers,
+              style: WelcomeStyle.welcomeCardHeaderStyle,
+            ),
+            WelcomeStyle.welcomeCardTextSpacer,
+            TextField(
+              controller: _textEditingController,
+              decoration: const InputDecoration(
+                hintText: 'Example: store.optimizely.com',
+                border: OutlineInputBorder(),
+                label: Text('Enter Store URL'),
+              ),
+            ),
+            const Expanded(child: SizedBox()),
+            WelcomePrimaryButton(
+              onPressed: _textEditingController.text.isNotEmpty
+                  ? () {
+                      AppRoute.shop.navigate(context);
+                    }
+                  : null,
+              child: const Text('Continue'),
+            ),
+          ],
         ),
       ),
     );
