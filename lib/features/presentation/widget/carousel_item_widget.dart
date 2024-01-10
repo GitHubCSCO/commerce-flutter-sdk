@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-class SliderItemWidget extends StatelessWidget {
-  const SliderItemWidget({super.key, required this.imageUrl});
+class CarouselItemWidget extends StatelessWidget {
+  const CarouselItemWidget({super.key, required this.imageUrl});
 
   final String imageUrl;
 

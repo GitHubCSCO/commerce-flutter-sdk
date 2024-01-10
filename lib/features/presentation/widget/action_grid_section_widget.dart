@@ -1,8 +1,8 @@
-import 'package:commerce_flutter_app/features/presentation/widget/linkgrid_item_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/action_grid_item_widget.dart';
 import 'package:flutter/material.dart';
 
-class LinkGridSectionWidget extends StatelessWidget {
-  const LinkGridSectionWidget({super.key});
+class ActionGridSectionWidget extends StatelessWidget {
+  const ActionGridSectionWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class LinkGridSectionWidget extends StatelessWidget {
           gridDelegate:
               SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
           itemBuilder: (context, index) {
-            return LinkGridItemWidget(type: index);
+            return ActionGridItemWidget(type: index);
           }),
     );
   }

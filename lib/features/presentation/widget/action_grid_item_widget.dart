@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class LinkGridItemWidget extends StatelessWidget {
+class ActionGridItemWidget extends StatelessWidget {
   final int type;
-  const LinkGridItemWidget({super.key, required this.type});
+  const ActionGridItemWidget({super.key, required this.type});
 
   @override
   Widget build(BuildContext context) {

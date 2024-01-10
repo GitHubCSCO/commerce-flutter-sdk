@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class LinkListItemWidget extends StatelessWidget {
+class ActionListItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(

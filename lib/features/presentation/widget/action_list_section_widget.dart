@@ -1,8 +1,8 @@
-import 'package:commerce_flutter_app/features/presentation/widget/linklist_item_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/action_list_item_widget.dart';
 import 'package:flutter/material.dart';
 
-class LinkListSectionWidget extends StatelessWidget {
-  const LinkListSectionWidget({super.key});
+class ActionListSectionWidget extends StatelessWidget {
+  const ActionListSectionWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class LinkListSectionWidget extends StatelessWidget {
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
-          return LinkListItemWidget();
+          return ActionListItemWidget();
         },
       ),
     );

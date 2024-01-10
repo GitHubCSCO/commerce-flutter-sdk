@@ -1,14 +1,14 @@
-import 'package:commerce_flutter_app/features/presentation/widget/slider_item_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/carousel_item_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../helper/carousel_slider/carousel_slider.dart';
 
-class SlideShowSectionWidget extends StatelessWidget {
+class CarouselSectionWidget extends StatelessWidget {
 
   final imageUrl = "https://mobilespire.commerce.insitesandbox.com//userfiles/optimizely_logo_full-color_dark.png?width=2980&height=1024";
 
-  const SlideShowSectionWidget({super.key});
+  const CarouselSectionWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class SlideShowSectionWidget extends StatelessWidget {
             items: [1,2,3,4,5].map((i) {
               return Builder(
                 builder: (BuildContext context) {
-                  return SliderItemWidget(imageUrl: imageUrl);
+                  return CarouselItemWidget(imageUrl: imageUrl);
                 },
               );
             }).toList(),
