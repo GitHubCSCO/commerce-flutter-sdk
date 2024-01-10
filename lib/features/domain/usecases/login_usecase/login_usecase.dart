@@ -9,6 +9,7 @@ class LoginUsecase {
 
   Future<Result<bool, ErrorResponse>> logInAsync(
       String username, String password) async {
+        
     final result = await _authenticationService.logInAsync(username, password);
     return result;
   }

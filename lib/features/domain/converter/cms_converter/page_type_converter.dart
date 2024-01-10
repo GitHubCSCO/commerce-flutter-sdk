@@ -1,0 +1,19 @@
+import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
+
+class PageTypeConverter {
+  static PageType convert(String enumString) {
+    switch (enumString.toLowerCase()) {
+      case "mobile/account":
+      case "mobileaccount":
+        return PageType.mobileAccount;
+      case "mobile/shop":
+      case "mobileshop":
+        return PageType.mobileShop;
+      case "mobile/search":
+      case "mobilesearch":
+        return PageType.mobileSearch;
+      default:
+        return PageType.unknown;
+    }
+  }
+}
