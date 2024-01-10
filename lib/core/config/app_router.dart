@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
@@ -12,6 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/shop/shop_scr
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_screen.dart';
 import 'package:commerce_flutter_app/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class GoRouterRefreshStream extends ChangeNotifier {
@@ -39,7 +41,7 @@ class Approuter {
   LoginBloc loginBloc = sl<LoginBloc>();
 
   late final GoRouter router = GoRouter(
-      initialLocation: AppRoute.welcome.path,
+      initialLocation: AppRoute.login.path,
       refreshListenable: GoRouterRefreshStream(loginBloc.stream),
       redirect: (BuildContext context, GoRouterState state) {
         debugPrint("a");
@@ -53,7 +55,7 @@ class Approuter {
           if (loggedIn) {
             return AppRoute.shop.path;
           } else {
-            return AppRoute.welcome.path;
+            return AppRoute.login.path;
           }
         }
       },
@@ -74,7 +76,9 @@ class Approuter {
             StatefulShellBranch(
               routes: <RouteBase>[
                 AppRoute.shop.createRoute(
-                  (context, state) => ShopScreen(),
+                  (context, state) => BlocProvider<ShopPageBloc>(
+                      create: (context) => sl<ShopPageBloc>(),
+                      child: const ShopScreen()),
                 ),
               ],
             ),

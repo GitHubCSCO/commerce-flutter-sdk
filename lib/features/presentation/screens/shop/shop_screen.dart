@@ -3,9 +3,15 @@ import 'package:commerce_flutter_app/features/presentation/widget/action_list_se
 import 'package:commerce_flutter_app/features/presentation/widget/product_carousel_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_history_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/carousel_section_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_event.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ShopScreen extends StatelessWidget {
+  const ShopScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
