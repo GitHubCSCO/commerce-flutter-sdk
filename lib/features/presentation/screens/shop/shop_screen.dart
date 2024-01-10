@@ -1,3 +1,8 @@
+import 'package:commerce_flutter_app/features/presentation/widget/action_grid_section_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/action_list_section_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/product_carousel_section_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/search_history_section_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/carousel_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_state.dart';
@@ -9,38 +14,23 @@ class ShopScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shopBloc = BlocProvider.of<ShopPageBloc>(context);
-    shopBloc.add(
-        const ShopPageLoadEvent()); // Add this line to call the event at first
-
-    return BlocConsumer<ShopPageBloc, ShopPageState>(
-      listener: (context, state) {
-        // Add your listener logic here
-      },
-      builder: (context, state) {
-        // Add your builder logic here
-
-        if (state is ShopPageLoadedState) {
-          return ListView.builder(
-            itemCount: state.pageWidgets.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(state.pageWidgets[index].type.toString()),
-              );
-            },
-          );
-        }
-        return Scaffold(
-          body: Center(
-            child: ElevatedButton(
-              onPressed: () {
-                // Add your button's onPressed logic here
-              },
-              child: const Text('shop'),
-            ),
-          ),
-        );
-      },
+    return Scaffold(
+      body: ListView(
+        children: getWidgets(),
+      )
     );
   }
+
+  List<Widget> getWidgets() {
+    List<Widget> widgets = [];
+    widgets.add(CarouselSectionWidget());
+    widgets.add(ActionGridSectionWidget());
+    widgets.add(ProductCarouselSectionWidget(title: 'Top Sellers'));
+    widgets.add(ProductCarouselSectionWidget(title: 'VAT Products'));
+    widgets.add(ProductCarouselSectionWidget(title: 'VMI Products'));
+    widgets.add(ActionListSectionWidget());
+    widgets.add(SearchHistorySectionWidget());
+    return widgets;
+  }
+
 }
