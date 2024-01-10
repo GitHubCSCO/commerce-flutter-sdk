@@ -23,6 +23,5 @@ class WidgetEntity extends Equatable {
   const WidgetEntity({this.id, this.type, this.subType});
 
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [id, type, subType];
 }

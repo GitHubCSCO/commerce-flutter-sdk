@@ -1,7 +1,11 @@
+import 'package:commerce_flutter_app/features/domain/converter/cms_converter/text_justification_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_slide_widget.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
+import 'package:flutter/material.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class PageContentManagementEntity {
   PageInformationEntity? page;
@@ -132,6 +136,7 @@ class LocalizationEntity {
 }
 
 class PageWidgetFieldsEntity {
+  int? previousSearches;
   int? timerSpeed;
   int? animationSpeed;
   ProductCarouselType? carouselType;
@@ -141,9 +146,13 @@ class PageWidgetFieldsEntity {
   bool? showTitle;
   bool? showPrice;
   ActionsLayout? layout;
-  
+  List<PageSlideEntity>? slides;
+  List<PageLinkEntity>? links;
 
   PageWidgetFieldsEntity({
+    this.previousSearches,
+    this.slides,
+    this.links,
     this.timerSpeed,
     this.animationSpeed,
     this.carouselType,
@@ -156,18 +165,58 @@ class PageWidgetFieldsEntity {
   });
 }
 
-class Slide {
-  Map<String, dynamic>? fields;
+class PageSlideEntity {
+  SlideEntity? slide;
 
-  Slide({
+  PageSlideEntity({this.slide});
+}
+
+class SlideEntity {
+  String? image;
+  String? link;
+  String? background;
+  String? heading;
+  String? subheading;
+  bool? applyDarkOverlayToImage;
+  String? backgroundColor;
+  String? headingColor;
+  String? subheadingColor;
+  TextJustification? textAlignment;
+
+  SlideEntity({
+    this.image,
+    this.link,
+    this.background,
+    this.heading,
+    this.subheading,
+    this.applyDarkOverlayToImage,
+    this.backgroundColor,
+    this.headingColor,
+    this.subheadingColor,
+    this.textAlignment,
+  });
+}
+
+class PageLinkEntity {
+  FieldsEntity? fields;
+
+  PageLinkEntity({
     this.fields,
   });
 }
 
-class Link {
-  Map<String, dynamic>? fields;
-
-  Link({
-    this.fields,
+class FieldsEntity {
+  String? icon;
+  String? type;
+  String? url;
+  String? text;
+  @JsonKey(name: 'requires_auth')
+  bool? requiresAuth;
+  FieldsEntity({
+    this.icon,
+    this.type,
+    this.url,
+    this.text,
+    this.requiresAuth,
   });
 }

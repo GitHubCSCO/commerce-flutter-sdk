@@ -4,10 +4,6 @@ import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/logi
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
-import 'package:commerce_flutter_app/services/cache_fake.dart';
-import 'package:commerce_flutter_app/services/local_storage_fake.dart';
-import 'package:commerce_flutter_app/services/network_fake.dart';
-import 'package:commerce_flutter_app/services/secure_storage_fake.dart';
 import 'package:get_it/get_it.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -22,7 +18,8 @@ Future<void> initInjectionContainer() async {
         ))
 
     //shop
-    ..registerFactory(() => ShopPageBloc(ShopUseCase(sl())))
+    ..registerFactory(() => ShopPageBloc(sl()))
+    ..registerLazySingleton(() => ShopUseCase(sl(), sl()))
     ..registerLazySingleton<IAuthenticationService>(() => AuthenticationService(
           sessionService: sl(),
           clientService: sl(),

@@ -19,6 +19,17 @@ class ShopScreen extends StatelessWidget {
       },
       builder: (context, state) {
         // Add your builder logic here
+
+        if (state is ShopPageLoadedState) {
+          return ListView.builder(
+            itemCount: state.pageWidgets.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(state.pageWidgets[index].type.toString()),
+              );
+            },
+          );
+        }
         return Scaffold(
           body: Center(
             child: ElevatedButton(

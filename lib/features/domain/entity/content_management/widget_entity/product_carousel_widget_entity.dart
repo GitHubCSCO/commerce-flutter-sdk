@@ -15,7 +15,7 @@ enum ProductCarouselType {
   webCrossSells,
 }
 
-class ProductCarouselWidget extends WidgetEntity {
+class ProductCarouselWidgetEntity extends WidgetEntity {
   final ProductCarouselType carouselType;
   final String title;
   final int numberOfProductsToDisplay;
@@ -26,7 +26,7 @@ class ProductCarouselWidget extends WidgetEntity {
   final List<String> selectedCategoryIds;
   final bool shouldForceLoadData;
 
-  const ProductCarouselWidget({
+  const ProductCarouselWidgetEntity({
     required this.carouselType,
     required this.title,
     required this.numberOfProductsToDisplay,

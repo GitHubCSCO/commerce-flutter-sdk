@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/features/domain/converter/cms_converter/act
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/page_type_converter.dart';
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/page_widget_type_converter.dart';
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/product_carousel_type_converter.dart';
+import 'package:commerce_flutter_app/features/domain/converter/cms_converter/text_justification_converter.dart';
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/top_sellers_categories_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/page_content_management_entity.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -30,7 +31,7 @@ class PageContentManagementMapper {
         variantName: model.variantName,
         layoutPageId: model.layoutPageId,
         templateHash: model.templateHash,
-        widgets: null,
+        widgets: model.widgets?.map(toPageWidgetEntity).toList() ?? [],
         id: model.id,
         generalFields: model.generalFields != null
             ? toPageSettingsEntity(model.generalFields!)
@@ -83,6 +84,38 @@ class PageContentManagementMapper {
         showTitle: model.showTitle,
         showPrice: model.showPrice,
         layout: ActionsLayoutConverter.convert(model.layout ?? ''),
+        previousSearches: model.previousSearches,
+        slides: model.slides?.map(toPageSlideEntity).toList() ?? [],
+        links: model.links?.map(toPageLinkEntity).toList() ?? [],
+      );
+
+  PageSlideEntity toPageSlideEntity(PageSlide model) => PageSlideEntity(
+        slide: toSlideEntity(model.slide ?? Slide()),
+      );
+
+  SlideEntity toSlideEntity(Slide model) => SlideEntity(
+        image: model.image,
+        link: model.link,
+        background: model.background,
+        heading: model.heading,
+        subheading: model.subheading,
+        applyDarkOverlayToImage: model.applyDarkOverlayToImage,
+        backgroundColor: model.backgroundColor,
+        headingColor: model.headingColor,
+        subheadingColor: model.subheadingColor,
+        textAlignment: TextJustificationConverter.convert(model.textAlignment ?? ''),
+      );
+
+  PageLinkEntity toPageLinkEntity(PageLink model) => PageLinkEntity(
+        fields: toFieldsEntity(model.fields ?? Fields()),
+      );
+
+  FieldsEntity toFieldsEntity(Fields model) => FieldsEntity(
+        icon: model.icon,
+        type: model.type,
+        url: model.url,
+        text: model.text,
+        requiresAuth: model.requiresAuth,
       );
 
   TranslatableFieldsEntity toTranslatableFieldsEntity(

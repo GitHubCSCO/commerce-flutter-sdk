@@ -52,12 +52,12 @@ class Action extends Equatable {
   List<Object?> get props => [type, icon, text, url, requiresAuth];
 }
 
-class ActionsWidget extends WidgetEntity {
+class ActionsWidgetEntity extends WidgetEntity {
   final ActionsLayout layout;
   final List<Action> actions;
   final List<Action> childWidgets;
 
-  const ActionsWidget({
+  const ActionsWidgetEntity({
     required this.layout,
     required this.actions,
     required this.childWidgets,

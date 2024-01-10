@@ -6,22 +6,22 @@ enum TextJustification {
   right,
 }
 
-class CarouselSlideWidget extends WidgetEntity {
-  final String imagePath;
-  final String link;
-  final String primaryText;
-  final String secondaryText;
-  final bool applyDarkOverlayToImage;
-  final String primaryTextColorHex;
-  final String secondaryTextColorHex;
-  final TextJustification textJustification;
+class CarouselSlideWidgetEntity extends WidgetEntity {
+  final String? imagePath;
+  final String? link;
+  final String? primaryText;
+  final String? secondaryText;
+  final bool? applyDarkOverlayToImage;
+  final String? primaryTextColorHex;
+  final String? secondaryTextColorHex;
+  final TextJustification? textJustification;
 
-  const CarouselSlideWidget({
+  const CarouselSlideWidgetEntity({
     required this.imagePath,
     required this.link,
     required this.primaryText,
     required this.secondaryText,
-    required this.applyDarkOverlayToImage,
+    this.applyDarkOverlayToImage,
     required this.primaryTextColorHex,
     required this.secondaryTextColorHex,
     required this.textJustification,
