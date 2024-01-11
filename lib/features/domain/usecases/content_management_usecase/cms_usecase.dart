@@ -1,5 +1,7 @@
+import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_type_converter.dart';
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/text_justification_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/page_content_management_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_slide_widget.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
@@ -68,6 +70,9 @@ class CmsUseCase {
             widgetEntities.add(mobileCarouselWidget);
           case WidgetType.mobileCarouselSlide:
           case WidgetType.mobileLinkList:
+            final listListWidget = await convertWidgetToMobileLinkListEntity(
+                pageWidget, currentSession);
+            widgetEntities.add(listListWidget);
           case WidgetType.productCarousel:
           case WidgetType.mobileSearchHistory:
           case WidgetType.unknown:
@@ -78,6 +83,53 @@ class CmsUseCase {
     }
 
     return widgetEntities;
+  }
+
+  Future<ActionsWidgetEntity> convertWidgetToMobileLinkListEntity(
+      PageWidgetEntity pageWidget, Session? currentSession) async {
+    var actionsWidget = ActionsWidgetEntity();
+    var actionList = <Action>[];
+    actionsWidget =
+        actionsWidget.copyWith(layout: pageWidget.generalFields?.layout);
+
+    if (pageWidget.generalFields?.links != null &&
+        pageWidget.generalFields!.links!.isNotEmpty) {
+      for (var action in pageWidget.generalFields?.links ?? []) {
+        actionList.add(Action(
+          type: ActionTypeConverter.convert(action.fields?.type ?? ''),
+          icon: action.fields?.icon,
+          text: action.fields?.text,
+          url: action.fields?.url,
+          requiresAuth: action.fields?.requiresAuth,
+        ));
+      }
+    } else if (pageWidget.translatableFields?.links != null) {
+      var titles = pageWidget.translatableFields?.links as Map<String, dynamic>;
+      titles.forEach((key, value) {
+        if (currentSession?.language != null &&
+            currentSession?.language?.id == key) {
+          var pageLinks =
+              (value as List).map((item) => PageLink.fromJson(item)).toList();
+          if (pageLinks.isNotEmpty) {
+            for (var pageLink in pageLinks) {
+              actionList.add(Action(
+                type: ActionTypeConverter.convert(pageLink.fields?.type ?? ''),
+                icon: pageLink.fields?.icon,
+                text: pageLink.fields?.text,
+                url: pageLink.fields?.url,
+                requiresAuth: pageLink.fields?.requiresAuth,
+              ));
+            }
+          }
+        }
+      });
+    }
+    actionsWidget = actionsWidget.copyWith(
+      id: pageWidget.id,
+      type: pageWidget.type,
+    );
+    actionsWidget = actionsWidget.copyWith(actions: actionList);
+    return actionsWidget;
   }
 
   Future<CarouselWidgetEntity> convertWidgetToCarouselWidgetEntity(
@@ -134,6 +186,11 @@ class CmsUseCase {
           }
         });
       }
+
+      carouselWidget = carouselWidget.copyWith(
+        id: pageWidget.id,
+        type: pageWidget.type,
+      );
     }
 
     return carouselWidget;

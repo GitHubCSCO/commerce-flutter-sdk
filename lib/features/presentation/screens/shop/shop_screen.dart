@@ -14,11 +14,13 @@ class ShopScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final shopBloc = BlocProvider.of<ShopPageBloc>(context);
+    shopBloc.add(const ShopPageLoadEvent());
+
     return Scaffold(
-      body: ListView(
-        children: getWidgets(),
-      )
-    );
+        body: ListView(
+      children: getWidgets(),
+    ));
   }
 
   List<Widget> getWidgets() {
@@ -32,5 +34,4 @@ class ShopScreen extends StatelessWidget {
     widgets.add(SearchHistorySectionWidget());
     return widgets;
   }
-
 }
