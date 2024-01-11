@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_components.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_style.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class DomainSelectionScreen extends StatelessWidget {
   const DomainSelectionScreen({super.key});
@@ -10,7 +11,21 @@ class DomainSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.transparent),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        actions: [
+          TextButton(
+            onPressed: () {
+              context.pop();
+            },
+            child: const Text(
+              LocalizationKeyword.cancel,
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+        ],
+      ),
       backgroundColor: Colors.yellow,
       body: const DomainSelectionPage(),
     );

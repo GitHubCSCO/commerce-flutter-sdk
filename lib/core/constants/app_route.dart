@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 enum AppRoute {
   welcome(name: 'welcome', path: '/'),
+  domainSelection(name: 'domainSelection', path: '/domainSelection'),
   login(name: 'login', path: '/login'),
   shop(name: 'shop', path: '/shop'),
   search(name: 'search', path: '/search'),

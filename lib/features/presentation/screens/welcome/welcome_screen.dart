@@ -1,8 +1,10 @@
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/domain_selection.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_components.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_style.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -48,11 +50,7 @@ class WelcomeFirstPage extends StatelessWidget {
             const Expanded(child: SizedBox()),
             WelcomePrimaryButton(
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const DomainSelectionScreen(),
-                  ),
-                );
+                context.push(AppRoute.domainSelection.path);
               },
               child: const Text(
                 LocalizationKeyword.signInPrompt,
