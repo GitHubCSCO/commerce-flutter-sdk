@@ -1,6 +1,28 @@
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_style.dart';
 import 'package:flutter/material.dart';
 
+class WelcomeBaseScreen extends StatelessWidget {
+  const WelcomeBaseScreen({
+    super.key,
+    this.child,
+    this.backgroundColor = Colors.yellow,
+    this.appBar,
+  });
+
+  final Widget? child;
+  final AppBar? appBar;
+  final Color backgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: appBar,
+      backgroundColor: backgroundColor,
+      body: child,
+    );
+  }
+}
+
 class WelcomeCard extends StatelessWidget {
   const WelcomeCard({
     super.key,

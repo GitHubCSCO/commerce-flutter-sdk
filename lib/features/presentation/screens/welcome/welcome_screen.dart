@@ -10,9 +10,8 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.yellow,
-      body: WelcomeFirstPage(),
+    return const WelcomeBaseScreen(
+      child: WelcomeFirstPage(),
     );
   }
 }

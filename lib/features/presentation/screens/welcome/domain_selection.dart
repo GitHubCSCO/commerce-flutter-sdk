@@ -10,7 +10,7 @@ class DomainSelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  WelcomeBaseScreen(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
@@ -26,8 +26,7 @@ class DomainSelectionScreen extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: Colors.yellow,
-      body: const DomainSelectionPage(),
+      child: const DomainSelectionPage(),
     );
   }
 }
