@@ -4,27 +4,27 @@ import 'package:commerce_flutter_app/features/presentation/screens/welcome/welco
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_style.dart';
 import 'package:flutter/material.dart';
 
-class StorefrontUrlScreen extends StatelessWidget {
-  const StorefrontUrlScreen({super.key});
+class DomainSelectionScreen extends StatelessWidget {
+  const DomainSelectionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.transparent),
       backgroundColor: Colors.yellow,
-      body: const StorefrontUrlPage(),
+      body: const DomainSelectionPage(),
     );
   }
 }
 
-class StorefrontUrlPage extends StatefulWidget {
-  const StorefrontUrlPage({super.key});
+class DomainSelectionPage extends StatefulWidget {
+  const DomainSelectionPage({super.key});
 
   @override
-  State<StorefrontUrlPage> createState() => _StorefrontUrlPageState();
+  State<DomainSelectionPage> createState() => _DomainSelectionPageState();
 }
 
-class _StorefrontUrlPageState extends State<StorefrontUrlPage> {
+class _DomainSelectionPageState extends State<DomainSelectionPage> {
   final TextEditingController _textEditingController = TextEditingController();
 
   @override
@@ -58,7 +58,7 @@ class _StorefrontUrlPageState extends State<StorefrontUrlPage> {
             TextField(
               controller: _textEditingController,
               decoration: const InputDecoration(
-                hintText: 'Example: store.optimizely.com',
+                hintText: LocalizationKeyword.enterDomainHint,
                 border: OutlineInputBorder(),
                 label: Text('Enter Store URL'),
               ),
@@ -70,7 +70,7 @@ class _StorefrontUrlPageState extends State<StorefrontUrlPage> {
                       AppRoute.shop.navigate(context);
                     }
                   : null,
-              child: const Text('Continue'),
+              child: const Text(LocalizationKeyword.useECommerceWebsite),
             ),
           ],
         ),

@@ -1,5 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/welcome/storefront_url_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/welcome/domain_selection.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_components.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_style.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +50,7 @@ class WelcomeFirstPage extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const StorefrontUrlScreen(),
+                    builder: (context) => const DomainSelectionScreen(),
                   ),
                 );
               },
