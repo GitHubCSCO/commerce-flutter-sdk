@@ -1,8 +1,11 @@
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_history_item_widget.dart';
 import 'package:flutter/material.dart';
 
 class SearchHistorySectionWidget extends StatelessWidget {
-  const SearchHistorySectionWidget({super.key});
+  final SearchHistoryWidgetEntity searchHistoryWidgetEntity;
+
+  const SearchHistorySectionWidget({super.key, required this.searchHistoryWidgetEntity});
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,11 @@
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/product_carousel_item_widget.dart';
 import 'package:flutter/material.dart';
 
 class ProductCarouselSectionWidget extends StatelessWidget {
-  final String title;
+  final ProductCarouselWidgetEntity productCarouselWidgetEntity;
 
-  const ProductCarouselSectionWidget({super.key, required this.title});
+  const ProductCarouselSectionWidget({super.key, required this.productCarouselWidgetEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class ProductCarouselSectionWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             child: Text(
-              title,
+              productCarouselWidgetEntity.title,
               style: const TextStyle(
                 color: Color(0xFF222222),
                 fontSize: 18,

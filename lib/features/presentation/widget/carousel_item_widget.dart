@@ -1,9 +1,10 @@
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_slide_widget.dart';
 import 'package:flutter/cupertino.dart';
 
 class CarouselItemWidget extends StatelessWidget {
-  const CarouselItemWidget({super.key, required this.imageUrl});
+  final CarouselSlideWidgetEntity carouselSlideWidgetEntity;
 
-  final String imageUrl;
+  const CarouselItemWidget({super.key, required this.carouselSlideWidgetEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +13,7 @@ class CarouselItemWidget extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
         image: DecorationImage(
-          image: NetworkImage(imageUrl),
+          image: NetworkImage(carouselSlideWidgetEntity.imagePath!),
           fit: BoxFit.fill,
         ),
       ),
