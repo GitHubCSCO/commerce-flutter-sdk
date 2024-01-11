@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/features/domain/entity/content_management/w
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_slide_widget.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service_interface.dart';
@@ -80,6 +81,10 @@ class CmsUseCase {
                     pageWidget, currentSession);
             widgetEntities.add(productCarouselWidget);
           case WidgetType.mobileSearchHistory:
+            final searchHistoryWidget =
+                await convertWidgetToSearchHistoryEntity(
+                    pageWidget, currentSession);
+            widgetEntities.add(searchHistoryWidget);
           case WidgetType.unknown:
           default:
             break;
@@ -88,6 +93,28 @@ class CmsUseCase {
     }
 
     return widgetEntities;
+  }
+
+  Future<SearchHistoryWidgetEntity> convertWidgetToSearchHistoryEntity(
+      PageWidgetEntity pageWidget, Session? currentSession) async {
+    var searchhistoryWidget = SearchHistoryWidgetEntity();
+    if (pageWidget.generalFields != null &&
+        pageWidget.generalFields?.previousSearches != null) {
+      searchhistoryWidget = searchhistoryWidget.copyWith(
+          itemsCount: pageWidget.generalFields?.previousSearches.toString());
+    }
+
+    if (pageWidget.translatableFields != null) {
+      var titles = pageWidget.translatableFields?.title as Map<String, dynamic>;
+      titles.forEach((key, value) {
+        if (currentSession?.language != null &&
+            currentSession?.language?.id == key) {
+          searchhistoryWidget = searchhistoryWidget.copyWith(title: value);
+        }
+      });
+    }
+
+    return searchhistoryWidget;
   }
 
   Future<ProductCarouselWidgetEntity> convertWidgetToProductCarouselListEntity(
