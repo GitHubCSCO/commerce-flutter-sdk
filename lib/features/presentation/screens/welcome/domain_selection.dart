@@ -10,7 +10,7 @@ class DomainSelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  WelcomeBaseScreen(
+    return WelcomeBaseScreen(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
