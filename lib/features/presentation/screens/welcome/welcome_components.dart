@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 class WelcomeBaseScreen extends StatelessWidget {
   const WelcomeBaseScreen({
     super.key,
-    this.child,
+    required this.child,
     this.backgroundColor = Colors.yellow,
     this.appBar,
   });
 
-  final Widget? child;
+  final Widget child;
   final AppBar? appBar;
   final Color backgroundColor;
 
@@ -18,7 +18,20 @@ class WelcomeBaseScreen extends StatelessWidget {
     return Scaffold(
       appBar: appBar,
       backgroundColor: backgroundColor,
-      body: child,
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const SizedBox(height: 50),
+            Image.asset(
+              WelcomeStyle.optimizelyLogo,
+              height: WelcomeStyle.optimizelyLogoHeight,
+              width: WelcomeStyle.optimizelyLogoWidth,
+            ),
+            Center(child: child),
+          ],
+        ),
+      ),
     );
   }
 }

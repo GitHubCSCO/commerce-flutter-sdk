@@ -30,4 +30,10 @@ class WelcomeStyle {
   static const Color welcomeButtonColorAccent = Colors.deepPurple;
 
   static BorderRadius welcomeButtonBorderRadius = BorderRadius.circular(5);
+
+  static const String optimizelyLogo = 'assets/images/optimizely-logo.png';
+
+  static const double optimizelyLogoHeight = 120;
+
+  static const double optimizelyLogoWidth = 120;
 }
