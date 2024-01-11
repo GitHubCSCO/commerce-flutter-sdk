@@ -146,12 +146,14 @@ class PageWidgetFieldsEntity {
   ActionsLayout? layout;
   List<PageSlideEntity>? slides;
   List<PageLinkEntity>? links;
+  bool? showPartNumbers;
 
   PageWidgetFieldsEntity({
     this.previousSearches,
     this.slides,
     this.links,
     this.timerSpeed,
+    this.showPartNumbers,
     this.animationSpeed,
     this.carouselType,
     this.displayProductsFrom,

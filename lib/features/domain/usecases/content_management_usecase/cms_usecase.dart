@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/features/domain/entity/content_management/p
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_slide_widget.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service_interface.dart';
@@ -74,6 +75,10 @@ class CmsUseCase {
                 pageWidget, currentSession);
             widgetEntities.add(listListWidget);
           case WidgetType.productCarousel:
+            final productCarouselWidget =
+                await convertWidgetToProductCarouselListEntity(
+                    pageWidget, currentSession);
+            widgetEntities.add(productCarouselWidget);
           case WidgetType.mobileSearchHistory:
           case WidgetType.unknown:
           default:
@@ -83,6 +88,30 @@ class CmsUseCase {
     }
 
     return widgetEntities;
+  }
+
+  Future<ProductCarouselWidgetEntity> convertWidgetToProductCarouselListEntity(
+      PageWidgetEntity pageWidget, Session? currentSession) async {
+    var productCarouselWidget = ProductCarouselWidgetEntity();
+    if (pageWidget.generalFields != null) {
+      productCarouselWidget = productCarouselWidget.copyWith(
+          carouselType: pageWidget.generalFields?.carouselType,
+          displayTopSellersFrom: pageWidget.generalFields?.displayProductsFrom,
+          selectedCategoryIds: pageWidget.generalFields?.selectedCategoryIds,
+          displayPrice: pageWidget.generalFields?.showPrice,
+          displayPartNumbers: pageWidget.generalFields?.showPartNumbers);
+    }
+
+    if (pageWidget.translatableFields != null) {
+      var titles = pageWidget.translatableFields?.title as Map<String, dynamic>;
+      titles.forEach((key, value) {
+        if (currentSession?.language != null &&
+            currentSession?.language?.id == key) {
+          productCarouselWidget = productCarouselWidget.copyWith(title: value);
+        }
+      });
+    }
+    return productCarouselWidget;
   }
 
   Future<ActionsWidgetEntity> convertWidgetToMobileLinkListEntity(
