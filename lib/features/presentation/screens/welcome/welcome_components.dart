@@ -5,32 +5,42 @@ class WelcomeBaseScreen extends StatelessWidget {
   const WelcomeBaseScreen({
     super.key,
     required this.child,
-    this.backgroundColor = Colors.yellow,
     this.appBar,
   });
 
   final Widget child;
   final AppBar? appBar;
-  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar,
-      backgroundColor: backgroundColor,
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SizedBox(height: 50),
-            Image.asset(
-              WelcomeStyle.optimizelyLogo,
-              height: WelcomeStyle.optimizelyLogoHeight,
-              width: WelcomeStyle.optimizelyLogoWidth,
+      extendBodyBehindAppBar: true,
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(WelcomeStyle.welcomeBackgroundImage),
+                fit: BoxFit.cover,
+              ),
             ),
-            Center(child: child),
-          ],
-        ),
+          ),
+          SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(height: 50),
+                Image.asset(
+                  WelcomeStyle.optimizelyLogo,
+                  height: WelcomeStyle.optimizelyLogoHeight,
+                  width: WelcomeStyle.optimizelyLogoWidth,
+                ),
+                Center(child: child),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
