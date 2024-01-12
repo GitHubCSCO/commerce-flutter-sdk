@@ -17,24 +17,24 @@ final class DomainSelectionSuccess extends DomainSelectionState {
   List<Object?> get props => [];
 }
 
-final class _DomainSelectionFailed extends DomainSelectionState {
+final class DomainSelectionFailed extends DomainSelectionState {
   final String title;
   final String message;
 
-  _DomainSelectionFailed(this.title, this.message);
+  DomainSelectionFailed(this.title, this.message);
 
   @override
   List<Object?> get props => [title, message];
 }
 
-final class DomainSelectionFailedOffline extends _DomainSelectionFailed {
+final class DomainSelectionFailedOffline extends DomainSelectionFailed {
   DomainSelectionFailedOffline(super.title, super.message);
 
   @override
   List<Object?> get props => [title, message];
 }
 
-final class DomainSelectionFailedInvalid extends _DomainSelectionFailed {
+final class DomainSelectionFailedInvalid extends DomainSelectionFailed {
   DomainSelectionFailedInvalid(super.message, super.title);
 
   @override
@@ -42,7 +42,7 @@ final class DomainSelectionFailedInvalid extends _DomainSelectionFailed {
 }
 
 final class DomainSelectionFailedMobileAppDisabled
-    extends _DomainSelectionFailed {
+    extends DomainSelectionFailed {
   DomainSelectionFailedMobileAppDisabled(super.title, super.message);
 
   @override

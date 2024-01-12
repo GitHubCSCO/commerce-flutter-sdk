@@ -42,5 +42,16 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<ISecureStorageService>(
         () => FakeSecureStorageService())
     ..registerLazySingleton<ILocalStorageService>(
-        () => FakeLocalStorageService());
+        () => FakeLocalStorageService())
+
+    //domain selection
+    ..registerLazySingleton<ISettingsService>(() => SettingsService(
+          cacheService: sl(),
+          clientService: sl(),
+          networkService: sl(),
+        ))
+    ..registerLazySingleton<IAdminClientService>(() => AdminClientService(
+          localStorageService: sl(),
+          secureStorageService: sl(),
+        ));
 }

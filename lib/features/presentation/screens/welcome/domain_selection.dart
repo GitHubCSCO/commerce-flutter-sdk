@@ -1,8 +1,11 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/domain_selection_usecase/domain_selection_usecase.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/domain_selection/domain_selection_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_components.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class DomainSelectionScreen extends StatelessWidget {
@@ -26,7 +29,10 @@ class DomainSelectionScreen extends StatelessWidget {
           ),
         ],
       ),
-      child: const DomainSelectionPage(),
+      child: BlocProvider(
+        create: (context) => DomainSelectionCubit(DomainSelectionUsecase()),
+        child: const DomainSelectionPage(),
+      ),
     );
   }
 }
@@ -78,13 +84,45 @@ class _DomainSelectionPageState extends State<DomainSelectionPage> {
               ),
             ),
             const Expanded(child: SizedBox()),
-            WelcomePrimaryButton(
-              onPressed: _textEditingController.text.isNotEmpty
-                  ? () {
-                      AppRoute.shop.navigate(context);
-                    }
-                  : null,
-              child: const Text(LocalizationKeyword.useECommerceWebsite),
+            BlocConsumer<DomainSelectionCubit, DomainSelectionState>(
+              listener: (context, state) {
+                if (state is DomainSelectionSuccess) {
+                  AppRoute.shop.navigate(context);
+                }
+
+                if (state is DomainSelectionFailed) {
+                  showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: Text(state.title),
+                      content: Text(state.message),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            context.pop();
+                          },
+                          child: const Text(LocalizationKeyword.ok),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
+              builder: (context, state) {
+                return state is DomainSelectionInProgress
+                    ? const Center(child: CircularProgressIndicator())
+                    : WelcomePrimaryButton(
+                        onPressed: _textEditingController.text.isNotEmpty
+                            ? () {
+                                context
+                                    .read<DomainSelectionCubit>()
+                                    .selectDomain(_textEditingController.text);
+                              }
+                            : null,
+                        child:
+                            const Text(LocalizationKeyword.useECommerceWebsite),
+                      );
+              },
             ),
           ],
         ),
