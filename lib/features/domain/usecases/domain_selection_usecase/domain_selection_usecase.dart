@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/url_string_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/features/domain/enums/domain_selection_status.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class DomainSelectionUsecase {
@@ -10,11 +10,9 @@ class DomainSelectionUsecase {
   final INetworkService _networkService = sl<INetworkService>();
   final ILocalStorageService _localStorageService = sl<ILocalStorageService>();
 
-  static const _wasAdminLoginAdvertisedPreferenceKey =
-      "wasAdminLoginAdvertisedPreferenceKey";
   static const _domainKey = 'DomainKey';
 
-  Future<Result<bool, ErrorResponse>> domainSelectHandler(String domain) async {
+  Future<DomainSelectionStatus> domainSelectHandler(String domain) async {
     final validUrlString = domain.makeValidUrl();
 
     var domainUri = Uri.parse(validUrlString);
@@ -30,23 +28,21 @@ class DomainSelectionUsecase {
     _clientService.host = extractedDomain;
     _adminClientService.host = extractedDomain;
 
-    if (!await _testAndGetSettings()) {
-      return Failure(
-        ErrorResponse(
-          message: LocalizationKeyword.domainWebsiteNotResponding,
-        ),
-      );
+    final domainSelectionStatus = await _testAndGetSettings();
+
+    if (domainSelectionStatus != DomainSelectionStatus.success) {
+      return domainSelectionStatus;
     }
 
     _localStorageService.save(_domainKey, _clientService.host!);
-    return const Success(true);
+    return DomainSelectionStatus.success;
   }
 
-  Future<bool> _testAndGetSettings() async {
+  Future<DomainSelectionStatus> _testAndGetSettings() async {
     var isOnline = await _networkService.isOnline();
 
     if (!isOnline) {
-      return false;
+      return DomainSelectionStatus.failedOffline;
     }
 
     final futures = [
@@ -71,9 +67,9 @@ class DomainSelectionUsecase {
         _clientService.host = prefixRemoveUrl;
         _adminClientService.host = prefixRemoveUrl;
         return await _testAndGetSettings();
-      } else {
-        return false;
       }
+
+      return DomainSelectionStatus.failedInvalidDomain;
     }
 
     // Check if websiteSettingsResponse is a Success
@@ -84,9 +80,9 @@ class DomainSelectionUsecase {
             false;
 
     if (!isMobileAppEnabled) {
-      return false;
+      return DomainSelectionStatus.failedMobileAppDisabled;
     }
 
-    return true;
+    return DomainSelectionStatus.success;
   }
 }
