@@ -144,14 +144,14 @@ class CmsUseCase {
   Future<ActionsWidgetEntity> convertWidgetToMobileLinkListEntity(
       PageWidgetEntity pageWidget, Session? currentSession) async {
     var actionsWidget = ActionsWidgetEntity();
-    var actionList = <Action>[];
+    var actionList = <ActionLink>[];
     actionsWidget =
         actionsWidget.copyWith(layout: pageWidget.generalFields?.layout);
 
     if (pageWidget.generalFields?.links != null &&
         pageWidget.generalFields!.links!.isNotEmpty) {
       for (var action in pageWidget.generalFields?.links ?? []) {
-        actionList.add(Action(
+        actionList.add(ActionLink(
           type: ActionTypeConverter.convert(action.fields?.type ?? ''),
           icon: action.fields?.icon,
           text: action.fields?.text,
@@ -168,7 +168,7 @@ class CmsUseCase {
               (value as List).map((item) => PageLink.fromJson(item)).toList();
           if (pageLinks.isNotEmpty) {
             for (var pageLink in pageLinks) {
-              actionList.add(Action(
+              actionList.add(ActionLink(
                 type: ActionTypeConverter.convert(pageLink.fields?.type ?? ''),
                 icon: pageLink.fields?.icon,
                 text: pageLink.fields?.text,

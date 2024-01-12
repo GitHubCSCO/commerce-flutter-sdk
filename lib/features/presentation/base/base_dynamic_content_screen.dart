@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_layout_type_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
@@ -6,12 +7,14 @@ import 'package:commerce_flutter_app/features/domain/entity/content_management/w
 import 'package:commerce_flutter_app/features/presentation/widget/action_grid_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/action_list_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/carousel_section_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/listview_divider_item.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/product_carousel_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_history_section_widget.dart';
 import 'package:flutter/material.dart';
 
 
 class BaseDynamicContentScreen extends StatelessWidget {
+  const BaseDynamicContentScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,23 +24,16 @@ class BaseDynamicContentScreen extends StatelessWidget {
 
   List<Widget> buildContentWidgets(List<WidgetEntity> widgetEntities) {
     List<Widget> widgets = [];
+    final dividerWidget = buildDividerWidget();
 
     for (WidgetEntity widgetEntity in widgetEntities) {
       final Widget? widget = buildContentWidget(widgetEntity);
 
       if (widget != null) {
         widgets.add(widget);
+        widgets.add(dividerWidget);
       }
     }
-
-    // Example additional widgets:
-    // widgets.add(buildCarouselSectionWidget());
-    // widgets.add(buildActionGridSectionWidget());
-    // widgets.add(buildProductCarouselSectionWidget(title: 'Top Sellers'));
-    // widgets.add(buildProductCarouselSectionWidget(title: 'VAT Products'));
-    // widgets.add(buildProductCarouselSectionWidget(title: 'VMI Products'));
-    // widgets.add(buildActionListSectionWidget());
-    // widgets.add(buildSearchHistorySectionWidget());
 
     return widgets;
   }
@@ -54,7 +50,7 @@ class BaseDynamicContentScreen extends StatelessWidget {
         {
           final ActionsWidgetEntity actionsWidgetEntity = widgetEntity as ActionsWidgetEntity;
 
-          return (actionsWidgetEntity.layout == ActionsLayout.grid)
+          return (actionsWidgetEntity.layout == ActionsLayout.list)
               ? buildActionGridSectionWidget(actionsWidgetEntity: actionsWidgetEntity)
               : buildActionListSectionWidget(actionsWidgetEntity: actionsWidgetEntity);
         }
@@ -72,6 +68,10 @@ class BaseDynamicContentScreen extends StatelessWidget {
         }
     }
     return null;
+  }
+
+  Widget buildDividerWidget() {
+    return const ListViewDivider();
   }
 
   Widget buildCarouselSectionWidget({required CarouselWidgetEntity carouselWidgetEntity}) {

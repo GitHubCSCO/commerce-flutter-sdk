@@ -5,36 +5,26 @@ class ProductCarouselItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 140,
-      margin: const EdgeInsets.only(
-        left: 6,
-        right: 6,
-      ),
-      padding:
-      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: ShapeDecoration(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
         color: Colors.white,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8)),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 108,
-            height: 80,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(
-                    "https://www.deere.com/assets/images/region-3/products/tractors/heavy-tractors/tractor-8270r-estudio.png"),
-                fit: BoxFit.fitHeight,
-              ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.network(
+              "https://www.deere.com/assets/images/region-3/products/tractors/heavy-tractors/tractor-8270r-estudio.png",
+              width: 108,
+              height: 80,
+              fit: BoxFit.fitHeight,
             ),
           ),
           const SizedBox(height: 8),
-          const SizedBox(
-            width: double.infinity,
+          SizedBox(
             height: 30,
             child: Text(
               'Cafe Valet® Barista Single-Serve Coffee Maker',
@@ -47,15 +37,12 @@ class ProductCarouselItemWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          const SizedBox(
-            width: double.infinity,
-            child: Text(
-              '\$449.99',
-              style: TextStyle(
-                color: Color(0xFF222222),
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
+          Text(
+            '\$449.99',
+            style: TextStyle(
+              color: Color(0xFF222222),
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],

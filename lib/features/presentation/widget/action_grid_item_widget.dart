@@ -1,8 +1,12 @@
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/base/base_action_item_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class ActionGridItemWidget extends StatelessWidget {
-  final int type;
-  const ActionGridItemWidget({super.key, required this.type});
+class ActionGridItemWidget extends BaseActionItemWidget {
+  final ActionLink action;
+
+  ActionGridItemWidget({super.key, required this.action});
 
   @override
   Widget build(BuildContext context) {
@@ -16,17 +20,19 @@ class ActionGridItemWidget extends StatelessWidget {
           Container(
             width: 40,
             height: 40,
-            child: Icon(
-              Icons.search,
-              color: Colors.black54,
+            child: SvgPicture.asset(
+              getActionIconPath(action.type),
+              semanticsLabel: 'Action item icon',
+              fit: BoxFit.fitWidth,
             ),
           ),
-          const SizedBox(height: 8),
-          SizedBox(
+          Container(
             width: double.infinity,
             height: 30,
+            padding: EdgeInsets.only(left: 4, right: 4),
+            alignment: Alignment.center,
             child: Text(
-              getTitle(type),
+              getActionTitle(action.type),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
@@ -39,11 +45,6 @@ class ActionGridItemWidget extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String getTitle(int type) {
-    return type % 2 == 0 ? "Categories" : "Cafe Valet® Barista Single-Serve Coffee Maker";
-    // return "Categories";
   }
 
 }

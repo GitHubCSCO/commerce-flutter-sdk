@@ -13,11 +13,12 @@ class ActionListSectionWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(color: Colors.white),
       child: ListView.builder(
-        itemCount: 4,
+        itemCount: actionsWidgetEntity.actions?.length,
         shrinkWrap: true,
-        scrollDirection: Axis.vertical,
+        physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
-          return ActionListItemWidget();
+          final action = actionsWidgetEntity.actions![index];
+          return ActionListItemWidget(action: action);
         },
       ),
     );
