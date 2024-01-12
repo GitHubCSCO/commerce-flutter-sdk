@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
+enum ActionsLayout { list, grid }
 
 class ActionsLayoutConverter {
   static ActionsLayout convert(String enumString) {

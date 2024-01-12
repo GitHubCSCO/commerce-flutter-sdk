@@ -1,4 +1,3 @@
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/recent_bin_note_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 
 enum TopSellersCategoriesSpan {
@@ -16,30 +15,68 @@ enum ProductCarouselType {
 }
 
 class ProductCarouselWidgetEntity extends WidgetEntity {
-  final ProductCarouselType carouselType;
-  final String title;
-  final int numberOfProductsToDisplay;
-  final bool displayPartNumbers;
-  final bool displayPrice;
-  final TopSellersCategoriesSpan displayTopSellersFrom;
-  final String selectedCategoryIdsString;
-  final List<String> selectedCategoryIds;
-  final bool shouldForceLoadData;
+  final ProductCarouselType? carouselType;
+  final String? title;
+  final int? numberOfProductsToDisplay;
+  final bool? displayPartNumbers;
+  final bool? displayPrice;
+  final TopSellersCategoriesSpan? displayTopSellersFrom;
+  final String? selectedCategoryIdsString;
+  final List<String>? selectedCategoryIds;
+  final bool? shouldForceLoadData;
 
   const ProductCarouselWidgetEntity({
-    required this.carouselType,
-    required this.title,
-    required this.numberOfProductsToDisplay,
-    required this.displayPartNumbers,
-    required this.displayPrice,
-    required this.displayTopSellersFrom,
-    required this.selectedCategoryIdsString,
-    required this.selectedCategoryIds,
-    required this.shouldForceLoadData,
-  });
+    String? id,
+    WidgetType? type,
+    String? subType,
+    this.carouselType,
+    this.title,
+    this.numberOfProductsToDisplay,
+    this.displayPartNumbers,
+    this.displayPrice,
+    this.displayTopSellersFrom,
+    this.selectedCategoryIdsString,
+    this.selectedCategoryIds,
+    this.shouldForceLoadData,
+  }) : super(id: id, type: type, subType: subType);
+
+  @override
+  ProductCarouselWidgetEntity copyWith({
+    String? id,
+    WidgetType? type,
+    String? subType,
+    ProductCarouselType? carouselType,
+    String? title,
+    int? numberOfProductsToDisplay,
+    bool? displayPartNumbers,
+    bool? displayPrice,
+    TopSellersCategoriesSpan? displayTopSellersFrom,
+    String? selectedCategoryIdsString,
+    List<String>? selectedCategoryIds,
+    bool? shouldForceLoadData,
+  }) {
+    return ProductCarouselWidgetEntity(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      subType: subType ?? this.subType,
+      carouselType: carouselType ?? this.carouselType,
+      title: title ?? this.title,
+      numberOfProductsToDisplay:
+          numberOfProductsToDisplay ?? this.numberOfProductsToDisplay,
+      displayPartNumbers: displayPartNumbers ?? this.displayPartNumbers,
+      displayPrice: displayPrice ?? this.displayPrice,
+      displayTopSellersFrom:
+          displayTopSellersFrom ?? this.displayTopSellersFrom,
+      selectedCategoryIdsString:
+          selectedCategoryIdsString ?? this.selectedCategoryIdsString,
+      selectedCategoryIds: selectedCategoryIds ?? this.selectedCategoryIds,
+      shouldForceLoadData: shouldForceLoadData ?? this.shouldForceLoadData,
+    );
+  }
 
   @override
   List<Object?> get props => [
+        ...super.props,
         carouselType,
         title,
         numberOfProductsToDisplay,

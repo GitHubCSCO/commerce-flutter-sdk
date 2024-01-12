@@ -501,7 +501,7 @@ packages:
     description:
       path: "."
       ref: "task/ICM-4100-dart"
-      resolved-ref: "7891494eb8f5f6e0770a063f7f5938dec976723e"
+      resolved-ref: "007824ab78c633b8229eee0101b17aecde4a9fe6"
       url: "git@github.com:InsiteSoftware/commerce-dart-sdk.git"
     source: git
     version: "0.1.0-dev.1"
