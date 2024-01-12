@@ -22,6 +22,18 @@ class WidgetEntity extends Equatable {
 
   const WidgetEntity({this.id, this.type, this.subType});
 
+  WidgetEntity copyWith({
+    String? id,
+    WidgetType? type,
+    String? subType,
+  }) {
+    return WidgetEntity(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      subType: subType ?? this.subType,
+    );
+  }
+
   @override
   List<Object?> get props => [id, type, subType];
 }

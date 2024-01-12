@@ -1,10 +1,8 @@
-import 'package:commerce_flutter_app/features/domain/converter/cms_converter/text_justification_converter.dart';
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_layout_type_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_slide_widget.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
-import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class PageContentManagementEntity {
@@ -148,12 +146,14 @@ class PageWidgetFieldsEntity {
   ActionsLayout? layout;
   List<PageSlideEntity>? slides;
   List<PageLinkEntity>? links;
+  bool? showPartNumbers;
 
   PageWidgetFieldsEntity({
     this.previousSearches,
     this.slides,
     this.links,
     this.timerSpeed,
+    this.showPartNumbers,
     this.animationSpeed,
     this.carouselType,
     this.displayProductsFrom,
