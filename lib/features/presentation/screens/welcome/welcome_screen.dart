@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_components.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_style.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class WelcomeFirstPage extends StatelessWidget {
             style: WelcomeStyle.welcomeCardTextStyle,
           ),
           const Expanded(child: SizedBox()),
-          WelcomePrimaryButton(
+          PrimaryButton(
             onPressed: () {
               context.push(AppRoute.domainSelection.path);
             },
@@ -56,8 +57,9 @@ class WelcomeFirstPage extends StatelessWidget {
           const SizedBox(
             height: 2,
           ),
-          WelcomeSecondaryButton(
+          TertiaryButton(
             onPressed: () {},
+            backgroundColor: Colors.transparent,
             child: const Text(
               LocalizationKeyword.visitWebsite,
             ),

@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_selection_usecase/domain_selection_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/domain_selection/domain_selection_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_components.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_style.dart';
 import 'package:flutter/material.dart';
@@ -111,7 +112,7 @@ class _DomainSelectionPageState extends State<DomainSelectionPage> {
               builder: (context, state) {
                 return state is DomainSelectionInProgress
                     ? const Center(child: CircularProgressIndicator())
-                    : WelcomePrimaryButton(
+                    : PrimaryButton(
                         onPressed: _textEditingController.text.isNotEmpty
                             ? () {
                                 context
