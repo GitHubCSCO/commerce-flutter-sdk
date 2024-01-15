@@ -1,7 +1,7 @@
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
 import 'package:commerce_flutter_app/services/cache_fake.dart';
-import 'package:commerce_flutter_app/services/local_storage_fake.dart';
+import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:commerce_flutter_app/services/network_fake.dart';
 import 'package:commerce_flutter_app/services/secure_storage_fake.dart';
 import 'package:get_it/get_it.dart';
@@ -41,8 +41,7 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<INetworkService>(() => FakeNetworkService(true))
     ..registerLazySingleton<ISecureStorageService>(
         () => FakeSecureStorageService())
-    ..registerLazySingleton<ILocalStorageService>(
-        () => FakeLocalStorageService())
+    ..registerLazySingleton<ILocalStorageService>(() => LocalStorageService())
 
     //domain selection
     ..registerLazySingleton<ISettingsService>(() => SettingsService(
