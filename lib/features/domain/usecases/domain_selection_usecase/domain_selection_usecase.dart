@@ -12,6 +12,10 @@ class DomainSelectionUsecase {
 
   static const _domainKey = 'DomainKey';
 
+  Future<String?> getSavedDomain() async {
+    return await _localStorageService.load(_domainKey);
+  }
+
   Future<DomainSelectionStatus> domainSelectHandler(String domain) async {
     final validUrlString = domain.makeValidUrl();
 
