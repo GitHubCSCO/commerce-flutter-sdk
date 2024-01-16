@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/page_content_management_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/cms_mode.dart';
 import 'package:commerce_flutter_app/features/domain/enums/content_mode.dart';
@@ -26,42 +29,125 @@ class ContentConfigurationService implements IContentConfigurationService {
   static const String switchSpireContentModeFormatUri =
       "/api/internal/contentAdmin/SwitchContentMode?ContentMode={0}";
 
+  ContentConfigurationService(this._mobileSpireContentService,
+      this._cacheService, this._mobileContentService);
+  final IMobileSpireContentService _mobileSpireContentService;
+  final IMobileContentService _mobileContentService;
+  final ICacheService _cacheService;
+
+  final Cookie cmsCurrentContentModeViewingCookie =
+      Cookie("cms_CurrentContentMode", "Viewing");
+  final Cookie cmsCurrentContentModeEditingCookie =
+      Cookie("cms_CurrentContentMode", "Previewing");
+  final Cookie cmsCurrentContentModeSignartureCookieDelete =
+      Cookie("cms_CurrentContentModeSignature", "");
+  final Cookie cmsCurrentContentModeCookieDelete =
+      Cookie("cms_CurrentContentMode", "");
+
   ContentMode currentContentMode = ContentMode.live;
   CMSMode currentCMSMode = CMSMode.classic;
 
-  ContentConfigurationService(this._mobileSpireContentService);
-  final IMobileSpireContentService _mobileSpireContentService;
+  final Cookie cmsCurrentContentModeSignartureCookie = Cookie('', '');
 
   @override
-  Future<Result<PageContentManagementEntity, ErrorResponse>>
-      getPersistedLiveContentManagement(PageContentType contentType) {
-    // TODO: implement getPersistedLiveContentManagement
-    throw UnimplementedError();
+  Future<PageContentManagement> getPersistedLiveContentManagement(
+      PageContentType contentType) async {
+    final persistenceKey = getPersistenceKeyForContentType(contentType);
+    var persistedBytes =
+        await _cacheService.loadPersistedBytesData(persistenceKey);
+    if (persistedBytes.isNotEmpty) {
+      var stringResponse = utf8.decode(persistedBytes);
+      if (stringResponse.isNotEmpty) {
+        var json = jsonDecode(stringResponse);
+        var pageContentManagement = PageContentManagement.fromJson(json);
+        return pageContentManagement;
+      }
+    }
+    return PageContentManagement();
   }
 
   @override
   Future<Result<PageContentManagementEntity, ErrorResponse>>
       loadAndPersistLiveContentManagement(PageContentType contentType,
-          {bool useCache = true}) {
-    // TODO: implement loadAndPersistLiveContentManagement
-    throw UnimplementedError();
+          {bool useCache = true}) async {
+    final result =
+        await getPageContentManagmentDataRepresentationForContentType(
+            contentType, useCache);
+    switch (result) {
+      case Success(value: final value):
+        {
+          if (value != null) {
+            final pageContentManagementEntity =
+                PageContentManagementMapper().toEntity(value);
+
+            persistContentManagementData(value, contentType);
+            return Success(pageContentManagementEntity);
+          } else {
+            final persistedConternManagement =
+                await getPersistedLiveContentManagement(contentType);
+            final pageContentManagementEntity = PageContentManagementMapper()
+                .toEntity(persistedConternManagement);
+            return Success(pageContentManagementEntity);
+          }
+        }
+
+      case Failure(errorResponse: final errorResponse):
+        {
+          return Failure(errorResponse);
+        }
+    }
   }
 
   @override
   Future<Result<PageContentManagementEntity, ErrorResponse>>
       loadPreviewContentManagement(PageContentType contentType,
           {bool useCache = false}) async {
-    final String pageKey = getPageKeyForContentType(contentType);
-
     final result =
-        await _mobileSpireContentService.getPageContenManagmentSpire(pageKey);
-
+        await getPageContentManagmentDataRepresentationForContentType(
+            contentType, useCache);
     switch (result) {
       case Success(value: final value):
         {
           final pageContentManagementEntity = PageContentManagementMapper()
               .toEntity(value ?? PageContentManagement());
           return Success(pageContentManagementEntity);
+        }
+
+      case Failure(errorResponse: final errorResponse):
+        {
+          return Failure(errorResponse);
+        }
+    }
+  }
+
+  Future<Result<PageContentManagement, ErrorResponse>>
+      getPageContentManagmentDataRepresentationForContentType(
+          PageContentType contentType, bool useCache) async {
+    final String pageKey = getPageKeyForContentType(contentType);
+    var response =
+        await _mobileSpireContentService.getPageContenManagmentSpire(pageKey);
+    switch (response) {
+      case Success(value: final value):
+        {
+          if (value != null && value.page != null) {
+            currentCMSMode = CMSMode.spire;
+            return Success(value);
+          } else {
+            var classicResponse = await _mobileContentService
+                .getPageContentManagementClassic(pageKey);
+
+            switch (classicResponse) {
+              case Success(value: final value):
+                {
+                  return Success(value);
+                }
+
+              case Failure(errorResponse: final errorResponse):
+                {
+                  return Failure(errorResponse);
+                }
+            }
+          }
         }
 
       case Failure(errorResponse: final errorResponse):
@@ -99,5 +185,14 @@ class ContentConfigurationService implements IContentConfigurationService {
       default:
         return '';
     }
+  }
+
+  void persistContentManagementData(
+      PageContentManagement response, PageContentType contentType) {
+    var json = response.toJson();
+    var jsonString = jsonEncode(json);
+    Uint8List bytes = Uint8List.fromList(utf8.encode(jsonString));
+    var persistenceKey = getPersistenceKeyForContentType(contentType);
+    _cacheService.persistBytesData(persistenceKey, bytes);
   }
 }

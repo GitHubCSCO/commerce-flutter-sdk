@@ -18,8 +18,31 @@ class PageContentManagementMapper {
         bypassedAuthorization: model.bypassedAuthorization,
         requiresAuthorization: model.requiresAuthorization,
         alternateLanguageUrls: model.alternateLanguageUrls,
+        pageClassicWidget:
+            model.pageClassicWidget?.map(toPageClassicWidgetEntity).toList(),
       );
 
+  PageClassicWidgetEntity toPageClassicWidgetEntity(PageClassicWidget model) =>
+      PageClassicWidgetEntity(
+        id: model.id,
+        type: model.type,
+        subType: model.subType,
+        childWidgets:
+            model.childWidgets?.map(toPageClassicChildWidgetEntity).toList() ??
+                [],
+      );
+
+  PageClassicChildWidgetEntity toPageClassicChildWidgetEntity(
+          PageClassicChildWidget model) =>
+      PageClassicChildWidgetEntity(
+        contentKey: model.contentKey,
+        className: model.className,
+        type: model.type,
+        icon: model.icon,
+        childWidgets: model.childWidgets
+            ?.map((childWidget) => toPageClassicChildWidgetEntity(childWidget))
+            .toList(),
+      );
   PageInformationEntity toPageInformationEntity(PageInformation model) =>
       PageInformationEntity(
         nodeId: model.nodeId,
@@ -103,7 +126,8 @@ class PageContentManagementMapper {
         backgroundColor: model.backgroundColor,
         headingColor: model.headingColor,
         subheadingColor: model.subheadingColor,
-        textAlignment: TextJustificationConverter.convert(model.textAlignment ?? ''),
+        textAlignment:
+            TextJustificationConverter.convert(model.textAlignment ?? ''),
       );
 
   PageLinkEntity toPageLinkEntity(PageLink model) => PageLinkEntity(

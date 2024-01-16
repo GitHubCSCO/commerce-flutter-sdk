@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_type_converter.dart';
+import 'package:commerce_flutter_app/features/domain/converter/cms_converter/page_widget_type_converter.dart';
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/text_justification_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/page_content_management_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
@@ -24,9 +25,8 @@ class CmsUseCase {
 
   Future<Result<List<WidgetEntity>, ErrorResponse>> getCMSData() async {
     print('CmsUseCase loaddata');
-
     final result = await _contentConfigurationService
-        .loadPreviewContentManagement(contentType);
+        .loadAndPersistLiveContentManagement(contentType);
 
     switch (result) {
       case Success(value: final pageData):
@@ -38,10 +38,19 @@ class CmsUseCase {
               {
                 var currentSession = _sessionService.currentSession ?? session;
 
-                var widgetList = pageData?.page?.widgets ?? [];
-                final widgetEntityList =
-                    await getWidgetEntityList(widgetList, currentSession);
-                return Success(widgetEntityList);
+                if (pageData?.page?.widgets != null) {
+                  //for classic
+                  var widgetList = pageData?.pageClassicWidget ?? [];
+                  final widgetEntityList = await getWidgetEntityListClassic(
+                      widgetList, currentSession);
+                  return Success(widgetEntityList);
+                } else {
+                  // for spire
+                  var widgetList = pageData?.page?.widgets ?? [];
+                  final widgetEntityList = await getWidgetEntityListSpire(
+                      widgetList, currentSession);
+                  return Success(widgetEntityList);
+                }
               }
             case Failure(errorResponse: final errorResponse):
               {
@@ -56,7 +65,35 @@ class CmsUseCase {
     }
   }
 
-  Future<List<WidgetEntity>> getWidgetEntityList(
+  Future<List<WidgetEntity>> getWidgetEntityListClassic(
+      List<PageClassicWidgetEntity> pageClassicWidgets,
+      Session? currentSession) async {
+    List<WidgetEntity> widgetEntities = [];
+
+    if (pageClassicWidgets.isEmpty) {
+      return <WidgetEntity>[];
+    } else {
+      for (final pageClassicWidget in pageClassicWidgets) {
+        var actionsWidget = const ActionsWidgetEntity();
+        var actionList = <Action>[];
+        for (final item in pageClassicWidget.childWidgets ?? []) {
+          final action = Action(
+              type: ActionTypeConverter.convert(item?.type ?? ''),
+              icon: item?.icon);
+          actionList.add(action);
+        }
+        actionsWidget = actionsWidget.copyWith(
+          type: PageWidgetTypeConverter.convert(pageClassicWidget.type ?? ''),
+          actions: actionList,
+        );
+        widgetEntities.add(actionsWidget);
+      }
+
+      return widgetEntities;
+    }
+  }
+
+  Future<List<WidgetEntity>> getWidgetEntityListSpire(
       List<PageWidgetEntity> pageWidgets, Session? currentSession) async {
     List<WidgetEntity> widgetEntities = [];
 
@@ -91,13 +128,12 @@ class CmsUseCase {
         }
       }
     }
-
     return widgetEntities;
   }
 
   Future<SearchHistoryWidgetEntity> convertWidgetToSearchHistoryEntity(
       PageWidgetEntity pageWidget, Session? currentSession) async {
-    var searchhistoryWidget = SearchHistoryWidgetEntity();
+    var searchhistoryWidget = const SearchHistoryWidgetEntity();
     if (pageWidget.generalFields != null &&
         pageWidget.generalFields?.previousSearches != null) {
       searchhistoryWidget = searchhistoryWidget.copyWith(
@@ -119,7 +155,7 @@ class CmsUseCase {
 
   Future<ProductCarouselWidgetEntity> convertWidgetToProductCarouselListEntity(
       PageWidgetEntity pageWidget, Session? currentSession) async {
-    var productCarouselWidget = ProductCarouselWidgetEntity();
+    var productCarouselWidget = const ProductCarouselWidgetEntity();
     if (pageWidget.generalFields != null) {
       productCarouselWidget = productCarouselWidget.copyWith(
           carouselType: pageWidget.generalFields?.carouselType,
@@ -190,7 +226,7 @@ class CmsUseCase {
 
   Future<CarouselWidgetEntity> convertWidgetToCarouselWidgetEntity(
       PageWidgetEntity pageWidget, Session? currentSession) async {
-    var carouselWidget = CarouselWidgetEntity();
+    var carouselWidget = const CarouselWidgetEntity();
     if (pageWidget.generalFields != null) {
       carouselWidget = carouselWidget.copyWith(
           timerSpeed: pageWidget.generalFields?.timerSpeed);
