@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_event.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
@@ -41,7 +42,7 @@ class Approuter {
   LoginBloc loginBloc = sl<LoginBloc>();
 
   late final GoRouter router = GoRouter(
-      initialLocation: AppRoute.login.path,
+      initialLocation: AppRoute.welcome.path,
       refreshListenable: GoRouterRefreshStream(loginBloc.stream),
       redirect: (BuildContext context, GoRouterState state) {
         debugPrint("a");
@@ -55,7 +56,7 @@ class Approuter {
           if (loggedIn) {
             return AppRoute.shop.path;
           } else {
-            return AppRoute.login.path;
+            return AppRoute.welcome.path;
           }
         }
       },
@@ -77,8 +78,8 @@ class Approuter {
               routes: <RouteBase>[
                 AppRoute.shop.createRoute(
                   (context, state) => BlocProvider<ShopPageBloc>(
-                      create: (context) => sl<ShopPageBloc>(),
-                      child: const ShopScreen()),
+                      create: (context) => sl<ShopPageBloc>()..add(ShopPageLoadEvent()),
+                      child: ShopScreen()),
                 ),
               ],
             ),

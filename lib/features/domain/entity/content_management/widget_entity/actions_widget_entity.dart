@@ -3,14 +3,14 @@ import 'package:commerce_flutter_app/features/domain/converter/cms_converter/act
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 import 'package:equatable/equatable.dart';
 
-class Action extends Equatable {
+class ActionLink extends Equatable {
   final ActionType? type;
   final String? icon;
   final String? text;
   final String? url;
   final bool? requiresAuth;
 
-  const Action({
+  const ActionLink({
     this.type,
     this.icon,
     this.text,
@@ -18,14 +18,14 @@ class Action extends Equatable {
     this.requiresAuth,
   });
 
-  Action copyWith({
+  ActionLink copyWith({
     ActionType? type,
     String? icon,
     String? text,
     String? url,
     bool? requiresAuth,
   }) {
-    return Action(
+    return ActionLink(
       type: type ?? this.type,
       icon: icon ?? this.icon,
       text: text ?? this.text,
@@ -40,8 +40,8 @@ class Action extends Equatable {
 
 class ActionsWidgetEntity extends WidgetEntity {
   final ActionsLayout? layout;
-  final List<Action>? actions;
-  final List<Action>? childWidgets;
+  final List<ActionLink>? actions;
+  final List<ActionLink>? childWidgets;
 
   const ActionsWidgetEntity({
     String? id,
@@ -58,8 +58,8 @@ class ActionsWidgetEntity extends WidgetEntity {
     WidgetType? type,
     String? subType,
     ActionsLayout? layout,
-    List<Action>? actions,
-    List<Action>? childWidgets,
+    List<ActionLink>? actions,
+    List<ActionLink>? childWidgets,
   }) {
     return ActionsWidgetEntity(
       id: id ?? this.id,
