@@ -13,7 +13,7 @@ void main() {
 }
 
 void initCommerceSDK() {
-  ClientConfig.hostUrl = 'mobilespire.commerce.insitesandbox.com';
+  ClientConfig.hostUrl = 'classic-mobilespire.commerce.insitesandbox.com';
   ClientConfig.clientId = 'fluttermobile';
   ClientConfig.clientSecret = 'd66d0479-07f7-47b2-ee1e-0d3a536e6091';
 }
