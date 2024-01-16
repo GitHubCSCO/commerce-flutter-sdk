@@ -7,8 +7,8 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 abstract class IContentConfigurationService {
   ContentMode get currentContentMode;
 
-  Future<Result<PageContentManagementEntity, ErrorResponse>>
-      getPersistedLiveContentManagement(PageContentType contentType);
+  Future<PageContentManagement> getPersistedLiveContentManagement(
+      PageContentType contentType);
 
   Future<Result<PageContentManagementEntity, ErrorResponse>>
       loadAndPersistLiveContentManagement(PageContentType contentType,

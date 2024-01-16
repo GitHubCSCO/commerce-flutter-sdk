@@ -32,7 +32,9 @@ Future<void> initInjectionContainer() async {
           networkService: sl(),
         ))
     ..registerLazySingleton<IContentConfigurationService>(
-        () => ContentConfigurationService(sl()))
+        () => ContentConfigurationService(sl(), sl(), sl()))
+    ..registerLazySingleton<IMobileContentService>(() => MobileContentService(
+        cacheService: sl(), networkService: sl(), clientService: sl()))
     ..registerLazySingleton<IMobileSpireContentService>(
         () => MobileSpireContentService(
               clientService: sl(),

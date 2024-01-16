@@ -14,16 +14,47 @@ class PageContentManagementEntity {
   bool? bypassedAuthorization;
   bool? requiresAuthorization;
   Map<String, dynamic>? alternateLanguageUrls;
+  List<PageClassicWidgetEntity>? pageClassicWidget;
 
-  PageContentManagementEntity({
-    this.page,
-    this.statusCode,
-    this.redirectTo,
-    this.authorizationFailed,
-    this.isAuthenticatedOnServer,
-    this.bypassedAuthorization,
-    this.requiresAuthorization,
-    this.alternateLanguageUrls,
+  PageContentManagementEntity(
+      {this.page,
+      this.statusCode,
+      this.redirectTo,
+      this.authorizationFailed,
+      this.isAuthenticatedOnServer,
+      this.bypassedAuthorization,
+      this.requiresAuthorization,
+      this.alternateLanguageUrls,
+      this.pageClassicWidget});
+}
+
+class PageClassicChildWidgetEntity {
+  int? contentKey;
+  String? className;
+  List<PageClassicChildWidgetEntity>? childWidgets;
+  String? type;
+  String? icon;
+
+  PageClassicChildWidgetEntity({
+    this.contentKey,
+    this.className,
+    this.type,
+    this.icon,
+    this.childWidgets = const [],
+  });
+}
+
+class PageClassicWidgetEntity {
+  int? id;
+  String? type;
+  String? subType;
+  List<PageClassicChildWidgetEntity>? childWidgets;
+
+  PageClassicWidgetEntity({
+    this.id,
+    this.type,
+    this.subType,
+    this.childWidgets,
   });
 }
 
