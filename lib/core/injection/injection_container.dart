@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/features/domain/usecases/domain_selection_usecase/domain_selection_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
 import 'package:commerce_flutter_app/services/cache_fake.dart';
@@ -44,6 +45,8 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<ILocalStorageService>(() => LocalStorageService())
 
     //domain selection
+    ..registerLazySingleton<DomainSelectionUsecase>(
+        () => DomainSelectionUsecase())
     ..registerLazySingleton<ISettingsService>(() => SettingsService(
           cacheService: sl(),
           clientService: sl(),

@@ -1,9 +1,5 @@
 import 'dart:async';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_state.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
@@ -37,73 +33,55 @@ class GoRouterRefreshStream extends ChangeNotifier {
 }
 
 class Approuter {
-  LoginBloc loginBloc = sl<LoginBloc>();
-
-  late final GoRouter router = GoRouter(
-      initialLocation: AppRoute.welcome.path,
-      refreshListenable: GoRouterRefreshStream(loginBloc.stream),
-      redirect: (BuildContext context, GoRouterState state) {
-        debugPrint("a");
-        if (loginBloc.state is AuthenticationAuthState) {
-          debugPrint("b");
-
-          debugPrint('${loginBloc.state}');
-          AuthenticationAuthState authState =
-              loginBloc.state as AuthenticationAuthState;
-          final bool loggedIn = authState.status == AuthStatus.authenticated;
-          if (loggedIn) {
-            return AppRoute.shop.path;
-          } else {
-            return AppRoute.welcome.path;
-          }
-        }
-      },
-      routes: <RouteBase>[
-        AppRoute.welcome.createRoute(
-          (context, state) => const WelcomeScreen(),
-        ),
-        AppRoute.domainSelection.createRoute(
-          (context, state) => const DomainSelectionScreen(),
-        ),
-        AppRoute.login.createRoute(
-          (context, state) => const LoginScreen(),
-        ),
-        StatefulShellRoute.indexedStack(
-          builder: (BuildContext context, GoRouterState state,
-              StatefulNavigationShell navigationShell) {
-            return NavBarScreen(navigationShell: navigationShell);
-          },
-          branches: <StatefulShellBranch>[
-            // The route branch for the first tab of the bottom navigation bar.
-            StatefulShellBranch(
-              routes: <RouteBase>[
-                AppRoute.shop.createRoute(
-                  (context, state) => ShopScreen(),
-                ),
-              ],
-            ),
-            StatefulShellBranch(
-              routes: <RouteBase>[
-                AppRoute.search.createRoute(
-                  (context, state) => const SearchScreen(),
-                ),
-              ],
-            ),
-            StatefulShellBranch(
-              routes: <RouteBase>[
-                AppRoute.account.createRoute(
-                  (context, state) => AccountScreen(),
-                ),
-              ],
-            ),
-            StatefulShellBranch(
-              routes: <RouteBase>[
-                AppRoute.cart.createRoute(
-                  (context, state) => CartScreen(),
-                ),
-              ],
-            ),
-          ],
-        )
-      ]);
+  final GoRouter router = GoRouter(
+    initialLocation: AppRoute.welcome.path,
+    routes: <RouteBase>[
+      AppRoute.welcome.createRoute(
+        (context, state) => const WelcomeScreen(),
+      ),
+      AppRoute.domainSelection.createRoute(
+        (context, state) => const DomainSelectionScreen(),
+      ),
+      AppRoute.login.createRoute(
+        (context, state) => const LoginScreen(),
+      ),
+      StatefulShellRoute.indexedStack(
+        builder: (BuildContext context, GoRouterState state,
+            StatefulNavigationShell navigationShell) {
+          return NavBarScreen(navigationShell: navigationShell);
+        },
+        branches: <StatefulShellBranch>[
+          // The route branch for the first tab of the bottom navigation bar.
+          StatefulShellBranch(
+            routes: <RouteBase>[
+              AppRoute.shop.createRoute(
+                (context, state) => ShopScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: <RouteBase>[
+              AppRoute.search.createRoute(
+                (context, state) => const SearchScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: <RouteBase>[
+              AppRoute.account.createRoute(
+                (context, state) => AccountScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: <RouteBase>[
+              AppRoute.cart.createRoute(
+                (context, state) => CartScreen(),
+              ),
+            ],
+          ),
+        ],
+      )
+    ],
+  );
 }
