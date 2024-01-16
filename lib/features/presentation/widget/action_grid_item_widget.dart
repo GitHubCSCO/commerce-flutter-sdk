@@ -21,18 +21,18 @@ class ActionGridItemWidget extends BaseActionItemWidget {
             width: 40,
             height: 40,
             child: SvgPicture.asset(
-              getActionIconPath(action.type),
+              getActionIconPath(action),
               semanticsLabel: 'Action item icon',
               fit: BoxFit.fitWidth,
             ),
           ),
           Container(
             width: double.infinity,
-            height: 30,
+            height: 32,
             padding: EdgeInsets.only(left: 4, right: 4),
             alignment: Alignment.center,
             child: Text(
-              getActionTitle(action.type),
+              getActionTitle(action),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,

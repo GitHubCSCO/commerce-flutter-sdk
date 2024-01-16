@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductCarouselItemWidget extends StatelessWidget {
+  final Product product;
+
+  const ProductCarouselItemWidget({super.key, required this.product});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -14,13 +19,15 @@ class ProductCarouselItemWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              "https://www.deere.com/assets/images/region-3/products/tractors/heavy-tractors/tractor-8270r-estudio.png",
-              width: 108,
-              height: 80,
-              fit: BoxFit.fitHeight,
+          SizedBox(
+            width: 108,
+            height: 80,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                product.smallImagePath ?? "https://www.deere.com/assets/images/region-3/products/tractors/heavy-tractors/tractor-8270r-estudio.png",
+                fit: BoxFit.fitHeight,
+              ),
             ),
           ),
           const SizedBox(height: 8),

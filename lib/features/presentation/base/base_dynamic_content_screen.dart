@@ -1,9 +1,11 @@
+import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_layout_type_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/action_grid_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/action_list_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/carousel_section_widget.dart';
@@ -11,6 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/listview_divid
 import 'package:commerce_flutter_app/features/presentation/widget/product_carousel_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_history_section_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 class BaseDynamicContentScreen extends StatelessWidget {
@@ -50,7 +53,7 @@ class BaseDynamicContentScreen extends StatelessWidget {
         {
           final ActionsWidgetEntity actionsWidgetEntity = widgetEntity as ActionsWidgetEntity;
 
-          return (actionsWidgetEntity.layout == ActionsLayout.list)
+          return (actionsWidgetEntity.layout == ActionsLayout.grid)
               ? buildActionGridSectionWidget(actionsWidgetEntity: actionsWidgetEntity)
               : buildActionListSectionWidget(actionsWidgetEntity: actionsWidgetEntity);
         }
@@ -87,7 +90,11 @@ class BaseDynamicContentScreen extends StatelessWidget {
   }
 
   Widget buildProductCarouselSectionWidget({required ProductCarouselWidgetEntity productCarouselWidgetEntity}) {
-    return ProductCarouselSectionWidget(productCarouselWidgetEntity: productCarouselWidgetEntity);
+    return BlocProvider<ProductCarouselCubit>(
+      create: (context) => sl<ProductCarouselCubit>()..getProducts(productCarouselWidgetEntity),
+      child: ProductCarouselSectionWidget(
+          productCarouselWidgetEntity: productCarouselWidgetEntity),
+    );
   }
 
   Widget buildSearchHistorySectionWidget({required SearchHistoryWidgetEntity searchHistoryWidgetEntity}) {

@@ -21,7 +21,7 @@ class ActionListItemWidget extends BaseActionItemWidget {
           Container(
             width: 30,
             child: SvgPicture.asset(
-              getActionIconPath(action.type),
+              getActionIconPath(action),
               semanticsLabel: 'Action item icon',
               fit: BoxFit.fitWidth,
             ),
@@ -47,7 +47,7 @@ class ActionListItemWidget extends BaseActionItemWidget {
                           SizedBox(
                             width: double.infinity,
                             child: Text(
-                              getActionTitle(action.type),
+                              getActionTitle(action),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(

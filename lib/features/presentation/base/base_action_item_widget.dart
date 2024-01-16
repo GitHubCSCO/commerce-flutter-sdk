@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_type_converter.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:flutter/material.dart';
 
 class BaseActionItemWidget extends StatelessWidget {
@@ -12,8 +13,8 @@ class BaseActionItemWidget extends StatelessWidget {
     throw UnimplementedError();
   }
 
-  String getActionIconPath(ActionType? actionType) {
-    switch (actionType) {
+  String getActionIconPath(ActionLink actionLink) {
+    switch (actionLink.type) {
       case ActionType.categories:
         return "assets/images/icon_shop_categories.svg";
       case ActionType.brands:
@@ -41,8 +42,8 @@ class BaseActionItemWidget extends StatelessWidget {
     }
   }
 
-  String getActionTitle(ActionType? actionType) {
-    switch (actionType) {
+  String getActionTitle(ActionLink actionLink) {
+    switch (actionLink.type) {
       case ActionType.categories:
         return LocalizationConstants.ShopCategories;
       case ActionType.brands:
@@ -92,7 +93,7 @@ class BaseActionItemWidget extends StatelessWidget {
       case ActionType.custom:
       case ActionType.unknown:
       default:
-      return LocalizationConstants.Clear;
+      return actionLink.text!;
     }
   }
 
