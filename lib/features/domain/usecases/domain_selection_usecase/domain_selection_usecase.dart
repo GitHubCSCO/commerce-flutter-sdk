@@ -13,7 +13,14 @@ class DomainSelectionUsecase {
   static const _domainKey = 'DomainKey';
 
   Future<String?> getSavedDomain() async {
-    return await _localStorageService.load(_domainKey);
+    final result = await _localStorageService.load(_domainKey);
+    if (result != null) {
+      ClientConfig.hostUrl = result;
+      _clientService.host = result;
+      _adminClientService.host = result;
+    }
+
+    return result;
   }
 
   Future<DomainSelectionStatus> domainSelectHandler(String domain) async {
