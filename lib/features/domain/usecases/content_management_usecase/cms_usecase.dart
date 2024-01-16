@@ -75,9 +75,9 @@ class CmsUseCase {
     } else {
       for (final pageClassicWidget in pageClassicWidgets) {
         var actionsWidget = const ActionsWidgetEntity();
-        var actionList = <Action>[];
+        var actionList = <ActionLink>[];
         for (final item in pageClassicWidget.childWidgets ?? []) {
-          final action = Action(
+          final action = ActionLink(
               type: ActionTypeConverter.convert(item?.type ?? ''),
               icon: item?.icon);
           actionList.add(action);

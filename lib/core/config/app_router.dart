@@ -42,7 +42,7 @@ class Approuter {
   LoginBloc loginBloc = sl<LoginBloc>();
 
   late final GoRouter router = GoRouter(
-      initialLocation: AppRoute.welcome.path,
+      initialLocation: AppRoute.login.path,
       refreshListenable: GoRouterRefreshStream(loginBloc.stream),
       redirect: (BuildContext context, GoRouterState state) {
         debugPrint("a");
@@ -56,7 +56,7 @@ class Approuter {
           if (loggedIn) {
             return AppRoute.shop.path;
           } else {
-            return AppRoute.welcome.path;
+            return AppRoute.login.path;
           }
         }
       },
