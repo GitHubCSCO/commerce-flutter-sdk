@@ -91,9 +91,10 @@ class BaseActionItemWidget extends StatelessWidget {
       case ActionType.createOrder:
         return LocalizationConstants.CreateOrder;
       case ActionType.custom:
+        return actionLink.text!;
       case ActionType.unknown:
       default:
-      return actionLink.text!;
+        return "";
     }
   }
 
