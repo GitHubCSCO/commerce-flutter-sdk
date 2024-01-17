@@ -38,7 +38,7 @@ class CmsUseCase {
               {
                 var currentSession = _sessionService.currentSession ?? session;
 
-                if (pageData?.page?.widgets != null) {
+                if (pageData?.pageClassicWidget != null) {
                   //for classic
                   var widgetList = pageData?.pageClassicWidget ?? [];
                   final widgetEntityList = await getWidgetEntityListClassic(
