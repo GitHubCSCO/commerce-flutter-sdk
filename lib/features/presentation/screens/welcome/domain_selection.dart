@@ -114,13 +114,12 @@ class _DomainSelectionPageState extends State<DomainSelectionPage> {
                 return state is DomainSelectionInProgress
                     ? const Center(child: CircularProgressIndicator())
                     : PrimaryButton(
-                        onPressed: _textEditingController.text.isNotEmpty
-                            ? () {
-                                context
-                                    .read<DomainSelectionCubit>()
-                                    .selectDomain(_textEditingController.text);
-                              }
-                            : null,
+                        onPressed: () {
+                          context
+                              .read<DomainSelectionCubit>()
+                              .selectDomain(_textEditingController.text);
+                        },
+                        isEnabled: _textEditingController.text.isNotEmpty,
                         child:
                             const Text(LocalizationKeyword.useECommerceWebsite),
                       );

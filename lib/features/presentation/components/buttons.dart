@@ -6,40 +6,36 @@ class PrimaryButton extends StatelessWidget {
     super.key,
     required this.child,
     this.onPressed,
-    this.backgroundEnabledColor = AppStyle.primary500,
-    this.backgroundDisabledColor = AppStyle.neutral200,
+    this.backgroundColor = AppStyle.primary500,
     this.foregroundColor = AppStyle.neutral00,
     this.borderRadius = AppStyle.borderRadius,
+    this.isEnabled = true,
   });
 
   final Widget child;
   final Function()? onPressed;
-  final Color backgroundEnabledColor;
-  final Color backgroundDisabledColor;
+  final bool isEnabled;
+  final Color backgroundColor;
   final Color foregroundColor;
   final double borderRadius;
 
   @override
   Widget build(BuildContext context) {
     return FilledButton(
-      onPressed: onPressed,
+      onPressed: isEnabled ? onPressed : null,
       style: ButtonStyle(
         alignment: Alignment.center,
         elevation: const MaterialStatePropertyAll(0),
-        backgroundColor: onPressed != null
-            ? MaterialStatePropertyAll(
-                backgroundEnabledColor,
-              )
-            : MaterialStatePropertyAll(
-                backgroundDisabledColor,
-              ),
-        foregroundColor: onPressed != null
-            ? MaterialStatePropertyAll(
-                foregroundColor,
-              )
-            : const MaterialStatePropertyAll(
-                AppStyle.neutral990,
-              ),
+        backgroundColor: MaterialStatePropertyAll(
+          isEnabled
+              ? backgroundColor
+              : backgroundColor.withOpacity(AppStyle.disabledButtonOpacity),
+        ),
+        foregroundColor: MaterialStatePropertyAll(
+          isEnabled
+              ? foregroundColor
+              : foregroundColor.withOpacity(AppStyle.disabledButtonOpacity),
+        ),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
@@ -66,6 +62,7 @@ class SecondaryButton extends StatelessWidget {
     this.backgroundColor = AppStyle.neutral75,
     this.foregroundColor = AppStyle.primary500,
     this.borderRadius = AppStyle.borderRadius,
+    this.isEnabled = true,
   });
 
   final Widget child;
@@ -73,11 +70,12 @@ class SecondaryButton extends StatelessWidget {
   final Color backgroundColor;
   final Color foregroundColor;
   final double borderRadius;
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onPressed,
+      onPressed: isEnabled ? onPressed : null,
       style: ButtonStyle(
         elevation: const MaterialStatePropertyAll(0),
         shape: MaterialStatePropertyAll(
@@ -85,8 +83,16 @@ class SecondaryButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(borderRadius),
           ),
         ),
-        foregroundColor: MaterialStatePropertyAll(foregroundColor),
-        backgroundColor: MaterialStatePropertyAll(backgroundColor),
+        foregroundColor: MaterialStatePropertyAll(
+          isEnabled
+              ? foregroundColor
+              : foregroundColor.withOpacity(AppStyle.disabledButtonOpacity),
+        ),
+        backgroundColor: MaterialStatePropertyAll(
+          isEnabled
+              ? backgroundColor
+              : backgroundColor.withOpacity(AppStyle.disabledButtonOpacity),
+        ),
       ),
       child: SizedBox(
         width: double.infinity,
@@ -107,6 +113,7 @@ class TertiaryButton extends StatelessWidget {
     this.foregroundColor = AppStyle.primary500,
     this.borderColor = AppStyle.neutral200,
     this.borderRadius = AppStyle.borderRadius,
+    this.isEnabled = true,
   });
 
   final Widget? child;
@@ -115,21 +122,30 @@ class TertiaryButton extends StatelessWidget {
   final Color foregroundColor;
   final Color borderColor;
   final double borderRadius;
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onPressed,
+      onPressed: isEnabled ? onPressed : null,
       style: ButtonStyle(
         elevation: const MaterialStatePropertyAll(0),
         shape: MaterialStatePropertyAll(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
-            side: BorderSide(color: borderColor),
+            side: BorderSide(
+              color: isEnabled
+                  ? borderColor
+                  : borderColor.withOpacity(AppStyle.disabledButtonOpacity),
+            ),
           ),
         ),
-        foregroundColor: MaterialStatePropertyAll(foregroundColor),
-        backgroundColor: MaterialStatePropertyAll(backgroundColor),
+        foregroundColor: MaterialStatePropertyAll(isEnabled
+            ? foregroundColor
+            : foregroundColor.withOpacity(AppStyle.disabledButtonOpacity)),
+        backgroundColor: MaterialStatePropertyAll(isEnabled
+            ? backgroundColor
+            : backgroundColor.withOpacity(AppStyle.disabledButtonOpacity)),
       ),
       child: SizedBox(
         width: double.infinity,
@@ -147,19 +163,25 @@ class PlainButton extends StatelessWidget {
     required this.child,
     this.onPressed,
     this.foregroundColor = AppStyle.primary500,
+    this.isEnabled = true,
   });
 
   final Widget child;
   final Function()? onPressed;
   final Color foregroundColor;
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: onPressed,
+      onPressed: isEnabled ? onPressed : null,
       style: ButtonStyle(
         elevation: const MaterialStatePropertyAll(0),
-        foregroundColor: MaterialStatePropertyAll(foregroundColor),
+        foregroundColor: MaterialStatePropertyAll(
+          isEnabled
+              ? foregroundColor
+              : foregroundColor.withOpacity(AppStyle.disabledButtonOpacity),
+        ),
       ),
       child: child,
     );
@@ -171,12 +193,13 @@ class PrimaryBlackButton extends PrimaryButton {
     super.key,
     required Widget child,
     Function()? onPressed,
+    bool isEnabled = true,
   }) : super(
           child: child,
           onPressed: onPressed,
-          backgroundEnabledColor: AppStyle.neutral990,
-          backgroundDisabledColor: AppStyle.neutral200,
+          backgroundColor: AppStyle.neutral990,
           foregroundColor: AppStyle.neutral00,
+          isEnabled: isEnabled,
         );
 }
 
@@ -185,10 +208,12 @@ class SecondaryBlackButton extends SecondaryButton {
     super.key,
     required Widget child,
     Function()? onPressed,
+    bool isEnabled = true,
   }) : super(
           child: child,
           onPressed: onPressed,
           foregroundColor: AppStyle.neutral990,
+          isEnabled: isEnabled,
         );
 }
 
@@ -197,10 +222,12 @@ class TertiaryBlackButton extends TertiaryButton {
     super.key,
     required Widget child,
     Function()? onPressed,
+    bool isEnabled = true,
   }) : super(
           child: child,
           onPressed: onPressed,
           foregroundColor: AppStyle.neutral990,
+          isEnabled: isEnabled,
         );
 }
 
@@ -209,9 +236,11 @@ class PlainBlackButton extends PlainButton {
     super.key,
     required Widget child,
     Function()? onPressed,
+    bool isEnabled = true,
   }) : super(
           child: child,
           onPressed: onPressed,
           foregroundColor: AppStyle.neutral990,
+          isEnabled: isEnabled,
         );
 }
