@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_selection_usecase/domain_selection_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/domain_selection/domain_selection_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_components.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_style.dart';
 import 'package:flutter/material.dart';
@@ -77,13 +78,10 @@ class _DomainSelectionPageState extends State<DomainSelectionPage> {
               style: WelcomeStyle.welcomeCardHeaderStyle,
             ),
             WelcomeStyle.welcomeCardTextSpacer,
-            TextField(
+            Input(
               controller: _textEditingController,
-              decoration: const InputDecoration(
-                hintText: LocalizationKeyword.enterDomainHint,
-                border: OutlineInputBorder(),
-                label: Text('Enter Store URL'),
-              ),
+              hintText: LocalizationKeyword.enterDomainHint,
+              label: 'Enter Storefront URL',
             ),
             const Expanded(child: SizedBox()),
             BlocConsumer<DomainSelectionCubit, DomainSelectionState>(

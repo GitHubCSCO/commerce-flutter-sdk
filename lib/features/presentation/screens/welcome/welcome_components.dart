@@ -27,17 +27,19 @@ class WelcomeBaseScreen extends StatelessWidget {
             ),
           ),
           SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(height: 50),
-                Image.asset(
-                  WelcomeStyle.optimizelyLogo,
-                  height: WelcomeStyle.optimizelyLogoHeight,
-                  width: WelcomeStyle.optimizelyLogoWidth,
-                ),
-                Center(child: child),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 50),
+                  Image.asset(
+                    WelcomeStyle.optimizelyLogo,
+                    height: WelcomeStyle.optimizelyLogoHeight,
+                    width: WelcomeStyle.optimizelyLogoWidth,
+                  ),
+                  Center(child: child),
+                ],
+              ),
             ),
           ),
         ],

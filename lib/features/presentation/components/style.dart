@@ -16,4 +16,7 @@ class AppStyle {
   static const double borderRadius = 32;
 
   static const double disabledButtonOpacity = 0.4;
+
+  static const double cursorHeight = 16;
+  static const Color inputDropShadowColor = Color.fromRGBO(179, 195, 255, 1);
 }
