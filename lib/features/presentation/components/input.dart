@@ -68,6 +68,7 @@ class _InputState extends State<Input> {
   @override
   void dispose() {
     _focusNode.removeListener(_setState);
+    _focusNode.removeListener(_resetScroll);
     _focusNode.dispose();
     _scrollController.dispose();
 
