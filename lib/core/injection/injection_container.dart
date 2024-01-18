@@ -1,9 +1,11 @@
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
@@ -26,6 +28,8 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton(() => ShopUseCase(sl(), sl()))
     ..registerFactory(() => SearchPageBloc(sl()))
     ..registerLazySingleton(() => SearchUseCase(sl(), sl()))
+    ..registerFactory(() => AccountPageBloc(sl()))
+    ..registerLazySingleton(() => AccountUseCase(sl(), sl()))
     ..registerFactory(() => ProductCarouselCubit(sl()))
     ..registerLazySingleton(() => ProductCarouselUseCase(sl()))
 
