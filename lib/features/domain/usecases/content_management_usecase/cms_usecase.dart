@@ -90,6 +90,10 @@ class CmsUseCase {
                     pageClassicWidget, currentSession);
             widgetEntities.add(productCarouselWidget);
           case WidgetType.mobileSearchHistory:
+            final searchHistoryWidget =
+                await convertWidgetToSearchHistoryEntityClassic(
+                    pageClassicWidget, currentSession);
+            widgetEntities.add(searchHistoryWidget);
           case WidgetType.unknown:
           default:
             break;
@@ -137,27 +141,16 @@ class CmsUseCase {
     return productCarouselWidget;
   }
 
-  //   Future<SearchHistoryWidgetEntity> convertWidgetToSearchHistoryEntityClassic(
-  //     PageWidgetEntity pageWidget, Session? currentSession) async {
-  //   var searchhistoryWidget = const SearchHistoryWidgetEntity();
-  //   if (pageWidget.generalFields != null &&
-  //       pageWidget.generalFields?.previousSearches != null) {
-  //     searchhistoryWidget = searchhistoryWidget.copyWith(
-  //         itemsCount: pageWidget.generalFields?.previousSearches.toString());
-  //   }
+  Future<SearchHistoryWidgetEntity> convertWidgetToSearchHistoryEntityClassic(
+      PageClassicWidgetEntity pageClassicWidget,
+      Session? currentSession) async {
+    var searchhistoryWidget = const SearchHistoryWidgetEntity();
 
-  //   if (pageWidget.translatableFields != null) {
-  //     var titles = pageWidget.translatableFields?.title as Map<String, dynamic>;
-  //     titles.forEach((key, value) {
-  //       if (currentSession?.language != null &&
-  //           currentSession?.language?.id == key) {
-  //         searchhistoryWidget = searchhistoryWidget.copyWith(title: value);
-  //       }
-  //     });
-  //   }
-
-  //   return searchhistoryWidget;
-  // }
+    searchhistoryWidget = searchhistoryWidget.copyWith(
+        itemsCount: pageClassicWidget.numberOfPreviousSearches.toString(),
+        title: pageClassicWidget.title);
+    return searchhistoryWidget;
+  }
 
   // spire
 

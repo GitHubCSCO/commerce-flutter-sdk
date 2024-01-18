@@ -85,28 +85,29 @@ class PageClassicWidgetEntity {
   String? cssClass;
   int? timerSpeed;
   int? animationSpeed;
+  int? numberOfPreviousSearches;
 
-  PageClassicWidgetEntity({
-    this.id,
-    this.type,
-    this.subType = '',
-    this.childWidgets = const [],
-    this.displayThumbnailImage,
-    this.displayTopSellersFrom,
-    this.displayAddToCart,
-    this.numberOfProductsToDisplay,
-    this.displayPartNumbers,
-    this.selectedCategoryIds,
-    this.title,
-    this.carouselType,
-    this.displayAddToMyLists,
-    this.displayDescription,
-    this.displayPrice,
-    this.seedWithManuallyAssigned,
-    this.cssClass,
-    this.timerSpeed,
-    this.animationSpeed,
-  });
+  PageClassicWidgetEntity(
+      {this.id,
+      this.type,
+      this.subType = '',
+      this.childWidgets = const [],
+      this.displayThumbnailImage,
+      this.displayTopSellersFrom,
+      this.displayAddToCart,
+      this.numberOfProductsToDisplay,
+      this.displayPartNumbers,
+      this.selectedCategoryIds,
+      this.title,
+      this.carouselType,
+      this.displayAddToMyLists,
+      this.displayDescription,
+      this.displayPrice,
+      this.seedWithManuallyAssigned,
+      this.cssClass,
+      this.timerSpeed,
+      this.animationSpeed,
+      this.numberOfPreviousSearches});
 }
 
 class PageInformationEntity {
