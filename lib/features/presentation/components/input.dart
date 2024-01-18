@@ -77,65 +77,76 @@ class _InputState extends State<Input> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppStyle.borderRadius),
-        boxShadow: _focusNode.hasFocus
-            ? const [
-                BoxShadow(
-                  color: AppStyle.inputDropShadowColor,
-                  spreadRadius: 3,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.label != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppStyle.inputLabelGap),
+            child: Text(
+              widget.label!,
+              style: const TextStyle(
+                color: AppStyle.neutral990,
+                fontSize: AppStyle.inputLabelFontSize,
+              ),
+            ),
+          ),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppStyle.borderRadius),
+            boxShadow: _focusNode.hasFocus
+                ? const [
+                    BoxShadow(
+                      color: AppStyle.inputDropShadowColor,
+                      spreadRadius: AppStyle.inputDropShadowSpreadRadius,
+                    ),
+                  ]
+                : null,
+          ),
+          child: TextField(
+            scrollController: _scrollController,
+            onChanged: widget.onChanged,
+            onSubmitted: widget.onSubmitted,
+            controller: widget.controller,
+            obscureText: widget.obscureText,
+            keyboardType: widget.keyboardType,
+            onEditingComplete: widget.onEditingComplete,
+            onTap: widget.onTap,
+            style: widget.style,
+            textAlign: widget.textAlign,
+            textDirection: widget.textDirection,
+            textInputAction: widget.textInputAction,
+            focusNode: _focusNode,
+            cursorHeight: AppStyle.cursorHeight,
+            cursorColor: AppStyle.neutral990,
+            decoration: InputDecoration(
+              hintText: widget.hintText,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: AppStyle.inputHorizontalPadding,
+                vertical: AppStyle.inputVerticalPadding,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(
+                  AppStyle.borderRadius,
                 ),
-              ]
-            : null,
-      ),
-      child: TextField(
-        scrollController: _scrollController,
-        onChanged: widget.onChanged,
-        onSubmitted: widget.onSubmitted,
-        controller: widget.controller,
-        obscureText: widget.obscureText,
-        keyboardType: widget.keyboardType,
-        onEditingComplete: widget.onEditingComplete,
-        onTap: widget.onTap,
-        style: widget.style,
-        textAlign: widget.textAlign,
-        textDirection: widget.textDirection,
-        textInputAction: widget.textInputAction,
-        focusNode: _focusNode,
-        cursorHeight: AppStyle.cursorHeight,
-        cursorColor: AppStyle.neutral990,
-        decoration: InputDecoration(
-          hintText: widget.hintText,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 12,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(
-              AppStyle.borderRadius,
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(
+                  AppStyle.borderRadius,
+                ),
+                borderSide: const BorderSide(
+                  color: AppStyle.primary500,
+                ),
+              ),
+              filled: true,
+              fillColor: _focusNode.hasFocus
+                  ? AppStyle.neutral00
+                  : AppStyle.neutral100,
             ),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(
-              AppStyle.borderRadius,
-            ),
-            borderSide: BorderSide.none,
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(
-              AppStyle.borderRadius,
-            ),
-            borderSide: const BorderSide(
-              color: AppStyle.primary500,
-              strokeAlign: 10,
-            ),
-          ),
-          filled: true,
-          fillColor:
-              _focusNode.hasFocus ? AppStyle.neutral00 : AppStyle.neutral100,
         ),
-      ),
+      ],
     );
   }
 }
