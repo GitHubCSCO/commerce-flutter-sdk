@@ -1,19 +1,31 @@
+import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/search/search_page_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SearchScreen extends StatelessWidget {
+class SearchScreen extends BaseDynamicContentScreen {
   const SearchScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Add your button's onPressed logic here
-          },
-          child: const Text('search'),
-        ),
-      ),
+    return BlocBuilder<SearchPageBloc, SearchPageState>(
+      builder: (context, state) {
+        switch(state) {
+          case SearchPageInitialState():
+          case SearchPageLoadingState():
+            return const Center(child: CircularProgressIndicator());
+          case SearchPageLoadedState():
+            return Scaffold(
+                body: ListView(
+                  children: buildContentWidgets(state.pageWidgets),
+                )
+            );
+          case SearchPageFailureState():
+            return const Center(child: Text('Failed Loading Search'));
+          default:
+            return const Center(child: Text('Failed Loading Search'));
+        }
+      },
     );
   }
 }

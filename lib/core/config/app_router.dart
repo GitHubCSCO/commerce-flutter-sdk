@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/search/search_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_event.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
@@ -79,14 +80,18 @@ class Approuter {
                 AppRoute.shop.createRoute(
                   (context, state) => BlocProvider<ShopPageBloc>(
                       create: (context) => sl<ShopPageBloc>()..add(ShopPageLoadEvent()),
-                      child: ShopScreen()),
+                      child: ShopScreen()
+                  ),
                 ),
               ],
             ),
             StatefulShellBranch(
               routes: <RouteBase>[
                 AppRoute.search.createRoute(
-                  (context, state) => const SearchScreen(),
+                  (context, state) => BlocProvider<SearchPageBloc>(
+                      create: (context) => sl<SearchPageBloc>()..add(SearchPageLoadEvent()),
+                      child: SearchScreen()
+                  ),
                 ),
               ],
             ),
