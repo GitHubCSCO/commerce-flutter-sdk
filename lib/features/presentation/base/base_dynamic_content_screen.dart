@@ -15,7 +15,6 @@ import 'package:commerce_flutter_app/features/presentation/widget/search_history
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 class BaseDynamicContentScreen extends StatelessWidget {
   const BaseDynamicContentScreen({super.key});
 
