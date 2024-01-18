@@ -65,6 +65,8 @@ class CmsUseCase {
     }
   }
 
+  // classic
+
   Future<List<WidgetEntity>> getWidgetEntityListClassic(
       List<PageClassicWidgetEntity> pageClassicWidgets,
       Session? currentSession) async {
@@ -74,24 +76,90 @@ class CmsUseCase {
       return <WidgetEntity>[];
     } else {
       for (final pageClassicWidget in pageClassicWidgets) {
-        var actionsWidget = const ActionsWidgetEntity();
-        var actionList = <ActionLink>[];
-        for (final item in pageClassicWidget.childWidgets ?? []) {
-          final action = ActionLink(
-              type: ActionTypeConverter.convert(item?.type ?? ''),
-              icon: item?.icon);
-          actionList.add(action);
+        switch (pageClassicWidget.type) {
+          case WidgetType.mobileCarousel:
+          case WidgetType.mobileCarouselSlide:
+          case WidgetType.mobileLinkList:
+            final listListWidget =
+                await convertWidgetToMobileLinkListEntityClassic(
+                    pageClassicWidget, currentSession);
+            widgetEntities.add(listListWidget);
+          case WidgetType.productCarousel:
+            final productCarouselWidget =
+                await convertWidgetToProductCarouselListEntityClassic(
+                    pageClassicWidget, currentSession);
+            widgetEntities.add(productCarouselWidget);
+          case WidgetType.mobileSearchHistory:
+          case WidgetType.unknown:
+          default:
+            break;
         }
-        actionsWidget = actionsWidget.copyWith(
-          type: PageWidgetTypeConverter.convert(pageClassicWidget.type ?? ''),
-          actions: actionList,
-        );
-        widgetEntities.add(actionsWidget);
       }
-
-      return widgetEntities;
     }
+
+    return widgetEntities;
   }
+
+  Future<ActionsWidgetEntity> convertWidgetToMobileLinkListEntityClassic(
+      PageClassicWidgetEntity pageClassicWidget,
+      Session? currentSession) async {
+    var actionsWidget = const ActionsWidgetEntity();
+    var actionList = <ActionLinkEntity>[];
+    for (final item in pageClassicWidget.childWidgets ?? []) {
+      final action = ActionLinkEntity(
+          type: ActionTypeConverter.convert(item?.type ?? ''),
+          icon: item?.icon);
+      actionList.add(action);
+    }
+    actionsWidget = actionsWidget.copyWith(
+      type: pageClassicWidget.type,
+      actions: actionList,
+    );
+    return actionsWidget;
+  }
+
+  Future<ProductCarouselWidgetEntity>
+      convertWidgetToProductCarouselListEntityClassic(
+          PageClassicWidgetEntity pageClassicWidget,
+          Session? currentSession) async {
+    var productCarouselWidget = const ProductCarouselWidgetEntity();
+    productCarouselWidget = productCarouselWidget.copyWith(
+        carouselType: pageClassicWidget.carouselType,
+        displayTopSellersFrom: pageClassicWidget.displayTopSellersFrom,
+        selectedCategoryIds: pageClassicWidget.selectedCategoryIds
+            ?.split(',')
+            .map((s) => s)
+            .toList(),
+        displayPrice: pageClassicWidget.displayPrice,
+        displayPartNumbers: pageClassicWidget.displayPartNumbers,
+        title: pageClassicWidget.title);
+
+    return productCarouselWidget;
+  }
+
+  //   Future<SearchHistoryWidgetEntity> convertWidgetToSearchHistoryEntityClassic(
+  //     PageWidgetEntity pageWidget, Session? currentSession) async {
+  //   var searchhistoryWidget = const SearchHistoryWidgetEntity();
+  //   if (pageWidget.generalFields != null &&
+  //       pageWidget.generalFields?.previousSearches != null) {
+  //     searchhistoryWidget = searchhistoryWidget.copyWith(
+  //         itemsCount: pageWidget.generalFields?.previousSearches.toString());
+  //   }
+
+  //   if (pageWidget.translatableFields != null) {
+  //     var titles = pageWidget.translatableFields?.title as Map<String, dynamic>;
+  //     titles.forEach((key, value) {
+  //       if (currentSession?.language != null &&
+  //           currentSession?.language?.id == key) {
+  //         searchhistoryWidget = searchhistoryWidget.copyWith(title: value);
+  //       }
+  //     });
+  //   }
+
+  //   return searchhistoryWidget;
+  // }
+
+  // spire
 
   Future<List<WidgetEntity>> getWidgetEntityListSpire(
       List<PageWidgetEntity> pageWidgets, Session? currentSession) async {
@@ -180,14 +248,14 @@ class CmsUseCase {
   Future<ActionsWidgetEntity> convertWidgetToMobileLinkListEntity(
       PageWidgetEntity pageWidget, Session? currentSession) async {
     var actionsWidget = ActionsWidgetEntity();
-    var actionList = <ActionLink>[];
+    var actionList = <ActionLinkEntity>[];
     actionsWidget =
         actionsWidget.copyWith(layout: pageWidget.generalFields?.layout);
 
     if (pageWidget.generalFields?.links != null &&
         pageWidget.generalFields!.links!.isNotEmpty) {
       for (var action in pageWidget.generalFields?.links ?? []) {
-        actionList.add(ActionLink(
+        actionList.add(ActionLinkEntity(
           type: ActionTypeConverter.convert(action.fields?.type ?? ''),
           icon: action.fields?.icon,
           text: action.fields?.text,
@@ -204,7 +272,7 @@ class CmsUseCase {
               (value as List).map((item) => PageLink.fromJson(item)).toList();
           if (pageLinks.isNotEmpty) {
             for (var pageLink in pageLinks) {
-              actionList.add(ActionLink(
+              actionList.add(ActionLinkEntity(
                 type: ActionTypeConverter.convert(pageLink.fields?.type ?? ''),
                 icon: pageLink.fields?.icon,
                 text: pageLink.fields?.text,

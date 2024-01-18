@@ -25,13 +25,29 @@ class PageContentManagementMapper {
   PageClassicWidgetEntity toPageClassicWidgetEntity(PageClassicWidget model) =>
       PageClassicWidgetEntity(
         id: model.id,
-        type: model.type,
+        type: PageWidgetTypeConverter.convert(model.type ?? ''),
         subType: model.subType,
         childWidgets:
             model.childWidgets?.map(toPageClassicChildWidgetEntity).toList() ??
                 [],
+        displayThumbnailImage: model.displayThumbnailImage,
+        displayTopSellersFrom: TopSellersCategoriesSpanConverter.convert(
+            model.displayTopSellersFrom ?? ''),
+        displayAddToCart: model.displayAddToCart,
+        numberOfProductsToDisplay: model.numberOfProductsToDisplay,
+        displayPartNumbers: model.displayPartNumbers,
+        selectedCategoryIds: model.selectedCategoryIds,
+        title: model.title,
+        carouselType:
+            ProductCarouselTypeConverter.convert(model.carouselType ?? ''),
+        displayAddToMyLists: model.displayAddToMyLists,
+        displayDescription: model.displayDescription,
+        displayPrice: model.displayPrice,
+        seedWithManuallyAssigned: model.seedWithManuallyAssigned,
+        cssClass: model.cssClass,
+        timerSpeed: model.timerSpeed,
+        animationSpeed: model.animationSpeed,
       );
-
   PageClassicChildWidgetEntity toPageClassicChildWidgetEntity(
           PageClassicChildWidget model) =>
       PageClassicChildWidgetEntity(
@@ -42,6 +58,15 @@ class PageContentManagementMapper {
         childWidgets: model.childWidgets
             ?.map((childWidget) => toPageClassicChildWidgetEntity(childWidget))
             .toList(),
+        text: model.text,
+        url: model.url,
+        secondaryTextColor: model.secondaryTextColor,
+        primaryTextColor: model.primaryTextColor,
+        imageUrl: model.imageUrl,
+        textJustification: model.textJustification,
+        applyDarkOverlayToImage: model.applyDarkOverlayToImage,
+        primaryText: model.primaryText,
+        secondaryText: model.secondaryText,
       );
   PageInformationEntity toPageInformationEntity(PageInformation model) =>
       PageInformationEntity(

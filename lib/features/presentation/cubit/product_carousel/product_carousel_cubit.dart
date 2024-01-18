@@ -8,18 +8,19 @@ part 'product_carousel_state.dart';
 class ProductCarouselCubit extends Cubit<ProductCarouselState> {
   final ProductCarouselUseCase _productCarouselUseCase;
 
-  ProductCarouselCubit(this._productCarouselUseCase) : super(ProductCarouselInitialState());
+  ProductCarouselCubit(this._productCarouselUseCase)
+      : super(ProductCarouselInitialState());
 
   Future<void> getProducts(ProductCarouselWidgetEntity widgetEntity) async {
     var result = await _productCarouselUseCase.getProducts(widgetEntity);
     switch (result) {
       case Success():
-        emit(ProductCarouselLoadedState(productList: result.value!.products!));
+        emit(ProductCarouselLoadedState(productList: result.value!));
       case Failure():
-        emit(ProductCarouselFailureState(error: result.errorResponse.errorDescription!));
+        emit(ProductCarouselFailureState(
+            error: result.errorResponse.errorDescription!));
       case null:
-        // TODO: Handle this case.
+      // TODO: Handle this case.
     }
   }
-
 }

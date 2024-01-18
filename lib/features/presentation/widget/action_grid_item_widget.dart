@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ActionGridItemWidget extends BaseActionItemWidget {
-  final ActionLink action;
+  final ActionLinkEntity action;
 
   ActionGridItemWidget({super.key, required this.action});
 
@@ -46,5 +46,4 @@ class ActionGridItemWidget extends BaseActionItemWidget {
       ),
     );
   }
-
 }

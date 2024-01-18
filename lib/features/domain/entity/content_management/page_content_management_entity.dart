@@ -35,26 +35,77 @@ class PageClassicChildWidgetEntity {
   String? type;
   String? icon;
 
+  String? text;
+  String? url;
+  String? secondaryTextColor;
+  String? primaryTextColor;
+  String? imageUrl;
+  String? textJustification;
+  bool? applyDarkOverlayToImage;
+  String? primaryText;
+  String? secondaryText;
+
   PageClassicChildWidgetEntity({
     this.contentKey,
     this.className,
     this.type,
     this.icon,
     this.childWidgets = const [],
+    this.text,
+    this.url,
+    this.secondaryTextColor,
+    this.primaryTextColor,
+    this.imageUrl,
+    this.textJustification,
+    this.applyDarkOverlayToImage,
+    this.primaryText,
+    this.secondaryText,
   });
 }
 
 class PageClassicWidgetEntity {
   int? id;
-  String? type;
+  WidgetType? type;
   String? subType;
   List<PageClassicChildWidgetEntity>? childWidgets;
+
+  // Added unique fields
+  bool? displayThumbnailImage;
+  TopSellersCategoriesSpan? displayTopSellersFrom;
+  bool? displayAddToCart;
+  int? numberOfProductsToDisplay;
+  bool? displayPartNumbers;
+  String? selectedCategoryIds;
+  String? title;
+  ProductCarouselType? carouselType;
+  bool? displayAddToMyLists;
+  bool? displayDescription;
+  bool? displayPrice;
+  String? seedWithManuallyAssigned;
+  String? cssClass;
+  int? timerSpeed;
+  int? animationSpeed;
 
   PageClassicWidgetEntity({
     this.id,
     this.type,
-    this.subType,
-    this.childWidgets,
+    this.subType = '',
+    this.childWidgets = const [],
+    this.displayThumbnailImage,
+    this.displayTopSellersFrom,
+    this.displayAddToCart,
+    this.numberOfProductsToDisplay,
+    this.displayPartNumbers,
+    this.selectedCategoryIds,
+    this.title,
+    this.carouselType,
+    this.displayAddToMyLists,
+    this.displayDescription,
+    this.displayPrice,
+    this.seedWithManuallyAssigned,
+    this.cssClass,
+    this.timerSpeed,
+    this.animationSpeed,
   });
 }
 

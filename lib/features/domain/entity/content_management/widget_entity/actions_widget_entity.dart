@@ -3,14 +3,14 @@ import 'package:commerce_flutter_app/features/domain/converter/cms_converter/act
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 import 'package:equatable/equatable.dart';
 
-class ActionLink extends Equatable {
+class ActionLinkEntity extends Equatable {
   final ActionType? type;
   final String? icon;
   final String? text;
   final String? url;
   final bool? requiresAuth;
 
-  const ActionLink({
+  const ActionLinkEntity({
     this.type,
     this.icon,
     this.text,
@@ -18,14 +18,14 @@ class ActionLink extends Equatable {
     this.requiresAuth,
   });
 
-  ActionLink copyWith({
+  ActionLinkEntity copyWith({
     ActionType? type,
     String? icon,
     String? text,
     String? url,
     bool? requiresAuth,
   }) {
-    return ActionLink(
+    return ActionLinkEntity(
       type: type ?? this.type,
       icon: icon ?? this.icon,
       text: text ?? this.text,
@@ -40,8 +40,8 @@ class ActionLink extends Equatable {
 
 class ActionsWidgetEntity extends WidgetEntity {
   final ActionsLayout? layout;
-  final List<ActionLink>? actions;
-  final List<ActionLink>? childWidgets;
+  final List<ActionLinkEntity>? actions;
+  final List<ActionLinkEntity>? childWidgets;
 
   const ActionsWidgetEntity({
     String? id,
@@ -58,8 +58,8 @@ class ActionsWidgetEntity extends WidgetEntity {
     WidgetType? type,
     String? subType,
     ActionsLayout? layout,
-    List<ActionLink>? actions,
-    List<ActionLink>? childWidgets,
+    List<ActionLinkEntity>? actions,
+    List<ActionLinkEntity>? childWidgets,
   }) {
     return ActionsWidgetEntity(
       id: id ?? this.id,

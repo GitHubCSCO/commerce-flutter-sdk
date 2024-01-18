@@ -4,7 +4,6 @@ import 'package:commerce_flutter_app/features/domain/entity/content_management/w
 import 'package:flutter/material.dart';
 
 class BaseActionItemWidget extends StatelessWidget {
-
   const BaseActionItemWidget({super.key});
 
   @override
@@ -13,7 +12,7 @@ class BaseActionItemWidget extends StatelessWidget {
     throw UnimplementedError();
   }
 
-  String getActionIconPath(ActionLink actionLink) {
+  String getActionIconPath(ActionLinkEntity actionLink) {
     switch (actionLink.type) {
       case ActionType.categories:
         return "assets/images/icon_shop_categories.svg";
@@ -42,7 +41,7 @@ class BaseActionItemWidget extends StatelessWidget {
     }
   }
 
-  String getActionTitle(ActionLink actionLink) {
+  String getActionTitle(ActionLinkEntity actionLink) {
     switch (actionLink.type) {
       case ActionType.categories:
         return LocalizationConstants.ShopCategories;
@@ -93,8 +92,7 @@ class BaseActionItemWidget extends StatelessWidget {
       case ActionType.custom:
       case ActionType.unknown:
       default:
-      return actionLink.text!;
+        return actionLink.text ?? "";
     }
   }
-
 }
