@@ -41,16 +41,37 @@ class Input extends StatefulWidget {
 
 class _InputState extends State<Input> {
   late FocusNode _focusNode;
+  late ScrollController _scrollController;
+
+  void _setState() {
+    setState(() {});
+  }
+
+  void _resetScroll() {
+    if (!_focusNode.hasFocus) {
+      _scrollController.jumpTo(0);
+      setState(() {});
+    }
+  }
 
   @override
   void initState() {
     _focusNode = FocusNode();
-    _focusNode.addListener(() {
-      setState(() {});
-      debugPrint('has focus: ${_focusNode.hasFocus}');
-    });
+    _focusNode.addListener(_setState);
+
+    _scrollController = ScrollController();
+    _focusNode.addListener(_resetScroll);
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_setState);
+    _focusNode.dispose();
+    _scrollController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -68,6 +89,7 @@ class _InputState extends State<Input> {
             : null,
       ),
       child: TextField(
+        scrollController: _scrollController,
         onChanged: widget.onChanged,
         onSubmitted: widget.onSubmitted,
         controller: widget.controller,
