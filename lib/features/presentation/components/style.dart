@@ -14,4 +14,16 @@ class AppStyle {
   static const Color neutral990 = Color.fromRGBO(34, 34, 34, 1);
 
   static const double borderRadius = 32;
+
+  static const double disabledButtonOpacity = 0.4;
+
+  static const double cursorHeight = 16;
+  static const Color inputDropShadowColor = Color.fromRGBO(179, 195, 255, 1);
+  static const double inputDropShadowSpreadRadius = 3;
+
+  static const double inputHorizontalPadding = 20;
+  static const double inputVerticalPadding = 12;
+
+  static const double inputLabelFontSize = 14;
+  static const double inputLabelGap = 8;
 }
