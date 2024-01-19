@@ -5,8 +5,11 @@ import 'package:commerce_flutter_app/features/domain/usecases/content_management
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ShopUseCase extends CmsUseCase {
+
+  final ICacheService _cacheService;
+
   ShopUseCase(IContentConfigurationService contentConfigurationService,
-      ISessionService sessionService, {PageContentType? contentType})
+      ISessionService sessionService, this._cacheService, {PageContentType? contentType})
       : super(contentConfigurationService, sessionService,
             contentType: contentType);
 
@@ -24,4 +27,10 @@ class ShopUseCase extends CmsUseCase {
         return Failure(errorResponse);
     }
   }
+
+  void addFakeSearchHistory() async {
+    final list = ["stapler", "tools", "battery"];
+    _cacheService.persistData<List<String>>("search_history", list);
+  }
+
 }

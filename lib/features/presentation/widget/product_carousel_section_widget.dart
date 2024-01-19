@@ -52,7 +52,7 @@ class ProductCarouselSectionWidget extends StatelessWidget {
               );
             case ProductCarouselFailureState:
             default:
-              return const Center(child: Text('Failed Loading Shop'));
+              return const Center(child: Text('Failed Loading Products'));
           }
         })
       ],
