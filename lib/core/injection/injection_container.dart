@@ -34,15 +34,19 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => AccountPageBloc(sl()))
     ..registerLazySingleton(() => AccountUseCase(sl(), sl()))
     ..registerFactory(() => ProductCarouselCubit(sl()))
-    ..registerLazySingleton(() => ProductCarouselUseCase(sl()))
+    ..registerLazySingleton(() => ProductCarouselUseCase(sl(), sl()))
+    ..registerLazySingleton<IWebsiteService>(() => WebsiteService(
+        clientService: sl(),
+        sessionService: sl(),
+        cacheService: sl(),
+        networkService: sl()))
     ..registerFactory(() => SearchHistoryCubit(sl()))
     ..registerLazySingleton(() => SearchHistoryUseCase(sl()))
-
     ..registerLazySingleton<IProductService>(() => ProductService(
-      clientService: sl(),
-      cacheService: sl(),
-      networkService: sl(),
-    ))
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
     ..registerLazySingleton<IAuthenticationService>(() => AuthenticationService(
           sessionService: sl(),
           clientService: sl(),

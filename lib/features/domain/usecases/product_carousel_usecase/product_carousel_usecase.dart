@@ -3,21 +3,25 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductCarouselUseCase {
   final IProductService _productService;
+  final IWebsiteService _websiteService;
 
-  ProductCarouselUseCase(this._productService);
+  ProductCarouselUseCase(this._productService, this._websiteService);
 
-  Future<Result<GetProductCollectionResult, ErrorResponse>?> getProducts(
+  Future<Result<List<Product>, ErrorResponse>?> getProducts(
       ProductCarouselWidgetEntity productCarouselWidgetEntity) async {
     print('ProductCarouselUseCase load data');
 
-    Result<GetProductCollectionResult, ErrorResponse>? result;
-    switch(productCarouselWidgetEntity.carouselType) {
+    Result<List<Product>, ErrorResponse>? result;
+    switch (productCarouselWidgetEntity.carouselType) {
       case ProductCarouselType.featuredCategory:
-        result = await _getFeaturedCategoryProducts(productCarouselWidgetEntity);
+        result =
+            await _getFeaturedCategoryProducts(productCarouselWidgetEntity);
       case ProductCarouselType.topSellers:
         result = await _getTopSellersProducts(productCarouselWidgetEntity);
       case ProductCarouselType.recentlyViewed:
         result = await _getRecentlyViewedProducts();
+      case ProductCarouselType.webCrossSells:
+        result = await _getWebsiteCrossSellsProducts();
       default:
     }
 
@@ -31,26 +35,51 @@ class ProductCarouselUseCase {
     }
   }
 
-  Future<Result<GetProductCollectionResult, ErrorResponse>>
-      _getFeaturedCategoryProducts(
-          ProductCarouselWidgetEntity productCarouselWidgetEntity) async {
+  Future<Result<List<Product>, ErrorResponse>> _getFeaturedCategoryProducts(
+      ProductCarouselWidgetEntity productCarouselWidgetEntity) async {
     var result = await _productService
         .getProducts(_featuredCategoryParameters(productCarouselWidgetEntity));
-    return result;
+    switch (result) {
+      case Success(value: final data):
+        return Success(data?.products);
+      case Failure(errorResponse: final errorResponse):
+        return Failure(errorResponse);
+    }
   }
 
-  Future<Result<GetProductCollectionResult, ErrorResponse>>
-      _getTopSellersProducts(
-          ProductCarouselWidgetEntity productCarouselWidgetEntity) async {
+  Future<Result<List<Product>, ErrorResponse>> _getTopSellersProducts(
+      ProductCarouselWidgetEntity productCarouselWidgetEntity) async {
     var result = await _productService
         .getProducts(_topSellersParameters(productCarouselWidgetEntity));
-    return result;
+    switch (result) {
+      case Success(value: final data):
+        return Success(data?.products);
+      case Failure(errorResponse: final errorResponse):
+        return Failure(errorResponse);
+    }
   }
 
-  Future<Result<GetProductCollectionResult, ErrorResponse>>
+  Future<Result<List<Product>, ErrorResponse>>
       _getRecentlyViewedProducts() async {
     var result = await _productService.getProducts(_recentlyViewedParameters());
-    return result;
+    switch (result) {
+      case Success(value: final data):
+        return Success(data?.products);
+      case Failure(errorResponse: final errorResponse):
+        return Failure(errorResponse);
+    }
+  }
+
+  Future<Result<List<Product>, ErrorResponse>>
+      _getWebsiteCrossSellsProducts() async {
+    var result = await _websiteService.getCrosssells();
+
+    switch (result) {
+      case Success(value: final data):
+        return Success(data?.products);
+      case Failure(errorResponse: final errorResponse):
+        return Failure(errorResponse);
+    }
   }
 
   ProductsQueryParameters _featuredCategoryParameters(
@@ -62,9 +91,10 @@ class ProductCarouselUseCase {
     );
   }
 
-  ProductsQueryParameters _topSellersParameters(ProductCarouselWidgetEntity productCarouselWidgetEntity) {
+  ProductsQueryParameters _topSellersParameters(
+      ProductCarouselWidgetEntity productCarouselWidgetEntity) {
     List<String>? topSellersCategoryIds;
-    switch(productCarouselWidgetEntity.displayTopSellersFrom) {
+    switch (productCarouselWidgetEntity.displayTopSellersFrom) {
       case TopSellersCategoriesSpan.selectCategories:
         topSellersCategoryIds = productCarouselWidgetEntity.selectedCategoryIds;
       default:
@@ -72,12 +102,12 @@ class ProductCarouselUseCase {
     }
 
     return ProductsQueryParameters(
-      filter: "topsellers",
-      topSellersMaxResults: productCarouselWidgetEntity.numberOfProductsToDisplay,
-      topSellersCategoryIds: topSellersCategoryIds,
-      makeBrandUrls: false,
-      expand: ["brand"]
-    );
+        filter: "topsellers",
+        topSellersMaxResults:
+            productCarouselWidgetEntity.numberOfProductsToDisplay,
+        topSellersCategoryIds: topSellersCategoryIds,
+        makeBrandUrls: false,
+        expand: ["brand"]);
   }
 
   ProductsQueryParameters _recentlyViewedParameters() {

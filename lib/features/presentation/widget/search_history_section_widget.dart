@@ -62,5 +62,4 @@ class SearchHistorySectionWidget extends StatelessWidget {
       ),
     );
   }
-
 }

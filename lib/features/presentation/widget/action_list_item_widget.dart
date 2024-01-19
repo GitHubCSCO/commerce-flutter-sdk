@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ActionListItemWidget extends BaseActionItemWidget {
-  final ActionLink action;
+  final ActionLinkEntity action;
 
   const ActionListItemWidget({super.key, required this.action});
 
@@ -84,5 +84,4 @@ class ActionListItemWidget extends BaseActionItemWidget {
       ),
     );
   }
-
 }

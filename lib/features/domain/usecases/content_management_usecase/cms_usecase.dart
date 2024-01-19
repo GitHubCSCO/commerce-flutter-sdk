@@ -11,6 +11,7 @@ import 'package:commerce_flutter_app/features/domain/entity/content_management/w
 import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service_interface.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 
 class CmsUseCase {
   late PageContentType contentType;
@@ -65,6 +66,8 @@ class CmsUseCase {
     }
   }
 
+  // classic
+
   Future<List<WidgetEntity>> getWidgetEntityListClassic(
       List<PageClassicWidgetEntity> pageClassicWidgets,
       Session? currentSession) async {
@@ -74,24 +77,123 @@ class CmsUseCase {
       return <WidgetEntity>[];
     } else {
       for (final pageClassicWidget in pageClassicWidgets) {
-        var actionsWidget = const ActionsWidgetEntity();
-        var actionList = <ActionLink>[];
-        for (final item in pageClassicWidget.childWidgets ?? []) {
-          final action = ActionLink(
-              type: ActionTypeConverter.convert(item?.type ?? ''),
-              icon: item?.icon);
-          actionList.add(action);
+        switch (pageClassicWidget.type) {
+          case WidgetType.mobileCarousel:
+            final mobileCarouselWidget =
+                await convertWidgetToCarouselWidgetEntityClassic(
+                    pageClassicWidget, currentSession);
+            widgetEntities.add(mobileCarouselWidget);
+          case WidgetType.mobileCarouselSlide:
+          case WidgetType.mobileLinkList:
+            final listListWidget =
+                await convertWidgetToMobileLinkListEntityClassic(
+                    pageClassicWidget, currentSession);
+            widgetEntities.add(listListWidget);
+          case WidgetType.productCarousel:
+            final productCarouselWidget =
+                await convertWidgetToProductCarouselListEntityClassic(
+                    pageClassicWidget, currentSession);
+            widgetEntities.add(productCarouselWidget);
+          case WidgetType.mobileSearchHistory:
+            final searchHistoryWidget =
+                await convertWidgetToSearchHistoryEntityClassic(
+                    pageClassicWidget, currentSession);
+            widgetEntities.add(searchHistoryWidget);
+          case WidgetType.unknown:
+          default:
+            break;
         }
-        actionsWidget = actionsWidget.copyWith(
-          type: PageWidgetTypeConverter.convert(pageClassicWidget.type ?? ''),
-          actions: actionList,
-        );
-        widgetEntities.add(actionsWidget);
       }
-
-      return widgetEntities;
     }
+
+    return widgetEntities;
   }
+
+  Future<ActionsWidgetEntity> convertWidgetToMobileLinkListEntityClassic(
+      PageClassicWidgetEntity pageClassicWidget,
+      Session? currentSession) async {
+    var actionsWidget = const ActionsWidgetEntity();
+    var actionList = <ActionLinkEntity>[];
+    for (final item in pageClassicWidget.childWidgets ?? []) {
+      final action = ActionLinkEntity(
+          type: ActionTypeConverter.convert(item?.type ?? ''),
+          icon: item?.icon);
+      actionList.add(action);
+    }
+    actionsWidget = actionsWidget.copyWith(
+      type: pageClassicWidget.type,
+      actions: actionList,
+    );
+    return actionsWidget;
+  }
+
+  Future<ProductCarouselWidgetEntity>
+      convertWidgetToProductCarouselListEntityClassic(
+          PageClassicWidgetEntity pageClassicWidget,
+          Session? currentSession) async {
+    var productCarouselWidget = const ProductCarouselWidgetEntity();
+    productCarouselWidget = productCarouselWidget.copyWith(
+        carouselType: pageClassicWidget.carouselType,
+        displayTopSellersFrom: pageClassicWidget.displayTopSellersFrom,
+        selectedCategoryIds: pageClassicWidget.selectedCategoryIds
+            ?.split(',')
+            .map((s) => s)
+            .toList(),
+        displayPrice: pageClassicWidget.displayPrice,
+        displayPartNumbers: pageClassicWidget.displayPartNumbers,
+        title: pageClassicWidget.title);
+
+    return productCarouselWidget;
+  }
+
+  Future<SearchHistoryWidgetEntity> convertWidgetToSearchHistoryEntityClassic(
+      PageClassicWidgetEntity pageClassicWidget,
+      Session? currentSession) async {
+    var searchhistoryWidget = const SearchHistoryWidgetEntity();
+
+    searchhistoryWidget = searchhistoryWidget.copyWith(
+        itemsCount: pageClassicWidget.numberOfPreviousSearches.toString(),
+        title: pageClassicWidget.title);
+    return searchhistoryWidget;
+  }
+
+  Future<CarouselWidgetEntity> convertWidgetToCarouselWidgetEntityClassic(
+      PageClassicWidgetEntity pageClassicWidget,
+      Session? currentSession) async {
+    var carouselWidget = const CarouselWidgetEntity();
+
+    carouselWidget =
+        carouselWidget.copyWith(timerSpeed: pageClassicWidget.timerSpeed);
+    carouselWidget = carouselWidget.copyWith(
+        animationSpeed: pageClassicWidget.animationSpeed);
+
+    List<CarouselSlideWidgetEntity> carouselSlideEntityList = [];
+
+    for (final slide in pageClassicWidget.childWidgets ?? []) {
+      if (slide is PageClassicChildWidgetEntity) {
+        final slideWidget = CarouselSlideWidgetEntity(
+            imagePath: slide.imageUrl?.makeImageUrl(),
+            link: slide.link,
+            primaryText: slide.primaryText,
+            secondaryText: slide.secondaryText,
+            primaryTextColorHex: slide.primaryTextColor,
+            secondaryTextColorHex: slide.secondaryTextColor,
+            textJustification: slide.textJustification);
+        carouselSlideEntityList.add(slideWidget);
+      }
+    }
+    carouselWidget =
+        carouselWidget.copyWith(childWidgets: carouselSlideEntityList);
+
+    carouselWidget = carouselWidget.copyWith(
+      id: pageClassicWidget.id.toString(),
+      type: pageClassicWidget.type,
+    );
+
+    return carouselWidget;
+  }
+
+  // spire
 
   Future<List<WidgetEntity>> getWidgetEntityListSpire(
       List<PageWidgetEntity> pageWidgets, Session? currentSession) async {
@@ -180,14 +282,14 @@ class CmsUseCase {
   Future<ActionsWidgetEntity> convertWidgetToMobileLinkListEntity(
       PageWidgetEntity pageWidget, Session? currentSession) async {
     var actionsWidget = ActionsWidgetEntity();
-    var actionList = <ActionLink>[];
+    var actionList = <ActionLinkEntity>[];
     actionsWidget =
         actionsWidget.copyWith(layout: pageWidget.generalFields?.layout);
 
     if (pageWidget.generalFields?.links != null &&
         pageWidget.generalFields!.links!.isNotEmpty) {
       for (var action in pageWidget.generalFields?.links ?? []) {
-        actionList.add(ActionLink(
+        actionList.add(ActionLinkEntity(
           type: ActionTypeConverter.convert(action.fields?.type ?? ''),
           icon: action.fields?.icon,
           text: action.fields?.text,
@@ -204,7 +306,7 @@ class CmsUseCase {
               (value as List).map((item) => PageLink.fromJson(item)).toList();
           if (pageLinks.isNotEmpty) {
             for (var pageLink in pageLinks) {
-              actionList.add(ActionLink(
+              actionList.add(ActionLinkEntity(
                 type: ActionTypeConverter.convert(pageLink.fields?.type ?? ''),
                 icon: pageLink.fields?.icon,
                 text: pageLink.fields?.text,

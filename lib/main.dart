@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/config/app_router.dart';
+import 'package:commerce_flutter_app/core/config/test_config_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +20,9 @@ void initialHiveDatabase() async {
 }
 
 void initCommerceSDK() {
-  ClientConfig.hostUrl = 'mobilespire.commerce.insitesandbox.com';
-  ClientConfig.clientId = 'fluttermobile';
-  ClientConfig.clientSecret = 'd66d0479-07f7-47b2-ee1e-0d3a536e6091';
+  ClientConfig.hostUrl = TestConfigConstants.url;
+  ClientConfig.clientId = TestConfigConstants.clientId;
+  ClientConfig.clientSecret = TestConfigConstants.clientSecret;
 }
 
 class MyApp extends StatelessWidget {
@@ -62,7 +63,7 @@ class NavBarScreen extends StatelessWidget {
           title: const Text('My App'),
         ),
         bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed, // This is all you need!
+          type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.shop),
