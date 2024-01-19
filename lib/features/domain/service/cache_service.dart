@@ -9,11 +9,11 @@ class CacheService extends ICacheService {
 
   @override
   // TODO: implement offlineCacheMinutes
-  int get offlineCacheMinutes => throw UnimplementedError();
+  int get offlineCacheMinutes => 5;
 
   @override
   // TODO: implement onlineCacheMinutes
-  int get onlineCacheMinutes => throw UnimplementedError();
+  int get onlineCacheMinutes => 5;
 
   @override
   void shutdown() {
