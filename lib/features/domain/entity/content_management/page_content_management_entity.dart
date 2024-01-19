@@ -40,27 +40,28 @@ class PageClassicChildWidgetEntity {
   String? secondaryTextColor;
   String? primaryTextColor;
   String? imageUrl;
-  String? textJustification;
+  TextJustification? textJustification;
   bool? applyDarkOverlayToImage;
   String? primaryText;
   String? secondaryText;
+  String? link;
 
-  PageClassicChildWidgetEntity({
-    this.contentKey,
-    this.className,
-    this.type,
-    this.icon,
-    this.childWidgets = const [],
-    this.text,
-    this.url,
-    this.secondaryTextColor,
-    this.primaryTextColor,
-    this.imageUrl,
-    this.textJustification,
-    this.applyDarkOverlayToImage,
-    this.primaryText,
-    this.secondaryText,
-  });
+  PageClassicChildWidgetEntity(
+      {this.contentKey,
+      this.className,
+      this.type,
+      this.icon,
+      this.childWidgets = const [],
+      this.text,
+      this.url,
+      this.secondaryTextColor,
+      this.primaryTextColor,
+      this.imageUrl,
+      this.textJustification,
+      this.applyDarkOverlayToImage,
+      this.primaryText,
+      this.secondaryText,
+      this.link});
 }
 
 class PageClassicWidgetEntity {

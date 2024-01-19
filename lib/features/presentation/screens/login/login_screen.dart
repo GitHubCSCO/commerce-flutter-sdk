@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/config/test_config_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_event.dart';
@@ -53,8 +54,8 @@ class LoginScreen extends StatelessWidget {
                     onPressed: () {
                       BlocProvider.of<LoginBloc>(context).add(
                         const LoginSubmitEvent(
-                          username: 'saif',
-                          password: 'tester1',
+                          username: TestConfigConstants.userName,
+                          password: TestConfigConstants.password,
                         ),
                       );
                       // Perform login logic here

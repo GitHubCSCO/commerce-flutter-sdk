@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 class SearchHistorySectionWidget extends StatelessWidget {
   final SearchHistoryWidgetEntity searchHistoryWidgetEntity;
 
-  const SearchHistorySectionWidget({super.key, required this.searchHistoryWidgetEntity});
+  const SearchHistorySectionWidget(
+      {super.key, required this.searchHistoryWidgetEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -43,5 +44,4 @@ class SearchHistorySectionWidget extends StatelessWidget {
       ),
     );
   }
-
 }

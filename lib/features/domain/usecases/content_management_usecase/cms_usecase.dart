@@ -11,6 +11,7 @@ import 'package:commerce_flutter_app/features/domain/entity/content_management/w
 import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service_interface.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 
 class CmsUseCase {
   late PageContentType contentType;
@@ -78,6 +79,10 @@ class CmsUseCase {
       for (final pageClassicWidget in pageClassicWidgets) {
         switch (pageClassicWidget.type) {
           case WidgetType.mobileCarousel:
+            final mobileCarouselWidget =
+                await convertWidgetToCarouselWidgetEntityClassic(
+                    pageClassicWidget, currentSession);
+            widgetEntities.add(mobileCarouselWidget);
           case WidgetType.mobileCarouselSlide:
           case WidgetType.mobileLinkList:
             final listListWidget =
@@ -150,6 +155,42 @@ class CmsUseCase {
         itemsCount: pageClassicWidget.numberOfPreviousSearches.toString(),
         title: pageClassicWidget.title);
     return searchhistoryWidget;
+  }
+
+  Future<CarouselWidgetEntity> convertWidgetToCarouselWidgetEntityClassic(
+      PageClassicWidgetEntity pageClassicWidget,
+      Session? currentSession) async {
+    var carouselWidget = const CarouselWidgetEntity();
+
+    carouselWidget =
+        carouselWidget.copyWith(timerSpeed: pageClassicWidget.timerSpeed);
+    carouselWidget = carouselWidget.copyWith(
+        animationSpeed: pageClassicWidget.animationSpeed);
+
+    List<CarouselSlideWidgetEntity> carouselSlideEntityList = [];
+
+    for (final slide in pageClassicWidget.childWidgets ?? []) {
+      if (slide is PageClassicChildWidgetEntity) {
+        final slideWidget = CarouselSlideWidgetEntity(
+            imagePath: slide.imageUrl?.makeImageUrl(),
+            link: slide.link,
+            primaryText: slide.primaryText,
+            secondaryText: slide.secondaryText,
+            primaryTextColorHex: slide.primaryTextColor,
+            secondaryTextColorHex: slide.secondaryTextColor,
+            textJustification: slide.textJustification);
+        carouselSlideEntityList.add(slideWidget);
+      }
+    }
+    carouselWidget =
+        carouselWidget.copyWith(childWidgets: carouselSlideEntityList);
+
+    carouselWidget = carouselWidget.copyWith(
+      id: pageClassicWidget.id.toString(),
+      type: pageClassicWidget.type,
+    );
+
+    return carouselWidget;
   }
 
   // spire
