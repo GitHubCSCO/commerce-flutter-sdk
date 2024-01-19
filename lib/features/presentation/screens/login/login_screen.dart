@@ -32,14 +32,14 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         title: const Text('Login'),
         centerTitle: false,
-        actions: [
-          PlainButton(
-            onPressed: () {
-              AppRoute.account.navigate(context);
-            },
-            child: const Text('Cancel'),
-          ),
-        ],
+        // actions: [
+        //   PlainButton(
+        //     onPressed: () {
+        //       AppRoute.login.navigateBackStack(context);
+        //     },
+        //     child: const Text('Cancel'),
+        //   ),
+        // ],
         automaticallyImplyLeading: false,
         forceMaterialTransparency: true,
         bottom: PreferredSize(
