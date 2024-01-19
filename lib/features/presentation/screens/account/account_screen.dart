@@ -11,24 +11,24 @@ class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: SafeArea(
         child: Center(
-          child: Column(
-            children: [
-              ElevatedButton(
+          child: Center(
+            child: Column(
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      context.push(AppRoute.domainSelection.path);
+                    },
+                    child: const Text('Change domain')),
+                ElevatedButton(
                   onPressed: () {
-                    context.push(AppRoute.domainSelection.path);
+                    AppRoute.login.navigate(context);
                   },
-                  child: const Text('Change domain')),
-              ElevatedButton(
-                onPressed: () {
-                  BlocProvider.of<LoginBloc>(context).add(
-                    const LogoutSubmitEvent(),
-                  );
-                },
-                child: const Text('Logout'),
-              ),
-            ],
+                  child: const Text('Login'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

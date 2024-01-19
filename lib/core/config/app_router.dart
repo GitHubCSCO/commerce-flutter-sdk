@@ -69,7 +69,7 @@ class Approuter {
           StatefulShellBranch(
             routes: <RouteBase>[
               AppRoute.account.createRoute(
-                (context, state) => AccountScreen(),
+                (context, state) => const AccountScreen(),
               ),
             ],
           ),
