@@ -9,9 +9,11 @@ class LocalizationConstants {
   static const String EnterDomainHint = "Example: store.optimizely.com";
   static const String UseECommerceWebsite = "Continue";
   static const String InvalidDomain = "Invalid Domain";
-  static const String DomainWebsiteNotResponding = "The website at the domain you entered is not responding.";
+  static const String DomainWebsiteNotResponding =
+      "The website at the domain you entered is not responding.";
   static const String MobileAppDisabled = "Mobile App Disabled";
-  static const String MobileAppDisabledDescription = "This website is not enabled for mobile app access.";
+  static const String MobileAppDisabledDescription =
+      "This website is not enabled for mobile app access.";
 
   // Account
   static const String Account = "Account";
@@ -28,7 +30,8 @@ class LocalizationConstants {
   static const String OrderApproval = "Order Approval";
   static const String Lists = "Lists";
   static const String ChangeCustomer = "Change Customer";
-  static const String ChangeCustomerWillCall = "Change Customer/Delivery Method";
+  static const String ChangeCustomerWillCall =
+      "Change Customer/Delivery Method";
   static const String Version = "Version";
   static const String SavedOrders = "Saved Orders";
   static const String SaveOrder = "Save Order";
@@ -61,15 +64,22 @@ class LocalizationConstants {
   static const String FaceID = "Face ID";
   static const String Fingerprint = "Fingerprint";
   static const String Dismiss = "Dismiss";
-  static const String IncorrectUsernameOrPassword = "Incorrect username or password.";
-  static const String ErrorCommunicatingWithTheServer = "There was an error communicating with the server.";
+  static const String IncorrectUsernameOrPassword =
+      "Incorrect username or password.";
+  static const String ErrorCommunicatingWithTheServer =
+      "There was an error communicating with the server.";
   static const String IncorrectLoginOrPassword = "Incorrect Login or Password.";
-  static const String UnableToGetCurrentSession = "Unable to get current session.";
+  static const String UnableToGetCurrentSession =
+      "Unable to get current session.";
   static const String AuthenticationFailed = "Authentication failed.";
-  static const String InvalidUsernameAndPasswordCombination = "Invalid Username/Password combination";
-  static const String InstructionsEmailStringTemplate = "Enter your email and we'll send you an email that will allow you to reset your password.";
-  static const String InstructionsUsernameStringTemplate = "Enter your username and we'll send you an email that will allow you to reset your password.";
-  static const String ForgotPasswordSuccessfulMessage = "If an account matches the username entered, an email will be sent to the associated email address to reset your password. If you do not receive one, please contact customer service.";
+  static const String InvalidUsernameAndPasswordCombination =
+      "Invalid Username/Password combination";
+  static const String InstructionsEmailStringTemplate =
+      "Enter your email and we'll send you an email that will allow you to reset your password.";
+  static const String InstructionsUsernameStringTemplate =
+      "Enter your username and we'll send you an email that will allow you to reset your password.";
+  static const String ForgotPasswordSuccessfulMessage =
+      "If an account matches the username entered, an email will be sent to the associated email address to reset your password. If you do not receive one, please contact customer service.";
 
   // Change Customer/Pick Up
   static const String SelectBillingAddress = "Select Billing Address";
@@ -80,7 +90,8 @@ class LocalizationConstants {
   static const String PickUpLocation = "Pick Up Location";
   static const String ShippingAddress = "Shipping Address";
   static const String RecipientAddress = "RECIPIENT ADDRESS";
-  static const String SetAsDefault = "Set as default and skip this step next time you log in";
+  static const String SetAsDefault =
+      "Set as default and skip this step next time you log in";
   static const String CancelSignIn = "Cancel Sign In";
   static const String YourChangesWillBeLost = "Your changes will be lost.";
   static const String Ship = "Ship";
@@ -91,7 +102,8 @@ class LocalizationConstants {
   static const String DistanceUnit = "Mi";
   static const String SearchPickUpLocation = "Search Pick Up Location";
   static const String OneTimeShippingAddress = "One-Time Shipping Address";
-  static const String TurnOnYourLocationSettingsFor = "Turn on your location settings for";
+  static const String TurnOnYourLocationSettingsFor =
+      "Turn on your location settings for";
   static const String GoToSettings = "Go to Settings";
 
   // Settings
@@ -103,9 +115,12 @@ class LocalizationConstants {
   static const String CacheCleared = "The cache has been cleared.";
   static const String CacheNotCleared = "The cache has not been cleared.";
   static const String EnterPassword = "Enter Password";
-  static const String ChangingDomainInfo = "Changing domains will log you out of your current session. Are you sure?";
-  static const String ChangingEnvironmentInfo = "Changing environment will log you out of your current session. Are you sure?";
-  static const String EnterPasswordToSetupBiometricLogin = "Enter your password to setup {0}.";
+  static const String ChangingDomainInfo =
+      "Changing domains will log you out of your current session. Are you sure?";
+  static const String ChangingEnvironmentInfo =
+      "Changing environment will log you out of your current session. Are you sure?";
+  static const String EnterPasswordToSetupBiometricLogin =
+      "Enter your password to setup {0}.";
   static const String DisableBiometricLoginFailed = "Disable {0} failed.";
   static const String AdminLogout = "Logout Admin";
   static const String CurrentDomain = "Current Domain";
@@ -120,7 +135,8 @@ class LocalizationConstants {
   static const String LeaveList = "Leave List";
   static const String LeaveSpecificList = "Leave {0}?";
   static const String ProductsOutOfStock = "Product(s) Out of Stock";
-  static const String ProductsOutOfStockMessage = "There are product(s) out of stock. Add available products to cart?";
+  static const String ProductsOutOfStockMessage =
+      "There are product(s) out of stock. Add available products to cart?";
   static const String AddListToCart = "Add List to Cart";
   static const String ListTotal = "List Total";
   static const String ListTotalProducts = "List Total ({0} products)";
@@ -149,14 +165,18 @@ class LocalizationConstants {
   static const String SharedBy = "Shared by {0}";
   static const String Items = "{0} Items";
   static const String RemoveItem = "Remove Item";
-  static const String RemoveItemInfoMessage = "Changing quantity to zero will remove this item from your list. Are you sure?";
+  static const String RemoveItemInfoMessage =
+      "Changing quantity to zero will remove this item from your list. Are you sure?";
   static const String FailedToAddToList = "Failed to add to List";
   static const String SelectList = "Select List";
-  static const String CreateNewListInfoMessage = "Creates a new list and adds the product to it.";
+  static const String CreateNewListInfoMessage =
+      "Creates a new list and adds the product to it.";
   static const String UpdateOnBy = "{0} by {1}";
   static const String UpdateBy = "Updated {0} by {1}";
-  static const String DeleteIsDiscontinued = "The product '{0}' have been discontinued. Would you like to remove this item from the list?";
-  static const String DeleteItemsIsDiscontinued = "There are {0} item(s) on this list have been discontinued. Would you like to remove the items from the list?";
+  static const String DeleteIsDiscontinued =
+      "The product '{0}' have been discontinued. Would you like to remove this item from the list?";
+  static const String DeleteItemsIsDiscontinued =
+      "There are {0} item(s) on this list have been discontinued. Would you like to remove the items from the list?";
 
   // Order Approval
   static const String TotalApprovalOrders = "{0} Orders";
@@ -169,7 +189,8 @@ class LocalizationConstants {
 
   // Orders
   static const String NoOrdersFound = "No Orders Found";
-  static const String AddOrderContentToCart = "Add this order's contents to your cart?";
+  static const String AddOrderContentToCart =
+      "Add this order's contents to your cart?";
   static const String Filter = "Filter";
   static const String Status = "Status";
   static const String Print = "Print";
@@ -213,19 +234,24 @@ class LocalizationConstants {
   static const String AddToList = "Add to List";
   static const String RemoveAllProducts = "Remove All Products";
   static const String QuickOrderBasketEmpty = "Quick order basket is empty";
-  static const String RemoveAllQuickOrderProductsQuestion = "Remove all products from your quick order cart?";
-  static const String PleaseSignInCheckout = "Please sign in before proceeding to checkout.";
+  static const String RemoveAllQuickOrderProductsQuestion =
+      "Remove all products from your quick order cart?";
+  static const String PleaseSignInCheckout =
+      "Please sign in before proceeding to checkout.";
   static const String QuickOrderContents = "Quick Order Contents";
   static const String NotFoundForSearch = "Not found for {0}";
-  static const String TooManyResultsForSearch = "There is more than one product that matches {0}";
+  static const String TooManyResultsForSearch =
+      "There is more than one product that matches {0}";
   static const String AddToCartAndCheckout = "Add to Cart & Checkout";
   static const String QuickOrder = "Quick Order";
   static const String AddToQuickOrder = "Add to Quick Order";
   static const String TapToScan = "Tap to Scan";
   static const String TakePhoto = "Take Photo";
   static const String CancelScan = "Cancel Scan";
-  static const String MultipleBarcodeWarningTitle = "More than one barcode found";
-  static const String MultipleBarcodeWarningMessage = "Please put only one barcode inside the scanning box.";
+  static const String MultipleBarcodeWarningTitle =
+      "More than one barcode found";
+  static const String MultipleBarcodeWarningMessage =
+      "Please put only one barcode inside the scanning box.";
   static const String UpdateQuantity = "Update quantity";
 
   // Products
@@ -237,9 +263,11 @@ class LocalizationConstants {
   static const String SelectSomething = "Select {0}";
   static const String Documents = "Documents";
   static const String RecommendedProducts = "Recommended Products";
-  static const String UnableToRetrieveInventory = "Unable to retrieve inventory";
+  static const String UnableToRetrieveInventory =
+      "Unable to retrieve inventory";
   static const String AddToCart = "Add to cart";
-  static const String PleaseSignInBeforeAddingToList = "Please sign in before adding to list.";
+  static const String PleaseSignInBeforeAddingToList =
+      "Please sign in before adding to list.";
   static const String NoFiltersAvailable = "No Filters Available";
   static const String Brand = "Brand";
   static const String ProductLine = "Product Line";
@@ -290,7 +318,8 @@ class LocalizationConstants {
   static const String CheckoutForApproval = "Checkout for Approval";
   static const String ErrorLoadingCart = "Error Loading Cart";
   static const String ClearAllItemsInCart = "Clear all items in cart?";
-  static const String SignInBeforeCheckout = "Please sign in before proceeding to checkout.";
+  static const String SignInBeforeCheckout =
+      "Please sign in before proceeding to checkout.";
   static const String NotSignedIn = "Not Signed In";
   static const String ClearCart = "Clear Cart";
   static const String AddDiscount = "Add Discount";
@@ -308,7 +337,8 @@ class LocalizationConstants {
   static const String QTYTitle = "QTY";
   static const String LineNotes = "Line Notes";
   static const String Inventory = "Inventory";
-  static const String ViewAvailabilityWarehouse = "View Availability by Warehouse";
+  static const String ViewAvailabilityWarehouse =
+      "View Availability by Warehouse";
   static const String CartDeleted = "Cart Deleted";
   static const String SavedOrderDetails = "Saved Order Details";
   static const String ProductsAddToCartSuccess = "Products added to Cart";
@@ -317,7 +347,8 @@ class LocalizationConstants {
   static const String ShippingHandling = "Shipping & Handling";
   static const String YouSaved = "You saved";
   static const String Promotion = "Promotion";
-  static const String NotEnoughInventoryInLocalWarehouse = "Quantity of {0} available, the remaining qty will be available in 3-5 days.";
+  static const String NotEnoughInventoryInLocalWarehouse =
+      "Quantity of {0} available, the remaining qty will be available in 3-5 days.";
 
   // Brands
   static const String Brands = "Brands";
@@ -346,9 +377,12 @@ class LocalizationConstants {
   static const String SelectDate = "Select Date";
   static const String Carrier = "Carrier";
   static const String Service = "Service";
-  static const String RequestDeliveryDateOptional = "Request Delivery Date (optional)";
-  static const String RequestPickUpDateOptional = "Request Pick Up Date (optional)";
-  static const String RequestPickUpDateRequired = "Request Pick Up Date (required)";
+  static const String RequestDeliveryDateOptional =
+      "Request Delivery Date (optional)";
+  static const String RequestPickUpDateOptional =
+      "Request Pick Up Date (optional)";
+  static const String RequestPickUpDateRequired =
+      "Request Pick Up Date (required)";
   static const String PaymentMethod = "Payment Method";
   static const String PONumberOptional = "PO Number (Optional)";
   static const String PONumberRequired = "PO Number (Required)";
@@ -360,7 +394,8 @@ class LocalizationConstants {
   static const String CardExpires = "Expires {0}";
   static const String InvalidPromotionCode = "Invalid Promotion Code";
   static const String PromotionApplied = "Promotion Applied";
-  static const String PromotionNotAppliedContinue = "Promotion code not applied. Do you wish to continue?";
+  static const String PromotionNotAppliedContinue =
+      "Promotion code not applied. Do you wish to continue?";
   static const String SelectPaymentMethod = "Select Payment Method";
   static const String NewPaymentMethod = "New Payment Method";
   static const String NewAddress = "New address";
@@ -369,7 +404,8 @@ class LocalizationConstants {
   static const String BackToVmiHome = "Back to VMI Home";
   static const String AddNonVMIProducts = "Add Non-VMI Products";
   static const String SubmitOrder = "Submit Order";
-  static const String UnableToRetrieveShippingCarriers = "Unable to retrieve shipping carriers.";
+  static const String UnableToRetrieveShippingCarriers =
+      "Unable to retrieve shipping carriers.";
 
   static const String ChangesWillBeLost = "Changes will be lost. Are you sure?";
   static const String Name = "Name";
@@ -377,7 +413,8 @@ class LocalizationConstants {
   static const String LastName = "Last Name";
   static const String CompanyName = "Company Name";
   static const String ExpDate = "Exp. Date";
-  static const String UseDifferentBillingAddress = "Use Different Billing Address";
+  static const String UseDifferentBillingAddress =
+      "Use Different Billing Address";
   static const String UseBillingAddress = "Use billing address";
   static const String ErrorLoadingPage = "Error Loading Page";
   static const String CreditCard = "Credit Card";
@@ -407,9 +444,12 @@ class LocalizationConstants {
   static const String SearchThisArea = "Search This Area";
   static const String ResultsUpdated = "Results Updated";
   static const String NoLocationsFound = "No Locations Found";
-  static const String NoResultFoundMessage = "No results found, please search again.";
-  static const String DefaultHintTextOnSearchField = "Zip/Postal Code or City, State/Province or Country:";
-  static const String LocationNotFoundMessage = "Unable to find location. Check your search location and try again.";
+  static const String NoResultFoundMessage =
+      "No results found, please search again.";
+  static const String DefaultHintTextOnSearchField =
+      "Zip/Postal Code or City, State/Province or Country:";
+  static const String LocationNotFoundMessage =
+      "Unable to find location. Check your search location and try again.";
 
   // Invoice
   static const String Invoices = "Invoices";
@@ -429,7 +469,8 @@ class LocalizationConstants {
   static const String DateRange = "DATE RANGE";
   static const String SelectFromDate = "Select From Date";
   static const String SelectToDate = "Select To Date";
-  static const String FromDateShouldBeLessThanOrEqualToDate = "From Date should be less than or equal To Date";
+  static const String FromDateShouldBeLessThanOrEqualToDate =
+      "From Date should be less than or equal To Date";
   static const String DueDate = "Due Date";
   static const String ShipToPickUp = "Ship To / Pick Up";
 
@@ -441,10 +482,14 @@ class LocalizationConstants {
   static const String Search = "Search";
   static const String Success = "Success";
   static const String Failed = "Failed";
-  static const String FailedDueToTimeout = "Your request is being processed, but it timed out unexpectedly.";
-  static const String FailedDueToTimeoutCheckAgain = "Your request is being processed, but it timed out unexpectedly. Please check back in a few moments.";
-  static const String PlaceOrderTimeoutCheckAgain = "Your order is being processed, but it timed out unexpectedly. Please check back in a few moments.";
-  static const String AddWishListToCartTimeoutCheckCartAgain = "Your request is being processed, but it timed out unexpectedly. Please check your cart in a few moments.";
+  static const String FailedDueToTimeout =
+      "Your request is being processed, but it timed out unexpectedly.";
+  static const String FailedDueToTimeoutCheckAgain =
+      "Your request is being processed, but it timed out unexpectedly. Please check back in a few moments.";
+  static const String PlaceOrderTimeoutCheckAgain =
+      "Your order is being processed, but it timed out unexpectedly. Please check back in a few moments.";
+  static const String AddWishListToCartTimeoutCheckCartAgain =
+      "Your request is being processed, but it timed out unexpectedly. Please check your cart in a few moments.";
   static const String Enable = "Enable";
   static const String SortBy = "Sort By...";
   static const String Rename = "Rename";
@@ -570,19 +615,22 @@ class LocalizationConstants {
   static const String JobExpiration = "Job Expiration";
   static const String DeclineSalesQuote = "Decline Sales Quote";
   static const String ViewQuotedPricing = "View Quoted Pricing";
-  static const String AcceptQuoteMessage = "Items in your cart will not be added to your quote order. You will be able to continue shopping and purchase these items after accepting your quote.";
+  static const String AcceptQuoteMessage =
+      "Items in your cart will not be added to your quote order. You will be able to continue shopping and purchase these items after accepting your quote.";
   static const String ShowLineNotes = "Show Line Notes";
   static const String OrderQty = "Order QTY";
   static const String JobQty = "Job Qty";
   static const String PurchasedQty = "Purchased Qty";
   static const String QtyRemaining = "Qty Remaining";
   static const String GenerateOrder = "Generate Order";
-  static const String OrderQuantityExceed = "Order quantity exceeds quantity remaining";
+  static const String OrderQuantityExceed =
+      "Order quantity exceeds quantity remaining";
   static const String ExpirationDate = "Expiration Date";
   static const String CreatingQuoteFor = "Creating Quote For";
   static const String SelectAUser = "Select a User";
   static const String DiscountBy = "Discount By";
-  static const String DiscountMessage = "Price(s) on one or more items do not meet the minimum, please reduce the discount.";
+  static const String DiscountMessage =
+      "Price(s) on one or more items do not meet the minimum, please reduce the discount.";
   static const String EnterLineNotes = "Enter Line Notes";
   static const String LineNotesUpdated = "Line Notes Updated";
   static const String SubmitRequisition = "Submit Requisition";
@@ -604,7 +652,8 @@ class LocalizationConstants {
   static const String PriceInvalid = "Price is not valid";
   static const String NoMessageItem = "There are no message item.";
   static const String RemoveItemFromTheList = "Remove item from the list?";
-  static const String QuantityIsRequired = "Quantity is required or greater than 0.";
+  static const String QuantityIsRequired =
+      "Quantity is required or greater than 0.";
 
   // Notification
   static const String Notification = "Notification";
@@ -618,7 +667,8 @@ class LocalizationConstants {
   static const String CurrentLocation = "Current Location";
   static const String CountInventory = "Count Inventory";
   static const String CreateOrder = "Create Order";
-  static const String EnterLocationNote = "Enter a location note by tapping\n'{0}' bellow";
+  static const String EnterLocationNote =
+      "Enter a location note by tapping\n'{0}' bellow";
   static const String EditLocationNote = "Edit Location Note";
   static const String ClearOrder = "Clear Order";
   static const String OrderContents = "Order Contents";
@@ -645,7 +695,8 @@ class LocalizationConstants {
   static const String ViewNote = "View note";
   static const String ViewAllOrders = "View All Orders";
   static const String Count = "Count";
-  static const String PreviousOrdersNotFound = "Orders placed at this location will appear here.";
+  static const String PreviousOrdersNotFound =
+      "Orders placed at this location will appear here.";
   static const String LocationNote = "Location Note";
   static const String SaveLocationNote = "Save Location Note";
   static const String LocationNoteUpdated = "Location Note Updated";

@@ -13,6 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_scr
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/search_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/shop/shop_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/welcome/domain_selection.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_screen.dart';
 import 'package:commerce_flutter_app/main.dart';
 import 'package:flutter/material.dart';
@@ -44,27 +45,14 @@ class Approuter {
   LoginBloc loginBloc = sl<LoginBloc>();
 
   late final GoRouter router = GoRouter(
-      initialLocation: AppRoute.login.path,
+      initialLocation: AppRoute.welcome.path,
       refreshListenable: GoRouterRefreshStream(loginBloc.stream),
-      redirect: (BuildContext context, GoRouterState state) {
-        debugPrint("a");
-        if (loginBloc.state is AuthenticationAuthState) {
-          debugPrint("b");
-
-          debugPrint('${loginBloc.state}');
-          AuthenticationAuthState authState =
-              loginBloc.state as AuthenticationAuthState;
-          final bool loggedIn = authState.status == AuthStatus.authenticated;
-          if (loggedIn) {
-            return AppRoute.shop.path;
-          } else {
-            return AppRoute.login.path;
-          }
-        }
-      },
       routes: <RouteBase>[
         AppRoute.welcome.createRoute(
           (context, state) => const WelcomeScreen(),
+        ),
+        AppRoute.domainSelection.createRoute(
+          (context, state) => const DomainSelectionScreen(),
         ),
         AppRoute.login.createRoute(
           (context, state) => const LoginScreen(),
@@ -80,9 +68,9 @@ class Approuter {
               routes: <RouteBase>[
                 AppRoute.shop.createRoute(
                   (context, state) => BlocProvider<ShopPageBloc>(
-                      create: (context) => sl<ShopPageBloc>()..add(ShopPageLoadEvent()),
-                      child: ShopScreen()
-                  ),
+                      create: (context) =>
+                          sl<ShopPageBloc>()..add(ShopPageLoadEvent()),
+                      child: ShopScreen()),
                 ),
               ],
             ),
@@ -90,9 +78,9 @@ class Approuter {
               routes: <RouteBase>[
                 AppRoute.search.createRoute(
                   (context, state) => BlocProvider<SearchPageBloc>(
-                      create: (context) => sl<SearchPageBloc>()..add(SearchPageLoadEvent()),
-                      child: SearchScreen()
-                  ),
+                      create: (context) =>
+                          sl<SearchPageBloc>()..add(SearchPageLoadEvent()),
+                      child: SearchScreen()),
                 ),
               ],
             ),
@@ -100,9 +88,9 @@ class Approuter {
               routes: <RouteBase>[
                 AppRoute.account.createRoute(
                   (context, state) => BlocProvider<AccountPageBloc>(
-                      create: (context) => sl<AccountPageBloc>()..add(AccountPageLoadEvent()),
-                      child: AccountScreen()
-                  ),
+                      create: (context) =>
+                          sl<AccountPageBloc>()..add(AccountPageLoadEvent()),
+                      child: AccountScreen()),
                 ),
               ],
             ),
