@@ -17,6 +17,7 @@ class ActionGridSectionWidget extends StatelessWidget {
           shrinkWrap: true,
           gridDelegate:
               SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+          physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             final action = actionsWidgetEntity.actions![index];
             return ActionGridItemWidget(action: action);

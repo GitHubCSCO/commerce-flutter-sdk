@@ -67,6 +67,7 @@ class BaseActionItemWidget extends StatelessWidget {
         return LocalizationConstants.Settings;
       case ActionType.changeCustomer:
       // return this.hasWillCall ? LocalizationConstants.ChangeCustomerWillCall : LocalizationConstants.ChangeCustomer;
+        return LocalizationConstants.ChangeCustomer;
       case ActionType.signOut:
         return LocalizationConstants.SignOut;
       case ActionType.viewAccountOnWebsite:
