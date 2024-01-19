@@ -15,7 +15,7 @@ class CarouselSectionWidget extends StatelessWidget {
     return SizedBox(
       height: 180,
       child: CarouselSlider.builder(
-          itemCount: carouselWidgetEntity.childWidgets?.length,
+          itemCount: carouselWidgetEntity.childWidgets?.length ?? 0,
           itemBuilder: (context, index, viewIndex) {
             CarouselSlideWidgetEntity carouselSlideWidgetEntity = carouselWidgetEntity.childWidgets![index];
             return CarouselItemWidget(carouselSlideWidgetEntity: carouselSlideWidgetEntity);

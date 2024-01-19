@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
-class SearchHisotoryItemWidget extends StatelessWidget {
+class SearchHistoryItemWidget extends StatelessWidget {
+  final String history;
+
+  const SearchHistoryItemWidget({super.key, required this.history});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,7 +37,7 @@ class SearchHisotoryItemWidget extends StatelessWidget {
           const SizedBox(width: 8),
           SizedBox(
             child: Text(
-              'tools',
+              history,
               style: TextStyle(
                 color: Color(0xFF222222),
                 fontSize: 12,

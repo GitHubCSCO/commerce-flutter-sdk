@@ -5,12 +5,18 @@ import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-void main() {
+void main() async {
+  initialHiveDatabase();
   initCommerceSDK();
   initInjectionContainer();
   runApp(MyApp());
+}
+
+void initialHiveDatabase() async {
+  await Hive.initFlutter();
 }
 
 void initCommerceSDK() {

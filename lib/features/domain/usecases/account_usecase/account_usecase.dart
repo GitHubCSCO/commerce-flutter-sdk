@@ -4,20 +4,17 @@ import 'package:commerce_flutter_app/features/domain/service/content_configurati
 import 'package:commerce_flutter_app/features/domain/usecases/content_management_usecase/cms_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class ShopUseCase extends CmsUseCase {
-
-  final ICacheService _cacheService;
-
-  ShopUseCase(IContentConfigurationService contentConfigurationService,
-      ISessionService sessionService, this._cacheService, {PageContentType? contentType})
+class AccountUseCase extends CmsUseCase {
+  AccountUseCase(IContentConfigurationService contentConfigurationService,
+      ISessionService sessionService, {PageContentType? contentType})
       : super(contentConfigurationService, sessionService,
-            contentType: contentType);
+      contentType: contentType);
 
   @override
-  PageContentType get contentType => PageContentType.shop;
+  PageContentType get contentType => PageContentType.account;
 
   Future<Result<List<WidgetEntity>, ErrorResponse>> loadData() async {
-    print('ShopUseCase loaddata');
+    print('AccountUseCase loaddata');
     var result = await super.getCMSData();
     switch (result) {
       case Success(value: final data):
@@ -26,11 +23,6 @@ class ShopUseCase extends CmsUseCase {
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
     }
-  }
-
-  void addFakeSearchHistory() async {
-    final list = ["stapler", "tools", "battery"];
-    _cacheService.persistData<List<String>>("search_history", list);
   }
 
 }
