@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/features/domain/service/cache_service.dart'
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/domain_selection_usecase/domain_selection_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
@@ -13,6 +14,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/search/search_pa
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_history/search_history_cubit.dart';
+import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -76,6 +78,18 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<INetworkService>(() => FakeNetworkService(true))
     ..registerLazySingleton<ISecureStorageService>(
         () => FakeSecureStorageService())
-    ..registerLazySingleton<ILocalStorageService>(
-        () => FakeLocalStorageService());
+    ..registerLazySingleton<ILocalStorageService>(() => LocalStorageService())
+
+    //domain selection
+    ..registerLazySingleton<DomainSelectionUsecase>(
+        () => DomainSelectionUsecase())
+    ..registerLazySingleton<ISettingsService>(() => SettingsService(
+          cacheService: sl(),
+          clientService: sl(),
+          networkService: sl(),
+        ))
+    ..registerLazySingleton<IAdminClientService>(() => AdminClientService(
+          localStorageService: sl(),
+          secureStorageService: sl(),
+        ));
 }

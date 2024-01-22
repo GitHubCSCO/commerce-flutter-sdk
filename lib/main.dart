@@ -12,7 +12,12 @@ void main() async {
   initialHiveDatabase();
   initCommerceSDK();
   initInjectionContainer();
-  runApp(MyApp());
+  runApp(
+    BlocProvider(
+      create: (context) => sl<LoginBloc>(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 void initialHiveDatabase() async {
@@ -26,15 +31,13 @@ void initCommerceSDK() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          sl<LoginBloc>(), // Replace YourBloc with your actual bloc class
-      child: MaterialApp.router(
-        title: 'My App',
-        routerConfig: Approuter().router,
-      ),
+    return MaterialApp.router(
+      title: 'My App',
+      routerConfig: Approuter().router,
     );
   }
 }
@@ -59,9 +62,6 @@ class NavBarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('My App'),
-        ),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[

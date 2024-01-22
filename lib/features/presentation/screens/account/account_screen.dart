@@ -10,16 +10,15 @@ class AccountScreen extends BaseDynamicContentScreen {
   Widget build(BuildContext context) {
     return BlocBuilder<AccountPageBloc, AccountPageState>(
       builder: (context, state) {
-        switch(state) {
+        switch (state) {
           case AccountPageInitialState():
           case AccountPageLoadingState():
             return const Center(child: CircularProgressIndicator());
           case AccountPageLoadedState():
             return Scaffold(
                 body: ListView(
-                  children: buildContentWidgets(state.pageWidgets),
-                )
-            );
+              children: buildContentWidgets(state.pageWidgets),
+            ));
           case AccountPageFailureState():
             return const Center(child: Text('Failed Loading Account'));
           default:
