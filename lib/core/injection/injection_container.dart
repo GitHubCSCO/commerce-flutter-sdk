@@ -1,6 +1,5 @@
 import 'package:commerce_flutter_app/features/domain/usecases/domain_selection_usecase/domain_selection_usecase.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/services/cache_fake.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:commerce_flutter_app/services/network_fake.dart';
@@ -14,8 +13,11 @@ Future<void> initInjectionContainer() async {
   sl
 
     //login
-    ..registerLazySingleton(() => LoginBloc(
-          LoginUsecase(),
+    ..registerLazySingleton(() => AuthCubit())
+    ..registerLazySingleton<IAccountService>(() => AccountService(
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
         ))
     ..registerLazySingleton<IAuthenticationService>(() => AuthenticationService(
           sessionService: sl(),

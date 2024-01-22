@@ -1,21 +1,33 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_state.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => LoginCubit(loginUsecase: LoginUsecase()),
+      child: const LoginPage(),
+    );
+  }
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -77,15 +89,30 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: _passwordController,
               ),
               const SizedBox(height: 16.0),
-              BlocConsumer<LoginBloc, AuthenticationState>(
+              BlocConsumer<LoginCubit, LoginState>(
                 listener: (context, state) {
                   if (state is LoginSuccessState) {
+                    context.read<AuthCubit>().authenticated();
+                    if (state.showBiometricOptionView) {
+                      // Display biometric option view
+                      return;
+                    }
+
                     AppRoute.shop.navigate(context);
                   } else if (state is LoginFailureState) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Login failed. Please try again.'),
-                        backgroundColor: Colors.red,
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text(state.title ?? ''),
+                        content: Text(state.message ?? ''),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(state.buttonText ?? ''),
+                          ),
+                        ],
                       ),
                     );
                   }
@@ -96,11 +123,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   } else {
                     return PrimaryButton(
                       onPressed: () {
-                        BlocProvider.of<LoginBloc>(context).add(
-                          LoginSubmitEvent(
-                            username: _usernameController.text,
-                            password: _passwordController.text,
-                          ),
+                        BlocProvider.of<LoginCubit>(context).onLoginSubmit(
+                          _usernameController.text,
+                          _passwordController.text,
                         );
                         // Perform login logic here
                       },
