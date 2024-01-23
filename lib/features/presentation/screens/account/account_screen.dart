@@ -1,5 +1,8 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -18,11 +21,22 @@ class AccountScreen extends StatelessWidget {
                       context.push(AppRoute.domainSelection.path);
                     },
                     child: const Text('Change domain')),
-                ElevatedButton(
-                  onPressed: () {
-                    AppRoute.login.navigate(context);
+                BlocBuilder<AuthCubit, AuthState>(
+                  builder: (context, state) {
+                    return state.status != AuthStatus.authenticated
+                        ? ElevatedButton(
+                            onPressed: () {
+                              AppRoute.login.navigate(context);
+                            },
+                            child: const Text('Login'),
+                          )
+                        : ElevatedButton(
+                            onPressed: () {
+                              context.read<AuthCubit>().unauthenticated();
+                            },
+                            child: const Text('Logout'),
+                          );
                   },
-                  child: const Text('Login'),
                 ),
               ],
             ),
