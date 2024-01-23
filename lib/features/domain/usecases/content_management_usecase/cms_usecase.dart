@@ -1,0 +1,392 @@
+import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_type_converter.dart';
+import 'package:commerce_flutter_app/features/domain/converter/cms_converter/page_widget_type_converter.dart';
+import 'package:commerce_flutter_app/features/domain/converter/cms_converter/text_justification_converter.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/page_content_management_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_slide_widget.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
+import 'package:commerce_flutter_app/features/domain/service/content_configuration_service_interface.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
+
+class CmsUseCase {
+  late PageContentType contentType;
+
+  final IContentConfigurationService _contentConfigurationService;
+  final ISessionService _sessionService;
+
+  CmsUseCase(this._contentConfigurationService, this._sessionService,
+      {PageContentType? contentType}) {
+    this.contentType = contentType ?? PageContentType.account;
+  }
+
+  Future<Result<List<WidgetEntity>, ErrorResponse>> getCMSData() async {
+    print('CmsUseCase loaddata');
+    final result = await _contentConfigurationService
+        .loadAndPersistLiveContentManagement(contentType);
+
+    switch (result) {
+      case Success(value: final pageData):
+        {
+          var session = await _sessionService.getCurrentSession();
+
+          switch (session) {
+            case Success(value: final session):
+              {
+                var currentSession = _sessionService.currentSession ?? session;
+
+                if (pageData?.pageClassicWidget != null) {
+                  //for classic
+                  var widgetList = pageData?.pageClassicWidget ?? [];
+                  final widgetEntityList = await getWidgetEntityListClassic(
+                      widgetList, currentSession);
+                  return Success(widgetEntityList);
+                } else {
+                  // for spire
+                  var widgetList = pageData?.page?.widgets ?? [];
+                  final widgetEntityList = await getWidgetEntityListSpire(
+                      widgetList, currentSession);
+                  return Success(widgetEntityList);
+                }
+              }
+            case Failure(errorResponse: final errorResponse):
+              {
+                return Failure(errorResponse);
+              }
+          }
+        }
+      case Failure(errorResponse: final errorResponse):
+        {
+          return Failure(errorResponse);
+        }
+    }
+  }
+
+  // classic
+
+  Future<List<WidgetEntity>> getWidgetEntityListClassic(
+      List<PageClassicWidgetEntity> pageClassicWidgets,
+      Session? currentSession) async {
+    List<WidgetEntity> widgetEntities = [];
+
+    if (pageClassicWidgets.isEmpty) {
+      return <WidgetEntity>[];
+    } else {
+      for (final pageClassicWidget in pageClassicWidgets) {
+        switch (pageClassicWidget.type) {
+          case WidgetType.mobileCarousel:
+            final mobileCarouselWidget =
+                await convertWidgetToCarouselWidgetEntityClassic(
+                    pageClassicWidget, currentSession);
+            widgetEntities.add(mobileCarouselWidget);
+          case WidgetType.mobileCarouselSlide:
+          case WidgetType.mobileLinkList:
+            final listListWidget =
+                await convertWidgetToMobileLinkListEntityClassic(
+                    pageClassicWidget, currentSession);
+            widgetEntities.add(listListWidget);
+          case WidgetType.productCarousel:
+            final productCarouselWidget =
+                await convertWidgetToProductCarouselListEntityClassic(
+                    pageClassicWidget, currentSession);
+            widgetEntities.add(productCarouselWidget);
+          case WidgetType.mobileSearchHistory:
+            final searchHistoryWidget =
+                await convertWidgetToSearchHistoryEntityClassic(
+                    pageClassicWidget, currentSession);
+            widgetEntities.add(searchHistoryWidget);
+          case WidgetType.unknown:
+          default:
+            break;
+        }
+      }
+    }
+
+    return widgetEntities;
+  }
+
+  Future<ActionsWidgetEntity> convertWidgetToMobileLinkListEntityClassic(
+      PageClassicWidgetEntity pageClassicWidget,
+      Session? currentSession) async {
+    var actionsWidget = const ActionsWidgetEntity();
+    var actionList = <ActionLinkEntity>[];
+    for (final item in pageClassicWidget.childWidgets ?? []) {
+      final action = ActionLinkEntity(
+          type: ActionTypeConverter.convert(item?.type ?? ''),
+          icon: item?.icon);
+      actionList.add(action);
+    }
+    actionsWidget = actionsWidget.copyWith(
+      type: pageClassicWidget.type,
+      actions: actionList,
+    );
+    return actionsWidget;
+  }
+
+  Future<ProductCarouselWidgetEntity>
+      convertWidgetToProductCarouselListEntityClassic(
+          PageClassicWidgetEntity pageClassicWidget,
+          Session? currentSession) async {
+    var productCarouselWidget = const ProductCarouselWidgetEntity();
+    productCarouselWidget = productCarouselWidget.copyWith(
+        carouselType: pageClassicWidget.carouselType,
+        displayTopSellersFrom: pageClassicWidget.displayTopSellersFrom,
+        selectedCategoryIds: pageClassicWidget.selectedCategoryIds
+            ?.split(',')
+            .map((s) => s)
+            .toList(),
+        displayPrice: pageClassicWidget.displayPrice,
+        displayPartNumbers: pageClassicWidget.displayPartNumbers,
+        title: pageClassicWidget.title);
+
+    return productCarouselWidget;
+  }
+
+  Future<SearchHistoryWidgetEntity> convertWidgetToSearchHistoryEntityClassic(
+      PageClassicWidgetEntity pageClassicWidget,
+      Session? currentSession) async {
+    var searchhistoryWidget = const SearchHistoryWidgetEntity();
+
+    searchhistoryWidget = searchhistoryWidget.copyWith(
+        itemsCount: pageClassicWidget.numberOfPreviousSearches.toString(),
+        title: pageClassicWidget.title);
+    return searchhistoryWidget;
+  }
+
+  Future<CarouselWidgetEntity> convertWidgetToCarouselWidgetEntityClassic(
+      PageClassicWidgetEntity pageClassicWidget,
+      Session? currentSession) async {
+    var carouselWidget = const CarouselWidgetEntity();
+
+    carouselWidget =
+        carouselWidget.copyWith(timerSpeed: pageClassicWidget.timerSpeed);
+    carouselWidget = carouselWidget.copyWith(
+        animationSpeed: pageClassicWidget.animationSpeed);
+
+    List<CarouselSlideWidgetEntity> carouselSlideEntityList = [];
+
+    for (final slide in pageClassicWidget.childWidgets ?? []) {
+      if (slide is PageClassicChildWidgetEntity) {
+        final slideWidget = CarouselSlideWidgetEntity(
+            imagePath: slide.imageUrl?.makeImageUrl(),
+            link: slide.link,
+            primaryText: slide.primaryText,
+            secondaryText: slide.secondaryText,
+            primaryTextColorHex: slide.primaryTextColor,
+            secondaryTextColorHex: slide.secondaryTextColor,
+            textJustification: slide.textJustification);
+        carouselSlideEntityList.add(slideWidget);
+      }
+    }
+    carouselWidget =
+        carouselWidget.copyWith(childWidgets: carouselSlideEntityList);
+
+    carouselWidget = carouselWidget.copyWith(
+      id: pageClassicWidget.id.toString(),
+      type: pageClassicWidget.type,
+    );
+
+    return carouselWidget;
+  }
+
+  // spire
+
+  Future<List<WidgetEntity>> getWidgetEntityListSpire(
+      List<PageWidgetEntity> pageWidgets, Session? currentSession) async {
+    List<WidgetEntity> widgetEntities = [];
+
+    if (pageWidgets.isEmpty) {
+      return <WidgetEntity>[];
+    } else {
+      for (final pageWidget in pageWidgets) {
+        switch (pageWidget.type) {
+          case WidgetType.mobileCarousel:
+            final mobileCarouselWidget =
+                await convertWidgetToCarouselWidgetEntity(
+                    pageWidget, currentSession);
+            widgetEntities.add(mobileCarouselWidget);
+          case WidgetType.mobileCarouselSlide:
+          case WidgetType.mobileLinkList:
+            final listListWidget = await convertWidgetToMobileLinkListEntity(
+                pageWidget, currentSession);
+            widgetEntities.add(listListWidget);
+          case WidgetType.productCarousel:
+            final productCarouselWidget =
+                await convertWidgetToProductCarouselListEntity(
+                    pageWidget, currentSession);
+            widgetEntities.add(productCarouselWidget);
+          case WidgetType.mobileSearchHistory:
+            final searchHistoryWidget =
+                await convertWidgetToSearchHistoryEntity(
+                    pageWidget, currentSession);
+            widgetEntities.add(searchHistoryWidget);
+          case WidgetType.unknown:
+          default:
+            break;
+        }
+      }
+    }
+    return widgetEntities;
+  }
+
+  Future<SearchHistoryWidgetEntity> convertWidgetToSearchHistoryEntity(
+      PageWidgetEntity pageWidget, Session? currentSession) async {
+    var searchhistoryWidget = const SearchHistoryWidgetEntity();
+    if (pageWidget.generalFields != null &&
+        pageWidget.generalFields?.previousSearches != null) {
+      searchhistoryWidget = searchhistoryWidget.copyWith(
+          itemsCount: pageWidget.generalFields?.previousSearches.toString());
+    }
+
+    if (pageWidget.translatableFields != null) {
+      var titles = pageWidget.translatableFields?.title as Map<String, dynamic>;
+      titles.forEach((key, value) {
+        if (currentSession?.language != null &&
+            currentSession?.language?.id == key) {
+          searchhistoryWidget = searchhistoryWidget.copyWith(title: value);
+        }
+      });
+    }
+
+    return searchhistoryWidget;
+  }
+
+  Future<ProductCarouselWidgetEntity> convertWidgetToProductCarouselListEntity(
+      PageWidgetEntity pageWidget, Session? currentSession) async {
+    var productCarouselWidget = const ProductCarouselWidgetEntity();
+    if (pageWidget.generalFields != null) {
+      productCarouselWidget = productCarouselWidget.copyWith(
+          carouselType: pageWidget.generalFields?.carouselType,
+          displayTopSellersFrom: pageWidget.generalFields?.displayProductsFrom,
+          selectedCategoryIds: pageWidget.generalFields?.selectedCategoryIds,
+          displayPrice: pageWidget.generalFields?.showPrice,
+          displayPartNumbers: pageWidget.generalFields?.showPartNumbers);
+    }
+
+    if (pageWidget.translatableFields != null) {
+      var titles = pageWidget.translatableFields?.title as Map<String, dynamic>;
+      titles.forEach((key, value) {
+        if (currentSession?.language != null &&
+            currentSession?.language?.id == key) {
+          productCarouselWidget = productCarouselWidget.copyWith(title: value);
+        }
+      });
+    }
+    return productCarouselWidget;
+  }
+
+  Future<ActionsWidgetEntity> convertWidgetToMobileLinkListEntity(
+      PageWidgetEntity pageWidget, Session? currentSession) async {
+    var actionsWidget = ActionsWidgetEntity();
+    var actionList = <ActionLinkEntity>[];
+    actionsWidget =
+        actionsWidget.copyWith(layout: pageWidget.generalFields?.layout);
+
+    if (pageWidget.generalFields?.links != null &&
+        pageWidget.generalFields!.links!.isNotEmpty) {
+      for (var action in pageWidget.generalFields?.links ?? []) {
+        actionList.add(ActionLinkEntity(
+          type: ActionTypeConverter.convert(action.fields?.type ?? ''),
+          icon: action.fields?.icon,
+          text: action.fields?.text,
+          url: action.fields?.url,
+          requiresAuth: action.fields?.requiresAuth,
+        ));
+      }
+    } else if (pageWidget.translatableFields?.links != null) {
+      var titles = pageWidget.translatableFields?.links as Map<String, dynamic>;
+      titles.forEach((key, value) {
+        if (currentSession?.language != null &&
+            currentSession?.language?.id == key) {
+          var pageLinks =
+              (value as List).map((item) => PageLink.fromJson(item)).toList();
+          if (pageLinks.isNotEmpty) {
+            for (var pageLink in pageLinks) {
+              actionList.add(ActionLinkEntity(
+                type: ActionTypeConverter.convert(pageLink.fields?.type ?? ''),
+                icon: pageLink.fields?.icon,
+                text: pageLink.fields?.text,
+                url: pageLink.fields?.url,
+                requiresAuth: pageLink.fields?.requiresAuth,
+              ));
+            }
+          }
+        }
+      });
+    }
+    actionsWidget = actionsWidget.copyWith(
+      id: pageWidget.id,
+      type: pageWidget.type,
+    );
+    actionsWidget = actionsWidget.copyWith(actions: actionList);
+    return actionsWidget;
+  }
+
+  Future<CarouselWidgetEntity> convertWidgetToCarouselWidgetEntity(
+      PageWidgetEntity pageWidget, Session? currentSession) async {
+    var carouselWidget = const CarouselWidgetEntity();
+    if (pageWidget.generalFields != null) {
+      carouselWidget = carouselWidget.copyWith(
+          timerSpeed: pageWidget.generalFields?.timerSpeed);
+      carouselWidget = carouselWidget.copyWith(
+          animationSpeed: pageWidget.generalFields?.animationSpeed);
+
+      List<CarouselSlideWidgetEntity> carouselSlideEntityList = [];
+      if (pageWidget.generalFields?.slides != null &&
+          pageWidget.generalFields!.slides!.isNotEmpty) {
+        for (final item in pageWidget.generalFields!.slides!) {
+          final slideWidget = CarouselSlideWidgetEntity(
+              imagePath: item.slide?.image,
+              link: item.slide?.link,
+              primaryText: item.slide?.heading,
+              secondaryText: item.slide?.subheading,
+              primaryTextColorHex: item.slide?.headingColor,
+              secondaryTextColorHex: item.slide?.subheadingColor,
+              textJustification: item.slide?.textAlignment);
+          carouselSlideEntityList.add(slideWidget);
+        }
+        carouselWidget =
+            carouselWidget.copyWith(childWidgets: carouselSlideEntityList);
+      } else if (pageWidget.translatableFields?.slides != null) {
+        var slides =
+            pageWidget.translatableFields?.slides as Map<String, dynamic>;
+        slides.forEach((key, value) {
+          if (currentSession?.language != null &&
+              currentSession?.language?.id == key) {
+            var pageSlides = (value as List)
+                .map((item) => PageSlide.fromJson(item))
+                .toList();
+            if (pageSlides.isNotEmpty) {
+              for (var item in pageSlides) {
+                var slideWidget = CarouselSlideWidgetEntity(
+                    imagePath: item.slide?.image,
+                    link: item.slide?.link,
+                    primaryText: item.slide?.heading,
+                    primaryTextColorHex: item.slide?.headingColor,
+                    secondaryText: item.slide?.subheading,
+                    secondaryTextColorHex: item.slide?.subheadingColor,
+                    textJustification: TextJustificationConverter.convert(
+                        item.slide?.textAlignment ?? ''));
+
+                carouselSlideEntityList.add(slideWidget);
+                carouselWidget = carouselWidget.copyWith(
+                    childWidgets: carouselSlideEntityList);
+              }
+            }
+          }
+        });
+      }
+
+      carouselWidget = carouselWidget.copyWith(
+        id: pageWidget.id,
+        type: pageWidget.type,
+      );
+    }
+
+    return carouselWidget;
+  }
+}

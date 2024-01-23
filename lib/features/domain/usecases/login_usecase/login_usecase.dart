@@ -3,8 +3,10 @@ import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class LoginUsecase {
-  final IAuthenticationService _authenticationService =
-      sl<IAuthenticationService>();
+
+  LoginUsecase(this._authenticationService);
+
+  final IAuthenticationService _authenticationService;
 
   final INetworkService _networkService = sl<INetworkService>();
 

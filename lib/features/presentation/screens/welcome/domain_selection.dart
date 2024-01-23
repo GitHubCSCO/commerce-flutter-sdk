@@ -26,7 +26,7 @@ class DomainSelectionScreen extends StatelessWidget {
               context.pop();
             },
             child: const Text(
-              LocalizationKeyword.cancel,
+              LocalizationConstants.Cancel,
               style: TextStyle(color: Colors.black),
             ),
           ),
@@ -74,20 +74,20 @@ class _DomainSelectionPageState extends State<DomainSelectionPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              LocalizationKeyword.existingCustomers,
+              LocalizationConstants.ExistingCustomers,
               style: WelcomeStyle.welcomeCardHeaderStyle,
             ),
             WelcomeStyle.welcomeCardTextSpacer,
             Input(
               controller: _textEditingController,
-              hintText: LocalizationKeyword.enterDomainHint,
+              hintText: LocalizationConstants.EnterDomainHint,
               label: 'Enter Storefront URL',
             ),
             const Expanded(child: SizedBox()),
             BlocConsumer<DomainSelectionCubit, DomainSelectionState>(
               listener: (context, state) {
                 if (state is DomainSelectionSuccess) {
-                  AppRoute.shop.navigate(context);
+                  AppRoute.login.navigate(context);
                 }
 
                 if (state is DomainSelectionFailed) {
@@ -101,7 +101,7 @@ class _DomainSelectionPageState extends State<DomainSelectionPage> {
                           onPressed: () {
                             context.pop();
                           },
-                          child: const Text(LocalizationKeyword.ok),
+                          child: const Text(LocalizationConstants.OK),
                         ),
                       ],
                     ),
@@ -118,8 +118,8 @@ class _DomainSelectionPageState extends State<DomainSelectionPage> {
                               .selectDomain(_textEditingController.text);
                         },
                         isEnabled: _textEditingController.text.isNotEmpty,
-                        child:
-                            const Text(LocalizationKeyword.useECommerceWebsite),
+                        child: const Text(
+                            LocalizationConstants.UseECommerceWebsite),
                       );
               },
             ),

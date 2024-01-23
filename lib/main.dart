@@ -1,12 +1,15 @@
 import 'package:commerce_flutter_app/core/config/app_router.dart';
+import 'package:commerce_flutter_app/core/config/test_config_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-void main() {
+void main() async {
+  initialHiveDatabase();
   initCommerceSDK();
   initInjectionContainer();
   runApp(
@@ -17,10 +20,14 @@ void main() {
   );
 }
 
+void initialHiveDatabase() async {
+  await Hive.initFlutter();
+}
+
 void initCommerceSDK() {
-  ClientConfig.hostUrl = 'mobilespire.commerce.insitesandbox.com';
-  ClientConfig.clientId = 'fluttermobile';
-  ClientConfig.clientSecret = 'd66d0479-07f7-47b2-ee1e-0d3a536e6091';
+  ClientConfig.hostUrl = TestConfigConstants.url;
+  ClientConfig.clientId = TestConfigConstants.clientId;
+  ClientConfig.clientSecret = TestConfigConstants.clientSecret;
 }
 
 class MyApp extends StatelessWidget {
@@ -56,7 +63,7 @@ class NavBarScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed, // This is all you need!
+          type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.shop),
