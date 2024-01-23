@@ -1,18 +1,24 @@
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class LoginUsecase {
-
-  LoginUsecase(this._authenticationService);
+  LoginUsecase({
+    required IAuthenticationService authenticationService,
+    required INetworkService networkService,
+    required ISessionService sessionService,
+    required IAccountService accountService,
+  })  : _authenticationService = authenticationService,
+        _networkService = networkService,
+        _sessionService = sessionService,
+        _accountService = accountService;
 
   final IAuthenticationService _authenticationService;
 
-  final INetworkService _networkService = sl<INetworkService>();
+  final INetworkService _networkService;
 
-  final ISessionService _sessionService = sl<ISessionService>();
+  final ISessionService _sessionService;
 
-  final IAccountService _accountService = sl<IAccountService>();
+  final IAccountService _accountService;
 
   Future<LoginStatus> attemptSignIn(
     String username,

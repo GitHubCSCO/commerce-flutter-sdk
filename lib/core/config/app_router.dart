@@ -4,7 +4,6 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_state.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_event.dart';
@@ -42,11 +41,9 @@ class GoRouterRefreshStream extends ChangeNotifier {
 }
 
 class Approuter {
-  LoginBloc loginBloc = sl<LoginBloc>();
 
   late final GoRouter router = GoRouter(
       initialLocation: AppRoute.welcome.path,
-      refreshListenable: GoRouterRefreshStream(loginBloc.stream),
       routes: <RouteBase>[
         AppRoute.welcome.createRoute(
           (context, state) => const WelcomeScreen(),
