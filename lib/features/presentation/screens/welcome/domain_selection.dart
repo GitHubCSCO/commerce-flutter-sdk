@@ -33,7 +33,7 @@ class DomainSelectionScreen extends StatelessWidget {
         ],
       ),
       child: BlocProvider(
-        create: (context) => DomainSelectionCubit(sl<DomainSelectionUsecase>()),
+        create: (context) => sl<DomainSelectionCubit>(),
         child: const DomainSelectionPage(),
       ),
     );

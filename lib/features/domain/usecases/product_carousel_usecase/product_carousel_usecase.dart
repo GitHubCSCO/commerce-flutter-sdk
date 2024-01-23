@@ -5,7 +5,11 @@ class ProductCarouselUseCase {
   final IProductService _productService;
   final IWebsiteService _websiteService;
 
-  ProductCarouselUseCase(this._productService, this._websiteService);
+  ProductCarouselUseCase({
+      required IProductService productService,
+      required IWebsiteService websiteService})
+      : _productService = productService,
+        _websiteService = websiteService;
 
   Future<Result<List<Product>, ErrorResponse>?> getProducts(
       ProductCarouselWidgetEntity productCarouselWidgetEntity) async {
