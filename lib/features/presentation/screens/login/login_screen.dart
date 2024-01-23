@@ -80,6 +80,8 @@ class _LoginPageState extends State<LoginPage> {
                 label: 'Username',
                 hintText: 'Enter your username',
                 controller: _usernameController,
+                onTapOutside: (context) =>
+                    FocusManager.instance.primaryFocus?.unfocus(),
                 onEditingComplete: () => FocusScope.of(context).nextFocus(),
               ),
               const SizedBox(height: 16.0),
@@ -88,6 +90,8 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: 'Enter password',
                 obscureText: true,
                 controller: _passwordController,
+                onTapOutside: (context) =>
+                    FocusManager.instance.primaryFocus?.unfocus(),
               ),
               const SizedBox(height: 16.0),
               BlocConsumer<LoginCubit, LoginState>(
@@ -124,11 +128,11 @@ class _LoginPageState extends State<LoginPage> {
                   } else {
                     return PrimaryButton(
                       onPressed: () {
+                        FocusManager.instance.primaryFocus?.unfocus();
                         BlocProvider.of<LoginCubit>(context).onLoginSubmit(
                           _usernameController.text,
                           _passwordController.text,
                         );
-                        // Perform login logic here
                       },
                       child: const Text('Login'),
                     );
