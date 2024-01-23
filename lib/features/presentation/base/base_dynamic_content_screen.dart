@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/features/domain/entity/content_management/w
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_history/search_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/action_grid_section_widget.dart';
@@ -78,7 +79,10 @@ class BaseDynamicContentScreen extends StatelessWidget {
   }
 
   Widget buildCarouselSectionWidget({required CarouselWidgetEntity carouselWidgetEntity}) {
-    return CarouselSectionWidget(carouselWidgetEntity: carouselWidgetEntity);
+    return BlocProvider(
+      create: (context) => CarouselIndicatorCubit(),
+      child: CarouselSectionWidget(carouselWidgetEntity: carouselWidgetEntity),
+    );
   }
 
   Widget buildActionGridSectionWidget({required ActionsWidgetEntity actionsWidgetEntity}) {
