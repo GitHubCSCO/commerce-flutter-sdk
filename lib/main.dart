@@ -2,7 +2,7 @@ import 'package:commerce_flutter_app/core/config/app_router.dart';
 import 'package:commerce_flutter_app/core/config/prod_config_constants.dart';
 import 'package:commerce_flutter_app/core/config/test_config_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -15,7 +15,7 @@ void main() async {
   initInjectionContainer();
   runApp(
     BlocProvider(
-      create: (context) => sl<LoginBloc>(),
+      create: (context) => sl<AuthCubit>(),
       child: const MyApp(),
     ),
   );

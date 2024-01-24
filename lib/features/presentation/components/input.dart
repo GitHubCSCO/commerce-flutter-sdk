@@ -112,6 +112,7 @@ class _InputState extends State<Input> {
             keyboardType: widget.keyboardType,
             onEditingComplete: widget.onEditingComplete,
             onTap: widget.onTap,
+            onTapOutside: widget.onTapOutside,
             style: widget.style,
             textAlign: widget.textAlign,
             textDirection: widget.textDirection,
