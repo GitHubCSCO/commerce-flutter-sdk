@@ -7,7 +7,7 @@ class ProductCarouselInitialState extends ProductCarouselState {}
 class ProductCarouseLoadingState extends ProductCarouselState {}
 
 class ProductCarouselLoadedState extends ProductCarouselState {
-  final List<Product> productList;
+  final List<ProductEntity> productList;
 
   ProductCarouselLoadedState({required this.productList});
 }
