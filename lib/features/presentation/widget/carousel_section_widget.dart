@@ -51,7 +51,7 @@ class CarouselSectionWidget extends StatelessWidget {
                     width: 8.0,
                     height: 8.0,
                     margin:
-                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: (Theme.of(context).brightness == Brightness.dark

@@ -34,7 +34,7 @@ Future<void> initInjectionContainer() async {
 
     //domain selection
     ..registerFactory(() => DomainSelectionCubit(sl()))
-    ..registerLazySingleton(() => DomainSelectionUsecase(
+    ..registerFactory(() => DomainSelectionUsecase(
         settingsService: sl(),
         clientService: sl(),
         adminClientService: sl(),
@@ -43,7 +43,7 @@ Future<void> initInjectionContainer() async {
 
     //login
     ..registerFactory(() => LoginCubit(loginUsecase: sl()))
-    ..registerLazySingleton(() => LoginUsecase(
+    ..registerFactory(() => LoginUsecase(
           authenticationService: sl(),
           networkService: sl(),
           sessionService: sl(),
@@ -52,35 +52,35 @@ Future<void> initInjectionContainer() async {
 
     //shop
     ..registerFactory(() => ShopPageBloc(shopUseCase: sl()))
-    ..registerLazySingleton(() => ShopUseCase(
+    ..registerFactory(() => ShopUseCase(
         contentConfigurationService: sl(),
         sessionService: sl(),
         cacheService: sl()))
 
     //search
     ..registerFactory(() => SearchPageBloc(searchUseCase: sl()))
-    ..registerLazySingleton(() => SearchUseCase(
+    ..registerFactory(() => SearchUseCase(
         contentConfigurationService: sl(),
         sessionService: sl()))
 
     //account
     ..registerFactory(() => AccountPageBloc(accountUseCase: sl()))
-    ..registerLazySingleton(() => AccountUseCase(
+    ..registerFactory(() => AccountUseCase(
         contentConfigurationService: sl(),
         sessionService: sl()))
 
     //product carousel
     ..registerFactory(() => ProductCarouselCubit(productCarouselUseCase: sl()))
-    ..registerLazySingleton(() => ProductCarouselUseCase(
+    ..registerFactory(() => ProductCarouselUseCase(
         productService: sl(),
         websiteService: sl()))
 
     //carousel
-    ..registerLazySingleton(() => CarouselIndicatorCubit())
+    ..registerFactory(() => CarouselIndicatorCubit())
 
     //search history
     ..registerFactory(() => SearchHistoryCubit(searchHistoryUseCase: sl()))
-    ..registerLazySingleton(() => SearchHistoryUseCase(cacheService: sl()))
+    ..registerFactory(() => SearchHistoryUseCase(cacheService: sl()))
 
     //services
     ..registerLazySingleton<IWebsiteService>(() => WebsiteService(
