@@ -8,9 +8,8 @@ class SearchUseCase extends CmsUseCase {
 
   SearchUseCase({
       required IContentConfigurationService contentConfigurationService,
-      required ISessionService sessionService,
       PageContentType? contentType})
-      : super(contentConfigurationService, sessionService,
+      : super(contentConfigurationService,
             contentType: contentType);
 
   @override

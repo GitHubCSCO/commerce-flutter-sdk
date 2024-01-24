@@ -29,11 +29,14 @@ class ContentConfigurationService implements IContentConfigurationService {
   static const String switchSpireContentModeFormatUri =
       "/api/internal/contentAdmin/SwitchContentMode?ContentMode={0}";
 
-  ContentConfigurationService(this._mobileSpireContentService,
-      this._cacheService, this._mobileContentService);
-  final IMobileSpireContentService _mobileSpireContentService;
-  final IMobileContentService _mobileContentService;
-  final ICacheService _cacheService;
+  final ICommerceAPIServiceProvider _commerceAPIServiceProvider;
+
+  ContentConfigurationService(
+      {required ICommerceAPIServiceProvider commerceAPIServiceProvider})
+      : _commerceAPIServiceProvider = commerceAPIServiceProvider;
+  // final IMobileSpireContentService _mobileSpireContentService;
+  // final IMobileContentService _mobileContentService;
+  // final ICacheService _cacheService;
 
   final Cookie cmsCurrentContentModeViewingCookie =
       Cookie("cms_CurrentContentMode", "Viewing");
@@ -53,8 +56,9 @@ class ContentConfigurationService implements IContentConfigurationService {
   Future<PageContentManagement> getPersistedLiveContentManagement(
       PageContentType contentType) async {
     final persistenceKey = getPersistenceKeyForContentType(contentType);
-    var persistedBytes =
-        await _cacheService.loadPersistedBytesData(persistenceKey);
+    var persistedBytes = await _commerceAPIServiceProvider
+        .getCacheService()
+        .loadPersistedBytesData(persistenceKey);
     if (persistedBytes.isNotEmpty) {
       var stringResponse = utf8.decode(persistedBytes);
       if (stringResponse.isNotEmpty) {
@@ -124,8 +128,9 @@ class ContentConfigurationService implements IContentConfigurationService {
       getPageContentManagmentDataRepresentationForContentType(
           PageContentType contentType, bool useCache) async {
     final String pageKey = getPageKeyForContentType(contentType);
-    var response =
-        await _mobileSpireContentService.getPageContenManagmentSpire(pageKey);
+    var response = await _commerceAPIServiceProvider
+        .getMobileSpireContentService()
+        .getPageContenManagmentSpire(pageKey);
     switch (response) {
       case Success(value: final value):
         {
@@ -133,7 +138,8 @@ class ContentConfigurationService implements IContentConfigurationService {
             currentCMSMode = CMSMode.spire;
             return Success(value);
           } else {
-            var classicResponse = await _mobileContentService
+            var classicResponse = await _commerceAPIServiceProvider
+                .getMobileContentService()
                 .getPageContentManagementClassic(pageKey);
 
             switch (classicResponse) {
@@ -193,6 +199,8 @@ class ContentConfigurationService implements IContentConfigurationService {
     var jsonString = jsonEncode(json);
     Uint8List bytes = Uint8List.fromList(utf8.encode(jsonString));
     var persistenceKey = getPersistenceKeyForContentType(contentType);
-    _cacheService.persistBytesData(persistenceKey, bytes);
+    _commerceAPIServiceProvider
+        .getCacheService()
+        .persistBytesData(persistenceKey, bytes);
   }
 }

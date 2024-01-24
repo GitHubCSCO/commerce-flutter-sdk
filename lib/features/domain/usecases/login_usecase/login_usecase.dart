@@ -1,37 +1,29 @@
 import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class LoginUsecase {
-
-  final IAuthenticationService _authenticationService;
-  final INetworkService _networkService;
-  final ISessionService _sessionService;
-  final IAccountService _accountService;
-
-  LoginUsecase({
-    required IAuthenticationService authenticationService,
-    required INetworkService networkService,
-    required ISessionService sessionService,
-    required IAccountService accountService,
-  })  : _authenticationService = authenticationService,
-        _networkService = networkService,
-        _sessionService = sessionService,
-        _accountService = accountService;
+class LoginUsecase extends BaseUseCase {
+  LoginUsecase() : super.defaultConstructor();
 
   Future<LoginStatus> attemptSignIn(
     String username,
     String password,
   ) async {
-    bool isOnline = await _networkService.isOnline();
+    bool isOnline =
+        await commerceAPIServiceProvider.getNetworkService().isOnline();
     if (!isOnline) {
       return LoginStatus.loginErrorOffline;
     }
 
-    final result = await _authenticationService.logInAsync(username, password);
+    final result = await commerceAPIServiceProvider
+        .getAuthenticationService()
+        .logInAsync(username, password);
     switch (result) {
       case Success():
         {
-          final sessionResult = await _sessionService.getCurrentSession();
+          final sessionResult = await commerceAPIServiceProvider
+              .getSessionService()
+              .getCurrentSession();
           switch (sessionResult) {
             case Success(value: final fullSession):
               {
@@ -39,7 +31,9 @@ class LoginUsecase {
                   return LoginStatus.loginErrorUnknown;
                 }
 
-                await _accountService.getCurrentAccountAsync();
+                await commerceAPIServiceProvider
+                    .getAccountService()
+                    .getCurrentAccountAsync();
                 if (_showBiometricOptionView()) {
                   return LoginStatus.loginSuccessBiometric;
                 } else {

@@ -516,8 +516,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "task/ICM-4100-dart"
-      resolved-ref: "8b0b3e3f02cd88aef798a6f9351b31644817eb86"
+      ref: "task/ICM-4117-dart"
+      resolved-ref: "7ad9749e0ee6d4f940723e334916f3b1f1048e03"
       url: "git@github.com:InsiteSoftware/commerce-dart-sdk.git"
     source: git
     version: "0.1.0-dev.1"
@@ -858,10 +858,10 @@ packages:
     dependency: "direct main"
     description:
       name: url_launcher
-      sha256: d25bb0ca00432a5e1ee40e69c36c85863addf7cc45e433769d61bed3fe81fd96
+      sha256: c512655380d241a337521703af62d2c122bf7b77a46ff7dd750092aa9433499c
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.3"
+    version: "6.2.4"
   url_launcher_android:
     dependency: transitive
     description:

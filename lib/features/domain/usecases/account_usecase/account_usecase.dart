@@ -5,27 +5,21 @@ import 'package:commerce_flutter_app/features/domain/usecases/content_management
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class AccountUseCase extends CmsUseCase {
-
-  AccountUseCase({
-      required IContentConfigurationService contentConfigurationService,
-      required ISessionService sessionService,
+  AccountUseCase(
+      {required IContentConfigurationService contentConfigurationService,
       PageContentType? contentType})
-      : super(contentConfigurationService, sessionService,
-            contentType: contentType);
+      : super(contentConfigurationService, contentType: contentType);
 
   @override
   PageContentType get contentType => PageContentType.account;
 
   Future<Result<List<WidgetEntity>, ErrorResponse>> loadData() async {
-    print('AccountUseCase loaddata');
     var result = await super.getCMSData();
     switch (result) {
       case Success(value: final data):
-        print(data);
         return Success(data);
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
     }
   }
-
 }
