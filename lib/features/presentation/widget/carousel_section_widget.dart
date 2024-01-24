@@ -44,7 +44,7 @@ class CarouselSectionWidget extends StatelessWidget {
           builder: (context, state) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: carouselWidgetEntity.childWidgets!.asMap().entries.map((entry) {
+              children: carouselWidgetEntity.childWidgets?.asMap().entries.map((entry) {
                 return GestureDetector(
                   onTap: () => _controller.animateToPage(entry.key),
                   child: Container(
@@ -60,7 +60,7 @@ class CarouselSectionWidget extends StatelessWidget {
                             .withOpacity(state.current == entry.key ? 0.9 : 0.4)),
                   ),
                 );
-              }).toList(),
+              }).toList() ?? [],
             );
           },
         ),

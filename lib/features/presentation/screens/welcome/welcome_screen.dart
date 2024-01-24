@@ -39,7 +39,7 @@ class WelcomeFirstPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              LocalizationConstants.FirstTimeWelcome,
+              LocalizationConstants.firstTimeWelcome,
               style: WelcomeStyle.welcomeCardHeaderStyle,
             ),
             WelcomeStyle.welcomeCardTextSpacer,
@@ -63,7 +63,7 @@ class WelcomeFirstPage extends StatelessWidget {
                 AppRoute.domainSelection.navigate(context);
               },
               child: const Text(
-                LocalizationConstants.SignInPrompt,
+                LocalizationConstants.signInPrompt,
               ),
             ),
             const SizedBox(
@@ -73,7 +73,7 @@ class WelcomeFirstPage extends StatelessWidget {
               onPressed: () {},
               backgroundColor: Colors.transparent,
               child: const Text(
-                LocalizationConstants.VisitWebsite,
+                LocalizationConstants.visitWebsite,
               ),
             ),
           ],

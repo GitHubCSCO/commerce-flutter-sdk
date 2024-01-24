@@ -9,7 +9,7 @@ class SearchHistoryUseCase {
 
   Future<List<String>> getSearchHistory() async {
     final List<String> list = await _cacheService.loadPersistedData<List<String>>("search_history");
-    list.isEmpty ? list.add(LocalizationConstants.SearchNoHistoryAvailable) : null;
+    list.isEmpty ? list.add(LocalizationConstants.searchNoHistoryAvailable) : null;
     return list;
   }
 }
