@@ -8,9 +8,13 @@ class ShopUseCase extends CmsUseCase {
 
   final ICacheService _cacheService;
 
-  ShopUseCase(IContentConfigurationService contentConfigurationService,
-      ISessionService sessionService, this._cacheService, {PageContentType? contentType})
-      : super(contentConfigurationService, sessionService,
+  ShopUseCase({
+      required IContentConfigurationService contentConfigurationService,
+      required ISessionService sessionService,
+      required ICacheService cacheService,
+      PageContentType? contentType})
+      : _cacheService = cacheService,
+        super(contentConfigurationService, sessionService,
             contentType: contentType);
 
   @override

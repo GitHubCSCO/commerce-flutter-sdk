@@ -5,8 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class DomainRedirectCubit extends Cubit<DomainRedirectStatus> {
   final DomainSelectionUsecase _domainSelectionUsecase;
 
-  DomainRedirectCubit(this._domainSelectionUsecase)
-      : super(DomainRedirectStatus.unknown) {
+  DomainRedirectCubit({required DomainSelectionUsecase domainSelectionUsecase})
+      : _domainSelectionUsecase = domainSelectionUsecase,
+        super(DomainRedirectStatus.unknown) {
     redirect();
   }
 

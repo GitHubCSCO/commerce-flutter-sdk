@@ -8,7 +8,6 @@ import 'package:commerce_flutter_app/features/presentation/screens/welcome/welco
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -17,7 +16,7 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return WelcomeBaseScreen(
       child: BlocProvider(
-        create: (context) => DomainRedirectCubit(sl()),
+        create: (context) => sl<DomainRedirectCubit>(),
         child: const WelcomeFirstPage(),
       ),
     );
@@ -32,7 +31,7 @@ class WelcomeFirstPage extends StatelessWidget {
     return BlocListener<DomainRedirectCubit, DomainRedirectStatus>(
       listener: (context, state) {
         if (state == DomainRedirectStatus.redirect) {
-          context.go(AppRoute.shop.path);
+          AppRoute.shop.navigate(context);
         }
       },
       child: WelcomeCard(
@@ -40,7 +39,7 @@ class WelcomeFirstPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              LocalizationConstants.FirstTimeWelcome,
+              LocalizationConstants.firstTimeWelcome,
               style: WelcomeStyle.welcomeCardHeaderStyle,
             ),
             WelcomeStyle.welcomeCardTextSpacer,
@@ -61,10 +60,10 @@ class WelcomeFirstPage extends StatelessWidget {
             const Expanded(child: SizedBox()),
             PrimaryButton(
               onPressed: () {
-                context.push(AppRoute.domainSelection.path);
+                AppRoute.domainSelection.navigate(context);
               },
               child: const Text(
-                LocalizationConstants.SignInPrompt,
+                LocalizationConstants.signInPrompt,
               ),
             ),
             const SizedBox(
@@ -74,7 +73,7 @@ class WelcomeFirstPage extends StatelessWidget {
               onPressed: () {},
               backgroundColor: Colors.transparent,
               child: const Text(
-                LocalizationConstants.VisitWebsite,
+                LocalizationConstants.visitWebsite,
               ),
             ),
           ],

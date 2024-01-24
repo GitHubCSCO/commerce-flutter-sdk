@@ -28,23 +28,23 @@ class LoginCubit extends Cubit<LoginState> {
             title: SiteMessageConstants.defaultMobileAppAlertNoInternet,
             message:
                 SiteMessageConstants.defaultMobileAppAlertNoInternetDescription,
-            buttonText: LocalizationConstants.Dismiss,
+            buttonText: LocalizationConstants.dismiss,
           ),
         );
         break;
       case LoginStatus.loginErrorUnsuccessful:
         emit(
           const LoginFailureState(
-            message: LocalizationConstants.IncorrectLoginOrPassword,
-            buttonText: LocalizationConstants.Dismiss,
+            message: LocalizationConstants.incorrectLoginOrPassword,
+            buttonText: LocalizationConstants.dismiss,
           ),
         );
         break;
       case LoginStatus.loginErrorUnknown:
         emit(
           const LoginFailureState(
-            message: LocalizationConstants.UnableToGetCurrentSession,
-            buttonText: LocalizationConstants.Dismiss,
+            message: LocalizationConstants.unableToGetCurrentSession,
+            buttonText: LocalizationConstants.dismiss,
           ),
         );
         break;

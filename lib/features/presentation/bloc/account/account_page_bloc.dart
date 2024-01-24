@@ -9,7 +9,9 @@ part 'account_page_state.dart';
 class AccountPageBloc extends Bloc<AccountPageEvent, AccountPageState> {
   final AccountUseCase _accountUseCase;
 
-  AccountPageBloc(this._accountUseCase) : super(AccountPageInitialState()) {
+  AccountPageBloc({required AccountUseCase accountUseCase})
+      : _accountUseCase = accountUseCase,
+        super(AccountPageInitialState()) {
     on<AccountPageLoadEvent>(_onAccountPageLoadEvent);
   }
 
