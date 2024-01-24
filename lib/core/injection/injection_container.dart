@@ -24,7 +24,7 @@ Future<void> initInjectionContainer() async {
   sl
 
     //login
-    ..registerLazySingleton(() => AuthCubit())
+    ..registerLazySingleton(() => AuthCubit(authenticationService: sl()))
     ..registerLazySingleton<IAccountService>(() => AccountService(
           clientService: sl(),
           cacheService: sl(),
