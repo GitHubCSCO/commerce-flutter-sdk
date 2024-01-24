@@ -87,7 +87,7 @@ class _DomainSelectionPageState extends State<DomainSelectionPage> {
             BlocConsumer<DomainSelectionCubit, DomainSelectionState>(
               listener: (context, state) {
                 if (state is DomainSelectionSuccess) {
-                  AppRoute.login.navigate(context);
+                  AppRoute.shop.navigate(context);
                 }
 
                 if (state is DomainSelectionFailed) {
