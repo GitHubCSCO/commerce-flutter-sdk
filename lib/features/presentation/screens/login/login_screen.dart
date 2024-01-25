@@ -1,4 +1,3 @@
-import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
@@ -8,6 +7,7 @@ import 'package:commerce_flutter_app/features/presentation/components/input.dart
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -45,14 +45,14 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: const Text('Login'),
         centerTitle: false,
-        // actions: [
-        //   PlainButton(
-        //     onPressed: () {
-        //       AppRoute.login.navigateBackStack(context);
-        //     },
-        //     child: const Text('Cancel'),
-        //   ),
-        // ],
+        actions: [
+          PlainButton(
+            onPressed: () {
+              context.pop();
+            },
+            child: const Text('Cancel'),
+          ),
+        ],
         automaticallyImplyLeading: false,
         forceMaterialTransparency: true,
         bottom: PreferredSize(
@@ -97,19 +97,21 @@ class _LoginPageState extends State<LoginPage> {
               BlocConsumer<LoginCubit, LoginState>(
                 listener: (context, state) {
                   if (state is LoginSuccessState) {
-                    context.read<AuthCubit>().authenticated();
+                    context.read<AuthCubit>().loadAuthenticationState();
+
                     if (state.showBiometricOptionView) {
                       // Display biometric option view
                       return;
                     }
 
-                    AppRoute.shop.navigate(context);
+                    context.pop();
                   } else if (state is LoginFailureState) {
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: Text(state.title ?? ''),
-                        content: Text(state.message ?? ''),
+                        title: state.title != null ? Text(state.title!) : null,
+                        content:
+                            state.message != null ? Text(state.message!) : null,
                         actions: [
                           TextButton(
                             onPressed: () {

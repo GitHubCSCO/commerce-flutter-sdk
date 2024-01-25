@@ -6,7 +6,9 @@ part 'search_history_state.dart';
 class SearchHistoryCubit extends Cubit<SearchHistoryState> {
   final SearchHistoryUseCase _searchHistoryUseCase;
 
-  SearchHistoryCubit(this._searchHistoryUseCase) : super(SearchHistoryInitialState());
+  SearchHistoryCubit({required SearchHistoryUseCase searchHistoryUseCase})
+      : _searchHistoryUseCase = searchHistoryUseCase,
+        super(SearchHistoryInitialState());
 
   Future<void> getSearchHistory() async {
     var result = await _searchHistoryUseCase.getSearchHistory();

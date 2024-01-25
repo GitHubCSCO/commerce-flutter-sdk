@@ -44,52 +44,52 @@ class BaseActionItemWidget extends StatelessWidget {
   String getActionTitle(ActionLinkEntity actionLink) {
     switch (actionLink.type) {
       case ActionType.categories:
-        return LocalizationConstants.ShopCategories;
+        return LocalizationConstants.shopCategories;
       case ActionType.brands:
-        return LocalizationConstants.ShopBrands;
+        return LocalizationConstants.shopBrands;
       case ActionType.quickOrder:
-        return LocalizationConstants.QuickOrder;
+        return LocalizationConstants.quickOrder;
       case ActionType.orderHistory:
-        return LocalizationConstants.Orders;
+        return LocalizationConstants.orders;
       case ActionType.showHidePricing:
-        return LocalizationConstants.ShowHidePricing;
+        return LocalizationConstants.showHidePricing;
       case ActionType.showHideInventory:
-        return LocalizationConstants.ShowHideInventory;
+        return LocalizationConstants.showHideInventory;
       case ActionType.orderApproval:
-        return LocalizationConstants.OrderApproval;
+        return LocalizationConstants.orderApproval;
       case ActionType.lists:
-        return LocalizationConstants.Lists;
+        return LocalizationConstants.lists;
       case ActionType.savedOrders:
-        return LocalizationConstants.SavedOrders;
+        return LocalizationConstants.savedOrders;
       case ActionType.locationFinder:
-        return LocalizationConstants.LocationFinder;
+        return LocalizationConstants.locationFinder;
       case ActionType.settings:
-        return LocalizationConstants.Settings;
+        return LocalizationConstants.settings;
       case ActionType.changeCustomer:
       // return this.hasWillCall ? LocalizationConstants.ChangeCustomerWillCall : LocalizationConstants.ChangeCustomer;
-        return LocalizationConstants.ChangeCustomer;
+        return LocalizationConstants.changeCustomer;
       case ActionType.signOut:
-        return LocalizationConstants.SignOut;
+        return LocalizationConstants.signOut;
       case ActionType.viewAccountOnWebsite:
-        return LocalizationConstants.ViewAccountOnWebsite;
+        return LocalizationConstants.viewAccountOnWebsite;
       case ActionType.search:
-        return LocalizationConstants.Search;
+        return LocalizationConstants.search;
       case ActionType.forceCrash:
         return "Force Crash";
       case ActionType.toggleLogging:
       // return Logger.IsAllLogsEnabled ? "Disable logging" : "Enable logging";
       case ActionType.invoices:
-        return LocalizationConstants.InvoiceHistory;
+        return LocalizationConstants.invoiceHistory;
       case ActionType.savedPayments:
-        return LocalizationConstants.MySavedPayments;
+        return LocalizationConstants.mySavedPayments;
       case ActionType.quotes:
-        return LocalizationConstants.MyQuotes;
+        return LocalizationConstants.myQuotes;
       case ActionType.vmi:
-        return LocalizationConstants.VendorManagedInventory;
+        return LocalizationConstants.vendorManagedInventory;
       case ActionType.countInventory:
-        return LocalizationConstants.CountInventory;
+        return LocalizationConstants.countInventory;
       case ActionType.createOrder:
-        return LocalizationConstants.CreateOrder;
+        return LocalizationConstants.createOrder;
       case ActionType.custom:
         return actionLink.text!;
       case ActionType.unknown:

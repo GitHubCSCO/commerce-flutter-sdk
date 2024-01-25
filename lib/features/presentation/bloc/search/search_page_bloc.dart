@@ -8,7 +8,10 @@ part 'search_page_state.dart';
 
 class SearchPageBloc extends Bloc<SearchPageEvent, SearchPageState> {
   final SearchUseCase _searchUseCase;
-  SearchPageBloc(this._searchUseCase) : super(SearchPageInitialState()) {
+
+  SearchPageBloc({required SearchUseCase searchUseCase})
+      : _searchUseCase = searchUseCase,
+        super(SearchPageInitialState()) {
     on<SearchPageLoadEvent>(_onSearchPageLoadEvent);
   }
 

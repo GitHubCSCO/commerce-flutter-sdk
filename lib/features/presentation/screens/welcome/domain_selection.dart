@@ -26,14 +26,14 @@ class DomainSelectionScreen extends StatelessWidget {
               context.pop();
             },
             child: const Text(
-              LocalizationConstants.Cancel,
+              LocalizationConstants.cancel,
               style: TextStyle(color: Colors.black),
             ),
           ),
         ],
       ),
       child: BlocProvider(
-        create: (context) => DomainSelectionCubit(sl<DomainSelectionUsecase>()),
+        create: (context) => sl<DomainSelectionCubit>(),
         child: const DomainSelectionPage(),
       ),
     );
@@ -74,20 +74,20 @@ class _DomainSelectionPageState extends State<DomainSelectionPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              LocalizationConstants.ExistingCustomers,
+              LocalizationConstants.existingCustomers,
               style: WelcomeStyle.welcomeCardHeaderStyle,
             ),
             WelcomeStyle.welcomeCardTextSpacer,
             Input(
               controller: _textEditingController,
-              hintText: LocalizationConstants.EnterDomainHint,
+              hintText: LocalizationConstants.enterDomainHint,
               label: 'Enter Storefront URL',
             ),
             const Expanded(child: SizedBox()),
             BlocConsumer<DomainSelectionCubit, DomainSelectionState>(
               listener: (context, state) {
                 if (state is DomainSelectionSuccess) {
-                  AppRoute.login.navigate(context);
+                  AppRoute.shop.navigate(context);
                 }
 
                 if (state is DomainSelectionFailed) {
@@ -101,7 +101,7 @@ class _DomainSelectionPageState extends State<DomainSelectionPage> {
                           onPressed: () {
                             context.pop();
                           },
-                          child: const Text(LocalizationConstants.OK),
+                          child: const Text(LocalizationConstants.oK),
                         ),
                       ],
                     ),
@@ -119,7 +119,7 @@ class _DomainSelectionPageState extends State<DomainSelectionPage> {
                         },
                         isEnabled: _textEditingController.text.isNotEmpty,
                         child: const Text(
-                            LocalizationConstants.UseECommerceWebsite),
+                            LocalizationConstants.useECommerceWebsite),
                       );
               },
             ),
