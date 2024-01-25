@@ -1,6 +1,8 @@
 import 'package:commerce_flutter_app/features/domain/service/commerce_api_service_provider.dart';
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service.dart';
-import 'package:commerce_flutter_app/features/domain/service/content_configuration_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/core_service_provider.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_selection_usecase/domain_selection_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
@@ -43,32 +45,33 @@ Future<void> initInjectionContainer() async {
 
     //shop
     ..registerFactory(() => ShopPageBloc(shopUseCase: sl()))
-    ..registerFactory(() => ShopUseCase(contentConfigurationService: sl()))
+    ..registerFactory(() => ShopUseCase())
 
     //search
     ..registerFactory(() => SearchPageBloc(searchUseCase: sl()))
-    ..registerFactory(() => SearchUseCase(contentConfigurationService: sl()))
+    ..registerFactory(() => SearchUseCase())
 
     //account
     ..registerFactory(() => AccountPageBloc(accountUseCase: sl()))
-    ..registerFactory(() => AccountUseCase(contentConfigurationService: sl()))
+    ..registerFactory(() => AccountUseCase())
 
     //product carousel
     ..registerFactory(() => ProductCarouselCubit(productCarouselUseCase: sl()))
-    ..registerFactory(() =>
-        ProductCarouselUseCase(productService: sl(), websiteService: sl()))
+    ..registerFactory(() => ProductCarouselUseCase())
 
     //carousel
     ..registerFactory(() => CarouselIndicatorCubit())
 
     //search history
     ..registerFactory(() => SearchHistoryCubit(searchHistoryUseCase: sl()))
-    ..registerFactory(() => SearchHistoryUseCase(cacheService: sl()))
-
+    ..registerFactory(() => SearchHistoryUseCase())
 
     //commerce api service provider
     ..registerLazySingleton<ICommerceAPIServiceProvider>(
         () => CommerceAPIServiceProvider())
+
+    //core service provider
+    ..registerLazySingleton<ICoreServiceProvider>(() => CoreServiceProvider())
 
     //services
     ..registerLazySingleton<IWebsiteService>(() => WebsiteService(

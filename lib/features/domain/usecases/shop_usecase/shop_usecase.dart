@@ -1,14 +1,10 @@
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
-import 'package:commerce_flutter_app/features/domain/service/content_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/content_management_usecase/cms_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ShopUseCase extends CmsUseCase {
-  ShopUseCase(
-      {required IContentConfigurationService contentConfigurationService,
-      PageContentType? contentType})
-      : super(contentConfigurationService, contentType: contentType);
+  ShopUseCase({PageContentType? contentType}) : super(contentType: contentType);
 
   @override
   PageContentType get contentType => PageContentType.shop;

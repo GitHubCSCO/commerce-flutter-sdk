@@ -7,7 +7,7 @@ import 'package:commerce_flutter_app/features/domain/enums/cms_mode.dart';
 import 'package:commerce_flutter_app/features/domain/enums/content_mode.dart';
 import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/content_management/page_management_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/service/content_configuration_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ContentConfigurationService implements IContentConfigurationService {
