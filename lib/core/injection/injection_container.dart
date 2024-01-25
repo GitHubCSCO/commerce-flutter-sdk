@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/ac
 import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_selection_usecase/domain_selection_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
@@ -13,6 +14,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.
 import 'package:commerce_flutter_app/features/presentation/bloc/domain_redirect/domain_redirect_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/domain_selection/domain_selection_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/login/login_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator_cubit.dart';
@@ -50,6 +52,12 @@ Future<void> initInjectionContainer() async {
           networkService: sl(),
           sessionService: sl(),
           accountService: sl(),
+        ))
+
+    //logout
+    ..registerFactory(() => LogoutCubit(logoutUsecase: sl()))
+    ..registerFactory(() => LogoutUsecase(
+          authenticationService: sl(),
         ))
 
     //shop
@@ -129,7 +137,6 @@ Future<void> initInjectionContainer() async {
           localStorageService: sl(),
           secureStorageService: sl(),
         ))
-
     ..registerLazySingleton<IAccountService>(() => AccountService(
           clientService: sl(),
           cacheService: sl(),
