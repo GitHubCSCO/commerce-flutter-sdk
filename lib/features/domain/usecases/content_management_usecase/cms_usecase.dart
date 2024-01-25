@@ -20,7 +20,7 @@ class CmsUseCase extends BaseUseCase {
   final IContentConfigurationService _contentConfigurationService;
 
   CmsUseCase(this._contentConfigurationService, {PageContentType? contentType})
-      : super.defaultConstructor() {
+      : super() {
     this.contentType = contentType ?? PageContentType.account;
   }
 
@@ -38,7 +38,10 @@ class CmsUseCase extends BaseUseCase {
           switch (session) {
             case Success(value: final session):
               {
-                var currentSession = commerceAPIServiceProvider.getSessionService().currentSession ?? session;
+                var currentSession = commerceAPIServiceProvider
+                        .getSessionService()
+                        .currentSession ??
+                    session;
 
                 if (pageData?.pageClassicWidget != null) {
                   //for classic

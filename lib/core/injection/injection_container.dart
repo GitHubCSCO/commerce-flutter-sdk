@@ -26,9 +26,6 @@ final sl = GetIt.instance;
 
 Future<void> initInjectionContainer() async {
   sl
-    //commerce api service provider
-    ..registerLazySingleton<ICommerceAPIServiceProvider>(
-        () => CommerceAPIServiceProvider())
 
     //auth
     ..registerLazySingleton(() => AuthCubit())
@@ -38,12 +35,7 @@ Future<void> initInjectionContainer() async {
 
     //domain selection
     ..registerFactory(() => DomainSelectionCubit(sl()))
-    ..registerFactory(() => DomainSelectionUsecase(
-        settingsService: sl(),
-        clientService: sl(),
-        adminClientService: sl(),
-        networkService: sl(),
-        localStorageService: sl()))
+    ..registerFactory(() => DomainSelectionUsecase())
 
     //login
     ..registerFactory(() => LoginCubit(loginUsecase: sl()))
@@ -72,6 +64,11 @@ Future<void> initInjectionContainer() async {
     //search history
     ..registerFactory(() => SearchHistoryCubit(searchHistoryUseCase: sl()))
     ..registerFactory(() => SearchHistoryUseCase(cacheService: sl()))
+
+
+    //commerce api service provider
+    ..registerLazySingleton<ICommerceAPIServiceProvider>(
+        () => CommerceAPIServiceProvider())
 
     //services
     ..registerLazySingleton<IWebsiteService>(() => WebsiteService(
