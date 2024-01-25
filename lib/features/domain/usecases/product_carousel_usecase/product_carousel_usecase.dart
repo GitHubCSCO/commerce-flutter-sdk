@@ -1,17 +1,23 @@
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductCarouselUseCase {
   final IProductService _productService;
   final IWebsiteService _websiteService;
 
-  ProductCarouselUseCase(this._productService, this._websiteService);
+  ProductCarouselUseCase({
+      required IProductService productService,
+      required IWebsiteService websiteService})
+      : _productService = productService,
+        _websiteService = websiteService;
 
-  Future<Result<List<Product>, ErrorResponse>?> getProducts(
+  Future<Result<List<ProductEntity>, ErrorResponse>?> getProducts(
       ProductCarouselWidgetEntity productCarouselWidgetEntity) async {
     print('ProductCarouselUseCase load data');
 
-    Result<List<Product>, ErrorResponse>? result;
+    Result<List<ProductEntity>, ErrorResponse>? result;
     switch (productCarouselWidgetEntity.carouselType) {
       case ProductCarouselType.featuredCategory:
         result =
@@ -35,48 +41,57 @@ class ProductCarouselUseCase {
     }
   }
 
-  Future<Result<List<Product>, ErrorResponse>> _getFeaturedCategoryProducts(
-      ProductCarouselWidgetEntity productCarouselWidgetEntity) async {
+  Future<Result<List<ProductEntity>, ErrorResponse>>
+      _getFeaturedCategoryProducts(
+          ProductCarouselWidgetEntity productCarouselWidgetEntity) async {
     var result = await _productService
         .getProducts(_featuredCategoryParameters(productCarouselWidgetEntity));
     switch (result) {
       case Success(value: final data):
-        return Success(data?.products);
+        return Success(data?.products
+            ?.map((e) => ProductEntityMapper().toEntity(e))
+            .toList());
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
     }
   }
 
-  Future<Result<List<Product>, ErrorResponse>> _getTopSellersProducts(
+  Future<Result<List<ProductEntity>, ErrorResponse>> _getTopSellersProducts(
       ProductCarouselWidgetEntity productCarouselWidgetEntity) async {
     var result = await _productService
         .getProducts(_topSellersParameters(productCarouselWidgetEntity));
     switch (result) {
       case Success(value: final data):
-        return Success(data?.products);
+        return Success(data?.products
+            ?.map((e) => ProductEntityMapper().toEntity(e))
+            .toList());
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
     }
   }
 
-  Future<Result<List<Product>, ErrorResponse>>
+  Future<Result<List<ProductEntity>, ErrorResponse>>
       _getRecentlyViewedProducts() async {
     var result = await _productService.getProducts(_recentlyViewedParameters());
     switch (result) {
       case Success(value: final data):
-        return Success(data?.products);
+        return Success(data?.products
+            ?.map((e) => ProductEntityMapper().toEntity(e))
+            .toList());
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
     }
   }
 
-  Future<Result<List<Product>, ErrorResponse>>
+  Future<Result<List<ProductEntity>, ErrorResponse>>
       _getWebsiteCrossSellsProducts() async {
     var result = await _websiteService.getCrosssells();
 
     switch (result) {
       case Success(value: final data):
-        return Success(data?.products);
+        return Success(data?.products
+            ?.map((e) => ProductEntityMapper().toEntity(e))
+            .toList());
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
     }

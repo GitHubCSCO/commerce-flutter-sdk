@@ -1,8 +1,9 @@
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductCarouselItemWidget extends StatelessWidget {
-  final Product product;
+  final ProductEntity product;
 
   const ProductCarouselItemWidget({super.key, required this.product});
 
@@ -25,7 +26,8 @@ class ProductCarouselItemWidget extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
-                product.smallImagePath ?? "https://www.deere.com/assets/images/region-3/products/tractors/heavy-tractors/tractor-8270r-estudio.png",
+                product.smallImagePath ??
+                    "https://www.deere.com/assets/images/region-3/products/tractors/heavy-tractors/tractor-8270r-estudio.png",
                 fit: BoxFit.fitHeight,
               ),
             ),
@@ -56,5 +58,4 @@ class ProductCarouselItemWidget extends StatelessWidget {
       ),
     );
   }
-
 }

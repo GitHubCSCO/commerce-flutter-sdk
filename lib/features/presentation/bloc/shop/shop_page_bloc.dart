@@ -7,7 +7,9 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class ShopPageBloc extends Bloc<ShopPageEvent, ShopPageState> {
   final ShopUseCase _shopUseCase;
 
-  ShopPageBloc(this._shopUseCase) : super(ShopPageInitialState()) {
+  ShopPageBloc({required ShopUseCase shopUseCase})
+      : _shopUseCase = shopUseCase,
+        super(ShopPageInitialState()) {
     on<ShopPageLoadEvent>(_onShopPageLoadEvent);
   }
 

@@ -4,11 +4,23 @@ import 'package:commerce_flutter_app/features/domain/enums/domain_selection_stat
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class DomainSelectionUsecase {
-  final ISettingsService _settingsService = sl<ISettingsService>();
-  final IClientService _clientService = sl<IClientService>();
-  final IAdminClientService _adminClientService = sl<IAdminClientService>();
-  final INetworkService _networkService = sl<INetworkService>();
-  final ILocalStorageService _localStorageService = sl<ILocalStorageService>();
+  final ISettingsService _settingsService;
+  final IClientService _clientService;
+  final IAdminClientService _adminClientService;
+  final INetworkService _networkService;
+  final ILocalStorageService _localStorageService;
+
+  DomainSelectionUsecase({
+    required ISettingsService settingsService,
+    required IClientService clientService,
+    required IAdminClientService adminClientService,
+    required INetworkService networkService,
+    required ILocalStorageService localStorageService,
+  })  : _settingsService = settingsService,
+        _clientService = clientService,
+        _adminClientService = adminClientService,
+        _networkService = networkService,
+        _localStorageService = localStorageService;
 
   static const _domainKey = 'DomainKey';
 

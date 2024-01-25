@@ -5,10 +5,13 @@ import 'package:commerce_flutter_app/features/domain/usecases/content_management
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class SearchUseCase extends CmsUseCase {
-  SearchUseCase(IContentConfigurationService contentConfigurationService,
-      ISessionService sessionService, {PageContentType? contentType})
+
+  SearchUseCase({
+      required IContentConfigurationService contentConfigurationService,
+      required ISessionService sessionService,
+      PageContentType? contentType})
       : super(contentConfigurationService, sessionService,
-      contentType: contentType);
+            contentType: contentType);
 
   @override
   PageContentType get contentType => PageContentType.searchLanding;

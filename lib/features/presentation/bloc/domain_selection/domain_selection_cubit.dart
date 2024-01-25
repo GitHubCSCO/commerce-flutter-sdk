@@ -31,16 +31,16 @@ class DomainSelectionCubit extends Cubit<DomainSelectionState> {
       case DomainSelectionStatus.failedInvalidDomain:
         emit(
           DomainSelectionFailedInvalid(
-            LocalizationConstants.InvalidDomain,
-            LocalizationConstants.DomainWebsiteNotResponding,
+            LocalizationConstants.invalidDomain,
+            LocalizationConstants.domainWebsiteNotResponding,
           ),
         );
         break;
       case DomainSelectionStatus.failedMobileAppDisabled:
         emit(
           DomainSelectionFailedMobileAppDisabled(
-            LocalizationConstants.MobileAppDisabled,
-            LocalizationConstants.MobileAppDisabledDescription,
+            LocalizationConstants.mobileAppDisabled,
+            LocalizationConstants.mobileAppDisabledDescription,
           ),
         );
         break;
