@@ -26,8 +26,7 @@ class ProductCarouselItemWidget extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
-                product.smallImagePath ??
-                    "https://www.deere.com/assets/images/region-3/products/tractors/heavy-tractors/tractor-8270r-estudio.png",
+                product.smallImagePath ?? "",
                 fit: BoxFit.fitHeight,
               ),
             ),
@@ -36,10 +35,10 @@ class ProductCarouselItemWidget extends StatelessWidget {
           SizedBox(
             height: 30,
             child: Text(
-              'Cafe Valet® Barista Single-Serve Coffee Maker',
+              product.shortDescription ?? "",
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Color(0xFF222222),
                 fontSize: 12,
               ),
@@ -47,8 +46,8 @@ class ProductCarouselItemWidget extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '\$449.99',
-            style: TextStyle(
+            "\$${product.basicListPrice ?? 0}",
+            style: const TextStyle(
               color: Color(0xFF222222),
               fontSize: 12,
               fontWeight: FontWeight.bold,
