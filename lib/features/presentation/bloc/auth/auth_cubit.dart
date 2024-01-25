@@ -1,28 +1,25 @@
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  final IAuthenticationService _authenticationService;
+  final AuthUsecase _authUsecase;
 
-  AuthCubit({required IAuthenticationService authenticationService})
-      : _authenticationService = authenticationService,
+  AuthCubit({required AuthUsecase authUsecase})
+      : _authUsecase = authUsecase,
         super(const AuthState(status: AuthStatus.unknown)) {
     loadAuthenticationState();
   }
 
   Future<void> loadAuthenticationState() async {
-    final authResult = await _authenticationService.isAuthenticatedAsync();
-    switch (authResult) {
-      case Success(value: final value):
-        value! ? authenticated() : unauthenticated();
-        break;
-      case Failure():
-        unauthenticated();
-        break;
+    final isAuthenticated = await _authUsecase.isAuthenticated();
+    if (isAuthenticated) {
+      authenticated();
+    } else {
+      unauthenticated();
     }
   }
 

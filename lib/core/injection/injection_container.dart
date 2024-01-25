@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_selection_usecase/domain_selection_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
@@ -27,7 +28,8 @@ Future<void> initInjectionContainer() async {
   sl
 
     //auth
-    ..registerLazySingleton(() => AuthCubit(authenticationService: sl()))
+    ..registerFactory(() => AuthCubit(authUsecase: sl()))
+    ..registerFactory(() => AuthUsecase(authenticationService: sl()))
 
     //domain redirect
     ..registerFactory(() => DomainRedirectCubit(domainSelectionUsecase: sl()))
@@ -59,21 +61,18 @@ Future<void> initInjectionContainer() async {
 
     //search
     ..registerFactory(() => SearchPageBloc(searchUseCase: sl()))
-    ..registerFactory(() => SearchUseCase(
-        contentConfigurationService: sl(),
-        sessionService: sl()))
+    ..registerFactory(() =>
+        SearchUseCase(contentConfigurationService: sl(), sessionService: sl()))
 
     //account
     ..registerFactory(() => AccountPageBloc(accountUseCase: sl()))
-    ..registerFactory(() => AccountUseCase(
-        contentConfigurationService: sl(),
-        sessionService: sl()))
+    ..registerFactory(() =>
+        AccountUseCase(contentConfigurationService: sl(), sessionService: sl()))
 
     //product carousel
     ..registerFactory(() => ProductCarouselCubit(productCarouselUseCase: sl()))
-    ..registerFactory(() => ProductCarouselUseCase(
-        productService: sl(),
-        websiteService: sl()))
+    ..registerFactory(() =>
+        ProductCarouselUseCase(productService: sl(), websiteService: sl()))
 
     //carousel
     ..registerFactory(() => CarouselIndicatorCubit())
@@ -130,9 +129,10 @@ Future<void> initInjectionContainer() async {
           localStorageService: sl(),
           secureStorageService: sl(),
         ))
+
     ..registerLazySingleton<IAccountService>(() => AccountService(
-      clientService: sl(),
-      cacheService: sl(),
-      networkService: sl(),
-    ));
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ));
 }
