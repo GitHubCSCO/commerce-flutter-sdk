@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,14 +32,20 @@ class AccountScreen extends BaseDynamicContentScreen {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: state.status == AuthStatus.authenticated
-                          ? PrimaryButton(
-                              child: const Text('Sign Out'),
-                              onPressed: () {
-                                // context.read<AuthCubit>().signOut();
-                                context.read<AuthCubit>().unauthenticated();
-
-                                /// TODO - Add Sign Out Functionality
+                          ? BlocListener<LogoutCubit, LogoutState>(
+                              listener: (context, state) {
+                                if (state is LogoutSuccess) {
+                                  context
+                                      .read<AuthCubit>()
+                                      .loadAuthenticationState();
+                                }
                               },
+                              child: PrimaryButton(
+                                child: const Text('Sign Out'),
+                                onPressed: () {
+                                  context.read<LogoutCubit>().logout();
+                                },
+                              ),
                             )
                           : PrimaryButton(
                               child: const Text('Sign In'),
