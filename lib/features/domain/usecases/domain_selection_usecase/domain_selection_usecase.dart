@@ -1,35 +1,21 @@
 import 'package:commerce_flutter_app/core/extensions/url_string_extension.dart';
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/enums/domain_selection_status.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class DomainSelectionUsecase {
-  final ISettingsService _settingsService;
-  final IClientService _clientService;
-  final IAdminClientService _adminClientService;
-  final INetworkService _networkService;
-  final ILocalStorageService _localStorageService;
-
-  DomainSelectionUsecase({
-    required ISettingsService settingsService,
-    required IClientService clientService,
-    required IAdminClientService adminClientService,
-    required INetworkService networkService,
-    required ILocalStorageService localStorageService,
-  })  : _settingsService = settingsService,
-        _clientService = clientService,
-        _adminClientService = adminClientService,
-        _networkService = networkService,
-        _localStorageService = localStorageService;
+class DomainSelectionUsecase extends BaseUseCase {
+  DomainSelectionUsecase() : super();
 
   static const _domainKey = 'DomainKey';
 
   Future<String?> getSavedDomain() async {
-    final result = await _localStorageService.load(_domainKey);
+    final result = await commerceAPIServiceProvider
+        .getLocalStorageService()
+        .load(_domainKey);
     if (result != null) {
       ClientConfig.hostUrl = result;
-      _clientService.host = result;
-      _adminClientService.host = result;
+      commerceAPIServiceProvider.getClientService().host = result;
+      commerceAPIServiceProvider.getAdminClientService().host = result;
     }
 
     return result;
@@ -48,8 +34,8 @@ class DomainSelectionUsecase {
     }
 
     ClientConfig.hostUrl = extractedDomain;
-    _clientService.host = extractedDomain;
-    _adminClientService.host = extractedDomain;
+    commerceAPIServiceProvider.getClientService().host = extractedDomain;
+    commerceAPIServiceProvider.getAdminClientService().host = extractedDomain;
 
     final domainSelectionStatus = await _testAndGetSettings();
 
@@ -57,20 +43,23 @@ class DomainSelectionUsecase {
       return domainSelectionStatus;
     }
 
-    _localStorageService.save(_domainKey, _clientService.host!);
+    commerceAPIServiceProvider
+        .getLocalStorageService()
+        .save(_domainKey, commerceAPIServiceProvider.getClientService().host!);
     return DomainSelectionStatus.success;
   }
 
   Future<DomainSelectionStatus> _testAndGetSettings() async {
-    var isOnline = await _networkService.isOnline();
+    var isOnline =
+        await commerceAPIServiceProvider.getNetworkService().isOnline();
 
     if (!isOnline) {
       return DomainSelectionStatus.failedOffline;
     }
 
     final futures = [
-      _settingsService.getProductSettingsAsync(),
-      _settingsService.getWebsiteSettingsAsync(),
+      commerceAPIServiceProvider.getSettingsService().getProductSettingsAsync(),
+      commerceAPIServiceProvider.getSettingsService().getWebsiteSettingsAsync(),
     ];
 
     final responses = await Future.wait(futures);
@@ -83,12 +72,17 @@ class DomainSelectionUsecase {
     if (productSettingsResponse is Failure ||
         websiteSettingsResponse is Failure) {
       // fixes problem when domain is not responding when starting with www
-      if (_clientService.host != null &&
-          _clientService.host!.startsWith('www.')) {
-        final prefixRemoveUrl = _clientService.host!.substring(4);
+      if (commerceAPIServiceProvider.getClientService().host != null &&
+          commerceAPIServiceProvider
+              .getClientService()
+              .host!
+              .startsWith('www.')) {
+        final prefixRemoveUrl =
+            commerceAPIServiceProvider.getClientService().host!.substring(4);
         ClientConfig.hostUrl = prefixRemoveUrl;
-        _clientService.host = prefixRemoveUrl;
-        _adminClientService.host = prefixRemoveUrl;
+        commerceAPIServiceProvider.getClientService().host = prefixRemoveUrl;
+        commerceAPIServiceProvider.getAdminClientService().host =
+            prefixRemoveUrl;
         return await _testAndGetSettings();
       }
 
