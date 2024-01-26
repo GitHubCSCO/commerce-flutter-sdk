@@ -34,7 +34,7 @@ Future<void> initInjectionContainer() async {
 
     //auth
     ..registerFactory(() => AuthCubit(authUsecase: sl()))
-    ..registerFactory(() => AuthUsecase(authenticationService: sl()))
+    ..registerFactory(() => AuthUsecase())
 
     //domain redirect
     ..registerFactory(() => DomainRedirectCubit(domainSelectionUsecase: sl()))
@@ -46,6 +46,10 @@ Future<void> initInjectionContainer() async {
     //login
     ..registerFactory(() => LoginCubit(loginUsecase: sl()))
     ..registerFactory(() => LoginUsecase())
+
+    //logout
+    ..registerFactory(() => LogoutCubit(logoutUsecase: sl()))
+    ..registerFactory(() => LogoutUsecase())
 
     //shop
     ..registerFactory(() => ShopPageBloc(shopUseCase: sl()))

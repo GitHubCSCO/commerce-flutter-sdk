@@ -1,12 +1,9 @@
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 
-class LogoutUsecase {
-  final IAuthenticationService _authenticationService;
-
-  LogoutUsecase({required IAuthenticationService authenticationService})
-      : _authenticationService = authenticationService;
+class LogoutUsecase extends BaseUseCase {
+  LogoutUsecase() : super();
 
   Future<void> logout() async {
-    await _authenticationService.logoutAsync();
+    await commerceAPIServiceProvider.getAuthenticationService().logoutAsync();
   }
 }

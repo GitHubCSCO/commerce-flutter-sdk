@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
@@ -53,14 +54,15 @@ class AccountPage extends BaseDynamicContentScreen {
                                 }
                               },
                               child: PrimaryButton(
-                                child: const Text('Sign Out'),
+                                child:
+                                    const Text(LocalizationConstants.signOut),
                                 onPressed: () {
                                   context.read<LogoutCubit>().logout();
                                 },
                               ),
                             )
                           : PrimaryButton(
-                              child: const Text('Sign In'),
+                              child: const Text(LocalizationConstants.signIn),
                               onPressed: () {
                                 context.push(AppRoute.login.path);
                               },
