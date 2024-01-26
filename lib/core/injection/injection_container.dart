@@ -20,7 +20,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/login/login_cubi
 import 'package:commerce_flutter_app/features/presentation/bloc/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_history/search_history_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
