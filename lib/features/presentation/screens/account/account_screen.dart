@@ -1,10 +1,22 @@
+import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AccountScreen extends BaseDynamicContentScreen {
+class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<AccountPageBloc>(
+        create: (context) => sl<AccountPageBloc>()..add(AccountPageLoadEvent()),
+        child: const AccountPage());
+  }
+}
+
+class AccountPage extends BaseDynamicContentScreen {
+  const AccountPage({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,12 +1,5 @@
 import 'dart:async';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/login/auth_state.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/search/search_page_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_event.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
@@ -16,7 +9,6 @@ import 'package:commerce_flutter_app/features/presentation/screens/welcome/domai
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_screen.dart';
 import 'package:commerce_flutter_app/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class GoRouterRefreshStream extends ChangeNotifier {
@@ -41,64 +33,53 @@ class GoRouterRefreshStream extends ChangeNotifier {
 }
 
 class Approuter {
-
-  late final GoRouter router = GoRouter(
-      initialLocation: AppRoute.welcome.path,
-      routes: <RouteBase>[
-        AppRoute.welcome.createRoute(
-          (context, state) => const WelcomeScreen(),
-        ),
-        AppRoute.domainSelection.createRoute(
-          (context, state) => const DomainSelectionScreen(),
-        ),
-        AppRoute.login.createRoute(
-          (context, state) => const LoginScreen(),
-        ),
-        StatefulShellRoute.indexedStack(
-          builder: (BuildContext context, GoRouterState state,
-              StatefulNavigationShell navigationShell) {
-            return NavBarScreen(navigationShell: navigationShell);
-          },
-          branches: <StatefulShellBranch>[
-            // The route branch for the first tab of the bottom navigation bar.
-            StatefulShellBranch(
-              routes: <RouteBase>[
-                AppRoute.shop.createRoute(
-                  (context, state) => BlocProvider<ShopPageBloc>(
-                      create: (context) =>
-                          sl<ShopPageBloc>()..add(ShopPageLoadEvent()),
-                      child: ShopScreen()),
-                ),
-              ],
-            ),
-            StatefulShellBranch(
-              routes: <RouteBase>[
-                AppRoute.search.createRoute(
-                  (context, state) => BlocProvider<SearchPageBloc>(
-                      create: (context) =>
-                          sl<SearchPageBloc>()..add(SearchPageLoadEvent()),
-                      child: SearchScreen()),
-                ),
-              ],
-            ),
-            StatefulShellBranch(
-              routes: <RouteBase>[
-                AppRoute.account.createRoute(
-                  (context, state) => BlocProvider<AccountPageBloc>(
-                      create: (context) =>
-                          sl<AccountPageBloc>()..add(AccountPageLoadEvent()),
-                      child: AccountScreen()),
-                ),
-              ],
-            ),
-            StatefulShellBranch(
-              routes: <RouteBase>[
-                AppRoute.cart.createRoute(
-                  (context, state) => CartScreen(),
-                ),
-              ],
+  late final GoRouter router =
+      GoRouter(initialLocation: AppRoute.welcome.path, routes: <RouteBase>[
+    AppRoute.welcome.createRoute(
+      (context, state) => const WelcomeScreen(),
+    ),
+    AppRoute.domainSelection.createRoute(
+      (context, state) => const DomainSelectionScreen(),
+    ),
+    AppRoute.login.createRoute(
+      (context, state) => const LoginScreen(),
+    ),
+    StatefulShellRoute.indexedStack(
+      builder: (BuildContext context, GoRouterState state,
+          StatefulNavigationShell navigationShell) {
+        return NavBarScreen(navigationShell: navigationShell);
+      },
+      branches: <StatefulShellBranch>[
+        // The route branch for the first tab of the bottom navigation bar.
+        StatefulShellBranch(
+          routes: <RouteBase>[
+            AppRoute.shop.createRoute(
+              (context, state) => const ShopScreen(),
             ),
           ],
-        )
-      ]);
+        ),
+        StatefulShellBranch(
+          routes: <RouteBase>[
+            AppRoute.search.createRoute(
+              (context, state) => const SearchScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: <RouteBase>[
+            AppRoute.account.createRoute(
+              (context, state) => const AccountScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: <RouteBase>[
+            AppRoute.cart.createRoute(
+              (context, state) => CartScreen(),
+            ),
+          ],
+        ),
+      ],
+    )
+  ]);
 }
