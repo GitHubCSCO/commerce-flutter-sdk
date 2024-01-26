@@ -1,5 +1,8 @@
+import 'package:commerce_flutter_app/features/domain/service/commerce_api_service_provider.dart';
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service.dart';
-import 'package:commerce_flutter_app/features/domain/service/content_configuration_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/core_service_provider.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_selection_usecase/domain_selection_usecase.dart';
@@ -38,56 +41,41 @@ Future<void> initInjectionContainer() async {
 
     //domain selection
     ..registerFactory(() => DomainSelectionCubit(sl()))
-    ..registerFactory(() => DomainSelectionUsecase(
-        settingsService: sl(),
-        clientService: sl(),
-        adminClientService: sl(),
-        networkService: sl(),
-        localStorageService: sl()))
+    ..registerFactory(() => DomainSelectionUsecase())
 
     //login
     ..registerFactory(() => LoginCubit(loginUsecase: sl()))
-    ..registerFactory(() => LoginUsecase(
-          authenticationService: sl(),
-          networkService: sl(),
-          sessionService: sl(),
-          accountService: sl(),
-        ))
-
-    //logout
-    ..registerFactory(() => LogoutCubit(logoutUsecase: sl()))
-    ..registerFactory(() => LogoutUsecase(
-          authenticationService: sl(),
-        ))
+    ..registerFactory(() => LoginUsecase())
 
     //shop
     ..registerFactory(() => ShopPageBloc(shopUseCase: sl()))
-    ..registerFactory(() => ShopUseCase(
-        contentConfigurationService: sl(),
-        sessionService: sl(),
-        cacheService: sl()))
+    ..registerFactory(() => ShopUseCase())
 
     //search
     ..registerFactory(() => SearchPageBloc(searchUseCase: sl()))
-    ..registerFactory(() =>
-        SearchUseCase(contentConfigurationService: sl(), sessionService: sl()))
+    ..registerFactory(() => SearchUseCase())
 
     //account
     ..registerFactory(() => AccountPageBloc(accountUseCase: sl()))
-    ..registerFactory(() =>
-        AccountUseCase(contentConfigurationService: sl(), sessionService: sl()))
+    ..registerFactory(() => AccountUseCase())
 
     //product carousel
     ..registerFactory(() => ProductCarouselCubit(productCarouselUseCase: sl()))
-    ..registerFactory(() =>
-        ProductCarouselUseCase(productService: sl(), websiteService: sl()))
+    ..registerFactory(() => ProductCarouselUseCase())
 
     //carousel
     ..registerFactory(() => CarouselIndicatorCubit())
 
     //search history
     ..registerFactory(() => SearchHistoryCubit(searchHistoryUseCase: sl()))
-    ..registerFactory(() => SearchHistoryUseCase(cacheService: sl()))
+    ..registerFactory(() => SearchHistoryUseCase())
+
+    //commerce api service provider
+    ..registerLazySingleton<ICommerceAPIServiceProvider>(
+        () => CommerceAPIServiceProvider())
+
+    //core service provider
+    ..registerLazySingleton<ICoreServiceProvider>(() => CoreServiceProvider())
 
     //services
     ..registerLazySingleton<IWebsiteService>(() => WebsiteService(
@@ -112,7 +100,7 @@ Future<void> initInjectionContainer() async {
           networkService: sl(),
         ))
     ..registerLazySingleton<IContentConfigurationService>(
-        () => ContentConfigurationService(sl(), sl(), sl()))
+        () => ContentConfigurationService(commerceAPIServiceProvider: sl()))
     ..registerLazySingleton<IMobileContentService>(() => MobileContentService(
         cacheService: sl(), networkService: sl(), clientService: sl()))
     ..registerLazySingleton<IMobileSpireContentService>(

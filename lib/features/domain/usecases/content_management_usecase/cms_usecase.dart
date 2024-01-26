@@ -1,5 +1,4 @@
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_type_converter.dart';
-import 'package:commerce_flutter_app/features/domain/converter/cms_converter/page_widget_type_converter.dart';
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/text_justification_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/page_content_management_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
@@ -9,35 +8,36 @@ import 'package:commerce_flutter_app/features/domain/entity/content_management/w
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
-import 'package:commerce_flutter_app/features/domain/service/content_configuration_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 
-class CmsUseCase {
+class CmsUseCase extends BaseUseCase {
   late PageContentType contentType;
 
-  final IContentConfigurationService _contentConfigurationService;
-  final ISessionService _sessionService;
-
-  CmsUseCase(this._contentConfigurationService, this._sessionService,
-      {PageContentType? contentType}) {
+  CmsUseCase({PageContentType? contentType}) : super() {
     this.contentType = contentType ?? PageContentType.account;
   }
 
   Future<Result<List<WidgetEntity>, ErrorResponse>> getCMSData() async {
-    print('CmsUseCase loaddata');
-    final result = await _contentConfigurationService
+    final result = await coreServiceProvider
+        .getContentConfigurationService()
         .loadAndPersistLiveContentManagement(contentType);
 
     switch (result) {
       case Success(value: final pageData):
         {
-          var session = await _sessionService.getCurrentSession();
+          var session = await commerceAPIServiceProvider
+              .getSessionService()
+              .getCurrentSession();
 
           switch (session) {
             case Success(value: final session):
               {
-                var currentSession = _sessionService.currentSession ?? session;
+                var currentSession = commerceAPIServiceProvider
+                        .getSessionService()
+                        .currentSession ??
+                    session;
 
                 if (pageData?.pageClassicWidget != null) {
                   //for classic

@@ -1,15 +1,16 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 
-class SearchHistoryUseCase {
-  final ICacheService _cacheService;
-
-  SearchHistoryUseCase({required ICacheService cacheService})
-      : _cacheService = cacheService;
+class SearchHistoryUseCase extends BaseUseCase {
+  SearchHistoryUseCase() : super();
 
   Future<List<String>> getSearchHistory() async {
-    final List<String> list = await _cacheService.loadPersistedData<List<String>>("search_history");
-    list.isEmpty ? list.add(LocalizationConstants.searchNoHistoryAvailable) : null;
+    final List<String> list = await commerceAPIServiceProvider
+        .getCacheService()
+        .loadPersistedData<List<String>>("search_history");
+    list.isEmpty
+        ? list.add(LocalizationConstants.searchNoHistoryAvailable)
+        : null;
     return list;
   }
 }
