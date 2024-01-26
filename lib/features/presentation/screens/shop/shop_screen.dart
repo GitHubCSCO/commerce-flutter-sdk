@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_state.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,28 +24,47 @@ class ShopPage extends BaseDynamicContentScreen {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ShopPageBloc, ShopPageState>(
-      builder: (context, state) {
-        switch  (state) {
-          case ShopPageInitialState():
-          case ShopPageLoadingState():
-            return const Center(child: CircularProgressIndicator());
-          case ShopPageLoadedState():
-            return BlocListener<AuthCubit, AuthState>(
-              listener: (context, state) {
-                context.read<ShopPageBloc>().add(const ShopPageLoadEvent());
-              },
-              child: Scaffold(
-                  body: ListView(
-                children: buildContentWidgets(state.pageWidgets),
-              )),
-            );
-          case ShopPageFailureState():
-            return const Center(child: Text('Failed Loading Shop'));
-          default:
-            return const Center(child: Text('Failed Loading Shop'));
-        }
-      },
+    return Scaffold(
+      appBar: AppBar(actions: <Widget>[
+        BottomMenuWidget(),
+      ]),
+      body: BlocBuilder<ShopPageBloc, ShopPageState>(
+        builder: (context, state) {
+          switch(state) {
+            case ShopPageInitialState():
+            case ShopPageLoadingState():
+              return const Center(child: CircularProgressIndicator());
+            case ShopPageLoadedState():
+              return BlocListener<AuthCubit, AuthState>(
+                listener: (context, state) {
+                  context.read<ShopPageBloc>().add(const ShopPageLoadEvent());
+                },
+                child: Scaffold(
+                    body: ListView(
+                      children: buildContentWidgets(state.pageWidgets),
+                    )),
+              );
+            case ShopPageFailureState():
+              return const Center(child: Text('Failed Loading Shop'));
+            default:
+              return const Center(child: Text('Failed Loading Shop'));
+          }
+        },
+      ),
     );
   }
+
+  // List<ToolMenu> _getToolMenu(BuildContext context) {
+  //   List<ToolMenu> list = [];
+  //   list.add(ToolMenu(
+  //     title: "Setting",
+  //     action: () {
+  //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //         content: Text("Sending Message"),
+  //       ));
+  //     }
+  //   ));
+  //   return list;
+  // }
+
 }

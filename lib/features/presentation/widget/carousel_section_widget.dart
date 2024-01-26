@@ -1,6 +1,6 @@
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_slide_widget.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_widget_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/carousel_slider/carousel_slider.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/carousel_item_widget.dart';
 import 'package:flutter/material.dart';
