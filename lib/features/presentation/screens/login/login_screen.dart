@@ -1,3 +1,5 @@
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
@@ -43,14 +45,14 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text(LocalizationConstants.signIn),
         centerTitle: false,
         actions: [
           PlainButton(
             onPressed: () {
               context.pop();
             },
-            child: const Text('Cancel'),
+            child: const Text(LocalizationConstants.cancel),
           ),
         ],
         automaticallyImplyLeading: false,
@@ -71,14 +73,14 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               const SizedBox(height: 50),
               Image.asset(
-                'assets/images/optimizely-logo.png',
+                AssetConstants.logo,
                 width: 100,
                 height: 100,
               ),
               const SizedBox(height: 50),
               Input(
-                label: 'Username',
-                hintText: 'Enter your username',
+                label: LocalizationConstants.username,
+                hintText: LocalizationConstants.enterUsername,
                 controller: _usernameController,
                 onTapOutside: (context) =>
                     FocusManager.instance.primaryFocus?.unfocus(),
@@ -86,8 +88,8 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 16.0),
               Input(
-                label: 'Password',
-                hintText: 'Enter password',
+                label: LocalizationConstants.password,
+                hintText: LocalizationConstants.enterPassword,
                 obscureText: true,
                 controller: _passwordController,
                 onTapOutside: (context) =>
@@ -136,15 +138,16 @@ class _LoginPageState extends State<LoginPage> {
                           _passwordController.text,
                         );
                       },
-                      child: const Text('Login'),
+                      child: const Text(LocalizationConstants.signIn),
                     );
                   }
                 },
               ),
               const SizedBox(height: 16.0),
-              const SecondaryButton(child: Text('Use Face ID')),
+              const SecondaryButton(child: Text(LocalizationConstants.faceID)),
               const SizedBox(height: 16.0),
-              const PlainButton(child: Text('Forgot password?')),
+              const PlainButton(
+                  child: Text(LocalizationConstants.forgotPassword)),
             ],
           ),
         ),

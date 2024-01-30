@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
@@ -25,7 +26,7 @@ class ShopPage extends BaseDynamicContentScreen {
   Widget build(BuildContext context) {
     return BlocBuilder<ShopPageBloc, ShopPageState>(
       builder: (context, state) {
-        switch  (state) {
+        switch (state) {
           case ShopPageInitialState():
           case ShopPageLoadingState():
             return const Center(child: CircularProgressIndicator());
@@ -40,9 +41,11 @@ class ShopPage extends BaseDynamicContentScreen {
               )),
             );
           case ShopPageFailureState():
-            return const Center(child: Text('Failed Loading Shop'));
+            return const Center(
+                child: Text(LocalizationConstants.errorLoadingShop));
           default:
-            return const Center(child: Text('Failed Loading Shop'));
+            return const Center(
+                child: Text(LocalizationConstants.errorLoadingShop));
         }
       },
     );

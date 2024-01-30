@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
@@ -23,7 +24,7 @@ class SearchPage extends BaseDynamicContentScreen {
   Widget build(BuildContext context) {
     return BlocBuilder<SearchPageBloc, SearchPageState>(
       builder: (context, state) {
-        switch  (state) {
+        switch (state) {
           case SearchPageInitialState():
           case SearchPageLoadingState():
             return const Center(child: CircularProgressIndicator());
@@ -38,9 +39,11 @@ class SearchPage extends BaseDynamicContentScreen {
               )),
             );
           case SearchPageFailureState():
-            return const Center(child: Text('Failed Loading Search'));
+            return const Center(
+                child: Text(LocalizationConstants.errorLoadingSearchLanding));
           default:
-            return const Center(child: Text('Failed Loading Search'));
+            return const Center(
+                child: Text(LocalizationConstants.errorLoadingSearchLanding));
         }
       },
     );
