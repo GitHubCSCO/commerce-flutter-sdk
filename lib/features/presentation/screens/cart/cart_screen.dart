@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 
 class CartScreen extends StatelessWidget {
@@ -6,6 +7,11 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          BottomMenuWidget()
+        ],
+      ),
       body: Center(
         child: ElevatedButton(
           onPressed: () {
