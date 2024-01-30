@@ -142,7 +142,7 @@ class ProductEntity extends Equatable {
   final List<StyleTraitEntity>? variantTraits;
   final List<ChildTraitValueEntity>? childTraitValues;
 
-  ProductEntity({
+  const ProductEntity({
     this.id,
     this.orderLineId,
     this.name,

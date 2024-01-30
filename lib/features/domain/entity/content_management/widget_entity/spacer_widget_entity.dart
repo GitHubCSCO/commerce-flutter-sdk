@@ -1,5 +1,4 @@
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
-import 'package:equatable/equatable.dart';
 
 class SpacerWidgetEntity extends WidgetEntity {
   final int height;

@@ -7,7 +7,7 @@ class ProductLineEntity extends Equatable {
   final int? count;
   final bool? selected;
 
-  ProductLineEntity({
+  const ProductLineEntity({
     this.id,
     this.name,
     this.count,

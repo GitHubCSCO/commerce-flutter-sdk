@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/config/app_router.dart';
 import 'package:commerce_flutter_app/core/config/test_config_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/logout/logout_cubit.dart';
@@ -76,19 +77,19 @@ class NavBarScreen extends StatelessWidget {
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.shop),
-              label: 'Shop',
+              label: LocalizationConstants.shopTitle,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.search),
-              label: 'Search',
+              label: LocalizationConstants.searchLandingTitle,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.account_circle),
-              label: 'Account',
+              label: LocalizationConstants.account,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.shopping_cart),
-              label: 'Cart',
+              label: LocalizationConstants.cart,
             ),
           ],
           currentIndex: navigationShell.currentIndex,

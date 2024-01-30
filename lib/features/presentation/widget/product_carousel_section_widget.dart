@@ -43,7 +43,7 @@ class ProductCarouselSectionWidget extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   shrinkWrap: true,
                   itemCount: productList.length,
-                  separatorBuilder: (context, index) => SizedBox(width: 12),
+                  separatorBuilder: (context, index) => const SizedBox(width: 12),
                   itemBuilder: (context, index) {
                     final product = productList[index];
                     return ProductCarouselItemWidget(product: product);

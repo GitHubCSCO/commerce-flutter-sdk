@@ -10,7 +10,7 @@ class ActionListItemWidget extends BaseActionItemWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 50,
       child: Row(
@@ -18,7 +18,7 @@ class ActionListItemWidget extends BaseActionItemWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
+          SizedBox(
             width: 30,
             child: SvgPicture.asset(
               getActionIconPath(action),
@@ -37,7 +37,7 @@ class ActionListItemWidget extends BaseActionItemWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: Container(
+                    child: SizedBox(
                       height: double.infinity,
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
@@ -50,7 +50,7 @@ class ActionListItemWidget extends BaseActionItemWidget {
                               getActionTitle(action),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Color(0xFF222222),
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,

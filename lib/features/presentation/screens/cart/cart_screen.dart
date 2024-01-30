@@ -2,6 +2,8 @@ import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_wi
 import 'package:flutter/material.dart';
 
 class CartScreen extends StatelessWidget {
+  const CartScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +17,7 @@ class CartScreen extends StatelessWidget {
           onPressed: () {
             // Add your button's onPressed logic here
           },
-          child: Text('cart'),
+          child: const Text('cart'),
         ),
       ),
     );
