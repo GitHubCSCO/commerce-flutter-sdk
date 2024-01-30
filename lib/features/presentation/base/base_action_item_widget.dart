@@ -1,7 +1,9 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_type_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/logout/logout_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BaseActionItemWidget extends StatelessWidget {
   const BaseActionItemWidget({super.key});
@@ -97,4 +99,20 @@ class BaseActionItemWidget extends StatelessWidget {
         return actionLink.text ?? "";
     }
   }
+
+  Function() onActionNavigationCommand(BuildContext context, ActionLinkEntity actionLink) {
+    switch (actionLink.type) {
+      case ActionType.signOut:
+        return () {
+          signOut(context);
+        };
+      default:
+        return () {};
+    }
+  }
+
+  void signOut(BuildContext context) {
+    context.read<LogoutCubit>().logout();
+  }
+
 }
