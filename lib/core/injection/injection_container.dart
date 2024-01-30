@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/features/domain/service/core_service_provid
 import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_selection_usecase/domain_selection_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
@@ -20,6 +21,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/login/login_cubi
 import 'package:commerce_flutter_app/features/presentation/bloc/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/action_link/action_link_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_history/search_history_cubit.dart';
@@ -69,6 +71,10 @@ Future<void> initInjectionContainer() async {
 
     //carousel
     ..registerFactory(() => CarouselIndicatorCubit())
+
+    //action link
+    ..registerFactory(() => ActionLinkCubit(actionLinkUseCase: sl()))
+    ..registerFactory(() => ActionLinkUseCase())
 
     //search history
     ..registerFactory(() => SearchHistoryCubit(searchHistoryUseCase: sl()))
