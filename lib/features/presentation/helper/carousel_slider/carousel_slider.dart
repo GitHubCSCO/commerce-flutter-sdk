@@ -168,15 +168,15 @@ class CarouselSliderState extends State<CarouselSlider>
   }
 
   void resumeTimer() {
-    if (timer == null) {
-      timer = getTimer();
-    }
+    timer ??= getTimer();
   }
 
   void handleAutoPlay() {
     bool autoPlayEnabled = widget.options.autoPlay;
 
-    if (autoPlayEnabled && timer != null) return;
+    if (autoPlayEnabled && timer != null) {
+      return;
+    }
 
     clearTimer();
     if (autoPlayEnabled) {
@@ -187,7 +187,7 @@ class CarouselSliderState extends State<CarouselSlider>
   Widget getGestureWrapper(Widget child) {
     Widget wrapper;
     if (widget.options.height != null) {
-      wrapper = Container(height: widget.options.height, child: child);
+      wrapper = SizedBox(height: widget.options.height, child: child);
     } else {
       wrapper =
           AspectRatio(aspectRatio: widget.options.aspectRatio, child: child);
@@ -330,7 +330,7 @@ class CarouselSliderState extends State<CarouselSlider>
         return AnimatedBuilder(
           animation: carouselState!.pageController!,
           child: (widget.items != null)
-              ? (widget.items!.length > 0 ? widget.items![index] : Container())
+              ? (widget.items!.isNotEmpty ? widget.items![index] : Container())
               : widget.itemBuilder!(context, index, idx),
           builder: (BuildContext context, child) {
             double distortionValue = 1.0;

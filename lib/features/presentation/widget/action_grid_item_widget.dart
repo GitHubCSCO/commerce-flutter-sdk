@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class ActionGridItemWidget extends BaseActionItemWidget {
   final ActionLinkEntity action;
 
-  ActionGridItemWidget({super.key, required this.action});
+  const ActionGridItemWidget({super.key, required this.action});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class ActionGridItemWidget extends BaseActionItemWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
+          SizedBox(
             width: 40,
             height: 40,
             child: SvgPicture.asset(
@@ -29,14 +29,14 @@ class ActionGridItemWidget extends BaseActionItemWidget {
           Container(
             width: double.infinity,
             height: 32,
-            padding: EdgeInsets.only(left: 4, right: 4),
+            padding: const EdgeInsets.only(left: 4, right: 4),
             alignment: Alignment.center,
             child: Text(
               getActionTitle(action),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Color(0xFF222222),
                 fontSize: 12,
               ),

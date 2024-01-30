@@ -281,7 +281,7 @@ class CmsUseCase extends BaseUseCase {
 
   Future<ActionsWidgetEntity> convertWidgetToMobileLinkListEntity(
       PageWidgetEntity pageWidget, Session? currentSession) async {
-    var actionsWidget = ActionsWidgetEntity();
+    var actionsWidget = const ActionsWidgetEntity();
     var actionList = <ActionLinkEntity>[];
     actionsWidget =
         actionsWidget.copyWith(layout: pageWidget.generalFields?.layout);

@@ -75,7 +75,7 @@ class Approuter {
         StatefulShellBranch(
           routes: <RouteBase>[
             AppRoute.cart.createRoute(
-              (context, state) => CartScreen(),
+              (context, state) => const CartScreen(),
             ),
           ],
         ),

@@ -32,7 +32,7 @@ class ProductCarouselItemWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          SizedBox(
+          const SizedBox(
             height: 30,
             child: Text(
               'Cafe Valet® Barista Single-Serve Coffee Maker',
@@ -45,7 +45,7 @@ class ProductCarouselItemWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
+          const Text(
             '\$449.99',
             style: TextStyle(
               color: Color(0xFF222222),

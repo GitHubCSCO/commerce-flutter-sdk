@@ -38,7 +38,7 @@ class ProductPriceEntity extends Equatable {
   final String? extendedActualPriceDisplay;
   final List<BreakPriceEntity>? regularBreakPrices;
   final List<BreakPriceEntity>? actualBreakPrices;
-  ProductPriceEntity({
+  const ProductPriceEntity({
     this.productId,
     this.isOnSale,
     this.requiresRealTimePrice,
