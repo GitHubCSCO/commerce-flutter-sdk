@@ -17,6 +17,7 @@ class AccountPageBloc extends Bloc<AccountPageEvent, AccountPageState> {
 
   Future<void> _onAccountPageLoadEvent(
       AccountPageLoadEvent event, Emitter<AccountPageState> emit) async {
+    emit(AccountPageLoadingState());
     var result = await _accountUseCase.loadData();
     switch (result) {
       case Success(value: final data):

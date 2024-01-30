@@ -30,13 +30,13 @@ class ActionLinkUseCase extends BaseUseCase {
         if (!isAuthenticated!) {
           continue;
         } else {
-          if (session == null || (isRequisitioner(session.userRoles) && !(action.type == ActionType.lists || action.type == ActionType.signOut))) {
+          if (session == null || (session.isRequisitioner && !(action.type == ActionType.lists || action.type == ActionType.signOut))) {
             continue;
           }
-          if (action.type == ActionType.vmi && !isVMIUser(session.userRoles)) {
+          if (action.type == ActionType.vmi && !session.isVMIUser) {
             continue;
           }
-          if (action.type == ActionType.orderApproval && !isOrderApprovalApplicableUser(session.userRoles)) {
+          if (action.type == ActionType.orderApproval && !session.isOrderApprovalApplicableUser) {
             continue;
           }
           if (action.type == ActionType.showHidePricing && !session.displayPricingAndInventory!) {
@@ -86,44 +86,6 @@ class ActionLinkUseCase extends BaseUseCase {
       default:
         return false;
     }
-  }
-
-  bool isRequisitioner(String? userRoles) {
-    if (userRoles != null && userRoles.isNotEmpty) {
-      List<String> roles = userRoles.split(",");
-      return roles.any(
-              (role) => role.trim().toLowerCase() == "requisitioner");
-    }
-
-    return false;
-  }
-
-  bool isVMIUser(String? userRoles) {
-    if (userRoles != null && userRoles.isNotEmpty) {
-      List<String> roles = userRoles.split(",");
-      return roles.any(
-            (role) =>
-        role.trim().toLowerCase() == "vmi_admin" ||
-            role.trim().toLowerCase() == "vmi_user",
-      );
-    }
-
-    return false;
-  }
-
-  bool isOrderApprovalApplicableUser(String? userRoles) {
-    if (userRoles != null && userRoles.isNotEmpty) {
-      List<String> roles = userRoles.split(",");
-      return roles.any(
-            (role) =>
-        role.trim().toLowerCase() == "administrator" ||
-            role.trim().toLowerCase() == "buyer1" ||
-            role.trim().toLowerCase() == "buyer2" ||
-            role.trim().toLowerCase() == "buyer3",
-      );
-    }
-
-    return false;
   }
 
 }
