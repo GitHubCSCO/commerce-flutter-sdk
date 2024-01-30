@@ -35,10 +35,10 @@ class CarouselSlider extends StatefulWidget {
 
   CarouselSlider(
       {required this.items,
-        required this.options,
-        this.disableGesture,
-        CarouselController? carouselController,
-        Key? key})
+      required this.options,
+      this.disableGesture,
+      CarouselController? carouselController,
+      Key? key})
       : itemBuilder = null,
         itemCount = items != null ? items.length : 0,
         _carouselController = carouselController != null
@@ -49,11 +49,11 @@ class CarouselSlider extends StatefulWidget {
   /// The on demand item builder constructor
   CarouselSlider.builder(
       {required this.itemCount,
-        required this.itemBuilder,
-        required this.options,
-        this.disableGesture,
-        CarouselController? carouselController,
-        Key? key})
+      required this.itemBuilder,
+      required this.options,
+      this.disableGesture,
+      CarouselController? carouselController,
+      Key? key})
       : items = null,
         _carouselController = carouselController != null
             ? carouselController as CarouselControllerImpl
@@ -127,36 +127,36 @@ class CarouselSliderState extends State<CarouselSlider>
   Timer? getTimer() {
     return widget.options.autoPlay
         ? Timer.periodic(widget.options.autoPlayInterval, (_) {
-      if (!mounted) {
-        clearTimer();
-        return;
-      }
+            if (!mounted) {
+              clearTimer();
+              return;
+            }
 
-      final route = ModalRoute.of(context);
-      if (route?.isCurrent == false) {
-        return;
-      }
+            final route = ModalRoute.of(context);
+            if (route?.isCurrent == false) {
+              return;
+            }
 
-      CarouselPageChangedReason previousReason = mode;
-      changeMode(CarouselPageChangedReason.timed);
-      int nextPage = carouselState!.pageController!.page!.round() + 1;
-      int itemCount = widget.itemCount ?? widget.items!.length;
+            CarouselPageChangedReason previousReason = mode;
+            changeMode(CarouselPageChangedReason.timed);
+            int nextPage = carouselState!.pageController!.page!.round() + 1;
+            int itemCount = widget.itemCount ?? widget.items!.length;
 
-      if (nextPage >= itemCount &&
-          widget.options.enableInfiniteScroll == false) {
-        if (widget.options.pauseAutoPlayInFiniteScroll) {
-          clearTimer();
-          return;
-        }
-        nextPage = 0;
-      }
+            if (nextPage >= itemCount &&
+                widget.options.enableInfiniteScroll == false) {
+              if (widget.options.pauseAutoPlayInFiniteScroll) {
+                clearTimer();
+                return;
+              }
+              nextPage = 0;
+            }
 
-      carouselState!.pageController!
-          .animateToPage(nextPage,
-          duration: widget.options.autoPlayAnimationDuration,
-          curve: widget.options.autoPlayCurve)
-          .then((_) => changeMode(previousReason));
-    })
+            carouselState!.pageController!
+                .animateToPage(nextPage,
+                    duration: widget.options.autoPlayAnimationDuration,
+                    curve: widget.options.autoPlayCurve)
+                .then((_) => changeMode(previousReason));
+          })
         : null;
   }
 
@@ -210,22 +210,22 @@ class CarouselSliderState extends State<CarouselSlider>
       behavior: HitTestBehavior.opaque,
       gestures: {
         _MultipleGestureRecognizer:
-        GestureRecognizerFactoryWithHandlers<_MultipleGestureRecognizer>(
+            GestureRecognizerFactoryWithHandlers<_MultipleGestureRecognizer>(
                 () => _MultipleGestureRecognizer(),
                 (_MultipleGestureRecognizer instance) {
-              instance.onStart = (_) {
-                onStart();
-              };
-              instance.onDown = (_) {
-                onPanDown();
-              };
-              instance.onEnd = (_) {
-                onPanUp();
-              };
-              instance.onCancel = () {
-                onPanUp();
-              };
-            }),
+          instance.onStart = (_) {
+            onStart();
+          };
+          instance.onDown = (_) {
+            onPanDown();
+          };
+          instance.onEnd = (_) {
+            onPanUp();
+          };
+          instance.onCancel = () {
+            onPanUp();
+          };
+        }),
       },
       child: NotificationListener(
         onNotification: (Notification notification) {
@@ -251,9 +251,9 @@ class CarouselSliderState extends State<CarouselSlider>
 
   Widget getEnlargeWrapper(Widget? child,
       {double? width,
-        double? height,
-        double? scale,
-        required double itemOffset}) {
+      double? height,
+      double? scale,
+      required double itemOffset}) {
     if (widget.options.enlargeStrategy == CenterPageEnlargeStrategy.height) {
       return SizedBox(child: child, width: width, height: height);
     }
@@ -345,16 +345,16 @@ class CarouselSliderState extends State<CarouselSlider>
               if (position != null &&
                   position.hasPixels &&
                   position.hasContentDimensions) {
-                var _page = carouselState?.pageController?.page;
-                if (_page != null) {
-                  itemOffset = _page - idx;
+                var page = carouselState?.pageController?.page;
+                if (page != null) {
+                  itemOffset = page - idx;
                 }
               } else {
                 BuildContext storageContext = carouselState!
                     .pageController!.position.context.storageContext;
                 final double? previousSavedPosition =
-                PageStorage.of(storageContext)?.readState(storageContext)
-                as double?;
+                    PageStorage.of(storageContext).readState(storageContext)
+                        as double?;
                 if (previousSavedPosition != null) {
                   itemOffset = previousSavedPosition - idx.toDouble();
                 } else {
@@ -364,9 +364,9 @@ class CarouselSliderState extends State<CarouselSlider>
               }
 
               final double enlargeFactor =
-              options.enlargeFactor.clamp(0.0, 1.0);
+                  options.enlargeFactor.clamp(0.0, 1.0);
               final num distortionRatio =
-              (1 - (itemOffset.abs() * enlargeFactor)).clamp(0.0, 1.0);
+                  (1 - (itemOffset.abs() * enlargeFactor)).clamp(0.0, 1.0);
               distortionValue =
                   Curves.easeOut.transform(distortionRatio as double);
             }

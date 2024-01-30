@@ -1,6 +1,5 @@
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductCarouselItemWidget extends StatelessWidget {
   final ProductEntity product;
