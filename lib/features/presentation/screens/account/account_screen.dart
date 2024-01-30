@@ -74,9 +74,11 @@ class AccountPage extends BaseDynamicContentScreen {
               ],
             ));
           case AccountPageFailureState():
-            return const Center(child: Text('Failed Loading Account'));
+            return const Center(
+                child: Text(LocalizationConstants.errorLoadingAccount));
           default:
-            return const Center(child: Text('Failed Loading Account'));
+            return const Center(
+                child: Text(LocalizationConstants.errorLoadingAccount));
         }
       },
     );

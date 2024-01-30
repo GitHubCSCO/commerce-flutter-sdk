@@ -45,7 +45,7 @@ class SearchHistorySectionWidget extends StatelessWidget {
                     child: ListView.builder(
                       itemCount: _historyListCount(searchHistoryWidgetEntity.itemsCount, historyList.length),
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       itemBuilder: (context, index) {
                         final history = historyList[index];

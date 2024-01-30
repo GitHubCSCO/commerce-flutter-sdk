@@ -7,7 +7,7 @@ class ChildTraitValueEntity extends Equatable {
   final String? value;
   final String? valueDisplay;
 
-  ChildTraitValueEntity({
+  const ChildTraitValueEntity({
     this.id,
     this.styleTraitId,
     this.value,

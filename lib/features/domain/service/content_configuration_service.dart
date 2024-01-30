@@ -47,6 +47,7 @@ class ContentConfigurationService implements IContentConfigurationService {
   final Cookie cmsCurrentContentModeCookieDelete =
       Cookie("cms_CurrentContentMode", "");
 
+  @override
   ContentMode currentContentMode = ContentMode.live;
   CMSMode currentCMSMode = CMSMode.classic;
 
