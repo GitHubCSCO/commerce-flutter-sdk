@@ -10,34 +10,30 @@ class ActionListItemWidget extends BaseActionItemWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 30,
-            child: SvgPicture.asset(
-              getActionIconPath(action),
-              semanticsLabel: 'Action item icon',
-              fit: BoxFit.fitWidth,
+    return InkWell(
+      onTap: onActionNavigationCommand(context, action),
+      child: SizedBox(
+        width: double.infinity,
+        height: 50,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 30,
+              child: SvgPicture.asset(
+                getActionIconPath(action),
+                semanticsLabel: 'Action item icon',
+                fit: BoxFit.fitWidth,
+              ),
             ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Container(
-              height: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 6),
+            const SizedBox(width: 8),
+            Expanded(
               child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: SizedBox(
+                    child: Container(
                       height: double.infinity,
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
@@ -62,25 +58,22 @@ class ActionListItemWidget extends BaseActionItemWidget {
                     ),
                   ),
                   const SizedBox(width: 2),
-                  SizedBox(
-                    height: double.infinity,
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 24,
-                      height: 24,
-                      padding: const EdgeInsets.all(7),
-                      child: const Icon(
-                        Icons.keyboard_arrow_right,
-                        color: Colors.grey,
-                        size: 20,
-                      ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: 24,
+                    height: 24,
+                    padding: const EdgeInsets.all(7),
+                    child: const Icon(
+                      Icons.keyboard_arrow_right,
+                      color: Colors.grey,
+                      size: 20,
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
