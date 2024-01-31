@@ -17,12 +17,12 @@ import 'package:commerce_flutter_app/features/presentation/bloc/account/account_
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/domain_redirect/domain_redirect_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/domain_selection/domain_selection_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/action_link/action_link_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_history/search_history_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
