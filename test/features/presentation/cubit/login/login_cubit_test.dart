@@ -12,7 +12,7 @@ void main() {
     late LoginCubit loginCubit;
 
     setUp(() {
-      loginUsecase = MockLoginUsecase(); // You need to create a mock for LoginUsecase
+      loginUsecase = MockLoginUsecase();
       loginCubit = LoginCubit(loginUsecase: loginUsecase);
     });
 
@@ -71,7 +71,6 @@ void main() {
       ],
     );
 
-    // Add more test cases for other scenarios...
   });
 }
 
