@@ -22,6 +22,9 @@ class DomainSelectionUsecase extends BaseUseCase {
   }
 
   Future<DomainSelectionStatus> domainSelectHandler(String domain) async {
+    if (domain.trim().isEmpty) {
+      return DomainSelectionStatus.failedInvalidDomain;
+    }
     final validUrlString = domain.makeValidUrl();
 
     var domainUri = Uri.parse(validUrlString);
@@ -42,10 +45,10 @@ class DomainSelectionUsecase extends BaseUseCase {
     if (domainSelectionStatus != DomainSelectionStatus.success) {
       return domainSelectionStatus;
     }
-
-    commerceAPIServiceProvider
-        .getLocalStorageService()
-        .save(_domainKey, commerceAPIServiceProvider.getClientService().host!);
+    if (commerceAPIServiceProvider.getClientService().host != null) {
+      commerceAPIServiceProvider.getLocalStorageService().save(
+          _domainKey, commerceAPIServiceProvider.getClientService().host!);
+    }
     return DomainSelectionStatus.success;
   }
 

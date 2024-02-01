@@ -8,9 +8,7 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          BottomMenuWidget()
-        ],
+        actions: [BottomMenuWidget()],
       ),
       body: Center(
         child: ElevatedButton(

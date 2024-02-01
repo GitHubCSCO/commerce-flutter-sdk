@@ -1,7 +1,9 @@
+import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+
 import '../../features/domain/injector_mock.dart';
 
 class MockAccountService extends Mock implements IAccountService {}
@@ -48,12 +50,7 @@ class MockMobileContentService extends Mock implements IMobileContentService {}
 class MockMobileSpireContentService extends Mock
     implements IMobileSpireContentService {}
 
-class MockNetworkService extends Mock implements INetworkService {
-  @override
-  Future<bool> isOnline() async {
-    return Future.value(true);
-  }
-}
+class MockNetworkService extends Mock implements INetworkService {}
 
 class MockOrderService extends Mock implements IOrderService {}
 
