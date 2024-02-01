@@ -7,9 +7,7 @@ class DomainRedirectCubit extends Cubit<DomainRedirectStatus> {
 
   DomainRedirectCubit({required DomainSelectionUsecase domainSelectionUsecase})
       : _domainSelectionUsecase = domainSelectionUsecase,
-        super(DomainRedirectStatus.unknown) {
-    // redirect();
-  }
+        super(DomainRedirectStatus.unknown);
 
   Future<void> redirect() async {
     emit(DomainRedirectStatus.loading);
