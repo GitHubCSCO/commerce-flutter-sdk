@@ -23,6 +23,10 @@ void main() {
     const expectedResult = LoginStatus.loginSuccessBillToShipTo;
 
     when(() => loginUsecase.commerceAPIServiceProvider
+        .getNetworkService()
+        .isOnline()).thenAnswer((_) async => true);
+
+    when(() => loginUsecase.commerceAPIServiceProvider
             .getAuthenticationService()
             .logInAsync(userName, passWord))
         .thenAnswer((_) async => const Success(true));

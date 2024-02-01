@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/extensions/url_string_extension.dart';
+import 'package:commerce_flutter_app/core/utils/url_validator.dart';
 import 'package:commerce_flutter_app/features/domain/enums/domain_selection_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -22,6 +23,13 @@ class DomainSelectionUsecase extends BaseUseCase {
   }
 
   Future<DomainSelectionStatus> domainSelectHandler(String domain) async {
+    if (domain.trim().isEmpty) {
+      return DomainSelectionStatus.failedInvalidDomain;
+    }
+    if (!UrlValidator.isValidUrl(domain)) {
+      return DomainSelectionStatus.failedInvalidDomain;
+    }
+
     final validUrlString = domain.makeValidUrl();
 
     var domainUri = Uri.parse(validUrlString);
@@ -42,10 +50,10 @@ class DomainSelectionUsecase extends BaseUseCase {
     if (domainSelectionStatus != DomainSelectionStatus.success) {
       return domainSelectionStatus;
     }
-
-    commerceAPIServiceProvider
-        .getLocalStorageService()
-        .save(_domainKey, commerceAPIServiceProvider.getClientService().host!);
+    if (commerceAPIServiceProvider.getClientService().host != null) {
+      commerceAPIServiceProvider.getLocalStorageService().save(
+          _domainKey, commerceAPIServiceProvider.getClientService().host!);
+    }
     return DomainSelectionStatus.success;
   }
 
