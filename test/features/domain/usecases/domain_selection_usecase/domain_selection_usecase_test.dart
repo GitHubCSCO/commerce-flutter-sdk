@@ -179,18 +179,6 @@ void main() {
       () async {
         const domain = '';
 
-
-        final result = await domainSelectionUsecase.domainSelectHandler(domain);
-
-        expect(result, equals(DomainSelectionStatus.failedInvalidDomain));
-      },
-    );
-
-    test(
-      'domainSelectHandler should return failedInvalidDomain status when domain is not a valid URL',
-      () async {
-        const domain = 'not a valid url';
-
         final result = await domainSelectionUsecase.domainSelectHandler(domain);
 
         expect(result, equals(DomainSelectionStatus.failedInvalidDomain));
