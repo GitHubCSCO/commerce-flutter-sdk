@@ -4,6 +4,8 @@ import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_c
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../../../sdk/usecases/mock_usecases.dart';
+
 void main() {
   group('LogoutCubit', () {
     late LogoutUsecase logoutUsecase;
@@ -35,5 +37,3 @@ void main() {
 
   });
 }
-
-class MockLogoutUsecase extends Mock implements LogoutUsecase {}

@@ -6,6 +6,8 @@ import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cub
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../../../sdk/usecases/mock_usecases.dart';
+
 void main() {
   group('LoginCubit', () {
     late LoginUsecase loginUsecase;
@@ -73,5 +75,3 @@ void main() {
 
   });
 }
-
-class MockLoginUsecase extends Mock implements LoginUsecase {}

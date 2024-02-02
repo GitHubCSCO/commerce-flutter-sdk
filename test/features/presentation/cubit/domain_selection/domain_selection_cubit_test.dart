@@ -6,6 +6,8 @@ import 'package:commerce_flutter_app/features/presentation/cubit/domain_selectio
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../../../sdk/usecases/mock_usecases.dart';
+
 void main() {
   group('DomainSelectionCubit', () {
     late DomainSelectionUsecase domainSelectionUsecase;
@@ -95,5 +97,3 @@ void main() {
 
   });
 }
-
-class MockDomainSelectionUsecase extends Mock implements DomainSelectionUsecase {}

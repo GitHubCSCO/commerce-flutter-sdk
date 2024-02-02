@@ -5,6 +5,8 @@ import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../../../sdk/usecases/mock_usecases.dart';
+
 void main() {
   group('DomainRedirectCubit', () {
     late DomainSelectionUsecase domainSelectionUsecase;
@@ -51,5 +53,3 @@ void main() {
     
   });
 }
-
-class MockDomainSelectionUsecase extends Mock implements DomainSelectionUsecase {}
