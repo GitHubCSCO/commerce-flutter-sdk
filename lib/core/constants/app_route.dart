@@ -1,4 +1,3 @@
-import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -55,27 +54,4 @@ extension AppRouteNavigation on AppRoute {
       builder: builder,
     );
   }
-
-  GoRoute createNestedRoute(Widget Function(BuildContext, GoRouterState) builder) {
-    List<String> pathSegments = path.split('/');
-
-    GoRoute nestedRoute = GoRoute(
-      name: pathSegments.last,
-      path: path,
-      builder: builder,
-      routes: [],
-    );
-
-    for (int i = pathSegments.length - 2; i >= 0; i--) {
-      nestedRoute = GoRoute(
-        name: pathSegments[i],
-        path: pathSegments.sublist(0, i + 1).join('/'),
-        builder: (context, state) => nestedRoute,
-        routes: [nestedRoute],
-      );
-    }
-
-    return nestedRoute;
-  }
-
 }
