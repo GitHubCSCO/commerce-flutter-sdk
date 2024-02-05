@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/cache_service_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 
@@ -8,7 +9,7 @@ class SearchHistoryUseCase extends BaseUseCase {
     try {
       final List<String> list = await commerceAPIServiceProvider
           .getCacheService()
-          .loadPersistedData<List<String>>("search_history");
+          .loadPersistedData<List<String>>(CacheServiceConstants.searchHistory);
 
       list.isEmpty
           ? list.add(LocalizationConstants.searchNoHistoryAvailable)

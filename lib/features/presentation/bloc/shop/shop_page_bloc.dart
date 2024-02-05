@@ -17,7 +17,6 @@ class ShopPageBloc extends Bloc<ShopPageEvent, ShopPageState> {
 
   Future<void> _onShopPageLoadEvent(
       ShopPageLoadEvent event, Emitter<ShopPageState> emit) async {
-    // _shopUseCase.addFakeSearchHistory();
     emit(ShopPageLoadingState());
     var result = await _shopUseCase.loadData();
     switch (result) {
