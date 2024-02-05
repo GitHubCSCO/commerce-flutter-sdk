@@ -31,13 +31,18 @@ class LoginUsecase extends BaseUseCase {
                   return LoginStatus.loginErrorUnknown;
                 }
 
-                await commerceAPIServiceProvider
+                final accountResult = await commerceAPIServiceProvider
                     .getAccountService()
                     .getCurrentAccountAsync();
-                if (_showBiometricOptionView()) {
-                  return LoginStatus.loginSuccessBiometric;
+
+                if (accountResult is Failure) {
+                  return LoginStatus.loginErrorUnknown;
                 } else {
-                  return LoginStatus.loginSuccessBillToShipTo;
+                  if (_showBiometricOptionView()) {
+                    return LoginStatus.loginSuccessBiometric;
+                  } else {
+                    return LoginStatus.loginSuccessBillToShipTo;
+                  }
                 }
               }
             case Failure():
