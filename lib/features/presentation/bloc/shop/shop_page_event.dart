@@ -1,3 +1,5 @@
+part of 'shop_page_bloc.dart';
+
 abstract class ShopPageEvent {
   const ShopPageEvent();
 }

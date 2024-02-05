@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/cache_service_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/content_management_usecase/cms_usecase.dart';
@@ -23,6 +24,6 @@ class ShopUseCase extends CmsUseCase {
     final list = ["stapler", "tools", "battery"];
     commerceAPIServiceProvider
         .getCacheService()
-        .persistData<List<String>>("search_history", list);
+        .persistData<List<String>>(CacheServiceConstants.searchHistory, list);
   }
 }
