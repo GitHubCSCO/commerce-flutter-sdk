@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
+part of 'shop_page_bloc.dart';
 
 abstract class ShopPageState {
   const ShopPageState();

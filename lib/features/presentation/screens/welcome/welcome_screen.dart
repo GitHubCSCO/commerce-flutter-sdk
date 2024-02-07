@@ -2,8 +2,8 @@ import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/enums/domain_redirect_status.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/domain_redirect/domain_redirect_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_components.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_style.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,7 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return WelcomeBaseScreen(
       child: BlocProvider(
-        create: (context) => sl<DomainRedirectCubit>(),
+        create: (context) => sl<DomainRedirectCubit>()..redirect(),
         child: const WelcomeFirstPage(),
       ),
     );
