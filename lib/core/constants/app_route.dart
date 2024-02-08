@@ -8,7 +8,9 @@ enum AppRoute {
   shop(name: 'shop', path: '/shop'),
   search(name: 'search', path: '/search'),
   account(name: 'account', path: '/account'),
-  cart(name: 'cart', path: '/cart');
+  cart(name: 'cart', path: '/cart'),
+  productDetails(name: 'productDetails', path: '/productDetails');
+
 
   const AppRoute({required this.name, required this.path});
 

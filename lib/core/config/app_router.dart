@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/search_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/shop/shop_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/domain_selection_screen.dart';
@@ -43,6 +45,13 @@ class Approuter {
     ),
     AppRoute.login.createRoute(
       (context, state) => const LoginScreen(),
+    ),
+
+    AppRoute.productDetails.createRoute(
+      (context, state) {
+        final productEntity = (state.extra as Map?)?['productEntity'] as ProductEntity?;
+        return ProductDetailsScreen(productEntity: productEntity!);
+      },
     ),
     StatefulShellRoute.indexedStack(
       builder: (BuildContext context, GoRouterState state,

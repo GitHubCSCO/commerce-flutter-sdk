@@ -9,12 +9,14 @@ import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_
 import 'package:commerce_flutter_app/features/domain/usecases/domain_selection_usecase/domain_selection_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/action_link/action_link_cubit.dart';
@@ -68,6 +70,11 @@ Future<void> initInjectionContainer() async {
     //product carousel
     ..registerFactory(() => ProductCarouselCubit(productCarouselUseCase: sl()))
     ..registerFactory(() => ProductCarouselUseCase())
+
+    // product details
+
+    ..registerFactory(() => ProductDetailsBloc(productDetailsUseCase: sl()))
+    ..registerFactory(() => ProductDetailsUseCase())
 
     //carousel
     ..registerFactory(() => CarouselIndicatorCubit())
