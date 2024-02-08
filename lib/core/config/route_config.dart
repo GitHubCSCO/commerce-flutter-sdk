@@ -76,5 +76,15 @@ NavigationNode _getNavigationRoot() {
     parent: navbarRoot,
   );
 
+  final productDetails = createNode(
+    name: AppRoute.productDetails.name,
+    path: AppRoute.productDetails.path,
+    builder: (context, state) {
+      final id = state.pathParameters['id'];
+      return MyWidget(id: id!);
+    },
+    parent: cart,
+  );
+
   return root;
 }

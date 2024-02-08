@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -11,12 +12,36 @@ class CartScreen extends StatelessWidget {
         actions: [BottomMenuWidget()],
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Add your button's onPressed logic here
+        child: ListView.builder(
+          itemCount: 5,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text('Item $index'),
+              onTap: () => AppRoute.productDetails.navigate(
+                context,
+                pathParameters: {'id': index.toString()},
+              ),
+            );
           },
-          child: const Text('cart'),
         ),
+      ),
+    );
+  }
+}
+
+class MyWidget extends StatelessWidget {
+  const MyWidget({super.key, required this.id});
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Product Details'),
+      ),
+      body: Center(
+        child: Text('Product id: $id'),
       ),
     );
   }
