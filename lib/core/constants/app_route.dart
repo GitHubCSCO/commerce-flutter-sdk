@@ -30,7 +30,7 @@ enum AppRoute {
   welcome(name: RouteNames.welcome, fullPath: RoutePaths.welcome),
   domainSelection(name: RouteNames.domainSelection, fullPath: RoutePaths.domainSelection),
   login(name: RouteNames.login, fullPath: RoutePaths.login),
-  shop(name: RouteNames.shop, fullPath: RouteNames.shop),
+  shop(name: RouteNames.shop, fullPath: RoutePaths.shop),
   search(name: RouteNames.search, fullPath: RoutePaths.search),
   account(name: RouteNames.account, fullPath: RoutePaths.account),
   cart(name: RouteNames.cart, fullPath: RoutePaths.cart),
