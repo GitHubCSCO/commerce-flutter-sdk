@@ -5,6 +5,7 @@ RouteBase generateRoutes(NavigationNode root) {
   if (root.isNavbarRoot) {
     return StatefulShellRoute.indexedStack(
       builder: root.statefulShellBuilder!,
+      parentNavigatorKey: root.navigatorKey,
       branches: root.children
           .map(generateRoutes)
           .map((e) => StatefulShellBranch(routes: [e]))
@@ -13,8 +14,9 @@ RouteBase generateRoutes(NavigationNode root) {
   }
   return GoRoute(
     name: root.name,
-    path: root.suffix,
+    path: root.path,
     builder: root.builder,
+    parentNavigatorKey: root.navigatorKey,
     routes: root.children.map(generateRoutes).toList(),
   );
 }

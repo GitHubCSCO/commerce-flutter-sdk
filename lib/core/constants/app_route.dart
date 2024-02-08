@@ -1,20 +1,43 @@
+// ignore_for_file: unused_element
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 enum AppRoute {
-  welcome(name: 'welcome', path: '/'),
-  domainSelection(name: 'domainSelection', path: '/domainSelection'),
-  login(name: 'login', path: '/login'),
-  shop(name: 'shop', path: '/shop'),
-  search(name: 'search', path: '/search'),
-  account(name: 'account', path: '/account'),
-  cart(name: 'cart', path: '/cart'),
-  productDetails(name: 'productDetails', path: '/cart/:id');
+  welcome(name: 'welcome', fullPath: '/'),
+  domainSelection(name: 'domainSelection', fullPath: '/domainSelection'),
+  login(name: 'login', fullPath: '/login'),
+  shop(name: 'shop', fullPath: '/shop'),
+  search(name: 'search', fullPath: '/search'),
+  account(name: 'account', fullPath: '/account'),
+  cart(name: 'cart', fullPath: '/cart'),
+  productDetails(name: 'productDetails', fullPath: '/cart/:id'),
+  checkout(name: 'checkout', fullPath: '/checkout/:id');
 
-  const AppRoute({required this.name, required this.path});
+  const AppRoute({
+    required this.name,
+    required this.fullPath,
+    this.pathSuffix,
+  });
 
   final String name;
-  final String path;
+  final String fullPath;
+  final String? pathSuffix;
+
+  String get suffix {
+    if (pathSuffix != null) {
+      return pathSuffix!;
+    }
+
+    final splittedList =
+        fullPath.split('/').where((element) => element.isNotEmpty).toList();
+
+    if (splittedList.isEmpty) {
+      return fullPath;
+    }
+
+    return splittedList.last;
+  }
 }
 
 extension AppRouteNavigation on AppRoute {

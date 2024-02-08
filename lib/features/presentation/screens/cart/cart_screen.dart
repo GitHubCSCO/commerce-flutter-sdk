@@ -29,8 +29,8 @@ class CartScreen extends StatelessWidget {
   }
 }
 
-class MyWidget extends StatelessWidget {
-  const MyWidget({super.key, required this.id});
+class DummyProductDetails extends StatelessWidget {
+  const DummyProductDetails({super.key, required this.id});
 
   final String id;
 
@@ -41,7 +41,29 @@ class MyWidget extends StatelessWidget {
         title: const Text('Product Details'),
       ),
       body: Center(
-        child: Text('Product id: $id'),
+        child: ElevatedButton(
+          child: Text('Product id: $id'),
+          onPressed: () => AppRoute.checkout.navigateBackStack(
+            context,
+            pathParameters: {'id': id},
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DummyCheckout extends StatelessWidget {
+  const DummyCheckout({super.key, required this.id});
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: Text('Checkout product $id'),
       ),
     );
   }

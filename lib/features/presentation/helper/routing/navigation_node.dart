@@ -3,34 +3,23 @@ import 'package:go_router/go_router.dart';
 
 class NavigationNode {
   final String name;
-  final String fullPath;
+  final String path;
   final Widget Function(BuildContext context, GoRouterState state)? builder;
   final NavigationNode? parent;
   final List<NavigationNode> children = [];
-  final String? pathSuffix;
   final bool isNavbarRoot;
   final StatefulShellRouteBuilder? statefulShellBuilder;
+  final GlobalKey<NavigatorState>? navigatorKey;
 
   NavigationNode(
     this.name,
-    this.fullPath,
+    this.path,
     this.builder, {
     this.parent,
     this.isNavbarRoot = false,
     this.statefulShellBuilder,
-    this.pathSuffix,
+    this.navigatorKey,
   });
-
-  String get suffix {
-    if (pathSuffix != null || parent == null) {
-      return pathSuffix ?? fullPath;
-    }
-
-    final splittedList = fullPath.split('/')
-      ..skipWhile((value) => value.isEmpty);
-
-    return splittedList.last;
-  }
 }
 
 NavigationNode createNode({
@@ -38,8 +27,15 @@ NavigationNode createNode({
   required String path,
   required Widget Function(BuildContext context, GoRouterState state)? builder,
   NavigationNode? parent,
+  GlobalKey<NavigatorState>? navigatorKey,
 }) {
-  final node = NavigationNode(name, path, builder, parent: parent);
+  final node = NavigationNode(
+    name,
+    path,
+    builder,
+    parent: parent,
+    navigatorKey: navigatorKey,
+  );
   parent?.children.add(node);
   return node;
 }
@@ -47,6 +43,7 @@ NavigationNode createNode({
 NavigationNode createNavbarRoot({
   required StatefulShellRouteBuilder statefulShellBuilder,
   required NavigationNode? parent,
+  GlobalKey<NavigatorState>? navigatorKey,
 }) {
   final node = NavigationNode(
     '',
@@ -55,8 +52,25 @@ NavigationNode createNavbarRoot({
     isNavbarRoot: true,
     statefulShellBuilder: statefulShellBuilder,
     parent: parent,
+    navigatorKey: navigatorKey,
   );
 
   parent?.children.add(node);
   return node;
+}
+
+NavigationNode createSeparateRoute({
+  required String name,
+  required String path,
+  required Widget Function(BuildContext context, GoRouterState state)? builder,
+  required GlobalKey<NavigatorState>? navigatorKey,
+  required NavigationNode? parent,
+}) {
+  return createNode(
+    name: name,
+    path: path,
+    builder: builder,
+    navigatorKey: navigatorKey,
+    parent: parent,
+  );
 }
