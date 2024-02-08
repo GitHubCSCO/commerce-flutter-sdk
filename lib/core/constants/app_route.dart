@@ -13,6 +13,7 @@ class RouteNames {
   static const String cart = 'cart';
   static const String productDetails = 'productDetails';
   static const String checkout = 'checkout';
+  static const String productList = 'productList';
 }
 
 class RoutePaths {
@@ -23,7 +24,10 @@ class RoutePaths {
   static const String search = '/${RouteNames.search}';
   static const String account = '/${RouteNames.account}';
   static const String cart = '/${RouteNames.cart}';
-  static const String checkout = '/${RouteNames.checkout}';
+  static const String productDetails = '${RoutePaths.cart}/:id';
+  static const String checkout = '/${RouteNames.checkout}/:id';
+  static const String shopProdlist = '/${RouteNames.shop}/${RouteNames.productList}';
+  static const String shopProdDetails = '$shopProdlist/:id';
 }
 
 enum AppRoute {
@@ -34,8 +38,9 @@ enum AppRoute {
   search(name: RouteNames.search, fullPath: RoutePaths.search),
   account(name: RouteNames.account, fullPath: RoutePaths.account),
   cart(name: RouteNames.cart, fullPath: RoutePaths.cart),
-  productDetails(name: RouteNames.productDetails, fullPath: '${RoutePaths.cart}/:id'),
-  checkout(name: RouteNames.checkout, fullPath: '${RoutePaths.checkout}/:id');
+  productList(name: RouteNames.productList, fullPath: RoutePaths.shopProdlist),
+  productDetails(name: RouteNames.productDetails, fullPath: RoutePaths.productDetails),
+  checkout(name: RouteNames.checkout, fullPath: RoutePaths.checkout);
 
   const AppRoute({
     required this.name,

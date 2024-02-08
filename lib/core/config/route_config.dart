@@ -111,5 +111,19 @@ NavigationNode _getNavigationRoot() {
     parent: root,
   );
 
+  // final prodList = createNode(
+  //   name: AppRoute.productList.name,
+  //   path: AppRoute.productList.suffix,
+  //   builder: (context, state) => const ProductListScreen(),
+  //   parent: shop,
+  // );
+
+  // final prodDetails = createNode(
+  //   name: AppRoute.productDetails.name,
+  //   path: AppRoute.productDetails.suffix,
+  //   builder: null,
+  //   parent: root,
+  // );
+
   return root;
 }
