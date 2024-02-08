@@ -15,27 +15,16 @@ class RouteNames {
   static const String checkout = 'checkout';
 }
 
-class RoutePaths {
-  static const String welcome = '/';
-  static const String domainSelection = '/${RouteNames.domainSelection}';
-  static const String login = '/${RouteNames.login}';
-  static const String shop = '/${RouteNames.shop}';
-  static const String search = '/${RouteNames.search}';
-  static const String account = '/${RouteNames.account}';
-  static const String cart = '/${RouteNames.cart}';
-  static const String checkout = '/${RouteNames.checkout}';
-}
-
 enum AppRoute {
-  welcome(name: RouteNames.welcome, fullPath: RoutePaths.welcome),
-  domainSelection(name: RouteNames.domainSelection, fullPath: RoutePaths.domainSelection),
-  login(name: RouteNames.login, fullPath: RoutePaths.login),
-  shop(name: RouteNames.shop, fullPath: RoutePaths.shop),
-  search(name: RouteNames.search, fullPath: RoutePaths.search),
-  account(name: RouteNames.account, fullPath: RoutePaths.account),
-  cart(name: RouteNames.cart, fullPath: RoutePaths.cart),
-  productDetails(name: RouteNames.productDetails, fullPath: '${RoutePaths.cart}/:id'),
-  checkout(name: RouteNames.checkout, fullPath: '${RoutePaths.checkout}/:id');
+  welcome(name: RouteNames.welcome, fullPath: '/${RouteNames.welcome}'),
+  domainSelection(name: RouteNames.domainSelection, fullPath: '/${RouteNames.domainSelection}'),
+  login(name: RouteNames.login, fullPath: '/${RouteNames.login}'),
+  shop(name: RouteNames.shop, fullPath: '/${RouteNames.shop}'),
+  search(name: RouteNames.search, fullPath: '/${RouteNames.search}'),
+  account(name: RouteNames.account, fullPath: '/${RouteNames.account}'),
+  cart(name: RouteNames.cart, fullPath: '/${RouteNames.cart}'),
+  productDetails(name: RouteNames.productDetails, fullPath: '/${RouteNames.cart}/:id'),
+  checkout(name: RouteNames.checkout, fullPath: '/${RouteNames.checkout}/:id');
 
   const AppRoute({
     required this.name,
