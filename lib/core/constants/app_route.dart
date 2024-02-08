@@ -33,25 +33,16 @@ extension AppRouteNavigation on AppRoute {
   }
 
   void navigateBackStack(
-      BuildContext context, {
-        Map<String, String> pathParameters = const <String, String>{},
-        Map<String, dynamic> queryParameters = const <String, dynamic>{},
-        Object? extra,
-      }) {
+    BuildContext context, {
+    Map<String, String> pathParameters = const <String, String>{},
+    Map<String, dynamic> queryParameters = const <String, dynamic>{},
+    Object? extra,
+  }) {
     GoRouter.of(context).pushNamed(
       name,
       pathParameters: pathParameters,
       queryParameters: queryParameters,
       extra: extra,
-    );
-  }
-
-  /// Create a GoRoute instance for the route.
-  GoRoute createRoute(Widget Function(BuildContext, GoRouterState) builder) {
-    return GoRoute(
-      name: name,
-      path: path,
-      builder: builder,
     );
   }
 }

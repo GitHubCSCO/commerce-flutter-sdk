@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/core/config/app_router.dart';
+import 'package:commerce_flutter_app/core/config/route_config.dart';
 import 'package:commerce_flutter_app/core/config/test_config_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'My App',
-      routerConfig: Approuter().router,
+      routerConfig: getRouter(),
     );
   }
 }
