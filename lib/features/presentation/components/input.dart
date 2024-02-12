@@ -125,8 +125,8 @@ class _InputState extends State<Input> {
             decoration: InputDecoration(
               hintText: widget.hintText,
               contentPadding: const EdgeInsets.symmetric(
-                horizontal: AppStyle.inputHorizontalPadding,
-                vertical: AppStyle.inputVerticalPadding,
+                horizontal: AppStyle.defaultHorizontalPadding,
+                vertical: AppStyle.defaultVerticalPadding,
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(

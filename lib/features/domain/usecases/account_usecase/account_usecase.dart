@@ -4,8 +4,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/content_management
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class AccountUseCase extends CmsUseCase {
-  AccountUseCase({PageContentType? contentType})
-      : super(contentType: contentType);
+  AccountUseCase({super.contentType});
 
   @override
   PageContentType get contentType => PageContentType.account;
@@ -19,4 +18,13 @@ class AccountUseCase extends CmsUseCase {
         return Failure(errorResponse);
     }
   }
+
+  String? get firstName =>
+      commerceAPIServiceProvider.getAccountService().currentAccount?.firstName;
+
+  String? get lastName =>
+      commerceAPIServiceProvider.getAccountService().currentAccount?.lastName;
+
+  String? get email =>
+      commerceAPIServiceProvider.getAccountService().currentAccount?.email;
 }
