@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/produc_details_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_event.dart';
@@ -19,12 +20,21 @@ class ProductDetailsBloc
 
     final result =
         await _productDetailsUseCase.getProductDetails(event.productParameter);
-        
+
     switch (result) {
       case Success(value: final data):
-        emit(ProductDetailsLoaded(product: data!));
+        _makeAllDetailsItems(data!, emit);
       case Failure(errorResponse: final errorResponse):
         emit(ProductDetailsErrorState(errorResponse.errorDescription ?? ''));
     }
+  }
+
+  Future<void> _makeAllDetailsItems(
+      ProductEntity productData, Emitter<ProductDetailsState> emit) async {
+    final productDetailsWidgetsList =
+        _productDetailsUseCase.makeAllDetailsItems(productData);
+    emit(ProductDetailsLoaded(
+        product: productData,
+        productDetailsWidgets: productDetailsWidgetsList));
   }
 }

@@ -3,6 +3,8 @@ import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart'
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
+enum ProdcutDeatilsPageWidgets { productDetailsDescription }
+
 class ProductDetailsUseCase extends BaseUseCase {
   late ProductEntity? productParameter;
   late Session? session;
@@ -58,5 +60,14 @@ class ProductDetailsUseCase extends BaseUseCase {
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
     }
+  }
+
+  List<ProdcutDeatilsPageWidgets> makeAllDetailsItems(ProductEntity product) {
+    List<ProdcutDeatilsPageWidgets> items = [];
+
+    if (product.htmlContent != null) {
+      items.add(ProdcutDeatilsPageWidgets.productDetailsDescription);
+    }
+    return items;
   }
 }
