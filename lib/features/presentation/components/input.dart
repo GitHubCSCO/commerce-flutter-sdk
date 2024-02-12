@@ -92,6 +92,9 @@ class _InputState extends State<Input> {
             ),
           ),
         Container(
+          margin: const EdgeInsets.symmetric(
+            horizontal: AppStyle.inputDropShadowSpreadRadius,
+          ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppStyle.borderRadius),
             boxShadow: _focusNode.hasFocus
@@ -118,7 +121,6 @@ class _InputState extends State<Input> {
             textDirection: widget.textDirection,
             textInputAction: widget.textInputAction,
             focusNode: _focusNode,
-            cursorHeight: AppStyle.cursorHeight,
             cursorColor: AppStyle.neutral990,
             decoration: InputDecoration(
               hintText: widget.hintText,
