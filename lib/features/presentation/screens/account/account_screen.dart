@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/account/account_
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,8 +19,9 @@ class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AccountPageBloc>(
-        create: (context) => sl<AccountPageBloc>()..add(AccountPageLoadEvent()),
-        child: const AccountPage());
+      create: (context) => sl<AccountPageBloc>()..add(AccountPageLoadEvent()),
+      child: const AccountPage(),
+    );
   }
 }
 
@@ -36,12 +38,15 @@ class AccountPage extends BaseDynamicContentScreen {
             return const Center(child: CircularProgressIndicator());
           case AccountPageLoadedState():
             return Scaffold(
-              appBar: AppBar(
-                backgroundColor: AppStyle.neutral00,
-                title: const Text(LocalizationConstants.account),
-                centerTitle: false,
-                automaticallyImplyLeading: false,
-              ),
+              appBar: context.read<AuthCubit>().state.status ==
+                      AuthStatus.authenticated
+                  ? null
+                  : AppBar(
+                      backgroundColor: AppStyle.neutral00,
+                      title: const Text(LocalizationConstants.account),
+                      centerTitle: false,
+                      automaticallyImplyLeading: false,
+                    ),
               body: ListView(
                 children: [
                   Container(
@@ -68,19 +73,7 @@ class AccountPage extends BaseDynamicContentScreen {
                                           .loadAuthenticationState();
                                     }
                                   },
-                                  child: ListTile(
-                                    leading: CircleAvatar(
-                                      backgroundColor: Colors.blue,
-                                      child: Text(
-                                        "Jane Doe"[0],
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                    ),
-                                    title: const Text("Jane Doe"),
-                                    subtitle:
-                                        const Text("jane.doe@example.com"),
-                                  ),
+                                  child: const _AccountHeader(),
                                 )
                               : Column(
                                   children: [
@@ -118,6 +111,35 @@ class AccountPage extends BaseDynamicContentScreen {
                 child: Text(LocalizationConstants.errorLoadingAccount));
         }
       },
+    );
+  }
+}
+
+class _AccountHeader extends StatelessWidget {
+  const _AccountHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => sl<AccountHeaderCubit>()..loadAccountHeader(),
+      child: BlocBuilder<AccountHeaderCubit, AccountHeaderState>(
+        builder: (context, state) {
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Colors.blue,
+              child: Text(
+                state is AccountHeaderLoaded ? state.firstName[0] : '',
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+            title: Text(
+              (state is AccountHeaderLoaded ? state.firstName : '') +
+                  (state is AccountHeaderLoaded ? state.lastName : ''),
+            ),
+            subtitle: Text(state is AccountHeaderLoaded ? state.email : ''),
+          );
+        },
+      ),
     );
   }
 }
