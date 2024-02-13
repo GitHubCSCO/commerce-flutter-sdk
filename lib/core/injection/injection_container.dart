@@ -43,7 +43,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => DomainRedirectCubit(domainSelectionUsecase: sl()))
 
     //domain selection
-    ..registerFactory(() => DomainSelectionCubit(sl()))
+    ..registerFactory(() => DomainSelectionCubit(domainSelectionUsecase: sl()))
     ..registerFactory(() => DomainSelectionUsecase())
 
     //login

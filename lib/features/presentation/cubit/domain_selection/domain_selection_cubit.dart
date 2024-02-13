@@ -9,8 +9,8 @@ part 'domain_selection_state.dart';
 class DomainSelectionCubit extends Cubit<DomainSelectionState> {
   final DomainSelectionUsecase _domainSelectionUsecase;
 
-  DomainSelectionCubit(this._domainSelectionUsecase)
-      : super(DomainSelectionInitial());
+  DomainSelectionCubit({required DomainSelectionUsecase domainSelectionUsecase})
+      : _domainSelectionUsecase = domainSelectionUsecase, super(DomainSelectionInitial());
 
   Future<void> selectDomain(String domain) async {
     emit(DomainSelectionInProgress());
