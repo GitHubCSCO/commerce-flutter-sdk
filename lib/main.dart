@@ -35,7 +35,7 @@ void initialHiveDatabase() async {
 }
 
 void initCommerceSDK() {
-  ClientConfig.hostUrl = TestConfigConstants.url;
+  ClientConfig.hostUrl = null;
   ClientConfig.clientId = TestConfigConstants.clientId;
   ClientConfig.clientSecret = TestConfigConstants.clientSecret;
 }

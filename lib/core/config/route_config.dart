@@ -6,6 +6,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/routing/route_
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/root/root_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/search_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/shop/shop_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/domain_selection_screen.dart';
@@ -19,7 +20,7 @@ final GlobalKey<NavigatorState> _rootNavigator = GlobalKey(debugLabel: 'root');
 GoRouter getRouter() {
   return GoRouter(
     navigatorKey: _rootNavigator,
-    initialLocation: AppRoute.welcome.fullPath,
+    initialLocation: AppRoute.root.fullPath,
     routes: [generateRoutes(_getNavigationRoot())],
   );
 }
@@ -27,9 +28,17 @@ GoRouter getRouter() {
 NavigationNode _getNavigationRoot() {
   // path: /
   final root = createNode(
+    path: AppRoute.root.fullPath,
+    name: AppRoute.root.name,
+    builder: (context, state) => const RootScreen(),
+  );
+
+  // path: /welcome
+  final welcome = createNode(
     name: AppRoute.welcome.name,
     path: AppRoute.welcome.suffix,
     builder: (context, state) => const WelcomeScreen(),
+    parent: root,
   );
 
   // path: /domainSelection
@@ -110,20 +119,6 @@ NavigationNode _getNavigationRoot() {
     navigatorKey: _rootNavigator,
     parent: root,
   );
-
-  // final prodList = createNode(
-  //   name: AppRoute.productList.name,
-  //   path: AppRoute.productList.suffix,
-  //   builder: (context, state) => const ProductListScreen(),
-  //   parent: shop,
-  // );
-
-  // final prodDetails = createNode(
-  //   name: AppRoute.productDetails.name,
-  //   path: AppRoute.productDetails.suffix,
-  //   builder: null,
-  //   parent: root,
-  // );
-
+  
   return root;
 }
