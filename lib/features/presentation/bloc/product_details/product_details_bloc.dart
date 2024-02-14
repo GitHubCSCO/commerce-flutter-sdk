@@ -31,10 +31,9 @@ class ProductDetailsBloc
 
   Future<void> _makeAllDetailsItems(
       ProductEntity productData, Emitter<ProductDetailsState> emit) async {
-    final productDetailsWidgetsList =
+    final productDetailsEntotities =
         _productDetailsUseCase.makeAllDetailsItems(productData);
-    emit(ProductDetailsLoaded(
-        product: productData,
-        productDetailsWidgets: productDetailsWidgetsList));
+    emit(
+        ProductDetailsLoaded(productDetailsEntities: productDetailsEntotities));
   }
 }

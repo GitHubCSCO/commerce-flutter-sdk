@@ -1,9 +1,9 @@
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-extension UrlStringExtensions on String {
+extension UrlStringExtensions on String? {
   String makeValidUrl() {
-    String urlString = this;
+    String urlString = this!;
     if (urlString.isNotEmpty) {
       if (!urlString.startsWith("http")) {
         urlString = "https://$urlString";
@@ -21,7 +21,7 @@ extension UrlStringExtensions on String {
   }
 
   String makeSimpleUrl() {
-    String urlString = this;
+    String urlString = this!;
     if (urlString.isNotEmpty) {
       if (urlString.contains("https://")) {
         urlString = urlString.replaceAll("https://", '');
@@ -41,7 +41,7 @@ extension UrlStringExtensions on String {
   }
 
   String makeImageUrl({bool useNotImageImage = true}) {
-    String imagePath = this;
+    String imagePath = this!;
     if (imagePath.isEmpty) {
       if (useNotImageImage) {
         return '';
@@ -63,7 +63,7 @@ extension UrlStringExtensions on String {
   }
 
   String makeAbsoluteUrl() {
-    String path = this;
+    String path = this!;
     if (path.isEmpty) {
       return '';
     }

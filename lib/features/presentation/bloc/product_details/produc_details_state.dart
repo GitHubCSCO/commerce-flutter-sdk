@@ -1,5 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_base_entity.dart';
 
 abstract class ProductDetailsState {}
 
@@ -8,11 +7,10 @@ class ProductDetailsInitial extends ProductDetailsState {}
 class ProductDetailsLoading extends ProductDetailsState {}
 
 class ProductDetailsLoaded extends ProductDetailsState {
-  final ProductEntity product;
-  List<ProdcutDeatilsPageWidgets> productDetailsWidgets = [];
+  List<ProductDetailsBaseEntity> productDetailsEntities = [];
 
   ProductDetailsLoaded(
-      {required this.product, required this.productDetailsWidgets});
+      {required this.productDetailsEntities});
 }
 
 class ProductDetailsErrorState extends ProductDetailsState {
