@@ -16,6 +16,7 @@ class Input extends StatefulWidget {
   final TextAlign textAlign;
   final TextDirection? textDirection;
   final TextInputAction? textInputAction;
+  final void Function(bool hasFocus)? focusListener;
 
   const Input({
     super.key,
@@ -33,6 +34,7 @@ class Input extends StatefulWidget {
     this.label,
     this.obscureText = false,
     this.textAlign = TextAlign.start,
+    this.focusListener,
   });
 
   @override
@@ -61,6 +63,12 @@ class _InputState extends State<Input> {
 
     _scrollController = ScrollController();
     _focusNode.addListener(_resetScroll);
+
+    if (widget.focusListener != null) {
+      _focusNode.addListener(() {
+        widget.focusListener!(_focusNode.hasFocus);
+      });
+    }
 
     super.initState();
   }

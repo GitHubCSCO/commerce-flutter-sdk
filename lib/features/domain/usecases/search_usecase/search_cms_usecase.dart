@@ -3,8 +3,8 @@ import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/content_management_usecase/cms_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class SearchUseCase extends CmsUseCase {
-  SearchUseCase({PageContentType? contentType})
+class SearchCmsUseCase extends CmsUseCase {
+  SearchCmsUseCase({PageContentType? contentType})
       : super(contentType: contentType);
 
   @override

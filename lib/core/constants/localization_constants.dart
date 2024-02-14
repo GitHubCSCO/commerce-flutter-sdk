@@ -164,6 +164,7 @@ class LocalizationConstants {
   static const sharedWith = "Shared with {0} others";
   static const sharedBy = "Shared by {0}";
   static const items = "{0} Items";
+  static const itemNumber = "Item # %s";
   static const removeItem = "Remove Item";
   static const removeItemInfoMessage =
       "Changing quantity to zero will remove this item from your list. Are you sure?";
@@ -305,7 +306,7 @@ class LocalizationConstants {
   static const searchNoResults = "Your search returned no results.";
   static const searchPrompt = "Search for products.";
   static const sort = "Sort";
-  static const resultsFor = "{0} result(s) for {1}";
+  static const resultsFor = "%s result(s) for '%s'";
   static const searchInsteadFor = "Search instead for {0}";
   static const didYouMean = "Did you mean {0}";
   static const autocompleteCategoryOrBrandCombinedTitle = "{0} in {1}";
