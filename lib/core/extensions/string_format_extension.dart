@@ -1,5 +1,5 @@
 extension StringFormatExtension on String {
-  String formatDynamic(List<dynamic>? replacements) {
+  String format(List<dynamic>? replacements) {
     if (replacements == null || replacements.isEmpty) {
       return this;
     }

@@ -30,71 +30,38 @@ class SearchScreen extends StatelessWidget {
 
 class SearchPage extends BaseDynamicContentScreen {
 
-  bool _hasFocus = false;
-  String _searchQuery = "";
-
-  SearchPage({super.key});
+  const SearchPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<SearchQueryBloc, SearchQueryState>(
-            listener: (_, state) {
-              // switch (state.runtimeType) {
-              //   case SearchQueryFocusState:
-              //     if(_hasFocus && _searchQuery.isNotEmpty) {
-              //       //call search product api
-              //     }
-              //   case SearchQueryTypingState:
-              //     //call search product api
-              //   case SearchQueryUnFocusState:
-              //     if(_hasFocus && _searchQuery.isNotEmpty) {
-              //       //call search product api
-              //     }
-              // }
-            }
-        ),
-      ],
-      child: Column(
-        children: [
-          const SizedBox(height: 36),
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-            child: Input(
-              hintText: LocalizationConstants.search,
-              onTapOutside: (context) =>
-                  FocusManager.instance.primaryFocus?.unfocus(),
-              textInputAction: TextInputAction.search,
-              focusListener: (bool hasFocus) {
-                if (hasFocus) {
-                  print('TextField is focused');
-                  // _hasFocus = true;
-                  context.read<SearchQueryBloc>().add(SearchQueryFocusEvent());
-                } else {
-                  print('TextField lost focus');
-                  // _hasFocus = false;
-                  context
-                      .read<SearchQueryBloc>()
-                      .add(SearchQueryUnFocusEvent());
-                }
-              },
-              onChanged: (String searchQuery) {
-                print(searchQuery);
-                // _searchQuery = searchQuery;
-                context
-                    .read<SearchQueryBloc>()
-                    .add(SearchQueryTypingEvent(searchQuery));
-              },
-              onSubmitted: (String query) {
-                context
-                    .read<SearchQueryBloc>()
-                    .add(SearchQuerySearchEvent());
-              },
-            ),
+    return Column(
+      children: [
+        const SizedBox(height: 36),
+        Container(
+          color: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+          child: Input(
+            hintText: LocalizationConstants.search,
+            onTapOutside: (context) =>
+                FocusManager.instance.primaryFocus?.unfocus(),
+            textInputAction: TextInputAction.search,
+            focusListener: (bool hasFocus) {
+              if (hasFocus) {
+                context.read<SearchQueryBloc>().add(SearchQueryFocusEvent());
+              } else {
+                context.read<SearchQueryBloc>().add(SearchQueryUnFocusEvent());
+              }
+            },
+            onChanged: (String searchQuery) {
+              context.read<SearchQueryBloc>().add(SearchQueryTypingEvent(searchQuery));
+            },
+            onSubmitted: (String query) {
+              context.read<SearchQueryBloc>().add(SearchQuerySearchEvent());
+            },
           ),
-          BlocBuilder<SearchQueryBloc, SearchQueryState>(
+        ),
+        Expanded(
+          child: BlocBuilder<SearchQueryBloc, SearchQueryState>(
               builder: (context, state) {
                 switch (state.runtimeType) {
                   case SearchQueryCmsInitialState:
@@ -108,9 +75,7 @@ class SearchPage extends BaseDynamicContentScreen {
                           case SearchPageCmsLoadedState():
                             return BlocListener<AuthCubit, AuthState>(
                               listener: (context, state) {
-                                context
-                                    .read<SearchPageCmsBloc>()
-                                    .add(SearchPageCmsLoadEvent());
+                                context.read<SearchPageCmsBloc>().add(SearchPageCmsLoadEvent());
                               },
                               child: Expanded(
                                 child: ListView(
@@ -153,9 +118,9 @@ class SearchPage extends BaseDynamicContentScreen {
                         child: Text(LocalizationConstants.errorLoadingSearchLanding));
                 }
               }
-          )
-        ],
-      ),
+          ),
+        )
+      ],
     );
   }
 }

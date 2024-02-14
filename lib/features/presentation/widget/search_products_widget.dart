@@ -12,91 +12,44 @@ class SearchProductsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              LocalizationConstants.resultsFor.formatDynamic([
-                productCollectionResult.products?.length ?? 0,
-                productCollectionResult.originalQuery
-              ]),
-              style: const TextStyle(
-                color: Color(0xFF222222),
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          child: Text(
+            LocalizationConstants.resultsFor.format([
+              productCollectionResult.products?.isEmpty ?? true
+                  ? LocalizationConstants.no
+                  : productCollectionResult.products!.length,
+              productCollectionResult.originalQuery
+            ]),
+            style: const TextStyle(
+              color: Color(0xFF222222),
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
             ),
           ),
-          Expanded(
-            child: ListView.separated(
-              padding: EdgeInsets.zero,
-              separatorBuilder: (context, index) => const Divider(
-                height: 1,
-                indent: 16,
-                endIndent: 16,
-                color: Color(0xFFF5F5F5),
-              ),
-              itemCount: productCollectionResult.products?.length ?? 0,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                final product = productCollectionResult.products![index];
-                return SearchProductWidget(product: product);
-              },
+        ),
+        Expanded(
+          child: ListView.separated(
+            padding: EdgeInsets.zero,
+            separatorBuilder: (context, index) => const Divider(
+              height: 1,
+              indent: 16,
+              endIndent: 16,
+              color: Color(0xFFF5F5F5),
             ),
+            itemCount: productCollectionResult.products?.length ?? 0,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              final product = productCollectionResult.products![index];
+              return SearchProductWidget(product: product);
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
-    // return Column(
-    //   children: [
-    //     // if(autocompleteResult.categories != null && autocompleteResult.categories!.isNotEmpty)
-    //     //   Container(
-    //     //     padding: const EdgeInsets.symmetric(horizontal: 16),
-    //     //     decoration: const BoxDecoration(color: Colors.white),
-    //     //     child: ListView.builder(
-    //     //       itemCount: autocompleteResult.categories!.length,
-    //     //       shrinkWrap: true,
-    //     //       physics: const NeverScrollableScrollPhysics(),
-    //     //       itemBuilder: (context, index) {
-    //     //         final autoCompleteCategory = autocompleteResult.categories![index];
-    //     //         return ActionListItemWidget(action: action);
-    //     //       },
-    //     //     ),
-    //     //   ),
-    //     // if(autocompleteResult.brands != null && autocompleteResult.brands!.isNotEmpty)
-    //     //   Container(
-    //     //     padding: const EdgeInsets.symmetric(horizontal: 16),
-    //     //     decoration: const BoxDecoration(color: Colors.white),
-    //     //     child: ListView.builder(
-    //     //       itemCount: autocompleteResult.brands!.length,
-    //     //       shrinkWrap: true,
-    //     //       physics: const NeverScrollableScrollPhysics(),
-    //     //       itemBuilder: (context, index) {
-    //     //         final autoCompleteBrand = autocompleteResult.brands![index];
-    //     //         return ActionListItemWidget(action: autoCompleteBrand);
-    //     //       },
-    //     //     ),
-    //     //   ),
-    //     if(autocompleteResult.products != null && autocompleteResult.products!.isNotEmpty)
-    //       Container(
-    //         padding: const EdgeInsets.symmetric(horizontal: 16),
-    //         decoration: const BoxDecoration(color: Colors.white),
-    //         child: Expanded(
-    //           child: ListView.builder(
-    //             itemCount: autocompleteResult.products!.length,
-    //             shrinkWrap: true,
-    //             itemBuilder: (context, index) {
-    //               final autoCompleteProduct = autocompleteResult.products![index];
-    //               return AutoCompleteProductWidget(autocompleteProduct: autoCompleteProduct);
-    //             },
-    //           ),
-    //         ),
-    //       ),
-    //   ],
-    // );
   }
 
 }
@@ -149,7 +102,7 @@ class SearchProductWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  LocalizationConstants.itemNumber.formatDynamic([product.erpNumber ?? '']),
+                  LocalizationConstants.itemNumber.format([product.erpNumber ?? '']),
                   style: const TextStyle(
                     color: Color(0xFF707070),
                     fontSize: 12,

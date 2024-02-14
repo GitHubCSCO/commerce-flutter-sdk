@@ -11,70 +11,21 @@ class AutoCompleteWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView.separated(
-        padding: EdgeInsets.zero,
-        separatorBuilder: (context, index) => const Divider(
-          height: 1,
-          indent: 16,
-          endIndent: 16,
-          color: Color(0xFFF5F5F5),
-        ),
-        itemCount: autocompleteResult.products!.length,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          final autoCompleteProduct = autocompleteResult.products![index];
-          return AutoCompleteProductWidget(autocompleteProduct: autoCompleteProduct);
-        },
+    return ListView.separated(
+      padding: EdgeInsets.zero,
+      separatorBuilder: (context, index) => const Divider(
+        height: 1,
+        indent: 16,
+        endIndent: 16,
+        color: Color(0xFFF5F5F5),
       ),
+      itemCount: autocompleteResult.products!.length,
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        final autoCompleteProduct = autocompleteResult.products![index];
+        return AutoCompleteProductWidget(autocompleteProduct: autoCompleteProduct);
+      },
     );
-    // return Column(
-    //   children: [
-    //     // if(autocompleteResult.categories != null && autocompleteResult.categories!.isNotEmpty)
-    //     //   Container(
-    //     //     padding: const EdgeInsets.symmetric(horizontal: 16),
-    //     //     decoration: const BoxDecoration(color: Colors.white),
-    //     //     child: ListView.builder(
-    //     //       itemCount: autocompleteResult.categories!.length,
-    //     //       shrinkWrap: true,
-    //     //       physics: const NeverScrollableScrollPhysics(),
-    //     //       itemBuilder: (context, index) {
-    //     //         final autoCompleteCategory = autocompleteResult.categories![index];
-    //     //         return ActionListItemWidget(action: action);
-    //     //       },
-    //     //     ),
-    //     //   ),
-    //     // if(autocompleteResult.brands != null && autocompleteResult.brands!.isNotEmpty)
-    //     //   Container(
-    //     //     padding: const EdgeInsets.symmetric(horizontal: 16),
-    //     //     decoration: const BoxDecoration(color: Colors.white),
-    //     //     child: ListView.builder(
-    //     //       itemCount: autocompleteResult.brands!.length,
-    //     //       shrinkWrap: true,
-    //     //       physics: const NeverScrollableScrollPhysics(),
-    //     //       itemBuilder: (context, index) {
-    //     //         final autoCompleteBrand = autocompleteResult.brands![index];
-    //     //         return ActionListItemWidget(action: autoCompleteBrand);
-    //     //       },
-    //     //     ),
-    //     //   ),
-    //     if(autocompleteResult.products != null && autocompleteResult.products!.isNotEmpty)
-    //       Container(
-    //         padding: const EdgeInsets.symmetric(horizontal: 16),
-    //         decoration: const BoxDecoration(color: Colors.white),
-    //         child: Expanded(
-    //           child: ListView.builder(
-    //             itemCount: autocompleteResult.products!.length,
-    //             shrinkWrap: true,
-    //             itemBuilder: (context, index) {
-    //               final autoCompleteProduct = autocompleteResult.products![index];
-    //               return AutoCompleteProductWidget(autocompleteProduct: autoCompleteProduct);
-    //             },
-    //           ),
-    //         ),
-    //       ),
-    //   ],
-    // );
   }
 
 }
@@ -127,7 +78,7 @@ class AutoCompleteProductWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  LocalizationConstants.itemNumber.formatDynamic([autocompleteProduct.erpNumber ?? '']),
+                  LocalizationConstants.itemNumber.format([autocompleteProduct.erpNumber ?? '']),
                   style: const TextStyle(
                     color: Color(0xFF707070),
                     fontSize: 12,

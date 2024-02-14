@@ -312,6 +312,7 @@ class LocalizationConstants {
   static const autocompleteCategoryOrBrandCombinedTitle = "{0} in {1}";
   static const autocompleteSearchCategoryGroupTitle = "Categories";
   static const autocompleteSearchBrandGroupTitle = "Brands";
+  static const no = "No";
 
   // Cart
   static const cart = "Cart";
