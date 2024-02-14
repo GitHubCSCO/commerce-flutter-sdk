@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/config/route_config.dart';
 import 'package:commerce_flutter_app/features/domain/service/commerce_api_service_provider.dart';
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/core_service_provider.dart';
@@ -34,6 +35,8 @@ final sl = GetIt.instance;
 
 Future<void> initInjectionContainer() async {
   sl
+    //router
+    ..registerLazySingleton(() => getRouter())
 
     //auth
     ..registerFactory(() => AuthCubit(authUsecase: sl()))
