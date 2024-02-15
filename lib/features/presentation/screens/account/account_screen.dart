@@ -49,55 +49,7 @@ class AccountPage extends BaseDynamicContentScreen {
                     ),
               body: ListView(
                 children: [
-                  Container(
-                    color: AppStyle.neutral00,
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppStyle.defaultHorizontalPadding,
-                        vertical: AppStyle.defaultVerticalPadding,
-                      ),
-                      child: BlocConsumer<AuthCubit, AuthState>(
-                        listener: (context, state) {
-                          context
-                              .read<AccountPageBloc>()
-                              .add(AccountPageLoadEvent());
-                        },
-                        builder: (context, state) {
-                          return state.status == AuthStatus.authenticated
-                              ? BlocListener<LogoutCubit, LogoutState>(
-                                  listener: (context, state) {
-                                    if (state is LogoutSuccess) {
-                                      context
-                                          .read<AuthCubit>()
-                                          .loadAuthenticationState();
-                                    }
-                                  },
-                                  child: const _AccountHeader(),
-                                )
-                              : Column(
-                                  children: [
-                                    Text(
-                                      SiteMessageConstants
-                                          .defalutMobileAppAccountUnauthenticatedDescription,
-                                    ),
-                                    const SizedBox(
-                                        height:
-                                            AppStyle.defaultVerticalPadding),
-                                    PrimaryButton(
-                                      child: const Text(
-                                          LocalizationConstants.signIn),
-                                      onPressed: () {
-                                        AppRoute.login
-                                            .navigateBackStack(context);
-                                      },
-                                    ),
-                                  ],
-                                );
-                        },
-                      ),
-                    ),
-                  ),
+                  const _AccountHeader(),
                   const SizedBox(height: AppStyle.defaultVerticalPadding),
                   ...buildContentWidgets(state.pageWidgets),
                 ],
@@ -120,26 +72,84 @@ class _AccountHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<AccountHeaderCubit>()..loadAccountHeader(),
-      child: BlocBuilder<AccountHeaderCubit, AccountHeaderState>(
-        builder: (context, state) {
-          return ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.blue,
-              child: Text(
-                state is AccountHeaderLoaded ? state.firstName[0] : '',
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
-            title: Text(
-              (state is AccountHeaderLoaded ? state.firstName : '') +
-                  (state is AccountHeaderLoaded ? state.lastName : ''),
-            ),
-            subtitle: Text(state is AccountHeaderLoaded ? state.email : ''),
-          );
-        },
+    return Container(
+      color: AppStyle.neutral00,
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppStyle.defaultHorizontalPadding,
+          vertical: AppStyle.defaultVerticalPadding,
+        ),
+        child: BlocConsumer<AuthCubit, AuthState>(
+          listener: (context, state) {
+            context.read<AccountPageBloc>().add(AccountPageLoadEvent());
+          },
+          builder: (context, state) {
+            return state.status == AuthStatus.authenticated
+                ? const _AccountLoggedInHeader()
+                : const _AccountLoggedOutHeader();
+          },
+        ),
       ),
+    );
+  }
+}
+
+class _AccountLoggedInHeader extends StatelessWidget {
+  const _AccountLoggedInHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<LogoutCubit, LogoutState>(
+      listener: (context, state) {
+        if (state is LogoutSuccess) {
+          context.read<AuthCubit>().loadAuthenticationState();
+        }
+      },
+      child: BlocProvider(
+        create: (context) => sl<AccountHeaderCubit>()..loadAccountHeader(),
+        child: BlocBuilder<AccountHeaderCubit, AccountHeaderState>(
+          builder: (context, state) {
+            return ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.blue,
+                child: Text(
+                  state is AccountHeaderLoaded ? state.firstName[0] : '',
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+              title: Text(
+                (state is AccountHeaderLoaded ? state.firstName : '') +
+                    (state is AccountHeaderLoaded ? state.lastName : ''),
+              ),
+              subtitle: Text(state is AccountHeaderLoaded ? state.email : ''),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _AccountLoggedOutHeader extends StatelessWidget {
+  const _AccountLoggedOutHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          SiteMessageConstants
+              .defalutMobileAppAccountUnauthenticatedDescription,
+        ),
+        const SizedBox(height: AppStyle.defaultVerticalPadding),
+        PrimaryButton(
+          child: const Text(LocalizationConstants.signIn),
+          onPressed: () {
+            AppRoute.login.navigateBackStack(context);
+          },
+        ),
+      ],
     );
   }
 }
