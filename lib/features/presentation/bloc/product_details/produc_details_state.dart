@@ -9,8 +9,7 @@ class ProductDetailsLoading extends ProductDetailsState {}
 class ProductDetailsLoaded extends ProductDetailsState {
   List<ProductDetailsBaseEntity> productDetailsEntities = [];
 
-  ProductDetailsLoaded(
-      {required this.productDetailsEntities});
+  ProductDetailsLoaded({required this.productDetailsEntities});
 }
 
 class ProductDetailsErrorState extends ProductDetailsState {

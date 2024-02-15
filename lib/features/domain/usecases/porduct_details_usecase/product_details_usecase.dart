@@ -1,10 +1,13 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_detail_item_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_base_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_description_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_image_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/specification_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
@@ -16,7 +19,8 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 enum ProdcutDeatilsPageWidgets {
   productDetailsDescription,
   productDetailsSpecification,
-  productDetailsGeneralInfo
+  productDetailsGeneralInfo,
+  productDetailsAddtoCart
 }
 
 class ProductDetailsUseCase extends BaseUseCase {
@@ -26,6 +30,9 @@ class ProductDetailsUseCase extends BaseUseCase {
   late ProductSettings? productSettings;
   late ProductUnitOfMeasure? chosenUnitOfMeasure;
   late StyledProductEntity? styledProduct;
+  late int? quantity;
+
+  late ProductPriceEntity? productPricing;
 
   ProductDetailsUseCase(
       {this.productParameter,
@@ -33,6 +40,8 @@ class ProductDetailsUseCase extends BaseUseCase {
       this.accountSettings,
       this.productSettings,
       this.chosenUnitOfMeasure,
+      this.quantity,
+      this.productPricing,
       this.styledProduct})
       : super();
 
@@ -162,10 +171,81 @@ class ProductDetailsUseCase extends BaseUseCase {
     return genralInfoEntity;
   }
 
+  // ProductDetailAddtoCartEntity makeAddToCartEntity(ProductEntity product) {
+  //   var addToCartEntity = ProductDetailAddtoCartEntity(
+  //       isAddToCartAllowed: false,
+  //       addToCartButtonEnabled: false,
+  //       addToCartButtonText: LocalizationConstants.addToCart,
+  //       showHidePricing: true,
+  //       detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart);
+
+  //   //  var isAddToCartButtonAvailable = !this.IsOffline && this.hasCheckout;
+  //   //     isAddToCartButtonAvailable &= this.addToCartEnabled;
+  //   //     isAddToCartButtonAvailable &= !this.product.CantBuy;
+  //   //     isAddToCartButtonAvailable &= this.product.AllowedAddToCart && !this.product.CanConfigure;
+  //   //     this.addToCartViewModel.IsAddToCartAllowed = isAddToCartButtonAvailable;
+
+  //   addToCartEntity = updateAddToCartEntity(product, addToCartEntity);
+  //   return addToCartEntity;
+  // }
+
+  // ProductDetailAddtoCartEntity updateAddToCartEntity(
+  //     ProductEntity product, ProductDetailAddtoCartEntity addToCartEntity) {
+  //   if (addToCartEntity == null) {
+  //     return;
+  //   }
+
+  //   // addToCartEntity = addToCartEntity.copyWith(isLoadingPrice: isLoadingPrice);
+  //   var productUnitOfMeasures = styledProduct == null
+  //       ? product.productUnitOfMeasures
+  //       : styledProduct?.productUnitOfMeasures;
+
+  //   if (productUnitOfMeasures != null && productUnitOfMeasures.length > 0) {
+  //     addToCartEntity = addToCartEntity.copyWith(
+  //       isUnitOfMeasuresVisible:
+  //           productUnitOfMeasures.length > 1 && alternateUnitsOfMeasureEnabled,
+  //       productUnitOfMeasures:
+  //           List<ProductUnitOfMeasure>.from(productUnitOfMeasures),
+  //       selectedUnitOfMeasure: chosenUnitOfMeasure,
+  //     );
+  //   } else {
+  //     addToCartEntity = addToCartEntity.copyWith(
+  //       isUnitOfMeasuresVisible: false,
+  //       productUnitOfMeasures: <ProductUnitOfMeasure>[],
+  //       selectedUnitOfMeasure: null,
+  //     );
+  //   }
+
+  //   // update subtotal value
+  //   var isQuoteRequired = styledProduct != null
+  //       ? styledProduct?.quoteRequired
+  //       : product.quoteRequired;
+  //   var shouldHideSubtotalValue = (quantity! < 1) || isQuoteRequired!;
+
+  //   if (shouldHideSubtotalValue || productPricing == null) {
+  //     addToCartEntity = addToCartEntity.copyWith(subtotalValueText: '');
+  //   } else if (productPricing?.extendedUnitNetPriceDisplay == null) {
+  //     addToCartEntity = addToCartEntity.copyWith(
+  //         subtotalValueText: SiteMessageConstants.valueRealTimePricingLoadFail);
+  //   } else if (productPricing?.extendedUnitNetPrice == 0) {
+  //     addToCartEntity = addToCartEntity.copyWith(
+  //         subtotalValueText: SiteMessageConstants.valuePricingZeroPriceMessage);
+  //   } else {
+  //     addToCartEntity = addToCartEntity.copyWith(
+  //         subtotalValueText: productPricing?.extendedUnitNetPriceDisplay);
+  //   }
+
+  //   addToCartEntity = addToCartEntity.copyWith(
+  //       selectedUnitOfMeasureValueText: productPricing
+  //           ?.getUnitOfMeasure(addToCartEntity.selectedUnitOfMeasureValueText));
+  // }
+
   List<ProductDetailsBaseEntity> makeAllDetailsItems(ProductEntity product) {
     List<ProductDetailsBaseEntity> items = [];
 
     items.add(makeGeneralInfoEntity(product));
+
+    items.add(ProductDetailAddtoCartEntity(detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart));
 
     if (product.htmlContent != null) {
       items.add(ProductDetailsDescriptionEntity(

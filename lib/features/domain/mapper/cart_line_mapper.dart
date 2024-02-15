@@ -2,13 +2,13 @@ import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dar
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class AddCartLineMapper {
-  AddCartLineEntity toEntity(AddCartLine model) => AddCartLineEntity(
-        productId: model.productId,
-        qtyOrdered: model.qtyOrdered,
-        unitOfMeasure: model.unitOfMeasure,
-        notes: model.notes,
-        vmiBinId: model.vmiBinId,
-        sectionOptions: model.sectionOptions
+  AddCartLineEntity toEntity(AddCartLine? model) => AddCartLineEntity(
+        productId: model?.productId,
+        qtyOrdered: model?.qtyOrdered,
+        unitOfMeasure: model?.unitOfMeasure,
+        notes: model?.notes,
+        vmiBinId: model?.vmiBinId,
+        sectionOptions: model?.sectionOptions
             ?.map((e) => SectionOptionEntityMapper().toEntity(e))
             .toList(),
       );
@@ -45,26 +45,26 @@ class SectionOptionEntityMapper {
 }
 
 class ProductSubscriptionEntityMapper {
-  ProductSubscriptionEntity toEntity(ProductSubscriptionDto model) =>
+  ProductSubscriptionEntity toEntity(ProductSubscriptionDto? model) =>
       ProductSubscriptionEntity(
-        subscriptionAddToInitialOrder: model.subscriptionAddToInitialOrder,
-        subscriptionAllMonths: model.subscriptionAllMonths,
-        subscriptionApril: model.subscriptionApril,
-        subscriptionAugust: model.subscriptionAugust,
-        subscriptionCyclePeriod: model.subscriptionCyclePeriod,
-        subscriptionDecember: model.subscriptionDecember,
-        subscriptionFebruary: model.subscriptionFebruary,
-        subscriptionFixedPrice: model.subscriptionFixedPrice,
-        subscriptionJanuary: model.subscriptionJanuary,
-        subscriptionJuly: model.subscriptionJuly,
-        subscriptionJune: model.subscriptionJune,
-        subscriptionMarch: model.subscriptionMarch,
-        subscriptionMay: model.subscriptionMay,
-        subscriptionNovember: model.subscriptionNovember,
-        subscriptionOctober: model.subscriptionOctober,
-        subscriptionPeriodsPerCycle: model.subscriptionPeriodsPerCycle,
-        subscriptionSeptember: model.subscriptionSeptember,
-        subscriptionShipViaId: model.subscriptionShipViaId,
-        subscriptionTotalCycles: model.subscriptionTotalCycles,
+        subscriptionAddToInitialOrder: model?.subscriptionAddToInitialOrder,
+        subscriptionAllMonths: model?.subscriptionAllMonths,
+        subscriptionApril: model?.subscriptionApril,
+        subscriptionAugust: model?.subscriptionAugust,
+        subscriptionCyclePeriod: model?.subscriptionCyclePeriod,
+        subscriptionDecember: model?.subscriptionDecember,
+        subscriptionFebruary: model?.subscriptionFebruary,
+        subscriptionFixedPrice: model?.subscriptionFixedPrice,
+        subscriptionJanuary: model?.subscriptionJanuary,
+        subscriptionJuly: model?.subscriptionJuly,
+        subscriptionJune: model?.subscriptionJune,
+        subscriptionMarch: model?.subscriptionMarch,
+        subscriptionMay: model?.subscriptionMay,
+        subscriptionNovember: model?.subscriptionNovember,
+        subscriptionOctober: model?.subscriptionOctober,
+        subscriptionPeriodsPerCycle: model?.subscriptionPeriodsPerCycle,
+        subscriptionSeptember: model?.subscriptionSeptember,
+        subscriptionShipViaId: model?.subscriptionShipViaId,
+        subscriptionTotalCycles: model?.subscriptionTotalCycles,
       );
 }

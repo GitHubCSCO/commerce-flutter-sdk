@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/attribute_type_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
@@ -37,7 +38,7 @@ class ProductEntityMapper {
         mediumImagePath: model.mediumImagePath,
         largeImagePath: model.largeImagePath,
         pricing: model.pricing != null
-            ? ProductPriceEntityMapper().toEntity(model.pricing!)
+            ? ProductPriceEntityMapper().toEntity(model.pricing)
             : null,
         currencySymbol: model.currencySymbol,
         qtyOnHand: model.qtyOnHand,
@@ -87,8 +88,7 @@ class ProductEntityMapper {
         roundingRule: model.roundingRule,
         vendorNumber: model.vendorNumber,
         configurationDto: model.configurationDto != null
-            ? LegacyConfigurationEntityMapper()
-                .toEntity(model.configurationDto!)
+            ? LegacyConfigurationEntityMapper().toEntity(model.configurationDto)
             : null,
         unitOfMeasure: model.unitOfMeasure,
         unitOfMeasureDisplay: model.unitOfMeasureDisplay,
@@ -110,7 +110,7 @@ class ProductEntityMapper {
         numberInCart: model.numberInCart,
         qtyOrdered: model.qtyOrdered,
         availability: model.availability != null
-            ? AvailabilityEntityMapper().toEntity(model.availability!)
+            ? AvailabilityEntityMapper().toEntity(model.availability)
             : null,
         styleTraits: model.styleTraits
             ?.map((e) => StyleTraitEntityMapper().toEntity(e))
@@ -144,14 +144,14 @@ class ProductEntityMapper {
         salePriceLabel: model.salePriceLabel,
         productSubscription: model.productSubscription != null
             ? ProductSubscriptionEntityMapper()
-                .toEntity(model.productSubscription!)
+                .toEntity(model.productSubscription)
             : null,
         replacementProductId: model.replacementProductId,
         warehouses: model.warehouses
             ?.map((e) => InventoryWarehouseEntityMapper().toEntity(e))
             .toList(),
         brand: model.brand != null
-            ? BrandEntityMapper().toEntity(model.brand!)
+            ? BrandEntityMapper().toEntity(model.brand)
             : null,
         productNumber: model.productNumber,
         customerProductNumber: model.customerProductNumber,
@@ -166,19 +166,19 @@ class ProductEntityMapper {
         variantTypeId: model.variantTypeId,
         cantBuy: model.cantBuy,
         productLine: model.productLine != null
-            ? ProductLineEntityMapper().toEntity(model.productLine!)
+            ? ProductLineEntityMapper().toEntity(model.productLine)
             : null,
         unitOfMeasures: model.unitOfMeasures
             ?.map((e) => ProductUnitOfMeasureEntityMapper().toEntity(e))
             .toList(),
         scoreExplanation: model.scoreExplanation != null
-            ? ScoreExplanationEntityMapper().toEntity(model.scoreExplanation!)
+            ? ScoreExplanationEntityMapper().toEntity(model.scoreExplanation)
             : null,
         detail: model.detail != null
-            ? ProductDetailEntityMapper().toEntity(model.detail!)
+            ? ProductDetailEntityMapper().toEntity(model.detail)
             : null,
         content: model.content != null
-            ? ProductContentEntityMapper().toEntity(model.content!)
+            ? ProductContentEntityMapper().toEntity(model.content)
             : null,
         images: model.images
             ?.map((e) => ProductImageEntityMapper().toEntity(e))

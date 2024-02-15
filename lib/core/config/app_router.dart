@@ -46,11 +46,12 @@ class Approuter {
     AppRoute.login.createRoute(
       (context, state) => const LoginScreen(),
     ),
-
     AppRoute.productDetails.createRoute(
       (context, state) {
-        final productEntity = (state.extra as Map?)?['productEntity'] as ProductEntity?;
-        return ProductDetailsScreen(productEntity: productEntity!);
+        final productEntity =
+            (state.extra as Map?)?['productEntity'] as ProductEntity?;
+        return ProductDetailsScreen(
+            productEntity: productEntity ?? ProductEntity());
       },
     ),
     StatefulShellRoute.indexedStack(
