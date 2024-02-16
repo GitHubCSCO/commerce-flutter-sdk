@@ -17,6 +17,7 @@ class Input extends StatefulWidget {
   final TextDirection? textDirection;
   final TextInputAction? textInputAction;
   final void Function(bool hasFocus)? focusListener;
+  final Widget? suffixIcon;
 
   const Input({
     super.key,
@@ -35,6 +36,7 @@ class Input extends StatefulWidget {
     this.obscureText = false,
     this.textAlign = TextAlign.start,
     this.focusListener,
+    this.suffixIcon,
   });
 
   @override
@@ -154,6 +156,7 @@ class _InputState extends State<Input> {
               fillColor: _focusNode.hasFocus
                   ? AppStyle.neutral00
                   : AppStyle.neutral100,
+              suffixIcon: _focusNode.hasFocus ? widget.suffixIcon : null,
             ),
           ),
         ),

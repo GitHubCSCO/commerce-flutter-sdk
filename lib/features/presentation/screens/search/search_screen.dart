@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_
 import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -30,7 +31,9 @@ class SearchScreen extends StatelessWidget {
 
 class SearchPage extends BaseDynamicContentScreen {
 
-  const SearchPage({super.key});
+  SearchPage({super.key});
+
+  final textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +45,18 @@ class SearchPage extends BaseDynamicContentScreen {
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
           child: Input(
             hintText: LocalizationConstants.search,
+            suffixIcon: IconButton(
+              icon: SvgPicture.asset(
+                "assets/images/icon_clear.svg",
+                semanticsLabel: 'search query clear icon',
+                fit: BoxFit.fitWidth,
+              ),
+              onPressed: () {
+                textEditingController.clear();
+                context.read<SearchQueryBloc>().add(SearchQueryTypingEvent(''));
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
+            ),
             onTapOutside: (context) =>
                 FocusManager.instance.primaryFocus?.unfocus(),
             textInputAction: TextInputAction.search,
@@ -58,6 +73,7 @@ class SearchPage extends BaseDynamicContentScreen {
             onSubmitted: (String query) {
               context.read<SearchQueryBloc>().add(SearchQuerySearchEvent());
             },
+            controller: textEditingController,
           ),
         ),
         Expanded(
@@ -79,6 +95,7 @@ class SearchPage extends BaseDynamicContentScreen {
                               },
                               child: Expanded(
                                 child: ListView(
+                                  padding: EdgeInsets.zero,
                                   children:
                                   buildContentWidgets(state.pageWidgets),
                                 ),
