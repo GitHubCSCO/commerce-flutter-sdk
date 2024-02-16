@@ -3,7 +3,7 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/search/search_query/search_query_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
@@ -21,9 +21,9 @@ class SearchScreen extends StatelessWidget {
         create: (context) =>
             sl<SearchPageCmsBloc>()..add(SearchPageCmsLoadEvent()),
       ),
-      BlocProvider<SearchQueryBloc>(
+      BlocProvider<SearchBloc>(
         create: (context) =>
-            sl<SearchQueryBloc>(),
+            sl<SearchBloc>(),
       ),
     ], child: SearchPage());
   }
@@ -53,7 +53,7 @@ class SearchPage extends BaseDynamicContentScreen {
               ),
               onPressed: () {
                 textEditingController.clear();
-                context.read<SearchQueryBloc>().add(SearchQueryTypingEvent(''));
+                context.read<SearchBloc>().add(SearchTypingEvent(''));
                 FocusManager.instance.primaryFocus?.unfocus();
               },
             ),
@@ -62,25 +62,25 @@ class SearchPage extends BaseDynamicContentScreen {
             textInputAction: TextInputAction.search,
             focusListener: (bool hasFocus) {
               if (hasFocus) {
-                context.read<SearchQueryBloc>().add(SearchQueryFocusEvent());
+                context.read<SearchBloc>().add(SearchFocusEvent());
               } else {
-                context.read<SearchQueryBloc>().add(SearchQueryUnFocusEvent());
+                context.read<SearchBloc>().add(SearchUnFocusEvent());
               }
             },
             onChanged: (String searchQuery) {
-              context.read<SearchQueryBloc>().add(SearchQueryTypingEvent(searchQuery));
+              context.read<SearchBloc>().add(SearchTypingEvent(searchQuery));
             },
             onSubmitted: (String query) {
-              context.read<SearchQueryBloc>().add(SearchQuerySearchEvent());
+              context.read<SearchBloc>().add(SearchSearchEvent());
             },
             controller: textEditingController,
           ),
         ),
         Expanded(
-          child: BlocBuilder<SearchQueryBloc, SearchQueryState>(
+          child: BlocBuilder<SearchBloc, SearchState>(
               builder: (context, state) {
                 switch (state.runtimeType) {
-                  case SearchQueryCmsInitialState:
+                  case SearchCmsInitialState:
                     return BlocBuilder<SearchPageCmsBloc, SearchPageCmsState>(
                       builder: (context, state) {
                         switch (state) {
@@ -112,22 +112,22 @@ class SearchPage extends BaseDynamicContentScreen {
                         }
                       },
                     );
-                  case SearchQueryLoadingState:
+                  case SearchLoadingState:
                     return const Center(
                         child: CircularProgressIndicator());
-                  case SearchQueryAutoCompleteInitialState:
+                  case SearchAutoCompleteInitialState:
                     return const Center(
                         child: Text(LocalizationConstants.searchPrompt));
-                  case SearchQueryAutoCompleteLoadedState:
-                    final autoCompleteResult = (state as SearchQueryAutoCompleteLoadedState).result!;
+                  case SearchAutoCompleteLoadedState:
+                    final autoCompleteResult = (state as SearchAutoCompleteLoadedState).result!;
                     return AutoCompleteWidget(autocompleteResult: autoCompleteResult);
-                  case SearchQueryAutoCompleteFailureState:
+                  case SearchAutoCompleteFailureState:
                     return const Center(
                         child: Text(LocalizationConstants.searchNoResults));
-                  case SearchQueryProductsLoadedState:
-                    final productCollectionResult = (state as SearchQueryProductsLoadedState).result!;
+                  case SearchProductsLoadedState:
+                    final productCollectionResult = (state as SearchProductsLoadedState).result!;
                     return SearchProductsWidget(productCollectionResult: productCollectionResult);
-                  case SearchQueryProductsFailureState:
+                  case SearchProductsFailureState:
                     return const Center(
                         child: Text(LocalizationConstants.searchNoResults));
                   default:
