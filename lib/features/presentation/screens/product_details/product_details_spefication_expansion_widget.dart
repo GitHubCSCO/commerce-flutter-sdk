@@ -12,18 +12,29 @@ class ProductDetailsExpansionItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: ThemeData(dividerColor: Colors.white),
-      child: ExpansionTile(
-        backgroundColor: Colors.white,
-        title: Text(specification.title),
-        collapsedBackgroundColor: Colors.white,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: HtmlWidget(
-              specification.htmlContent.styleHtmlContent() ?? '',
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              backgroundColor: Colors.white,
+              title: Text(specification.title),
+              collapsedBackgroundColor: Colors.white,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: HtmlWidget(
+                    specification.htmlContent.styleHtmlContent() ?? '',
+                  ),
+                ),
+              ],
             ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, .0),
+            child: Divider(),
           ),
         ],
       ),
