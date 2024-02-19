@@ -11,12 +11,15 @@ import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/logi
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_cms_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/search/search_page_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/action_link/action_link_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
@@ -58,12 +61,15 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ShopUseCase())
 
     //search
-    ..registerFactory(() => SearchPageBloc(searchUseCase: sl()))
+    ..registerFactory(() => SearchBloc(searchUseCase: sl()))
+    ..registerFactory(() => SearchPageCmsBloc(searchUseCase: sl()))
+    ..registerFactory(() => SearchCmsUseCase())
     ..registerFactory(() => SearchUseCase())
 
     //account
     ..registerFactory(() => AccountPageBloc(accountUseCase: sl()))
     ..registerFactory(() => AccountUseCase())
+    ..registerFactory(() => AccountHeaderCubit(accountUseCase: sl()))
 
     //product carousel
     ..registerFactory(() => ProductCarouselCubit(productCarouselUseCase: sl()))
@@ -139,5 +145,10 @@ Future<void> initInjectionContainer() async {
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
-        ));
+        ))
+    ..registerLazySingleton<IAutocompleteService>(() => AutoCompleteService(
+      clientService: sl(),
+      cacheService: sl(),
+      networkService: sl(),
+    ));
 }

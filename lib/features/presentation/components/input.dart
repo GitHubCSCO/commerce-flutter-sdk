@@ -16,6 +16,8 @@ class Input extends StatefulWidget {
   final TextAlign textAlign;
   final TextDirection? textDirection;
   final TextInputAction? textInputAction;
+  final void Function(bool hasFocus)? focusListener;
+  final Widget? suffixIcon;
 
   const Input({
     super.key,
@@ -33,6 +35,8 @@ class Input extends StatefulWidget {
     this.label,
     this.obscureText = false,
     this.textAlign = TextAlign.start,
+    this.focusListener,
+    this.suffixIcon,
   });
 
   @override
@@ -61,6 +65,12 @@ class _InputState extends State<Input> {
 
     _scrollController = ScrollController();
     _focusNode.addListener(_resetScroll);
+
+    if (widget.focusListener != null) {
+      _focusNode.addListener(() {
+        widget.focusListener!(_focusNode.hasFocus);
+      });
+    }
 
     super.initState();
   }
@@ -92,6 +102,9 @@ class _InputState extends State<Input> {
             ),
           ),
         Container(
+          margin: const EdgeInsets.symmetric(
+            horizontal: AppStyle.inputDropShadowSpreadRadius,
+          ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppStyle.borderRadius),
             boxShadow: _focusNode.hasFocus
@@ -118,13 +131,12 @@ class _InputState extends State<Input> {
             textDirection: widget.textDirection,
             textInputAction: widget.textInputAction,
             focusNode: _focusNode,
-            cursorHeight: AppStyle.cursorHeight,
             cursorColor: AppStyle.neutral990,
             decoration: InputDecoration(
               hintText: widget.hintText,
               contentPadding: const EdgeInsets.symmetric(
-                horizontal: AppStyle.inputHorizontalPadding,
-                vertical: AppStyle.inputVerticalPadding,
+                horizontal: AppStyle.defaultHorizontalPadding,
+                vertical: AppStyle.defaultVerticalPadding,
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(
@@ -144,6 +156,7 @@ class _InputState extends State<Input> {
               fillColor: _focusNode.hasFocus
                   ? AppStyle.neutral00
                   : AppStyle.neutral100,
+              suffixIcon: _focusNode.hasFocus ? widget.suffixIcon : null,
             ),
           ),
         ),

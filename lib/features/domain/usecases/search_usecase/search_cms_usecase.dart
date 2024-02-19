@@ -3,11 +3,12 @@ import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/content_management_usecase/cms_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class AccountUseCase extends CmsUseCase {
-  AccountUseCase({super.contentType});
+class SearchCmsUseCase extends CmsUseCase {
+  SearchCmsUseCase({PageContentType? contentType})
+      : super(contentType: contentType);
 
   @override
-  PageContentType get contentType => PageContentType.account;
+  PageContentType get contentType => PageContentType.searchLanding;
 
   Future<Result<List<WidgetEntity>, ErrorResponse>> loadData() async {
     var result = await super.getCMSData();
@@ -18,13 +19,4 @@ class AccountUseCase extends CmsUseCase {
         return Failure(errorResponse);
     }
   }
-
-  String? get firstName =>
-      commerceAPIServiceProvider.getAccountService().currentAccount?.firstName;
-
-  String? get lastName =>
-      commerceAPIServiceProvider.getAccountService().currentAccount?.lastName;
-
-  String? get email =>
-      commerceAPIServiceProvider.getAccountService().currentAccount?.email;
 }
