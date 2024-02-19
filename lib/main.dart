@@ -1,4 +1,3 @@
-import 'package:commerce_flutter_app/core/config/route_config.dart';
 import 'package:commerce_flutter_app/core/config/test_config_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
@@ -35,7 +34,7 @@ void initialHiveDatabase() async {
 }
 
 void initCommerceSDK() {
-  ClientConfig.hostUrl = TestConfigConstants.url;
+  ClientConfig.hostUrl = null;
   ClientConfig.clientId = TestConfigConstants.clientId;
   ClientConfig.clientSecret = TestConfigConstants.clientSecret;
 }
@@ -47,7 +46,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'My App',
-      routerConfig: getRouter(),
+      routerConfig: sl<GoRouter>(),
     );
   }
 }

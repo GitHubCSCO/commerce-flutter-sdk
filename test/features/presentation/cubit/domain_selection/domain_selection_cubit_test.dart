@@ -15,7 +15,7 @@ void main() {
 
     setUp(() {
       domainSelectionUsecase = MockDomainSelectionUsecase();
-      domainSelectionCubit = DomainSelectionCubit(domainSelectionUsecase);
+      domainSelectionCubit = DomainSelectionCubit(domainSelectionUsecase: domainSelectionUsecase);
     });
 
     tearDown(() {
