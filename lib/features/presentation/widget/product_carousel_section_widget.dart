@@ -30,7 +30,7 @@ class ProductCarouselSectionWidget extends StatelessWidget {
             ),
           ),
         ),
-        BlocBuilder<ProductCarouselCubit, ProductCarouselState>(
+        BlocConsumer<ProductCarouselCubit, ProductCarouselState>(
             builder: (context, state) {
           switch (state.runtimeType) {
             case ProductCarouselInitialState:
@@ -52,13 +52,11 @@ class ProductCarouselSectionWidget extends StatelessWidget {
                     final product = productList[index];
                     return GestureDetector(
                       onTap: () {
-                        // Handle the onClick event here
-                        // You can perform any action you want
                         print('Item $index clicked');
-                        context.push(AppRoute.productDetails.path,
-                            extra: {'productEntity': product});
 
-                        // context.push(AppRoute.login.path);
+                        context
+                            .read<ProductCarouselCubit>()
+                            .getProductId(product);
                       },
                       child: ProductCarouselItemWidget(product: product),
                     );
@@ -66,8 +64,16 @@ class ProductCarouselSectionWidget extends StatelessWidget {
                 ),
               );
             case ProductCarouselFailureState:
-            default:
               return const Center(child: Text('Failed Loading Products'));
+            default:
+              return const Center(child: Text('default Loading Products'));
+          }
+        }, listener: (context, state) {
+          if (state is ProductIdFetchState) {
+            AppRoute.productDetails.navigateBackStack(
+              context,
+              pathParameters: {"productId": state.productId},
+            );
           }
         })
       ],

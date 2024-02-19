@@ -7,10 +7,8 @@ import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class ProductDetailsAddToCartWidget extends StatelessWidget {
   final ProductDetailAddtoCartEntity detailsAddToCartEntity;
@@ -147,7 +145,8 @@ class AddToCartNotSignedInWidget extends StatelessWidget {
     return PrimaryButton(
       child: const Text(LocalizationConstants.signInForAddToCart),
       onPressed: () {
-        context.push(AppRoute.login.path);
+        // context.push(AppRoute.login.path);
+        AppRoute.login.navigate(context);
       },
     );
   }

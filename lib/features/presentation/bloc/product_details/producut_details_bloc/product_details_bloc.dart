@@ -19,7 +19,7 @@ class ProductDetailsBloc
     emit(ProductDetailsLoading());
 
     final result =
-        await _productDetailsUseCase.getProductDetails(event.productParameter);
+        await _productDetailsUseCase.getProductDetails(event.productId);
 
     switch (result) {
       case Success(value: final data):

@@ -25,7 +25,6 @@ enum ProdcutDeatilsPageWidgets {
 }
 
 class ProductDetailsUseCase extends BaseUseCase {
-  late ProductEntity? productParameter;
   late Session? session;
   late AccountSettings? accountSettings;
   late ProductSettings? productSettings;
@@ -36,8 +35,7 @@ class ProductDetailsUseCase extends BaseUseCase {
   late ProductPriceEntity? productPricing;
 
   ProductDetailsUseCase(
-      {this.productParameter,
-      this.session,
+      {this.session,
       this.accountSettings,
       this.productSettings,
       this.chosenUnitOfMeasure,
@@ -47,13 +45,9 @@ class ProductDetailsUseCase extends BaseUseCase {
       : super();
 
   Future<Result<ProductEntity, ErrorResponse>> getProductDetails(
-      ProductEntity productParameter) async {
+      String productId) async {
     // (await this.commerceAPIServiceProvider.getCatalogpagesService()
     //     .getProductCatalogInformation(this.productParameter.urlSegment));
-
-    this.productParameter = productParameter;
-    String? productId =
-        this.productParameter?.styleParentId ?? this.productParameter?.id;
 
     if (productId == null) {
       return Failure(ErrorResponse(message: "Product id is null"));
@@ -83,9 +77,9 @@ class ProductDetailsUseCase extends BaseUseCase {
         final productEntity =
             ProductEntityMapper().toEntity(data?.product ?? Product());
         if (productEntity.styledProducts != null) {
-          if (productParameter.styleParentId != null) {
+          if (productEntity.styleParentId != null) {
             styledProduct = productEntity.styledProducts
-                ?.firstWhere((o) => o.productId == this.productParameter?.id);
+                ?.firstWhere((o) => o.productId == productEntity.id);
           }
         }
         return Success(productEntity);

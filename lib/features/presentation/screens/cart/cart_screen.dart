@@ -10,13 +10,8 @@ class CartScreen extends StatelessWidget {
       appBar: AppBar(
         actions: [BottomMenuWidget()],
       ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Add your button's onPressed logic here
-          },
-          child: const Text('cart'),
-        ),
+      body: const Center(
+        child: Text('Cart Screen'),
       ),
     );
   }

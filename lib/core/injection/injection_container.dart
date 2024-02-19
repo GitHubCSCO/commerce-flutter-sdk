@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/config/route_config.dart';
 import 'package:commerce_flutter_app/features/domain/service/commerce_api_service_provider.dart';
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/core_service_provider.dart';
@@ -12,13 +13,16 @@ import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/log
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_cms_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/search/search_page_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/action_link/action_link_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
@@ -35,6 +39,8 @@ final sl = GetIt.instance;
 
 Future<void> initInjectionContainer() async {
   sl
+    //router
+    ..registerLazySingleton(() => getRouter())
 
     //auth
     ..registerFactory(() => AuthCubit(authUsecase: sl()))
@@ -44,7 +50,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => DomainRedirectCubit(domainSelectionUsecase: sl()))
 
     //domain selection
-    ..registerFactory(() => DomainSelectionCubit(sl()))
+    ..registerFactory(() => DomainSelectionCubit(domainSelectionUsecase: sl()))
     ..registerFactory(() => DomainSelectionUsecase())
 
     //login
@@ -60,12 +66,15 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ShopUseCase())
 
     //search
-    ..registerFactory(() => SearchPageBloc(searchUseCase: sl()))
+    ..registerFactory(() => SearchBloc(searchUseCase: sl()))
+    ..registerFactory(() => SearchPageCmsBloc(searchUseCase: sl()))
+    ..registerFactory(() => SearchCmsUseCase())
     ..registerFactory(() => SearchUseCase())
 
     //account
     ..registerFactory(() => AccountPageBloc(accountUseCase: sl()))
     ..registerFactory(() => AccountUseCase())
+    ..registerFactory(() => AccountHeaderCubit(accountUseCase: sl()))
 
     //product carousel
     ..registerFactory(() => ProductCarouselCubit(productCarouselUseCase: sl()))
@@ -143,6 +152,11 @@ Future<void> initInjectionContainer() async {
           secureStorageService: sl(),
         ))
     ..registerLazySingleton<IAccountService>(() => AccountService(
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
+    ..registerLazySingleton<IAutocompleteService>(() => AutoCompleteService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),

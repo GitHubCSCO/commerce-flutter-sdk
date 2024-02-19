@@ -17,3 +17,9 @@ class ProductCarouselFailureState extends ProductCarouselState {
 
   ProductCarouselFailureState({required this.error});
 }
+
+class ProductIdFetchState extends ProductCarouselState {
+  final String productId;
+
+  ProductIdFetchState({required this.productId});
+}

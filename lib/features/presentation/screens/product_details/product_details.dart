@@ -22,14 +22,14 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:commerce_flutter_app/core/extensions/html_string_extension.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
-  final ProductEntity productEntity;
-  const ProductDetailsScreen({super.key, required this.productEntity});
+  final String productId;
+  const ProductDetailsScreen({super.key, required this.productId});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ProductDetailsBloc>(
-        create: (context) => sl<ProductDetailsBloc>()
-          ..add(FetchProductDetailsEvent(productEntity)),
+        create: (context) =>
+            sl<ProductDetailsBloc>()..add(FetchProductDetailsEvent(productId)),
         child: ProductDetailsPage());
   }
 }

@@ -1,17 +1,16 @@
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/content_management_usecase/cms_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class SearchUseCase extends CmsUseCase {
-  SearchUseCase({PageContentType? contentType})
-      : super(contentType: contentType);
+class SearchUseCase extends BaseUseCase {
 
-  @override
-  PageContentType get contentType => PageContentType.searchLanding;
-
-  Future<Result<List<WidgetEntity>, ErrorResponse>> loadData() async {
-    var result = await super.getCMSData();
+  Future<Result<AutocompleteResult, ErrorResponse>?> loadAutocompleteResults(String searchQuery) async {
+    var parameters = AutocompleteQueryParameters(
+        query: searchQuery,
+        categoryEnabled: true,
+        brandEnabled: true,
+        productEnabled: true,
+    );
+    var result = await commerceAPIServiceProvider.getAutocompleteService().getAutocompleteResults(parameters);
     switch (result) {
       case Success(value: final data):
         return Success(data);
@@ -19,4 +18,27 @@ class SearchUseCase extends CmsUseCase {
         return Failure(errorResponse);
     }
   }
+
+  Future<Result<GetProductCollectionResult, ErrorResponse>?> loadSearchProductsResults(String searchQuery) async {
+    var parameters = ProductsQueryParameters(
+      query: searchQuery,
+      // page: this.CurrentPage,
+      // Sort = this.sortViewModel?.CurrentlySelectedSortOption?.SortType,
+      // AttributeValueIds = this.SelectedAttributeValueIds,
+      // BrandIds = this.SelectedBrandIds,
+      // ProductLineIds = this.SelectedProductLineIds,
+      // CategoryId = this.SelectedCategoryId,
+      // PreviouslyPurchasedProducts = this.PreviouslyPurchased,
+      // StockedItemsOnly = this.SelectedStockedItems,
+      expand: ["pricing", "facets", "brand"],
+    );
+    var result = await commerceAPIServiceProvider.getProductService().getProducts(parameters);
+    switch (result) {
+      case Success(value: final data):
+        return Success(data);
+      case Failure(errorResponse: final errorResponse):
+        return Failure(errorResponse);
+    }
+  }
+
 }

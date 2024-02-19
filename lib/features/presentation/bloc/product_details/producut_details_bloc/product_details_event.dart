@@ -1,9 +1,7 @@
-import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
-
 abstract class ProductDetailsEvent {}
 
 class FetchProductDetailsEvent extends ProductDetailsEvent {
-  final ProductEntity productParameter;
+  final String productId;
 
-  FetchProductDetailsEvent(this.productParameter);
+  FetchProductDetailsEvent(this.productId);
 }
