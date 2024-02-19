@@ -28,7 +28,7 @@ class ShopPage extends BaseDynamicContentScreen {
       ]),
       body: BlocBuilder<ShopPageBloc, ShopPageState>(
         builder: (context, state) {
-          switch(state) {
+          switch (state) {
             case ShopPageInitialState():
             case ShopPageLoadingState():
               return const Center(child: CircularProgressIndicator());
@@ -39,8 +39,8 @@ class ShopPage extends BaseDynamicContentScreen {
                 },
                 child: Scaffold(
                     body: ListView(
-                      children: buildContentWidgets(state.pageWidgets),
-                    )),
+                  children: buildContentWidgets(state.pageWidgets),
+                )),
               );
             case ShopPageFailureState():
               return const Center(child: Text('Failed Loading Shop'));
@@ -64,5 +64,4 @@ class ShopPage extends BaseDynamicContentScreen {
   //   ));
   //   return list;
   // }
-
 }

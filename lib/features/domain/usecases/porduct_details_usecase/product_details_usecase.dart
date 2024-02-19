@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/features/domain/entity/product_details/prod
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_base_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_description_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_image_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
@@ -19,7 +20,8 @@ enum ProdcutDeatilsPageWidgets {
   productDetailsDescription,
   productDetailsSpecification,
   productDetailsGeneralInfo,
-  productDetailsAddtoCart
+  productDetailsAddtoCart,
+  productDetailsPrice,
 }
 
 class ProductDetailsUseCase extends BaseUseCase {
@@ -243,8 +245,11 @@ class ProductDetailsUseCase extends BaseUseCase {
     List<ProductDetailsBaseEntity> items = [];
 
     items.add(makeGeneralInfoEntity(product));
+    items.add(ProductDetailsPriceEntity(
+        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsPrice));
 
-    items.add(ProductDetailAddtoCartEntity(detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart));
+    items.add(ProductDetailAddtoCartEntity(
+        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart));
 
     if (product.htmlContent != null) {
       items.add(ProductDetailsDescriptionEntity(

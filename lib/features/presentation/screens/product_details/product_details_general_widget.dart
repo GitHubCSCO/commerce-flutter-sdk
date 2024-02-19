@@ -13,89 +13,85 @@ class ProductDetailsGeneralWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: Container(
-        color: Colors.white,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            BlocProvider(
-              create: (context) => CarouselIndicatorCubit(),
-              child: ProductDetailsCarouselWidget(
-                generalInfoEntity: generalInfoEntity,
-              ),
+    return Container(
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BlocProvider(
+            create: (context) => CarouselIndicatorCubit(),
+            child: ProductDetailsCarouselWidget(
+              generalInfoEntity: generalInfoEntity,
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  generalInfoEntity.productName ?? '',
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.left,
+                ),
+                if (generalInfoEntity.originalPartNumberValue != null)
                   Text(
-                    generalInfoEntity.productName ?? '',
-                    style: const TextStyle(fontWeight: FontWeight.w600),
+                    generalInfoEntity.originalPartNumberValue ?? '',
+                    style: const TextStyle(color: AppColors.lightGrayTextColor),
                     textAlign: TextAlign.left,
                   ),
-                  if (generalInfoEntity.originalPartNumberValue != null)
+                if (generalInfoEntity.myPartNumberValue != null &&
+                    generalInfoEntity.myPartNumberValue!.isNotEmpty)
+                  Row(children: [
                     Text(
-                      generalInfoEntity.originalPartNumberValue ?? '',
+                      generalInfoEntity.myPartNumberTitle ?? '',
+                      style:
+                          const TextStyle(color: AppColors.darkGrayTextColor),
+                      textAlign: TextAlign.left,
+                    ),
+                    Text(
+                      generalInfoEntity.myPartNumberValue ?? '',
                       style:
                           const TextStyle(color: AppColors.lightGrayTextColor),
                       textAlign: TextAlign.left,
                     ),
-                  if (generalInfoEntity.myPartNumberValue != null &&
-                      generalInfoEntity.myPartNumberValue!.isNotEmpty)
-                    Row(children: [
-                      Text(
-                        generalInfoEntity.myPartNumberTitle ?? '',
-                        style:
-                            const TextStyle(color: AppColors.darkGrayTextColor),
-                        textAlign: TextAlign.left,
-                      ),
-                      Text(
-                        generalInfoEntity.myPartNumberValue ?? '',
-                        style: const TextStyle(
-                            color: AppColors.lightGrayTextColor),
-                        textAlign: TextAlign.left,
-                      ),
-                    ]),
-                  if (generalInfoEntity.mFGNumberValue != null &&
-                      generalInfoEntity.mFGNumberValue!.isNotEmpty)
-                    Row(children: [
-                      Text(
-                        generalInfoEntity.mFGNumberTitle ?? '',
-                        style:
-                            const TextStyle(color: AppColors.darkGrayTextColor),
-                        textAlign: TextAlign.left,
-                      ),
-                      Text(
-                        generalInfoEntity.mFGNumberValue ?? '',
-                        style: const TextStyle(
-                            color: AppColors.lightGrayTextColor),
-                        textAlign: TextAlign.left,
-                      ),
-                    ]),
-                  if (generalInfoEntity.packDescriptionValue != null &&
-                      generalInfoEntity.packDescriptionValue!.isNotEmpty)
-                    Row(children: [
-                      Text(
-                        generalInfoEntity.packDescriptionTitle ?? '',
-                        style:
-                            const TextStyle(color: AppColors.darkGrayTextColor),
-                        textAlign: TextAlign.left,
-                      ),
-                      Text(
-                        generalInfoEntity.packDescriptionValue ?? '',
-                        style: const TextStyle(
-                            color: AppColors.lightGrayTextColor),
-                        textAlign: TextAlign.left,
-                      ),
-                    ]),
-                ],
-              ),
-            )
-          ],
-        ),
+                  ]),
+                if (generalInfoEntity.mFGNumberValue != null &&
+                    generalInfoEntity.mFGNumberValue!.isNotEmpty)
+                  Row(children: [
+                    Text(
+                      generalInfoEntity.mFGNumberTitle ?? '',
+                      style:
+                          const TextStyle(color: AppColors.darkGrayTextColor),
+                      textAlign: TextAlign.left,
+                    ),
+                    Text(
+                      generalInfoEntity.mFGNumberValue ?? '',
+                      style:
+                          const TextStyle(color: AppColors.lightGrayTextColor),
+                      textAlign: TextAlign.left,
+                    ),
+                  ]),
+                if (generalInfoEntity.packDescriptionValue != null &&
+                    generalInfoEntity.packDescriptionValue!.isNotEmpty)
+                  Row(children: [
+                    Text(
+                      generalInfoEntity.packDescriptionTitle ?? '',
+                      style:
+                          const TextStyle(color: AppColors.darkGrayTextColor),
+                      textAlign: TextAlign.left,
+                    ),
+                    Text(
+                      generalInfoEntity.packDescriptionValue ?? '',
+                      style:
+                          const TextStyle(color: AppColors.lightGrayTextColor),
+                      textAlign: TextAlign.left,
+                    ),
+                  ]),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
