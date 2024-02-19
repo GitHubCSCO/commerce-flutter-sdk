@@ -97,28 +97,5 @@ NavigationNode _getNavigationRoot() {
     parent: navbarRoot,
   );
 
-  // path: /cart/:id
-  final productDetails = createNode(
-    name: AppRoute.productDetails.name,
-    path: AppRoute.productDetails.suffix,
-    builder: (context, state) {
-      final id = state.pathParameters['id'];
-      return DummyProductDetails(id: id!);
-    },
-    parent: cart,
-  );
-
-  // path: /checkout/:id
-  final checkout = createSeparateRoute(
-    name: AppRoute.checkout.name,
-    path: AppRoute.checkout.suffix,
-    builder: (context, state) {
-      final id = state.pathParameters['id'];
-      return DummyCheckout(id: id!);
-    },
-    navigatorKey: _rootNavigator,
-    parent: root,
-  );
-  
   return root;
 }
