@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class RouteNames {
+  static const String root = 'root';
   static const String welcome = 'welcome';
   static const String domainSelection = 'domainSelection';
   static const String login = 'login';
@@ -17,7 +18,8 @@ class RouteNames {
 }
 
 class RoutePaths {
-  static const String welcome = '/';
+  static const String root = '/';
+  static const String welcome = '/welcome';
   static const String domainSelection = '/${RouteNames.domainSelection}';
   static const String login = '/${RouteNames.login}';
   static const String shop = '/${RouteNames.shop}';
@@ -26,20 +28,24 @@ class RoutePaths {
   static const String cart = '/${RouteNames.cart}';
   static const String productDetails = '${RoutePaths.cart}/:id';
   static const String checkout = '/${RouteNames.checkout}/:id';
-  static const String shopProdlist = '/${RouteNames.shop}/${RouteNames.productList}';
+  static const String shopProdlist =
+      '/${RouteNames.shop}/${RouteNames.productList}';
   static const String shopProdDetails = '$shopProdlist/:id';
 }
 
 enum AppRoute {
+  root(name: RouteNames.root, fullPath: RoutePaths.root),
   welcome(name: RouteNames.welcome, fullPath: RoutePaths.welcome),
-  domainSelection(name: RouteNames.domainSelection, fullPath: RoutePaths.domainSelection),
+  domainSelection(
+      name: RouteNames.domainSelection, fullPath: RoutePaths.domainSelection),
   login(name: RouteNames.login, fullPath: RoutePaths.login),
   shop(name: RouteNames.shop, fullPath: RoutePaths.shop),
   search(name: RouteNames.search, fullPath: RoutePaths.search),
   account(name: RouteNames.account, fullPath: RoutePaths.account),
   cart(name: RouteNames.cart, fullPath: RoutePaths.cart),
   productList(name: RouteNames.productList, fullPath: RoutePaths.shopProdlist),
-  productDetails(name: RouteNames.productDetails, fullPath: RoutePaths.productDetails),
+  productDetails(
+      name: RouteNames.productDetails, fullPath: RoutePaths.productDetails),
   checkout(name: RouteNames.checkout, fullPath: RoutePaths.checkout);
 
   const AppRoute({
