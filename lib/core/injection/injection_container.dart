@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_
 import 'package:commerce_flutter_app/features/domain/usecases/domain_selection_usecase/domain_selection_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
@@ -18,6 +19,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/sea
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
@@ -85,6 +87,11 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ProductDetailsBloc(productDetailsUseCase: sl()))
     ..registerFactory(() => ProductDetailsUseCase())
 
+    // product details pricing
+    ..registerFactory(
+        () => ProductDetailsPricingBloc(productDetailsPricingUseCase: sl()))
+    ..registerFactory(() => ProductDetailsPricingUseCase())
+
     //carousel
     ..registerFactory(() => CarouselIndicatorCubit())
 
@@ -104,6 +111,9 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<ICoreServiceProvider>(() => CoreServiceProvider())
 
     //services
+    ..registerLazySingleton<IRealTimePricingService>(() =>
+        RealTimePricingService(
+            clientService: sl(), cacheService: sl(), networkService: sl()))
     ..registerLazySingleton<IWebsiteService>(() => WebsiteService(
         clientService: sl(),
         sessionService: sl(),

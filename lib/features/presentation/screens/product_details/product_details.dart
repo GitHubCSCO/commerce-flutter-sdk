@@ -6,9 +6,10 @@ import 'package:commerce_flutter_app/features/domain/entity/product_details/prod
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_description_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/produc_details_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_event.dart';
@@ -130,7 +131,11 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
 
   Widget buildPricingWidget(
       ProductDetailsPriceEntity productDetailsPriceEntity) {
-    return ProductDetailsPricingWidget(
-        productDetailsPricingEntity: productDetailsPriceEntity);
+    return BlocProvider<ProductDetailsPricingBloc>(
+        create: (context) => sl<ProductDetailsPricingBloc>()
+          ..add(LoadProductDetailsPricing(
+              productDetailsPriceEntity: productDetailsPriceEntity)),
+        child: ProductDetailsPricingWidget(
+            productDetailsPricingEntity: productDetailsPriceEntity));
   }
 }

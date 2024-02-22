@@ -100,14 +100,14 @@ NavigationNode _getNavigationRoot() {
 
   // path: /product details
 
-  final productDetails = createSeparateRoute(
+  final productDetails = createNode(
     name: AppRoute.productDetails.name,
     path: AppRoute.productDetails.suffix,
     builder: (context, state) => ProductDetailsScreen(
         productId: state.pathParameters['productId'] ?? ''),
-    navigatorKey: _rootNavigator,
-    parent: root,
+    parent: shop,
   );
+
 
   return root;
 }

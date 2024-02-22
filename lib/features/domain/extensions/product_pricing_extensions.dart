@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
 
 extension ProductPriceExtensions on ProductPriceEntity? {
@@ -38,11 +39,11 @@ extension ProductPriceExtensions on ProductPriceEntity? {
     return defaultUnitOfMeasure;
   }
 
-  // String getDiscountValue() {
-  //   if (this == null || this?.unitNetPrice == 0) {
-  //     return '';
-  //   }
+  String getDiscountValue() {
+    if (this == null || this?.unitNetPrice == 0) {
+      return '';
+    }
 
-  //   return DiscountValueConverter().convert(this).toString();
-  // }
+    return DiscountValueConverter().convert(this).toString();
+  }
 }

@@ -13,7 +13,7 @@ class ProductCarouselSectionWidget extends StatelessWidget {
       {super.key, required this.productCarouselWidgetEntity});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext buildContext) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -54,9 +54,18 @@ class ProductCarouselSectionWidget extends StatelessWidget {
                       onTap: () {
                         print('Item $index clicked');
 
-                        context
-                            .read<ProductCarouselCubit>()
-                            .getProductId(product);
+                        AppRoute.productDetails.navigateBackStack(
+                          context,
+                          pathParameters: {
+                            "productId": "da2078e1-389c-4d6c-84f4-ac4f00ee111b"
+                          },
+                        );
+
+                        // AppRoute.login.navigateBackStack(buildContext);
+
+                        // context
+                        //     .read<ProductCarouselCubit>()
+                        //     .getProductId(product);
                       },
                       child: ProductCarouselItemWidget(product: product),
                     );
@@ -68,10 +77,10 @@ class ProductCarouselSectionWidget extends StatelessWidget {
             default:
               return const Center(child: Text('default Loading Products'));
           }
-        }, listener: (context, state) {
+        }, listener: (_, state) {
           if (state is ProductIdFetchState) {
-            AppRoute.productDetails.navigateBackStack(
-              context,
+            AppRoute.productDetails.navigate(
+              buildContext,
               pathParameters: {"productId": state.productId},
             );
           }

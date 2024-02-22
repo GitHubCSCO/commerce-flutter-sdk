@@ -240,7 +240,10 @@ class ProductDetailsUseCase extends BaseUseCase {
 
     items.add(makeGeneralInfoEntity(product));
     items.add(ProductDetailsPriceEntity(
-        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsPrice));
+        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsPrice,
+        product: product,
+        styledProduct: styledProduct,
+        productPricingEnabled: true));
 
     items.add(ProductDetailAddtoCartEntity(
         detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart));
