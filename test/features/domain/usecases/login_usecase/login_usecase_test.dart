@@ -1,65 +1,112 @@
+import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
-
-class MockAuthenticationService extends Mock
-    implements IAuthenticationService {}
+import '../../injector_mock.dart';
 
 void main() {
   late LoginUsecase loginUsecase;
-  late MockAuthenticationService mockAuthService;
 
   setUp(() {
-    mockAuthService = MockAuthenticationService();
-    // GetIt.I.registerLazySingleton<IAuthenticationService>(() => mockAuthService);
-
-    loginUsecase = LoginUsecase(mockAuthService);
+    initInjectionContainerMock();
+    loginUsecase = LoginUsecase();
   });
 
-  tearDown(() {
-    // GetIt.I.reset();
+  tearDown(() {});
+
+  test('attemptSignIn should return loginErrorOffline when offline', () async {
+    const userName = 'testUser';
+    const passWord = 'testPassword';
+    const expectedResult = LoginStatus.loginErrorOffline;
+
+    when(() => loginUsecase.commerceAPIServiceProvider
+        .getNetworkService()
+        .isOnline()).thenAnswer((_) async => false);
+
+    final result = await loginUsecase.attemptSignIn(userName, passWord);
+
+    expect(result, expectedResult);
   });
 
-  test('logInAsync should return Result with bool on successful login', () async {
-    // Arrange
-    const username = 'testUser';
-    const password = 'testPassword';
-    const expectedResult = Success(true);
+  test('attemptSignIn should return loginErrorUnsuccessful when login fails',
+      () async {
+    const userName = 'testUser';
+    const passWord = 'testPassword';
+    const expectedResult = LoginStatus.loginErrorUnsuccessful;
 
-    when(() => mockAuthService.logInAsync(username, password))
-        .thenAnswer((_) async => Future.value(const Success(true)));
+    when(() => loginUsecase.commerceAPIServiceProvider
+        .getNetworkService()
+        .isOnline()).thenAnswer((_) async => true);
 
-    // Act
-    final result = await loginUsecase.logInAsync(username, password);
+    when(() => loginUsecase.commerceAPIServiceProvider
+        .getSessionService()
+        .getCurrentSession()).thenAnswer((_) async => Success(Session()));
 
-    // Assert
-    // expect(result, expectedResult);
-    switch (result) {
-      case Success(value: final value):
-        {
-          expect(value, expectedResult.value);
-        }
-      case Failure():
-        {
-          fail('Should not be a failure');
-        }
-    }
+    when(() =>
+        loginUsecase.commerceAPIServiceProvider
+            .getAuthenticationService()
+            .logInAsync(userName, passWord)).thenAnswer(
+        (_) async => Failure(ErrorResponse(message: 'loginErrorUnsuccessful')));
 
-    verify(() => mockAuthService.logInAsync(username, password)).called(1);
-    verifyNoMoreInteractions(mockAuthService);
+    final result = await loginUsecase.attemptSignIn(userName, passWord);
+
+    expect(result, expectedResult);
   });
 
-  test('logoutAsync should call authService.logoutAsync', () async {
-    // Arrange
+  test(
+      'attemptSignIn should return loginErrorUnknown when session retrieval fails',
+      () async {
+    const userName = 'testUser';
+    const passWord = 'testPassword';
+    const expectedResult = LoginStatus.loginErrorUnknown;
 
-    when(() => mockAuthService.logoutAsync()).thenAnswer((_) async => Future.value());
-    // Act
-    await loginUsecase.logoutAsync();
+    when(() => loginUsecase.commerceAPIServiceProvider
+        .getNetworkService()
+        .isOnline()).thenAnswer((_) async => true);
 
-    // Assert
-    verify(() => mockAuthService.logoutAsync()).called(1);
-    verifyNoMoreInteractions(mockAuthService);
+    when(() => loginUsecase.commerceAPIServiceProvider
+        .getAuthenticationService()
+        .logInAsync(userName, passWord)).thenAnswer((_) async => Success(true));
+
+    when(() => loginUsecase.commerceAPIServiceProvider
+            .getSessionService()
+            .getCurrentSession())
+        .thenAnswer(
+            (_) async => Failure(ErrorResponse(message: 'loginErrorUnknown')));
+
+    final result = await loginUsecase.attemptSignIn(userName, passWord);
+
+    expect(result, expectedResult);
+  });
+
+  test(
+      'attemptSignIn should return loginErrorUnknown when account retrieval fails',
+      () async {
+    const userName = 'testUser';
+    const passWord = 'testPassword';
+    const expectedResult = LoginStatus.loginErrorUnknown;
+
+    when(() => loginUsecase.commerceAPIServiceProvider
+        .getNetworkService()
+        .isOnline()).thenAnswer((_) async => true);
+
+    when(() => loginUsecase.commerceAPIServiceProvider
+        .getAuthenticationService()
+        .logInAsync(userName, passWord)).thenAnswer((_) async => Success(true));
+
+    when(() => loginUsecase.commerceAPIServiceProvider
+        .getSessionService()
+        .getCurrentSession()).thenAnswer((_) async => Success(Session()));
+
+    when(() => loginUsecase.commerceAPIServiceProvider
+            .getAccountService()
+            .getCurrentAccountAsync())
+        .thenAnswer(
+            (_) async => Failure(ErrorResponse(message: 'loginErrorUnknown')));
+
+    final result = await loginUsecase.attemptSignIn(userName, passWord);
+
+    expect(result, expectedResult);
   });
 }

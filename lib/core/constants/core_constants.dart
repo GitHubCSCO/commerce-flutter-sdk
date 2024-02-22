@@ -30,4 +30,4 @@ class CoreConstants {
       static const String removeAlternateCartCookieKey = "RemoveAlternateCartCookieKey";
       static const String navigateToVmiHomeKey = "NavigateToVMIHomeKey";
       static const String orderApprovalShouldReloadKey = "OrderApprovalShouldReloadKey";
-    }
+}

@@ -1,33 +1,52 @@
-import 'package:commerce_flutter_app/core/config/app_router.dart';
+import 'package:commerce_flutter_app/core/config/test_config_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/login/login_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  initialHiveDatabase();
   initCommerceSDK();
   initInjectionContainer();
-  runApp(MyApp());
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => sl<AuthCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<LogoutCubit>(),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
+}
+
+void initialHiveDatabase() async {
+  await Hive.initFlutter();
 }
 
 void initCommerceSDK() {
-  ClientConfig.hostUrl = 'mobilespire.commerce.insitesandbox.com';
-  ClientConfig.clientId = 'fluttermobile';
-  ClientConfig.clientSecret = 'd66d0479-07f7-47b2-ee1e-0d3a536e6091';
+  ClientConfig.hostUrl = null;
+  ClientConfig.clientId = TestConfigConstants.clientId;
+  ClientConfig.clientSecret = TestConfigConstants.clientSecret;
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          sl<LoginBloc>(), // Replace YourBloc with your actual bloc class
-      child: MaterialApp.router(
-        title: 'My App',
-        routerConfig: Approuter().router,
-      ),
+    return MaterialApp.router(
+      title: 'My App',
+      routerConfig: sl<GoRouter>(),
     );
   }
 }
@@ -52,27 +71,24 @@ class NavBarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('My App'),
-        ),
         bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed, // This is all you need!
+          type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.shop),
-              label: 'Shop',
+              label: LocalizationConstants.shopTitle,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.search),
-              label: 'Search',
+              label: LocalizationConstants.searchLandingTitle,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.account_circle),
-              label: 'Account',
+              label: LocalizationConstants.account,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.shopping_cart),
-              label: 'Cart',
+              label: LocalizationConstants.cart,
             ),
           ],
           currentIndex: navigationShell.currentIndex,
