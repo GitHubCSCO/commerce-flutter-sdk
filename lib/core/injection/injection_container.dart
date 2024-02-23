@@ -114,6 +114,9 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<IRealTimePricingService>(() =>
         RealTimePricingService(
             clientService: sl(), cacheService: sl(), networkService: sl()))
+    ..registerLazySingleton<IRealTimeInventoryService>(() =>
+        RealTimeInventoryService(
+            clientService: sl(), cacheService: sl(), networkService: sl()))
     ..registerLazySingleton<IWebsiteService>(() => WebsiteService(
         clientService: sl(),
         sessionService: sl(),

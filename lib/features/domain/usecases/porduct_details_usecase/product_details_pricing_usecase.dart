@@ -1,6 +1,9 @@
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -128,16 +131,13 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
       var parameters =
           RealTimeInventoryParameters(productIds: inventoryProducts);
 
-      var realTimeInventoryResultResponse = await this
-          .commerceAPIServiceProvider
+      var realTimeInventoryResultResponse = await commerceAPIServiceProvider
           .getRealTimeInventoryService()
           .getProductRealTimeInventory(parameters: parameters);
 
       switch (realTimeInventoryResultResponse) {
         case Success(value: final data):
           var realTimeInventoryResult = data;
-          var realTimeInventoryInfoList =
-              realTimeInventoryResult?.realTimeInventoryResults;
           return Success(realTimeInventoryResult);
         case Failure(errorResponse: final errorResponse):
           return Failure(
@@ -153,5 +153,95 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
     return Failure(ErrorResponse(
         errorDescription:
             'Real time inventory is not enabled for this product'));
+  }
+
+  ProductDetailsPriceEntity updateProductOrStyleProductRealTimeInventory(
+    GetRealTimeInventoryResult getRealTimeInventoryResult,
+    ProductEntity productEntity,
+    StyledProductEntity? styledProduct,
+    ProductDetailsPriceEntity productDetailsPriceEntity,
+  ) {
+    var productId =
+        styledProduct != null ? styledProduct.productId : productEntity.id;
+    var inventory = getRealTimeInventoryResult.realTimeInventoryResults
+        ?.firstWhere((o) => o.productId == productId);
+
+    if (inventory != null) {
+      late var newInventoryAvailability;
+
+      if (inventory.inventoryAvailabilityDtos != null) {
+        for (var inventoryAvailabilityDto
+            in inventory.inventoryAvailabilityDtos!) {
+          if (inventoryAvailabilityDto.unitOfMeasure ==
+                  chosenUnitOfMeasure?.unitOfMeasure ||
+              (chosenUnitOfMeasure == null &&
+                  inventoryAvailabilityDto.unitOfMeasure == '')) {
+            newInventoryAvailability = inventoryAvailabilityDto.availability;
+            break;
+          }
+        }
+      }
+
+      newInventoryAvailability ??= Availability(messageType: 0);
+
+      if (styledProduct != null) {
+        styledProduct = styledProduct.copyWith(
+            qtyOnHand: inventory.qtyOnHand,
+            availability: AvailabilityEntityMapper()
+                .toEntity(newInventoryAvailability));
+      } else {
+        productEntity = productEntity.copyWith(
+            qtyOnHand: inventory.qtyOnHand,
+            availability: AvailabilityEntityMapper().toEntity(newInventoryAvailability));
+      }
+
+      var productUnitOfMeasures = styledProduct != null
+          ? styledProduct.productUnitOfMeasures
+          : productEntity.productUnitOfMeasures;
+      for (var p in productUnitOfMeasures!) {
+        var unitOfMeasureAvailability = inventory.inventoryAvailabilityDtos
+            ?.firstWhere((o) => o.unitOfMeasure == p.unitOfMeasure);
+        if (unitOfMeasureAvailability != null) {
+          p = p.copyWith(
+              availability: AvailabilityEntityMapper()
+                  .toEntity(unitOfMeasureAvailability.availability));
+        } else {
+          p = p.copyWith(
+              availability: AvailabilityEntityMapper()
+                  .toEntity(Availability(messageType: 0)));
+        }
+      }
+    } else {
+      var newProductAvailability = Availability(
+        messageType: 0,
+        message: LocalizationConstants.unableToRetrieveInventory,
+      );
+      if (styledProduct != null) {
+        styledProduct = styledProduct.copyWith(
+            availability:
+                AvailabilityEntityMapper().toEntity(newProductAvailability));
+        for (var p in styledProduct.productUnitOfMeasures!) {
+          p = p.copyWith(
+              availability: AvailabilityEntityMapper()
+                  .toEntity(Availability(messageType: 0)));
+        }
+      } else {
+        productEntity = productEntity.copyWith(
+            availability:
+                AvailabilityEntityMapper().toEntity(newProductAvailability));
+        for (var p in productEntity.productUnitOfMeasures!) {
+          p = p.copyWith(
+              availability: AvailabilityEntityMapper()
+                  .toEntity(Availability(messageType: 0)));
+        }
+      }
+    }
+
+    productDetailsPriceEntity = productDetailsPriceEntity.copyWith(
+      product: productEntity,
+      styledProduct: styledProduct,
+    );
+
+    return productDetailsPriceEntity;
   }
 }

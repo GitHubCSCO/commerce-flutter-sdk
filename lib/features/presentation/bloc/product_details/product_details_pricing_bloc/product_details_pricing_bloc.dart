@@ -29,6 +29,21 @@ class ProductDetailsPricingBloc
       case Success(value: final data):
         if (productDetailsPricingEntity.productPricingEnabled != null &&
             productDetailsPricingEntity.productPricingEnabled!) {
+          var realTimeInventory = await _productDetailsPricingUseCase
+              .loadRealTimeInventory(productDetailsPricingEntity.product!);
+
+          switch (realTimeInventory) {
+            case Success(value: final inventory):
+              productDetailsPricingEntity = _productDetailsPricingUseCase
+                  .updateProductOrStyleProductRealTimeInventory(
+                      inventory!,
+                      productDetailsPricingEntity.product!,
+                      productDetailsPricingEntity.styledProduct,
+                      productDetailsPricingEntity);
+              break;
+            case Failure(errorResponse: final errorResponse):
+          }
+
           var availability = productDetailsPricingEntity.styledProduct == null
               ? productDetailsPricingEntity.product?.availability
               : productDetailsPricingEntity.styledProduct?.availability;
