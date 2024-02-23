@@ -68,7 +68,7 @@ class BaseActionItemWidget extends StatelessWidget {
       case ActionType.settings:
         return LocalizationConstants.settings;
       case ActionType.changeCustomer:
-      // return this.hasWillCall ? LocalizationConstants.ChangeCustomerWillCall : LocalizationConstants.ChangeCustomer;
+        // return this.hasWillCall ? LocalizationConstants.ChangeCustomerWillCall : LocalizationConstants.ChangeCustomer;
         return LocalizationConstants.changeCustomer;
       case ActionType.signOut:
         return LocalizationConstants.signOut;
@@ -100,11 +100,16 @@ class BaseActionItemWidget extends StatelessWidget {
     }
   }
 
-  Function() onActionNavigationCommand(BuildContext context, ActionLinkEntity actionLink) {
+  Function() onActionNavigationCommand(
+      BuildContext context, ActionLinkEntity actionLink) {
     switch (actionLink.type) {
       case ActionType.signOut:
         return () {
           signOut(context);
+        };
+      case ActionType.settings:
+        return () {
+          navigateToSettings(context);
         };
       default:
         return () {};
@@ -115,4 +120,8 @@ class BaseActionItemWidget extends StatelessWidget {
     context.read<LogoutCubit>().logout();
   }
 
+  void navigateToSettings(BuildContext context) {
+    /// TODO - implement
+    throw UnimplementedError();
+  }
 }
