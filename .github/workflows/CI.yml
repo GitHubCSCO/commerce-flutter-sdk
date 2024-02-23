@@ -37,12 +37,11 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
+      - uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH }}
+          name: id_rsa
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
       - name: Run flutter doctor
         run: flutter doctor -v
