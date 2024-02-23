@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_type_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
@@ -121,7 +122,6 @@ class BaseActionItemWidget extends StatelessWidget {
   }
 
   void navigateToSettings(BuildContext context) {
-    /// TODO - implement
-    throw UnimplementedError();
+    AppRoute.settings.navigate(context);
   }
 }

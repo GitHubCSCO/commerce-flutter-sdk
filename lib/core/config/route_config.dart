@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_scr
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/root/root_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/search_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/settings/settings_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/shop/shop_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/domain_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_screen.dart';
@@ -95,6 +96,14 @@ NavigationNode _getNavigationRoot() {
     path: AppRoute.cart.suffix,
     builder: (context, state) => const CartScreen(),
     parent: navbarRoot,
+  );
+
+  // path: /account/settings
+  final settings = createNode(
+    name: AppRoute.settings.name,
+    path: AppRoute.settings.suffix,
+    builder: (context, state) => const SettingsScreen(),
+    parent: account,
   );
 
   return root;

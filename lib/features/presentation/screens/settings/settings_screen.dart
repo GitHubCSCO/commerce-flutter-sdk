@@ -10,16 +10,21 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<SettingsDomainCubit>()..getDomain(),
-      child: const Placeholder(),
+      child: const SettingsPage(),
     );
   }
 }
 
-class MyWidget extends StatelessWidget {
-  const MyWidget({super.key});
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(),
+      body: const Center(
+        child: Text('Settings screen!'),
+      ),
+    );
   }
 }
