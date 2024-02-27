@@ -56,7 +56,7 @@ class _SettingsDomainSelectorWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Current domain'),
+          const Text(LocalizationConstants.currentDomain),
           const SizedBox(height: 8),
           BlocBuilder<SettingsDomainCubit, SettingsDomainState>(
             builder: (context, state) {
@@ -116,15 +116,15 @@ class _SettingsListWidget extends StatelessWidget {
 final settingsItems = [
   _SettingsListItemWidget(
     onTap: () {},
-    title: 'Clear Cache',
+    title: LocalizationConstants.clearCache,
   ),
   _SettingsListItemWidget(
-    title: 'Languages',
+    title: LocalizationConstants.languages,
     onTap: () {},
     showTrailing: true,
   ),
   _SettingsListItemWidget(
-    title: 'Admin Login',
+    title: LocalizationConstants.adminLogin,
     onTap: () {},
   ),
 ];
