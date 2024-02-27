@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
@@ -77,7 +78,7 @@ class _SettingsDomainSelectorWidget extends StatelessWidget {
           const SizedBox(height: 16),
           PrimaryButton(
             leadingIcon: SvgPicture.asset(
-              'assets/images/icon_change_domain.svg',
+              AssetConstants.iconChangeDomain,
               semanticsLabel: 'Change domain icon',
               fit: BoxFit.fitWidth,
             ),
