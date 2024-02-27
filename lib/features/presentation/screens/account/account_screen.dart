@@ -144,7 +144,7 @@ class _AccountLoggedOutHeader extends StatelessWidget {
         ),
         const SizedBox(height: AppStyle.defaultVerticalPadding),
         PrimaryButton(
-          child: const Text(LocalizationConstants.signIn),
+          text: LocalizationConstants.signIn,
           onPressed: () {
             AppRoute.login.navigateBackStack(context);
           },

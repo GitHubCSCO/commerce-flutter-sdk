@@ -117,8 +117,7 @@ class _DomainSelectionPageState extends State<DomainSelectionPage> {
                               .selectDomain(_textEditingController.text);
                         },
                         isEnabled: _textEditingController.text.isNotEmpty,
-                        child: const Text(
-                            LocalizationConstants.useECommerceWebsite),
+                        text: LocalizationConstants.useECommerceWebsite,
                       );
               },
             ),
