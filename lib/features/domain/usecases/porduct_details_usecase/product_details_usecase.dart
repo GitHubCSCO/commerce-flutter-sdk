@@ -238,15 +238,19 @@ class ProductDetailsUseCase extends BaseUseCase {
   List<ProductDetailsBaseEntity> makeAllDetailsItems(ProductEntity product) {
     List<ProductDetailsBaseEntity> items = [];
 
+    var quantity = (product.minimumOrderQty! > 0) ? product.minimumOrderQty : 1;
+
     items.add(makeGeneralInfoEntity(product));
     items.add(ProductDetailsPriceEntity(
         detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsPrice,
         product: product,
         styledProduct: styledProduct,
-        productPricingEnabled: true));
+        productPricingEnabled: true,
+        quantity: quantity));
 
     items.add(ProductDetailsAddtoCartEntity(
-        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart));
+        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart,
+        quantityText: quantity.toString()));
 
     if (product.htmlContent != null) {
       items.add(ProductDetailsDescriptionEntity(

@@ -17,6 +17,7 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
   final ProductEntity? product;
   final StyledProductEntity? styledProduct;
   final String? selectedUnitOfMeasureValueText;
+  final int? quantity;
 
   const ProductDetailsPriceEntity(
       {this.productPricingEnabled,
@@ -30,6 +31,7 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
       this.product,
       this.styledProduct,
       this.selectedUnitOfMeasureValueText, 
+      this.quantity,
       required super.detailsSectionType});
 
   @override
@@ -45,6 +47,7 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
       ProductEntity? product,
       StyledProductEntity? styledProduct,
       String? selectedUnitOfMeasureValueText,
+      int? quantity,
       ProdcutDeatilsPageWidgets? detailsSectionType}) {
     return ProductDetailsPriceEntity(
       productPricingEnabled:
@@ -61,6 +64,7 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
       styledProduct: styledProduct ?? this.styledProduct,
       selectedUnitOfMeasureValueText:
           selectedUnitOfMeasureValueText ?? this.selectedUnitOfMeasureValueText,
+      quantity: quantity ?? this.quantity,
       detailsSectionType: detailsSectionType ?? this.detailsSectionType,
     );
   }

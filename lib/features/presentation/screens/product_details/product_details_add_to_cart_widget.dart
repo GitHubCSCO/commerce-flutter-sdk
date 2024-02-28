@@ -6,8 +6,12 @@ import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_state.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_state.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
+import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,6 +43,8 @@ class ProductDetailsAddToCartWidget extends StatelessWidget {
 }
 
 class AddToCartSignInWidget extends StatelessWidget {
+  final textEditingController = TextEditingController();
+
   AddToCartSignInWidget();
   @override
   Widget build(BuildContext context) {
@@ -57,63 +63,26 @@ class AddToCartSignInWidget extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 20.0),
                   child: Row(
                     children: [
-                      Container(
-                        child: Expanded(
-                          flex: 4,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: TextButton(
-                                  onPressed: () {},
-                                  style: TextButton.styleFrom(
-                                    backgroundColor:
-                                        AppColors.grayBackgroundColor,
-                                    padding: EdgeInsets.all(16),
-                                    shape: CircleBorder(),
-                                  ),
-                                  child: Icon(
-                                    Icons.remove,
-                                    color: Colors.black,
-                                    size: 24,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 5,
-                                child: Container(
-                                  color: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: Input(
-                                    onTapOutside: (context) => FocusManager
-                                        .instance.primaryFocus
-                                        ?.unfocus(),
-                                    onEditingComplete: () =>
-                                        FocusScope.of(context).nextFocus(),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 3,
-                                child: TextButton(
-                                  onPressed: () {},
-                                  style: TextButton.styleFrom(
-                                    backgroundColor:
-                                        AppColors.grayBackgroundColor,
-                                    padding: EdgeInsets.all(16),
-                                    shape: CircleBorder(),
-                                  ),
-                                  child: Icon(
-                                    Icons.add,
-                                    color: Colors.black,
-                                    size: 24,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                      Expanded(
+                        flex: 5,
+                        child: NumberTextField(
+                            initialtText: detailsAddToCartEntity.quantityText,
+                            onChanged: (int? quantity) {
+                              var pricingState = context
+                                  .read<ProductDetailsPricingBloc>()
+                                  .state;
+                              if (pricingState is ProductDetailsPricingLoaded) {
+                                var productDetailsPricingEntity =
+                                    pricingState.productDetailsPriceEntity;
+                                productDetailsPricingEntity =
+                                    productDetailsPricingEntity.copyWith(
+                                        quantity: quantity);
+                                context.read<ProductDetailsPricingBloc>().add(
+                                    LoadProductDetailsPricing(
+                                        productDetailsPriceEntity:
+                                            productDetailsPricingEntity));
+                              }
+                            }),
                       ),
                       Expanded(
                         flex: 2,
@@ -158,6 +127,8 @@ class AddToCartSignInWidget extends StatelessWidget {
     });
   }
 }
+
+class QuantityTextChangeEvent {}
 
 class AddToCartNotSignedInWidget extends StatelessWidget {
   @override

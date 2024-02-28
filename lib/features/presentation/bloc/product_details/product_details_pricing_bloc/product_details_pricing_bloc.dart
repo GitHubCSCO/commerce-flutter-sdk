@@ -23,7 +23,7 @@ class ProductDetailsPricingBloc
     final result = await _productDetailsPricingUseCase.loadProductPricing(
         productDetailsPricingEntity.product!,
         productDetailsPricingEntity.styledProduct,
-        1);
+        productDetailsPricingEntity.quantity!);
 
     switch (result) {
       case Success(value: final data):

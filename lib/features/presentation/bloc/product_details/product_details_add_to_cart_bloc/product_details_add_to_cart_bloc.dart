@@ -33,7 +33,7 @@ class ProductDetailsAddToCartBloc
       return productDetailsAddtoCartEntity;
     }
     //var alternateUnitsOfMeasureEnabled = true;
-    var quantity = 1;
+    var quantity = int.parse(productDetailsAddtoCartEntity.quantityText!);
     var styledProduct = productDetailsPriceEntity.styledProduct;
     var product = productDetailsPriceEntity.product;
 
@@ -79,7 +79,8 @@ class ProductDetailsAddToCartBloc
     productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
         selectedUnitOfMeasureValueText: productDetailsPriceEntity.pricing
             .getUnitOfMeasure(
-                productDetailsAddtoCartEntity.selectedUnitOfMeasureValueText ?? ''));
+                productDetailsAddtoCartEntity.selectedUnitOfMeasureValueText ??
+                    ''));
 
     return productDetailsAddtoCartEntity;
   }
