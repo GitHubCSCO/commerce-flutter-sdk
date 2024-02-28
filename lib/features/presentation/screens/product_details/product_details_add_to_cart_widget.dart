@@ -4,6 +4,8 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_state.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
@@ -11,9 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductDetailsAddToCartWidget extends StatelessWidget {
-  final ProductDetailsAddtoCartEntity detailsAddToCartEntity;
-
-  const ProductDetailsAddToCartWidget({required this.detailsAddToCartEntity});
+  const ProductDetailsAddToCartWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class ProductDetailsAddToCartWidget extends StatelessWidget {
             listener: (context, state) {},
             builder: (context, state) {
               return state.status == AuthStatus.authenticated
-                  ? AddToCartSignInWidget(detailsAddToCartEntity: detailsAddToCartEntity)
+                  ? AddToCartSignInWidget()
                   : AddToCartNotSignedInWidget();
             },
           ),
@@ -39,105 +39,123 @@ class ProductDetailsAddToCartWidget extends StatelessWidget {
 }
 
 class AddToCartSignInWidget extends StatelessWidget {
-  final ProductDetailsAddtoCartEntity detailsAddToCartEntity;
-  AddToCartSignInWidget({required this.detailsAddToCartEntity});  
+  AddToCartSignInWidget();
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20.0),
-            child: Row(
+    return BlocBuilder<ProductDetailsAddToCartBloc,
+        ProductDetailsAddtoCartState>(builder: (context, state) {
+      switch (state) {
+        case ProductDetailsAddtoCartInitial():
+        case ProductDetailsAddtoCartLoading():
+          return const Center(child: CircularProgressIndicator());
+        case ProductDetailsAddtoCartSuccess():
+          var detailsAddToCartEntity = state.productDetailsAddToCartEntity;
+          return Container(
+            child: Column(
               children: [
-                Container(
-                  child: Expanded(
-                    flex: 4,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: TextButton(
-                            onPressed: () {},
-                            style: TextButton.styleFrom(
-                              backgroundColor: AppColors.grayBackgroundColor,
-                              padding: EdgeInsets.all(16),
-                              shape: CircleBorder(),
-                            ),
-                            child: Icon(
-                              Icons.remove,
-                              color: Colors.black,
-                              size: 24,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 5,
-                          child: Container(
-                            color: Colors.white,
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Input(
-                              onTapOutside: (context) =>
-                                  FocusManager.instance.primaryFocus?.unfocus(),
-                              onEditingComplete: () =>
-                                  FocusScope.of(context).nextFocus(),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: TextButton(
-                            onPressed: () {},
-                            style: TextButton.styleFrom(
-                              backgroundColor: AppColors.grayBackgroundColor,
-                              padding: EdgeInsets.all(16),
-                              shape: CircleBorder(),
-                            ),
-                            child: Icon(
-                              Icons.add,
-                              color: Colors.black,
-                              size: 24,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Column(
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Row(
                     children: [
-                      Text('U/M'),
-                      Text('E/A',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500, fontSize: 18.0))
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    children: [
-                      Text('Subtotal'),
-                      Text(
-                       detailsAddToCartEntity?.subtotalValueText ?? '',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 18.0),
+                      Container(
+                        child: Expanded(
+                          flex: 4,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: TextButton(
+                                  onPressed: () {},
+                                  style: TextButton.styleFrom(
+                                    backgroundColor:
+                                        AppColors.grayBackgroundColor,
+                                    padding: EdgeInsets.all(16),
+                                    shape: CircleBorder(),
+                                  ),
+                                  child: Icon(
+                                    Icons.remove,
+                                    color: Colors.black,
+                                    size: 24,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 5,
+                                child: Container(
+                                  color: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Input(
+                                    onTapOutside: (context) => FocusManager
+                                        .instance.primaryFocus
+                                        ?.unfocus(),
+                                    onEditingComplete: () =>
+                                        FocusScope.of(context).nextFocus(),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 3,
+                                child: TextButton(
+                                  onPressed: () {},
+                                  style: TextButton.styleFrom(
+                                    backgroundColor:
+                                        AppColors.grayBackgroundColor,
+                                    padding: EdgeInsets.all(16),
+                                    shape: CircleBorder(),
+                                  ),
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Colors.black,
+                                    size: 24,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          children: [
+                            Text('U/M'),
+                            Text('E/A',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18.0))
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          children: [
+                            Text('Subtotal'),
+                            Text(
+                              detailsAddToCartEntity?.subtotalValueText ?? '',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 18.0),
+                            )
+                          ],
+                        ),
                       )
                     ],
                   ),
+                ),
+                PrimaryButton(
+                  child: const Text(LocalizationConstants.addToCart),
+                  onPressed: () {},
                 )
               ],
             ),
-          ),
-          PrimaryButton(
-            child: const Text(LocalizationConstants.addToCart),
-            onPressed: () {},
-          )
-        ],
-      ),
-    );
+          );
+        case ProductDetailsAddtoCartError():
+          return Center(child: Text(state.errorMessage));
+        default:
+          return const Center(child: Text("failure"));
+      }
+    });
   }
 }
 

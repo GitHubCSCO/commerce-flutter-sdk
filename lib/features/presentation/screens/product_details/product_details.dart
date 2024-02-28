@@ -10,9 +10,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_us
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/produc_details_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
@@ -155,31 +153,12 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
               );
         }
       },
-      child: BlocBuilder<ProductDetailsAddToCartBloc,
-          ProductDetailsAddtoCartState>(builder: (context, state) {
-        if (state is ProductDetailsAddtoCartInitial ||
-            state is ProductDetailsAddtoCartLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is ProductDetailsAddtoCartSuccess) {
-          return ProductDetailsAddToCartWidget(
-              detailsAddToCartEntity: state.productDetailsAddToCartEntity);
-        } else {
-          return Container(); // return a default widget in case of other states
-        }
-      }),
+      child: ProductDetailsAddToCartWidget(),
     );
   }
 
   Widget buildPricingWidget(
       ProductDetailsPriceEntity productDetailsPriceEntity) {
-    // return BlocProvider(
-    //   create: (context) => sl<ProductDetailsPricingBloc>()
-    //     ..add(LoadProductDetailsPricing(
-    //         productDetailsPriceEntity: productDetailsPriceEntity)),
-    //   child: ProductDetailsPricingWidget(
-    //       productDetailsPricingEntity: productDetailsPriceEntity),
-    // );
-
     return ProductDetailsPricingWidget(
         productDetailsPricingEntity: productDetailsPriceEntity);
   }
