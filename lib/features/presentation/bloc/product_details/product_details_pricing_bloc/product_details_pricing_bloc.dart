@@ -29,6 +29,7 @@ class ProductDetailsPricingBloc
       case Success(value: final data):
         if (productDetailsPricingEntity.productPricingEnabled != null &&
             productDetailsPricingEntity.productPricingEnabled!) {
+              
           var realTimeInventory = await _productDetailsPricingUseCase
               .loadRealTimeInventory(productDetailsPricingEntity.product!);
 

@@ -28,7 +28,5 @@ class ProductCarouselCubit extends Cubit<ProductCarouselState> {
     }
   }
 
-  Future<void> getProductId(ProductEntity productEntity) async {
-    emit(ProductIdFetchState(productId: productEntity.id.toString()));
-  }
+ 
 }

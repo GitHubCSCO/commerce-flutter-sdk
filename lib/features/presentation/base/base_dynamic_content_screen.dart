@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/features/domain/entity/content_management/w
 import 'package:commerce_flutter_app/features/presentation/cubit/action_link/action_link_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_id_fetch_cubit/product_id_fetch_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_history/search_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/action_grid_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/action_list_section_widget.dart';
@@ -47,29 +48,38 @@ class BaseDynamicContentScreen extends StatelessWidget {
     switch (widgetEntity.runtimeType) {
       case CarouselWidgetEntity:
         {
-          final CarouselWidgetEntity carouselWidgetEntity = widgetEntity as CarouselWidgetEntity;
+          final CarouselWidgetEntity carouselWidgetEntity =
+              widgetEntity as CarouselWidgetEntity;
 
-          return buildCarouselSectionWidget(carouselWidgetEntity: carouselWidgetEntity);
+          return buildCarouselSectionWidget(
+              carouselWidgetEntity: carouselWidgetEntity);
         }
       case ActionsWidgetEntity:
         {
-          final ActionsWidgetEntity actionsWidgetEntity = widgetEntity as ActionsWidgetEntity;
+          final ActionsWidgetEntity actionsWidgetEntity =
+              widgetEntity as ActionsWidgetEntity;
 
           return (actionsWidgetEntity.layout == ActionsLayout.grid)
-              ? buildActionGridSectionWidget(actionsWidgetEntity: actionsWidgetEntity)
-              : buildActionListSectionWidget(actionsWidgetEntity: actionsWidgetEntity);
+              ? buildActionGridSectionWidget(
+                  actionsWidgetEntity: actionsWidgetEntity)
+              : buildActionListSectionWidget(
+                  actionsWidgetEntity: actionsWidgetEntity);
         }
       case ProductCarouselWidgetEntity:
         {
-          final ProductCarouselWidgetEntity productCarouselWidgetEntity = widgetEntity as ProductCarouselWidgetEntity;
+          final ProductCarouselWidgetEntity productCarouselWidgetEntity =
+              widgetEntity as ProductCarouselWidgetEntity;
 
-          return buildProductCarouselSectionWidget(productCarouselWidgetEntity: productCarouselWidgetEntity);
+          return buildProductCarouselSectionWidget(
+              productCarouselWidgetEntity: productCarouselWidgetEntity);
         }
       case SearchHistoryWidgetEntity:
         {
-          final SearchHistoryWidgetEntity searchHistoryWidgetEntity = widgetEntity as SearchHistoryWidgetEntity;
+          final SearchHistoryWidgetEntity searchHistoryWidgetEntity =
+              widgetEntity as SearchHistoryWidgetEntity;
 
-          return buildSearchHistorySectionWidget(searchHistoryWidgetEntity: searchHistoryWidgetEntity);
+          return buildSearchHistorySectionWidget(
+              searchHistoryWidgetEntity: searchHistoryWidgetEntity);
         }
     }
     return null;
@@ -79,38 +89,48 @@ class BaseDynamicContentScreen extends StatelessWidget {
     return const ListViewDivider();
   }
 
-  Widget buildCarouselSectionWidget({required CarouselWidgetEntity carouselWidgetEntity}) {
+  Widget buildCarouselSectionWidget(
+      {required CarouselWidgetEntity carouselWidgetEntity}) {
     return BlocProvider(
       create: (context) => CarouselIndicatorCubit(),
       child: CarouselSectionWidget(carouselWidgetEntity: carouselWidgetEntity),
     );
   }
 
-  Widget buildActionGridSectionWidget({required ActionsWidgetEntity actionsWidgetEntity}) {
+  Widget buildActionGridSectionWidget(
+      {required ActionsWidgetEntity actionsWidgetEntity}) {
     return ActionGridSectionWidget(actionsWidgetEntity: actionsWidgetEntity);
   }
 
-  Widget buildActionListSectionWidget({required ActionsWidgetEntity actionsWidgetEntity}) {
+  Widget buildActionListSectionWidget(
+      {required ActionsWidgetEntity actionsWidgetEntity}) {
     return BlocProvider(
-      create: (context) => sl<ActionLinkCubit>()..viewableActions(actionsWidgetEntity),
+      create: (context) =>
+          sl<ActionLinkCubit>()..viewableActions(actionsWidgetEntity),
       child: ActionListSectionWidget(actionsWidgetEntity: actionsWidgetEntity),
     );
   }
 
-  Widget buildProductCarouselSectionWidget({required ProductCarouselWidgetEntity productCarouselWidgetEntity}) {
-    return BlocProvider<ProductCarouselCubit>(
-      create: (context) => sl<ProductCarouselCubit>()..getProducts(productCarouselWidgetEntity),
+  Widget buildProductCarouselSectionWidget(
+      {required ProductCarouselWidgetEntity productCarouselWidgetEntity}) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ProductCarouselCubit>(
+            create: (context) => sl<ProductCarouselCubit>()
+              ..getProducts(productCarouselWidgetEntity)),
+
+          BlocProvider<ProductIDFetchCubit>(create: (context) => sl<ProductIDFetchCubit>())
+      ],
       child: ProductCarouselSectionWidget(
           productCarouselWidgetEntity: productCarouselWidgetEntity),
     );
   }
 
-  Widget buildSearchHistorySectionWidget({required SearchHistoryWidgetEntity searchHistoryWidgetEntity}) {
+  Widget buildSearchHistorySectionWidget(
+      {required SearchHistoryWidgetEntity searchHistoryWidgetEntity}) {
     return BlocProvider<SearchHistoryCubit>(
         create: (context) => sl<SearchHistoryCubit>()..getSearchHistory(),
         child: SearchHistorySectionWidget(
-            searchHistoryWidgetEntity: searchHistoryWidgetEntity)
-    );
+            searchHistoryWidgetEntity: searchHistoryWidgetEntity));
   }
-
 }

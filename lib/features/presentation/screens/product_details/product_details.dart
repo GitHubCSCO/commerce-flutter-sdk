@@ -8,8 +8,12 @@ import 'package:commerce_flutter_app/features/domain/entity/product_details/prod
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_event.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/produc_details_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_event.dart';
@@ -28,10 +32,21 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ProductDetailsBloc>(
-        create: (context) =>
-            sl<ProductDetailsBloc>()..add(FetchProductDetailsEvent(productId)),
-        child: ProductDetailsPage());
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ProductDetailsBloc>(
+          create: (context) => sl<ProductDetailsBloc>()
+            ..add(FetchProductDetailsEvent(productId)),
+        ),
+        BlocProvider<ProductDetailsPricingBloc>(
+          create: (context) => sl<ProductDetailsPricingBloc>(),
+        ),
+        BlocProvider<ProductDetailsAddToCartBloc>(
+          create: (context) => sl<ProductDetailsAddToCartBloc>(),
+        ),
+      ],
+      child: ProductDetailsPage(),
+    );
   }
 }
 
@@ -52,7 +67,7 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
                 body: SingleChildScrollView(
                   child: Column(
                     children: _buildProductDetailsWidgets(
-                        state.productDetailsEntities),
+                        state.productDetailsEntities, context),
                   ),
                 ),
                 backgroundColor: AppColors.grayBackgroundColor);
@@ -66,7 +81,8 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
   }
 
   List<Widget> _buildProductDetailsWidgets(
-      List<ProductDetailsBaseEntity> productDetailsEntities) {
+      List<ProductDetailsBaseEntity> productDetailsEntities,
+      BuildContext buildContext) {
     List<Widget> widgets = [];
     for (var item in productDetailsEntities) {
       switch (item.detailsSectionType) {
@@ -83,8 +99,9 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
           widgets.add(buildGeneralInfoWidget(generalInfoEntity));
           break;
         case ProdcutDeatilsPageWidgets.productDetailsAddtoCart:
-          final detailsAddToCartEntity = item as ProductDetailAddtoCartEntity;
-          widgets.add(buildAddToCartWidget(detailsAddToCartEntity));
+          final detailsAddToCartEntity = item as ProductDetailsAddtoCartEntity;
+          widgets
+              .add(buildAddToCartWidget(detailsAddToCartEntity, buildContext));
         case ProdcutDeatilsPageWidgets.productDetailsPrice:
           final productDetailsPriceEntity = item as ProductDetailsPriceEntity;
           widgets.add(buildPricingWidget(productDetailsPriceEntity));
@@ -124,18 +141,46 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
   // details add to cart widget
 
   Widget buildAddToCartWidget(
-      ProductDetailAddtoCartEntity detailsAddToCartEntity) {
-    return ProductDetailsAddToCartWidget(
-        detailsAddToCartEntity: detailsAddToCartEntity);
+      ProductDetailsAddtoCartEntity detailsAddToCartEntity,
+      BuildContext buildContext) {
+    return BlocListener<ProductDetailsPricingBloc, ProductDetailsPricingState>(
+      listener: (context, state) {
+        if (state is ProductDetailsPricingLoaded) {
+          final priceEntity = state.productDetailsPriceEntity;
+          buildContext.read<ProductDetailsAddToCartBloc>().add(
+                LoadProductDetailsAddToCartEvent(
+                  productDetailsAddToCartEntity: detailsAddToCartEntity,
+                  productDetailsPriceEntity: priceEntity,
+                ),
+              );
+        }
+      },
+      child: BlocBuilder<ProductDetailsAddToCartBloc,
+          ProductDetailsAddtoCartState>(builder: (context, state) {
+        if (state is ProductDetailsAddtoCartInitial ||
+            state is ProductDetailsAddtoCartLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is ProductDetailsAddtoCartSuccess) {
+          return ProductDetailsAddToCartWidget(
+              detailsAddToCartEntity: state.productDetailsAddToCartEntity);
+        } else {
+          return Container(); // return a default widget in case of other states
+        }
+      }),
+    );
   }
 
   Widget buildPricingWidget(
       ProductDetailsPriceEntity productDetailsPriceEntity) {
-    return BlocProvider<ProductDetailsPricingBloc>(
-        create: (context) => sl<ProductDetailsPricingBloc>()
-          ..add(LoadProductDetailsPricing(
-              productDetailsPriceEntity: productDetailsPriceEntity)),
-        child: ProductDetailsPricingWidget(
-            productDetailsPricingEntity: productDetailsPriceEntity));
+    // return BlocProvider(
+    //   create: (context) => sl<ProductDetailsPricingBloc>()
+    //     ..add(LoadProductDetailsPricing(
+    //         productDetailsPriceEntity: productDetailsPriceEntity)),
+    //   child: ProductDetailsPricingWidget(
+    //       productDetailsPricingEntity: productDetailsPriceEntity),
+    // );
+
+    return ProductDetailsPricingWidget(
+        productDetailsPricingEntity: productDetailsPriceEntity);
   }
 }

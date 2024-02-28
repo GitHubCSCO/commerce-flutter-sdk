@@ -28,13 +28,13 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
       return Failure(ErrorResponse(
           errorDescription: 'Product requires a quote to be purchased'));
     }
-
-    chosenUnitOfMeasure = styledProduct != null
-        ? styledProduct.productUnitOfMeasures?.first ??
-            productEntity.productUnitOfMeasures?.firstWhere(
-                (p) => p.unitOfMeasure == productEntity.unitOfMeasure)
-        : productEntity.productUnitOfMeasures
-            ?.firstWhere((p) => p.unitOfMeasure == productEntity.unitOfMeasure);
+chosenUnitOfMeasure = ProductUnitOfMeasure();
+    // chosenUnitOfMeasure = styledProduct != null
+    //     ? styledProduct.productUnitOfMeasures?.first ??
+    //         productEntity.productUnitOfMeasures?.firstWhere(
+    //             (p) => p.unitOfMeasure == productEntity.unitOfMeasure)
+    //     : productEntity.productUnitOfMeasures
+    //         ?.firstWhere((p) => p.unitOfMeasure == productEntity.unitOfMeasure);
 
     for (var s in productEntity?.configurationDto?.sections ?? []) {
       if (selectedConfigurations.containsKey(s.sectionName)) {
@@ -167,7 +167,7 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
         ?.firstWhere((o) => o.productId == productId);
 
     if (inventory != null) {
-      late var newInventoryAvailability;
+     Availability? newInventoryAvailability;
 
       if (inventory.inventoryAvailabilityDtos != null) {
         for (var inventoryAvailabilityDto

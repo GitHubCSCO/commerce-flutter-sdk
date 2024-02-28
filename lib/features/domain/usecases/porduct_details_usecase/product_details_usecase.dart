@@ -245,7 +245,7 @@ class ProductDetailsUseCase extends BaseUseCase {
         styledProduct: styledProduct,
         productPricingEnabled: true));
 
-    items.add(ProductDetailAddtoCartEntity(
+    items.add(ProductDetailsAddtoCartEntity(
         detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart));
 
     if (product.htmlContent != null) {

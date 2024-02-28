@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductDetailsAddToCartWidget extends StatelessWidget {
-  final ProductDetailAddtoCartEntity detailsAddToCartEntity;
+  final ProductDetailsAddtoCartEntity detailsAddToCartEntity;
 
   const ProductDetailsAddToCartWidget({required this.detailsAddToCartEntity});
 
@@ -28,7 +28,7 @@ class ProductDetailsAddToCartWidget extends StatelessWidget {
             listener: (context, state) {},
             builder: (context, state) {
               return state.status == AuthStatus.authenticated
-                  ? AddToCartSignInWidget()
+                  ? AddToCartSignInWidget(detailsAddToCartEntity: detailsAddToCartEntity)
                   : AddToCartNotSignedInWidget();
             },
           ),
@@ -39,6 +39,8 @@ class ProductDetailsAddToCartWidget extends StatelessWidget {
 }
 
 class AddToCartSignInWidget extends StatelessWidget {
+  final ProductDetailsAddtoCartEntity detailsAddToCartEntity;
+  AddToCartSignInWidget({required this.detailsAddToCartEntity});  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -119,7 +121,7 @@ class AddToCartSignInWidget extends StatelessWidget {
                     children: [
                       Text('Subtotal'),
                       Text(
-                        '11,44.00',
+                       detailsAddToCartEntity?.subtotalValueText ?? '',
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 18.0),
                       )

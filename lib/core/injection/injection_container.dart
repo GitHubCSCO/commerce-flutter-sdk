@@ -19,6 +19,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/sea
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
@@ -32,6 +33,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/domain_selectio
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_id_fetch_cubit/product_id_fetch_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_history/search_history_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:get_it/get_it.dart';
@@ -83,7 +85,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ProductCarouselUseCase())
 
     // product details
-
+    ..registerFactory(() => ProductIDFetchCubit(productCarouselUseCase: sl()))
     ..registerFactory(() => ProductDetailsBloc(productDetailsUseCase: sl()))
     ..registerFactory(() => ProductDetailsUseCase())
 
@@ -91,6 +93,9 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(
         () => ProductDetailsPricingBloc(productDetailsPricingUseCase: sl()))
     ..registerFactory(() => ProductDetailsPricingUseCase())
+
+    // product details Add to cart
+    ..registerFactory(() => ProductDetailsAddToCartBloc())
 
     //carousel
     ..registerFactory(() => CarouselIndicatorCubit())
