@@ -41,7 +41,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                         productDetailsPricingEntity.discountMessage!.isNotEmpty)
                       Text(
                         productDetailsPriceEntity.discountMessage ?? '',
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.normal,
                             fontStyle: FontStyle.italic,
@@ -51,7 +51,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(productDetailsPriceEntity.priceValueText ?? '',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               )),
@@ -65,7 +65,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                       onTap: () {
                         // TODO: Implement the logic for "View Quantity Pricing"
                       },
-                      child: Text("View Quantity Pricing",
+                      child: const Text("View Quantity Pricing",
                           style: TextStyle(
                               color: AppColors.primaryColor,
                               fontWeight: FontWeight.w500,
@@ -80,7 +80,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                       onTap: () {
                         // TODO: Implement the logic for "View Quantity Pricing"
                       },
-                      child: Text("View Availability by Warehouse",
+                      child: const Text("View Availability by Warehouse",
                           style: TextStyle(
                               color: AppColors.primaryColor,
                               fontWeight: FontWeight.w500,

@@ -29,6 +29,7 @@ class ProductDetailsAddToCartBloc
   ProductDetailsAddtoCartEntity updateAddToCartViewModel(
       ProductDetailsAddtoCartEntity productDetailsAddtoCartEntity,
       ProductDetailsPriceEntity productDetailsPriceEntity) {
+        
     if (productDetailsAddtoCartEntity == null) {
       return productDetailsAddtoCartEntity;
     }

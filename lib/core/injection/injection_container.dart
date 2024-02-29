@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_
 import 'package:commerce_flutter_app/features/domain/usecases/domain_selection_usecase/domain_selection_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_id_fetch_usecase_dart.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
@@ -85,9 +86,11 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ProductCarouselUseCase())
 
     // product details
-    ..registerFactory(() => ProductIDFetchCubit(productCarouselUseCase: sl()))
+    ..registerFactory(
+        () => ProductIDFetchCubit(productDetailsIdFetchUseCase: sl()))
     ..registerFactory(() => ProductDetailsBloc(productDetailsUseCase: sl()))
     ..registerFactory(() => ProductDetailsUseCase())
+    ..registerFactory(() => ProductDetailsIdFetchUseCase())
 
     // product details pricing
     ..registerFactory(
@@ -175,6 +178,11 @@ Future<void> initInjectionContainer() async {
           networkService: sl(),
         ))
     ..registerLazySingleton<IAutocompleteService>(() => AutoCompleteService(
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
+    ..registerLazySingleton<ICatalogpagesService>(() => CatalogpagesService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),

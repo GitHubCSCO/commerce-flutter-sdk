@@ -28,13 +28,13 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
       return Failure(ErrorResponse(
           errorDescription: 'Product requires a quote to be purchased'));
     }
-chosenUnitOfMeasure = ProductUnitOfMeasure();
-    // chosenUnitOfMeasure = styledProduct != null
-    //     ? styledProduct.productUnitOfMeasures?.first ??
-    //         productEntity.productUnitOfMeasures?.firstWhere(
-    //             (p) => p.unitOfMeasure == productEntity.unitOfMeasure)
-    //     : productEntity.productUnitOfMeasures
-    //         ?.firstWhere((p) => p.unitOfMeasure == productEntity.unitOfMeasure);
+// chosenUnitOfMeasure = ProductUnitOfMeasure();
+    chosenUnitOfMeasure = styledProduct != null
+        ? styledProduct.productUnitOfMeasures?.first ??
+            productEntity.productUnitOfMeasures?.firstWhere(
+                (p) => p.unitOfMeasure == productEntity.unitOfMeasure)
+        : productEntity.productUnitOfMeasures
+            ?.firstWhere((p) => p.unitOfMeasure == productEntity.unitOfMeasure);
 
     for (var s in productEntity?.configurationDto?.sections ?? []) {
       if (selectedConfigurations.containsKey(s.sectionName)) {
@@ -167,7 +167,7 @@ chosenUnitOfMeasure = ProductUnitOfMeasure();
         ?.firstWhere((o) => o.productId == productId);
 
     if (inventory != null) {
-     Availability? newInventoryAvailability;
+      Availability? newInventoryAvailability;
 
       if (inventory.inventoryAvailabilityDtos != null) {
         for (var inventoryAvailabilityDto
@@ -187,12 +187,13 @@ chosenUnitOfMeasure = ProductUnitOfMeasure();
       if (styledProduct != null) {
         styledProduct = styledProduct.copyWith(
             qtyOnHand: inventory.qtyOnHand,
-            availability: AvailabilityEntityMapper()
-                .toEntity(newInventoryAvailability));
+            availability:
+                AvailabilityEntityMapper().toEntity(newInventoryAvailability));
       } else {
         productEntity = productEntity.copyWith(
             qtyOnHand: inventory.qtyOnHand,
-            availability: AvailabilityEntityMapper().toEntity(newInventoryAvailability));
+            availability:
+                AvailabilityEntityMapper().toEntity(newInventoryAvailability));
       }
 
       var productUnitOfMeasures = styledProduct != null
