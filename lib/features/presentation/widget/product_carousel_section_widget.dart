@@ -60,7 +60,7 @@ class ProductCarouselSectionWidget extends StatelessWidget {
                           var state = context.read<ProductIDFetchCubit>().state;
                           if (state is ProductIdFetchSuccess) {
                             var produtId = state.productId;
-                            AppRoute.productDetails.navigate(
+                            AppRoute.productDetails.navigateBackStack(
                               context,
                               pathParameters: {
                                 "productId": produtId.toString()
