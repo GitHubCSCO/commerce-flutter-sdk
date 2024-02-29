@@ -86,6 +86,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
             child: TextField(
                 controller: _controller,
                 focusNode: _focusNode,
+                textAlign: TextAlign.center,
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.number,
                 maxLength: widget.max.toString().length +
