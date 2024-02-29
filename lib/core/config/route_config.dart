@@ -108,6 +108,5 @@ NavigationNode _getNavigationRoot() {
     parent: shop,
   );
 
-
   return root;
 }

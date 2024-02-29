@@ -107,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                       return;
                     }
 
-                    AppRoute.shop.navigate(context);
+                    context.pop();
                   } else if (state is LoginFailureState) {
                     showDialog(
                       context: context,
