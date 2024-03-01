@@ -26,6 +26,7 @@ dependencies:
   hive_flutter: ^1.1.0
   html: ^0.15.4
   flutter_widget_from_html: ^0.14.11
+  loading_animation_widget:
 
 
 dev_dependencies:
