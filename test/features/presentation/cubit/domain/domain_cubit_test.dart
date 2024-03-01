@@ -94,5 +94,37 @@ void main() {
         ),
       ],
     );
+
+    blocTest(
+      'emits [DomainOperationInProgress, DomainHasValue] when fetchDomain is called successfully',
+      build: () {
+        when(() => domainUsecase.getSavedDomain())
+            .thenAnswer((_) async => Future.value('savedDomain'));
+        return domainCubit;
+      },
+      act: (cubit) async {
+        await cubit.fetchDomain();
+      },
+      expect: () => [
+        DomainOperationInProgress(),
+        DomainHasValue('savedDomain'),
+      ],
+    );
+
+    blocTest(
+      'emits [DomainOperationInProgress, DomainOperationFailed] when fetchDomain encounters an error',
+      build: () {
+        when(() => domainUsecase.getSavedDomain())
+            .thenAnswer((_) async => Future.value(null));
+        return domainCubit;
+      },
+      act: (cubit) async {
+        await cubit.fetchDomain();
+      },
+      expect: () => [
+        DomainOperationInProgress(),
+        DomainOperationFailed('No Domain', ''),
+      ],
+    );
   });
 }
