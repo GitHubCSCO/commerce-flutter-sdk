@@ -46,7 +46,7 @@ NavigationNode _getNavigationRoot() {
   final domainSelection = createNode(
     name: AppRoute.domainSelection.name,
     path: AppRoute.domainSelection.suffix,
-    builder: (context, state) => const DomainSelectionScreen(),
+    builder: (context, state) => const DomainScreen(),
     parent: root,
   );
 

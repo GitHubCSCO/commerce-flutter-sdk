@@ -1,10 +1,9 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -14,10 +13,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<SettingsDomainCubit>()..getDomain(),
-      child: const SettingsPage(),
-    );
+    return const SettingsPage();
   }
 }
 
@@ -59,9 +55,9 @@ class _SettingsDomainSelectorWidget extends StatelessWidget {
         children: [
           const Text(LocalizationConstants.currentDomain),
           const SizedBox(height: 8),
-          BlocBuilder<SettingsDomainCubit, SettingsDomainState>(
+          BlocBuilder<DomainCubit, DomainState>(
             builder: (context, state) {
-              if (state is SettingsDomainLoaded) {
+              if (state is DomainHasValue) {
                 return Text(
                   state.domain,
                   style: const TextStyle(

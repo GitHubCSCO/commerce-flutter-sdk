@@ -9,7 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/domain_change/domain_change_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -90,9 +90,9 @@ class _AccountHeader extends StatelessWidget {
             _reloadAccountPage(context);
           },
           builder: (context, state) {
-            return BlocListener<DomainChangeCubit, DomainChangeState>(
+            return BlocListener<DomainCubit, DomainState>(
               listener: (context, state) {
-                if (state is DomainChangeSuccess) {
+                if (state is DomainHasValue) {
                   _reloadAccountPage(context);
                 }
               },

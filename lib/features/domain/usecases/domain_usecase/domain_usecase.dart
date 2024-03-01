@@ -1,10 +1,10 @@
 import 'package:commerce_flutter_app/core/extensions/url_string_extension.dart';
-import 'package:commerce_flutter_app/features/domain/enums/domain_selection_status.dart';
+import 'package:commerce_flutter_app/features/domain/enums/domain_change_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class DomainSelectionUsecase extends BaseUseCase {
-  DomainSelectionUsecase() : super();
+class DomainUsecase extends BaseUseCase {
+  DomainUsecase() : super();
 
   static const _domainKey = 'DomainKey';
 
@@ -21,9 +21,9 @@ class DomainSelectionUsecase extends BaseUseCase {
     return result;
   }
 
-  Future<DomainSelectionStatus> domainSelectHandler(String domain) async {
+  Future<DomainChangeStatus> domainSelectHandler(String domain) async {
     if (domain.trim().isEmpty) {
-      return DomainSelectionStatus.failedInvalidDomain;
+      return DomainChangeStatus.failedInvalidDomain;
     }
     final validUrlString = domain.makeValidUrl();
 
@@ -42,22 +42,22 @@ class DomainSelectionUsecase extends BaseUseCase {
 
     final domainSelectionStatus = await _testAndGetSettings();
 
-    if (domainSelectionStatus != DomainSelectionStatus.success) {
+    if (domainSelectionStatus != DomainChangeStatus.success) {
       return domainSelectionStatus;
     }
     if (commerceAPIServiceProvider.getClientService().host != null) {
       commerceAPIServiceProvider.getLocalStorageService().save(
           _domainKey, commerceAPIServiceProvider.getClientService().host!);
     }
-    return DomainSelectionStatus.success;
+    return DomainChangeStatus.success;
   }
 
-  Future<DomainSelectionStatus> _testAndGetSettings() async {
+  Future<DomainChangeStatus> _testAndGetSettings() async {
     var isOnline =
         await commerceAPIServiceProvider.getNetworkService().isOnline();
 
     if (!isOnline) {
-      return DomainSelectionStatus.failedOffline;
+      return DomainChangeStatus.failedOffline;
     }
 
     final futures = [
@@ -89,7 +89,7 @@ class DomainSelectionUsecase extends BaseUseCase {
         return await _testAndGetSettings();
       }
 
-      return DomainSelectionStatus.failedInvalidDomain;
+      return DomainChangeStatus.failedInvalidDomain;
     }
 
     // Check if websiteSettingsResponse is a Success
@@ -100,9 +100,9 @@ class DomainSelectionUsecase extends BaseUseCase {
             false;
 
     if (!isMobileAppEnabled) {
-      return DomainSelectionStatus.failedMobileAppDisabled;
+      return DomainChangeStatus.failedMobileAppDisabled;
     }
 
-    return DomainSelectionStatus.success;
+    return DomainChangeStatus.success;
   }
 }

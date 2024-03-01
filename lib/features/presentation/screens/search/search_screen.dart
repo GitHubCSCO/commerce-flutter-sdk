@@ -5,7 +5,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/domain_change/domain_change_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
 import 'package:flutter/material.dart';
@@ -98,9 +98,9 @@ class SearchPage extends BaseDynamicContentScreen {
                                 _reloadSearchPage(context);
                               },
                             ),
-                            BlocListener<DomainChangeCubit, DomainChangeState>(
+                            BlocListener<DomainCubit, DomainState>(
                               listener: (context, state) {
-                                if (state is DomainChangeSuccess) {
+                                if (state is DomainHasValue) {
                                   _reloadSearchPage(context);
                                 }
                               },
