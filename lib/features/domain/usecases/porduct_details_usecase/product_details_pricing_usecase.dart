@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
@@ -14,6 +15,7 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
   late var chosenUnitOfMeasure;
   late Map<String, ConfigSectionOption> selectedConfigurations = {};
   late var realtimeProductAvailabilityEnabled;
+
   ProductDetailsPricingUseCase() : super() {
     productPricingEnabled = true;
     realtimeProductPricingEnabled = true;
@@ -28,13 +30,19 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
       return Failure(ErrorResponse(
           errorDescription: 'Product requires a quote to be purchased'));
     }
-// chosenUnitOfMeasure = ProductUnitOfMeasure();
-    chosenUnitOfMeasure = styledProduct != null
-        ? styledProduct.productUnitOfMeasures?.first ??
-            productEntity.productUnitOfMeasures?.firstWhere(
-                (p) => p.unitOfMeasure == productEntity.unitOfMeasure)
-        : productEntity.productUnitOfMeasures
-            ?.firstWhere((p) => p.unitOfMeasure == productEntity.unitOfMeasure);
+
+    if ((styledProduct?.productUnitOfMeasures?.isEmpty ?? true) &&
+        (productEntity.productUnitOfMeasures?.isEmpty ?? true)) {
+      // THIS NEED TO FIX LATER, productUnitOfMeasures is gettign empty thats why
+      chosenUnitOfMeasure = ProductUnitOfMeasureEntity();
+    } else {
+      chosenUnitOfMeasure = styledProduct != null
+          ? styledProduct.productUnitOfMeasures?.first ??
+              productEntity.productUnitOfMeasures?.firstWhere(
+                  (p) => p.unitOfMeasure == productEntity.unitOfMeasure)
+          : productEntity.productUnitOfMeasures?.firstWhere(
+              (p) => p.unitOfMeasure == productEntity.unitOfMeasure);
+    }
 
     for (var s in productEntity?.configurationDto?.sections ?? []) {
       if (selectedConfigurations.containsKey(s.sectionName)) {
