@@ -1,4 +1,4 @@
-enum DomainSelectionStatus {
+enum DomainChangeStatus {
   success,
   failedOffline,
   failedInvalidDomain,
