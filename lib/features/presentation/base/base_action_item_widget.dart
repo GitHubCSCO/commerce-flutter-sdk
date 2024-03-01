@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_type_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -118,7 +119,24 @@ class BaseActionItemWidget extends StatelessWidget {
   }
 
   void signOut(BuildContext context) {
-    context.read<LogoutCubit>().logout();
+    displayDialogWidget(
+        context: context,
+        title: LocalizationConstants.signOut,
+        actions: [
+          DialogPlainButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text(LocalizationConstants.cancel),
+          ),
+          DialogPlainButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              context.read<LogoutCubit>().logout();
+            },
+            child: const Text(LocalizationConstants.oK),
+          ),
+        ]);
   }
 
   void navigateToSettings(BuildContext context) {
