@@ -9,9 +9,14 @@ import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/domain_change/domain_change_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+void _reloadAccountPage(BuildContext context) {
+  context.read<AccountPageBloc>().add(AccountPageLoadEvent());
+}
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -82,12 +87,19 @@ class _AccountHeader extends StatelessWidget {
         ),
         child: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) {
-            context.read<AccountPageBloc>().add(AccountPageLoadEvent());
+            _reloadAccountPage(context);
           },
           builder: (context, state) {
-            return state.status == AuthStatus.authenticated
-                ? const _AccountLoggedInHeader()
-                : const _AccountLoggedOutHeader();
+            return BlocListener<DomainChangeCubit, DomainChangeState>(
+              listener: (context, state) {
+                if (state is DomainChangeSuccess) {
+                  _reloadAccountPage(context);
+                }
+              },
+              child: state.status == AuthStatus.authenticated
+                  ? const _AccountLoggedInHeader()
+                  : const _AccountLoggedOutHeader(),
+            );
           },
         ),
       ),

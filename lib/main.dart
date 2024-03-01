@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/config/test_config_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/domain_change/domain_change_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,12 +18,9 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => sl<AuthCubit>(),
-        ),
-        BlocProvider(
-          create: (context) => sl<LogoutCubit>(),
-        ),
+        BlocProvider(create: (context) => sl<AuthCubit>()),
+        BlocProvider(create: (context) => sl<LogoutCubit>()),
+        BlocProvider(create: (context) => sl<DomainChangeCubit>()),
       ],
       child: const MyApp(),
     ),

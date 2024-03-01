@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/domain_change/domain_change_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain_selection/domain_selection_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_components.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_style.dart';
@@ -86,6 +87,9 @@ class _DomainSelectionPageState extends State<DomainSelectionPage> {
             BlocConsumer<DomainSelectionCubit, DomainSelectionState>(
               listener: (context, state) {
                 if (state is DomainSelectionSuccess) {
+                  context
+                      .read<DomainChangeCubit>()
+                      .changeDomain(_textEditingController.text);
                   AppRoute.shop.navigate(context);
                 }
 
