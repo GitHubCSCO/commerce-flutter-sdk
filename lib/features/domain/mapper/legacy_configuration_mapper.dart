@@ -2,13 +2,13 @@ import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class LegacyConfigurationEntityMapper {
-  LegacyConfigurationEntity toEntity(LegacyConfiguration model) =>
+  LegacyConfigurationEntity toEntity(LegacyConfiguration? model) =>
       LegacyConfigurationEntity(
-        sections: model.sections
+        sections: model?.sections
             ?.map((section) => ConfigSectionEntityMapper().toEntity(section))
             .toList(),
-        hasDefaults: model.hasDefaults,
-        isKit: model.isKit,
+        hasDefaults: model?.hasDefaults,
+        isKit: model?.isKit,
       );
 }
 

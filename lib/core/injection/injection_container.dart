@@ -10,6 +10,9 @@ import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_id_fetch_usecase_dart.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_cms_usecase.dart';
@@ -17,6 +20,9 @@ import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/sea
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
@@ -27,6 +33,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_c
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_id_fetch_cubit/product_id_fetch_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_history/search_history_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:get_it/get_it.dart';
@@ -74,6 +81,21 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ProductCarouselCubit(productCarouselUseCase: sl()))
     ..registerFactory(() => ProductCarouselUseCase())
 
+    // product details
+    ..registerFactory(
+        () => ProductIDFetchCubit(productDetailsIdFetchUseCase: sl()))
+    ..registerFactory(() => ProductDetailsBloc(productDetailsUseCase: sl()))
+    ..registerFactory(() => ProductDetailsUseCase())
+    ..registerFactory(() => ProductDetailsIdFetchUseCase())
+
+    // product details pricing
+    ..registerFactory(
+        () => ProductDetailsPricingBloc(productDetailsPricingUseCase: sl()))
+    ..registerFactory(() => ProductDetailsPricingUseCase())
+
+    // product details Add to cart
+    ..registerFactory(() => ProductDetailsAddToCartBloc())
+
     //carousel
     ..registerFactory(() => CarouselIndicatorCubit())
 
@@ -93,6 +115,12 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<ICoreServiceProvider>(() => CoreServiceProvider())
 
     //services
+    ..registerLazySingleton<IRealTimePricingService>(() =>
+        RealTimePricingService(
+            clientService: sl(), cacheService: sl(), networkService: sl()))
+    ..registerLazySingleton<IRealTimeInventoryService>(() =>
+        RealTimeInventoryService(
+            clientService: sl(), cacheService: sl(), networkService: sl()))
     ..registerLazySingleton<IWebsiteService>(() => WebsiteService(
         clientService: sl(),
         sessionService: sl(),
@@ -149,5 +177,11 @@ Future<void> initInjectionContainer() async {
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
+        ))
+    ..registerLazySingleton<ICatalogpagesService>(() => CatalogpagesService(
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+
         ));
 }

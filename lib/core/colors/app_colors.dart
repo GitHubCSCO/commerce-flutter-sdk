@@ -60,6 +60,11 @@ class AppColors {
 
   static const textDisabledColor = Color(0xFF707070);
 
+
+
+  static const grayBackgroundColor = Color(0xFFF5F5F5);
+
+
   static String colorToHex(Color color) {
     return '#${color.value.toRadixString(16).substring(2)}';
   }

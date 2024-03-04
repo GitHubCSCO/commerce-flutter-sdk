@@ -27,8 +27,9 @@ class RoutePaths {
   static const String search = '/${RouteNames.search}';
   static const String account = '/${RouteNames.account}';
   static const String cart = '/${RouteNames.cart}';
-  static const String productDetails = '${RoutePaths.cart}/:id';
-  static const String checkout = '/${RouteNames.checkout}/:id';
+  static const String productDetails =
+      '/${RouteNames.productDetails}/:productId';
+  static const String checkout = '/:id';
   static const String shopProdlist =
       '/${RouteNames.shop}/${RouteNames.productList}';
   static const String shopProdDetails = '$shopProdlist/:id';

@@ -15,14 +15,18 @@ class ProductCarouselCubit extends Cubit<ProductCarouselState> {
 
   Future<void> getProducts(ProductCarouselWidgetEntity widgetEntity) async {
     var result = await _productCarouselUseCase.getProducts(widgetEntity);
-    switch (result) {
-      case Success():
-        emit(ProductCarouselLoadedState(productList: result.value!));
-      case Failure():
-        emit(ProductCarouselFailureState(
-            error: result.errorResponse.errorDescription!));
-      case null:
-      // TODO: Handle this case.
+    if (!isClosed) {
+      switch (result) {
+        case Success():
+          emit(ProductCarouselLoadedState(productList: result.value!));
+        case Failure():
+          emit(ProductCarouselFailureState(
+              error: result.errorResponse.errorDescription!));
+        case null:
+        // TODO: Handle this case.
+      }
     }
   }
+
+ 
 }

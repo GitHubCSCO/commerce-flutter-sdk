@@ -6,6 +6,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/routing/route_
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/root/root_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/search_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/settings/settings_screen.dart';
@@ -98,12 +99,22 @@ NavigationNode _getNavigationRoot() {
     parent: navbarRoot,
   );
 
+  // path: /product details
+  final productDetails = createNode(
+    name: AppRoute.productDetails.name,
+    path: AppRoute.productDetails.suffix,
+    builder: (context, state) => ProductDetailsScreen(
+        productId: state.pathParameters['productId'] ?? ''),
+    parent: shop,
+  );
+
   // path: /account/settings
   final settings = createNode(
     name: AppRoute.settings.name,
     path: AppRoute.settings.suffix,
     builder: (context, state) => const SettingsScreen(),
     parent: account,
+
   );
 
   return root;
