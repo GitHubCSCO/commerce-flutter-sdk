@@ -139,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                           _passwordController.text,
                         );
                       },
-                      child: const Text(LocalizationConstants.signIn),
+                      text: LocalizationConstants.signIn,
                     );
                   }
                 },
