@@ -1,7 +1,7 @@
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parse;
 
-extension StringExtensions on String {
+extension HtmlStringExtensions on String {
   String? styleHtmlContent() {
     if (isEmpty) {
       return null;
