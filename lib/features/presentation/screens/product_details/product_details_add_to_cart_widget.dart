@@ -76,7 +76,7 @@ class AddToCartSuccessWidget extends StatelessWidget {
         children: [
           ProductDetailsAddCartRow(detailsAddToCartEntity),
           PrimaryButton(
-            child: const Text(LocalizationConstants.addToCart),
+            text: LocalizationConstants.addToCart,
             onPressed: () {},
           )
         ],
@@ -151,7 +151,7 @@ class AddToCartNotSignedInWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PrimaryButton(
-      child: const Text(LocalizationConstants.signInForAddToCart),
+      text: LocalizationConstants.signInForAddToCart,
       onPressed: () {
         AppRoute.login.navigateBackStack(context);
       },
