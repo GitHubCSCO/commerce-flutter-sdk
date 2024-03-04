@@ -1,18 +1,23 @@
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
     super.key,
-    required this.child,
     this.onPressed,
     this.backgroundColor = AppStyle.primary500,
     this.foregroundColor = AppStyle.neutral00,
     this.borderRadius = AppStyle.borderRadius,
     this.isEnabled = true,
+    this.leadingIcon,
+    this.trailingIcon,
+    required this.text,
   });
 
-  final Widget child;
+  final SvgPicture? leadingIcon;
+  final SvgPicture? trailingIcon;
+  final String text;
   final Function()? onPressed;
   final bool isEnabled;
   final Color backgroundColor;
@@ -47,7 +52,16 @@ class PrimaryButton extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: Center(
-          child: child,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              leadingIcon ?? const SizedBox.shrink(),
+              const SizedBox(width: 10),
+              Text(text),
+              const SizedBox(width: 10),
+              trailingIcon ?? const SizedBox.shrink(),
+            ],
+          ),
         ),
       ),
     );
@@ -192,55 +206,46 @@ class PrimaryBlackButton extends PrimaryButton {
   const PrimaryBlackButton({
     super.key,
     required Widget child,
-    Function()? onPressed,
-    bool isEnabled = true,
+    super.onPressed,
+    super.isEnabled,
+    super.leadingIcon,
+    super.trailingIcon,
+    required super.text,
   }) : super(
-          child: child,
-          onPressed: onPressed,
           backgroundColor: AppStyle.neutral990,
           foregroundColor: AppStyle.neutral00,
-          isEnabled: isEnabled,
         );
 }
 
 class SecondaryBlackButton extends SecondaryButton {
   const SecondaryBlackButton({
     super.key,
-    required Widget child,
-    Function()? onPressed,
-    bool isEnabled = true,
+    required super.child,
+    super.onPressed,
+    super.isEnabled,
   }) : super(
-          child: child,
-          onPressed: onPressed,
           foregroundColor: AppStyle.neutral990,
-          isEnabled: isEnabled,
         );
 }
 
 class TertiaryBlackButton extends TertiaryButton {
   const TertiaryBlackButton({
     super.key,
-    required Widget child,
-    Function()? onPressed,
-    bool isEnabled = true,
+    required Widget super.child,
+    super.onPressed,
+    super.isEnabled,
   }) : super(
-          child: child,
-          onPressed: onPressed,
           foregroundColor: AppStyle.neutral990,
-          isEnabled: isEnabled,
         );
 }
 
 class PlainBlackButton extends PlainButton {
   const PlainBlackButton({
     super.key,
-    required Widget child,
-    Function()? onPressed,
-    bool isEnabled = true,
+    required super.child,
+    super.onPressed,
+    super.isEnabled,
   }) : super(
-          child: child,
-          onPressed: onPressed,
           foregroundColor: AppStyle.neutral990,
-          isEnabled: isEnabled,
         );
 }

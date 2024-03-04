@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/login/login_s
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/root/root_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/search_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/settings/settings_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/shop/shop_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/domain_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_screen.dart';
@@ -46,7 +47,7 @@ NavigationNode _getNavigationRoot() {
   final domainSelection = createNode(
     name: AppRoute.domainSelection.name,
     path: AppRoute.domainSelection.suffix,
-    builder: (context, state) => const DomainSelectionScreen(),
+    builder: (context, state) => const DomainScreen(),
     parent: root,
   );
 
@@ -106,6 +107,14 @@ NavigationNode _getNavigationRoot() {
     builder: (context, state) => ProductDetailsScreen(
         productId: state.pathParameters['productId'] ?? ''),
     parent: shop,
+
+  // path: /account/settings
+  final settings = createNode(
+    name: AppRoute.settings.name,
+    path: AppRoute.settings.suffix,
+    builder: (context, state) => const SettingsScreen(),
+    parent: account,
+
   );
 
   return root;

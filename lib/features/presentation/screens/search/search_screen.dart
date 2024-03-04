@@ -5,11 +5,16 @@ import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+void _reloadSearchPage(BuildContext context) {
+  context.read<SearchPageCmsBloc>().add(SearchPageCmsLoadEvent());
+}
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -22,15 +27,13 @@ class SearchScreen extends StatelessWidget {
             sl<SearchPageCmsBloc>()..add(SearchPageCmsLoadEvent()),
       ),
       BlocProvider<SearchBloc>(
-        create: (context) =>
-            sl<SearchBloc>(),
+        create: (context) => sl<SearchBloc>(),
       ),
     ], child: SearchPage());
   }
 }
 
 class SearchPage extends BaseDynamicContentScreen {
-
   SearchPage({super.key});
 
   final textEditingController = TextEditingController();
@@ -77,65 +80,77 @@ class SearchPage extends BaseDynamicContentScreen {
           ),
         ),
         Expanded(
-          child: BlocBuilder<SearchBloc, SearchState>(
-              builder: (context, state) {
-                switch (state.runtimeType) {
-                  case SearchCmsInitialState:
-                    return BlocBuilder<SearchPageCmsBloc, SearchPageCmsState>(
-                      builder: (context, state) {
-                        switch (state) {
-                          case SearchPageCmsInitialState():
-                          case SearchPageCmsLoadingState():
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          case SearchPageCmsLoadedState():
-                            return BlocListener<AuthCubit, AuthState>(
+          child:
+              BlocBuilder<SearchBloc, SearchState>(builder: (context, state) {
+            switch (state.runtimeType) {
+              case SearchCmsInitialState:
+                return BlocBuilder<SearchPageCmsBloc, SearchPageCmsState>(
+                  builder: (context, state) {
+                    switch (state) {
+                      case SearchPageCmsInitialState():
+                      case SearchPageCmsLoadingState():
+                        return const Center(child: CircularProgressIndicator());
+                      case SearchPageCmsLoadedState():
+                        return MultiBlocListener(
+                          listeners: [
+                            BlocListener<AuthCubit, AuthState>(
                               listener: (context, state) {
-                                context.read<SearchPageCmsBloc>().add(SearchPageCmsLoadEvent());
+                                _reloadSearchPage(context);
                               },
-                              child: Expanded(
-                                child: ListView(
-                                  padding: EdgeInsets.zero,
-                                  children:
-                                  buildContentWidgets(state.pageWidgets),
-                                ),
-                              ),
-                            );
-                          case SearchPageCmsFailureState():
-                            return const Center(
-                                child: Text(LocalizationConstants
-                                    .errorLoadingSearchLanding));
-                          default:
-                            return const Center(
-                                child: Text(LocalizationConstants
-                                    .errorLoadingSearchLanding));
-                        }
-                      },
-                    );
-                  case SearchLoadingState:
-                    return const Center(
-                        child: CircularProgressIndicator());
-                  case SearchAutoCompleteInitialState:
-                    return const Center(
-                        child: Text(LocalizationConstants.searchPrompt));
-                  case SearchAutoCompleteLoadedState:
-                    final autoCompleteResult = (state as SearchAutoCompleteLoadedState).result!;
-                    return AutoCompleteWidget(autocompleteResult: autoCompleteResult);
-                  case SearchAutoCompleteFailureState:
-                    return const Center(
-                        child: Text(LocalizationConstants.searchNoResults));
-                  case SearchProductsLoadedState:
-                    final productCollectionResult = (state as SearchProductsLoadedState).result!;
-                    return SearchProductsWidget(productCollectionResult: productCollectionResult);
-                  case SearchProductsFailureState:
-                    return const Center(
-                        child: Text(LocalizationConstants.searchNoResults));
-                  default:
-                    return const Center(
-                        child: Text(LocalizationConstants.errorLoadingSearchLanding));
-                }
-              }
-          ),
+                            ),
+                            BlocListener<DomainCubit, DomainState>(
+                              listener: (context, state) {
+                                if (state is DomainLoaded) {
+                                  _reloadSearchPage(context);
+                                }
+                              },
+                            ),
+                          ],
+                          child: Expanded(
+                            child: ListView(
+                              padding: EdgeInsets.zero,
+                              children: buildContentWidgets(state.pageWidgets),
+                            ),
+                          ),
+                        );
+                      case SearchPageCmsFailureState():
+                        return const Center(
+                            child: Text(LocalizationConstants
+                                .errorLoadingSearchLanding));
+                      default:
+                        return const Center(
+                            child: Text(LocalizationConstants
+                                .errorLoadingSearchLanding));
+                    }
+                  },
+                );
+              case SearchLoadingState:
+                return const Center(child: CircularProgressIndicator());
+              case SearchAutoCompleteInitialState:
+                return const Center(
+                    child: Text(LocalizationConstants.searchPrompt));
+              case SearchAutoCompleteLoadedState:
+                final autoCompleteResult =
+                    (state as SearchAutoCompleteLoadedState).result!;
+                return AutoCompleteWidget(
+                    autocompleteResult: autoCompleteResult);
+              case SearchAutoCompleteFailureState:
+                return const Center(
+                    child: Text(LocalizationConstants.searchNoResults));
+              case SearchProductsLoadedState:
+                final productCollectionResult =
+                    (state as SearchProductsLoadedState).result!;
+                return SearchProductsWidget(
+                    productCollectionResult: productCollectionResult);
+              case SearchProductsFailureState:
+                return const Center(
+                    child: Text(LocalizationConstants.searchNoResults));
+              default:
+                return const Center(
+                    child:
+                        Text(LocalizationConstants.errorLoadingSearchLanding));
+            }
+          }),
         )
       ],
     );

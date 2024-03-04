@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_type_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
@@ -108,6 +109,10 @@ class BaseActionItemWidget extends StatelessWidget {
         return () {
           signOut(context);
         };
+      case ActionType.settings:
+        return () {
+          navigateToSettings(context);
+        };
       default:
         return () {};
     }
@@ -132,5 +137,9 @@ class BaseActionItemWidget extends StatelessWidget {
             child: const Text(LocalizationConstants.oK),
           ),
         ]);
+  }
+
+  void navigateToSettings(BuildContext context) {
+    AppRoute.settings.navigate(context);
   }
 }
