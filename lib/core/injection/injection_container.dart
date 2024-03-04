@@ -7,7 +7,7 @@ import 'package:commerce_flutter_app/features/domain/service/interfaces/core_ser
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/domain_selection_usecase/domain_selection_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_id_fetch_usecase_dart.dart';
@@ -29,8 +29,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_b
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/action_link/action_link_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/domain_selection/domain_selection_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
@@ -51,12 +50,9 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => AuthCubit(authUsecase: sl()))
     ..registerFactory(() => AuthUsecase())
 
-    //domain redirect
-    ..registerFactory(() => DomainRedirectCubit(domainSelectionUsecase: sl()))
-
     //domain selection
-    ..registerFactory(() => DomainSelectionCubit(domainSelectionUsecase: sl()))
-    ..registerFactory(() => DomainSelectionUsecase())
+    ..registerFactory(() => DomainCubit(domainUsecase: sl()))
+    ..registerFactory(() => DomainUsecase())
 
     //login
     ..registerFactory(() => LoginCubit(loginUsecase: sl()))
@@ -186,5 +182,6 @@ Future<void> initInjectionContainer() async {
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
+
         ));
 }

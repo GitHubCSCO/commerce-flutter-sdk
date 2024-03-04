@@ -2,9 +2,14 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+void _reloadShopPage(BuildContext context) {
+  context.read<ShopPageBloc>().add(const ShopPageLoadEvent());
+}
 
 class ShopScreen extends StatelessWidget {
   const ShopScreen({super.key});
@@ -33,10 +38,21 @@ class ShopPage extends BaseDynamicContentScreen {
             case ShopPageLoadingState():
               return const Center(child: CircularProgressIndicator());
             case ShopPageLoadedState():
-              return BlocListener<AuthCubit, AuthState>(
-                listener: (context, state) {
-                  context.read<ShopPageBloc>().add(const ShopPageLoadEvent());
-                },
+              return MultiBlocListener(
+                listeners: [
+                  BlocListener<AuthCubit, AuthState>(
+                    listener: (context, state) {
+                      _reloadShopPage(context);
+                    },
+                  ),
+                  BlocListener<DomainCubit, DomainState>(
+                    listener: (context, state) {
+                      if (state is DomainLoaded) {
+                        _reloadShopPage(context);
+                      }
+                    },
+                  ),
+                ],
                 child: Scaffold(
                     body: ListView(
                   children: buildContentWidgets(state.pageWidgets),
