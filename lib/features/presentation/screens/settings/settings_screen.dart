@@ -57,7 +57,7 @@ class _SettingsDomainSelectorWidget extends StatelessWidget {
           const SizedBox(height: 8),
           BlocBuilder<DomainCubit, DomainState>(
             builder: (context, state) {
-              if (state is DomainHasValue) {
+              if (state is DomainLoaded) {
                 return Text(
                   state.domain,
                   style: const TextStyle(

@@ -12,10 +12,10 @@ final class DomainOperationInProgress extends DomainState {
   List<Object?> get props => [];
 }
 
-final class DomainHasValue extends DomainState {
+final class DomainLoaded extends DomainState {
   final String domain;
 
-  DomainHasValue(this.domain);
+  DomainLoaded(this.domain);
 
   @override
   List<Object?> get props => [domain];

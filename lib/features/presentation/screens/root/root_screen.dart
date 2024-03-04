@@ -26,7 +26,7 @@ class RootPage extends StatelessWidget {
         );
       },
       listener: (context, state) {
-        if (state is DomainHasValue) {
+        if (state is DomainLoaded) {
           AppRoute.shop.navigate(context);
         } else if (state is DomainOperationFailed) {
           AppRoute.welcome.navigate(context);

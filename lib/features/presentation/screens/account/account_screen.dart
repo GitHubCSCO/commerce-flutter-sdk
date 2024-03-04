@@ -92,7 +92,7 @@ class _AccountHeader extends StatelessWidget {
           builder: (context, state) {
             return BlocListener<DomainCubit, DomainState>(
               listener: (context, state) {
-                if (state is DomainHasValue) {
+                if (state is DomainLoaded) {
                   _reloadAccountPage(context);
                 }
               },

@@ -18,7 +18,7 @@ class DomainCubit extends Cubit<DomainState> {
     final result = await _domainUsecase.getSavedDomain();
 
     if (result != null) {
-      emit(DomainHasValue(result));
+      emit(DomainLoaded(result));
     } else {
       emit(DomainOperationFailed('No Domain', ''));
     }
@@ -30,7 +30,7 @@ class DomainCubit extends Cubit<DomainState> {
 
     switch (result) {
       case DomainChangeStatus.success:
-        emit(DomainHasValue(domain));
+        emit(DomainLoaded(domain));
         break;
       case DomainChangeStatus.failedOffline:
         emit(

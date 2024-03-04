@@ -23,7 +23,7 @@ void main() {
     });
 
     blocTest(
-      'emits [DomainOperationInProgress, DomainHasValue] when selectDomain is called successfully',
+      'emits [DomainOperationInProgress, DomainLoaded] when selectDomain is called successfully',
       build: () {
         when(() => domainUsecase.domainSelectHandler(any()))
             .thenAnswer((_) async => DomainChangeStatus.success);
@@ -34,7 +34,7 @@ void main() {
       },
       expect: () => [
         DomainOperationInProgress(),
-        DomainHasValue('validDomain'),
+        DomainLoaded('validDomain'),
       ],
     );
 
@@ -96,7 +96,7 @@ void main() {
     );
 
     blocTest(
-      'emits [DomainOperationInProgress, DomainHasValue] when fetchDomain is called successfully',
+      'emits [DomainOperationInProgress, DomainLoaded] when fetchDomain is called successfully',
       build: () {
         when(() => domainUsecase.getSavedDomain())
             .thenAnswer((_) async => Future.value('savedDomain'));
@@ -107,7 +107,7 @@ void main() {
       },
       expect: () => [
         DomainOperationInProgress(),
-        DomainHasValue('savedDomain'),
+        DomainLoaded('savedDomain'),
       ],
     );
 

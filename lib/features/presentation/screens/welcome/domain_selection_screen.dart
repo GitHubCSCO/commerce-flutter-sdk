@@ -81,19 +81,9 @@ class _DomainPageState extends State<DomainPage> {
             const Expanded(child: SizedBox()),
             BlocConsumer<DomainCubit, DomainState>(
               listener: (context, state) {
-                if (state is DomainHasValue) {
+                if (state is DomainLoaded) {
+                  AppRoute.account.navigate(context);
                   context.pop();
-                  final branches =
-                      StatefulNavigationShell.of(context).route.branches;
-
-                  for (final branch in branches) {
-                    try {
-                      branch.navigatorKey.currentState
-                          ?.popUntil((route) => route.isFirst);
-                    } catch (e) {
-                      continue;
-                    }
-                  }
 
                   AppRoute.shop.navigate(context);
                 }

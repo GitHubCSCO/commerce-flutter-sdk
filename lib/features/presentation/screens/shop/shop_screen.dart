@@ -47,7 +47,7 @@ class ShopPage extends BaseDynamicContentScreen {
                   ),
                   BlocListener<DomainCubit, DomainState>(
                     listener: (context, state) {
-                      if (state is DomainHasValue) {
+                      if (state is DomainLoaded) {
                         _reloadShopPage(context);
                       }
                     },
