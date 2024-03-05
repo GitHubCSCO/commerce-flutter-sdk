@@ -1,4 +1,7 @@
+import 'dart:js';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_detail_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
@@ -90,7 +93,8 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
           break;
         case ProdcutDeatilsPageWidgets.productDetailsDescription:
           final detailsEntity = item as ProductDetailsDescriptionEntity;
-          widgets.add(buildProductDetailsDescriptionWidget(detailsEntity));
+          widgets.add(buildProductDetailsDescriptionWidget(
+              detailsEntity, buildContext));
           break;
         case ProdcutDeatilsPageWidgets.productDetailsGeneralInfo:
           final generalInfoEntity = item as ProductDetailsGeneralInfoEntity;
@@ -114,13 +118,15 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
 
 // details description widget
   Widget buildProductDetailsDescriptionWidget(
-      ProductDetailsDescriptionEntity detailsEntity) {
+      ProductDetailsDescriptionEntity detailsEntity, BuildContext context) {
     return Container(
       color: Colors.white,
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: HtmlWidget(detailsEntity.htmlContent?.styleHtmlContent() ?? ''),
-      ),
+          padding: const EdgeInsets.all(20.0),
+          child: HtmlWidget(
+            detailsEntity.htmlContent?.styleHtmlContent() ?? '',
+            textStyle: context.textTheme.bodyLarge,
+          )),
     );
   }
 

@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/extensions/html_string_extension.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_detail_item_entity.dart';
 import 'package:flutter/material.dart';
@@ -20,13 +21,17 @@ class ProductDetailsExpansionItemWidget extends StatelessWidget {
             data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
             child: ExpansionTile(
               backgroundColor: Colors.white,
-              title: Text(specification.title),
+              title: Text(
+                specification.title,
+                style: context.textTheme.titleSmall,
+              ),
               collapsedBackgroundColor: Colors.white,
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: HtmlWidget(
                     specification.htmlContent.styleHtmlContent() ?? '',
+                    textStyle: context.textTheme.bodyLarge,
                   ),
                 ),
               ],

@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/config/test_config_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'My App',
       routerConfig: sl<GoRouter>(),
+      theme: lightTheme,
     );
   }
 }
