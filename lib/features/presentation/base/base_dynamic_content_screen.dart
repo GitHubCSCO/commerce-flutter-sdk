@@ -117,7 +117,7 @@ class BaseDynamicContentScreen extends StatelessWidget {
       providers: [
         BlocProvider<ProductCarouselCubit>(
             create: (context) => sl<ProductCarouselCubit>()
-              ..getProducts(productCarouselWidgetEntity)),
+              ..getCarouselProducts(productCarouselWidgetEntity)),
 
           BlocProvider<ProductIDFetchCubit>(create: (context) => sl<ProductIDFetchCubit>())
       ],

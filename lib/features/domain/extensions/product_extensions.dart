@@ -1,7 +1,13 @@
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 extension ProductExtensions on ProductEntity? {
+
+  String getUnitOfMeasure() {
+    return (this != null && this!.unitOfMeasureDescription.isNullOrEmpty ? this?.unitOfMeasureDisplay : this?.unitOfMeasureDescription) ?? '';
+  }
+
   String getProductNumber() {
     return this?.erpNumber ?? '';
   }
