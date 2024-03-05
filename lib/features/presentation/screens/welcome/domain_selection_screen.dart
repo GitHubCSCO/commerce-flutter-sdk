@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_components.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_style.dart';
 import 'package:flutter/material.dart';
@@ -82,10 +83,10 @@ class _DomainPageState extends State<DomainPage> {
             BlocConsumer<DomainCubit, DomainState>(
               listener: (context, state) {
                 if (state is DomainLoaded) {
-                  AppRoute.account.navigate(context);
-                  context.pop();
-
-                  AppRoute.shop.navigate(context);
+                  while (context.canPop()) {
+                    context.pop();
+                  }
+                  AppRoute.root.navigateBackStack(context);
                 }
 
                 if (state is DomainOperationFailed) {

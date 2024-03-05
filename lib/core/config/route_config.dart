@@ -23,6 +23,7 @@ GoRouter getRouter() {
   return GoRouter(
     navigatorKey: _rootNavigator,
     initialLocation: AppRoute.root.fullPath,
+    debugLogDiagnostics: true,
     routes: [generateRoutes(_getNavigationRoot())],
   );
 }

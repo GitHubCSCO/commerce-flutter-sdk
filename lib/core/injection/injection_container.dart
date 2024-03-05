@@ -30,6 +30,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/account_header/
 import 'package:commerce_flutter_app/features/presentation/cubit/action_link/action_link_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
@@ -53,6 +54,9 @@ Future<void> initInjectionContainer() async {
     //domain selection
     ..registerFactory(() => DomainCubit(domainUsecase: sl()))
     ..registerFactory(() => DomainUsecase())
+
+    //domain redirect
+    ..registerFactory(() => DomainRedirectCubit(domainUsecase: sl()))
 
     //login
     ..registerFactory(() => LoginCubit(loginUsecase: sl()))
