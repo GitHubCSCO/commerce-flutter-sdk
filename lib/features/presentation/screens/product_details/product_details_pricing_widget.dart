@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/features/domain/entity/product_details/prod
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_state.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -34,6 +35,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   // TODO: Implement the logic for "View Quantity Pricing"
+                  CustomSnackBar.showComingSoonSnackBar(context);
                 },
                 child: const Text("View Quantity Pricing",
                     style: TextStyle(
@@ -46,6 +48,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   // TODO: Implement the logic for "View Quantity Pricing"
+                  CustomSnackBar.showComingSoonSnackBar(context);
                 },
                 child: const Text("View Availability by Warehouse",
                     style: TextStyle(

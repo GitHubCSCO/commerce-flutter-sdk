@@ -15,15 +15,15 @@ class ProductIDFetchCubit extends Cubit<ProductIdFetchState> {
 
   Future<void> getProductId(ProductEntity productEntity) async {
     var productIdFromCatalog = '';
-    var response = await _productDetailsIdFetchUseCase
-        .getProductDetailsId(productEntity.urlSegment ?? '');
-    switch (response) {
-      case Success(value: final data):
-        productIdFromCatalog = data ?? '';
-        break;
-      case Failure():
-        break;
-    }
+    // var response = await _productDetailsIdFetchUseCase
+    //     .getProductDetailsId(productEntity.urlSegment ?? '');
+    // switch (response) {
+    //   case Success(value: final data):
+    //     productIdFromCatalog = data ?? '';
+    //     break;
+    //   case Failure():
+    //     break;
+    // }
     var productId =
         productEntity.styleParentId ?? productEntity.id ?? productIdFromCatalog;
 

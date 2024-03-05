@@ -52,18 +52,18 @@ class ProductCarouselSectionWidget extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final product = productList[index];
 
-                      return GestureDetector(
+                      return InkWell(
                         onTap: () {
                           context
                               .read<ProductIDFetchCubit>()
                               .getProductId(product);
                           var state = context.read<ProductIDFetchCubit>().state;
                           if (state is ProductIdFetchSuccess) {
-                            var produtId = state.productId;
+                            var productId = state.productId;
                             AppRoute.productDetails.navigateBackStack(
                               context,
                               pathParameters: {
-                                "productId": produtId.toString()
+                                "productId": productId.toString()
                               },
                             );
                           }
