@@ -1,1 +1,12 @@
 include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    - camel_case_types
+    - unnecessary_new
+    - package_names
+    - unnecessary_parenthesis
+    - no_self_assignments
+    - prefer_void_to_null
+    - always_put_control_body_on_new_line
+    - avoid_relative_lib_imports
