@@ -34,7 +34,7 @@ class ProductCarouselSectionWidget extends StatelessWidget {
             switch (state.runtimeType) {
               case ProductCarouselInitialState:
               case ProductCarouseLoadingState:
-                return const Center(child: CircularProgressIndicator());
+                return const SizedBox(height: 168, child: Center(child: CircularProgressIndicator()));
               case ProductCarouselLoadedState:
                 final isLoading =
                     (state as ProductCarouselLoadedState).isPricingLoading;

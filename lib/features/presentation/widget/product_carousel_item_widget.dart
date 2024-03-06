@@ -1,11 +1,7 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_carousel/product_carousel_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductCarouselItemWidget extends StatelessWidget {
   final ProductCarouselEntity productCarousel;
@@ -61,7 +57,7 @@ class ProductCarouselItemWidget extends StatelessWidget {
           } else ... {
             const SizedBox(height: 8),
             Text(
-              '${updatePriceValueText()} ${updateUnitOfMeasure()}',
+              '${productCarousel.product.updatePriceValueText(productCarousel.productPricingEnabled)} ${productCarousel.product.updateUnitOfMeasure(productCarousel.productPricingEnabled)}',
               style: const TextStyle(
                 color: Color(0xFF222222),
                 fontSize: 12,
@@ -72,32 +68,6 @@ class ProductCarouselItemWidget extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String updateUnitOfMeasure() {
-    if (!(productCarousel.productPricingEnabled ?? false)) {
-      return '';
-    }
-
-    String uomText = productCarousel.product?.getUnitOfMeasure() ?? '';
-
-    if (productCarousel.product?.pricing != null && !(productCarousel.product?.pricing?.isOnSale ?? false)) {
-      uomText = productCarousel.product?.pricing?.getUnitOfMeasure(uomText) ?? '';
-    }
-
-    return uomText.isNullOrEmpty ? '' : " / $uomText";
-  }
-
-  String updatePriceValueText() {
-    if (productCarousel.product != null && (productCarousel.product!.quoteRequired ?? false)) {
-      return LocalizationConstants.requiresQuote;
-    }
-
-    final priceDisplay = (productCarousel.product?.pricing != null && (productCarousel.product!.pricing!.isOnSale ?? false))
-        ? productCarousel.product!.pricing!.unitNetPriceDisplay
-        : productCarousel.product?.pricing?.getPriceValue() ?? '';
-
-    return (productCarousel.productPricingEnabled ?? false) ? priceDisplay! : SiteMessageConstants.valuePricingSignInForPrice;
   }
 
 }
