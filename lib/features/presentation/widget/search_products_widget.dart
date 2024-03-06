@@ -66,7 +66,6 @@ class SearchProductWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        print("SearchProductWidget");
         var productId = product.styleParentId ?? product.id;
         AppRoute.productDetails.navigateBackStack(context,
             pathParameters: {"productId": productId.toString()},
