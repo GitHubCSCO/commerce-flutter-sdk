@@ -6,7 +6,6 @@ import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/searc
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_id_fetch_cubit/product_id_fetch_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +29,6 @@ class SearchScreen extends StatelessWidget {
       BlocProvider<SearchBloc>(
         create: (context) => sl<SearchBloc>(),
       ),
-      BlocProvider<ProductIDFetchCubit>(
-          create: (context) => sl<ProductIDFetchCubit>())
     ], child: SearchPage());
   }
 }

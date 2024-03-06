@@ -6,6 +6,7 @@ import 'package:commerce_flutter_app/features/domain/entity/product_details/prod
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_description_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
@@ -26,7 +27,8 @@ import 'package:commerce_flutter_app/core/extensions/html_string_extension.dart'
 
 class ProductDetailsScreen extends StatelessWidget {
   final String productId;
-  const ProductDetailsScreen({super.key, required this.productId});
+  final ProductEntity? product;
+  const ProductDetailsScreen({super.key, required this.productId, this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class ProductDetailsScreen extends StatelessWidget {
       providers: [
         BlocProvider<ProductDetailsBloc>(
           create: (context) => sl<ProductDetailsBloc>()
-            ..add(FetchProductDetailsEvent(productId)),
+            ..add(FetchProductDetailsEvent(productId, product)),
         ),
         BlocProvider<ProductDetailsPricingBloc>(
           create: (context) => sl<ProductDetailsPricingBloc>(),

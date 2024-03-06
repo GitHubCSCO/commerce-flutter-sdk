@@ -3,10 +3,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_id_fetch_cubit/product_id_fetch_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_id_fetch_cubit/product_id_fetch_state.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -70,15 +67,10 @@ class SearchProductWidget extends StatelessWidget {
     return InkWell(
       onTap: () {
         print("SearchProductWidget");
-        context.read<ProductIDFetchCubit>().getProductId(product);
-        var state = context.read<ProductIDFetchCubit>().state;
-        if (state is ProductIdFetchSuccess) {
-          var productId = state.productId;
-          AppRoute.productDetails.navigateBackStack(
-            context,
+        var productId = product.styleParentId ?? product.id;
+        AppRoute.productDetails.navigateBackStack(context,
             pathParameters: {"productId": productId.toString()},
-          );
-        }
+            extra: product);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
