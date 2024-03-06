@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:flutter/material.dart';
 
@@ -33,24 +34,15 @@ class ProductCarouselItemWidget extends StatelessWidget {
           const SizedBox(height: 8),
           SizedBox(
             height: 30,
-            child: Text(
-              product.shortDescription ?? "",
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: Color(0xFF222222),
-                fontSize: 12,
-              ),
-            ),
+            child: Text(product.shortDescription ?? "",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: OptiTextStyles.bodySmall),
           ),
           const SizedBox(height: 8),
           Text(
             "\$${product.basicListPrice ?? 0}",
-            style: const TextStyle(
-              color: Color(0xFF222222),
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
+            style: OptiTextStyles.bodySmallHighlight,
           ),
         ],
       ),

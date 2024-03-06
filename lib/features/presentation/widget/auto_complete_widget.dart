@@ -1,10 +1,11 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class AutoCompleteWidget extends StatelessWidget {
-
   final AutocompleteResult autocompleteResult;
 
   const AutoCompleteWidget({super.key, required this.autocompleteResult});
@@ -23,18 +24,18 @@ class AutoCompleteWidget extends StatelessWidget {
       shrinkWrap: true,
       itemBuilder: (context, index) {
         final autoCompleteProduct = autocompleteResult.products![index];
-        return AutoCompleteProductWidget(autocompleteProduct: autoCompleteProduct);
+        return AutoCompleteProductWidget(
+            autocompleteProduct: autoCompleteProduct);
       },
     );
   }
-
 }
 
 class AutoCompleteProductWidget extends StatelessWidget {
-
   final AutocompleteProduct autocompleteProduct;
 
-  const AutoCompleteProductWidget({super.key, required this.autocompleteProduct});
+  const AutoCompleteProductWidget(
+      {super.key, required this.autocompleteProduct});
 
   @override
   Widget build(BuildContext context) {
@@ -70,19 +71,14 @@ class AutoCompleteProductWidget extends StatelessWidget {
                   autocompleteProduct.title ?? "",
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
-                  style: const TextStyle(
-                    color: Color(0xFF222222),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style: OptiTextStyles.bodySmall,
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  LocalizationConstants.itemNumber.format([autocompleteProduct.erpNumber ?? '']),
-                  style: const TextStyle(
-                    color: Color(0xFF707070),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
+                  LocalizationConstants.itemNumber
+                      .format([autocompleteProduct.erpNumber ?? '']),
+                  style: OptiTextStyles.bodySmall.copyWith(
+                    color: AppColors.textDisabledColor,
                   ),
                 ),
               ],
@@ -91,7 +87,5 @@ class AutoCompleteProductWidget extends StatelessWidget {
         ],
       ),
     );
-
   }
-  
 }

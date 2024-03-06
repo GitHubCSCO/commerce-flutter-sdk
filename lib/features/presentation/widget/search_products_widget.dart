@@ -1,14 +1,16 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class SearchProductsWidget extends StatelessWidget {
-
   final GetProductCollectionResult productCollectionResult;
 
-  const SearchProductsWidget({super.key, required this.productCollectionResult});
+  const SearchProductsWidget(
+      {super.key, required this.productCollectionResult});
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +26,7 @@ class SearchProductsWidget extends StatelessWidget {
                   : productCollectionResult.products!.length,
               productCollectionResult.originalQuery
             ]),
-            style: const TextStyle(
-              color: Color(0xFF222222),
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
+            style: OptiTextStyles.header3,
           ),
         ),
         Expanded(
@@ -51,11 +49,9 @@ class SearchProductsWidget extends StatelessWidget {
       ],
     );
   }
-
 }
 
 class SearchProductWidget extends StatelessWidget {
-
   final Product product;
 
   const SearchProductWidget({super.key, required this.product});
@@ -94,29 +90,22 @@ class SearchProductWidget extends StatelessWidget {
                   product.shortDescription ?? "",
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
-                  style: const TextStyle(
-                    color: Color(0xFF222222),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
+                  style: OptiTextStyles.bodySmall,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  LocalizationConstants.itemNumber
+                      .format([product.erpNumber ?? '']),
+                  style: OptiTextStyles.bodySmall.copyWith(
+                    color: AppColors.textDisabledColor,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  LocalizationConstants.itemNumber.format([product.erpNumber ?? '']),
-                  style: const TextStyle(
-                    color: Color(0xFF707070),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  product.basicListPrice != null ? '\$${product.basicListPrice}' : '',
-                  style: const TextStyle(
-                    color: Color(0xFF222222),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  product.basicListPrice != null
+                      ? '\$${product.basicListPrice}'
+                      : '',
+                  style: OptiTextStyles.bodySmallHighlight,
                 ),
               ],
             ),
@@ -137,7 +126,5 @@ class SearchProductWidget extends StatelessWidget {
         ],
       ),
     );
-
   }
-
 }

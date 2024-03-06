@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
@@ -136,10 +137,13 @@ class ProductDetailsAddCartTtitleSubTitleColumn extends StatelessWidget {
       flex: 2,
       child: Column(
         children: [
-          Text(title),
+          Text(
+            title,
+            style: OptiTextStyles.bodySmall,
+          ),
           Text(
             value,
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.0),
+            style: OptiTextStyles.titleLarge,
           )
         ],
       ),

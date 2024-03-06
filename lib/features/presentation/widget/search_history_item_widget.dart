@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:flutter/material.dart';
 
 class SearchHistoryItemWidget extends StatelessWidget {
@@ -31,15 +32,11 @@ class SearchHistoryItemWidget extends StatelessWidget {
           SizedBox(
             child: Text(
               history,
-              style: const TextStyle(
-                color: Color(0xFF222222),
-                fontSize: 12,
-              ),
+              style: OptiTextStyles.bodySmall,
             ),
           ),
         ],
       ),
     );
   }
-
 }

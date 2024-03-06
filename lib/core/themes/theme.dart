@@ -271,7 +271,7 @@ class OptiTextStyles {
   static TextStyle get bodySmallHighlight => _getInterFontStyle(
         const TextStyle(
           fontSize: 12,
-          color: _primary,
+          color: bodyColor,
           fontWeight: bodyHighlightWeight,
         ),
       );

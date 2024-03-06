@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
@@ -35,11 +36,10 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                 onTap: () {
                   // TODO: Implement the logic for "View Quantity Pricing"
                 },
-                child: const Text("View Quantity Pricing",
-                    style: TextStyle(
-                        color: AppColors.primaryColor,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12)),
+                child: Text(
+                  "View Quantity Pricing",
+                  style: OptiTextStyles.link,
+                ),
               ),
               _buildInventorySection(context),
               // For "View Availability by Warehouse"
@@ -47,11 +47,10 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                 onTap: () {
                   // TODO: Implement the logic for "View Quantity Pricing"
                 },
-                child: const Text("View Availability by Warehouse",
-                    style: TextStyle(
-                        color: AppColors.primaryColor,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12)),
+                child: Text(
+                  "View Availability by Warehouse",
+                  style: OptiTextStyles.link,
+                ),
               ),
             ],
           ),
@@ -104,12 +103,11 @@ class ProductDetailsPricingWidget extends StatelessWidget {
             child: Row(
               children: [
                 Text(productDetailsPriceEntity.priceValueText ?? '',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    )),
+                    style: OptiTextStyles.subtitle),
                 Text(
-                    '/${productDetailsPriceEntity.selectedUnitOfMeasureValueText ?? ''}'),
+                  ' / ${productDetailsPriceEntity.selectedUnitOfMeasureValueText ?? ''}',
+                  style: OptiTextStyles.body,
+                ),
               ],
             ),
           );
@@ -131,7 +129,10 @@ class ProductDetailsPricingWidget extends StatelessWidget {
         if (state is ProductDetailsPricingLoaded) {
           var productDetailsPriceEntity = state.productDetailsPriceEntity;
           return Container(
-            child: Text(productDetailsPriceEntity.availability?.message ?? ''),
+            child: Text(
+              productDetailsPriceEntity.availability?.message ?? '',
+              style: OptiTextStyles.body,
+            ),
           );
         }
         return Container(
