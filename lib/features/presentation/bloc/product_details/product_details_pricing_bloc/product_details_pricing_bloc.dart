@@ -29,7 +29,6 @@ class ProductDetailsPricingBloc
       case Success(value: final data):
         if (productDetailsPricingEntity.productPricingEnabled != null &&
             productDetailsPricingEntity.productPricingEnabled!) {
-              
           var realTimeInventory = await _productDetailsPricingUseCase
               .loadRealTimeInventory(productDetailsPricingEntity.product!);
 
@@ -45,6 +44,8 @@ class ProductDetailsPricingBloc
             case Failure(errorResponse: final errorResponse):
           }
 
+          // need to implement hide/show inventory and quanty button logix
+
           var availability = productDetailsPricingEntity.styledProduct == null
               ? productDetailsPricingEntity.product?.availability
               : productDetailsPricingEntity.styledProduct?.availability;
@@ -56,17 +57,24 @@ class ProductDetailsPricingBloc
           var discountMessage = data.getDiscountValue();
           var selectedUnitOfMeasureValueText =
               data.getUnitOfMeasure(data?.unitOfMeasure ?? '');
+
           productDetailsPricingEntity = productDetailsPricingEntity.copyWith(
-              pricing: data,
               priceValueText: priceValueText,
               discountMessage: discountMessage,
               selectedUnitOfMeasureValueText: selectedUnitOfMeasureValueText,
               availability: availability);
+
+        var product = productDetailsPricingEntity.product;
+        product = product?.copyWith(pricing: data);
+        productDetailsPricingEntity = productDetailsPricingEntity.copyWith(
+            product: product, productPricingEnabled: true);
+
         } else {
           productDetailsPricingEntity = productDetailsPricingEntity.copyWith(
               priceValueText: SiteMessageConstants.valuePricingSignInForPrice,
               selectedUnitOfMeasureValueText: null);
         }
+
 
         emit(ProductDetailsPricingLoaded(
             productDetailsPriceEntity: productDetailsPricingEntity));

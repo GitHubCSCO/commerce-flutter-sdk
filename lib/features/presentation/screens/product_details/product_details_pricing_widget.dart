@@ -1,8 +1,10 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_state.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -34,6 +36,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   // TODO: Implement the logic for "View Quantity Pricing"
+                  CustomSnackBar.showComingSoonSnackBar(context);
                 },
                 child: const Text("View Quantity Pricing",
                     style: TextStyle(
@@ -41,11 +44,15 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                         fontSize: 12)),
               ),
-              _buildInventorySection(context),
+              productDetailsPricingEntity.availability?.message != null
+                  ? _buildInventorySection(context)
+                  : Container(),
+              // _buildInventorySection(context),
               // For "View Availability by Warehouse"
               GestureDetector(
                 onTap: () {
                   // TODO: Implement the logic for "View Quantity Pricing"
+                  CustomSnackBar.showComingSoonSnackBar(context);
                 },
                 child: const Text("View Availability by Warehouse",
                     style: TextStyle(
@@ -103,13 +110,14 @@ class ProductDetailsPricingWidget extends StatelessWidget {
           return Container(
             child: Row(
               children: [
-                Text(productDetailsPriceEntity.priceValueText ?? '',
+                Text(
+                    '${productDetailsPriceEntity.product.updatePriceValueText(productDetailsPriceEntity.productPricingEnabled)}',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     )),
                 Text(
-                    '/${productDetailsPriceEntity.selectedUnitOfMeasureValueText ?? ''}'),
+                    '${productDetailsPriceEntity.product.updateUnitOfMeasure(productDetailsPriceEntity.productPricingEnabled)}'),
               ],
             ),
           );
