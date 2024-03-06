@@ -1,7 +1,7 @@
-import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
@@ -46,14 +46,22 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(LocalizationConstants.signIn),
+        title: Text(
+          LocalizationConstants.signIn,
+          style: OptiTextStyles.titleLarge,
+        ),
         centerTitle: false,
         actions: [
           PlainButton(
             onPressed: () {
               context.pop();
             },
-            child: const Text(LocalizationConstants.cancel),
+            child: Text(
+              LocalizationConstants.cancel,
+              style: OptiTextStyles.subtitle.copyWith(
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
           ),
         ],
         automaticallyImplyLeading: false,

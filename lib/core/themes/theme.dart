@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 final lightTheme = _getTheme();
 
-const _primary = Colors.indigo;
+const _primary = Color.fromRGBO(0, 55, 255, 1);
 const _secondary = Colors.amber;
 
 const _background = Color(0xFFF5F5F5);
@@ -42,24 +42,22 @@ final _lightColorScheme = ColorScheme(
 
 ThemeData _getTheme() {
   final colorScheme = _lightColorScheme;
-  final textTheme = _getTextTheme(colorScheme);
-  final primaryTextTheme = textTheme;
 
   final buttonShape = RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(16),
   );
+
   const buttonPadding = EdgeInsets.symmetric(
     horizontal: 24,
     vertical: 12,
   );
-  final buttonTextStyle = textTheme.titleMedium;
+
+  final buttonTextStyle = OptiTextStyles.titleSmall;
 
   return ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
     colorScheme: colorScheme,
-    textTheme: textTheme,
-    // primaryTextTheme: primaryTextTheme,
     scaffoldBackgroundColor: colorScheme.background,
     disabledColor: _disabled,
     dividerTheme: const DividerThemeData(
@@ -189,123 +187,100 @@ ThemeData _getTheme() {
   );
 }
 
-TextTheme _getTextTheme(ColorScheme colorScheme) {
-  const headlineColor = _darker;
-  const headlineWeight = FontWeight.w400;
-  const headlineLargeHeight = 1.2;
-  const headlineMediumHeight = 1.1;
-  const headlineSmallHeight = 1.1;
-  const headlineLetterSpacing = 0.0;
+class OptiTextStyles {
+  static const headlineColor = _darker;
+  static const headlineWeight = FontWeight.w400;
 
-  const titleColor = _darker;
-  const titleWeight = FontWeight.w600;
-  const titleLargeHeight = 1.56;
-  const titleMediumHeight = 1.5;
-  const titleSmallHeight = 1.43;
-  const titleLetterSpacing = 0.0;
+  static const titleColor = _darker;
+  static const titleWeight = FontWeight.w600;
 
-  const bodyColor = _darkest;
-  const bodyWeight = FontWeight.w400;
-  const bodyLargeHeight = 1.43;
-  const bodyMediumHeight = 1.25;
-  const bodySmallHeight = 1.45;
-  const bodyLetterSpacing = 0.0;
+  static const bodyColor = _darkest;
+  static const bodyWeight = FontWeight.w400;
+  static const bodyHighlightWeight = FontWeight.w600;
 
-  const labelColor = titleColor;
+  static const linkColor = _primary;
+  static const linkWeight = FontWeight.w500;
 
-  const textTheme = TextTheme(
-    // Headline
-    headlineLarge: TextStyle(
-      fontSize: 20,
-      height: headlineLargeHeight,
-      letterSpacing: headlineLetterSpacing,
-      color: headlineColor,
-      fontWeight: headlineWeight,
-    ),
-    headlineMedium: TextStyle(
-      fontSize: 18,
-      height: headlineMediumHeight,
-      letterSpacing: headlineLetterSpacing,
-      color: headlineColor,
-      fontWeight: headlineWeight,
-    ),
-    headlineSmall: TextStyle(
-      fontSize: 18,
-      height: headlineSmallHeight,
-      letterSpacing: headlineLetterSpacing,
-      color: headlineColor,
-      fontWeight: headlineWeight,
-    ),
+  static const labelColor = titleColor;
 
-    // Title
-    titleLarge: TextStyle(
-      fontSize: 18,
-      height: titleLargeHeight,
-      letterSpacing: titleLetterSpacing,
-      color: titleColor,
-      fontWeight: titleWeight,
-    ),
-    titleMedium: TextStyle(
-      fontSize: 16,
-      height: titleMediumHeight,
-      letterSpacing: titleLetterSpacing,
-      color: titleColor,
-      fontWeight: titleWeight,
-    ),
-    titleSmall: TextStyle(
-      fontSize: 14,
-      height: titleSmallHeight,
-      letterSpacing: titleLetterSpacing,
-      color: titleColor,
-      fontWeight: titleWeight,
-    ),
+  static TextStyle _getInterFontStyle(TextStyle style) {
+    return GoogleFonts.inter(
+      textStyle: style,
+    );
+  }
 
-    // Body
-    bodyLarge: TextStyle(
-      fontSize: 14,
-      height: bodyLargeHeight,
-      letterSpacing: bodyLetterSpacing,
-      color: bodyColor,
-      fontWeight: bodyWeight,
-    ),
-    bodyMedium: TextStyle(
-      fontSize: 12,
-      height: bodyMediumHeight,
-      letterSpacing: bodyLetterSpacing,
-      color: bodyColor,
-      fontWeight: bodyWeight,
-    ),
-    bodySmall: TextStyle(
-      fontSize: 12,
-      height: bodySmallHeight,
-      color: bodyColor,
-      fontWeight: bodyWeight,
-    ),
+  // Headline
+  static TextStyle get header2 => _getInterFontStyle(
+        const TextStyle(
+          fontSize: 20,
+          color: headlineColor,
+          fontWeight: headlineWeight,
+        ),
+      );
 
-    // Label
-    // labelLarge: TextStyle(
-    //   fontSize: 16,
-    //   height: bodyHeight,
-    //   letterSpacing: bodyLetterSpacing,
-    //   color: labelColor,
-    //   fontWeight: bodyWeight,
-    // ),
-    // labelMedium: TextStyle(
-    //   fontSize: 14,
-    //   height: bodyHeight,
-    //   letterSpacing: bodyLetterSpacing,
-    //   color: labelColor,
-    //   fontWeight: bodyWeight,
-    // ),
-    // labelSmall: TextStyle(
-    //   fontSize: 12,
-    //   height: bodyHeight,
-    //   letterSpacing: bodyLetterSpacing,
-    //   color: labelColor,
-    //   fontWeight: bodyWeight,
-    // ),
-  );
+  static TextStyle get header3 => _getInterFontStyle(
+        const TextStyle(
+          fontSize: 18,
+          color: headlineColor,
+          fontWeight: headlineWeight,
+        ),
+      );
 
-  return GoogleFonts.interTextTheme(textTheme);
+  // Title
+  static TextStyle get titleLarge => _getInterFontStyle(
+        const TextStyle(
+          fontSize: 18,
+          color: titleColor,
+          fontWeight: titleWeight,
+        ),
+      );
+
+  static TextStyle get titleSmall => _getInterFontStyle(
+        const TextStyle(
+          fontSize: 16,
+          color: titleColor,
+          fontWeight: titleWeight,
+        ),
+      );
+
+  static TextStyle get subtitle => _getInterFontStyle(
+        const TextStyle(
+          fontSize: 14,
+          color: titleColor,
+          fontWeight: titleWeight,
+        ),
+      );
+
+  // Body
+  static TextStyle get body => _getInterFontStyle(
+        const TextStyle(
+          fontSize: 14,
+          color: bodyColor,
+          fontWeight: bodyWeight,
+        ),
+      );
+
+  static TextStyle get bodySmall => _getInterFontStyle(
+        const TextStyle(
+          fontSize: 12,
+          color: bodyColor,
+          fontWeight: bodyWeight,
+        ),
+      );
+
+  static TextStyle get bodySmallHighlight => _getInterFontStyle(
+        const TextStyle(
+          fontSize: 12,
+          color: _primary,
+          fontWeight: bodyHighlightWeight,
+        ),
+      );
+
+  static TextStyle get link => _getInterFontStyle(
+        const TextStyle(
+          fontSize: 12,
+          color: _primary,
+          fontWeight: linkWeight,
+        ),
+      );
 }
-

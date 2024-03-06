@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
@@ -25,7 +26,10 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppStyle.neutral00,
-        title: const Text(LocalizationConstants.settings),
+        title: Text(
+          LocalizationConstants.settings,
+          style: OptiTextStyles.titleLarge,
+        ),
         centerTitle: false,
       ),
       body: const Center(
@@ -53,19 +57,15 @@ class _SettingsDomainSelectorWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(LocalizationConstants.currentDomain),
+          Text(
+            LocalizationConstants.currentDomain,
+            style: OptiTextStyles.body,
+          ),
           const SizedBox(height: 8),
           BlocBuilder<DomainCubit, DomainState>(
             builder: (context, state) {
               if (state is DomainLoaded) {
-                return Text(
-                  state.domain,
-                  style: const TextStyle(
-                    color: Color(0xFF222222),
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                );
+                return Text(state.domain, style: OptiTextStyles.titleLarge);
               } else {
                 return const Text('...');
               }
@@ -166,11 +166,7 @@ class _SettingsListItemWidget extends StatelessWidget {
                               title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Color(0xFF222222),
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: OptiTextStyles.titleSmall,
                             ),
                           ),
                         ],

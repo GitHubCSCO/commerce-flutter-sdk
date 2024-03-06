@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,6 @@ class Input extends StatefulWidget {
   final void Function()? onEditingComplete;
   final void Function()? onTap;
   final void Function(PointerDownEvent)? onTapOutside;
-  final TextStyle? style;
   final TextAlign textAlign;
   final TextDirection? textDirection;
   final TextInputAction? textInputAction;
@@ -29,7 +29,6 @@ class Input extends StatefulWidget {
     this.onEditingComplete,
     this.onTap,
     this.onTapOutside,
-    this.style,
     this.textDirection,
     this.textInputAction,
     this.label,
@@ -95,10 +94,7 @@ class _InputState extends State<Input> {
             padding: const EdgeInsets.only(bottom: AppStyle.inputLabelGap),
             child: Text(
               widget.label!,
-              style: const TextStyle(
-                color: AppStyle.neutral990,
-                fontSize: AppStyle.inputLabelFontSize,
-              ),
+              style: OptiTextStyles.body,
             ),
           ),
         Container(
@@ -126,7 +122,7 @@ class _InputState extends State<Input> {
             onEditingComplete: widget.onEditingComplete,
             onTap: widget.onTap,
             onTapOutside: widget.onTapOutside,
-            style: widget.style,
+            style: OptiTextStyles.body,
             textAlign: widget.textAlign,
             textDirection: widget.textDirection,
             textInputAction: widget.textInputAction,
@@ -134,6 +130,9 @@ class _InputState extends State<Input> {
             cursorColor: AppStyle.neutral990,
             decoration: InputDecoration(
               hintText: widget.hintText,
+              hintStyle: OptiTextStyles.body.copyWith(
+                color: AppStyle.neutral500,
+              ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: AppStyle.defaultHorizontalPadding,
                 vertical: AppStyle.defaultVerticalPadding,

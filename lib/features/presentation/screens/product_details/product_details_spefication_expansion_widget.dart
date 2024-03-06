@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/extensions/html_string_extension.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_detail_item_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -8,8 +8,7 @@ class ProductDetailsExpansionItemWidget extends StatelessWidget {
   final ProductDetailItemEntity specification;
 
   const ProductDetailsExpansionItemWidget(
-      {Key? key, required this.specification})
-      : super(key: key);
+      {super.key, required this.specification});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +22,7 @@ class ProductDetailsExpansionItemWidget extends StatelessWidget {
               backgroundColor: Colors.white,
               title: Text(
                 specification.title,
-                style: context.textTheme.titleSmall,
+                style: OptiTextStyles.titleSmall,
               ),
               collapsedBackgroundColor: Colors.white,
               children: <Widget>[
@@ -31,14 +30,14 @@ class ProductDetailsExpansionItemWidget extends StatelessWidget {
                   padding: const EdgeInsets.all(20.0),
                   child: HtmlWidget(
                     specification.htmlContent.styleHtmlContent() ?? '',
-                    textStyle: context.textTheme.bodyLarge,
+                    textStyle: OptiTextStyles.body,
                   ),
                 ),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, .0),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16.0, 0, 16.0, .0),
             child: Divider(),
           ),
         ],

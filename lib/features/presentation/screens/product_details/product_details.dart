@@ -1,8 +1,6 @@
-import 'dart:js';
-
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_detail_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_base_entity.dart';
@@ -46,7 +44,7 @@ class ProductDetailsScreen extends StatelessWidget {
           create: (context) => sl<ProductDetailsAddToCartBloc>(),
         ),
       ],
-      child: ProductDetailsPage(),
+      child: const ProductDetailsPage(),
     );
   }
 }
@@ -125,7 +123,7 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
           padding: const EdgeInsets.all(20.0),
           child: HtmlWidget(
             detailsEntity.htmlContent?.styleHtmlContent() ?? '',
-            textStyle: context.textTheme.bodyLarge,
+            textStyle: OptiTextStyles.body,
           )),
     );
   }
@@ -159,7 +157,7 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
               );
         }
       },
-      child: ProductDetailsAddToCartWidget(),
+      child: const ProductDetailsAddToCartWidget(),
     );
   }
 
