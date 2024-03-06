@@ -98,7 +98,11 @@ class BaseDynamicContentScreen extends StatelessWidget {
 
   Widget buildActionGridSectionWidget(
       {required ActionsWidgetEntity actionsWidgetEntity}) {
-    return ActionGridSectionWidget(actionsWidgetEntity: actionsWidgetEntity);
+    return BlocProvider(
+      create: (context) =>
+      sl<ActionLinkCubit>()..viewableActions(actionsWidgetEntity),
+      child: ActionGridSectionWidget(actionsWidgetEntity: actionsWidgetEntity),
+    );
   }
 
   Widget buildActionListSectionWidget(

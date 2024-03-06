@@ -19,19 +19,23 @@ class ActionListSectionWidget extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           case ActionLinkLoadedState:
             final actions = (state as ActionLinkLoadedState).actions;
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: const BoxDecoration(color: Colors.white),
-              child: ListView.builder(
-                itemCount: actions.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  final action = actions[index];
-                  return ActionListItemWidget(action: action);
-                },
-              ),
-            );
+            if (actions.isEmpty) {
+              return const SizedBox();
+            } else {
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: const BoxDecoration(color: Colors.white),
+                child: ListView.builder(
+                  itemCount: actions.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final action = actions[index];
+                    return ActionListItemWidget(action: action);
+                  },
+                ),
+              );
+            }
           default:
             return const Center(child: Text('Failed Loading Actions'));
         }

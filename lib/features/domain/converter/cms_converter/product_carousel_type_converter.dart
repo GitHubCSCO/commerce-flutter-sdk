@@ -10,6 +10,7 @@ class ProductCarouselTypeConverter {
       case "topsellers":
         return ProductCarouselType.topSellers;
       case "webcrosssells":
+      case "crosssells":
         return ProductCarouselType.webCrossSells;
       default:
         return ProductCarouselType.unknown;

@@ -20,7 +20,7 @@ void main() async {
       providers: [
         BlocProvider(create: (context) => sl<AuthCubit>()),
         BlocProvider(create: (context) => sl<LogoutCubit>()),
-        BlocProvider(create: (context) => sl<DomainCubit>()..fetchDomain()),
+        BlocProvider(create: (context) => sl<DomainCubit>()),
       ],
       child: const MyApp(),
     ),
