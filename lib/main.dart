@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/core/config/test_config_constants.dart';
+import 'package:commerce_flutter_app/core/config/prod_config_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
@@ -20,7 +20,7 @@ void main() async {
       providers: [
         BlocProvider(create: (context) => sl<AuthCubit>()),
         BlocProvider(create: (context) => sl<LogoutCubit>()),
-        BlocProvider(create: (context) => sl<DomainCubit>()..fetchDomain()),
+        BlocProvider(create: (context) => sl<DomainCubit>()),
       ],
       child: const MyApp(),
     ),
@@ -33,8 +33,8 @@ void initialHiveDatabase() async {
 
 void initCommerceSDK() {
   ClientConfig.hostUrl = null;
-  ClientConfig.clientId = TestConfigConstants.clientId;
-  ClientConfig.clientSecret = TestConfigConstants.clientSecret;
+  ClientConfig.clientId = ProdConfigConstants.clientId;
+  ClientConfig.clientSecret = ProdConfigConstants.clientSecret;
 }
 
 class MyApp extends StatelessWidget {
