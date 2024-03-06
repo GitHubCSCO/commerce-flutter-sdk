@@ -35,7 +35,7 @@ class ProductEntity extends Equatable {
   final String? smallImagePath;
   final String? mediumImagePath;
   final String? largeImagePath;
-  final ProductPriceEntity? pricing;
+  ProductPriceEntity? pricing;
   final String? currencySymbol;
   final num? qtyOnHand;
   final bool? isConfigured;
@@ -142,7 +142,7 @@ class ProductEntity extends Equatable {
   final List<StyleTraitEntity>? variantTraits;
   final List<ChildTraitValueEntity>? childTraitValues;
 
-  const ProductEntity({
+  ProductEntity({
     this.id,
     this.orderLineId,
     this.name,

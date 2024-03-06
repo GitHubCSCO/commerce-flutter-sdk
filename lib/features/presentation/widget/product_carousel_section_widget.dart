@@ -38,25 +38,26 @@ class ProductCarouselSectionWidget extends StatelessWidget {
               case ProductCarouseLoadingState:
                 return const Center(child: CircularProgressIndicator());
               case ProductCarouselLoadedState:
-                final productList =
-                    (state as ProductCarouselLoadedState).productList;
+                final isLoading = (state as ProductCarouselLoadedState).isPricingLoading;
+                final productCarouselList =
+                    (state as ProductCarouselLoadedState).productCarouselList;
                 return SizedBox(
                   height: 168,
                   child: ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
-                    itemCount: productList.length,
+                    itemCount: productCarouselList.length,
                     separatorBuilder: (context, index) =>
                         const SizedBox(width: 12),
                     itemBuilder: (context, index) {
-                      final product = productList[index];
+                      final productCarousel = productCarouselList[index];
 
                       return InkWell(
                         onTap: () {
                           context
                               .read<ProductIDFetchCubit>()
-                              .getProductId(product);
+                              .getProductId(productCarousel.product!);
                           var state = context.read<ProductIDFetchCubit>().state;
                           if (state is ProductIdFetchSuccess) {
                             var productId = state.productId;
@@ -68,7 +69,7 @@ class ProductCarouselSectionWidget extends StatelessWidget {
                             );
                           }
                         },
-                        child: ProductCarouselItemWidget(product: product),
+                        child: ProductCarouselItemWidget(productCarousel: productCarousel, isLoading: isLoading),
                       );
                     },
                   ),
