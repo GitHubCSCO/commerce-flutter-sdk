@@ -82,10 +82,10 @@ class _DomainPageState extends State<DomainPage> {
             BlocConsumer<DomainCubit, DomainState>(
               listener: (context, state) {
                 if (state is DomainLoaded) {
-                  AppRoute.account.navigate(context);
-                  context.pop();
-
-                  AppRoute.shop.navigate(context);
+                  while (context.canPop()) {
+                    context.pop();
+                  }
+                  AppRoute.root.navigateBackStack(context);
                 }
 
                 if (state is DomainOperationFailed) {
