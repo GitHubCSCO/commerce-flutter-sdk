@@ -45,12 +45,26 @@ class ProductDetailsUseCase extends BaseUseCase {
       : super();
 
   Future<Result<ProductEntity, ErrorResponse>> getProductDetails(
-      String productId) async {
+      String productId, ProductEntity? product) async {
     // (await this.commerceAPIServiceProvider.getCatalogpagesService()
     //     .getProductCatalogInformation(this.productParameter.urlSegment));
 
-    if (productId == null) {
-      return Failure(ErrorResponse(message: "Product id is null"));
+    if (productId.isNullOrEmpty) {
+      var urlSegment = product?.urlSegment ?? '';
+      var response = await commerceAPIServiceProvider
+          .getCatalogpagesService()
+          .getProductCatalogInformation(urlSegment);
+      switch (response) {
+        case Success(value: final data):
+          productId = data?.productId ?? '';
+          break;
+        case Failure(errorResponse: final errorResponse):
+          return Failure(errorResponse);
+      }
+
+      if (productId.isNullOrEmpty) {
+        return Failure(ErrorResponse(message: "Product id is null"));
+      }
     }
 
     // var includeAlternateInventory =
@@ -165,7 +179,6 @@ class ProductDetailsUseCase extends BaseUseCase {
 
     return genralInfoEntity;
   }
-
 
   List<ProductDetailsBaseEntity> makeAllDetailsItems(ProductEntity product) {
     List<ProductDetailsBaseEntity> items = [];

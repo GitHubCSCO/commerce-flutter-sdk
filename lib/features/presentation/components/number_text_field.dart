@@ -117,6 +117,11 @@ class _NumberTextFieldState extends State<NumberTextField> {
                       : AppStyle.neutral100,
                 ),
                 maxLines: 1,
+                onTapOutside: (context) =>
+                    FocusManager.instance.primaryFocus?.unfocus(),
+                onSubmitted: (value) {
+                  _focusNode.unfocus();
+                },
                 onChanged: (value) {
                   final intValue = int.tryParse(value);
                   widget.onChanged?.call(intValue);
