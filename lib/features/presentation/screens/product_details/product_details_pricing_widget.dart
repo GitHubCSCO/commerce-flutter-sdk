@@ -44,7 +44,10 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                         fontSize: 12)),
               ),
-              _buildInventorySection(context),
+              productDetailsPricingEntity.availability?.message != null
+                  ? _buildInventorySection(context)
+                  : Container(),
+              // _buildInventorySection(context),
               // For "View Availability by Warehouse"
               GestureDetector(
                 onTap: () {

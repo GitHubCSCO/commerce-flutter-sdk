@@ -24,11 +24,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:commerce_flutter_app/core/extensions/html_string_extension.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   final String productId;
   final ProductEntity? product;
-  const ProductDetailsScreen({super.key, required this.productId, this.product});
+  const ProductDetailsScreen(
+      {super.key, required this.productId, this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -117,11 +119,15 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
 // details description widget
   Widget buildProductDetailsDescriptionWidget(
       ProductDetailsDescriptionEntity detailsEntity) {
+    if (detailsEntity.htmlContent.isNullOrEmpty) {
+      return const SizedBox.shrink(); // or return Container();
+    }
+
     return Container(
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: HtmlWidget(detailsEntity.htmlContent?.styleHtmlContent() ?? ''),
+        child: HtmlWidget(detailsEntity.htmlContent.styleHtmlContent()!),
       ),
     );
   }

@@ -44,6 +44,8 @@ class ProductDetailsPricingBloc
             case Failure(errorResponse: final errorResponse):
           }
 
+          // need to implement hide/show inventory and quanty button logix
+
           var availability = productDetailsPricingEntity.styledProduct == null
               ? productDetailsPricingEntity.product?.availability
               : productDetailsPricingEntity.styledProduct?.availability;

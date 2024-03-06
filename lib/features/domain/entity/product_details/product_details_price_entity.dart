@@ -16,6 +16,8 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
   final StyledProductEntity? styledProduct;
   final String? selectedUnitOfMeasureValueText;
   final int? quantity;
+  final bool? viewQuantityPricingButtonShown;
+  final bool? viewInventoryByWarehouseShown;
 
   const ProductDetailsPriceEntity(
       {this.productPricingEnabled,
@@ -28,6 +30,8 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
       this.product,
       this.styledProduct,
       this.selectedUnitOfMeasureValueText,
+      this.viewQuantityPricingButtonShown,
+      this.viewInventoryByWarehouseShown,
       this.quantity,
       required super.detailsSectionType});
 
@@ -44,6 +48,8 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
       StyledProductEntity? styledProduct,
       String? selectedUnitOfMeasureValueText,
       int? quantity,
+      bool? viewQuantityPricingButtonShown,
+      bool? viewInventoryByWarehouseShown,
       ProdcutDeatilsPageWidgets? detailsSectionType}) {
     return ProductDetailsPriceEntity(
       productPricingEnabled:
@@ -61,6 +67,10 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
           selectedUnitOfMeasureValueText ?? this.selectedUnitOfMeasureValueText,
       quantity: quantity ?? this.quantity,
       detailsSectionType: detailsSectionType ?? this.detailsSectionType,
+      viewQuantityPricingButtonShown:
+          viewQuantityPricingButtonShown ?? this.viewQuantityPricingButtonShown,
+      viewInventoryByWarehouseShown:
+          viewInventoryByWarehouseShown ?? this.viewInventoryByWarehouseShown,
     );
   }
 }
