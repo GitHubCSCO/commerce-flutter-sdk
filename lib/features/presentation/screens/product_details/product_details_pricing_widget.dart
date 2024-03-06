@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_state.dart';
@@ -106,13 +107,14 @@ class ProductDetailsPricingWidget extends StatelessWidget {
           return Container(
             child: Row(
               children: [
-                Text(productDetailsPriceEntity.priceValueText ?? '',
+                Text(
+                    '${productDetailsPriceEntity.product.updatePriceValueText(productDetailsPriceEntity.productPricingEnabled)}',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     )),
                 Text(
-                    '/${productDetailsPriceEntity.selectedUnitOfMeasureValueText ?? ''}'),
+                    '${productDetailsPriceEntity.product.updateUnitOfMeasure(productDetailsPriceEntity.productPricingEnabled)}'),
               ],
             ),
           );
