@@ -25,11 +25,11 @@ GoRouter getRouter() {
     navigatorKey: _rootNavigator,
     initialLocation: AppRoute.root.fullPath,
     debugLogDiagnostics: true,
-    routes: [generateRoutes(_getNavigationRoot())],
+    routes: _getNavigationRoot().map((e) => generateRoutes(e)).toList(),
   );
 }
 
-NavigationNode _getNavigationRoot() {
+List<NavigationNode> _getNavigationRoot() {
   // path: /
   final root = createNode(
     path: AppRoute.root.fullPath,
@@ -42,7 +42,6 @@ NavigationNode _getNavigationRoot() {
     name: AppRoute.welcome.name,
     path: AppRoute.welcome.suffix,
     builder: (context, state) => const WelcomeScreen(),
-    parent: root,
   );
 
   // path: /domainSelection
@@ -50,7 +49,6 @@ NavigationNode _getNavigationRoot() {
     name: AppRoute.domainSelection.name,
     path: AppRoute.domainSelection.suffix,
     builder: (context, state) => const DomainScreen(),
-    parent: root,
   );
 
   // path: /login
@@ -59,14 +57,14 @@ NavigationNode _getNavigationRoot() {
     path: AppRoute.login.suffix,
     builder: (context, state) => const LoginScreen(),
     navigatorKey: _rootNavigator,
-    parent: root,
+    parent: null,
   );
 
   final navbarRoot = createNavbarRoot(
     statefulShellBuilder: (context, state, navigationShell) => NavBarScreen(
       navigationShell: navigationShell,
     ),
-    parent: root,
+    parent: null,
   );
 
   // path: /shop
@@ -117,8 +115,7 @@ NavigationNode _getNavigationRoot() {
     path: AppRoute.settings.suffix,
     builder: (context, state) => const SettingsScreen(),
     parent: account,
-
   );
 
-  return root;
+  return [root, navbarRoot, welcome, domainSelection, login];
 }
