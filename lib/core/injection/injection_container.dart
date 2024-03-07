@@ -10,7 +10,6 @@ import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_id_fetch_usecase_dart.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
@@ -30,10 +29,10 @@ import 'package:commerce_flutter_app/features/presentation/cubit/account_header/
 import 'package:commerce_flutter_app/features/presentation/cubit/action_link/action_link_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_id_fetch_cubit/product_id_fetch_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_history/search_history_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:get_it/get_it.dart';
@@ -53,6 +52,9 @@ Future<void> initInjectionContainer() async {
     //domain selection
     ..registerFactory(() => DomainCubit(domainUsecase: sl()))
     ..registerFactory(() => DomainUsecase())
+
+    //domain redirect
+    ..registerFactory(() => DomainRedirectCubit(domainUsecase: sl()))
 
     //login
     ..registerFactory(() => LoginCubit(loginUsecase: sl()))
@@ -82,11 +84,8 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ProductCarouselUseCase())
 
     // product details
-    ..registerFactory(
-        () => ProductIDFetchCubit(productDetailsIdFetchUseCase: sl()))
     ..registerFactory(() => ProductDetailsBloc(productDetailsUseCase: sl()))
     ..registerFactory(() => ProductDetailsUseCase())
-    ..registerFactory(() => ProductDetailsIdFetchUseCase())
 
     // product details pricing
     ..registerFactory(
@@ -182,6 +181,5 @@ Future<void> initInjectionContainer() async {
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
-
         ));
 }

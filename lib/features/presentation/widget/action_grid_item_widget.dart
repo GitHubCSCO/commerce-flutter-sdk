@@ -11,36 +11,39 @@ class ActionGridItemWidget extends BaseActionItemWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 32,
-            height: 32,
-            child: SvgPicture.asset(
-              getActionIconPath(action),
-              semanticsLabel: 'Action item icon',
-              fit: BoxFit.fitWidth,
+    return InkWell(
+      onTap: onActionNavigationCommand(context, action),
+      child: Container(
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 40,
+              height: 40,
+              child: SvgPicture.asset(
+                getActionIconPath(action),
+                semanticsLabel: 'Action item icon',
+                fit: BoxFit.fitWidth,
+              ),
             ),
-          ),
-          Container(
-            width: double.infinity,
-            height: 50,
-            padding: const EdgeInsets.only(left: 4, right: 4),
-            alignment: Alignment.center,
-            child: Text(
-              getActionTitle(action),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: OptiTextStyles.body,
+            Container(
+              width: double.infinity,
+              height: 32,
+              padding: const EdgeInsets.only(left: 4, right: 4),
+              alignment: Alignment.center,
+              child: Text(
+                getActionTitle(action),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: OptiTextStyles.body,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -7,6 +7,7 @@ import 'package:commerce_flutter_app/features/domain/entity/product_details/prod
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_description_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
@@ -24,10 +25,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:commerce_flutter_app/core/extensions/html_string_extension.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   final String productId;
-  const ProductDetailsScreen({super.key, required this.productId});
+  final ProductEntity? product;
+  const ProductDetailsScreen(
+      {super.key, required this.productId, this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +39,7 @@ class ProductDetailsScreen extends StatelessWidget {
       providers: [
         BlocProvider<ProductDetailsBloc>(
           create: (context) => sl<ProductDetailsBloc>()
-            ..add(FetchProductDetailsEvent(productId)),
+            ..add(FetchProductDetailsEvent(productId, product)),
         ),
         BlocProvider<ProductDetailsPricingBloc>(
           create: (context) => sl<ProductDetailsPricingBloc>(),
@@ -91,8 +95,7 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
           break;
         case ProdcutDeatilsPageWidgets.productDetailsDescription:
           final detailsEntity = item as ProductDetailsDescriptionEntity;
-          widgets.add(buildProductDetailsDescriptionWidget(
-              detailsEntity, buildContext));
+          widgets.add(buildProductDetailsDescriptionWidget(detailsEntity));
           break;
         case ProdcutDeatilsPageWidgets.productDetailsGeneralInfo:
           final generalInfoEntity = item as ProductDetailsGeneralInfoEntity;
@@ -116,13 +119,17 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
 
 // details description widget
   Widget buildProductDetailsDescriptionWidget(
-      ProductDetailsDescriptionEntity detailsEntity, BuildContext context) {
+      ProductDetailsDescriptionEntity detailsEntity) {
+    if (detailsEntity.htmlContent.isNullOrEmpty) {
+      return const SizedBox.shrink(); // or return Container();
+    }
+
     return Container(
       color: Colors.white,
       child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: HtmlWidget(
-            detailsEntity.htmlContent?.styleHtmlContent() ?? '',
+            detailsEntity.htmlContent.styleHtmlContent()!,
             textStyle: OptiTextStyles.body,
           )),
     );

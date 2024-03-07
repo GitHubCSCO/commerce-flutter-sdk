@@ -22,10 +22,11 @@ class ActionListItemWidget extends BaseActionItemWidget {
           children: [
             SizedBox(
               width: 30,
+              height: 30,
               child: SvgPicture.asset(
                 getActionIconPath(action),
                 semanticsLabel: 'Action item icon',
-                fit: BoxFit.fitWidth,
+                fit: BoxFit.contain,
               ),
             ),
             const SizedBox(width: 8),

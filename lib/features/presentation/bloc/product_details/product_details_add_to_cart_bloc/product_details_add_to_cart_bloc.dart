@@ -29,7 +29,6 @@ class ProductDetailsAddToCartBloc
   ProductDetailsAddtoCartEntity updateAddToCartViewModel(
       ProductDetailsAddtoCartEntity productDetailsAddtoCartEntity,
       ProductDetailsPriceEntity productDetailsPriceEntity) {
-        
     if (productDetailsAddtoCartEntity == null) {
       return productDetailsAddtoCartEntity;
     }
@@ -61,25 +60,29 @@ class ProductDetailsAddToCartBloc
         : product?.quoteRequired;
     var shouldHideSubtotalValue = quantity < 1 || isQuoteRequired!;
 
-    if (shouldHideSubtotalValue || productDetailsPriceEntity.pricing == null) {
+    if (shouldHideSubtotalValue ||
+        productDetailsPriceEntity.product?.pricing == null) {
       productDetailsAddtoCartEntity =
           productDetailsAddtoCartEntity.copyWith(subtotalValueText: '');
-    } else if (productDetailsPriceEntity.pricing?.extendedUnitNetPriceDisplay ==
+    } else if (productDetailsPriceEntity
+            .product?.pricing?.extendedUnitNetPriceDisplay ==
         null) {
       productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
           subtotalValueText: SiteMessageConstants.valueRealTimePricingLoadFail);
-    } else if (productDetailsPriceEntity.pricing?.extendedUnitNetPrice == 0) {
+    } else if (productDetailsPriceEntity
+            .product?.pricing?.extendedUnitNetPrice ==
+        0) {
       productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
           subtotalValueText: SiteMessageConstants.valuePricingZeroPriceMessage);
     } else {
       productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
-          subtotalValueText:
-              productDetailsPriceEntity.pricing?.extendedUnitNetPriceDisplay);
+          subtotalValueText: productDetailsPriceEntity
+              .product?.pricing?.extendedUnitNetPriceDisplay);
     }
 
     productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
-        selectedUnitOfMeasureValueText: productDetailsPriceEntity.pricing
-            .getUnitOfMeasure(
+        selectedUnitOfMeasureValueText:
+            productDetailsPriceEntity.product?.pricing?.getUnitOfMeasure(
                 productDetailsAddtoCartEntity.selectedUnitOfMeasureValueText ??
                     ''));
 

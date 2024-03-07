@@ -10,9 +10,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit({required AuthUsecase authUsecase})
       : _authUsecase = authUsecase,
-        super(const AuthState(status: AuthStatus.unknown)) {
-    loadAuthenticationState();
-  }
+        super(const AuthState(status: AuthStatus.unknown));
 
   Future<void> loadAuthenticationState() async {
     final isAuthenticated = await _authUsecase.isAuthenticated();

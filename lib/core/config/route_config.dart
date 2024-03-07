@@ -1,6 +1,7 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
@@ -23,6 +24,7 @@ GoRouter getRouter() {
   return GoRouter(
     navigatorKey: _rootNavigator,
     initialLocation: AppRoute.root.fullPath,
+    debugLogDiagnostics: true,
     routes: [generateRoutes(_getNavigationRoot())],
   );
 }
@@ -104,7 +106,8 @@ NavigationNode _getNavigationRoot() {
     name: AppRoute.productDetails.name,
     path: AppRoute.productDetails.suffix,
     builder: (context, state) => ProductDetailsScreen(
-        productId: state.pathParameters['productId'] ?? ''),
+        productId: state.pathParameters['productId'] ?? '',
+        product: state.extra as ProductEntity),
     parent: shop,
   );
 

@@ -11,6 +11,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_state.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -78,7 +79,9 @@ class AddToCartSuccessWidget extends StatelessWidget {
           ProductDetailsAddCartRow(detailsAddToCartEntity),
           PrimaryButton(
             text: LocalizationConstants.addToCart,
-            onPressed: () {},
+            onPressed: () {
+              CustomSnackBar.showComingSoonSnackBar(context);
+            },
           )
         ],
       ),
