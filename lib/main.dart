@@ -7,6 +7,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_c
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -71,29 +72,74 @@ class NavBarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.shop),
-              label: LocalizationConstants.shopTitle,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: LocalizationConstants.searchLandingTitle,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle),
-              label: LocalizationConstants.account,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart),
-              label: LocalizationConstants.cart,
-            ),
-          ],
-          currentIndex: navigationShell.currentIndex,
-          onTap: (int index) => _onTap(context, index),
-        ),
-        body: navigationShell);
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black,
+        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+        unselectedLabelStyle: TextStyle(fontWeight: FontWeight.normal),
+        items: _buildBottomNavigationBarItems(),
+        currentIndex: navigationShell.currentIndex,
+        onTap: (int index) => _onTap(context, index),
+      ),
+      body: navigationShell,
+    );
+  }
+
+  List<BottomNavigationBarItem> _buildBottomNavigationBarItems() {
+    return [
+      _buildBottomNavigationBarItem(
+        0,
+        "assets/images/bar_icons/shop.svg",
+        "assets/images/bar_icons/shop_selected.svg",
+        LocalizationConstants.shopTitle,
+      ),
+      _buildBottomNavigationBarItem(
+        1,
+        "assets/images/bar_icons/search.svg",
+        "assets/images/bar_icons/search_selected.svg",
+        LocalizationConstants.searchLandingTitle,
+      ),
+      _buildBottomNavigationBarItem(
+        2,
+        "assets/images/bar_icons/account.svg",
+        "assets/images/bar_icons/account_selected.svg",
+        LocalizationConstants.account,
+      ),
+      _buildBottomNavigationBarItem(
+        3,
+        "assets/images/bar_icons/cart.svg",
+        "assets/images/bar_icons/cart_selected.svg",
+        LocalizationConstants.cart,
+      ),
+    ];
+  }
+
+  BottomNavigationBarItem _buildBottomNavigationBarItem(
+    int index,
+    String unselectedIconPath,
+    String selectedIconPath,
+    String label,
+  ) {
+    return BottomNavigationBarItem(
+      icon: Padding(
+        padding: EdgeInsets.only(bottom: 5.0),
+        child: _getIcon(index, unselectedIconPath, selectedIconPath),
+      ),
+      label: label,
+    );
+  }
+
+  Widget _getIcon(
+      int index, String unselectedIconPath, String selectedIconPath) {
+    return navigationShell.currentIndex == index
+        ? SvgPicture.asset(
+            selectedIconPath,
+            fit: BoxFit.fitWidth,
+          )
+        : SvgPicture.asset(
+            unselectedIconPath,
+            fit: BoxFit.fitWidth,
+          );
   }
 }
