@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/config/prod_config_constants.dart';
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
@@ -90,26 +91,26 @@ class NavBarScreen extends StatelessWidget {
     return [
       _buildBottomNavigationBarItem(
         0,
-        "assets/images/bar_icons/shop.svg",
-        "assets/images/bar_icons/shop_selected.svg",
+        AssetConstants.shopIcon,
+        AssetConstants.shopSelectedIcon,
         LocalizationConstants.shopTitle,
       ),
       _buildBottomNavigationBarItem(
         1,
-        "assets/images/bar_icons/search.svg",
-        "assets/images/bar_icons/search_selected.svg",
+        AssetConstants.searchIcon,
+        AssetConstants.searchSelectedIcon,
         LocalizationConstants.searchLandingTitle,
       ),
       _buildBottomNavigationBarItem(
         2,
-        "assets/images/bar_icons/account.svg",
-        "assets/images/bar_icons/account_selected.svg",
+        AssetConstants.accountIcon,
+        AssetConstants.accountSelectedIcon,
         LocalizationConstants.account,
       ),
       _buildBottomNavigationBarItem(
         3,
-        "assets/images/bar_icons/cart.svg",
-        "assets/images/bar_icons/cart_selected.svg",
+        AssetConstants.cartIcon,
+        AssetConstants.cartSelectedIcon,
         LocalizationConstants.cart,
       ),
     ];
