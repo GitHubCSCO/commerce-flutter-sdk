@@ -2,10 +2,10 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -15,7 +15,10 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SettingsPage();
+    return BlocProvider(
+      create: (context) => sl<SettingsDomainCubit>()..fetchDomain(),
+      child: const SettingsPage(),
+    );
   }
 }
 
@@ -28,10 +31,7 @@ class SettingsPage extends StatelessWidget {
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         backgroundColor: AppStyle.neutral00,
-        title: Text(
-          LocalizationConstants.settings,
-          style: OptiTextStyles.titleLarge,
-        ),
+        title: const Text(LocalizationConstants.settings),
         centerTitle: false,
       ),
       body: const Center(
@@ -59,15 +59,19 @@ class _SettingsDomainSelectorWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            LocalizationConstants.currentDomain,
-            style: OptiTextStyles.body,
-          ),
+          const Text(LocalizationConstants.currentDomain),
           const SizedBox(height: 8),
-          BlocBuilder<DomainCubit, DomainState>(
+          BlocBuilder<SettingsDomainCubit, SettingsDomainState>(
             builder: (context, state) {
-              if (state is DomainLoaded) {
-                return Text(state.domain, style: OptiTextStyles.titleLarge);
+              if (state is SettingsDomainLoaded) {
+                return Text(
+                  state.domain,
+                  style: const TextStyle(
+                    color: Color(0xFF222222),
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
               } else {
                 return const Text('...');
               }
@@ -104,7 +108,7 @@ class _SettingsListWidget extends StatelessWidget {
         itemBuilder: (context, index) => settingsItems[index],
         separatorBuilder: (context, index) => const Divider(
           height: 0,
-          thickness: 0.4,
+          thickness: 1,
         ),
         itemCount: settingsItems.length,
       ),
@@ -168,7 +172,11 @@ class _SettingsListItemWidget extends StatelessWidget {
                               title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: OptiTextStyles.titleSmall,
+                              style: const TextStyle(
+                                color: Color(0xFF222222),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],

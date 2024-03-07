@@ -92,6 +92,8 @@ class _AccountHeader extends StatelessWidget {
           vertical: AppStyle.defaultVerticalPadding,
         ),
         child: BlocConsumer<AuthCubit, AuthState>(
+          listenWhen: (previous, current) =>
+              AuthCubitChangeTrigger(previous, current),
           listener: (context, state) {
             _reloadAccountPage(context);
           },

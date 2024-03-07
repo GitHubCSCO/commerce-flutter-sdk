@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
@@ -82,6 +83,7 @@ class _DomainPageState extends State<DomainPage> {
             BlocConsumer<DomainCubit, DomainState>(
               listener: (context, state) {
                 if (state is DomainLoaded) {
+                  context.read<AuthCubit>().reset();
                   while (context.canPop()) {
                     context.pop();
                   }

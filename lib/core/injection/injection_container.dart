@@ -34,6 +34,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cub
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_history/search_history_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -78,6 +79,9 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => AccountPageBloc(accountUseCase: sl()))
     ..registerFactory(() => AccountUseCase())
     ..registerFactory(() => AccountHeaderCubit(accountUseCase: sl()))
+
+    //settings domain
+    ..registerFactory(() => SettingsDomainCubit(domainUsecase: sl()))
 
     //product carousel
     ..registerFactory(() => ProductCarouselCubit(productCarouselUseCase: sl()))
