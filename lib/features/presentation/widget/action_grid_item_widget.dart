@@ -21,8 +21,8 @@ class ActionGridItemWidget extends BaseActionItemWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              width: 40,
-              height: 40,
+              width: 32,
+              height: 32,
               child: SvgPicture.asset(
                 getActionIconPath(action),
                 semanticsLabel: 'Action item icon',
@@ -31,7 +31,7 @@ class ActionGridItemWidget extends BaseActionItemWidget {
             ),
             Container(
               width: double.infinity,
-              height: 32,
+              height: 50,
               padding: const EdgeInsets.only(left: 4, right: 4),
               alignment: Alignment.center,
               child: Text(
