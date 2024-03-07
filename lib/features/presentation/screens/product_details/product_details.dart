@@ -66,6 +66,7 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
             return const Center(child: CircularProgressIndicator());
           case ProductDetailsLoaded():
             return Scaffold(
+                backgroundColor: OptiAppColors.backgroundGray,
                 appBar: AppBar(),
                 body: SingleChildScrollView(
                   child: Column(

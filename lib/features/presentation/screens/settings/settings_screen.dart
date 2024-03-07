@@ -104,7 +104,7 @@ class _SettingsListWidget extends StatelessWidget {
         itemBuilder: (context, index) => settingsItems[index],
         separatorBuilder: (context, index) => const Divider(
           height: 0,
-          thickness: 1,
+          thickness: 0.4,
         ),
         itemCount: settingsItems.length,
       ),

@@ -81,9 +81,9 @@ class AddToCartSuccessWidget extends StatelessWidget {
           ProductDetailsAddCartRow(detailsAddToCartEntity),
           PrimaryButton(
               leadingIcon: SvgPicture.asset(
-                AssetConstants.iconChangeDomain,
-                semanticsLabel: 'Change domain icon',
+                AssetConstants.productDeatilsAddToCartIcon,
                 fit: BoxFit.fitWidth,
+                color: Colors.white,
               ),
               text: LocalizationConstants.addToCart,
               onPressed: () => CustomSnackBar.showComingSoonSnackBar(context))

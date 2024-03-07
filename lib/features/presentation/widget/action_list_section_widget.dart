@@ -25,10 +25,14 @@ class ActionListSectionWidget extends StatelessWidget {
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: const BoxDecoration(color: Colors.white),
-                child: ListView.builder(
+                child: ListView.separated(
                   itemCount: actions.length,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
+                  separatorBuilder: (context, index) => const Divider(
+                    height: 0,
+                    thickness: 0.3,
+                  ),
                   itemBuilder: (context, index) {
                     final action = actions[index];
                     return ActionListItemWidget(action: action);
