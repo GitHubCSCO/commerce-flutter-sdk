@@ -72,8 +72,7 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
                     children: _buildProductDetailsWidgets(
                         state.productDetailsEntities, context),
                   ),
-                ),
-                backgroundColor: AppColors.grayBackgroundColor);
+                ));
           case ProductDetailsErrorState():
             return const Center(child: Text("failure"));
           default:

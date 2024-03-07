@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -10,7 +11,7 @@ const _background = Color(0xFFF5F5F5);
 const _lightest = Colors.white;
 const _darkest = Colors.black;
 const _darker = Color(0xFF222222);
-const _divider = Color(0xFFD6D6D6);
+const _divider = OptiAppColors.border;
 const _disabled = Colors.grey;
 
 const _red = Colors.red;
@@ -57,13 +58,12 @@ ThemeData _getTheme() {
   return ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
-    colorScheme: colorScheme,
-    scaffoldBackgroundColor: colorScheme.background,
+    // colorScheme: colorScheme,
     disabledColor: _disabled,
     dividerTheme: const DividerThemeData(
       color: _divider,
       space: 1,
-      thickness: 1,
+      thickness: 0.5,
     ),
     // chipTheme: ChipThemeData(
     //   labelStyle: textTheme.labelSmall,
@@ -284,3 +284,4 @@ class OptiTextStyles {
         ),
       );
 }
+

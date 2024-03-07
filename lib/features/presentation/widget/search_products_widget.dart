@@ -108,7 +108,7 @@ class SearchProductWidget extends StatelessWidget {
                     LocalizationConstants.itemNumber
                         .format([product.erpNumber ?? '']),
                     style: OptiTextStyles.bodySmall.copyWith(
-                      color: AppColors.textDisabledColor,
+                      color: OptiAppColors.textDisabledColor,
                     ),
                   ),
                   const SizedBox(height: 4),

@@ -66,7 +66,7 @@ class ProductDetailsGeneralWidget extends StatelessWidget {
                     Text(
                       generalInfoEntity.mFGNumberValue ?? '',
                       style: OptiTextStyles.bodySmall
-                          .copyWith(color: AppColors.lightGrayTextColor),
+                          .copyWith(color: OptiAppColors.textSecondary),
                       textAlign: TextAlign.left,
                     ),
                   ]),

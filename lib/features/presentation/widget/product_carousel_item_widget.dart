@@ -37,7 +37,7 @@ class ProductCarouselItemWidget extends StatelessWidget {
                     StackTrace? stackTrace) {
                   // This function is called when the image fails to load
                   return Container(
-                    color: AppColors.grayBackgroundColor, // Placeholder color
+                    color: OptiAppColors.backgroundGray, // Placeholder color
                     alignment: Alignment.center,
                     child: const Icon(
                       Icons.image, // Icon to display
@@ -61,7 +61,7 @@ class ProductCarouselItemWidget extends StatelessWidget {
             Container(
               alignment: Alignment.bottomLeft,
               child: LoadingAnimationWidget.prograssiveDots(
-                color: Colors.black87,
+                color: OptiAppColors.iconPrimary,
                 size: 30,
               ),
             ),

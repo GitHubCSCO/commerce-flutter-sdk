@@ -92,7 +92,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                   fontSize: 12,
                   fontWeight: FontWeight.normal,
                   fontStyle: FontStyle.italic,
-                  color: AppColors.lightGrayTextColor),
+                  color: OptiAppColors.textSecondary),
             );
           }
         }
@@ -123,7 +123,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
         return Container(
           alignment: Alignment.bottomLeft,
           child: LoadingAnimationWidget.prograssiveDots(
-            color: Colors.black87,
+            color: OptiAppColors.iconPrimary,
             size: 30,
           ),
         );
@@ -146,7 +146,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
         return Container(
           alignment: Alignment.bottomLeft,
           child: LoadingAnimationWidget.prograssiveDots(
-            color: Colors.black87,
+            color: OptiAppColors.iconPrimary,
             size: 30,
           ),
         );

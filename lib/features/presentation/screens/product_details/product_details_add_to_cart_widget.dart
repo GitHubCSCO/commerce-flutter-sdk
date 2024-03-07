@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
@@ -15,6 +16,7 @@ import 'package:commerce_flutter_app/features/presentation/components/snackbar_c
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 class ProductDetailsAddToCartWidget extends StatelessWidget {
   const ProductDetailsAddToCartWidget();
@@ -78,11 +80,13 @@ class AddToCartSuccessWidget extends StatelessWidget {
         children: [
           ProductDetailsAddCartRow(detailsAddToCartEntity),
           PrimaryButton(
-            text: LocalizationConstants.addToCart,
-            onPressed: () {
-              CustomSnackBar.showComingSoonSnackBar(context);
-            },
-          )
+              leadingIcon: SvgPicture.asset(
+                AssetConstants.iconChangeDomain,
+                semanticsLabel: 'Change domain icon',
+                fit: BoxFit.fitWidth,
+              ),
+              text: LocalizationConstants.addToCart,
+              onPressed: () => CustomSnackBar.showComingSoonSnackBar(context))
         ],
       ),
     );

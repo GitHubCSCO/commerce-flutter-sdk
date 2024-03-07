@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
@@ -44,6 +45,7 @@ class AccountPage extends BaseDynamicContentScreen {
             return const Center(child: CircularProgressIndicator());
           case AccountPageLoadedState():
             return Scaffold(
+              backgroundColor: OptiAppColors.backgroundGray,
               appBar: context.read<AuthCubit>().state.status ==
                       AuthStatus.authenticated
                   ? null

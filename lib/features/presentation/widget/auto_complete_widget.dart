@@ -87,7 +87,7 @@ class AutoCompleteProductWidget extends StatelessWidget {
                     LocalizationConstants.itemNumber
                         .format([autocompleteProduct.erpNumber ?? '']),
                     style: OptiTextStyles.bodySmall.copyWith(
-                      color: AppColors.textDisabledColor,
+                      color: OptiAppColors.textDisabledColor,
                     ),
                   ),
                 ],
