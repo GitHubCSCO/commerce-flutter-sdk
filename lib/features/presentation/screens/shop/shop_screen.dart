@@ -32,7 +32,7 @@ class ShopPage extends BaseDynamicContentScreen {
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(actions: <Widget>[
         BottomMenuWidget(),
-      ]),
+      ], backgroundColor: Colors.white),
       body: BlocBuilder<ShopPageBloc, ShopPageState>(
         builder: (context, state) {
           switch (state) {

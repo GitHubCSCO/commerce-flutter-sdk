@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
@@ -51,7 +52,7 @@ class SearchPage extends BaseDynamicContentScreen {
             hintText: LocalizationConstants.search,
             suffixIcon: IconButton(
               icon: SvgPicture.asset(
-                "assets/images/icon_clear.svg",
+                AssetConstants.iconClear,
                 semanticsLabel: 'search query clear icon',
                 fit: BoxFit.fitWidth,
               ),

@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
@@ -130,7 +131,7 @@ class SearchProductWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(32),
               ),
               child: SvgPicture.asset(
-                "assets/images/add_to_cart.svg",
+                AssetConstants.addToCart,
                 fit: BoxFit.fitWidth,
               ),
             ),

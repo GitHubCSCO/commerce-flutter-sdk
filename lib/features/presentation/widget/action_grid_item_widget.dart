@@ -36,7 +36,7 @@ class ActionGridItemWidget extends BaseActionItemWidget {
               alignment: Alignment.center,
               child: Text(
                 getActionTitle(action),
-                maxLines: 2,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
                 style: OptiTextStyles.body,
