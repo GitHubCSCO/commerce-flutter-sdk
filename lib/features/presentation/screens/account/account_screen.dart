@@ -63,7 +63,7 @@ class AccountPage extends BaseDynamicContentScreen {
                         AuthStatus.authenticated
                     ? null
                     : AppBar(
-                        backgroundColor: AppStyle.neutral00,
+                        backgroundColor: Theme.of(context).colorScheme.surface,
                         title: Text(
                           LocalizationConstants.account,
                           style: OptiTextStyles.titleLarge,

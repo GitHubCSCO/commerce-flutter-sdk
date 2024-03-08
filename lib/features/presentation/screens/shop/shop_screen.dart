@@ -36,12 +36,12 @@ class ShopPage extends BaseDynamicContentScreen {
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(actions: <Widget>[
         BottomMenuWidget(),
-      ], backgroundColor: Colors.white),
+      ], backgroundColor: Theme.of(context).colorScheme.surface),
       body: MultiBlocListener(
         listeners: [
           BlocListener<AuthCubit, AuthState>(
             listenWhen: (previous, current) =>
-              AuthCubitChangeTrigger(previous, current),
+                AuthCubitChangeTrigger(previous, current),
             listener: (context, state) {
               _reloadShopPage(context);
             },
@@ -55,7 +55,7 @@ class ShopPage extends BaseDynamicContentScreen {
           ),
           BlocListener<ShopPageBloc, ShopPageState>(
             listener: (context, state) {
-              switch(state) {
+              switch (state) {
                 case ShopPageLoadingState():
                   context.read<CmsCubit>().loading();
                 case ShopPageLoadedState():
@@ -68,7 +68,7 @@ class ShopPage extends BaseDynamicContentScreen {
         ],
         child: BlocBuilder<CmsCubit, CmsState>(
           builder: (context, state) {
-            switch(state) {
+            switch (state) {
               case CmsInitialState():
               case CmsLoadingState():
                 return const Center(child: CircularProgressIndicator());
