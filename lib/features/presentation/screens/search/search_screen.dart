@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
@@ -25,6 +26,7 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
+      BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
       BlocProvider<SearchPageCmsBloc>(
         create: (context) =>
             sl<SearchPageCmsBloc>()..add(SearchPageCmsLoadEvent()),
@@ -82,87 +84,113 @@ class SearchPage extends BaseDynamicContentScreen {
           ),
         ),
         Expanded(
-          child:
-              BlocBuilder<SearchBloc, SearchState>(builder: (context, state) {
-            switch (state.runtimeType) {
-              case SearchCmsInitialState:
-                return BlocBuilder<SearchPageCmsBloc, SearchPageCmsState>(
-                  builder: (context, state) {
-                    switch (state) {
-                      case SearchPageCmsInitialState():
-                      case SearchPageCmsLoadingState():
-                        return const Center(child: CircularProgressIndicator());
-                      case SearchPageCmsLoadedState():
-                        return MultiBlocListener(
-                          listeners: [
-                            BlocListener<AuthCubit, AuthState>(
-                              listenWhen: (previous, current) =>
-                                  AuthCubitChangeTrigger(previous, current),
-                              listener: (context, state) {
-                                _reloadSearchPage(context);
-                              },
-                            ),
-                            BlocListener<DomainCubit, DomainState>(
-                              listener: (context, state) {
-                                if (state is DomainLoaded) {
+          child: MultiBlocListener(
+            listeners: [
+              BlocListener<AuthCubit, AuthState>(
+                listenWhen: (previous, current) =>
+                    AuthCubitChangeTrigger(previous, current),
+                listener: (context, state) {
+                  _reloadSearchPage(context);
+                },
+              ),
+              BlocListener<DomainCubit, DomainState>(
+                listener: (context, state) {
+                  if (state is DomainLoaded) {
+                    _reloadSearchPage(context);
+                  }
+                },
+              ),
+              BlocListener<SearchPageCmsBloc, SearchPageCmsState>(
+                listener: (context, state) {
+                  switch(state) {
+                    case SearchPageCmsLoadingState():
+                      context.read<CmsCubit>().loading();
+                    case SearchPageCmsLoadedState():
+                      context.read<CmsCubit>().buildCMSWidgets(state.pageWidgets);
+                    case SearchPageCmsFailureState():
+                      context.read<CmsCubit>().failedLoading();
+                  }
+                },
+              ),
+            ],
+            child:
+                BlocBuilder<SearchBloc, SearchState>(builder: (context, state) {
+              switch (state.runtimeType) {
+                case SearchCmsInitialState:
+                  return BlocBuilder<CmsCubit, CmsState>(
+                    builder: (context, state) {
+                      switch (state) {
+                        case CmsInitialState():
+                        case CmsLoadingState():
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        case CmsLoadedState():
+                          return MultiBlocListener(
+                            listeners: [
+                              BlocListener<AuthCubit, AuthState>(
+                                listener: (context, state) {
                                   _reloadSearchPage(context);
-                                }
-                              },
+                                },
+                              ),
+                              BlocListener<DomainCubit, DomainState>(
+                                listener: (context, state) {
+                                  if (state is DomainLoaded) {
+                                    _reloadSearchPage(context);
+                                  }
+                                },
+                              ),
+                            ],
+                            child: Expanded(
+                              child: ListView(
+                                padding: EdgeInsets.zero,
+                                children:
+                                    buildContentWidgets(state.widgetEntities),
+                              ),
                             ),
-                          ],
-                          child: Expanded(
-                            child: ListView(
-                              padding: EdgeInsets.zero,
-                              children: buildContentWidgets(state.pageWidgets),
-                            ),
-                          ),
-                        );
-                      case SearchPageCmsFailureState():
-                        return const Center(
-                            child: Text(LocalizationConstants
-                                .errorLoadingSearchLanding));
-                      default:
-                        return const Center(
-                            child: Text(LocalizationConstants
-                                .errorLoadingSearchLanding));
-                    }
-                  },
-                );
-              case SearchLoadingState:
-                return const Center(child: CircularProgressIndicator());
-              case SearchAutoCompleteInitialState:
-                return Center(
-                  child: Text(
-                    LocalizationConstants.searchPrompt,
-                    style: OptiTextStyles.body,
-                  ),
-                );
-              case SearchAutoCompleteLoadedState:
-                final autoCompleteResult =
-                    (state as SearchAutoCompleteLoadedState).result!;
-                return AutoCompleteWidget(
-                    autocompleteResult: autoCompleteResult);
-              case SearchAutoCompleteFailureState:
-                return Center(
+                          );
+                        default:
+                          return const Center(
+                              child: Text(LocalizationConstants
+                                  .errorLoadingSearchLanding));
+                      }
+                    },
+                  );
+                case SearchLoadingState:
+                  return const Center(child: CircularProgressIndicator());
+                case SearchAutoCompleteInitialState:
+                  return Center(
                     child: Text(
-                  LocalizationConstants.searchNoResults,
-                  style: OptiTextStyles.body,
-                ));
-              case SearchProductsLoadedState:
-                final productCollectionResult =
-                    (state as SearchProductsLoadedState).result!;
-                return SearchProductsWidget(
-                    productCollectionResult: productCollectionResult);
-              case SearchProductsFailureState:
-                return Center(
-                    child: Text(LocalizationConstants.searchNoResults,
-                        style: OptiTextStyles.body));
-              default:
-                return const Center(
-                    child:
-                        Text(LocalizationConstants.errorLoadingSearchLanding));
-            }
-          }),
+                      LocalizationConstants.searchPrompt,
+                      style: OptiTextStyles.body,
+                    ),
+                  );
+                case SearchAutoCompleteLoadedState:
+                  final autoCompleteResult =
+                      (state as SearchAutoCompleteLoadedState).result!;
+                  return AutoCompleteWidget(
+                      autocompleteResult: autoCompleteResult);
+                case SearchAutoCompleteFailureState:
+                  return Center(
+                      child: Text(
+                        LocalizationConstants.searchNoResults,
+                        style: OptiTextStyles.body,
+                      ));
+                case SearchProductsLoadedState:
+                  final productCollectionResult =
+                      (state as SearchProductsLoadedState).result!;
+                  return SearchProductsWidget(
+                      productCollectionResult: productCollectionResult);
+                case SearchProductsFailureState:
+                  return Center(
+                      child: Text(LocalizationConstants.searchNoResults,
+                          style: OptiTextStyles.body));
+                default:
+                  return const Center(
+                      child: Text(
+                          LocalizationConstants.errorLoadingSearchLanding));
+              }
+            }),
+          ),
         )
       ],
     );

@@ -29,36 +29,20 @@ class SearchHistorySectionWidget extends StatelessWidget {
               style: OptiTextStyles.titleLarge,
             ),
           ),
-          BlocBuilder<SearchHistoryCubit, SearchHistoryState>(
-            builder: (context, state) {
-              switch (state.runtimeType) {
-                case SearchHistoryInitialState:
-                case SearchHistoryoadingState:
-                  return const Center(child: CircularProgressIndicator());
-                case SearchHistoryLoadedState:
-                  final historyList =
-                      (state as SearchHistoryLoadedState).historyList;
-                  return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: const BoxDecoration(color: Colors.white),
-                    child: ListView.builder(
-                      itemCount: _historyListCount(
-                          searchHistoryWidgetEntity.itemsCount,
-                          historyList.length),
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (context, index) {
-                        final history = historyList[index];
-                        return SearchHistoryItemWidget(history: history);
-                      },
-                    ),
-                  );
-                case SearchHistoryFailureState:
-                default:
-                  return const Center(child: Text('Failed Loading history'));
-              }
-            },
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: const BoxDecoration(color: Colors.white),
+            child: ListView.builder(
+              padding: const EdgeInsets.all(0.0),
+              itemCount: _historyListCount(searchHistoryWidgetEntity.itemsCount, searchHistoryWidgetEntity.histories?.length ?? 0),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                final history =  searchHistoryWidgetEntity.histories![index];
+                return SearchHistoryItemWidget(history: history);
+              },
+            ),
           )
         ],
       ),
