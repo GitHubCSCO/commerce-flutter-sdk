@@ -7,6 +7,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/routing/route_
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/nav_bar/nav_bar_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/root/root_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/search_screen.dart';

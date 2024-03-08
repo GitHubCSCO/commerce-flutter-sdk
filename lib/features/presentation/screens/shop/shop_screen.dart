@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
@@ -28,9 +29,10 @@ class ShopPage extends BaseDynamicContentScreen {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(actions: <Widget>[
         BottomMenuWidget(),
-      ]),
+      ], backgroundColor: Colors.white),
       body: BlocBuilder<ShopPageBloc, ShopPageState>(
         builder: (context, state) {
           switch (state) {
@@ -56,9 +58,10 @@ class ShopPage extends BaseDynamicContentScreen {
                   ),
                 ],
                 child: Scaffold(
+                    backgroundColor: OptiAppColors.backgroundGray,
                     body: ListView(
-                  children: buildContentWidgets(state.pageWidgets),
-                )),
+                      children: buildContentWidgets(state.pageWidgets),
+                    )),
               );
             case ShopPageFailureState():
               return const Center(child: Text('Failed Loading Shop'));

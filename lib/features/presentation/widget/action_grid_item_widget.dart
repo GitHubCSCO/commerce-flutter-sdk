@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_action_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +21,8 @@ class ActionGridItemWidget extends BaseActionItemWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              width: 40,
-              height: 40,
+              width: 32,
+              height: 32,
               child: SvgPicture.asset(
                 getActionIconPath(action),
                 semanticsLabel: 'Action item icon',
@@ -30,18 +31,15 @@ class ActionGridItemWidget extends BaseActionItemWidget {
             ),
             Container(
               width: double.infinity,
-              height: 32,
+              height: 50,
               padding: const EdgeInsets.only(left: 4, right: 4),
               alignment: Alignment.center,
               child: Text(
                 getActionTitle(action),
-                maxLines: 2,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Color(0xFF222222),
-                  fontSize: 12,
-                ),
+                style: OptiTextStyles.body,
               ),
             ),
           ],

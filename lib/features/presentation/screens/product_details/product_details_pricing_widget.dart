@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
@@ -38,11 +39,10 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                   // TODO: Implement the logic for "View Quantity Pricing"
                   CustomSnackBar.showComingSoonSnackBar(context);
                 },
-                child: const Text("View Quantity Pricing",
-                    style: TextStyle(
-                        color: AppColors.primaryColor,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12)),
+                child: Text(
+                  "View Quantity Pricing",
+                  style: OptiTextStyles.link,
+                ),
               ),
               productDetailsPricingEntity.availability?.message != null
                   ? _buildInventorySection(context)
@@ -54,11 +54,10 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                   // TODO: Implement the logic for "View Quantity Pricing"
                   CustomSnackBar.showComingSoonSnackBar(context);
                 },
-                child: const Text("View Availability by Warehouse",
-                    style: TextStyle(
-                        color: AppColors.primaryColor,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12)),
+                child: Text(
+                  "View Availability by Warehouse",
+                  style: OptiTextStyles.link,
+                ),
               ),
             ],
           ),
@@ -93,7 +92,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                   fontSize: 12,
                   fontWeight: FontWeight.normal,
                   fontStyle: FontStyle.italic,
-                  color: AppColors.lightGrayTextColor),
+                  color: OptiAppColors.textSecondary),
             );
           }
         }
@@ -112,12 +111,11 @@ class ProductDetailsPricingWidget extends StatelessWidget {
               children: [
                 Text(
                     '${productDetailsPriceEntity.product.updatePriceValueText(productDetailsPriceEntity.productPricingEnabled)}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    )),
+                    style: OptiTextStyles.subtitle),
                 Text(
-                    '${productDetailsPriceEntity.product.updateUnitOfMeasure(productDetailsPriceEntity.productPricingEnabled)}'),
+                  '${productDetailsPriceEntity.product.updateUnitOfMeasure(productDetailsPriceEntity.productPricingEnabled)}',
+                  style: OptiTextStyles.body,
+                ),
               ],
             ),
           );
@@ -125,7 +123,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
         return Container(
           alignment: Alignment.bottomLeft,
           child: LoadingAnimationWidget.prograssiveDots(
-            color: Colors.black87,
+            color: OptiAppColors.iconPrimary,
             size: 30,
           ),
         );
@@ -139,13 +137,16 @@ class ProductDetailsPricingWidget extends StatelessWidget {
         if (state is ProductDetailsPricingLoaded) {
           var productDetailsPriceEntity = state.productDetailsPriceEntity;
           return Container(
-            child: Text(productDetailsPriceEntity.availability?.message ?? ''),
+            child: Text(
+              productDetailsPriceEntity.availability?.message ?? '',
+              style: OptiTextStyles.body,
+            ),
           );
         }
         return Container(
           alignment: Alignment.bottomLeft,
           child: LoadingAnimationWidget.prograssiveDots(
-            color: Colors.black87,
+            color: OptiAppColors.iconPrimary,
             size: 30,
           ),
         );

@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_carousel/product_carousel_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,8 @@ class ProductCarouselItemWidget extends StatelessWidget {
   final ProductCarouselEntity productCarousel;
   final bool isLoading;
 
-  const ProductCarouselItemWidget({super.key, required this.productCarousel, required this.isLoading});
+  const ProductCarouselItemWidget(
+      {super.key, required this.productCarousel, required this.isLoading});
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +33,11 @@ class ProductCarouselItemWidget extends StatelessWidget {
               child: Image.network(
                 productCarousel.product!.smallImagePath ?? "",
                 fit: BoxFit.fitHeight,
-                errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                errorBuilder: (BuildContext context, Object error,
+                    StackTrace? stackTrace) {
                   // This function is called when the image fails to load
                   return Container(
-                    color: AppColors.grayBackgroundColor, // Placeholder color
+                    color: OptiAppColors.backgroundGray, // Placeholder color
                     alignment: Alignment.center,
                     child: const Icon(
                       Icons.image, // Icon to display
@@ -49,40 +52,30 @@ class ProductCarouselItemWidget extends StatelessWidget {
           const SizedBox(height: 8),
           SizedBox(
             height: 30,
-            child: Text(
-              productCarousel.product!.shortDescription ?? "",
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: Color(0xFF222222),
-                fontSize: 12,
-              ),
-            ),
+            child: Text(productCarousel.product!.shortDescription ?? "",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: OptiTextStyles.bodySmall),
           ),
-          if (isLoading) ... {
+          if (isLoading) ...{
             Container(
               alignment: Alignment.bottomLeft,
               child: LoadingAnimationWidget.prograssiveDots(
-                color: Colors.black87,
+                color: OptiAppColors.iconPrimary,
                 size: 30,
               ),
             ),
-          } else ... {
+          } else ...{
             const SizedBox(height: 8),
             Text(
               '${productCarousel.product.updatePriceValueText(productCarousel.productPricingEnabled)} ${productCarousel.product.updateUnitOfMeasure(productCarousel.productPricingEnabled)}',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: Color(0xFF222222),
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-              ),
+              style: OptiTextStyles.bodySmallHighlight,
             ),
           },
         ],
       ),
     );
   }
-
 }

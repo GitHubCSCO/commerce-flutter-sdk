@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/product_carousel_item_widget.dart';
@@ -22,11 +23,7 @@ class ProductCarouselSectionWidget extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Text(
             productCarouselWidgetEntity.title!,
-            style: const TextStyle(
-              color: Color(0xFF222222),
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: OptiTextStyles.titleLarge,
           ),
         ),
         BlocBuilder<ProductCarouselCubit, ProductCarouselState>(

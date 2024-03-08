@@ -1,6 +1,8 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
@@ -43,12 +45,16 @@ class AccountPage extends BaseDynamicContentScreen {
             return const Center(child: CircularProgressIndicator());
           case AccountPageLoadedState():
             return Scaffold(
+              backgroundColor: OptiAppColors.backgroundGray,
               appBar: context.read<AuthCubit>().state.status ==
                       AuthStatus.authenticated
                   ? null
                   : AppBar(
                       backgroundColor: AppStyle.neutral00,
-                      title: const Text(LocalizationConstants.account),
+                      title: Text(
+                        LocalizationConstants.account,
+                        style: OptiTextStyles.titleLarge,
+                      ),
                       centerTitle: false,
                       automaticallyImplyLeading: false,
                     ),
@@ -135,8 +141,12 @@ class _AccountLoggedInHeader extends StatelessWidget {
               title: Text(
                 (state is AccountHeaderLoaded ? state.firstName : '') +
                     (state is AccountHeaderLoaded ? state.lastName : ''),
+                style: OptiTextStyles.header2,
               ),
-              subtitle: Text(state is AccountHeaderLoaded ? state.email : ''),
+              subtitle: Text(
+                state is AccountHeaderLoaded ? state.email : '',
+                style: OptiTextStyles.body,
+              ),
             );
           },
         ),
@@ -155,6 +165,7 @@ class _AccountLoggedOutHeader extends StatelessWidget {
         Text(
           SiteMessageConstants
               .defalutMobileAppAccountUnauthenticatedDescription,
+          style: OptiTextStyles.body,
         ),
         const SizedBox(height: AppStyle.defaultVerticalPadding),
         PrimaryButton(
