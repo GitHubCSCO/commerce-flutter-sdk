@@ -1,9 +1,8 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 class NumberTextField extends StatefulWidget {
   final TextEditingController? controller;
@@ -118,8 +117,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
                       : AppStyle.neutral100,
                 ),
                 maxLines: 1,
-                onTapOutside: (context) =>
-                    FocusManager.instance.primaryFocus?.unfocus(),
+                onTapOutside: (p0) => context.closeKeyboard(),
                 onSubmitted: (value) {
                   _focusNode.unfocus();
                 },

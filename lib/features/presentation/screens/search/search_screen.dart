@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
@@ -61,11 +62,10 @@ class SearchPage extends BaseDynamicContentScreen {
               onPressed: () {
                 textEditingController.clear();
                 context.read<SearchBloc>().add(SearchTypingEvent(''));
-                FocusManager.instance.primaryFocus?.unfocus();
+                context.closeKeyboard();
               },
             ),
-            onTapOutside: (context) =>
-                FocusManager.instance.primaryFocus?.unfocus(),
+            onTapOutside: (p0) => context.closeKeyboard(),
             textInputAction: TextInputAction.search,
             focusListener: (bool hasFocus) {
               if (hasFocus) {
