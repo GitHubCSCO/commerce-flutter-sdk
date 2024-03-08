@@ -153,12 +153,10 @@ class SearchPage extends BaseDynamicContentScreen {
                                   },
                                 ),
                               ],
-                              child: Expanded(
-                                child: ListView(
-                                  padding: EdgeInsets.zero,
-                                  children:
-                                      buildContentWidgets(state.widgetEntities),
-                                ),
+                              child: ListView(
+                                padding: EdgeInsets.zero,
+                                children:
+                                    buildContentWidgets(state.widgetEntities),
                               ),
                             );
                           default:
