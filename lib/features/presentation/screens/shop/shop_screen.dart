@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +18,12 @@ class ShopScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ShopPageBloc>(
+    return MultiBlocProvider(providers: [
+      BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
+      BlocProvider<ShopPageBloc>(
         create: (context) => sl<ShopPageBloc>()..add(const ShopPageLoadEvent()),
-        child: const ShopPage());
+      ),
+    ], child: const ShopPage());
   }
 }
 
@@ -33,56 +37,66 @@ class ShopPage extends BaseDynamicContentScreen {
       appBar: AppBar(actions: <Widget>[
         BottomMenuWidget(),
       ], backgroundColor: Colors.white),
-      body: BlocBuilder<ShopPageBloc, ShopPageState>(
-        builder: (context, state) {
-          switch (state) {
-            case ShopPageInitialState():
-            case ShopPageLoadingState():
-              return const Center(child: CircularProgressIndicator());
-            case ShopPageLoadedState():
-              return MultiBlocListener(
-                listeners: [
-                  BlocListener<AuthCubit, AuthState>(
-                    listenWhen: (previous, current) =>
-                        AuthCubitChangeTrigger(previous, current),
-                    listener: (context, state) {
-                      _reloadShopPage(context);
-                    },
-                  ),
-                  BlocListener<DomainCubit, DomainState>(
-                    listener: (context, state) {
-                      if (state is DomainLoaded) {
-                        _reloadShopPage(context);
-                      }
-                    },
-                  ),
-                ],
-                child: Scaffold(
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<AuthCubit, AuthState>(
+            listenWhen: (previous, current) =>
+              AuthCubitChangeTrigger(previous, current),
+            listener: (context, state) {
+              _reloadShopPage(context);
+            },
+          ),
+          BlocListener<DomainCubit, DomainState>(
+            listener: (context, state) {
+              if (state is DomainLoaded) {
+                _reloadShopPage(context);
+              }
+            },
+          ),
+          BlocListener<ShopPageBloc, ShopPageState>(
+            listener: (context, state) {
+              switch(state) {
+                case ShopPageLoadingState():
+                  context.read<CmsCubit>().loading();
+                case ShopPageLoadedState():
+                  context.read<CmsCubit>().buildCMSWidgets(state.pageWidgets);
+                case ShopPageFailureState():
+                  context.read<CmsCubit>().failedLoading();
+              }
+            },
+          ),
+        ],
+        child: BlocBuilder<CmsCubit, CmsState>(
+          builder: (context, state) {
+            switch(state) {
+              case CmsInitialState():
+              case CmsLoadingState():
+                return const Center(child: CircularProgressIndicator());
+              case CmsLoadedState():
+                return Scaffold(
                     backgroundColor: OptiAppColors.backgroundGray,
                     body: ListView(
-                      children: buildContentWidgets(state.pageWidgets),
-                    )),
-              );
-            case ShopPageFailureState():
-              return const Center(child: Text('Failed Loading Shop'));
-            default:
-              return const Center(child: Text('Failed Loading Shop'));
-          }
-        },
+                      children: buildContentWidgets(state.widgetEntities),
+                    ));
+              default:
+                return const Center(child: Text('Failed Loading Shop'));
+            }
+          },
+        ),
       ),
     );
   }
 
-  // List<ToolMenu> _getToolMenu(BuildContext context) {
-  //   List<ToolMenu> list = [];
-  //   list.add(ToolMenu(
-  //     title: "Setting",
-  //     action: () {
-  //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-  //         content: Text("Sending Message"),
-  //       ));
-  //     }
-  //   ));
-  //   return list;
-  // }
+// List<ToolMenu> _getToolMenu(BuildContext context) {
+//   List<ToolMenu> list = [];
+//   list.add(ToolMenu(
+//     title: "Setting",
+//     action: () {
+//       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+//         content: Text("Sending Message"),
+//       ));
+//     }
+//   ));
+//   return list;
+// }
 }

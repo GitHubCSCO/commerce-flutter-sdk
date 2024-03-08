@@ -98,20 +98,12 @@ class BaseDynamicContentScreen extends StatelessWidget {
 
   Widget buildActionGridSectionWidget(
       {required ActionsWidgetEntity actionsWidgetEntity}) {
-    return BlocProvider(
-      create: (context) =>
-      sl<ActionLinkCubit>()..viewableActions(actionsWidgetEntity),
-      child: ActionGridSectionWidget(actionsWidgetEntity: actionsWidgetEntity),
-    );
+    return ActionGridSectionWidget(actionsWidgetEntity: actionsWidgetEntity);
   }
 
   Widget buildActionListSectionWidget(
       {required ActionsWidgetEntity actionsWidgetEntity}) {
-    return BlocProvider(
-      create: (context) =>
-          sl<ActionLinkCubit>()..viewableActions(actionsWidgetEntity),
-      child: ActionListSectionWidget(actionsWidgetEntity: actionsWidgetEntity),
-    );
+    return ActionListSectionWidget(actionsWidgetEntity: actionsWidgetEntity);
   }
 
   Widget buildProductCarouselSectionWidget(
@@ -130,9 +122,7 @@ class BaseDynamicContentScreen extends StatelessWidget {
 
   Widget buildSearchHistorySectionWidget(
       {required SearchHistoryWidgetEntity searchHistoryWidgetEntity}) {
-    return BlocProvider<SearchHistoryCubit>(
-        create: (context) => sl<SearchHistoryCubit>()..getSearchHistory(),
-        child: SearchHistorySectionWidget(
-            searchHistoryWidgetEntity: searchHistoryWidgetEntity));
+    return SearchHistorySectionWidget(
+        searchHistoryWidgetEntity: searchHistoryWidgetEntity);
   }
 }
