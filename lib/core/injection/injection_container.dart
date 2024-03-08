@@ -22,6 +22,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
@@ -65,6 +66,9 @@ Future<void> initInjectionContainer() async {
     //logout
     ..registerFactory(() => LogoutCubit(logoutUsecase: sl()))
     ..registerFactory(() => LogoutUsecase())
+
+    //Pull to refresh
+    ..registerFactory(() => PullToRefreshBloc())
 
     //CMS
     ..registerFactory(() => CmsCubit(
