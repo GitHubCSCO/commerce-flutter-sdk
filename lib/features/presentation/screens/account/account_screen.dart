@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:flutter/material.dart';
@@ -23,10 +24,11 @@ class AccountScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AccountPageBloc>(
-      create: (context) => sl<AccountPageBloc>()..add(AccountPageLoadEvent()),
-      child: const AccountPage(),
-    );
+    return MultiBlocProvider(providers: [
+      BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
+      BlocProvider<AccountPageBloc>(
+          create: (context) => sl<AccountPageBloc>()..add(AccountPageLoadEvent())),
+    ], child: const AccountPage());
   }
 }
 
@@ -35,39 +37,48 @@ class AccountPage extends BaseDynamicContentScreen {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AccountPageBloc, AccountPageState>(
-      builder: (context, state) {
-        switch (state) {
-          case AccountPageInitialState():
+    return BlocListener<AccountPageBloc, AccountPageState>(
+      listener: (context, state) {
+        switch(state) {
           case AccountPageLoadingState():
-            return const Center(child: CircularProgressIndicator());
+            context.read<CmsCubit>().loading();
           case AccountPageLoadedState():
-            return Scaffold(
-              appBar: context.read<AuthCubit>().state.status ==
-                      AuthStatus.authenticated
-                  ? null
-                  : AppBar(
-                      backgroundColor: AppStyle.neutral00,
-                      title: const Text(LocalizationConstants.account),
-                      centerTitle: false,
-                      automaticallyImplyLeading: false,
-                    ),
-              body: ListView(
-                children: [
-                  const _AccountHeader(),
-                  const SizedBox(height: AppStyle.defaultVerticalPadding),
-                  ...buildContentWidgets(state.pageWidgets),
-                ],
-              ),
-            );
+            context.read<CmsCubit>().buildCMSWidgets(state.pageWidgets);
           case AccountPageFailureState():
-            return const Center(
-                child: Text(LocalizationConstants.errorLoadingAccount));
-          default:
-            return const Center(
-                child: Text(LocalizationConstants.errorLoadingAccount));
+            context.read<CmsCubit>().failedLoading();
         }
       },
+      child: BlocBuilder<CmsCubit, CmsState>(
+        builder: (context, state) {
+          switch (state) {
+            case CmsInitialState():
+            case CmsLoadingState():
+              return const Center(child: CircularProgressIndicator());
+            case CmsLoadedState():
+              return Scaffold(
+                appBar: context.read<AuthCubit>().state.status ==
+                        AuthStatus.authenticated
+                    ? null
+                    : AppBar(
+                        backgroundColor: AppStyle.neutral00,
+                        title: const Text(LocalizationConstants.account),
+                        centerTitle: false,
+                        automaticallyImplyLeading: false,
+                      ),
+                body: ListView(
+                  children: [
+                    const _AccountHeader(),
+                    const SizedBox(height: AppStyle.defaultVerticalPadding),
+                    ...buildContentWidgets(state.widgetEntities),
+                  ],
+                ),
+              );
+            default:
+              return const Center(
+                  child: Text(LocalizationConstants.errorLoadingAccount));
+          }
+        },
+      ),
     );
   }
 }

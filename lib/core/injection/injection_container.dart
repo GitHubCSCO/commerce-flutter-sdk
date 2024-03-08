@@ -29,6 +29,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_b
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/action_link/action_link_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
@@ -65,6 +66,12 @@ Future<void> initInjectionContainer() async {
     //logout
     ..registerFactory(() => LogoutCubit(logoutUsecase: sl()))
     ..registerFactory(() => LogoutUsecase())
+
+    //CMS
+    ..registerFactory(() => CmsCubit(
+        actionLinkUseCase: sl(),
+        productCarouselUseCase: sl(),
+        searchHistoryUseCase: sl()))
 
     //shop
     ..registerFactory(() => ShopPageBloc(shopUseCase: sl()))
@@ -104,11 +111,11 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => CarouselIndicatorCubit())
 
     //action link
-    ..registerFactory(() => ActionLinkCubit(actionLinkUseCase: sl()))
+    // ..registerFactory(() => ActionLinkCubit(actionLinkUseCase: sl()))
     ..registerFactory(() => ActionLinkUseCase())
 
     //search history
-    ..registerFactory(() => SearchHistoryCubit(searchHistoryUseCase: sl()))
+    // ..registerFactory(() => SearchHistoryCubit(searchHistoryUseCase: sl()))
     ..registerFactory(() => SearchHistoryUseCase())
 
     //commerce api service provider
