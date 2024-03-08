@@ -58,7 +58,7 @@ ThemeData _getTheme() {
   return ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
-    // colorScheme: colorScheme,
+    colorScheme: colorScheme,
     disabledColor: _disabled,
     dividerTheme: const DividerThemeData(
       color: _divider,
@@ -108,10 +108,10 @@ ThemeData _getTheme() {
     //   labelType: NavigationRailLabelType.all,
     //   groupAlignment: 0,
     // ),
-    // appBarTheme: AppBarTheme(
-    //   titleTextStyle: textTheme.titleLarge,
-    //   backgroundColor: _background,
-    // ),
+    appBarTheme: AppBarTheme(
+        titleTextStyle: OptiTextStyles.titleLarge,
+        color: _background,
+        surfaceTintColor: _background),
     // dialogTheme: DialogTheme(
     //   backgroundColor: colorScheme.background,
     //   surfaceTintColor: colorScheme.background,
@@ -284,4 +284,3 @@ class OptiTextStyles {
         ),
       );
 }
-
