@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
@@ -26,6 +27,7 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
+      BlocProvider<PullToRefreshBloc>(create: (context) => sl<PullToRefreshBloc>()),
       BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
       BlocProvider<SearchPageCmsBloc>(
         create: (context) =>
@@ -86,6 +88,13 @@ class SearchPage extends BaseDynamicContentScreen {
         Expanded(
           child: MultiBlocListener(
             listeners: [
+              BlocListener<PullToRefreshBloc, PullToRefreshState>(
+                listener: (context, state) {
+                  if(state is PullToRefreshLoadState) {
+                    _reloadSearchPage(context);
+                  }
+                },
+              ),
               BlocListener<AuthCubit, AuthState>(
                 listenWhen: (previous, current) =>
                     AuthCubitChangeTrigger(previous, current),
@@ -117,43 +126,54 @@ class SearchPage extends BaseDynamicContentScreen {
                 BlocBuilder<SearchBloc, SearchState>(builder: (context, state) {
               switch (state.runtimeType) {
                 case SearchCmsInitialState:
-                  return BlocBuilder<CmsCubit, CmsState>(
-                    builder: (context, state) {
-                      switch (state) {
-                        case CmsInitialState():
-                        case CmsLoadingState():
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        case CmsLoadedState():
-                          return MultiBlocListener(
-                            listeners: [
-                              BlocListener<AuthCubit, AuthState>(
-                                listener: (context, state) {
-                                  _reloadSearchPage(context);
-                                },
-                              ),
-                              BlocListener<DomainCubit, DomainState>(
-                                listener: (context, state) {
-                                  if (state is DomainLoaded) {
-                                    _reloadSearchPage(context);
-                                  }
-                                },
-                              ),
-                            ],
-                            child: Expanded(
-                              child: ListView(
-                                padding: EdgeInsets.zero,
-                                children:
-                                    buildContentWidgets(state.widgetEntities),
-                              ),
-                            ),
-                          );
-                        default:
-                          return const Center(
-                              child: Text(LocalizationConstants
-                                  .errorLoadingSearchLanding));
-                      }
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      BlocProvider.of<PullToRefreshBloc>(context).add(PullToRefreshInitialEvent());
                     },
+                    child: BlocBuilder<CmsCubit, CmsState>(
+                      builder: (context, state) {
+                        switch (state) {
+                          case CmsInitialState():
+                          case CmsLoadingState():
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          case CmsLoadedState():
+                            return MultiBlocListener(
+                              listeners: [
+                                BlocListener<AuthCubit, AuthState>(
+                                  listener: (context, state) {
+                                    _reloadSearchPage(context);
+                                  },
+                                ),
+                                BlocListener<DomainCubit, DomainState>(
+                                  listener: (context, state) {
+                                    if (state is DomainLoaded) {
+                                      _reloadSearchPage(context);
+                                    }
+                                  },
+                                ),
+                              ],
+                              child: Expanded(
+                                child: ListView(
+                                  padding: EdgeInsets.zero,
+                                  children:
+                                      buildContentWidgets(state.widgetEntities),
+                                ),
+                              ),
+                            );
+                          default:
+                            return const CustomScrollView(
+                              slivers: <Widget>[
+                                SliverFillRemaining(
+                                  child: Center(
+                                    child: Text(LocalizationConstants.errorLoadingSearchLanding),
+                                  ),
+                                ),
+                              ],
+                            );
+                        }
+                      },
+                    ),
                   );
                 case SearchLoadingState:
                   return const Center(child: CircularProgressIndicator());

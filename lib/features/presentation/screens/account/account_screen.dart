@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
@@ -27,6 +28,7 @@ class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
+      BlocProvider<PullToRefreshBloc>(create: (context) => sl<PullToRefreshBloc>()),
       BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
       BlocProvider<AccountPageBloc>(
           create: (context) => sl<AccountPageBloc>()..add(AccountPageLoadEvent())),
@@ -39,51 +41,73 @@ class AccountPage extends BaseDynamicContentScreen {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AccountPageBloc, AccountPageState>(
-      listener: (context, state) {
-        switch(state) {
-          case AccountPageLoadingState():
-            context.read<CmsCubit>().loading();
-          case AccountPageLoadedState():
-            context.read<CmsCubit>().buildCMSWidgets(state.pageWidgets);
-          case AccountPageFailureState():
-            context.read<CmsCubit>().failedLoading();
-        }
-      },
-      child: BlocBuilder<CmsCubit, CmsState>(
-        builder: (context, state) {
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<PullToRefreshBloc, PullToRefreshState>(
+          listener: (context, state) {
+            if(state is PullToRefreshLoadState) {
+              _reloadAccountPage(context);
+            }
+          },
+        ),
+        BlocListener<AccountPageBloc, AccountPageState>(
+            listener: (context, state) {
           switch (state) {
-            case CmsInitialState():
-            case CmsLoadingState():
-              return const Center(child: CircularProgressIndicator());
-            case CmsLoadedState():
-              return Scaffold(
-                backgroundColor: OptiAppColors.backgroundGray,
-                appBar: context.read<AuthCubit>().state.status ==
-                        AuthStatus.authenticated
-                    ? null
-                    : AppBar(
-                        backgroundColor: Theme.of(context).colorScheme.surface,
-                        title: Text(
-                          LocalizationConstants.account,
-                          style: OptiTextStyles.titleLarge,
-                        ),
-                        centerTitle: false,
-                        automaticallyImplyLeading: false,
-                      ),
-                body: ListView(
-                  children: [
-                    const _AccountHeader(),
-                    const SizedBox(height: AppStyle.defaultVerticalPadding),
-                    ...buildContentWidgets(state.widgetEntities),
-                  ],
-                ),
-              );
-            default:
-              return const Center(
-                  child: Text(LocalizationConstants.errorLoadingAccount));
+            case AccountPageLoadingState():
+              context.read<CmsCubit>().loading();
+            case AccountPageLoadedState():
+              context.read<CmsCubit>().buildCMSWidgets(state.pageWidgets);
+            case AccountPageFailureState():
+              context.read<CmsCubit>().failedLoading();
           }
+        }),
+      ],
+      child: RefreshIndicator(
+        onRefresh: () async {
+          BlocProvider.of<PullToRefreshBloc>(context).add(PullToRefreshInitialEvent());
         },
+        child: BlocBuilder<CmsCubit, CmsState>(
+          builder: (context, state) {
+            switch (state) {
+              case CmsInitialState():
+              case CmsLoadingState():
+                return const Center(child: CircularProgressIndicator());
+              case CmsLoadedState():
+                return Scaffold(
+                  backgroundColor: OptiAppColors.backgroundGray,
+                  appBar: context.read<AuthCubit>().state.status ==
+                          AuthStatus.authenticated
+                      ? null
+                      : AppBar(
+                          backgroundColor: Theme.of(context).colorScheme.surface,
+                          title: Text(
+                            LocalizationConstants.account,
+                            style: OptiTextStyles.titleLarge,
+                          ),
+                          centerTitle: false,
+                          automaticallyImplyLeading: false,
+                        ),
+                  body: ListView(
+                    children: [
+                      const _AccountHeader(),
+                      const SizedBox(height: AppStyle.defaultVerticalPadding),
+                      ...buildContentWidgets(state.widgetEntities),
+                    ],
+                  ),
+                );
+              default:
+                return const CustomScrollView(
+                  slivers: <Widget>[
+                    SliverFillRemaining(
+                      child: Center(
+                        child: Text(LocalizationConstants.errorLoadingAccount),
+                      ),
+                    ),
+                  ],
+                );
+            }
+          },
+        ),
       ),
     );
   }
