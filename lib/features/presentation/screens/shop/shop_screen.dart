@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
@@ -32,12 +33,15 @@ class ShopPage extends BaseDynamicContentScreen {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(actions: <Widget>[
         BottomMenuWidget(),
-      ]),
+      ], backgroundColor: Colors.white),
       body: MultiBlocListener(
         listeners: [
           BlocListener<AuthCubit, AuthState>(
+            listenWhen: (previous, current) =>
+              AuthCubitChangeTrigger(previous, current),
             listener: (context, state) {
               _reloadShopPage(context);
             },
@@ -70,6 +74,7 @@ class ShopPage extends BaseDynamicContentScreen {
                 return const Center(child: CircularProgressIndicator());
               case CmsLoadedState():
                 return Scaffold(
+                    backgroundColor: OptiAppColors.backgroundGray,
                     body: ListView(
                       children: buildContentWidgets(state.widgetEntities),
                     ));

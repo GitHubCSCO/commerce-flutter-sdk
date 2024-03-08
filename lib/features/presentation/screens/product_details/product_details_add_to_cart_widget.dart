@@ -1,5 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
@@ -10,9 +12,11 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_state.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 class ProductDetailsAddToCartWidget extends StatelessWidget {
   const ProductDetailsAddToCartWidget();
@@ -76,9 +80,13 @@ class AddToCartSuccessWidget extends StatelessWidget {
         children: [
           ProductDetailsAddCartRow(detailsAddToCartEntity),
           PrimaryButton(
-            text: LocalizationConstants.addToCart,
-            onPressed: () {},
-          )
+              leadingIcon: SvgPicture.asset(
+                AssetConstants.productDeatilsAddToCartIcon,
+                fit: BoxFit.fitWidth,
+                color: Colors.white,
+              ),
+              text: LocalizationConstants.addToCart,
+              onPressed: () => CustomSnackBar.showComingSoonSnackBar(context))
         ],
       ),
     );
@@ -136,10 +144,13 @@ class ProductDetailsAddCartTtitleSubTitleColumn extends StatelessWidget {
       flex: 2,
       child: Column(
         children: [
-          Text(title),
+          Text(
+            title,
+            style: OptiTextStyles.bodySmall,
+          ),
           Text(
             value,
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18.0),
+            style: OptiTextStyles.titleLarge,
           )
         ],
       ),

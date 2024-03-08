@@ -1,5 +1,7 @@
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
@@ -52,7 +54,7 @@ class SearchPage extends BaseDynamicContentScreen {
             hintText: LocalizationConstants.search,
             suffixIcon: IconButton(
               icon: SvgPicture.asset(
-                "assets/images/icon_clear.svg",
+                AssetConstants.iconClear,
                 semanticsLabel: 'search query clear icon',
                 fit: BoxFit.fitWidth,
               ),
@@ -85,6 +87,8 @@ class SearchPage extends BaseDynamicContentScreen {
           child: MultiBlocListener(
             listeners: [
               BlocListener<AuthCubit, AuthState>(
+                listenWhen: (previous, current) =>
+                    AuthCubitChangeTrigger(previous, current),
                 listener: (context, state) {
                   _reloadSearchPage(context);
                 },
@@ -154,24 +158,32 @@ class SearchPage extends BaseDynamicContentScreen {
                 case SearchLoadingState:
                   return const Center(child: CircularProgressIndicator());
                 case SearchAutoCompleteInitialState:
-                  return const Center(
-                      child: Text(LocalizationConstants.searchPrompt));
+                  return Center(
+                    child: Text(
+                      LocalizationConstants.searchPrompt,
+                      style: OptiTextStyles.body,
+                    ),
+                  );
                 case SearchAutoCompleteLoadedState:
                   final autoCompleteResult =
                       (state as SearchAutoCompleteLoadedState).result!;
                   return AutoCompleteWidget(
                       autocompleteResult: autoCompleteResult);
                 case SearchAutoCompleteFailureState:
-                  return const Center(
-                      child: Text(LocalizationConstants.searchNoResults));
+                  return Center(
+                      child: Text(
+                        LocalizationConstants.searchNoResults,
+                        style: OptiTextStyles.body,
+                      ));
                 case SearchProductsLoadedState:
                   final productCollectionResult =
                       (state as SearchProductsLoadedState).result!;
                   return SearchProductsWidget(
                       productCollectionResult: productCollectionResult);
                 case SearchProductsFailureState:
-                  return const Center(
-                      child: Text(LocalizationConstants.searchNoResults));
+                  return Center(
+                      child: Text(LocalizationConstants.searchNoResults,
+                          style: OptiTextStyles.body));
                 default:
                   return const Center(
                       child: Text(

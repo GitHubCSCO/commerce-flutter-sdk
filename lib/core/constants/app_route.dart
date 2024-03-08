@@ -74,6 +74,10 @@ enum AppRoute {
       return fullPath;
     }
 
+    if (splittedList.length == 1) {
+      return '/${splittedList.first}';
+    }
+
     return splittedList.last;
   }
 }

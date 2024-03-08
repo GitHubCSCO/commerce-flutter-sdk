@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_history/search_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_history_item_widget.dart';
@@ -23,12 +24,9 @@ class SearchHistorySectionWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
-              searchHistoryWidgetEntity.title ?? LocalizationConstants.searchHistory,
-              style: const TextStyle(
-                color: Color(0xFF222222),
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              searchHistoryWidgetEntity.title ??
+                  LocalizationConstants.searchHistory,
+              style: OptiTextStyles.titleLarge,
             ),
           ),
           Container(
@@ -55,5 +53,4 @@ class SearchHistorySectionWidget extends StatelessWidget {
     int limit = int.tryParse(itemsCountLimit ?? '') ?? itemCount;
     return limit < itemCount ? limit : itemCount;
   }
-
 }

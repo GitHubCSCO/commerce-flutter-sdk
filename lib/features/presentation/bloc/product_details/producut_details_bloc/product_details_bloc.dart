@@ -18,8 +18,8 @@ class ProductDetailsBloc
       FetchProductDetailsEvent event, Emitter<ProductDetailsState> emit) async {
     emit(ProductDetailsLoading());
 
-    final result =
-        await _productDetailsUseCase.getProductDetails(event.productId);
+    final result = await _productDetailsUseCase.getProductDetails(
+        event.productId, event.product);
 
     switch (result) {
       case Success(value: final data):

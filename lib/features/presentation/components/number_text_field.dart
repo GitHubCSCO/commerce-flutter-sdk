@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -71,7 +72,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
               }
             },
             style: TextButton.styleFrom(
-              backgroundColor: AppColors.grayBackgroundColor,
+              backgroundColor: OptiAppColors.backgroundGray,
               padding: EdgeInsets.all(16),
               shape: CircleBorder(),
             ),
@@ -117,6 +118,11 @@ class _NumberTextFieldState extends State<NumberTextField> {
                       : AppStyle.neutral100,
                 ),
                 maxLines: 1,
+                onTapOutside: (context) =>
+                    FocusManager.instance.primaryFocus?.unfocus(),
+                onSubmitted: (value) {
+                  _focusNode.unfocus();
+                },
                 onChanged: (value) {
                   final intValue = int.tryParse(value);
                   widget.onChanged?.call(intValue);
@@ -135,7 +141,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
               }
             },
             style: TextButton.styleFrom(
-              backgroundColor: AppColors.grayBackgroundColor,
+              backgroundColor: OptiAppColors.backgroundGray,
               padding: EdgeInsets.all(16),
               shape: CircleBorder(),
             ),

@@ -25,9 +25,16 @@ class AuthCubit extends Cubit<AuthState> {
 
   void unauthenticated() => emit(const AuthState.unauthenticated());
 
+  void reset() => emit(const AuthState(status: AuthStatus.unknown));
+
   @override
   void onChange(Change<AuthState> change) {
     print(change);
     super.onChange(change);
   }
+}
+
+bool AuthCubitChangeTrigger(AuthState previous, AuthState current) {
+  return previous.status != current.status &&
+      current.status != AuthStatus.unknown;
 }

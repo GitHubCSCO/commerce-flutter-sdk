@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_carousel_widget.dart';
@@ -31,13 +32,13 @@ class ProductDetailsGeneralWidget extends StatelessWidget {
               children: [
                 Text(
                   generalInfoEntity.productName ?? '',
-                  style: const TextStyle(fontWeight: FontWeight.w600),
+                  style: OptiTextStyles.header3,
                   textAlign: TextAlign.left,
                 ),
                 if (generalInfoEntity.originalPartNumberValue != null)
                   Text(
                     generalInfoEntity.originalPartNumberValue ?? '',
-                    style: const TextStyle(color: AppColors.lightGrayTextColor),
+                    style: OptiTextStyles.bodySmall,
                     textAlign: TextAlign.left,
                   ),
                 if (generalInfoEntity.myPartNumberValue != null &&
@@ -45,14 +46,12 @@ class ProductDetailsGeneralWidget extends StatelessWidget {
                   Row(children: [
                     Text(
                       generalInfoEntity.myPartNumberTitle ?? '',
-                      style:
-                          const TextStyle(color: AppColors.darkGrayTextColor),
+                      style: OptiTextStyles.bodySmall,
                       textAlign: TextAlign.left,
                     ),
                     Text(
                       generalInfoEntity.myPartNumberValue ?? '',
-                      style:
-                          const TextStyle(color: AppColors.lightGrayTextColor),
+                      style: OptiTextStyles.bodySmall,
                       textAlign: TextAlign.left,
                     ),
                   ]),
@@ -61,14 +60,13 @@ class ProductDetailsGeneralWidget extends StatelessWidget {
                   Row(children: [
                     Text(
                       generalInfoEntity.mFGNumberTitle ?? '',
-                      style:
-                          const TextStyle(color: AppColors.darkGrayTextColor),
+                      style: OptiTextStyles.bodySmall,
                       textAlign: TextAlign.left,
                     ),
                     Text(
                       generalInfoEntity.mFGNumberValue ?? '',
-                      style:
-                          const TextStyle(color: AppColors.lightGrayTextColor),
+                      style: OptiTextStyles.bodySmall
+                          .copyWith(color: OptiAppColors.textSecondary),
                       textAlign: TextAlign.left,
                     ),
                   ]),
@@ -77,14 +75,12 @@ class ProductDetailsGeneralWidget extends StatelessWidget {
                   Row(children: [
                     Text(
                       generalInfoEntity.packDescriptionTitle ?? '',
-                      style:
-                          const TextStyle(color: AppColors.darkGrayTextColor),
+                      style: OptiTextStyles.bodySmall,
                       textAlign: TextAlign.left,
                     ),
                     Text(
                       generalInfoEntity.packDescriptionValue ?? '',
-                      style:
-                          const TextStyle(color: AppColors.lightGrayTextColor),
+                      style: OptiTextStyles.bodySmall,
                       textAlign: TextAlign.left,
                     ),
                   ]),
