@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
@@ -93,9 +94,8 @@ class _LoginPageState extends State<LoginPage> {
                   label: LocalizationConstants.username,
                   hintText: LocalizationConstants.enterUsername,
                   controller: _usernameController,
-                  onTapOutside: (context) =>
-                      FocusManager.instance.primaryFocus?.unfocus(),
-                  onEditingComplete: () => FocusScope.of(context).nextFocus(),
+                  onTapOutside: (p0) => context.closeKeyboard(),
+                  onEditingComplete: () => context.nextFocus(),
                 ),
                 const SizedBox(height: 16.0),
                 Input(
@@ -103,8 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                   hintText: LocalizationConstants.enterPassword,
                   obscureText: true,
                   controller: _passwordController,
-                  onTapOutside: (context) =>
-                      FocusManager.instance.primaryFocus?.unfocus(),
+                  onTapOutside: (p0) => context.closeKeyboard(),
                 ),
                 const SizedBox(height: 16.0),
                 BlocConsumer<LoginCubit, LoginState>(
@@ -145,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                     } else {
                       return PrimaryButton(
                         onPressed: () {
-                          FocusManager.instance.primaryFocus?.unfocus();
+                          context.closeKeyboard();
                           BlocProvider.of<LoginCubit>(context).onLoginSubmit(
                             _usernameController.text,
                             _passwordController.text,

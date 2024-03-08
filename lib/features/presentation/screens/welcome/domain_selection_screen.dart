@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
@@ -77,6 +78,7 @@ class _DomainPageState extends State<DomainPage> {
             Input(
               controller: _textEditingController,
               hintText: LocalizationConstants.enterDomainHint,
+              onTapOutside: (p0) => context.closeKeyboard(),
               label: 'Enter Storefront URL',
             ),
             const Expanded(child: SizedBox()),
@@ -113,6 +115,7 @@ class _DomainPageState extends State<DomainPage> {
                     ? const Center(child: CircularProgressIndicator())
                     : PrimaryButton(
                         onPressed: () {
+                          context.closeKeyboard();
                           context
                               .read<DomainCubit>()
                               .selectDomain(_textEditingController.text);
