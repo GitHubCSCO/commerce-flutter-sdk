@@ -1,17 +1,18 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/extensions/context.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/domain_selection/domain_selection_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_components.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class DomainSelectionScreen extends StatelessWidget {
-  const DomainSelectionScreen({super.key});
+class DomainScreen extends StatelessWidget {
+  const DomainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,22 +32,19 @@ class DomainSelectionScreen extends StatelessWidget {
           ),
         ],
       ),
-      child: BlocProvider(
-        create: (context) => sl<DomainSelectionCubit>(),
-        child: const DomainSelectionPage(),
-      ),
+      child: const DomainPage(),
     );
   }
 }
 
-class DomainSelectionPage extends StatefulWidget {
-  const DomainSelectionPage({super.key});
+class DomainPage extends StatefulWidget {
+  const DomainPage({super.key});
 
   @override
-  State<DomainSelectionPage> createState() => _DomainSelectionPageState();
+  State<DomainPage> createState() => _DomainPageState();
 }
 
-class _DomainSelectionPageState extends State<DomainSelectionPage> {
+class _DomainPageState extends State<DomainPage> {
   final TextEditingController _textEditingController = TextEditingController();
 
   @override
@@ -80,16 +78,21 @@ class _DomainSelectionPageState extends State<DomainSelectionPage> {
             Input(
               controller: _textEditingController,
               hintText: LocalizationConstants.enterDomainHint,
+              onTapOutside: (p0) => context.closeKeyboard(),
               label: 'Enter Storefront URL',
             ),
             const Expanded(child: SizedBox()),
-            BlocConsumer<DomainSelectionCubit, DomainSelectionState>(
+            BlocConsumer<DomainCubit, DomainState>(
               listener: (context, state) {
-                if (state is DomainSelectionSuccess) {
-                  AppRoute.shop.navigate(context);
+                if (state is DomainLoaded) {
+                  context.read<AuthCubit>().reset();
+                  while (context.canPop()) {
+                    context.pop();
+                  }
+                  AppRoute.root.navigateBackStack(context);
                 }
 
-                if (state is DomainSelectionFailed) {
+                if (state is DomainOperationFailed) {
                   showDialog(
                     context: context,
                     builder: (_) => AlertDialog(
@@ -108,17 +111,17 @@ class _DomainSelectionPageState extends State<DomainSelectionPage> {
                 }
               },
               builder: (context, state) {
-                return state is DomainSelectionInProgress
+                return state is DomainOperationInProgress
                     ? const Center(child: CircularProgressIndicator())
                     : PrimaryButton(
                         onPressed: () {
+                          context.closeKeyboard();
                           context
-                              .read<DomainSelectionCubit>()
+                              .read<DomainCubit>()
                               .selectDomain(_textEditingController.text);
                         },
                         isEnabled: _textEditingController.text.isNotEmpty,
-                        child: const Text(
-                            LocalizationConstants.useECommerceWebsite),
+                        text: LocalizationConstants.useECommerceWebsite,
                       );
               },
             ),

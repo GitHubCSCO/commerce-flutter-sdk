@@ -13,10 +13,10 @@ class ActionGridSectionWidget extends StatelessWidget {
       padding: const EdgeInsets.only(top: 8, bottom: 0, left: 12, right: 12),
       decoration: const BoxDecoration(color: Colors.white),
       child: GridView.builder(
-          itemCount: actionsWidgetEntity.actions?.length,
+          itemCount: actionsWidgetEntity.actions?.length ?? 0,
           shrinkWrap: true,
           gridDelegate:
-              const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+          const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             final action = actionsWidgetEntity.actions![index];

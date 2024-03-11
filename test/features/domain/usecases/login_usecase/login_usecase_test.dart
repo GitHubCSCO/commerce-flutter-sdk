@@ -8,7 +8,7 @@ import '../../injector_mock.dart';
 void main() {
   late LoginUsecase loginUsecase;
 
-  setUp(() {
+  setUpAll(() {
     initInjectionContainerMock();
     loginUsecase = LoginUsecase();
   });

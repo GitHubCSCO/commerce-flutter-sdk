@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_action_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -21,10 +22,11 @@ class ActionListItemWidget extends BaseActionItemWidget {
           children: [
             SizedBox(
               width: 30,
+              height: 30,
               child: SvgPicture.asset(
                 getActionIconPath(action),
                 semanticsLabel: 'Action item icon',
-                fit: BoxFit.fitWidth,
+                fit: BoxFit.contain,
               ),
             ),
             const SizedBox(width: 8),
@@ -33,7 +35,7 @@ class ActionListItemWidget extends BaseActionItemWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: Container(
+                    child: SizedBox(
                       height: double.infinity,
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
@@ -46,11 +48,7 @@ class ActionListItemWidget extends BaseActionItemWidget {
                               getActionTitle(action),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Color(0xFF222222),
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: OptiTextStyles.titleSmall,
                             ),
                           ),
                         ],

@@ -1,27 +1,38 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+void _reloadAccountPage(BuildContext context) {
+  context.read<AccountPageBloc>().add(AccountPageLoadEvent());
+}
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AccountPageBloc>(
-      create: (context) => sl<AccountPageBloc>()..add(AccountPageLoadEvent()),
-      child: const AccountPage(),
-    );
+    return MultiBlocProvider(providers: [
+      BlocProvider<PullToRefreshBloc>(create: (context) => sl<PullToRefreshBloc>()),
+      BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
+      BlocProvider<AccountPageBloc>(
+          create: (context) => sl<AccountPageBloc>()..add(AccountPageLoadEvent())),
+    ], child: const AccountPage());
   }
 }
 
@@ -30,39 +41,74 @@ class AccountPage extends BaseDynamicContentScreen {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AccountPageBloc, AccountPageState>(
-      builder: (context, state) {
-        switch (state) {
-          case AccountPageInitialState():
-          case AccountPageLoadingState():
-            return const Center(child: CircularProgressIndicator());
-          case AccountPageLoadedState():
-            return Scaffold(
-              appBar: context.read<AuthCubit>().state.status ==
-                      AuthStatus.authenticated
-                  ? null
-                  : AppBar(
-                      backgroundColor: AppStyle.neutral00,
-                      title: const Text(LocalizationConstants.account),
-                      centerTitle: false,
-                      automaticallyImplyLeading: false,
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<PullToRefreshBloc, PullToRefreshState>(
+          listener: (context, state) {
+            if(state is PullToRefreshLoadState) {
+              _reloadAccountPage(context);
+            }
+          },
+        ),
+        BlocListener<AccountPageBloc, AccountPageState>(
+            listener: (context, state) {
+          switch (state) {
+            case AccountPageLoadingState():
+              context.read<CmsCubit>().loading();
+            case AccountPageLoadedState():
+              context.read<CmsCubit>().buildCMSWidgets(state.pageWidgets);
+            case AccountPageFailureState():
+              context.read<CmsCubit>().failedLoading();
+          }
+        }),
+      ],
+      child: RefreshIndicator(
+        onRefresh: () async {
+          BlocProvider.of<PullToRefreshBloc>(context).add(PullToRefreshInitialEvent());
+        },
+        child: BlocBuilder<CmsCubit, CmsState>(
+          builder: (context, state) {
+            switch (state) {
+              case CmsInitialState():
+              case CmsLoadingState():
+                return const Center(child: CircularProgressIndicator());
+              case CmsLoadedState():
+                return Scaffold(
+                  backgroundColor: OptiAppColors.backgroundGray,
+                  appBar: context.read<AuthCubit>().state.status ==
+                          AuthStatus.authenticated
+                      ? null
+                      : AppBar(
+                          backgroundColor: Theme.of(context).colorScheme.surface,
+                          title: Text(
+                            LocalizationConstants.account,
+                            style: OptiTextStyles.titleLarge,
+                          ),
+                          centerTitle: false,
+                          automaticallyImplyLeading: false,
+                        ),
+                  body: ListView(
+                    children: [
+                      const _AccountHeader(),
+                      const SizedBox(height: AppStyle.defaultVerticalPadding),
+                      ...buildContentWidgets(state.widgetEntities),
+                    ],
+                  ),
+                );
+              default:
+                return const CustomScrollView(
+                  slivers: <Widget>[
+                    SliverFillRemaining(
+                      child: Center(
+                        child: Text(LocalizationConstants.errorLoadingAccount),
+                      ),
                     ),
-              body: ListView(
-                children: [
-                  const _AccountHeader(),
-                  const SizedBox(height: AppStyle.defaultVerticalPadding),
-                  ...buildContentWidgets(state.pageWidgets),
-                ],
-              ),
-            );
-          case AccountPageFailureState():
-            return const Center(
-                child: Text(LocalizationConstants.errorLoadingAccount));
-          default:
-            return const Center(
-                child: Text(LocalizationConstants.errorLoadingAccount));
-        }
-      },
+                  ],
+                );
+            }
+          },
+        ),
+      ),
     );
   }
 }
@@ -81,13 +127,22 @@ class _AccountHeader extends StatelessWidget {
           vertical: AppStyle.defaultVerticalPadding,
         ),
         child: BlocConsumer<AuthCubit, AuthState>(
+          listenWhen: (previous, current) =>
+              AuthCubitChangeTrigger(previous, current),
           listener: (context, state) {
-            context.read<AccountPageBloc>().add(AccountPageLoadEvent());
+            _reloadAccountPage(context);
           },
           builder: (context, state) {
-            return state.status == AuthStatus.authenticated
-                ? const _AccountLoggedInHeader()
-                : const _AccountLoggedOutHeader();
+            return BlocListener<DomainCubit, DomainState>(
+              listener: (context, state) {
+                if (state is DomainLoaded) {
+                  _reloadAccountPage(context);
+                }
+              },
+              child: state.status == AuthStatus.authenticated
+                  ? const _AccountLoggedInHeader()
+                  : const _AccountLoggedOutHeader(),
+            );
           },
         ),
       ),
@@ -121,8 +176,12 @@ class _AccountLoggedInHeader extends StatelessWidget {
               title: Text(
                 (state is AccountHeaderLoaded ? state.firstName : '') +
                     (state is AccountHeaderLoaded ? state.lastName : ''),
+                style: OptiTextStyles.header2,
               ),
-              subtitle: Text(state is AccountHeaderLoaded ? state.email : ''),
+              subtitle: Text(
+                state is AccountHeaderLoaded ? state.email : '',
+                style: OptiTextStyles.body,
+              ),
             );
           },
         ),
@@ -141,10 +200,11 @@ class _AccountLoggedOutHeader extends StatelessWidget {
         Text(
           SiteMessageConstants
               .defalutMobileAppAccountUnauthenticatedDescription,
+          style: OptiTextStyles.body,
         ),
         const SizedBox(height: AppStyle.defaultVerticalPadding),
         PrimaryButton(
-          child: const Text(LocalizationConstants.signIn),
+          text: LocalizationConstants.signIn,
           onPressed: () {
             AppRoute.login.navigateBackStack(context);
           },

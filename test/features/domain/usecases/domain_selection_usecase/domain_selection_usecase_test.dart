@@ -1,17 +1,17 @@
-import 'package:commerce_flutter_app/features/domain/enums/domain_selection_status.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/domain_selection_usecase/domain_selection_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/enums/domain_change_status.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:test/test.dart';
 import '../../injector_mock.dart';
 
 void main() {
-  group('DomainSelectionUsecase', () {
-    late DomainSelectionUsecase domainSelectionUsecase;
+  group('DomainUsecase', () {
+    late DomainUsecase domainSelectionUsecase;
 
     setUpAll(() {
       initInjectionContainerMock();
-      domainSelectionUsecase = DomainSelectionUsecase();
+      domainSelectionUsecase = DomainUsecase();
     });
 
     test('getSavedDomain should load and set the saved domain', () async {
@@ -63,7 +63,7 @@ void main() {
 
         final result = await domainSelectionUsecase.domainSelectHandler(domain);
 
-        expect(result, equals(DomainSelectionStatus.success));
+        expect(result, equals(DomainChangeStatus.success));
         expect(ClientConfig.hostUrl, equals(extractedDomain));
         verify(() => domainSelectionUsecase.commerceAPIServiceProvider
             .getClientService()
@@ -84,7 +84,7 @@ void main() {
 
       final result = await domainSelectionUsecase.domainSelectHandler(domain);
 
-      expect(result, equals(DomainSelectionStatus.failedOffline));
+      expect(result, equals(DomainChangeStatus.failedOffline));
     });
 
     test(
@@ -110,7 +110,7 @@ void main() {
 
       final result = await domainSelectionUsecase.domainSelectHandler(domain);
 
-      expect(result, equals(DomainSelectionStatus.failedInvalidDomain));
+      expect(result, equals(DomainChangeStatus.failedInvalidDomain));
     });
 
     test(
@@ -133,7 +133,7 @@ void main() {
 
       final result = await domainSelectionUsecase.domainSelectHandler(domain);
 
-      expect(result, equals(DomainSelectionStatus.failedMobileAppDisabled));
+      expect(result, equals(DomainChangeStatus.failedMobileAppDisabled));
     });
 
     test(
@@ -163,7 +163,7 @@ void main() {
 
         final result = await domainSelectionUsecase.domainSelectHandler(domain);
 
-        expect(result, equals(DomainSelectionStatus.success));
+        expect(result, equals(DomainChangeStatus.success));
         expect(ClientConfig.hostUrl, equals(domain));
         verify(() => domainSelectionUsecase.commerceAPIServiceProvider
             .getClientService()
@@ -181,7 +181,7 @@ void main() {
 
         final result = await domainSelectionUsecase.domainSelectHandler(domain);
 
-        expect(result, equals(DomainSelectionStatus.failedInvalidDomain));
+        expect(result, equals(DomainChangeStatus.failedInvalidDomain));
       },
     );
   });

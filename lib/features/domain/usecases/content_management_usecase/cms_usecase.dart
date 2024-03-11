@@ -131,7 +131,7 @@ class CmsUseCase extends BaseUseCase {
       convertWidgetToProductCarouselListEntityClassic(
           PageClassicWidgetEntity pageClassicWidget,
           Session? currentSession) async {
-    var productCarouselWidget = const ProductCarouselWidgetEntity();
+    var productCarouselWidget = ProductCarouselWidgetEntity();
     productCarouselWidget = productCarouselWidget.copyWith(
         carouselType: pageClassicWidget.carouselType,
         displayTopSellersFrom: pageClassicWidget.displayTopSellersFrom,
@@ -149,7 +149,7 @@ class CmsUseCase extends BaseUseCase {
   Future<SearchHistoryWidgetEntity> convertWidgetToSearchHistoryEntityClassic(
       PageClassicWidgetEntity pageClassicWidget,
       Session? currentSession) async {
-    var searchhistoryWidget = const SearchHistoryWidgetEntity();
+    var searchhistoryWidget = SearchHistoryWidgetEntity();
 
     searchhistoryWidget = searchhistoryWidget.copyWith(
         itemsCount: pageClassicWidget.numberOfPreviousSearches.toString(),
@@ -235,7 +235,7 @@ class CmsUseCase extends BaseUseCase {
 
   Future<SearchHistoryWidgetEntity> convertWidgetToSearchHistoryEntity(
       PageWidgetEntity pageWidget, Session? currentSession) async {
-    var searchhistoryWidget = const SearchHistoryWidgetEntity();
+    var searchhistoryWidget = SearchHistoryWidgetEntity();
     if (pageWidget.generalFields != null &&
         pageWidget.generalFields?.previousSearches != null) {
       searchhistoryWidget = searchhistoryWidget.copyWith(
@@ -257,7 +257,7 @@ class CmsUseCase extends BaseUseCase {
 
   Future<ProductCarouselWidgetEntity> convertWidgetToProductCarouselListEntity(
       PageWidgetEntity pageWidget, Session? currentSession) async {
-    var productCarouselWidget = const ProductCarouselWidgetEntity();
+    var productCarouselWidget = ProductCarouselWidgetEntity();
     if (pageWidget.generalFields != null) {
       productCarouselWidget = productCarouselWidget.copyWith(
           carouselType: pageWidget.generalFields?.carouselType,
