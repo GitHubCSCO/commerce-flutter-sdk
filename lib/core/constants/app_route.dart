@@ -15,6 +15,7 @@ class RouteNames {
   static const String productDetails = 'productDetails';
   static const String checkout = 'checkout';
   static const String productList = 'productList';
+  static const String settings = 'settings';
 }
 
 class RoutePaths {
@@ -26,11 +27,13 @@ class RoutePaths {
   static const String search = '/${RouteNames.search}';
   static const String account = '/${RouteNames.account}';
   static const String cart = '/${RouteNames.cart}';
-  static const String productDetails = '${RoutePaths.cart}/:id';
-  static const String checkout = '/${RouteNames.checkout}/:id';
+  static const String productDetails =
+      '/${RouteNames.productDetails}/:productId';
+  static const String checkout = '/:id';
   static const String shopProdlist =
       '/${RouteNames.shop}/${RouteNames.productList}';
   static const String shopProdDetails = '$shopProdlist/:id';
+  static const String settings = '${RoutePaths.account}/${RouteNames.settings}';
 }
 
 enum AppRoute {
@@ -46,7 +49,8 @@ enum AppRoute {
   productList(name: RouteNames.productList, fullPath: RoutePaths.shopProdlist),
   productDetails(
       name: RouteNames.productDetails, fullPath: RoutePaths.productDetails),
-  checkout(name: RouteNames.checkout, fullPath: RoutePaths.checkout);
+  checkout(name: RouteNames.checkout, fullPath: RoutePaths.checkout),
+  settings(name: RouteNames.settings, fullPath: RoutePaths.settings);
 
   const AppRoute({
     required this.name,
@@ -68,6 +72,10 @@ enum AppRoute {
 
     if (splittedList.isEmpty) {
       return fullPath;
+    }
+
+    if (splittedList.length == 1) {
+      return '/${splittedList.first}';
     }
 
     return splittedList.last;

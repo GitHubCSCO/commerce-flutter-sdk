@@ -3,36 +3,35 @@ import 'package:commerce_flutter_app/features/domain/entity/content_management/w
 class SearchHistoryWidgetEntity extends WidgetEntity {
   final String? title;
   final String? itemsCount;
+  final List<String>? histories;
 
-  const SearchHistoryWidgetEntity({
-    String? id,
-    WidgetType? type,
-    String? subType,
-    this.title,
-    this.itemsCount,
-  }) : super(id: id, type: type, subType: subType);
+  SearchHistoryWidgetEntity(
+      {String? id,
+      WidgetType? type,
+      String? subType,
+      this.title,
+      this.itemsCount,
+      List<String>? histories})
+      : histories = histories ?? [],
+        super(id: id, type: type, subType: subType);
 
   @override
-  SearchHistoryWidgetEntity copyWith({
-    String? id,
-    WidgetType? type,
-    String? subType,
-    String? title,
-    String? itemsCount,
-  }) {
+  SearchHistoryWidgetEntity copyWith(
+      {String? id,
+      WidgetType? type,
+      String? subType,
+      String? title,
+      String? itemsCount,
+      List<String>? histories}) {
     return SearchHistoryWidgetEntity(
-      id: id ?? this.id,
-      type: type ?? this.type,
-      subType: subType ?? this.subType,
-      title: title ?? this.title,
-      itemsCount: itemsCount ?? this.itemsCount,
-    );
+        id: id ?? this.id,
+        type: type ?? this.type,
+        subType: subType ?? this.subType,
+        title: title ?? this.title,
+        itemsCount: itemsCount ?? this.itemsCount,
+        histories: histories ?? this.histories);
   }
 
   @override
-  List<Object?> get props => [
-        ...super.props,
-        title,
-        itemsCount,
-      ];
+  List<Object?> get props => [...super.props, title, itemsCount, histories];
 }

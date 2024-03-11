@@ -49,9 +49,7 @@ class WelcomeFirstPage extends StatelessWidget {
             onPressed: () {
               AppRoute.domainSelection.navigateBackStack(context);
             },
-            child: const Text(
-              LocalizationConstants.signInPrompt,
-            ),
+            text: LocalizationConstants.signInPrompt,
           ),
           const SizedBox(
             height: 2,

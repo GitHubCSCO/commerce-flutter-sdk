@@ -1,13 +1,17 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/nav_bar/nav_bar_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/root/root_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/search_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/settings/settings_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/shop/shop_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/domain_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_screen.dart';
@@ -21,11 +25,12 @@ GoRouter getRouter() {
   return GoRouter(
     navigatorKey: _rootNavigator,
     initialLocation: AppRoute.root.fullPath,
-    routes: [generateRoutes(_getNavigationRoot())],
+    debugLogDiagnostics: true,
+    routes: _getNavigationRoot().map((e) => generateRoutes(e)).toList(),
   );
 }
 
-NavigationNode _getNavigationRoot() {
+List<NavigationNode> _getNavigationRoot() {
   // path: /
   final root = createNode(
     path: AppRoute.root.fullPath,
@@ -38,15 +43,13 @@ NavigationNode _getNavigationRoot() {
     name: AppRoute.welcome.name,
     path: AppRoute.welcome.suffix,
     builder: (context, state) => const WelcomeScreen(),
-    parent: root,
   );
 
   // path: /domainSelection
   final domainSelection = createNode(
     name: AppRoute.domainSelection.name,
     path: AppRoute.domainSelection.suffix,
-    builder: (context, state) => const DomainSelectionScreen(),
-    parent: root,
+    builder: (context, state) => const DomainScreen(),
   );
 
   // path: /login
@@ -55,14 +58,14 @@ NavigationNode _getNavigationRoot() {
     path: AppRoute.login.suffix,
     builder: (context, state) => const LoginScreen(),
     navigatorKey: _rootNavigator,
-    parent: root,
+    parent: null,
   );
 
   final navbarRoot = createNavbarRoot(
     statefulShellBuilder: (context, state, navigationShell) => NavBarScreen(
       navigationShell: navigationShell,
     ),
-    parent: root,
+    parent: null,
   );
 
   // path: /shop
@@ -97,5 +100,23 @@ NavigationNode _getNavigationRoot() {
     parent: navbarRoot,
   );
 
-  return root;
+  // path: /product details
+  final productDetails = createNode(
+    name: AppRoute.productDetails.name,
+    path: AppRoute.productDetails.suffix,
+    builder: (context, state) => ProductDetailsScreen(
+        productId: state.pathParameters['productId'] ?? '',
+        product: state.extra as ProductEntity),
+    parent: shop,
+  );
+
+  // path: /account/settings
+  final settings = createNode(
+    name: AppRoute.settings.name,
+    path: AppRoute.settings.suffix,
+    builder: (context, state) => const SettingsScreen(),
+    parent: account,
+  );
+
+  return [root, navbarRoot, welcome, domainSelection, login];
 }
