@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/device_interface.dart';
+import 'package:local_auth/local_auth.dart';
 
 class DeviceService implements IDeviceService {
   @override
@@ -6,9 +10,19 @@ class DeviceService implements IDeviceService {
   String get applicationName => throw UnimplementedError();
 
   @override
-  // TODO: implement authenticationOption
-  Future<DeviceAuthenticationOption> get authenticationOption =>
-      throw UnimplementedError();
+  Future<DeviceAuthenticationOption> authenticationOption() async {
+    final LocalAuthentication auth = LocalAuthentication();
+    final List<BiometricType> availableBiometrics =
+        await auth.getAvailableBiometrics();
+
+    if (availableBiometrics.contains(BiometricType.fingerprint)) {
+      return DeviceAuthenticationOption.touchID;
+    } else if (availableBiometrics.contains(BiometricType.face)) {
+      return DeviceAuthenticationOption.faceID;
+    } else {
+      return DeviceAuthenticationOption.none;
+    }
+  }
 
   @override
   Future<void> biometricAuthentication(void Function() callback) {
@@ -25,16 +39,14 @@ class DeviceService implements IDeviceService {
   bool get hasCamera => throw UnimplementedError();
 
   @override
-  // TODO: implement isAndroid
-  bool get isAndroid => throw UnimplementedError();
+  bool get isAndroid => Platform.isAndroid;
 
   @override
-  // TODO: implement isDesktop
-  bool get isDesktop => throw UnimplementedError();
+  bool get isDesktop =>
+      Platform.isWindows || Platform.isMacOS || Platform.isLinux;
 
   @override
-  // TODO: implement isIOS
-  bool get isIOS => throw UnimplementedError();
+  bool get isIOS => Platform.isIOS;
 
   @override
   // TODO: implement isLandscape

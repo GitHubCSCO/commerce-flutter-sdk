@@ -1,3 +1,5 @@
+import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
+
 abstract class IDeviceService {
   bool get isTablet;
 
@@ -25,11 +27,9 @@ abstract class IDeviceService {
 
   String get applicationName;
 
-  Future<DeviceAuthenticationOption> get authenticationOption;
+  Future<DeviceAuthenticationOption> authenticationOption();
 
   Future<void> biometricAuthentication(void Function() callback);
 
   bool isRunningOSVersionOrGreater(int majorVersion, int minorVersion);
 }
-
-enum DeviceAuthenticationOption { none, touchID, faceID }
