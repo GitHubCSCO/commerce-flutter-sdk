@@ -24,6 +24,10 @@ class ContentConfigurationService implements IContentConfigurationService {
   static const String vmiMainContentManagementPersistenceKey =
       "VmiMainContentManagementPersistenceKey";
 
+  static const String cartContentPageName = "mobileCart";
+  static const String cartContentManagementPersistenceKey =
+      "mobileCartContentManagementPersistenceKey";
+
   static const String switchContentModeFormatUri =
       "/contentadmin/shell/switchtocontentmode?contentmode={0}";
   static const String switchSpireContentModeFormatUri =
@@ -174,6 +178,8 @@ class ContentConfigurationService implements IContentConfigurationService {
         return accountContentPageName;
       case PageContentType.vmiMain:
         return vmiMainContentPageName;
+      case PageContentType.cart:
+        return cartContentPageName;
       default:
         return '';
     }
@@ -189,6 +195,8 @@ class ContentConfigurationService implements IContentConfigurationService {
         return accountContentManagementPersistenceKey;
       case PageContentType.vmiMain:
         return vmiMainContentManagementPersistenceKey;
+        case PageContentType.cart:
+        return cartContentManagementPersistenceKey;
       default:
         return '';
     }

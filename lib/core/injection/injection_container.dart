@@ -7,6 +7,7 @@ import 'package:commerce_flutter_app/features/domain/service/interfaces/core_ser
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
@@ -19,6 +20,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/sea
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
@@ -90,6 +92,11 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => AccountPageBloc(accountUseCase: sl()))
     ..registerFactory(() => AccountUseCase())
     ..registerFactory(() => AccountHeaderCubit(accountUseCase: sl()))
+
+
+    //shop
+    ..registerFactory(() => CartPageBloc(cartUseCase: sl()))
+    ..registerFactory(() => CartUseCase())
 
     //settings domain
     ..registerFactory(() => SettingsDomainCubit(domainUsecase: sl()))
