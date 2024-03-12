@@ -195,6 +195,7 @@ class OptiTextStyles {
   static const titleWeight = FontWeight.w600;
 
   static const bodyColor = _darkest;
+  static const bodyFadeColor = _disabled;
   static const bodyWeight = FontWeight.w400;
   static const bodyHighlightWeight = FontWeight.w600;
 
@@ -259,6 +260,14 @@ class OptiTextStyles {
           fontWeight: bodyWeight,
         ),
       );
+
+  static TextStyle get bodyFade => _getInterFontStyle(
+    const TextStyle(
+      fontSize: 14,
+      color: bodyFadeColor,
+      fontWeight: bodyWeight,
+    ),
+  );
 
   static TextStyle get bodySmall => _getInterFontStyle(
         const TextStyle(
