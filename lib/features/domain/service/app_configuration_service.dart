@@ -105,9 +105,10 @@ class AppConfigurationService extends ServiceBase
   static const String _tokenExConfigurationUrl = "/api/v1/tokenexconfig";
   static const String _tokenExIFramePath = "mobilecreditcard";
 
+  @override
   String get tokenExIFrameUrl {
     var url = _commerceAPIServiceProvider.getClientService().url.toString();
-    return "${url}${url.endsWith("/") ? '' : '/'}$_tokenExIFramePath";
+    return "$url${url.endsWith("/") ? '' : '/'}$_tokenExIFramePath";
   }
 
   @override
