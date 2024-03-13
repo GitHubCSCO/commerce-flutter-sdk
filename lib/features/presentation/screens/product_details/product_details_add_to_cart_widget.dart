@@ -108,6 +108,7 @@ class ProductDetailsAddCartRow extends StatelessWidget {
             flex: 5,
             child: NumberTextField(
                 initialtText: detailsAddToCartEntity.quantityText,
+                shouldShowIncrementDecermentIcon: true,
                 onChanged: (int? quantity) {
                   var pricingState =
                       context.read<ProductDetailsPricingBloc>().state;

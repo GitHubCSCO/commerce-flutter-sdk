@@ -18,4 +18,5 @@ class AssetConstants {
 
   static const String iconClear = "assets/images/icon_clear.svg";
   static const String addToCart = "assets/images/add_to_cart.svg";
+  static const String cartClearIcon = "assets/images/cart_page_icons/trash.svg";
 }

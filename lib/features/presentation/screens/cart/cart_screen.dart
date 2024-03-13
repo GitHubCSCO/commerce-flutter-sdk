@@ -1,11 +1,13 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_state.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,7 +37,7 @@ class CartPage extends BaseDynamicContentScreen {
       ),
       body: BlocBuilder<CartPageBloc, CartPageState>(builder: (context, state) {
         if (state is CartPageLoadedState) {
-          return Text(state.pageWidgets.length.toString());
+          return CartLineWidget(cartLineEntity: CartLineEntity());
         } else {
           return const Center(child: CircularProgressIndicator());
         }
