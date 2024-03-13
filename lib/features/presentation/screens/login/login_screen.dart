@@ -1,13 +1,17 @@
+import 'dart:io';
+
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/biometric_auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,8 +22,19 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => LoginCubit(loginUsecase: sl<LoginUsecase>()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => sl<LoginCubit>(),
+        ),
+        BlocProvider(
+          create: (context) =>
+              sl<BiometricOptionsCubit>()..loadBiometricOptions(),
+        ),
+        BlocProvider(
+          create: (context) => sl<BiometricAuthCubit>(),
+        ),
+      ],
       child: const LoginPage(),
     );
   }
@@ -157,13 +172,60 @@ class _LoginPageState extends State<LoginPage> {
                   },
                 ),
                 const SizedBox(height: 16.0),
-                SecondaryButton(
-                  child: Text(
-                    LocalizationConstants.faceID,
-                    style: OptiTextStyles.subtitle.copyWith(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
+                BlocBuilder<BiometricOptionsCubit, BiometricOptionsState>(
+                  builder: (context, state) {
+                    if (state is BiometricOptionsLoading ||
+                        state is BiometricOptionsUnknown ||
+                        (state is BiometricOptionsLoaded &&
+                            state.option == DeviceAuthenticationOption.none)) {
+                      return const SizedBox.shrink();
+                    }
+
+                    DeviceAuthenticationOption biometricOption =
+                        state is BiometricOptionsLoaded
+                            ? state.option
+                            : DeviceAuthenticationOption.none;
+
+                    return BlocListener<BiometricAuthCubit, BiometricAuthState>(
+                      listener: (context, state) {
+                        if (state is BiometricAuthSuccess) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Successfully Authenticated'),
+                              backgroundColor: Colors.green,
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                        } else if (state is BiometricAuthFailure) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Failed to Authenticate'),
+                              backgroundColor: Colors.red,
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                        }
+                      },
+                      child: SecondaryButton(
+                        onPressed: () async {
+                          await context
+                              .read<BiometricAuthCubit>()
+                              .authenticateWithBiometrics();
+                        },
+                        child: Text(
+                          'Use ${Platform.isAndroid ? LocalizationConstants.fingerprint : (
+                              biometricOption ==
+                                      DeviceAuthenticationOption.faceID
+                                  ? LocalizationConstants.faceID
+                                  : LocalizationConstants.touchID,
+                            )}',
+                          style: OptiTextStyles.subtitle.copyWith(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 16.0),
                 PlainButton(

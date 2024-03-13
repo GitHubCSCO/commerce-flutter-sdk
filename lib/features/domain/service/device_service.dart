@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/device_interface.dart';
+import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
 class DeviceService implements IDeviceService {
@@ -15,10 +16,41 @@ class DeviceService implements IDeviceService {
     final List<BiometricType> availableBiometrics =
         await auth.getAvailableBiometrics();
 
-    if (availableBiometrics.contains(BiometricType.fingerprint)) {
-      return DeviceAuthenticationOption.touchID;
-    } else if (availableBiometrics.contains(BiometricType.face)) {
-      return DeviceAuthenticationOption.faceID;
+    if (availableBiometrics.isEmpty) {
+      return DeviceAuthenticationOption.none;
+    }
+
+    if (isIOS) {
+      if (availableBiometrics.contains(BiometricType.face)) {
+        return DeviceAuthenticationOption.faceID;
+      } else if (availableBiometrics.contains(BiometricType.fingerprint)) {
+        return DeviceAuthenticationOption.touchID;
+      } else {
+        return DeviceAuthenticationOption.none;
+      }
+    } else if (isAndroid) {
+      const platform = MethodChannel('biometric_channel');
+
+      String biometricType = '';
+
+      String type;
+      try {
+        final String result = await platform.invokeMethod('getBiometricType');
+        type = result;
+      } on PlatformException catch (e) {
+        print("Failed to get biometric type: '${e.message}'.");
+        type = 'Unknown';
+      }
+
+      biometricType = type;
+
+      if (biometricType == 'Fingerprint') {
+        return DeviceAuthenticationOption.touchID;
+      } else if (biometricType == 'Face') {
+        return DeviceAuthenticationOption.faceID;
+      } else {
+        return DeviceAuthenticationOption.none;
+      }
     } else {
       return DeviceAuthenticationOption.none;
     }
