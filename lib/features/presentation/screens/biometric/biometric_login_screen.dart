@@ -1,85 +1,114 @@
-// import 'package:commerce_flutter_app/features/presentation/cubit/biometric/biometric_cubit.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:local_auth/local_auth.dart';
+import 'dart:io';
 
-// class BiometricLoginScreen extends StatelessWidget {
-//   const BiometricLoginScreen({super.key});
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
+import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/style.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/biometric_auth_cubit.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return BlocProvider(
-//       create: (context) => BiometricCubit()..loadBiometric(),
-//       child: const BiometricLoginPage(),
-//     );
-//   }
-// }
+class BiometricLoginScreen extends StatelessWidget {
+  const BiometricLoginScreen({super.key, required this.biometricOption});
+  final DeviceAuthenticationOption biometricOption;
 
-// class BiometricLoginPage extends StatelessWidget {
-//   const BiometricLoginPage({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => sl<BiometricAuthCubit>(),
+      child: BiometricLoginPage(
+        biometricOption: biometricOption,
+      ),
+    );
+  }
+}
 
-//   Future<bool> _authenticateWithBiometrics() async {
-//     final LocalAuthentication auth = LocalAuthentication();
-//     try {
-//       final bool authenticated = await auth.authenticate(
-//         localizedReason: 'Authenticate for biometric login',
-//         options: const AuthenticationOptions(
-//           biometricOnly: true,
-//           stickyAuth: true,
-//         ),
-//       );
+class BiometricLoginPage extends StatelessWidget {
+  const BiometricLoginPage({super.key, required this.biometricOption});
 
-//       return authenticated;
-//     } on PlatformException catch (e) {
-//       print(e);
-//       return false;
-//     }
-//   }
+  final DeviceAuthenticationOption biometricOption;
 
-//   Future<void> _authenticationHelper(context) async {
-//     bool isAuthenticated = await _authenticateWithBiometrics();
-//     if (isAuthenticated) {
-//       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-//           content: Text(
-//         'Authenticated',
-//         style: TextStyle(color: Colors.white),
-//       )));
-//     } else {
-//       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-//           content: Text(
-//         'Failed to authenticate',
-//         style: TextStyle(color: Colors.red),
-//       )));
-//     }
-//   }
+  @override
+  Widget build(BuildContext context) {
+    String? title;
+    String? biometricOptionName;
+    String? biometricOptionInfo;
+    String? biometricNameWithSuffix;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(),
-//       body: Center(
-//         child: Padding(
-//           padding: const EdgeInsets.all(8.0),
-//           child: ElevatedButton(
-//             onPressed: () {
-//               _authenticationHelper(context);
-//             },
-//             child: BlocBuilder<BiometricCubit, BiometricState>(
-//               builder: (context, state) {
-//                 if (state is BiometricEnabledFace) {
-//                   return const Text('Face ID');
-//                 } else if (state is BiometricEnabledTouch) {
-//                   return const Text('Touch ID');
-//                 } else if (state is BiometricDisabled) {
-//                   return const Text('Biometric is disabled');
-//                 }
-//                 return const Text('...');
-//               },
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+    if (biometricOption != DeviceAuthenticationOption.none) {
+      if (Platform.isAndroid) {
+        title = 'Setup Fingerprint ID for\nfast & secure sign in';
+        biometricOptionInfo = 'your fingerprint';
+        biometricOptionName = 'Fingerprint';
+        biometricNameWithSuffix = 'Fingerprint';
+      } else {
+        title =
+            'Setup ${biometricOption == DeviceAuthenticationOption.touchID ? 'Touch' : 'Face'} ID for fast &\nsecure sign in';
+        biometricOptionInfo =
+            biometricOption == DeviceAuthenticationOption.touchID
+                ? 'your fingerprint'
+                : 'Face ID';
+        biometricOptionName =
+            biometricOption == DeviceAuthenticationOption.touchID
+                ? 'Touch'
+                : 'Face';
+        biometricNameWithSuffix =
+            biometricOption == DeviceAuthenticationOption.touchID
+                ? 'Touch ID'
+                : 'Face ID';
+      }
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        centerTitle: false,
+        actions: [
+          PlainButton(
+            onPressed: () {
+              context.pop();
+            },
+            child: Text(
+              LocalizationConstants.cancel,
+              style: OptiTextStyles.subtitle.copyWith(
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          ),
+        ],
+        automaticallyImplyLeading: false,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(20),
+          child: Container(
+            color: AppStyle.neutral75,
+            height: 20,
+          ),
+        ),
+        title: Text(
+          'Setup $biometricNameWithSuffix',
+          style: OptiTextStyles.titleLarge,
+        ),
+      ),
+      body: Container(
+        height: double.infinity,
+        color: AppStyle.neutral00,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Text('Biometric Login'),
+              ElevatedButton(
+                onPressed: () {},
+                child: const Text('Authenticate'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
