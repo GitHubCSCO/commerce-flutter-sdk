@@ -1,7 +1,9 @@
 import 'package:commerce_flutter_app/core/config/route_config.dart';
+import 'package:commerce_flutter_app/features/domain/service/app_configuration_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/commerce_api_service_provider.dart';
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/core_service_provider.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/app_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
@@ -164,6 +166,12 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
+    ..registerLazySingleton<IAppConfigurationService>(() =>
+        AppConfigurationService(
+            commerceAPIServiceProvider: sl(),
+            clientService: sl(),
+            cacheService: sl(),
+            networkService: sl()))
     ..registerLazySingleton<IContentConfigurationService>(
         () => ContentConfigurationService(commerceAPIServiceProvider: sl()))
     ..registerLazySingleton<IMobileContentService>(() => MobileContentService(
