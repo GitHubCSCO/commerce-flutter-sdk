@@ -40,6 +40,9 @@ class LoginUsecase extends BiometricUsecase {
                   return LoginStatus.loginErrorUnknown;
                 } else {
                   if (await _showBiometricOptionView()) {
+                    await coreServiceProvider
+                        .getBiometricAuthenticationService()
+                        .markCurrentUserAsSeenEnableBiometricOptionView();
                     return LoginStatus.loginSuccessBiometric;
                   } else {
                     return LoginStatus.loginSuccessBillToShipTo;
@@ -99,7 +102,7 @@ class LoginUsecase extends BiometricUsecase {
             if (accountResult is Failure) {
               return LoginStatus.loginErrorUnknown;
             } else {
-              return LoginStatus.loginSuccessBiometric;
+              return LoginStatus.loginSuccessBillToShipTo;
             }
           }
         case Failure():
@@ -108,5 +111,31 @@ class LoginUsecase extends BiometricUsecase {
     } else {
       return LoginStatus.loginFailed;
     }
+  }
+
+  Future<LoginStatus> authenticateBiometrically(
+      DeviceAuthenticationOption option) async {
+    if (option == DeviceAuthenticationOption.none) {
+      return LoginStatus.loginFailed;
+    }
+
+    if (!(await coreServiceProvider
+        .getBiometricAuthenticationService()
+        .hasStoredCredentialsForCurrentDomain())) {
+      return LoginStatus.loginFailed;
+    }
+
+    return await biometricSignIn();
+  }
+
+  @override
+  Future<DeviceAuthenticationOption> getBiometricOptions() async {
+    if (await coreServiceProvider
+        .getBiometricAuthenticationService()
+        .hasStoredCredentialsForCurrentDomain()) {
+      return DeviceAuthenticationOption.none;
+    }
+
+    return await super.getBiometricOptions();
   }
 }

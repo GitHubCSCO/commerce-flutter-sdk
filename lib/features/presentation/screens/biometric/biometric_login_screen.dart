@@ -8,30 +8,42 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/biometric_auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/biometric_controller/biometric_controller_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class BiometricLoginScreen extends StatelessWidget {
-  const BiometricLoginScreen({super.key, required this.biometricOption});
+  const BiometricLoginScreen({
+    super.key,
+    required this.biometricOption,
+    required this.password,
+  });
+
+  final String password;
   final DeviceAuthenticationOption biometricOption;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<BiometricAuthCubit>(),
+      create: (context) => sl<BiometricControllerCubit>(),
       child: BiometricLoginPage(
         biometricOption: biometricOption,
+        password: password,
       ),
     );
   }
 }
 
 class BiometricLoginPage extends StatelessWidget {
-  const BiometricLoginPage({super.key, required this.biometricOption});
+  const BiometricLoginPage({
+    super.key,
+    required this.biometricOption,
+    required this.password,
+  });
 
   final DeviceAuthenticationOption biometricOption;
+  final String password;
 
   @override
   Widget build(BuildContext context) {
@@ -101,9 +113,9 @@ class BiometricLoginPage extends StatelessWidget {
           style: OptiTextStyles.titleLarge,
         ),
       ),
-      body: BlocConsumer<BiometricAuthCubit, BiometricAuthState>(
+      body: BlocConsumer<BiometricControllerCubit, BiometricControllerState>(
         listener: (context, state) {
-          if (state is BiometricAuthSuccess) {
+          if (state is BiometricControllerSuccess) {
             title = 'Success';
             subtitle =
                 'Net time you sign in, you can ${(biometricOptionName == 'Fingerprint' || biometricOptionName == 'Touch') ? 'use your fingerprint' : 'sign in\nwith Face ID'}';
@@ -121,7 +133,8 @@ class BiometricLoginPage extends StatelessWidget {
                   const SizedBox(height: 60),
                   _BiometricIcon(
                       iconPath: iconPath ?? '',
-                      enabled: state is BiometricAuthSuccess ? true : false),
+                      enabled:
+                          state is BiometricControllerSuccess ? true : false),
                   const SizedBox(height: 30),
                   Text(
                     title ?? '',
@@ -135,7 +148,7 @@ class BiometricLoginPage extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 200),
-                  state is BiometricAuthSuccess
+                  state is BiometricControllerSuccess
                       ? PrimaryButton(
                           text: LocalizationConstants.continueText,
                           onPressed: () async {
@@ -146,12 +159,12 @@ class BiometricLoginPage extends StatelessWidget {
                           text: enableButtonTitle,
                           onPressed: () async {
                             await context
-                                .read<BiometricAuthCubit>()
-                                .authenticateWithBiometrics();
+                                .read<BiometricControllerCubit>()
+                                .enableBiometric(password);
                           },
                         ),
                   const SizedBox(height: 5),
-                  state is BiometricAuthSuccess
+                  state is BiometricControllerSuccess
                       ? const SizedBox.shrink()
                       : PlainButton(
                           child: const Text('No Thanks'),

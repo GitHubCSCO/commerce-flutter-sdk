@@ -33,6 +33,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/search/search/se
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/biometric_auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/biometric_controller/biometric_controller_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
@@ -63,6 +64,9 @@ Future<void> initInjectionContainer() async {
 
     //biometric auth
     ..registerFactory(() => BiometricAuthCubit(biometricUsecase: sl()))
+
+    //biometric controller
+    ..registerFactory(() => BiometricControllerCubit(biometricUsecase: sl()))
 
     //domain selection
     ..registerFactory(() => DomainCubit(domainUsecase: sl()))

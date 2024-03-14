@@ -1,8 +1,8 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
@@ -123,9 +123,13 @@ List<NavigationNode> _getNavigationRoot() {
   final biometricLogin = createNode(
     name: AppRoute.biometricLogin.name,
     path: AppRoute.biometricLogin.suffix,
-    builder: (context, state) => BiometricLoginScreen(
-      biometricOption: state.extra as DeviceAuthenticationOption,
-    ),
+    builder: (context, state) {
+      final biometricInfo = state.extra as BiometricInfoEntity;
+      return BiometricLoginScreen(
+        biometricOption: biometricInfo.biometricOption,
+        password: biometricInfo.password,
+      );
+    },
     parent: null,
   );
 

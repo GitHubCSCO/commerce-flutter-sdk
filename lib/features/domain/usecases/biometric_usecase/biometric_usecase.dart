@@ -28,7 +28,7 @@ class BiometricUsecase extends BaseUseCase {
     }
   }
 
-  Future<bool> authenticateWithBiometricsAndPassword(String password) async {
+  Future<bool> enableBiometricsWithPassword(String password) async {
     final success = await authenticateWithBiometrics();
     if (success) {
       final result = coreServiceProvider
@@ -39,5 +39,19 @@ class BiometricUsecase extends BaseUseCase {
     }
 
     return false;
+  }
+
+  Future<void> cancelBiometricSignIn() async {
+    await coreServiceProvider
+        .getBiometricAuthenticationService()
+        .logoutWithStoredCredentials();
+
+    await commerceAPIServiceProvider.getAuthenticationService().logoutAsync();
+  }
+
+  Future<void> markCurrentUserHasSeenBiometricOptions() async {
+    await coreServiceProvider
+        .getBiometricAuthenticationService()
+        .markCurrentUserAsSeenEnableBiometricOptionView();
   }
 }

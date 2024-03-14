@@ -6,6 +6,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
@@ -137,8 +138,14 @@ class _LoginPageState extends State<LoginPage> {
                                 : DeviceAuthenticationOption.none;
 
                         if (options != DeviceAuthenticationOption.none) {
-                          AppRoute.biometricLogin
-                              .navigate(context, extra: options);
+                          AppRoute.biometricLogin.navigate(
+                            context,
+                            extra: BiometricInfoEntity(
+                              biometricOption: options,
+                              password: _passwordController.text,
+                            ),
+                          );
+
                           return;
                         }
                         return;
@@ -221,8 +228,8 @@ class _LoginPageState extends State<LoginPage> {
                       child: SecondaryButton(
                         onPressed: () async {
                           await context
-                              .read<BiometricAuthCubit>()
-                              .authenticateWithBiometrics();
+                              .read<LoginCubit>()
+                              .onBiometricLoginSubmit(biometricOption);
                         },
                         child: Text(
                           'Use ${Platform.isAndroid ? LocalizationConstants.fingerprint : biometricOption == DeviceAuthenticationOption.faceID ? LocalizationConstants.faceID : LocalizationConstants.touchID}',
