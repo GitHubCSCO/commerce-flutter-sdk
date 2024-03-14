@@ -48,6 +48,14 @@ class LoginCubit extends Cubit<LoginState> {
           ),
         );
         break;
+      case LoginStatus.loginFailed:
+        emit(
+          const LoginFailureState(
+            message: LocalizationConstants.authenticationFailed,
+            buttonText: LocalizationConstants.oK,
+          ),
+        );
+        break;
     }
   }
 }

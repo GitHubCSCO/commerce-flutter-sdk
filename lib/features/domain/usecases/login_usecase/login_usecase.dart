@@ -69,4 +69,44 @@ class LoginUsecase extends BiometricUsecase {
 
     return true;
   }
+
+  Future<LoginStatus> biometricSignIn() async {
+    final success = await authenticateWithBiometrics();
+    if (success) {
+      final loginSuccess = await coreServiceProvider
+          .getBiometricAuthenticationService()
+          .logInWithStoredCredentials();
+
+      if (!loginSuccess) {
+        return LoginStatus.loginErrorUnsuccessful;
+      }
+
+      final sessionResponse = await commerceAPIServiceProvider
+          .getSessionService()
+          .getCurrentSession();
+
+      switch (sessionResponse) {
+        case Success(value: final fullSession):
+          {
+            if (fullSession == null) {
+              return LoginStatus.loginErrorUnknown;
+            }
+
+            final accountResult = await commerceAPIServiceProvider
+                .getAccountService()
+                .getCurrentAccountAsync();
+
+            if (accountResult is Failure) {
+              return LoginStatus.loginErrorUnknown;
+            } else {
+              return LoginStatus.loginSuccessBiometric;
+            }
+          }
+        case Failure():
+          return LoginStatus.loginErrorUnknown;
+      }
+    } else {
+      return LoginStatus.loginFailed;
+    }
+  }
 }
