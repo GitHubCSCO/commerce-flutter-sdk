@@ -30,6 +30,7 @@ class CartLineEntityMapper {
   CartLineEntity toEntity(CartLine model) => CartLineEntity(
         productUri: model.productUri,
         id: model.id,
+        productId: model.productId,
         line: model.line,
         requisitionId: model.requisitionId,
         smallImagePath: model.smallImagePath,

@@ -98,10 +98,12 @@ class CartPage extends StatelessWidget {
 
     list.add(
         CartPaymentSummaryWidget(paymentSummaryEntity: paymentSummaryEntity));
+
     list.add(BlocProvider<CartShippingSelectionBloc>(
       create: (context) => sl<CartShippingSelectionBloc>(),
       child: CartShippingWidget(shippingEntity: shippingEntity),
     ));
+    
     list.add(CartLineWidgetList(
         cartLineEntities: CartLineListMapper()
             .toEntity(CartLineList(cartLines: cart!.cartLines))));

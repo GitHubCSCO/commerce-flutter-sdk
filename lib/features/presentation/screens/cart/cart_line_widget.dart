@@ -1,9 +1,12 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/cart_line_extentions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:flutter/material.dart';
@@ -38,31 +41,40 @@ class CartLineWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
+    return InkWell(
+      onTap: () {
+         var productId = cartLineEntity.productId;
+        AppRoute.productDetails.navigateBackStack(context,
+            pathParameters: {"productId": productId.toString()},
+            extra: ProductEntity());
+      },
       child: Container(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CartContentProductImageWidget(),
-            Expanded(
-              child: Container(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CartContentProductTitleWidget(
-                        cartLineEntity: cartLineEntity),
-                    CartContentPricingWidget(cartLineEntity: cartLineEntity),
-                    CartContentQuantityGroupWidget(cartLineEntity)
-                  ],
+        color: Colors.white,
+        child: Container(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CartContentProductImageWidget(
+                  imagePath: cartLineEntity.smallImagePath ?? ""),
+              Expanded(
+                child: Container(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CartContentProductTitleWidget(
+                          cartLineEntity: cartLineEntity),
+                      CartContentPricingWidget(cartLineEntity: cartLineEntity),
+                      CartContentQuantityGroupWidget(cartLineEntity)
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -70,8 +82,10 @@ class CartLineWidget extends StatelessWidget {
 }
 
 class CartContentProductImageWidget extends StatelessWidget {
+  final String imagePath;
   const CartContentProductImageWidget({
     super.key,
+    required this.imagePath,
   });
 
   @override
@@ -89,12 +103,11 @@ class CartContentProductImageWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
         ),
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage("https://via.placeholder.com/42x58"),
-              fit: BoxFit.fill,
-            ),
+        child: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Image.network(
+            imagePath,
+            fit: BoxFit.fitWidth,
           ),
         ),
       ),
@@ -116,7 +129,7 @@ class CartContentProductTitleWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
+            padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -160,7 +173,7 @@ class CartContentPricingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20.0),
+      padding: const EdgeInsets.only(bottom: 5.0),
       child: Container(
         color: Colors.white,
         child: Padding(
@@ -205,7 +218,7 @@ class CartContentPricingWidget extends StatelessWidget {
 
 Widget _buildDiscountMessageSection(
     BuildContext context, CartLineEntity cartLineEntity) {
-  var discountMessage = "relage";
+  var discountMessage = cartLineEntity.pricing.getDiscountValue();
   if (discountMessage != null &&
       discountMessage.isNotEmpty &&
       discountMessage != "null") {
