@@ -1,16 +1,11 @@
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/content_management_usecase/cms_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class CartUseCase extends CmsUseCase {
-  CartUseCase({PageContentType? contentType}) : super(contentType: contentType);
+class CartUseCase extends BaseUseCase {
 
-  @override
-  PageContentType get contentType => PageContentType.cart;
-
-  Future<Result<List<WidgetEntity>, ErrorResponse>> loadData() async {
-    var result = await super.getCMSData();
+  Future<Result<Cart, ErrorResponse>> loadCurrentCart() async {
+    var cartParameters = CartQueryParameters(expand: [ "cartlines", "costcodes", "shipping", "tax" ]);
+    var result = await commerceAPIServiceProvider.getCartService().getCurrentCart(cartParameters);
     switch (result) {
       case Success(value: final data):
         return Success(data);
@@ -18,4 +13,9 @@ class CartUseCase extends CmsUseCase {
         return Failure(errorResponse);
     }
   }
+
+  Warehouse? getPickUpWareHouse() {
+    return commerceAPIServiceProvider.getSessionService().currentSession?.pickUpWarehouse;
+  }
+
 }

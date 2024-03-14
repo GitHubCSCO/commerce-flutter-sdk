@@ -9,6 +9,28 @@ import 'package:commerce_flutter_app/features/presentation/components/snackbar_c
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+class CartLineWidgetList extends StatelessWidget {
+  final CartLineListEntity cartLineEntities;
+
+  CartLineWidgetList({required this.cartLineEntities});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CartContentHeaderWidget(cartCount: cartLineEntities.cartLines!.length),
+        Column(
+          children: cartLineEntities.cartLines!
+              .map((cartLineEntity) =>
+                  CartLineWidget(cartLineEntity: cartLineEntity))
+              .toList(),
+        ),
+      ],
+    );
+  }
+}
+
 class CartLineWidget extends StatelessWidget {
   final CartLineEntity cartLineEntity;
 
@@ -18,37 +40,30 @@ class CartLineWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CartContentHeaderWidget(),
-          Container(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CartContentProductImageWidget(),
-                Expanded(
-                  child: Container(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CartContentProductTitleWidget(
-                            cartLineEntity: cartLineEntity),
-                        CartContentPricingWidget(
-                            cartLineEntity: cartLineEntity),
-                        CartContentQuantityGroupWidget(cartLineEntity)
-                      ],
-                    ),
-                  ),
+      child: Container(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CartContentProductImageWidget(),
+            Expanded(
+              child: Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CartContentProductTitleWidget(
+                        cartLineEntity: cartLineEntity),
+                    CartContentPricingWidget(cartLineEntity: cartLineEntity),
+                    CartContentQuantityGroupWidget(cartLineEntity)
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -107,7 +122,7 @@ class CartContentProductTitleWidget extends StatelessWidget {
               children: [
                 Text(
                   cartLineEntity.shortDescription ?? '',
-                  style: OptiTextStyles.header3,
+                  style: OptiTextStyles.body,
                   textAlign: TextAlign.left,
                 ),
                 if (cartLineEntity.getProductNumber() != '')
@@ -212,10 +227,10 @@ Widget _buildPricingSection(
     child: Row(
       children: [
         Text(cartLineEntity.updatePriceValueText(),
-            style: OptiTextStyles.subtitle),
+            style: OptiTextStyles.bodySmallHighlight),
         Text(
           cartLineEntity.updateUnitOfMeasureValueText(),
-          style: OptiTextStyles.body,
+          style: OptiTextStyles.bodySmall,
         ),
       ],
     ),
@@ -233,8 +248,10 @@ Widget _buildInventorySection(
 }
 
 class CartContentHeaderWidget extends StatelessWidget {
+  final int cartCount;
   const CartContentHeaderWidget({
     super.key,
+    required this.cartCount,
   });
 
   @override
@@ -242,7 +259,6 @@ class CartContentHeaderWidget extends StatelessWidget {
     return Container(
       width: 430,
       height: 62,
-      color: OptiAppColors.backgroundInput,
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -257,9 +273,9 @@ class CartContentHeaderWidget extends StatelessWidget {
                   style: OptiTextStyles.titleLarge,
                 ),
                 TextSpan(
-                  text: '(1 Item)',
+                  text: '($cartCount ${cartCount == 1 ? 'Item' : 'Items'})',
                   style: OptiTextStyles.subtitle,
-                ),
+                )
               ],
             ),
           ),
@@ -302,13 +318,13 @@ class CartContentQuantityGroupWidget extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            flex: 2,
+            flex: 1,
             child: NumberTextField(
                 initialtText: "1",
                 shouldShowIncrementDecermentIcon: false,
                 onChanged: (int? quantity) {}),
           ),
-          CartContentTitleSubTitleColumn('U/M', 'E/A'),
+          // CartContentTitleSubTitleColumn('U/M', 'E/A'),
           CartContentTitleSubTitleColumn(
               'Subtotal', cartLineEntity.updateSubtotalPriceValueText()),
         ],

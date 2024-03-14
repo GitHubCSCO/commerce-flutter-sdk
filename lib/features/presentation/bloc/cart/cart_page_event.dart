@@ -1,7 +1,5 @@
-abstract class CartPageEvent {
-  const CartPageEvent();
-}
+part of 'cart_page_bloc.dart';
 
-class CartPageLoadEvent extends CartPageEvent {
-  const CartPageLoadEvent();
-}
+abstract class CartPageEvent {}
+
+class CartPageLoadEvent extends CartPageEvent {}
