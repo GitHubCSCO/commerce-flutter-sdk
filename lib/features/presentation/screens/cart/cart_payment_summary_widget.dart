@@ -1,9 +1,12 @@
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
 import 'package:flutter/material.dart';
 
 class CartPaymentSummaryWidget extends StatelessWidget {
 
-  const CartPaymentSummaryWidget({super.key});
+  final PaymentSummaryEntity paymentSummaryEntity;
+
+  const CartPaymentSummaryWidget({super.key, required this.paymentSummaryEntity});
 
   @override
   Widget build(BuildContext context) {
