@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
@@ -128,7 +129,18 @@ class _LoginPageState extends State<LoginPage> {
                       context.read<AuthCubit>().loadAuthenticationState();
 
                       if (state.showBiometricOptionView) {
-                        // Display biometric option view
+                        final biometricOptionsState =
+                            context.read<BiometricOptionsCubit>().state;
+                        final options =
+                            biometricOptionsState is BiometricOptionsLoaded
+                                ? biometricOptionsState.option
+                                : DeviceAuthenticationOption.none;
+
+                        if (options != DeviceAuthenticationOption.none) {
+                          AppRoute.biometricLogin
+                              .navigate(context, extra: options);
+                          return;
+                        }
                         return;
                       }
 
@@ -213,12 +225,7 @@ class _LoginPageState extends State<LoginPage> {
                               .authenticateWithBiometrics();
                         },
                         child: Text(
-                          'Use ${Platform.isAndroid ? LocalizationConstants.fingerprint : (
-                              biometricOption ==
-                                      DeviceAuthenticationOption.faceID
-                                  ? LocalizationConstants.faceID
-                                  : LocalizationConstants.touchID,
-                            )}',
+                          'Use ${Platform.isAndroid ? LocalizationConstants.fingerprint : biometricOption == DeviceAuthenticationOption.faceID ? LocalizationConstants.faceID : LocalizationConstants.touchID}',
                           style: OptiTextStyles.subtitle.copyWith(
                             color: Theme.of(context).primaryColor,
                           ),

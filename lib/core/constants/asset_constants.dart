@@ -18,4 +18,9 @@ class AssetConstants {
 
   static const String iconClear = "assets/images/icon_clear.svg";
   static const String addToCart = "assets/images/add_to_cart.svg";
+
+  static const String faceID =
+      "assets/images/biometric_icons/icon_faceID_{0}.svg";
+  static const String touchID =
+      "assets/images/biometric_icons/icon_touchID_{0}.svg";
 }

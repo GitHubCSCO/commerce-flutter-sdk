@@ -1,8 +1,9 @@
+import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/biometric_usecase/biometric_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class LoginUsecase extends BaseUseCase {
+class LoginUsecase extends BiometricUsecase {
   LoginUsecase() : super();
 
   Future<LoginStatus> attemptSignIn(
@@ -38,7 +39,7 @@ class LoginUsecase extends BaseUseCase {
                 if (accountResult is Failure) {
                   return LoginStatus.loginErrorUnknown;
                 } else {
-                  if (_showBiometricOptionView()) {
+                  if (await _showBiometricOptionView()) {
                     return LoginStatus.loginSuccessBiometric;
                   } else {
                     return LoginStatus.loginSuccessBillToShipTo;
@@ -54,8 +55,18 @@ class LoginUsecase extends BaseUseCase {
     }
   }
 
-  bool _showBiometricOptionView() {
-    // TODO - implement this
-    return false;
+  Future<bool> _showBiometricOptionView() async {
+    bool isUnavailable =
+        (await getBiometricOptions()) == DeviceAuthenticationOption.none;
+
+    bool hasCurrentUserSeenEnableBiometricOptionView = await coreServiceProvider
+        .getBiometricAuthenticationService()
+        .hasCurrentUserSeenEnableBiometricOptionView();
+
+    if (isUnavailable || hasCurrentUserSeenEnableBiometricOptionView) {
+      return false;
+    }
+
+    return true;
   }
 }

@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
@@ -9,7 +11,7 @@ import 'package:commerce_flutter_app/features/presentation/components/style.dart
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/biometric_auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class BiometricLoginScreen extends StatelessWidget {
   const BiometricLoginScreen({super.key, required this.biometricOption});
@@ -37,6 +39,9 @@ class BiometricLoginPage extends StatelessWidget {
     String? biometricOptionName;
     String? biometricOptionInfo;
     String? biometricNameWithSuffix;
+    String? iconPath;
+    String subtitle;
+    String enableButtonTitle;
 
     if (biometricOption != DeviceAuthenticationOption.none) {
       if (Platform.isAndroid) {
@@ -44,23 +49,27 @@ class BiometricLoginPage extends StatelessWidget {
         biometricOptionInfo = 'your fingerprint';
         biometricOptionName = 'Fingerprint';
         biometricNameWithSuffix = 'Fingerprint';
+        iconPath = AssetConstants.touchID;
       } else {
-        title =
-            'Setup ${biometricOption == DeviceAuthenticationOption.touchID ? 'Touch' : 'Face'} ID for fast &\nsecure sign in';
-        biometricOptionInfo =
-            biometricOption == DeviceAuthenticationOption.touchID
-                ? 'your fingerprint'
-                : 'Face ID';
-        biometricOptionName =
-            biometricOption == DeviceAuthenticationOption.touchID
-                ? 'Touch'
-                : 'Face';
-        biometricNameWithSuffix =
-            biometricOption == DeviceAuthenticationOption.touchID
-                ? 'Touch ID'
-                : 'Face ID';
+        if (biometricOption == DeviceAuthenticationOption.touchID) {
+          title = 'Setup Touch ID for fast & secure sign in';
+          biometricOptionInfo = 'your fingerprint';
+          biometricOptionName = 'Touch';
+          biometricNameWithSuffix = 'Touch ID';
+          iconPath = AssetConstants.touchID;
+        } else {
+          title = 'Setup Face ID for fast & secure sign in';
+          biometricOptionInfo = 'Face ID';
+          biometricOptionName = 'Face';
+          biometricNameWithSuffix = 'Face ID';
+          iconPath = AssetConstants.faceID;
+        }
       }
     }
+
+    subtitle =
+        'Use $biometricOptionInfo to sign in\ninstead of typing in your login credentials';
+    enableButtonTitle = 'Yes, Use $biometricOptionName ID';
 
     return Scaffold(
       appBar: AppBar(
@@ -69,7 +78,7 @@ class BiometricLoginPage extends StatelessWidget {
         actions: [
           PlainButton(
             onPressed: () {
-              context.pop();
+              AppRoute.account.navigate(context);
             },
             child: Text(
               LocalizationConstants.cancel,
@@ -98,17 +107,54 @@ class BiometricLoginPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              const Text('Biometric Login'),
-              ElevatedButton(
+              const SizedBox(height: 60),
+              _BiometricIcon(iconPath: iconPath ?? '', enabled: false),
+              const SizedBox(height: 30),
+              Text(
+                title ?? '',
+                style: OptiTextStyles.header3,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 30),
+              Text(
+                subtitle,
+                style: OptiTextStyles.body,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 200),
+              PrimaryButton(
+                text: enableButtonTitle,
                 onPressed: () {},
-                child: const Text('Authenticate'),
+              ),
+              const SizedBox(height: 5),
+              PlainButton(
+                child: const Text('No Thanks'),
+                onPressed: () {
+                  AppRoute.account.navigate(context);
+                },
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _BiometricIcon extends StatelessWidget {
+  const _BiometricIcon({required this.iconPath, required this.enabled});
+
+  final String iconPath;
+  final bool enabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      iconPath.replaceAll('{0}', enabled ? 'enabled' : 'disabled'),
+      width: 80,
+      height: 80,
     );
   }
 }
