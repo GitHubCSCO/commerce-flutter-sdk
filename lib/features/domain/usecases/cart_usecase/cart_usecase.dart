@@ -5,17 +5,23 @@ class CartUseCase extends BaseUseCase {
 
   Future<Result<Cart, ErrorResponse>> loadCurrentCart() async {
     var cartParameters = CartQueryParameters(expand: [ "cartlines", "costcodes", "shipping", "tax" ]);
-    var result = await commerceAPIServiceProvider.getCartService().getCurrentCart(cartParameters);
-    switch (result) {
-      case Success(value: final data):
-        return Success(data);
-      case Failure(errorResponse: final errorResponse):
-        return Failure(errorResponse);
-    }
+    return await commerceAPIServiceProvider.getCartService().getCurrentCart(cartParameters);
+  }
+
+  Future<Result<CartSettings, ErrorResponse>> loadCartSetting() async {
+    return await commerceAPIServiceProvider.getSettingsService().getCartSettingAsync();
+  }
+  
+  Future<Result<PromotionCollectionModel, ErrorResponse>> loadCartPromotions() async {
+    return await commerceAPIServiceProvider.getCartService().getCurrentCartPromotions();
   }
 
   Warehouse? getPickUpWareHouse() {
     return commerceAPIServiceProvider.getSessionService().currentSession?.pickUpWarehouse;
+  }
+
+  bool isCustomerOrderApproval() {
+    return false;
   }
 
 }

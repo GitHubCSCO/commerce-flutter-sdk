@@ -23,7 +23,19 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
       case Success(value: final data):
         cart = data;
         var wareHouse = _cartUseCase.getPickUpWareHouse();
-        emit(CartPageLoadedState(cart: data!, warehouse: wareHouse!));
+        var isCustomerOrderApproval = _cartUseCase.isCustomerOrderApproval();
+        var promotionsResult = await _cartUseCase.loadCartPromotions();
+        PromotionCollectionModel? promotionCollection = promotionsResult is Success ? (promotionsResult as Success).value : null;
+
+        var settingResult = await _cartUseCase.loadCartSetting();
+        switch (settingResult) {
+          case Success(value: final setting):
+            emit(CartPageLoadedState(cart: data!, warehouse: wareHouse!, promotions: promotionCollection!, isCustomerOrderApproval: isCustomerOrderApproval, cartSettings: setting!));
+            break;
+          case Failure(errorResponse: final errorResponse):
+            emit(CartPageFailureState(error: errorResponse.errorDescription ?? ''));
+            break;
+        }
         break;
       case Failure(errorResponse: final errorResponse):
         emit(CartPageFailureState(error: errorResponse.errorDescription ?? ''));

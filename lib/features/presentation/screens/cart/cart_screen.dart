@@ -16,6 +16,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
+void _reloadCartPage(BuildContext context) {
+  context.read<CartPageBloc>().add(CartPageLoadEvent());
+}
+
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
 
@@ -50,7 +54,7 @@ class CartPage extends StatelessWidget {
             case CartPageLoadedState():
               return Column(
                 mainAxisSize: MainAxisSize.min,
-                children: _buildCartWidgets(state.cart, state.warehouse),
+                children: _buildCartWidgets(state.cart, state.cartSettings, state.warehouse, state.promotions, state.isCustomerOrderApproval),
               );
             default:
               return const CustomScrollView(
@@ -94,10 +98,19 @@ class CartPage extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildCartWidgets(Cart? cart, Warehouse? warehouse) {
+  List<Widget> _buildCartWidgets(
+      Cart? cart,
+      CartSettings? settings,
+      Warehouse? warehouse,
+      PromotionCollectionModel promotions,
+      bool isCustomerOrderApproval) {
     List<Widget> list = [];
 
-    final paymentSummaryEntity = PaymentSummaryEntity();
+    final paymentSummaryEntity = PaymentSummaryEntity(
+        cart: cart,
+        cartSettings: settings,
+        promotions: promotions,
+        isCustomerOrderApproval: isCustomerOrderApproval);
     final shippingEntity = ShippingEntity(warehouse: warehouse);
 
     list.add(CartPaymentSummaryWidget(paymentSummaryEntity: paymentSummaryEntity));
@@ -108,5 +121,4 @@ class CartPage extends StatelessWidget {
 
     return list;
   }
-
 }
