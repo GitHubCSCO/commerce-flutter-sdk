@@ -101,43 +101,69 @@ class BiometricLoginPage extends StatelessWidget {
           style: OptiTextStyles.titleLarge,
         ),
       ),
-      body: Container(
-        height: double.infinity,
-        color: AppStyle.neutral00,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              const SizedBox(height: 60),
-              _BiometricIcon(iconPath: iconPath ?? '', enabled: false),
-              const SizedBox(height: 30),
-              Text(
-                title ?? '',
-                style: OptiTextStyles.header3,
-                textAlign: TextAlign.center,
+      body: BlocConsumer<BiometricAuthCubit, BiometricAuthState>(
+        listener: (context, state) {
+          if (state is BiometricAuthSuccess) {
+            title = 'Success';
+            subtitle =
+                'Net time you sign in, you can ${(biometricOptionName == 'Fingerprint' || biometricOptionName == 'Touch') ? 'use your fingerprint' : 'sign in\nwith Face ID'}';
+          }
+        },
+        builder: (context, state) {
+          return Container(
+            height: double.infinity,
+            color: AppStyle.neutral00,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  const SizedBox(height: 60),
+                  _BiometricIcon(
+                      iconPath: iconPath ?? '',
+                      enabled: state is BiometricAuthSuccess ? true : false),
+                  const SizedBox(height: 30),
+                  Text(
+                    title ?? '',
+                    style: OptiTextStyles.header3,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 30),
+                  Text(
+                    subtitle,
+                    style: OptiTextStyles.body,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 200),
+                  state is BiometricAuthSuccess
+                      ? PrimaryButton(
+                          text: LocalizationConstants.continueText,
+                          onPressed: () async {
+                            AppRoute.account.navigate(context);
+                          },
+                        )
+                      : PrimaryButton(
+                          text: enableButtonTitle,
+                          onPressed: () async {
+                            await context
+                                .read<BiometricAuthCubit>()
+                                .authenticateWithBiometrics();
+                          },
+                        ),
+                  const SizedBox(height: 5),
+                  state is BiometricAuthSuccess
+                      ? const SizedBox.shrink()
+                      : PlainButton(
+                          child: const Text('No Thanks'),
+                          onPressed: () {
+                            AppRoute.account.navigate(context);
+                          },
+                        ),
+                ],
               ),
-              const SizedBox(height: 30),
-              Text(
-                subtitle,
-                style: OptiTextStyles.body,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 200),
-              PrimaryButton(
-                text: enableButtonTitle,
-                onPressed: () {},
-              ),
-              const SizedBox(height: 5),
-              PlainButton(
-                child: const Text('No Thanks'),
-                onPressed: () {
-                  AppRoute.account.navigate(context);
-                },
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

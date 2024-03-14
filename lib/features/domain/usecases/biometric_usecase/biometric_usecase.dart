@@ -27,4 +27,17 @@ class BiometricUsecase extends BaseUseCase {
       return false;
     }
   }
+
+  Future<bool> authenticateWithBiometricsAndPassword(String password) async {
+    final success = await authenticateWithBiometrics();
+    if (success) {
+      final result = coreServiceProvider
+          .getBiometricAuthenticationService()
+          .enableBiometricAuthentication(password);
+
+      return result;
+    }
+
+    return false;
+  }
 }
