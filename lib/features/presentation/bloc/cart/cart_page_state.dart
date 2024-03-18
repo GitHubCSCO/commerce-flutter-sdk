@@ -13,10 +13,18 @@ class CartPageLoadedState extends CartPageState {
   final Warehouse warehouse;
   final PromotionCollectionModel promotions;
   final bool isCustomerOrderApproval;
+  final String shippingMethod;
 
-  CartPageLoadedState({required this.cart, required this.warehouse, required this.promotions, required this.isCustomerOrderApproval, required this.cartSettings});
-
+  CartPageLoadedState(
+      {required this.cart,
+      required this.warehouse,
+      required this.promotions,
+      required this.isCustomerOrderApproval,
+      required this.cartSettings,
+      required this.shippingMethod});
 }
+
+class CartPageNoDataState extends CartPageState {}
 
 class CartPageFailureState extends CartPageState {
 

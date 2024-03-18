@@ -20,6 +20,10 @@ class CartUseCase extends BaseUseCase {
     return commerceAPIServiceProvider.getSessionService().currentSession?.pickUpWarehouse;
   }
 
+  String? getShippingMethod() {
+    return commerceAPIServiceProvider.getSessionService().currentSession?.fulfillmentMethod;
+  }
+
   bool isCustomerOrderApproval() {
     return false;
   }
