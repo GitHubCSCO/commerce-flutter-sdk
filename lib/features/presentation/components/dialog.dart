@@ -73,6 +73,7 @@ void displayDialogWidget({
   required BuildContext context,
   String? title,
   String? message,
+  Widget? content,
   Widget? positiveButton,
   Widget? negativeButton,
   Widget? icon,
@@ -102,7 +103,13 @@ void displayDialogWidget({
             ),
           ],
         ),
-        content: Text(message ?? ''),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(message ?? ''),
+            content ?? const SizedBox.shrink(),
+          ],
+        ),
         actions: actions,
         icon: icon != null
             ? Row(

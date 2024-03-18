@@ -3,7 +3,6 @@ import 'package:commerce_flutter_app/core/constants/site_message_constants.dart'
 import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -37,7 +36,7 @@ class LoginCubit extends Cubit<LoginState> {
       case LoginStatus.loginErrorUnsuccessful:
         emit(
           const LoginFailureState(
-            message: LocalizationConstants.incorrectLoginOrPassword,
+            title: LocalizationConstants.incorrectLoginOrPassword,
             buttonText: LocalizationConstants.dismiss,
           ),
         );
@@ -45,7 +44,7 @@ class LoginCubit extends Cubit<LoginState> {
       case LoginStatus.loginErrorUnknown:
         emit(
           const LoginFailureState(
-            message: LocalizationConstants.unableToGetCurrentSession,
+            title: LocalizationConstants.unableToGetCurrentSession,
             buttonText: LocalizationConstants.dismiss,
           ),
         );
@@ -53,7 +52,7 @@ class LoginCubit extends Cubit<LoginState> {
       case LoginStatus.loginFailed:
         emit(
           const LoginFailureState(
-            message: LocalizationConstants.authenticationFailed,
+            title: LocalizationConstants.authenticationFailed,
             buttonText: LocalizationConstants.oK,
           ),
         );
@@ -82,7 +81,7 @@ class LoginCubit extends Cubit<LoginState> {
       case LoginStatus.loginErrorUnsuccessful:
         emit(
           const LoginFailureState(
-            message: LocalizationConstants.incorrectLoginOrPassword,
+            title: LocalizationConstants.incorrectLoginOrPassword,
             buttonText: LocalizationConstants.dismiss,
           ),
         );
@@ -90,7 +89,7 @@ class LoginCubit extends Cubit<LoginState> {
       case LoginStatus.loginErrorUnknown:
         emit(
           const LoginFailureState(
-            message: LocalizationConstants.unableToGetCurrentSession,
+            title: LocalizationConstants.unableToGetCurrentSession,
             buttonText: LocalizationConstants.dismiss,
           ),
         );
@@ -98,7 +97,7 @@ class LoginCubit extends Cubit<LoginState> {
       case LoginStatus.loginFailed:
         emit(
           const LoginFailureState(
-            message: LocalizationConstants.authenticationFailed,
+            title: LocalizationConstants.authenticationFailed,
             buttonText: LocalizationConstants.oK,
           ),
         );
@@ -106,7 +105,7 @@ class LoginCubit extends Cubit<LoginState> {
       default:
         emit(
           const LoginFailureState(
-            message: LocalizationConstants.authenticationFailed,
+            title: LocalizationConstants.authenticationFailed,
             buttonText: LocalizationConstants.oK,
           ),
         );
