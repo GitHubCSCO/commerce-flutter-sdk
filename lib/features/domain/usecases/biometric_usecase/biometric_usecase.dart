@@ -54,4 +54,16 @@ class BiometricUsecase extends BaseUseCase {
         .getBiometricAuthenticationService()
         .markCurrentUserAsSeenEnableBiometricOptionView();
   }
+
+  Future<bool> isBiometricAuthenticationEnableForCurrentUser() async {
+    return await coreServiceProvider
+        .getBiometricAuthenticationService()
+        .isBiometricAuthenticationEnableForCurrentUser();
+  }
+
+  Future<bool> disableBiometricAuthentication() async {
+    return await coreServiceProvider
+        .getBiometricAuthenticationService()
+        .disableBiometricAuthentication();
+  }
 }

@@ -19,4 +19,22 @@ class BiometricControllerCubit extends Cubit<BiometricControllerState> {
         ? emit(BiometricControllerSuccess())
         : emit(BiometricControllerFailure());
   }
+
+  Future<void> checkBiometricEnabledForCurrentUser() async {
+    emit(BiometricControllerLoading());
+    final enabled =
+        await _biometricUsecase.isBiometricAuthenticationEnableForCurrentUser();
+
+    enabled
+        ? emit(BiometricControllerSuccess())
+        : emit(BiometricControllerFailure());
+  }
+
+  Future<void> disableBiometricAuthentication() async {
+    emit(BiometricControllerLoading());
+    final result = await _biometricUsecase.disableBiometricAuthentication();
+    result
+        ? emit(BiometricControllerFailure())
+        : emit(BiometricControllerSuccess());
+  }
 }
