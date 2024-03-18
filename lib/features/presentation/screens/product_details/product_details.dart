@@ -156,10 +156,10 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
       listener: (context, state) {
         if (state is ProductDetailsPricingLoaded) {
           final priceEntity = state.productDetailsPriceEntity;
+          detailsAddToCartEntity = detailsAddToCartEntity.copyWith(productDetailsPriceEntity:  priceEntity);
           buildContext.read<ProductDetailsAddToCartBloc>().add(
                 LoadProductDetailsAddToCartEvent(
-                  productDetailsAddToCartEntity: detailsAddToCartEntity,
-                  productDetailsPriceEntity: priceEntity,
+                  productDetailsAddToCartEntity: detailsAddToCartEntity
                 ),
               );
         }

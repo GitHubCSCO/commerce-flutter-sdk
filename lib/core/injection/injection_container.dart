@@ -13,6 +13,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
@@ -118,7 +119,9 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ProductDetailsPricingUseCase())
 
     // product details Add to cart
-    ..registerFactory(() => ProductDetailsAddToCartBloc())
+    ..registerFactory(
+        () => ProductDetailsAddToCartBloc(productDetailsAddToCartUseCase: sl()))
+    ..registerFactory(() => ProductDetailsAddToCartUseCase())
 
     //carousel
     ..registerFactory(() => CarouselIndicatorCubit())

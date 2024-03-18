@@ -6,6 +6,7 @@ import 'package:commerce_flutter_app/features/domain/entity/product_details/prod
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
@@ -86,7 +87,13 @@ class AddToCartSuccessWidget extends StatelessWidget {
                 color: Colors.white,
               ),
               text: LocalizationConstants.addToCart,
-              onPressed: () => CustomSnackBar.showComingSoonSnackBar(context))
+              onPressed: () {
+                //  CustomSnackBar.showComingSoonSnackBar(context)
+
+                context.read<ProductDetailsAddToCartBloc>().add(
+                    AddToCartEvent(
+                        productDetailsAddToCartEntity: detailsAddToCartEntity));
+              })
         ],
       ),
     );
