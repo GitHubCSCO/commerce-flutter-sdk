@@ -12,4 +12,15 @@ class AttributeValueEntityMapper {
         count: model.count,
         selected: model.selected,
       );
+  AttributeValue toModel(AttributeValueEntity entity) => AttributeValue(
+        attributeValueId: entity.attributeValueId,
+        value: entity.value,
+        valueDisplay: entity.valueDisplay,
+        sortOrder: entity.sortOrder,
+        isActive: entity.isActive,
+        id: entity.id,
+        count: entity.count,
+        selected: entity.selected,
+      );
+      
 }

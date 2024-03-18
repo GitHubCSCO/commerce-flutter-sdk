@@ -12,4 +12,14 @@ class FieldScoreDetailedEntityMapper {
         inverseDocumentFrequency: model.inverseDocumentFrequency,
         scoreUsed: model.scoreUsed,
       );
+
+  FieldScoreDetailed toModel(FieldScoreDetailedEntity entity) =>
+      FieldScoreDetailed(
+
+        boost: entity.boost,
+        matchText: entity.matchText,
+        termFrequencyNormalized: entity.termFrequencyNormalized,
+        inverseDocumentFrequency: entity.inverseDocumentFrequency,
+        scoreUsed: entity.scoreUsed,
+      );
 }

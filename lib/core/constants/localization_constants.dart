@@ -327,8 +327,8 @@ class LocalizationConstants {
   static const addDiscount = "Add Discount";
   static const addAllToList = "Add All to List";
   static const cartContents = "Cart Contents";
-  static const cartContentsItems = "Cart Contents ({0} Items)";
-  static const subtotalItems = "Subtotal ({0} Items)";
+  static const cartContentsItems = "Cart Contents (%s Items)";
+  static const subtotalItems = "Subtotal (%s Item(s))";
   static const continueShopping = "Continue Shopping";
   static const noSavedOrders = "There are no saved orders.";
   static const deleteSavedOrder = "Delete Saved Order";

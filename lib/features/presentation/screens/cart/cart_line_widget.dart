@@ -7,9 +7,15 @@ import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart'
 import 'package:commerce_flutter_app/features/domain/extensions/cart_line_extentions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_state.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class CartLineWidgetList extends StatelessWidget {
@@ -19,18 +25,38 @@ class CartLineWidgetList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CartContentHeaderWidget(cartCount: cartLineEntities.cartLines!.length),
-        Column(
-          children: cartLineEntities.cartLines!
-              .map((cartLineEntity) =>
-                  CartLineWidget(cartLineEntity: cartLineEntity))
-              .toList(),
-        ),
-      ],
-    );
+    return BlocConsumer<CartContentBloc, CartContentState>(
+        buildWhen: (previous, current) {
+      return current is CartContentDefaultState;
+    }, listener: (context, state) {
+      if (state is CartContentClearAllSuccessState) {
+        context.read<CartPageBloc>().add(CartPageLoadEvent());
+        CustomSnackBar.showProductAddedToCart(context);
+      }
+      if (state is CartContentItemRemovedSuccessState) {
+        context.read<CartPageBloc>().add(CartPageLoadEvent());
+        CustomSnackBar.showProductAddedToCart(context);
+      }
+    }, builder: (context, state) {
+      switch (state) {
+        case CartContentDefaultState():
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CartContentHeaderWidget(
+                  cartCount: cartLineEntities.cartLines!.length),
+              Column(
+                children: cartLineEntities.cartLines!
+                    .map((cartLineEntity) =>
+                        CartLineWidget(cartLineEntity: cartLineEntity))
+                    .toList(),
+              ),
+            ],
+          );
+        default:
+          return Container();
+      }
+    });
   }
 }
 
@@ -43,7 +69,7 @@ class CartLineWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-         var productId = cartLineEntity.productId;
+        var productId = cartLineEntity.productId;
         AppRoute.productDetails.navigateBackStack(context,
             pathParameters: {"productId": productId.toString()},
             extra: ProductEntity());
@@ -70,6 +96,23 @@ class CartLineWidget extends StatelessWidget {
                       CartContentPricingWidget(cartLineEntity: cartLineEntity),
                       CartContentQuantityGroupWidget(cartLineEntity)
                     ],
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  context.read<CartContentBloc>().add(CartContentRemoveEvent(
+                      CartLineEntityMapper().toModel(cartLineEntity)));
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    child: SvgPicture.asset(
+                      AssetConstants.cartItemRemoveIcon,
+                      fit: BoxFit.fitWidth,
+                    ),
                   ),
                 ),
               ),
@@ -293,24 +336,29 @@ class CartContentHeaderWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Container(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 16,
-                  height: 16,
-                  child: SvgPicture.asset(
-                    AssetConstants.cartClearIcon,
-                    fit: BoxFit.fitWidth,
+          InkWell(
+            onTap: () {
+              context.read<CartContentBloc>().add(CartContentClearAllEvent());
+            },
+            child: Container(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 16,
+                    height: 16,
+                    child: SvgPicture.asset(
+                      AssetConstants.cartClearIcon,
+                      fit: BoxFit.fitWidth,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 11),
-                Text('Clear Cart',
-                    textAlign: TextAlign.center, style: OptiTextStyles.body),
-              ],
+                  const SizedBox(width: 11),
+                  Text('Clear Cart',
+                      textAlign: TextAlign.center, style: OptiTextStyles.body),
+                ],
+              ),
             ),
           ),
         ],

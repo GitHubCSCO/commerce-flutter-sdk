@@ -20,6 +20,24 @@ class BrandEntityMapper {
             ?.map((e) => ProductEntityMapper().toEntity(e))
             .toList(),
       );
+
+  Brand toModel(BrandEntity entity) => Brand(
+        id: entity.id,
+        name: entity.name,
+        manufacturer: entity.manufacturer,
+        externalUrl: entity.externalUrl,
+        detailPagePath: entity.detailPagePath,
+        productListPagePage: entity.productListPagePage,
+        logoSmallImagePath: entity.logoSmallImagePath,
+        logoLargeImagePath: entity.logoLargeImagePath,
+        logoAltText: entity.logoAltText,
+        featuredImagePath: entity.featuredImagePath,
+        featuredImageAltText: entity.featuredImageAltText,
+        htmlContent: entity.htmlContent,
+        topSellerProducts: entity.topSellerProducts
+            ?.map((e) => ProductEntityMapper().toModel(e))
+            .toList(),
+      );
 }
 
 class BrandAlphabetEntityMapper {

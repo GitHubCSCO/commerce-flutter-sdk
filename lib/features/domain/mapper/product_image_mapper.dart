@@ -12,4 +12,14 @@ class ProductImageEntityMapper {
         altText: model.altText,
         imageType: model.imageType,
       );
+  ProductImage toModel(ProductImageEntity entity) => ProductImage(
+        id: entity.id,
+        sortOrder: entity.sortOrder,
+        name: entity.name,
+        smallImagePath: entity.smallImagePath,
+        mediumImagePath: entity.mediumImagePath,
+        largeImagePath: entity.largeImagePath,
+        altText: entity.altText,
+        imageType: entity.imageType,
+      );
 }

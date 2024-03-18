@@ -21,4 +21,22 @@ class AttributeTypeEntityMapper {
             ?.map(AttributeValueEntityMapper().toEntity)
             .toList(),
       );
+  AttributeType toModel(AttributeTypeEntity entity) => AttributeType(
+        attributeTypeId: entity.attributeTypeId,
+        name: entity.name,
+        nameDisplay: entity.nameDisplay,
+        sort: entity.sort,
+        attributeValueFacets: entity.attributeValueFacets
+            ?.map((e) => AttributeValueEntityMapper().toModel(e))
+            .toList(),
+        id: entity.id,
+        label: entity.label,
+        isFilter: entity.isFilter,
+        isComparable: entity.isComparable,
+        isActive: entity.isActive,
+        sortOrder: entity.sortOrder,
+        attributeValues: entity.attributeValues
+            ?.map((e) => AttributeValueEntityMapper().toModel(e))
+            .toList(),
+      );
 }

@@ -1,4 +1,7 @@
+import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/brand_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/break_price_mapper.dart';
@@ -75,6 +78,52 @@ class CartLineEntityMapper {
             ?.map((e) => SectionOptionEntityMapper().toEntity(e))
             .toList(),
       );
+
+  CartLine toModel(CartLineEntity entity) => CartLine(
+        productUri: entity.productUri,
+        id: entity.id,
+        line: entity.line,
+        requisitionId: entity.requisitionId,
+        smallImagePath: entity.smallImagePath,
+        altText: entity.altText,
+        productName: entity.productName,
+        manufacturerItem: entity.manufacturerItem,
+        customerName: entity.customerName,
+        shortDescription: entity.shortDescription,
+        erpNumber: entity.erpNumber,
+        unitOfMeasureDisplay: entity.unitOfMeasureDisplay,
+        unitOfMeasureDescription: entity.unitOfMeasureDescription,
+        baseUnitOfMeasure: entity.baseUnitOfMeasure,
+        baseUnitOfMeasureDisplay: entity.baseUnitOfMeasureDisplay,
+        qtyPerBaseUnitOfMeasure: entity.qtyPerBaseUnitOfMeasure,
+        costCode: entity.costCode,
+        qtyLeft: entity.qtyLeft,
+        pricing: ProductPriceEntityMapper()
+            .toModel(entity.pricing ?? ProductPriceEntity()),
+        isPromotionItem: entity.isPromotionItem,
+        isDiscounted: entity.isDiscounted,
+        isFixedConfiguration: entity.isFixedConfiguration,
+        quoteRequired: entity.quoteRequired,
+        breakPrices: entity.breakPrices
+            ?.map((e) => BreakPriceEntityMapper().toModel(e))
+            .toList(),
+        availability: AvailabilityEntityMapper()
+            .toModel(entity.availability ?? AvailabilityEntity()),
+        qtyOnHand: entity.qtyOnHand,
+        canAddToCart: entity.canAddToCart,
+        isQtyAdjusted: entity.isQtyAdjusted,
+        hasInsufficientInventory: entity.hasInsufficientInventory,
+        canBackOrder: entity.canBackOrder,
+        salePriceLabel: entity.salePriceLabel,
+        isSubscription: entity.isSubscription,
+        productSubscription: ProductSubscriptionEntityMapper()
+            .toModel(entity.productSubscription ?? ProductSubscriptionEntity()),
+        isRestricted: entity.isRestricted,
+        isActive: entity.isActive,
+        brand: BrandEntityMapper().toModel(entity.brand ?? BrandEntity()),
+        status: entity.status,
+       
+      );
 }
 
 class SectionOptionEntityMapper {
@@ -107,5 +156,28 @@ class ProductSubscriptionEntityMapper {
         subscriptionSeptember: model?.subscriptionSeptember,
         subscriptionShipViaId: model?.subscriptionShipViaId,
         subscriptionTotalCycles: model?.subscriptionTotalCycles,
+      );
+
+  ProductSubscriptionDto toModel(ProductSubscriptionEntity entity) =>
+      ProductSubscriptionDto(
+        subscriptionAddToInitialOrder: entity.subscriptionAddToInitialOrder,
+        subscriptionAllMonths: entity.subscriptionAllMonths,
+        subscriptionApril: entity.subscriptionApril,
+        subscriptionAugust: entity.subscriptionAugust,
+        subscriptionCyclePeriod: entity.subscriptionCyclePeriod,
+        subscriptionDecember: entity.subscriptionDecember,
+        subscriptionFebruary: entity.subscriptionFebruary,
+        subscriptionFixedPrice: entity.subscriptionFixedPrice,
+        subscriptionJanuary: entity.subscriptionJanuary,
+        subscriptionJuly: entity.subscriptionJuly,
+        subscriptionJune: entity.subscriptionJune,
+        subscriptionMarch: entity.subscriptionMarch,
+        subscriptionMay: entity.subscriptionMay,
+        subscriptionNovember: entity.subscriptionNovember,
+        subscriptionOctober: entity.subscriptionOctober,
+        subscriptionPeriodsPerCycle: entity.subscriptionPeriodsPerCycle,
+        subscriptionSeptember: entity.subscriptionSeptember,
+        subscriptionShipViaId: entity.subscriptionShipViaId,
+        subscriptionTotalCycles: entity.subscriptionTotalCycles,
       );
 }

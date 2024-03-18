@@ -10,6 +10,18 @@ class LegacyConfigurationEntityMapper {
         hasDefaults: model?.hasDefaults,
         isKit: model?.isKit,
       );
+
+  LegacyConfiguration? toModel(LegacyConfigurationEntity? entity) =>
+      entity == null
+          ? null
+          : LegacyConfiguration(
+              sections: entity.sections
+                  ?.map((sectionEntity) =>
+                      ConfigSectionEntityMapper().toModel(sectionEntity))
+                  .toList(),
+              hasDefaults: entity.hasDefaults,
+              isKit: entity.isKit,
+            );
 }
 
 class ConfigSectionEntityMapper {
@@ -21,6 +33,15 @@ class ConfigSectionEntityMapper {
             .toList(),
         id: model.id,
         sortOrder: model.sortOrder,
+      );
+  ConfigSection toModel(ConfigSectionEntity entity) => ConfigSection(
+        sectionName: entity.sectionName,
+        options: entity.options
+            ?.map((optionEntity) =>
+                ConfigSectionOptionEntityMapper().toModel(optionEntity))
+            .toList(),
+        id: entity.id,
+        sortOrder: entity.sortOrder,
       );
 }
 
@@ -39,5 +60,21 @@ class ConfigSectionOptionEntityMapper {
         id: model.id,
         name: model.name,
         quantity: model.quantity,
+      );
+
+  ConfigSectionOption toModel(ConfigSectionOptionEntity entity) =>
+      ConfigSectionOption(
+        sectionOptionId: entity.sectionOptionId,
+        sectionName: entity.sectionName,
+        productName: entity.productName,
+        productId: entity.productId,
+        description: entity.description,
+        price: entity.price,
+        userProductPrice: entity.userProductPrice,
+        selected: entity.selected,
+        sortOrder: entity.sortOrder,
+        id: entity.id,
+        name: entity.name,
+        quantity: entity.quantity,
       );
 }

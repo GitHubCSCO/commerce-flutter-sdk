@@ -7,4 +7,9 @@ class AvailabilityEntityMapper {
         message: model?.message,
         requiresRealTimeInventory: model?.requiresRealTimeInventory,
       );
+  Availability toModel(AvailabilityEntity entity) => Availability(
+        messageType: entity.messageType,
+        message: entity.message,
+        requiresRealTimeInventory: entity.requiresRealTimeInventory,
+      );
 }
