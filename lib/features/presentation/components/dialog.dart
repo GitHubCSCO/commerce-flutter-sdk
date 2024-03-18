@@ -74,8 +74,6 @@ void displayDialogWidget({
   String? title,
   String? message,
   Widget? content,
-  Widget? positiveButton,
-  Widget? negativeButton,
   Widget? icon,
   EdgeInsetsGeometry? iconPadding,
   Color? iconColor,

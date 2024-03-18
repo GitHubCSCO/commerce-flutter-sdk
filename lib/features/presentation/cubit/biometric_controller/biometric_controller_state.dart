@@ -11,6 +11,16 @@ final class BiometricControllerInitial extends BiometricControllerState {}
 
 final class BiometricControllerLoading extends BiometricControllerState {}
 
-final class BiometricControllerSuccess extends BiometricControllerState {}
+final class BiometricControllerEnabled extends BiometricControllerState {}
 
-final class BiometricControllerFailure extends BiometricControllerState {}
+final class BiometricControllerDisabled extends BiometricControllerState {}
+
+final class BiometricControllerChangeLoading extends BiometricControllerState {}
+
+final class BiometricControllerChangeSuccessEnabled
+    extends BiometricControllerState {}
+
+final class BiometricControllerChangeSuccessDisabled
+    extends BiometricControllerState {}
+
+final class BiometricControllerChangeFailure extends BiometricControllerState {}

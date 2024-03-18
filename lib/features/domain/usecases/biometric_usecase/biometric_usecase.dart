@@ -41,6 +41,18 @@ class BiometricUsecase extends BaseUseCase {
     return false;
   }
 
+  Future<bool> enableBiometricsWhileLoggedIn(String password) async {
+    final serviceCallResult = await coreServiceProvider
+        .getBiometricAuthenticationService()
+        .authenticate(password);
+    if (serviceCallResult) {
+      final result = await enableBiometricsWithPassword(password);
+      return result;
+    }
+
+    return false;
+  }
+
   Future<void> cancelBiometricSignIn() async {
     await coreServiceProvider
         .getBiometricAuthenticationService()

@@ -12,12 +12,21 @@ class BiometricControllerCubit extends Cubit<BiometricControllerState> {
         super(BiometricControllerInitial());
 
   Future<void> enableBiometric(String password) async {
-    emit(BiometricControllerLoading());
+    emit(BiometricControllerChangeLoading());
     final enabled =
         await _biometricUsecase.enableBiometricsWithPassword(password);
     enabled
-        ? emit(BiometricControllerSuccess())
-        : emit(BiometricControllerFailure());
+        ? emit(BiometricControllerChangeSuccessEnabled())
+        : emit(BiometricControllerChangeFailure());
+  }
+
+  Future<void> enableBiometricWhileLoggedIn(String password) async {
+    emit(BiometricControllerChangeLoading());
+    final enabled =
+        await _biometricUsecase.enableBiometricsWhileLoggedIn(password);
+    enabled
+        ? emit(BiometricControllerChangeSuccessEnabled())
+        : emit(BiometricControllerChangeFailure());
   }
 
   Future<void> checkBiometricEnabledForCurrentUser() async {
@@ -26,15 +35,15 @@ class BiometricControllerCubit extends Cubit<BiometricControllerState> {
         await _biometricUsecase.isBiometricAuthenticationEnableForCurrentUser();
 
     enabled
-        ? emit(BiometricControllerSuccess())
-        : emit(BiometricControllerFailure());
+        ? emit(BiometricControllerEnabled())
+        : emit(BiometricControllerDisabled());
   }
 
   Future<void> disableBiometricAuthentication() async {
-    emit(BiometricControllerLoading());
+    emit(BiometricControllerChangeLoading());
     final result = await _biometricUsecase.disableBiometricAuthentication();
     result
-        ? emit(BiometricControllerFailure())
-        : emit(BiometricControllerSuccess());
+        ? emit(BiometricControllerChangeSuccessDisabled())
+        : emit(BiometricControllerChangeFailure());
   }
 }

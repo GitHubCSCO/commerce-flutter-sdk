@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_controller/biometric_controller_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
@@ -251,18 +252,69 @@ class _BiometricListTile extends StatelessWidget {
                         ? LocalizationConstants.faceID
                         : LocalizationConstants.touchID;
 
-                return BlocBuilder<BiometricControllerCubit,
+                return BlocConsumer<BiometricControllerCubit,
                     BiometricControllerState>(
-                  buildWhen: (previous, current) =>
-                      (previous is BiometricControllerLoading &&
-                          current is BiometricControllerSuccess) ||
-                      (previous is BiometricControllerLoading &&
-                          current is BiometricControllerFailure),
+                  listenWhen: (previous, current) {
+                    return previous != current &&
+                        previous is! BiometricControllerLoading;
+                  },
+                  listener: (context, state) {
+                    if (state is BiometricControllerChangeSuccessEnabled) {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.green,
+                          content: Text('$biometricDisplay enabled'),
+                          duration: const Duration(seconds: 1),
+                        ),
+                      );
+                    }
+
+                    if (state is BiometricControllerChangeSuccessDisabled) {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.red,
+                          content: Text('$biometricDisplay disabled'),
+                          duration: const Duration(seconds: 1),
+                        ),
+                      );
+                    }
+
+                    if (state is BiometricControllerChangeLoading) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const AlertDialog(
+                          content: Row(
+                            children: [
+                              CircularProgressIndicator(),
+                              Text('Please wait...')
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+
+                    if (state is BiometricControllerChangeFailure) {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      displayDialogWidget(
+                        context: context,
+                        title: 'Error',
+                        message: 'Failed to enable $biometricDisplay',
+                        actions: [
+                          DialogPlainButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text(LocalizationConstants.oK),
+                          ),
+                        ],
+                      );
+                    }
+                  },
                   builder: (context, state) {
                     void submitPassword(String password) {
                       context
                           .read<BiometricControllerCubit>()
-                          .enableBiometric(password);
+                          .enableBiometricWhileLoggedIn(password);
                     }
 
                     void showPasswordPrompt() {
@@ -290,7 +342,9 @@ class _BiometricListTile extends StatelessWidget {
                       title: 'Enable $biometricDisplay',
                       showTrailing: true,
                       trailingWidget: Switch(
-                        value: state is BiometricControllerSuccess,
+                        value:
+                            state is BiometricControllerChangeSuccessEnabled ||
+                                state is BiometricControllerEnabled,
                         onChanged: onChange,
                       ),
                     );
