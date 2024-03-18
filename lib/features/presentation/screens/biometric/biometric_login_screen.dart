@@ -118,7 +118,7 @@ class BiometricLoginPage extends StatelessWidget {
           if (state is BiometricControllerSuccess) {
             title = 'Success';
             subtitle =
-                'Net time you sign in, you can ${(biometricOptionName == 'Fingerprint' || biometricOptionName == 'Touch') ? 'use your fingerprint' : 'sign in\nwith Face ID'}';
+                'Next time you sign in, you can ${(biometricOptionName == 'Fingerprint' || biometricOptionName == 'Touch') ? 'use your fingerprint' : 'sign in\nwith Face ID'}';
           }
         },
         builder: (context, state) {
