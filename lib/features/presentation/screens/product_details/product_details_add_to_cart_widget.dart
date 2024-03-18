@@ -50,22 +50,39 @@ class AddToCartSignInWidget extends StatelessWidget {
 
   AddToCartSignInWidget();
 
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProductDetailsAddToCartBloc,
-        ProductDetailsAddtoCartState>(builder: (context, state) {
-      switch (state) {
-        case ProductDetailsAddtoCartInitial():
-        case ProductDetailsAddtoCartLoading():
-          return const Center(child: CircularProgressIndicator());
-        case ProductDetailsAddtoCartSuccess():
-          return AddToCartSuccessWidget(state.productDetailsAddToCartEntity);
-        case ProductDetailsAddtoCartError():
-          return Center(child: Text(state.errorMessage));
-        default:
-          return const Center(child: Text("failure"));
-      }
-    });
+    return BlocListener<ProductDetailsAddToCartBloc,
+        ProductDetailsAddtoCartState>(
+      listener: (bloccontext, state) {
+        if (state is ProductDetailsProdctAddedToCartSuccess) {
+          CustomSnackBar.showProductAddedToCart(context);
+          return;
+        }
+      },
+      child: BlocBuilder<ProductDetailsAddToCartBloc,
+          ProductDetailsAddtoCartState>(
+        buildWhen: (previous, current) {
+          return current is! ProductDetailsProdctAddedToCartSuccess;
+        },
+        builder: (context, state) {
+          if (state is ProductDetailsAddtoCartInitial ||
+              state is ProductDetailsAddtoCartLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state is ProductDetailsAddtoCartSuccess) {
+            return AddToCartSuccessWidget(state.productDetailsAddToCartEntity);
+          }
+          if (state is ProductDetailsAddtoCartError) {
+            return Center(child: Text(state.errorMessage));
+          } else {
+            return const Center(child: Text("failure"));
+          }
+        },
+      ),
+    );
   }
 }
 
@@ -88,11 +105,8 @@ class AddToCartSuccessWidget extends StatelessWidget {
               ),
               text: LocalizationConstants.addToCart,
               onPressed: () {
-                //  CustomSnackBar.showComingSoonSnackBar(context)
-
-                context.read<ProductDetailsAddToCartBloc>().add(
-                    AddToCartEvent(
-                        productDetailsAddToCartEntity: detailsAddToCartEntity));
+                context.read<ProductDetailsAddToCartBloc>().add(AddToCartEvent(
+                    productDetailsAddToCartEntity: detailsAddToCartEntity));
               })
         ],
       ),

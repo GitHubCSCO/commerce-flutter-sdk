@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
@@ -101,6 +103,7 @@ class ProductDetailsAddToCartBloc
 
   Future<void> _onAddToCartEvent(
       AddToCartEvent event, Emitter<ProductDetailsAddtoCartState> emit) async {
+    // emit(ProductDetailsAddtoCartLoading());
     var product =
         event.productDetailsAddToCartEntity.productDetailsPriceEntity?.product;
     var styledProduct = event
@@ -108,6 +111,16 @@ class ProductDetailsAddToCartBloc
     var productId = styledProduct?.productId ?? product?.id;
     var addCartLine = AddCartLine(
         productId: productId, unitOfMeasure: product?.unitOfMeasure);
-    _productDetailsAddToCartUseCase.addToCart(addCartLine);
+
+    final response = await _productDetailsAddToCartUseCase.addToCart(addCartLine);
+
+    switch (response) {
+      case Success(value: final data):
+        emit(ProductDetailsProdctAddedToCartSuccess());
+        break;
+      case Failure(errorResponse: final errorResponse):
+        emit(ProductDetailsAddtoCartError(errorResponse.errorDescription ?? ''));
+        break;
+    }
   }
 }
