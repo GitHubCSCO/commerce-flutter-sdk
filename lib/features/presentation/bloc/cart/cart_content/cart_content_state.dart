@@ -15,17 +15,23 @@ class CartContentDefaultState extends CartContentState {
   List<Object?> get props => [];
 }
 
-class CartContentQuantityChangedState extends CartContentState {
-  final int quantity;
-
-  CartContentQuantityChangedState(this.quantity);
+class CartContentQuantityChangedSuccessState extends CartContentState {
+  const CartContentQuantityChangedSuccessState();
 
   @override
-  List<Object?> get props => [quantity];
+  List<Object?> get props => [];
+}
+
+class CartContentQuantityChangedFailureState extends CartContentState {
+  final String message;
+  const CartContentQuantityChangedFailureState({required this.message});
+
+  @override
+  List<Object?> get props => [];
 }
 
 class CartContentClearAllSuccessState extends CartContentState {
-  CartContentClearAllSuccessState();
+  const CartContentClearAllSuccessState();
 
   @override
   List<Object?> get props => [];
@@ -34,14 +40,14 @@ class CartContentClearAllSuccessState extends CartContentState {
 class CartContentClearAllFailureState extends CartContentState {
   final String message;
 
-  CartContentClearAllFailureState(this.message);
+  const CartContentClearAllFailureState(this.message);
 
   @override
   List<Object?> get props => [message];
 }
 
 class CartContentItemRemovedSuccessState extends CartContentState {
-  CartContentItemRemovedSuccessState();
+  const CartContentItemRemovedSuccessState();
 
   @override
   List<Object?> get props => [];
@@ -50,7 +56,7 @@ class CartContentItemRemovedSuccessState extends CartContentState {
 class CartContentItemRemovedFailureState extends CartContentState {
   final String message;
 
-  CartContentItemRemovedFailureState(this.message);
+  const CartContentItemRemovedFailureState(this.message);
 
   @override
   List<Object?> get props => [message];

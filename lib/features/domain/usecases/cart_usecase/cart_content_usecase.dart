@@ -25,4 +25,17 @@ class CartContentUseCase extends BaseUseCase {
         return Failure(errorResponse);
     }
   }
+
+
+  Future<Result<CartLine, ErrorResponse>> updateCartLine(CartLine cartLine) async {
+    var response = await commerceAPIServiceProvider
+        .getCartService()
+        .updateCartLine(cartLine);
+    switch (response) {
+      case Success(value: final data):
+        return Success(data);
+      case Failure(errorResponse: final errorResponse):
+        return Failure(errorResponse);
+    }
+  }
 }

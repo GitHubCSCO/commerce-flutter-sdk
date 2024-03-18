@@ -732,8 +732,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: develop
-      resolved-ref: bc38ddceac8ae521c347d0f8273deffcbd151e9a
+      ref: "task/ICM-4207-dart"
+      resolved-ref: "5473f077068612009c8cda13f49cd42457bb34f6"
       url: "git@github.com:InsiteSoftware/commerce-dart-sdk.git"
     source: git
     version: "0.1.0-dev.1"

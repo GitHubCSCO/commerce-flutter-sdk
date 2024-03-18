@@ -72,7 +72,7 @@ class CartLineWidget extends StatelessWidget {
     return InkWell(
       onTap: () {
         context.read<CartContentBloc>().add(CartContentRemoveEvent(
-            CartLineEntityMapper().toModel(cartLineEntity)));
+            cartLine: CartLineEntityMapper().toModel(cartLineEntity)));
       },
       child: Padding(
         padding: const EdgeInsets.all(15.0),

@@ -35,6 +35,7 @@ class CartLineEntityMapper {
         id: model.id,
         productId: model.productId,
         line: model.line,
+        qtyOrdered: model.qtyOrdered,
         requisitionId: model.requisitionId,
         smallImagePath: model.smallImagePath,
         altText: model.altText,
@@ -86,6 +87,7 @@ class CartLineEntityMapper {
         requisitionId: entity.requisitionId,
         smallImagePath: entity.smallImagePath,
         altText: entity.altText,
+        qtyOrdered: entity.qtyOrdered,
         productName: entity.productName,
         manufacturerItem: entity.manufacturerItem,
         customerName: entity.customerName,
@@ -122,7 +124,6 @@ class CartLineEntityMapper {
         isActive: entity.isActive,
         brand: BrandEntityMapper().toModel(entity.brand ?? BrandEntity()),
         status: entity.status,
-       
       );
 }
 

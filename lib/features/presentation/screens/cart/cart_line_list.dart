@@ -17,10 +17,9 @@ class CartLineWidgetList extends StatelessWidget {
         buildWhen: (previous, current) {
       return current is CartContentDefaultState;
     }, listener: (context, state) {
-      if (state is CartContentClearAllSuccessState) {
-        context.read<CartPageBloc>().add(CartPageLoadEvent());
-      }
-      if (state is CartContentItemRemovedSuccessState) {
+      if (state is CartContentClearAllSuccessState ||
+          state is CartContentItemRemovedSuccessState ||
+          state is CartContentQuantityChangedSuccessState) {
         context.read<CartPageBloc>().add(CartPageLoadEvent());
       }
     }, builder: (context, state) {

@@ -50,7 +50,6 @@ class AddToCartSignInWidget extends StatelessWidget {
 
   AddToCartSignInWidget();
 
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<ProductDetailsAddToCartBloc,
@@ -58,7 +57,6 @@ class AddToCartSignInWidget extends StatelessWidget {
       listener: (bloccontext, state) {
         if (state is ProductDetailsProdctAddedToCartSuccess) {
           CustomSnackBar.showProductAddedToCart(context);
-          return;
         }
       },
       child: BlocBuilder<ProductDetailsAddToCartBloc,
@@ -86,17 +84,28 @@ class AddToCartSignInWidget extends StatelessWidget {
   }
 }
 
-class AddToCartSuccessWidget extends StatelessWidget {
+class AddToCartSuccessWidget extends StatefulWidget {
   final ProductDetailsAddtoCartEntity detailsAddToCartEntity;
 
   AddToCartSuccessWidget(this.detailsAddToCartEntity);
+
+  @override
+  _AddToCartSuccessWidgetState createState() => _AddToCartSuccessWidgetState();
+}
+
+class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
+  int? quantity;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: [
-          ProductDetailsAddCartRow(detailsAddToCartEntity),
+          ProductDetailsAddCartRow(widget.detailsAddToCartEntity, (int? value) {
+            setState(() {
+              quantity = value;
+            });
+          }),
           PrimaryButton(
               leadingIcon: SvgPicture.asset(
                 AssetConstants.productDeatilsAddToCartIcon,
@@ -106,7 +115,7 @@ class AddToCartSuccessWidget extends StatelessWidget {
               text: LocalizationConstants.addToCart,
               onPressed: () {
                 context.read<ProductDetailsAddToCartBloc>().add(AddToCartEvent(
-                    productDetailsAddToCartEntity: detailsAddToCartEntity));
+                    productDetailsAddToCartEntity: widget.detailsAddToCartEntity.copyWith(quantityText: quantity.toString())));
               })
         ],
       ),
@@ -116,8 +125,9 @@ class AddToCartSuccessWidget extends StatelessWidget {
 
 class ProductDetailsAddCartRow extends StatelessWidget {
   final ProductDetailsAddtoCartEntity detailsAddToCartEntity;
+  final ValueChanged<int?> onQuantityChanged;
 
-  ProductDetailsAddCartRow(this.detailsAddToCartEntity);
+  ProductDetailsAddCartRow(this.detailsAddToCartEntity, this.onQuantityChanged);
 
   @override
   Widget build(BuildContext context) {
@@ -131,6 +141,7 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                 initialtText: detailsAddToCartEntity.quantityText,
                 shouldShowIncrementDecermentIcon: true,
                 onChanged: (int? quantity) {
+                  onQuantityChanged(quantity);
                   var pricingState =
                       context.read<ProductDetailsPricingBloc>().state;
                   if (pricingState is ProductDetailsPricingLoaded) {
@@ -153,7 +164,6 @@ class ProductDetailsAddCartRow extends StatelessWidget {
     );
   }
 }
-
 class ProductDetailsAddCartTtitleSubTitleColumn extends StatelessWidget {
   final String title;
   final String value;

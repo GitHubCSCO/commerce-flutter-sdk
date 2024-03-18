@@ -109,17 +109,22 @@ class ProductDetailsAddToCartBloc
     var styledProduct = event
         .productDetailsAddToCartEntity.productDetailsPriceEntity?.styledProduct;
     var productId = styledProduct?.productId ?? product?.id;
+    var quantity = int.parse(event.productDetailsAddToCartEntity.quantityText!);
     var addCartLine = AddCartLine(
-        productId: productId, unitOfMeasure: product?.unitOfMeasure);
+        productId: productId,
+        unitOfMeasure: product?.unitOfMeasure,
+        qtyOrdered: quantity);
 
-    final response = await _productDetailsAddToCartUseCase.addToCart(addCartLine);
+    final response =
+        await _productDetailsAddToCartUseCase.addToCart(addCartLine);
 
     switch (response) {
       case Success(value: final data):
         emit(ProductDetailsProdctAddedToCartSuccess());
         break;
       case Failure(errorResponse: final errorResponse):
-        emit(ProductDetailsAddtoCartError(errorResponse.errorDescription ?? ''));
+        emit(
+            ProductDetailsAddtoCartError(errorResponse.errorDescription ?? ''));
         break;
     }
   }
