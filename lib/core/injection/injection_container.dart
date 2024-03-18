@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/domain/service/interfaces/core_ser
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_shipping_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
@@ -99,7 +100,8 @@ Future<void> initInjectionContainer() async {
     //cart
     ..registerFactory(() => CartPageBloc(cartUseCase: sl()))
     ..registerFactory(() => CartUseCase())
-    ..registerFactory(() => CartShippingSelectionBloc())
+    ..registerFactory(() => CartShippingSelectionBloc(shippingUseCase: sl()))
+    ..registerFactory(() => CartShippingUseCase())
 
     //settings domain
     ..registerFactory(() => SettingsDomainCubit(domainUsecase: sl()))

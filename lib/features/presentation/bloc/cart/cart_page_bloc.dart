@@ -18,16 +18,44 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
 
   Future<void> _onCurrentCartLoadEvent(CartPageLoadEvent event, Emitter<CartPageState> emit) async {
     emit(CartPageLoadingState());
-    var result = await _cartUseCase.loadCurrentCart();
-    switch (result) {
-      case Success(value: final data):
-        cart = data;
-        var wareHouse = _cartUseCase.getPickUpWareHouse();
-        emit(CartPageLoadedState(cart: data!, warehouse: wareHouse!));
-        break;
-      case Failure(errorResponse: final errorResponse):
-        emit(CartPageFailureState(error: errorResponse.errorDescription ?? ''));
-        break;
+
+    try {
+      var result = await _cartUseCase.loadCurrentCart();
+      switch (result) {
+        case Success(value: final data):
+          cart = data;
+          if (cart?.cartLines == null || cart!.cartLines!.isEmpty) {
+            emit(CartPageNoDataState());
+            return;
+          }
+          var wareHouse = _cartUseCase.getPickUpWareHouse();
+          var isCustomerOrderApproval = _cartUseCase.isCustomerOrderApproval();
+          var shippingMethod = _cartUseCase.getShippingMethod();
+          var promotionsResult = await _cartUseCase.loadCartPromotions();
+          PromotionCollectionModel? promotionCollection = promotionsResult is Success ? (promotionsResult as Success).value : null;
+
+          var settingResult = await _cartUseCase.loadCartSetting();
+          switch (settingResult) {
+            case Success(value: final setting):
+              emit(CartPageLoadedState(
+                  cart: data!,
+                  warehouse: wareHouse!,
+                  promotions: promotionCollection!,
+                  isCustomerOrderApproval: isCustomerOrderApproval,
+                  cartSettings: setting!,
+                  shippingMethod: shippingMethod ?? ''));
+              break;
+            case Failure(errorResponse: final errorResponse):
+              emit(CartPageFailureState(error: errorResponse.errorDescription ?? ''));
+              break;
+          }
+          break;
+        case Failure(errorResponse: final errorResponse):
+          emit(CartPageFailureState(error: errorResponse.errorDescription ?? ''));
+          break;
+      }
+    } catch (e) {
+      emit(CartPageFailureState(error: 'An unexpected error occurred'));
     }
   }
 

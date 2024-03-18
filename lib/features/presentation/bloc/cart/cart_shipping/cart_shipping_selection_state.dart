@@ -1,9 +1,20 @@
 part of 'cart_shipping_selection_bloc.dart';
 
-class CartShippingSelectionState extends Equatable {
+abstract class CartShippingSelectionState extends Equatable {}
+
+class CartShippingDefaultState extends CartShippingSelectionState {
   final ShippingOption selectedOption;
 
-  const CartShippingSelectionState(this.selectedOption);
+  CartShippingDefaultState(this.selectedOption);
+
+  @override
+  List<Object?> get props => [selectedOption];
+}
+
+class CartShippingSelectionChangeState extends CartShippingSelectionState {
+  final ShippingOption selectedOption;
+
+  CartShippingSelectionChangeState(this.selectedOption);
 
   @override
   List<Object?> get props => [selectedOption];
