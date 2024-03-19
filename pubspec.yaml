@@ -28,6 +28,8 @@ dependencies:
   html: ^0.15.4
   flutter_widget_from_html: ^0.14.11
   loading_animation_widget:
+  device_info_plus: ^9.1.2
+  local_auth: ^2.2.0
 
 
 dev_dependencies:
@@ -46,3 +48,4 @@ flutter:
     - assets/images/
     - assets/images/bar_icons/
     - assets/images/cart_page_icons/
+    - assets/images/biometric_icons/

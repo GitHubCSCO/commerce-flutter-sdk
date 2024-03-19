@@ -21,4 +21,9 @@ class AssetConstants {
   static const String cartClearIcon = "assets/images/cart_page_icons/trash.svg";
   static const String cartItemRemoveIcon =
       "assets/images/cart_page_icons/delete_cart_icon.svg";
+
+  static const String faceID =
+      "assets/images/biometric_icons/icon_faceID_{0}.svg";
+  static const String touchID =
+      "assets/images/biometric_icons/icon_touchID_{0}.svg";
 }
