@@ -10,4 +10,12 @@ class BreakPriceEntityMapper {
         breakPriceWithVat: model.breakPriceWithVat,
         breakPriceWithVatDisplay: model.breakPriceWithVatDisplay,
       );
+  BreakPriceDto toModel(BreakPriceEntity entity) => BreakPriceDto(
+        breakQty: entity.breakQty,
+        breakPrice: entity.breakPrice,
+        breakPriceDisplay: entity.breakPriceDisplay,
+        savingsMessage: entity.savingsMessage,
+        breakPriceWithVat: entity.breakPriceWithVat,
+        breakPriceWithVatDisplay: entity.breakPriceWithVatDisplay,
+      );
 }

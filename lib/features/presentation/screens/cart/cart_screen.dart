@@ -3,13 +3,16 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/shipping_entity.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line_list.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_payment_summary_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
@@ -28,7 +31,8 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
-      BlocProvider<PullToRefreshBloc>(create: (context) => sl<PullToRefreshBloc>()),
+      BlocProvider<PullToRefreshBloc>(
+          create: (context) => sl<PullToRefreshBloc>()),
       BlocProvider<CartPageBloc>(
           create: (context) => sl<CartPageBloc>()..add(CartPageLoadEvent())),
     ], child: const CartPage());
@@ -41,6 +45,19 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Container(
+          height: 50,
+          child: PrimaryButton(
+            onPressed: () {
+              CustomSnackBar.showComingSoonSnackBar(context);
+            },
+            text: LocalizationConstants.checkout,
+          ),
+        ),
+      ),
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         title: const Text(LocalizationConstants.cart),
@@ -51,7 +68,7 @@ class CartPage extends StatelessWidget {
         listeners: [
           BlocListener<PullToRefreshBloc, PullToRefreshState>(
             listener: (context, state) {
-              if(state is PullToRefreshLoadState) {
+              if (state is PullToRefreshLoadState) {
                 _reloadCartPage(context);
               }
             },
@@ -73,7 +90,8 @@ class CartPage extends StatelessWidget {
         ],
         child: RefreshIndicator(
           onRefresh: () async {
-            BlocProvider.of<PullToRefreshBloc>(context).add(PullToRefreshInitialEvent());
+            BlocProvider.of<PullToRefreshBloc>(context)
+                .add(PullToRefreshInitialEvent());
           },
           child: BlocBuilder<CartPageBloc, CartPageState>(
             builder: (context, state) {
@@ -82,47 +100,47 @@ class CartPage extends StatelessWidget {
                 case CartPageLoadingState():
                   return const Center(child: CircularProgressIndicator());
                 case CartPageLoadedState():
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: _buildCartWidgets(
-                        state.cart,
-                        state.cartSettings,
-                        state.warehouse,
-                        state.promotions,
-                        state.isCustomerOrderApproval,
-                        state.shippingMethod),
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 120.0),
+                    child: ListView(
+                      children: _buildCartWidgets(
+                          state.cart,
+                          state.cartSettings,
+                          state.warehouse,
+                          state.promotions,
+                          state.isCustomerOrderApproval,
+                          state.shippingMethod),
+                    ),
                   );
                 case CartPageNoDataState():
-                  return CustomScrollView(
-                    slivers: <Widget> [
-                      SliverFillRemaining(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 50,
-                              height: 50,
-                              padding: const EdgeInsets.all(10),
-                              child: SvgPicture.asset(
-                                "assets/images/cart.svg",
-                                fit: BoxFit.fitWidth,
-                              ),
+                  return CustomScrollView(slivers: <Widget>[
+                    SliverFillRemaining(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 50,
+                            padding: const EdgeInsets.all(10),
+                            child: SvgPicture.asset(
+                              "assets/images/cart.svg",
+                              fit: BoxFit.fitWidth,
                             ),
-                            const Text('There are no items in your cart'),
-                            Padding(
-                              padding: const EdgeInsets.all(24),
-                              child: TertiaryButton(
-                                onPressed: () {
-                                  CustomSnackBar.showComingSoonSnackBar(context);
-                                },
-                                child: Text('Continue Shopping'),
-                              ),
-                            )
-                          ],
-                        ),
+                          ),
+                          const Text('There are no items in your cart'),
+                          Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: TertiaryButton(
+                              onPressed: () {
+                                CustomSnackBar.showComingSoonSnackBar(context);
+                              },
+                              child: Text('Continue Shopping'),
+                            ),
+                          )
+                        ],
                       ),
-                    ]
-                  );
+                    ),
+                  ]);
                 default:
                   return const CustomScrollView(
                     slivers: <Widget>[
@@ -155,12 +173,26 @@ class CartPage extends StatelessWidget {
         cartSettings: settings,
         promotions: promotions,
         isCustomerOrderApproval: isCustomerOrderApproval);
-    final shippingEntity = ShippingEntity(warehouse: warehouse, shippingMethod: (shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name) ? ShippingOption.pickUp : ShippingOption.ship));
+    final shippingEntity = ShippingEntity(
+        warehouse: warehouse,
+        shippingMethod:
+            (shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)
+                ? ShippingOption.pickUp
+                : ShippingOption.ship));
 
-    list.add(CartPaymentSummaryWidget(paymentSummaryEntity: paymentSummaryEntity));
+    list.add(
+        CartPaymentSummaryWidget(paymentSummaryEntity: paymentSummaryEntity));
     list.add(BlocProvider<CartShippingSelectionBloc>(
-      create: (context) => sl<CartShippingSelectionBloc>()..add(CartShippingOptionDefaultEvent(shippingEntity.shippingMethod!)),
+      create: (context) => sl<CartShippingSelectionBloc>()
+        ..add(CartShippingOptionDefaultEvent(shippingEntity.shippingMethod!)),
       child: CartShippingWidget(shippingEntity: shippingEntity),
+    ));
+
+    list.add(BlocProvider<CartContentBloc>(
+      create: (context) => sl<CartContentBloc>(),
+      child: CartLineWidgetList(
+          cartLineEntities: CartLineListMapper()
+              .toEntity(CartLineList(cartLines: cart!.cartLines))),
     ));
 
     return list;

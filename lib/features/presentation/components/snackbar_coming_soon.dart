@@ -9,4 +9,13 @@ class CustomSnackBar {
       ),
     );
   }
+
+  static void showProductAddedToCart(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Product Added to Cart"),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
 }

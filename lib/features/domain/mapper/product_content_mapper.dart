@@ -11,4 +11,14 @@ class ProductContentEntityMapper {
         openGraphTitle: model?.openGraphTitle,
         openGraphUrl: model?.openGraphUrl,
       );
+
+  ProductContent? toModel(ProductContentEntity entity) => ProductContent(
+        htmlContent: entity.htmlContent,
+        metaDescription: entity.metaDescription,
+        pageTitle: entity.pageTitle,
+        metaKeywords: entity.metaKeywords,
+        openGraphImage: entity.openGraphImage,
+        openGraphTitle: entity.openGraphTitle,
+        openGraphUrl: entity.openGraphUrl,
+      );
 }

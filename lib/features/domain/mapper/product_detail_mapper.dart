@@ -33,4 +33,35 @@ class ProductDetailEntityMapper {
         configuration: LegacyConfigurationEntityMapper()
             .toEntity(model?.configuration ?? LegacyConfiguration()),
       );
+
+  ProductDetail? toModel(ProductDetailEntity entity) => ProductDetail(
+        name: entity.name,
+        modelNumber: entity.modelNumber,
+        sku: entity.sku,
+        upcCode: entity.upcCode,
+        unspsc: entity.unspsc,
+        productCode: entity.productCode,
+        priceCode: entity.priceCode,
+        sortOrder: entity.sortOrder,
+        multipleSaleQty: entity.multipleSaleQty,
+        canBackOrder: entity.canBackOrder,
+        roundingRule: entity.roundingRule,
+        replacementProductId: entity.replacementProductId,
+        isHazardousGood: entity.isHazardousGood,
+        hasMsds: entity.hasMsds,
+        isSpecialOrder: entity.isSpecialOrder,
+        isGiftCard: entity.isGiftCard,
+        allowAnyGiftCardAmount: entity.allowAnyGiftCardAmount,
+        taxCode1: entity.taxCode1,
+        taxCode2: entity.taxCode2,
+        taxCategory: entity.taxCategory,
+        vatCodeId: entity.vatCodeId,
+        shippingClassification: entity.shippingClassification,
+        shippingLength: entity.shippingLength,
+        shippingWidth: entity.shippingWidth,
+        shippingHeight: entity.shippingHeight,
+        shippingWeight: entity.shippingWeight,
+        configuration:
+            LegacyConfigurationEntityMapper().toModel(entity.configuration),
+      );
 }

@@ -30,4 +30,33 @@ class WarehouseEntityMapper {
         allowPickup: model.allowPickup,
         pickupShipViaId: model.pickupShipViaId,
       );
+
+  Warehouse toModel(WarehouseEntity entity) => Warehouse(
+        // messageType: entity.messageType,
+        // message: entity.message,
+        // requiresRealTimeInventory: entity.requiresRealTimeInventory,
+        id: entity.id,
+        name: entity.name,
+        address1: entity.address1,
+        address2: entity.address2,
+        city: entity.city,
+        contactName: entity.contactName,
+        countryId: entity.countryId,
+        deactivateOn: entity.deactivateOn,
+        description: entity.description,
+        phone: entity.phone,
+        postalCode: entity.postalCode,
+        shipSite: entity.shipSite,
+        state: entity.state,
+        isDefault: entity.isDefault,
+        alternateWarehouses: entity.alternateWarehouses
+            ?.map((warehouse) => WarehouseEntityMapper().toModel(warehouse))
+            .toList(),
+        latitude: entity.latitude,
+        longitude: entity.longitude,
+        hours: entity.hours,
+        distance: entity.distance,
+        allowPickup: entity.allowPickup,
+        pickupShipViaId: entity.pickupShipViaId,
+      );
 }
