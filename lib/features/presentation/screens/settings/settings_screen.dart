@@ -1,10 +1,19 @@
+import 'dart:io';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
+import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/biometric_controller/biometric_controller_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,8 +24,20 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<SettingsDomainCubit>()..fetchDomain(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => sl<SettingsDomainCubit>()..fetchDomain(),
+        ),
+        BlocProvider(
+          create: (context) => sl<BiometricControllerCubit>()
+            ..checkBiometricEnabledForCurrentUser(),
+        ),
+        BlocProvider(
+          create: (context) =>
+              sl<BiometricOptionsCubit>()..loadBiometricOptions(),
+        ),
+      ],
       child: const SettingsPage(),
     );
   }
@@ -34,13 +55,15 @@ class SettingsPage extends StatelessWidget {
         title: const Text(LocalizationConstants.settings),
         centerTitle: false,
       ),
-      body: const Center(
-        child: Column(
-          children: [
-            _SettingsListWidget(),
-            SizedBox(height: 16),
-            _SettingsDomainSelectorWidget(),
-          ],
+      body: const SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              _SettingsListWidget(),
+              SizedBox(height: 16),
+              _SettingsDomainSelectorWidget(),
+            ],
+          ),
         ),
       ),
     );
@@ -117,6 +140,7 @@ class _SettingsListWidget extends StatelessWidget {
 }
 
 final settingsItems = [
+  const _BiometricListTile(),
   _SettingsListItemWidget(
     onTap: () {},
     title: LocalizationConstants.clearCache,
@@ -136,11 +160,13 @@ class _SettingsListItemWidget extends StatelessWidget {
   final void Function() onTap;
   final String title;
   final bool showTrailing;
+  final Widget? trailingWidget;
 
   const _SettingsListItemWidget({
     required this.onTap,
     required this.title,
     this.showTrailing = false,
+    this.trailingWidget,
   });
 
   @override
@@ -185,17 +211,18 @@ class _SettingsListItemWidget extends StatelessWidget {
                   ),
                   const SizedBox(width: 2),
                   showTrailing
-                      ? Container(
-                          alignment: Alignment.center,
-                          width: 24,
-                          height: 24,
-                          padding: const EdgeInsets.all(7),
-                          child: const Icon(
-                            Icons.keyboard_arrow_right,
-                            color: Colors.grey,
-                            size: 20,
-                          ),
-                        )
+                      ? trailingWidget ??
+                          Container(
+                            alignment: Alignment.center,
+                            width: 24,
+                            height: 24,
+                            padding: const EdgeInsets.all(7),
+                            child: const Icon(
+                              Icons.keyboard_arrow_right,
+                              color: Colors.grey,
+                              size: 20,
+                            ),
+                          )
                       : Container(),
                 ],
               ),
@@ -203,6 +230,183 @@ class _SettingsListItemWidget extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _BiometricListTile extends StatelessWidget {
+  const _BiometricListTile();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) => state.status == AuthStatus.authenticated
+          ? BlocBuilder<BiometricOptionsCubit, BiometricOptionsState>(
+              builder: (context, state) {
+                DeviceAuthenticationOption biometricOption =
+                    state is BiometricOptionsLoaded
+                        ? state.option
+                        : DeviceAuthenticationOption.none;
+
+                final biometricDisplay = Platform.isAndroid
+                    ? LocalizationConstants.fingerprint
+                    : biometricOption == DeviceAuthenticationOption.faceID
+                        ? LocalizationConstants.faceID
+                        : LocalizationConstants.touchID;
+
+                return BlocConsumer<BiometricControllerCubit,
+                    BiometricControllerState>(
+                  listenWhen: (previous, current) {
+                    return previous != current &&
+                        previous is! BiometricControllerLoading;
+                  },
+                  listener: (context, state) {
+                    if (state is BiometricControllerChangeSuccessEnabled) {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.green,
+                          content: Text('$biometricDisplay enabled'),
+                          duration: const Duration(seconds: 1),
+                        ),
+                      );
+                    }
+
+                    if (state is BiometricControllerChangeSuccessDisabled) {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.red,
+                          content: Text('$biometricDisplay disabled'),
+                          duration: const Duration(seconds: 1),
+                        ),
+                      );
+                    }
+
+                    if (state is BiometricControllerChangeLoading) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const AlertDialog(
+                          content: Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Row(
+                              children: [
+                                CircularProgressIndicator(),
+                                SizedBox(width: 30),
+                                Text('Please wait...'),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    if (state is BiometricControllerChangeFailure) {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      displayDialogWidget(
+                        context: context,
+                        title: 'Error',
+                        message: 'Failed to enable $biometricDisplay',
+                        actions: [
+                          DialogPlainButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text(LocalizationConstants.oK),
+                          ),
+                        ],
+                      );
+                    }
+                  },
+                  builder: (context, state) {
+                    void submitPassword(String password) {
+                      context
+                          .read<BiometricControllerCubit>()
+                          .enableBiometricWhileLoggedIn(password);
+                    }
+
+                    void showPasswordPrompt() {
+                      showDialog(
+                        context: context,
+                        builder: (context) => _PassowordDialog(
+                          biometricDisplay: biometricDisplay,
+                          submitPassword: submitPassword,
+                        ),
+                      );
+                    }
+
+                    void onChange(bool value) {
+                      if (value) {
+                        showPasswordPrompt();
+                      } else {
+                        context
+                            .read<BiometricControllerCubit>()
+                            .disableBiometricAuthentication();
+                      }
+                    }
+
+                    return _SettingsListItemWidget(
+                      onTap: () {},
+                      title: 'Enable $biometricDisplay',
+                      showTrailing: true,
+                      trailingWidget: Switch(
+                        value:
+                            state is BiometricControllerChangeSuccessEnabled ||
+                                state is BiometricControllerEnabled,
+                        onChanged: onChange,
+                      ),
+                    );
+                  },
+                );
+              },
+            )
+          : Container(),
+    );
+  }
+}
+
+class _PassowordDialog extends StatefulWidget {
+  const _PassowordDialog({
+    required this.biometricDisplay,
+    required this.submitPassword,
+  });
+
+  final String biometricDisplay;
+  final void Function(String) submitPassword;
+
+  @override
+  State<_PassowordDialog> createState() => __PassowordDialogState();
+}
+
+class __PassowordDialogState extends State<_PassowordDialog> {
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Enter your password to enable ${widget.biometricDisplay}'),
+      content: TextField(
+        obscureText: true,
+        onSubmitted: (password) => context.closeKeyboard(),
+        controller: _passwordController,
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text(LocalizationConstants.cancel),
+        ),
+        TextButton(
+          onPressed: () {
+            widget.submitPassword(_passwordController.text);
+            Navigator.of(context).pop();
+          },
+          child: const Text(LocalizationConstants.enable),
+        )
+      ],
     );
   }
 }

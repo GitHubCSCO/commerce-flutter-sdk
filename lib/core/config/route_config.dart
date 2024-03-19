@@ -1,10 +1,12 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/biometric/biometric_login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/nav_bar/nav_bar_screen.dart';
@@ -15,7 +17,6 @@ import 'package:commerce_flutter_app/features/presentation/screens/settings/sett
 import 'package:commerce_flutter_app/features/presentation/screens/shop/shop_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/domain_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_screen.dart';
-import 'package:commerce_flutter_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -118,5 +119,19 @@ List<NavigationNode> _getNavigationRoot() {
     parent: account,
   );
 
-  return [root, navbarRoot, welcome, domainSelection, login];
+  // path: /biometric
+  final biometricLogin = createNode(
+    name: AppRoute.biometricLogin.name,
+    path: AppRoute.biometricLogin.suffix,
+    builder: (context, state) {
+      final biometricInfo = state.extra as BiometricInfoEntity;
+      return BiometricLoginScreen(
+        biometricOption: biometricInfo.biometricOption,
+        password: biometricInfo.password,
+      );
+    },
+    parent: null,
+  );
+
+  return [root, navbarRoot, welcome, domainSelection, login, biometricLogin];
 }
