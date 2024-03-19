@@ -1,3 +1,5 @@
+import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_image_mapper.dart';
@@ -38,5 +40,36 @@ class StyledProductEntityMapper {
             ?.map((warehouse) => WarehouseEntityMapper().toEntity(warehouse))
             .toList(),
         trackInventory: model.trackInventory,
+      );
+  StyledProduct toModel(StyledProductEntity entity) => StyledProduct(
+        productId: entity.productId,
+        name: entity.name,
+        shortDescription: entity.shortDescription,
+        erpNumber: entity.erpNumber,
+        mediumImagePath: entity.mediumImagePath,
+        smallImagePath: entity.smallImagePath,
+        largeImagePath: entity.largeImagePath,
+        qtyOnHand: entity.qtyOnHand,
+        numberInCart: entity.numberInCart,
+        pricing: ProductPriceEntityMapper()
+            .toModel(entity.pricing ?? ProductPriceEntity()),
+        quoteRequired: entity.quoteRequired,
+        styleValues: entity.styleValues
+            ?.map((styleValue) => StyleValueEntityMapper().toModel(styleValue))
+            .toList(),
+        availability: AvailabilityEntityMapper()
+            .toModel(entity.availability ?? AvailabilityEntity()),
+        productUnitOfMeasures: entity.productUnitOfMeasures
+            ?.map((productUnitOfMeasure) => ProductUnitOfMeasureEntityMapper()
+                .toModel(productUnitOfMeasure))
+            .toList(),
+        productImages: entity.productImages
+            ?.map((productImage) =>
+                ProductImageEntityMapper().toModel(productImage))
+            .toList(),
+        warehouses: entity.warehouses
+            ?.map((warehouse) => WarehouseEntityMapper().toModel(warehouse))
+            .toList(),
+        trackInventory: entity.trackInventory,
       );
 }

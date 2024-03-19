@@ -12,6 +12,9 @@ class PageTypeConverter {
       case "mobile/search":
       case "mobilesearch":
         return PageType.mobileSearch;
+      case "mobile/mobilecart":
+      case "mobilecart":
+        return PageType.mobileCart;
       default:
         return PageType.unknown;
     }

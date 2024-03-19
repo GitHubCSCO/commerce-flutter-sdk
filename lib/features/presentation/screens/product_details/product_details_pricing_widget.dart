@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_state.dart';
@@ -82,7 +83,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is ProductDetailsPricingLoaded) {
-          var discountMessage = state.productDetailsPriceEntity.discountMessage;
+          var discountMessage = state.productDetailsPriceEntity.product?.pricing?.getDiscountValue();
           if (discountMessage != null &&
               discountMessage.isNotEmpty &&
               discountMessage != "null") {

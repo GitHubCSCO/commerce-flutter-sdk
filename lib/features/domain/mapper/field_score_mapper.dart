@@ -6,4 +6,9 @@ class FieldScoreEntityMapper {
         name: model.name,
         score: model.score,
       );
+
+  FieldScore toModel(FieldScoreEntity entity) => FieldScore(
+        name: entity.name,
+        score: entity.score,
+      );
 }

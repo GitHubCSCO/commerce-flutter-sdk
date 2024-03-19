@@ -9,4 +9,11 @@ class ChildTraitValueEntityMapper {
         value: model.value,
         valueDisplay: model.valueDisplay,
       );
+
+  ChildTraitValue toModel(ChildTraitValueEntity entity) => ChildTraitValue(
+        id: entity.id,
+        styleTraitId: entity.styleTraitId,
+        value: entity.value,
+        valueDisplay: entity.valueDisplay,
+      );
 }

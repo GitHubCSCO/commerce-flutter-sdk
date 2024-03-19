@@ -1,12 +1,12 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/shipping_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:map_launcher/map_launcher.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 enum ShippingOption { ship, pickUp }
 
@@ -28,8 +28,21 @@ class CartShippingWidget extends StatelessWidget {
             style: OptiTextStyles.titleLarge,
           ),
         ),
-        BlocBuilder<CartShippingSelectionBloc, CartShippingSelectionState>(
+        BlocConsumer<CartShippingSelectionBloc, CartShippingSelectionState>(
+          listener: (context, state) {
+            if (state is CartShippingSelectionChangeState) {
+              context.read<CartPageBloc>().add(CartPageLoadEvent());
+            }
+          },
           builder: (context, state) {
+            ShippingOption shippingOption;
+            if (state is CartShippingDefaultState) {
+              shippingOption = state.selectedOption;
+            } else if (state is CartShippingSelectionChangeState) {
+              shippingOption = state.selectedOption;
+            } else {
+              shippingOption = ShippingOption.ship;
+            }
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               color: Colors.white,
@@ -43,9 +56,11 @@ class CartShippingWidget extends StatelessWidget {
                         child: RadioListTile<ShippingOption>(
                           title: const Text(LocalizationConstants.ship),
                           value: ShippingOption.ship,
-                          groupValue: state.selectedOption,
+                          groupValue: shippingOption,
                           onChanged: (value) {
-                            context.read<CartShippingSelectionBloc>().add(CartShippingOptionEvent(value!));
+                            context
+                                .read<CartShippingSelectionBloc>()
+                                .add(CartShippingOptionChangeEvent(value!));
                           },
                         ),
                       ),
@@ -53,16 +68,18 @@ class CartShippingWidget extends StatelessWidget {
                         child: RadioListTile<ShippingOption>(
                           title: const Text(LocalizationConstants.pickUp),
                           value: ShippingOption.pickUp,
-                          groupValue: state.selectedOption,
+                          groupValue: shippingOption,
                           onChanged: (value) {
-                            context.read<CartShippingSelectionBloc>().add(CartShippingOptionEvent(value!));
+                            context
+                                .read<CartShippingSelectionBloc>()
+                                .add(CartShippingOptionChangeEvent(value!));
                           },
                         ),
                       )
                     ],
                   ),
                   Visibility(
-                    visible: state.selectedOption == ShippingOption.pickUp,
+                    visible: shippingOption == ShippingOption.pickUp,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           vertical: 12, horizontal: 24),
@@ -114,7 +131,7 @@ class CartShippingWidget extends StatelessWidget {
                     ),
                   ),
                   Visibility(
-                    visible: state.selectedOption == ShippingOption.pickUp,
+                    visible: shippingOption == ShippingOption.pickUp,
                     child: Container(
                       padding: const EdgeInsets.only(
                           top: 12, bottom: 24, left: 24, right: 24),
@@ -155,14 +172,16 @@ class CartShippingWidget extends StatelessWidget {
   }
 
   String _wareHouseAddress() {
-    String address = shippingEntity.warehouse!.address2 == null || shippingEntity.warehouse!.address2!.isEmpty
+    String address = shippingEntity.warehouse!.address2 == null ||
+            shippingEntity.warehouse!.address2!.isEmpty
         ? shippingEntity.warehouse!.address1!
         : '${shippingEntity.warehouse!.address1}, ${shippingEntity.warehouse!.address2}';
     return address;
   }
 
   String _wareHouseCity() {
-    String city = '${shippingEntity.warehouse!.city}, ${shippingEntity.warehouse!.state} ${shippingEntity.warehouse!.postalCode}';
+    String city =
+        '${shippingEntity.warehouse!.city}, ${shippingEntity.warehouse!.state} ${shippingEntity.warehouse!.postalCode}';
     return city;
   }
 
@@ -190,6 +209,7 @@ class CartShippingWidget extends StatelessWidget {
 
     final availableMaps = await MapLauncher.installedMaps;
 
-    await availableMaps.first.showDirections(destination: Coords(latitudeDouble, longitudeDouble));
+    await availableMaps.first
+        .showDirections(destination: Coords(latitudeDouble, longitudeDouble));
   }
 }

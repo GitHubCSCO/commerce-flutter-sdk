@@ -15,49 +15,61 @@ class ProductCarouselCubit extends Cubit<ProductCarouselState> {
       : _productCarouselUseCase = productCarouselUseCase,
         super(ProductCarouselInitialState());
 
-  Future<void> getCarouselProducts(ProductCarouselWidgetEntity widgetEntity) async {
+  Future<void> getCarouselProducts(
+      ProductCarouselWidgetEntity widgetEntity) async {
     if (isClosed) {
       return;
     }
-    emit(ProductCarouselLoadedState(productCarouselList: widgetEntity.productCarouselList!, isPricingLoading: true));
+    emit(ProductCarouselLoadedState(
+        productCarouselList: widgetEntity.productCarouselList!,
+        isPricingLoading: true));
 
-    final productPricingEnabled = await _productCarouselUseCase.getProductPricingEnable();
-    final productList = widgetEntity.productCarouselList?.map((productCarousel) => productCarousel.product).toList() ?? [];
+    final productPricingEnabled =
+        await _productCarouselUseCase.getProductPricingEnable();
+    final productList = widgetEntity.productCarouselList
+            ?.map((productCarousel) => productCarousel.product)
+            .toList() ??
+        [];
 
     if (productPricingEnabled) {
       final realTimeResult = RealTimeSupport.RealTimePricingOnly;
 
       if (realTimeResult != null &&
           (realTimeResult == RealTimeSupport.RealTimePricingOnly ||
-              realTimeResult == RealTimeSupport.RealTimePricingWithInventoryIncluded ||
+              realTimeResult ==
+                  RealTimeSupport.RealTimePricingWithInventoryIncluded ||
               realTimeResult == RealTimeSupport.RealTimePricingAndInventory)) {
-        final productPriceParameters = productList.map((product) =>
-            ProductPriceQueryParameter(
-              productId: product!.id,
-              qtyOrdered: 1,
-              unitOfMeasure: product.unitOfMeasure,
-            )).toList();
+        final productPriceParameters = productList
+            .map((product) => ProductPriceQueryParameter(
+                  productId: product!.id,
+                  qtyOrdered: 1,
+                  unitOfMeasure: product.unitOfMeasure,
+                ))
+            .toList();
 
-        final parameter = RealTimePricingParameters(productPriceParameters: productPriceParameters);
+        final parameter = RealTimePricingParameters(
+            productPriceParameters: productPriceParameters);
 
-        final pricingResult = await _productCarouselUseCase.getRealTimePricing(parameter);
+        final pricingResult =
+            await _productCarouselUseCase.getRealTimePricing(parameter);
 
-        switch(pricingResult) {
+        switch (pricingResult) {
           case Success():
-            for(var productEntity in productList) {
-              var matchingPrice = pricingResult.value?.realTimePricingResults?.firstWhere(
-                      (o) => o.productId == productEntity!.id
-              );
-              productEntity?.pricing = ProductPriceEntityMapper().toEntity(matchingPrice);
+            for (var productEntity in productList) {
+              var matchingPrice = pricingResult.value?.realTimePricingResults
+                  ?.firstWhere((o) => o.productId == productEntity!.id);
+              productEntity?.pricing =
+                  ProductPriceEntityMapper().toEntity(matchingPrice);
             }
           case Failure():
           default:
         }
       }
     }
-    emit(ProductCarouselLoadedState(productCarouselList: widgetEntity.productCarouselList!, isPricingLoading: false));
+    emit(ProductCarouselLoadedState(
+        productCarouselList: widgetEntity.productCarouselList!,
+        isPricingLoading: false));
   }
-
 }
 
 enum RealTimeSupport {

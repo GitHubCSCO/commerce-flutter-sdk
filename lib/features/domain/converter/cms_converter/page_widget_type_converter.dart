@@ -17,6 +17,9 @@ class PageWidgetTypeConverter {
       case "mobile/searchhistory":
       case "mobilesearchhistory":
         return WidgetType.mobileSearchHistory;
+      case "mobile/cart":
+      case "mobilecart":
+        return WidgetType.mobileCartButtonsWidget;
       default:
         return WidgetType.unknown;
     }

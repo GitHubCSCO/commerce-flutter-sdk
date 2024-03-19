@@ -17,4 +17,21 @@ class StyleTraitEntityMapper {
             ?.map((traitValue) => StyleValueEntityMapper().toEntity(traitValue))
             .toList(),
       );
+
+  StyleTrait toModel(StyleTraitEntity entity) => StyleTrait(
+        styleTraitId: entity.styleTraitId,
+        name: entity.name,
+        nameDisplay: entity.nameDisplay,
+        unselectedValue: entity.unselectedValue,
+        sortOrder: entity.sortOrder,
+        styleValues: entity.styleValues
+            ?.map((styleValueEntity) =>
+                StyleValueEntityMapper().toModel(styleValueEntity))
+            .toList(),
+        id: entity.id,
+        traitValues: entity.traitValues
+            ?.map((traitValueEntity) =>
+                StyleValueEntityMapper().toModel(traitValueEntity))
+            .toList(),
+      );
 }

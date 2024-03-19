@@ -13,6 +13,10 @@ enum WidgetType {
   mobileLocationNote,
   mobileRecentBinNote,
   mobilePreviousOrders,
+  mobileCartButtonsWidget,
+  mobileOrderSummary,
+  mobileShippingMethod,
+  mobileCartContents
 }
 
 class WidgetEntity extends Equatable {
