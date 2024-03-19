@@ -3,5 +3,6 @@ enum LoginStatus {
   loginSuccessBillToShipTo, // successful, show bill to ship to
   loginErrorOffline, // unsuccessful, offline
   loginErrorUnsuccessful, // unsuccessful, online
-  loginErrorUnknown, // unsuccessful, unknown
+  loginErrorUnknown,
+  loginFailed, // unsuccessful, unknown
 }

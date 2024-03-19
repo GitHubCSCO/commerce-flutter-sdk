@@ -1,8 +1,10 @@
 import 'package:commerce_flutter_app/core/config/route_config.dart';
+import 'package:commerce_flutter_app/features/domain/service/app_configuration_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/biometric_authentication_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/commerce_api_service_provider.dart';
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/core_service_provider.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/app_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/device_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/biometric_authentication_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
@@ -11,6 +13,7 @@ import 'package:commerce_flutter_app/features/domain/service/interfaces/device_i
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/biometric_usecase/biometric_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
@@ -24,6 +27,8 @@ import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/sea
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
@@ -33,6 +38,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/search/search/se
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/biometric_auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/biometric_controller/biometric_controller_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
@@ -63,6 +69,9 @@ Future<void> initInjectionContainer() async {
 
     //biometric auth
     ..registerFactory(() => BiometricAuthCubit(biometricUsecase: sl()))
+
+    //biometric controller
+    ..registerFactory(() => BiometricControllerCubit(biometricUsecase: sl()))
 
     //domain selection
     ..registerFactory(() => DomainCubit(domainUsecase: sl()))
@@ -102,6 +111,11 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => AccountPageBloc(accountUseCase: sl()))
     ..registerFactory(() => AccountUseCase())
     ..registerFactory(() => AccountHeaderCubit(accountUseCase: sl()))
+
+    //cart
+    ..registerFactory(() => CartPageBloc(cartUseCase: sl()))
+    ..registerFactory(() => CartUseCase())
+    ..registerFactory(() => CartShippingSelectionBloc())
 
     //settings domain
     ..registerFactory(() => SettingsDomainCubit(domainUsecase: sl()))
@@ -168,6 +182,12 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
+    ..registerLazySingleton<IAppConfigurationService>(() =>
+        AppConfigurationService(
+            commerceAPIServiceProvider: sl(),
+            clientService: sl(),
+            cacheService: sl(),
+            networkService: sl()))
     ..registerLazySingleton<IContentConfigurationService>(
         () => ContentConfigurationService(commerceAPIServiceProvider: sl()))
     ..registerLazySingleton<IBiometricAuthenticationService>(
@@ -211,5 +231,10 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
+    ..registerLazySingleton<ICartService>(() => CartService(
+      clientService: sl(),
+      cacheService: sl(),
+      networkService: sl(),
+    ))
     ..registerLazySingleton<IDeviceService>(() => DeviceService());
 }

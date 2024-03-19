@@ -1,13 +1,16 @@
 import 'dart:io';
 
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/biometric_auth_cubit.dart';
@@ -128,29 +131,41 @@ class _LoginPageState extends State<LoginPage> {
                       context.read<AuthCubit>().loadAuthenticationState();
 
                       if (state.showBiometricOptionView) {
-                        // Display biometric option view
+                        final biometricOptionsState =
+                            context.read<BiometricOptionsCubit>().state;
+                        final options =
+                            biometricOptionsState is BiometricOptionsLoaded
+                                ? biometricOptionsState.option
+                                : DeviceAuthenticationOption.none;
+
+                        if (options != DeviceAuthenticationOption.none) {
+                          AppRoute.biometricLogin.navigate(
+                            context,
+                            extra: BiometricInfoEntity(
+                              biometricOption: options,
+                              password: _passwordController.text,
+                            ),
+                          );
+
+                          return;
+                        }
                         return;
                       }
 
                       context.pop();
                     } else if (state is LoginFailureState) {
-                      showDialog(
+                      displayDialogWidget(
                         context: context,
-                        builder: (context) => AlertDialog(
-                          title:
-                              state.title != null ? Text(state.title!) : null,
-                          content: state.message != null
-                              ? Text(state.message!)
-                              : null,
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(state.buttonText ?? ''),
-                            ),
-                          ],
-                        ),
+                        title: state.title,
+                        message: state.message,
+                        actions: [
+                          DialogPlainButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(state.buttonText ?? ''),
+                          ),
+                        ],
                       );
                     }
                   },
@@ -171,60 +186,55 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   },
                 ),
-                const SizedBox(height: 16.0),
-                BlocBuilder<BiometricOptionsCubit, BiometricOptionsState>(
+                BlocBuilder<LoginCubit, LoginState>(
                   builder: (context, state) {
-                    if (state is BiometricOptionsLoading ||
-                        state is BiometricOptionsUnknown ||
-                        (state is BiometricOptionsLoaded &&
-                            state.option == DeviceAuthenticationOption.none)) {
-                      return const SizedBox.shrink();
-                    }
+                    return state is LoginLoadingState
+                        ? const SizedBox.shrink()
+                        : const SizedBox(height: 16.0);
+                  },
+                ),
+                BlocBuilder<LoginCubit, LoginState>(
+                  builder: (context, state) {
+                    return state is LoginLoadingState
+                        ? const SizedBox.shrink()
+                        : BlocBuilder<BiometricOptionsCubit,
+                            BiometricOptionsState>(
+                            builder: (context, state) {
+                              if (state is BiometricOptionsLoading ||
+                                  state is BiometricOptionsUnknown ||
+                                  (state is BiometricOptionsLoaded &&
+                                      state.option ==
+                                          DeviceAuthenticationOption.none)) {
+                                return const SizedBox.shrink();
+                              }
 
-                    DeviceAuthenticationOption biometricOption =
-                        state is BiometricOptionsLoaded
-                            ? state.option
-                            : DeviceAuthenticationOption.none;
+                              final biometricOption =
+                                  state is BiometricOptionsLoaded
+                                      ? state.option
+                                      : DeviceAuthenticationOption.none;
 
-                    return BlocListener<BiometricAuthCubit, BiometricAuthState>(
-                      listener: (context, state) {
-                        if (state is BiometricAuthSuccess) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Successfully Authenticated'),
-                              backgroundColor: Colors.green,
-                              duration: Duration(seconds: 1),
-                            ),
+                              final biometricDisplayOption = Platform.isAndroid
+                                  ? LocalizationConstants.fingerprint
+                                  : biometricOption ==
+                                          DeviceAuthenticationOption.faceID
+                                      ? LocalizationConstants.faceID
+                                      : LocalizationConstants.touchID;
+
+                              return SecondaryButton(
+                                onPressed: () async {
+                                  await context
+                                      .read<LoginCubit>()
+                                      .onBiometricLoginSubmit(biometricOption);
+                                },
+                                child: Text(
+                                  'Use $biometricDisplayOption',
+                                  style: OptiTextStyles.subtitle.copyWith(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              );
+                            },
                           );
-                        } else if (state is BiometricAuthFailure) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Failed to Authenticate'),
-                              backgroundColor: Colors.red,
-                              duration: Duration(seconds: 1),
-                            ),
-                          );
-                        }
-                      },
-                      child: SecondaryButton(
-                        onPressed: () async {
-                          await context
-                              .read<BiometricAuthCubit>()
-                              .authenticateWithBiometrics();
-                        },
-                        child: Text(
-                          'Use ${Platform.isAndroid ? LocalizationConstants.fingerprint : (
-                              biometricOption ==
-                                      DeviceAuthenticationOption.faceID
-                                  ? LocalizationConstants.faceID
-                                  : LocalizationConstants.touchID,
-                            )}',
-                          style: OptiTextStyles.subtitle.copyWith(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                      ),
-                    );
                   },
                 ),
                 const SizedBox(height: 16.0),
