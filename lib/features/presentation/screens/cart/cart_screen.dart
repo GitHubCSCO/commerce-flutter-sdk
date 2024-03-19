@@ -45,6 +45,19 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Container(
+          height: 50,
+          child: PrimaryButton(
+            onPressed: () {
+              CustomSnackBar.showComingSoonSnackBar(context);
+            },
+            text: LocalizationConstants.checkout,
+          ),
+        ),
+      ),
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         title: const Text(LocalizationConstants.cart),
@@ -87,14 +100,17 @@ class CartPage extends StatelessWidget {
                 case CartPageLoadingState():
                   return const Center(child: CircularProgressIndicator());
                 case CartPageLoadedState():
-                  return ListView(
-                    children: _buildCartWidgets(
-                        state.cart,
-                        state.cartSettings,
-                        state.warehouse,
-                        state.promotions,
-                        state.isCustomerOrderApproval,
-                        state.shippingMethod),
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 120.0),
+                    child: ListView(
+                      children: _buildCartWidgets(
+                          state.cart,
+                          state.cartSettings,
+                          state.warehouse,
+                          state.promotions,
+                          state.isCustomerOrderApproval,
+                          state.shippingMethod),
+                    ),
                   );
                 case CartPageNoDataState():
                   return CustomScrollView(slivers: <Widget>[
