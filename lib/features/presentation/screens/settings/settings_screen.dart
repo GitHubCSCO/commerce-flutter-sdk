@@ -55,13 +55,15 @@ class SettingsPage extends StatelessWidget {
         title: const Text(LocalizationConstants.settings),
         centerTitle: false,
       ),
-      body: const Center(
-        child: Column(
-          children: [
-            _SettingsListWidget(),
-            SizedBox(height: 16),
-            _SettingsDomainSelectorWidget(),
-          ],
+      body: const SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              _SettingsListWidget(),
+              SizedBox(height: 16),
+              _SettingsDomainSelectorWidget(),
+            ],
+          ),
         ),
       ),
     );
@@ -285,11 +287,15 @@ class _BiometricListTile extends StatelessWidget {
                       showDialog(
                         context: context,
                         builder: (context) => const AlertDialog(
-                          content: Row(
-                            children: [
-                              CircularProgressIndicator(),
-                              Text('Please wait...')
-                            ],
+                          content: Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Row(
+                              children: [
+                                CircularProgressIndicator(),
+                                SizedBox(width: 30),
+                                Text('Please wait...'),
+                              ],
+                            ),
                           ),
                         ),
                       );
