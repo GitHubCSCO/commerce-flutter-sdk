@@ -1,8 +1,9 @@
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+
+part 'checkout_state.dart';
+part 'checkout_event.dart';
 
 class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   final CheckoutUsecase _checkoutUsecase;
@@ -19,10 +20,10 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     var data = await _checkoutUsecase.getCart(event.cart.id!);
     switch (data) {
       case Success(value: final cart):
-        emit(CheckkoutDataLoaded(cart: cart!));
+        emit(CheckoutDataLoaded(cart: cart!));
         break;
       case Failure(errorResponse: final errorResponse):
-        emit(CheckkoutDataFetchFailed(
+        emit(CheckoutDataFetchFailed(
             error: errorResponse.errorDescription ?? ''));
         break;
     }

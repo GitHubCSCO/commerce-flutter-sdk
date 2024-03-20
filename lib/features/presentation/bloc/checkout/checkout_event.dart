@@ -1,4 +1,4 @@
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+part of 'checkout_bloc.dart';
 
 abstract class CheckoutEvent {}
 

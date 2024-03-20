@@ -1,4 +1,4 @@
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+part of 'checkout_bloc.dart';
 
 abstract class CheckoutState {}
 
@@ -6,14 +6,14 @@ class CheckoutInitial extends CheckoutState {}
 
 class CheckoutLoading extends CheckoutState {}
 
-class CheckkoutDataLoaded extends CheckoutState {
+class CheckoutDataLoaded extends CheckoutState {
   final Cart cart;
 
-  CheckkoutDataLoaded({required this.cart});
+  CheckoutDataLoaded({required this.cart});
 }
 
-class CheckkoutDataFetchFailed extends CheckoutState {
+class CheckoutDataFetchFailed extends CheckoutState {
   final String error;
 
-  CheckkoutDataFetchFailed({required this.error});
+  CheckoutDataFetchFailed({required this.error});
 }
