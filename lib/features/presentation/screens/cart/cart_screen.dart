@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
@@ -47,12 +48,13 @@ class CartPage extends StatelessWidget {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.symmetric(horizontal: 32),
         child: Container(
           height: 50,
           child: PrimaryButton(
             onPressed: () {
-              CustomSnackBar.showComingSoonSnackBar(context);
+              AppRoute.checkout.navigate(context);
+              // CustomSnackBar.showComingSoonSnackBar(context);
             },
             text: LocalizationConstants.checkout,
           ),
@@ -101,7 +103,7 @@ class CartPage extends StatelessWidget {
                   return const Center(child: CircularProgressIndicator());
                 case CartPageLoadedState():
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 120.0),
+                    padding: const EdgeInsets.only(bottom: 84.0),
                     child: ListView(
                       children: _buildCartWidgets(
                           state.cart,

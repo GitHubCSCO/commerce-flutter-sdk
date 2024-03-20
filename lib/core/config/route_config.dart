@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/routing/route_
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/biometric/biometric_login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/nav_bar/nav_bar_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details.dart';
@@ -131,6 +132,14 @@ List<NavigationNode> _getNavigationRoot() {
       );
     },
     parent: null,
+  );
+
+  // path: /account/settings
+  final checkout = createNode(
+    name: AppRoute.checkout.name,
+    path: AppRoute.checkout.suffix,
+    builder: (context, state) => const CheckoutScreen(),
+    parent: cart,
   );
 
   return [root, navbarRoot, welcome, domainSelection, login, biometricLogin];

@@ -252,6 +252,15 @@ class OptiTextStyles {
         ),
       );
 
+  static TextStyle get subtitleLink => _getInterFontStyle(
+    const TextStyle(
+      fontSize: 14,
+      color: linkColor,
+      fontWeight: titleWeight,
+    ),
+  );
+
+
   // Body
   static TextStyle get body => _getInterFontStyle(
         const TextStyle(
