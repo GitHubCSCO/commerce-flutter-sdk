@@ -54,7 +54,7 @@ class CartPage extends StatelessWidget {
           child: PrimaryButton(
             onPressed: () {
               AppRoute.checkout
-                  .navigate(context, extra: context.read<CartPageBloc>().cart);
+                  .navigateBackStack(context, extra: context.read<CartPageBloc>().cart);
             },
             text: LocalizationConstants.checkout,
           ),

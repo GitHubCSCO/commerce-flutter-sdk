@@ -1,5 +1,3 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
@@ -112,7 +110,7 @@ List<NavigationNode> _getNavigationRoot() {
       final cart = state.extra as Cart;
       return CheckoutScreen(cart: cart);
     },
-    parent: cart,
+    parent: null,
   );
 
   // path: /product details
@@ -147,5 +145,5 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
-  return [root, navbarRoot, welcome, domainSelection, login, biometricLogin];
+  return [root, navbarRoot, welcome, domainSelection, login, biometricLogin, checkout];
 }

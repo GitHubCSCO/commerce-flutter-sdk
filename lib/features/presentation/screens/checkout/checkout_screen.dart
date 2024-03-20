@@ -2,8 +2,12 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_event.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_state.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/expansion_panel/expansion_panel_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -21,12 +25,12 @@ class CheckoutScreen extends StatelessWidget {
           create: (context) => sl<ExpansionPanelCubit>(),
         ),
         BlocProvider<CheckoutBloc>(
-          create: (context) => sl<CheckoutBloc>()..add(LoadCheckoutEvent(cart: cart))),
+            create: (context) =>
+                sl<CheckoutBloc>()..add(LoadCheckoutEvent(cart: cart))),
       ],
       child: const CheckoutPage(),
     );
   }
-
 }
 
 class CheckoutPage extends StatelessWidget {
@@ -39,11 +43,16 @@ class CheckoutPage extends StatelessWidget {
         title: const Text(LocalizationConstants.checkout),
         backgroundColor: Colors.white,
         actions: <Widget>[
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              LocalizationConstants.cancel,
-              style: OptiTextStyles.subtitleLink,
+          InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                LocalizationConstants.cancel,
+                style: OptiTextStyles.subtitleLink,
+              ),
             ),
           ),
         ],
@@ -105,10 +114,8 @@ class CheckoutPage extends StatelessWidget {
                                 title: Text('Payment Details'),
                               );
                             },
-                            body: ListTile(
-                              title: Text('Item 2 child'),
-                              subtitle: Text('Details goes here'),
-                            ),
+                            body: _buildPaymentDetails(
+                                context.read<CheckoutBloc>().cart!),
                             isExpanded: list?[1].isExpanded ?? false,
                             canTapOnHeader: true),
                         ExpansionPanel(
@@ -137,6 +144,13 @@ class CheckoutPage extends StatelessWidget {
     );
   }
 
+  Widget _buildPaymentDetails(Cart cart) {
+    return BlocProvider<PaymentDetailsBloc>(
+        create: (context) =>
+            sl<PaymentDetailsBloc>()..add(LoadPaymentDetailsEvent(cart: cart)),
+        child: CheckoutPaymentDetails(cart: cart));
+  }
+
   Widget _buildSummary() {
     List<Widget> list = [];
     list.add(_buildRow('Promo', '-\$20', OptiTextStyles.bodyFade)!);
@@ -145,10 +159,7 @@ class CheckoutPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       color: Colors.white,
-      child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: list
-      ),
+      child: Column(mainAxisSize: MainAxisSize.min, children: list),
     );
   }
 
@@ -174,5 +185,4 @@ class CheckoutPage extends StatelessWidget {
       );
     }
   }
-
 }

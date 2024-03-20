@@ -7,7 +7,7 @@ part 'checkout_event.dart';
 
 class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   final CheckoutUsecase _checkoutUsecase;
-
+  Cart? cart;
   CheckoutBloc({required CheckoutUsecase checkoutUsecase})
       : _checkoutUsecase = checkoutUsecase,
         super(CheckoutInitial()) {
@@ -19,8 +19,9 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     emit(CheckoutLoading());
     var data = await _checkoutUsecase.getCart(event.cart.id!);
     switch (data) {
-      case Success(value: final cart):
-        emit(CheckoutDataLoaded(cart: cart!));
+      case Success(value: final cartdata):
+        cart = cartdata;
+        emit(CheckoutDataLoaded(cart: cartdata!));
         break;
       case Failure(errorResponse: final errorResponse):
         emit(CheckoutDataFetchFailed(
