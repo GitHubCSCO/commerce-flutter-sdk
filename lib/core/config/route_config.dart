@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/account/accou
 import 'package:commerce_flutter_app/features/presentation/screens/biometric/biometric_login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/nav_bar/nav_bar_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details.dart';
@@ -20,6 +21,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/welcome/domai
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 final GlobalKey<NavigatorState> _rootNavigator = GlobalKey(debugLabel: 'root');
 
@@ -102,6 +104,17 @@ List<NavigationNode> _getNavigationRoot() {
     parent: navbarRoot,
   );
 
+  // path: /checkout
+  final checkout = createNode(
+    name: AppRoute.checkout.name,
+    path: AppRoute.checkout.suffix,
+    builder: (context, state) {
+      final cart = state.extra as Cart;
+      return CheckoutScreen(cart: cart);
+    },
+    parent: cart,
+  );
+
   // path: /product details
   final productDetails = createNode(
     name: AppRoute.productDetails.name,
@@ -132,14 +145,6 @@ List<NavigationNode> _getNavigationRoot() {
       );
     },
     parent: null,
-  );
-
-  // path: /account/settings
-  final checkout = createNode(
-    name: AppRoute.checkout.name,
-    path: AppRoute.checkout.suffix,
-    builder: (context, state) => const CheckoutScreen(),
-    parent: cart,
   );
 
   return [root, navbarRoot, welcome, domainSelection, login, biometricLogin];

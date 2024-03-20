@@ -30,7 +30,7 @@ class RoutePaths {
   static const String cart = '/${RouteNames.cart}';
   static const String productDetails =
       '/${RouteNames.productDetails}/:productId';
-  static const String checkout = '${RoutePaths.cart}/${RouteNames.checkout}';
+  static const String checkout = '$cart/${RouteNames.checkout}';
   static const String shopProdlist =
       '/${RouteNames.shop}/${RouteNames.productList}';
   static const String shopProdDetails = '$shopProdlist/:id';

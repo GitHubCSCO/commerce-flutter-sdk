@@ -53,8 +53,8 @@ class CartPage extends StatelessWidget {
           height: 50,
           child: PrimaryButton(
             onPressed: () {
-              AppRoute.checkout.navigate(context);
-              // CustomSnackBar.showComingSoonSnackBar(context);
+              AppRoute.checkout
+                  .navigate(context, extra: context.read<CartPageBloc>().cart);
             },
             text: LocalizationConstants.checkout,
           ),
