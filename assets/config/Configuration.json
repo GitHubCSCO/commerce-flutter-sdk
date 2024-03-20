@@ -1,6 +1,6 @@
 {
-  "Domain": "mobilespire.commerce.insitesandbox.com",
-  "ShouldUseStaticDomain": true,
+  "Domain": "",
+  "ShouldUseStaticDomain": false,
   "SandboxDomain": "",
   "AppCenterSecretiOS": "",
   "AppCenterSecretAndroid": "",
