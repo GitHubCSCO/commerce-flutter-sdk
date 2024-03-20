@@ -26,4 +26,7 @@ class AssetConstants {
       "assets/images/biometric_icons/icon_faceID_{0}.svg";
   static const String touchID =
       "assets/images/biometric_icons/icon_touchID_{0}.svg";
+
+  static const String checkoutArrowIcon =
+      "assets/images/checkout_icons/arrow.svg";
 }

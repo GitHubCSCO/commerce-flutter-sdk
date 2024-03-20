@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
@@ -52,7 +53,8 @@ class CartPage extends StatelessWidget {
           height: 50,
           child: PrimaryButton(
             onPressed: () {
-              CustomSnackBar.showComingSoonSnackBar(context);
+              AppRoute.checkout
+                  .navigate(context, extra: context.read<CartPageBloc>().cart);
             },
             text: LocalizationConstants.checkout,
           ),
