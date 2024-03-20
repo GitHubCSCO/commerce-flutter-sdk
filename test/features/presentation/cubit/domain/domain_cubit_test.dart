@@ -98,7 +98,7 @@ void main() {
     blocTest(
       'emits [DomainOperationInProgress, DomainLoaded] when fetchDomain is called successfully',
       build: () {
-        when(() => domainUsecase.getSavedDomain())
+        when(() => domainUsecase.getDomain())
             .thenAnswer((_) async => Future.value('savedDomain'));
         return domainCubit;
       },
@@ -114,7 +114,7 @@ void main() {
     blocTest(
       'emits [DomainOperationInProgress, DomainOperationFailed] when fetchDomain encounters an error',
       build: () {
-        when(() => domainUsecase.getSavedDomain())
+        when(() => domainUsecase.getDomain())
             .thenAnswer((_) async => Future.value(null));
         return domainCubit;
       },

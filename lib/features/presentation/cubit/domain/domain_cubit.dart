@@ -15,7 +15,7 @@ class DomainCubit extends Cubit<DomainState> {
 
   Future<void> fetchDomain() async {
     emit(DomainOperationInProgress());
-    final result = await _domainUsecase.getSavedDomain();
+    final result = await _domainUsecase.getDomain();
 
     if (result != null) {
       emit(DomainLoaded(result));

@@ -1,0 +1,12 @@
+{
+  "Domain": "mobilespire.commerce.insitesandbox.com",
+  "ShouldUseStaticDomain": true,
+  "SandboxDomain": "",
+  "AppCenterSecretiOS": "",
+  "AppCenterSecretAndroid": "",
+  "HasCheckout": true,
+  "CheckoutUrl": null,
+  "StartingCategoryForBrowsing": null,
+  "ViewOnWebsiteEnabled": true,
+  "CustomHideCheckoutOrderNotes": false
+}

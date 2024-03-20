@@ -10,11 +10,11 @@ import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   initialHiveDatabase();
   initCommerceSDK();
-  initInjectionContainer();
+  await initInjectionContainer();
   runApp(
     MultiBlocProvider(
       providers: [

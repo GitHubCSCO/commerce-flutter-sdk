@@ -21,7 +21,7 @@ void main() {
           .getLocalStorageService()
           .load(any())).thenAnswer((_) async => savedDomain);
 
-      final result = await domainSelectionUsecase.getSavedDomain();
+      final result = await domainSelectionUsecase.getDomain();
 
       expect(result, equals(savedDomain));
       verify(() => domainSelectionUsecase.commerceAPIServiceProvider

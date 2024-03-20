@@ -2,27 +2,27 @@ import 'package:commerce_flutter_app/features/presentation/cubit/product_carouse
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 abstract class IAppConfigurationService {
-  String get domain;
+  String? get domain;
 
-  String get sandboxDomain;
+  String? get sandboxDomain;
 
-  bool get shouldUseStaticDomain;
+  bool? get shouldUseStaticDomain;
 
-  String get appCenterSecretiOS;
+  String? get appCenterSecretiOS;
 
-  String get tokenExIFrameUrl;
+  String? get tokenExIFrameUrl;
 
-  String get appCenterSecretAndroid;
+  String? get appCenterSecretAndroid;
 
-  bool get hasOrderHistory;
+  bool? get hasOrderHistory;
 
-  bool get viewOnWebsiteEnabled;
+  bool? get viewOnWebsiteEnabled;
 
-  bool get customHideCheckoutOrderNotes;
+  bool? get customHideCheckoutOrderNotes;
 
-  String get privacyPolicyUrl;
+  String? get privacyPolicyUrl;
 
-  String get termsOfUseUrl;
+  String? get termsOfUseUrl;
 
   Future loadRemoteSettings();
 

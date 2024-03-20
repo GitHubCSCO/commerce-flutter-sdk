@@ -1,106 +1,154 @@
+// ignore_for_file: non_constant_identifier_names
+
+import 'dart:convert';
+
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/app_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
+import 'package:flutter/services.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+
+class Configuration {
+  bool? ShouldUseStaticDomain;
+
+  String? AppCenterSecretiOS;
+
+  String? AppCenterSecretAndroid;
+
+  String? Domain;
+
+  String? SandboxDomain;
+
+  bool? HasCheckout;
+
+  String? CheckoutUrl;
+
+  bool? ViewOnWebsiteEnabled;
+
+  String? StartingCategoryForBrowsing;
+
+  bool? CustomHideCheckoutOrderNotes;
+
+  Configuration({
+    this.ShouldUseStaticDomain,
+    this.AppCenterSecretiOS,
+    this.AppCenterSecretAndroid,
+    this.Domain,
+    this.SandboxDomain,
+    this.HasCheckout,
+    this.CheckoutUrl,
+    this.ViewOnWebsiteEnabled,
+    this.StartingCategoryForBrowsing,
+    this.CustomHideCheckoutOrderNotes,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'ShouldUseStaticDomain': ShouldUseStaticDomain,
+      'AppCenterSecretiOS': AppCenterSecretiOS,
+      'AppCenterSecretAndroid': AppCenterSecretAndroid,
+      'Domain': Domain,
+      'SandboxDomain': SandboxDomain,
+      'HasCheckout': HasCheckout,
+      'CheckoutUrl': CheckoutUrl,
+      'ViewOnWebsiteEnabled': ViewOnWebsiteEnabled,
+      'StartingCategoryForBrowsing': StartingCategoryForBrowsing,
+      'CustomHideCheckoutOrderNotes': CustomHideCheckoutOrderNotes,
+    };
+  }
+
+  factory Configuration.fromMap(Map<String, dynamic> map) {
+    return Configuration(
+      ShouldUseStaticDomain: map['ShouldUseStaticDomain'] != null
+          ? map['ShouldUseStaticDomain'] as bool
+          : null,
+      AppCenterSecretiOS: map['AppCenterSecretiOS'] != null
+          ? map['AppCenterSecretiOS'] as String
+          : null,
+      AppCenterSecretAndroid: map['AppCenterSecretAndroid'] != null
+          ? map['AppCenterSecretAndroid'] as String
+          : null,
+      Domain: map['Domain'] != null ? map['Domain'] as String : null,
+      SandboxDomain:
+          map['SandboxDomain'] != null ? map['SandboxDomain'] as String : null,
+      HasCheckout:
+          map['HasCheckout'] != null ? map['HasCheckout'] as bool : null,
+      CheckoutUrl:
+          map['CheckoutUrl'] != null ? map['CheckoutUrl'] as String : null,
+      ViewOnWebsiteEnabled: map['ViewOnWebsiteEnabled'] != null
+          ? map['ViewOnWebsiteEnabled'] as bool
+          : null,
+      StartingCategoryForBrowsing: map['StartingCategoryForBrowsing'] != null
+          ? map['StartingCategoryForBrowsing'] as String
+          : null,
+      CustomHideCheckoutOrderNotes: map['CustomHideCheckoutOrderNotes'] != null
+          ? map['CustomHideCheckoutOrderNotes'] as bool
+          : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Configuration.fromJson(String source) =>
+      Configuration.fromMap(json.decode(source) as Map<String, dynamic>);
+}
 
 class AppConfigurationService extends ServiceBase
     implements IAppConfigurationService {
   final ICommerceAPIServiceProvider _commerceAPIServiceProvider;
-  String _termsOfUseUrl = '';
+  @override
+  String? termsOfUseUrl;
 
   @override
-  String get termsOfUseUrl => _termsOfUseUrl;
-
-  set termsOfUseUrl(String value) {
-    _termsOfUseUrl = value;
-  }
-
-  String _appCenterSecretAndroid = '';
+  String? appCenterSecretAndroid;
 
   @override
-  String get appCenterSecretAndroid => _appCenterSecretAndroid;
-
-  set appCenterSecretAndroid(String value) {
-    _appCenterSecretAndroid = value;
-  }
-
-  String _appCenterSecretiOS = '';
+  String? appCenterSecretiOS;
 
   @override
-  String get appCenterSecretiOS => _appCenterSecretiOS;
-
-  set appCenterSecretiOS(String value) {
-    _appCenterSecretiOS = value;
-  }
-
-  bool _customHideCheckoutOrderNotes = false;
+  bool? customHideCheckoutOrderNotes;
 
   @override
-  bool get customHideCheckoutOrderNotes => _customHideCheckoutOrderNotes;
-
-  set customHideCheckoutOrderNotes(bool value) {
-    _customHideCheckoutOrderNotes = value;
-  }
-
-  String _domain = '';
+  String? domain;
 
   @override
-  String get domain => _domain;
-
-  set domain(String value) {
-    _domain = value;
-  }
-
-  bool _hasOrderHistory = false;
+  bool? hasOrderHistory;
 
   @override
-  bool get hasOrderHistory => _hasOrderHistory;
-
-  set hasOrderHistory(bool value) {
-    _hasOrderHistory = value;
-  }
-
-  String _privacyPolicyUrl = '';
+  String? privacyPolicyUrl;
 
   @override
-  String get privacyPolicyUrl => _privacyPolicyUrl;
-
-  set privacyPolicyUrl(String value) {
-    _privacyPolicyUrl = value;
-  }
-
-  String _sandboxDomain = '';
+  String? sandboxDomain;
 
   @override
-  String get sandboxDomain => _sandboxDomain;
-
-  set sandboxDomain(String value) {
-    _sandboxDomain = value;
-  }
-
-  bool _shouldUseStaticDomain = false;
+  bool? shouldUseStaticDomain;
 
   @override
-  bool get shouldUseStaticDomain => _shouldUseStaticDomain;
+  bool? viewOnWebsiteEnabled;
 
-  set shouldUseStaticDomain(bool value) {
-    _shouldUseStaticDomain = value;
+  AppConfigurationService({
+    required ICommerceAPIServiceProvider commerceAPIServiceProvider,
+    required super.clientService,
+    required super.cacheService,
+    required super.networkService,
+  }) : _commerceAPIServiceProvider = commerceAPIServiceProvider;
+
+  Future<void> init() async {
+    final configurationString =
+        await rootBundle.loadString(AssetConstants.configuration);
+
+    final configuration = Configuration.fromJson(configurationString);
+
+    appCenterSecretAndroid = configuration.AppCenterSecretAndroid;
+    appCenterSecretiOS = configuration.AppCenterSecretiOS;
+    domain = configuration.Domain;
+    sandboxDomain = configuration.SandboxDomain;
+    shouldUseStaticDomain = configuration.ShouldUseStaticDomain;
+    viewOnWebsiteEnabled = configuration.ViewOnWebsiteEnabled;
+    termsOfUseUrl = configuration.CheckoutUrl;
+    privacyPolicyUrl = configuration.CheckoutUrl;
+    customHideCheckoutOrderNotes = configuration.CustomHideCheckoutOrderNotes;
   }
-
-  bool _viewOnWebsiteEnabled = false;
-
-  @override
-  bool get viewOnWebsiteEnabled => _viewOnWebsiteEnabled;
-
-  set viewOnWebsiteEnabled(bool value) {
-    _viewOnWebsiteEnabled = value;
-  }
-
-  AppConfigurationService(
-      {required ICommerceAPIServiceProvider commerceAPIServiceProvider,
-      required super.clientService,
-      required super.cacheService,
-      required super.networkService})
-      : _commerceAPIServiceProvider = commerceAPIServiceProvider;
 
   static const String _tokenExConfigurationUrl = "/api/v1/tokenexconfig";
   static const String _tokenExIFramePath = "mobilecreditcard";
