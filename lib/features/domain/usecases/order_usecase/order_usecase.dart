@@ -2,7 +2,7 @@ import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.d
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 
 class OrderUsecase extends BaseUseCase {
-  Future<List<OrderEntity>> getOrderHistory() async {
+  Future<List<OrderEntity>?> getOrderHistory() async {
     // TODO - put proper implementation
     return Future.delayed(
       const Duration(seconds: 1),
