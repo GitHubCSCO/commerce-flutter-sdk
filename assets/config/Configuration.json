@@ -1,0 +1,12 @@
+{
+  "Domain": "",
+  "ShouldUseStaticDomain": false,
+  "SandboxDomain": "",
+  "AppCenterSecretiOS": "",
+  "AppCenterSecretAndroid": "",
+  "HasCheckout": true,
+  "CheckoutUrl": null,
+  "StartingCategoryForBrowsing": null,
+  "ViewOnWebsiteEnabled": true,
+  "CustomHideCheckoutOrderNotes": false
+}

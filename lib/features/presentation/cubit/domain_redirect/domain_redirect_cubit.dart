@@ -11,7 +11,7 @@ class DomainRedirectCubit extends Cubit<DomainRedirectStatus> {
 
   Future<void> redirect() async {
     emit(DomainRedirectStatus.loading);
-    final result = await _domainUsecase.getSavedDomain();
+    final result = await _domainUsecase.getDomain();
 
     if (result != null) {
       emit(DomainRedirectStatus.redirect);

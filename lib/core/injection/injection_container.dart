@@ -191,12 +191,6 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
-    ..registerLazySingleton<IAppConfigurationService>(() =>
-        AppConfigurationService(
-            commerceAPIServiceProvider: sl(),
-            clientService: sl(),
-            cacheService: sl(),
-            networkService: sl()))
     ..registerLazySingleton<IContentConfigurationService>(
         () => ContentConfigurationService(commerceAPIServiceProvider: sl()))
     ..registerLazySingleton<IBiometricAuthenticationService>(
@@ -245,5 +239,18 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
-    ..registerLazySingleton<IDeviceService>(() => DeviceService());
+    ..registerLazySingleton<IDeviceService>(() => DeviceService())
+    ..registerSingletonAsync<IAppConfigurationService>(
+      () async {
+        final service = AppConfigurationService(
+            commerceAPIServiceProvider: sl(),
+            clientService: sl(),
+            cacheService: sl(),
+            networkService: sl());
+        await service.init();
+        return service;
+      },
+    );
+
+  await sl.allReady();
 }
