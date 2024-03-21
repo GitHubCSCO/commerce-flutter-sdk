@@ -1,6 +1,8 @@
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class OrderHistoryScreen extends StatelessWidget {
   const OrderHistoryScreen({super.key});
@@ -44,7 +46,10 @@ class _OrderHistoryListItem extends StatelessWidget {
                 style: OptiTextStyles.body,
               ),
               Text(
-                orderEntity.orderDate?.toString() ?? '',
+                orderEntity.orderDate != null
+                    ? DateFormat(CoreConstants.dateFormatShortString)
+                        .format(orderEntity.orderDate!)
+                    : '',
                 style: OptiTextStyles.body,
               ),
             ],
