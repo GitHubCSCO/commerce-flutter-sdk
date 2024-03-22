@@ -245,6 +245,11 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
+    ..registerLazySingleton<IOrderService>(() => OrderService(
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
     ..registerLazySingleton<IDeviceService>(() => DeviceService())
     ..registerSingletonAsync<IAppConfigurationService>(
       () async {

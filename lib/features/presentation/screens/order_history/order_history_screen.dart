@@ -76,12 +76,8 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
                       padding:
                           const EdgeInsetsDirectional.symmetric(horizontal: 16),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                            '${state.orderEntities.length} Orders',
-                            style: OptiTextStyles.header3,
-                          ),
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -130,6 +126,12 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
                   ],
                 ),
               );
+            } else if (state is OrderHistoryError) {
+              return const Expanded(
+                child: Center(
+                  child: Text('Error loading orders'),
+                ),
+              );
             } else {
               return const Expanded(
                 child: Center(
@@ -165,7 +167,7 @@ class _OrderHistoryListItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                orderEntity.orderNumberLabel ?? '',
+                orderEntity.orderNumberLabel ?? orderEntity.orderNumber ?? '',
                 style: OptiTextStyles.body,
               ),
               Text(
@@ -177,26 +179,12 @@ class _OrderHistoryListItem extends StatelessWidget {
               ),
             ],
           ),
-          ...(orderEntity.webOrderNumber != null
-              ? [
-                  const SizedBox(height: 4),
-                  Text(
-                    (orderEntity.webOrderNumberLabel ?? '') +
-                        (orderEntity.webOrderNumber ?? ''),
-                    style: OptiTextStyles.bodySmall,
-                  ),
-                ]
-              : []),
-          ...(orderEntity.customerPO != null
-              ? [
-                  const SizedBox(height: 4),
-                  Text(
-                    (orderEntity.poNumberLabel ?? '') +
-                        (orderEntity.customerPO ?? ''),
-                    style: OptiTextStyles.bodySmall,
-                  ),
-                ]
-              : []),
+          const SizedBox(height: 4),
+          Text(
+            (orderEntity.poNumberLabel ?? 'PO #') +
+                (orderEntity.customerPO ?? ''),
+            style: OptiTextStyles.bodySmall,
+          ),
           ...(orderEntity.stCompanyName != null
               ? [
                   const SizedBox(height: 4),
