@@ -30,6 +30,7 @@ dependencies:
   loading_animation_widget:
   device_info_plus: ^9.1.2
   local_auth: ^2.2.0
+  webview_flutter: ^4.7.0
 
 
 dev_dependencies:

@@ -34,7 +34,8 @@ abstract class IAppConfigurationService {
 
   Future<String> startingCategoryForBrowsing();
 
-  Future<TokenExDto> getTokenExConfiguration({String token = ""});
+  Future<Result<TokenExDto, ErrorResponse>> getTokenExConfiguration(
+      String token);
 
   Future<bool> productPricingEnabled();
 

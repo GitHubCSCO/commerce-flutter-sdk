@@ -4,7 +4,8 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_state.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/expansion_panel/expansion_panel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
@@ -27,6 +28,7 @@ class CheckoutScreen extends StatelessWidget {
         BlocProvider<CheckoutBloc>(
             create: (context) =>
                 sl<CheckoutBloc>()..add(LoadCheckoutEvent(cart: cart))),
+        BlocProvider<TokenExBloc>(create: (context) => sl<TokenExBloc>())
       ],
       child: const CheckoutPage(),
     );
@@ -65,7 +67,12 @@ class CheckoutPage extends StatelessWidget {
           height: 50,
           child: PrimaryButton(
             onPressed: () {
-              context.read<ExpansionPanelCubit>().onContinueClick();
+              var index = context.read<ExpansionPanelCubit>().expansionIndex;
+              if (index == 1) {
+                context.read<TokenExBloc>().add(TokenExValidateEvent());
+              } else {
+                context.read<ExpansionPanelCubit>().onContinueClick();
+              }
             },
             text: LocalizationConstants.continueText,
           ),
@@ -145,10 +152,15 @@ class CheckoutPage extends StatelessWidget {
   }
 
   Widget _buildPaymentDetails(Cart cart) {
-    return BlocProvider<PaymentDetailsBloc>(
-        create: (context) =>
-            sl<PaymentDetailsBloc>()..add(LoadPaymentDetailsEvent(cart: cart)),
-        child: CheckoutPaymentDetails(cart: cart));
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<PaymentDetailsBloc>(
+          create: (context) => sl<PaymentDetailsBloc>()
+            ..add(LoadPaymentDetailsEvent(cart: cart)),
+        ),
+      ],
+      child: CheckoutPaymentDetails(cart: cart),
+    );
   }
 
   Widget _buildSummary() {

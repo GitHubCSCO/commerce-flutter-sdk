@@ -797,7 +797,7 @@ packages:
     description:
       path: "."
       ref: develop
-      resolved-ref: b61b76001108c730e4c09e0b5a39ea1b335a7067
+      resolved-ref: "7b7d2e05ba0d50b55468be6e10c21215e667e6c0"
       url: "git@github.com:InsiteSoftware/commerce-dart-sdk.git"
     source: git
     version: "0.1.0-dev.1"
@@ -1391,7 +1391,7 @@ packages:
     source: hosted
     version: "1.2.1"
   webview_flutter:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: webview_flutter
       sha256: "25e1b6e839e8cbfbd708abc6f85ed09d1727e24e08e08c6b8590d7c65c9a8932"

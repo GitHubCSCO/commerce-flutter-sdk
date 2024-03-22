@@ -37,6 +37,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_b
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
@@ -135,6 +136,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => CheckoutUsecase())
     ..registerFactory(() => PaymentDetailsBloc(paymentDetailsUseCase: sl()))
     ..registerFactory(() => PaymentDetailsUseCase())
+    ..registerFactory(() => TokenExBloc())
 
     //settings domain
     ..registerFactory(() => SettingsDomainCubit(domainUsecase: sl()))

@@ -11,3 +11,13 @@ class UpdatePaymentMethodEvent extends PaymentDetailsEvent {
   final PaymentMethodDto paymentMethodDto;
   UpdatePaymentMethodEvent({required this.paymentMethodDto});
 }
+
+class UpdateCreditCartInfoEvent extends PaymentDetailsEvent {
+  final String cardNumber;
+  final String cardType;
+  final String securityCode;
+  UpdateCreditCartInfoEvent(
+      {required this.cardNumber,
+      required this.cardType,
+      required this.securityCode});
+}
