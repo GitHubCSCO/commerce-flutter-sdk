@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_con
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -68,7 +69,7 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
             if (state is OrderHistoryLoaded) {
               return Expanded(
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: MainAxisSize.max,
                   children: [
                     Container(
                       height: 50,
@@ -110,20 +111,21 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
                         ],
                       ),
                     ),
-                    ListView.separated(
-                      shrinkWrap: true,
-                      itemCount: state.orderEntities.length,
-                      itemBuilder: (context, index) {
-                        return _OrderHistoryListItem(
-                          orderEntity: state.orderEntities[index],
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return const Divider(
-                          height: 0,
-                          thickness: 1,
-                        );
-                      },
+                    Expanded(
+                      child: ListView.separated(
+                        itemCount: state.orderEntities.length,
+                        itemBuilder: (context, index) {
+                          return _OrderHistoryListItem(
+                            orderEntity: state.orderEntities[index],
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return const Divider(
+                            height: 0,
+                            thickness: 1,
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
