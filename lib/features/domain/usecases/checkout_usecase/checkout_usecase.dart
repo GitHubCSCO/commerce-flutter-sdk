@@ -18,4 +18,23 @@ class CheckoutUsecase extends BaseUseCase {
         .getCartService()
         .getCurrentCart(cartParameters);
   }
+
+  Future<Result<PromotionCollectionModel, ErrorResponse>>
+  loadCartPromotions() async {
+    return await commerceAPIServiceProvider
+        .getCartService()
+        .getCurrentCartPromotions();
+  }
+
+  Session? getCurrentSession() {
+    return commerceAPIServiceProvider
+        .getSessionService()
+        .currentSession;
+  }
+
+  Future<Result<CartSettings, ErrorResponse>> getCartSetting() {
+    return commerceAPIServiceProvider
+        .getSettingsService().getCartSettingAsync();
+  }
+
 }

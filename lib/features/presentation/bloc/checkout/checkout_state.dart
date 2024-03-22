@@ -8,8 +8,21 @@ class CheckoutLoading extends CheckoutState {}
 
 class CheckoutDataLoaded extends CheckoutState {
   final Cart cart;
+  final BillTo billToAddress;
+  final ShipTo shipToAddress;
+  final Warehouse wareHouse;
+  final PromotionCollectionModel promotions;
+  final String shippingMethod;
+  final CartSettings cartSettings;
 
-  CheckoutDataLoaded({required this.cart});
+  CheckoutDataLoaded(
+      {required this.cart,
+      required this.billToAddress,
+      required this.shipToAddress,
+      required this.wareHouse,
+      required this.promotions,
+      required this.shippingMethod,
+      required this.cartSettings});
 }
 
 class CheckoutDataFetchFailed extends CheckoutState {
