@@ -2,10 +2,11 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shipping_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/warehouse_extension.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/date_selection/date_selection_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/date_picker_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BillingShippingWidget extends StatelessWidget {
   final BillingShippingEntity billingShippingEntity;
@@ -36,7 +37,29 @@ class BillingShippingWidget extends StatelessWidget {
 
       if (billingShippingEntity.carriers != null &&
           billingShippingEntity.carriers!.isNotEmpty) {
-        list.add(_buildShippingMethod());
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+        list.add(_buildShippingMethod(billingShippingEntity.carriers!, billingShippingEntity.carriers![0].shipVias!));
       }
 
       if (billingShippingEntity.cartSettings != null &&
@@ -44,7 +67,8 @@ class BillingShippingWidget extends StatelessWidget {
         DateTime? maximumDate;
 
         if (billingShippingEntity.cartSettings!.maximumDeliveryPeriod! > 0) {
-          final duration = Duration(days: billingShippingEntity.cartSettings!.maximumDeliveryPeriod!);
+          final duration = Duration(
+              days: billingShippingEntity.cartSettings!.maximumDeliveryPeriod!);
           maximumDate = DateTime.now().add(duration);
         }
         list.add(_buildRequestDeliveryDate(maximumDate));
@@ -200,7 +224,7 @@ class BillingShippingWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildShippingMethod() {
+  Widget _buildShippingMethod(List<CarrierDto> carriers, List<ShipViaDto> services) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -212,7 +236,7 @@ class BillingShippingWidget extends StatelessWidget {
           textAlign: TextAlign.center,
           style: OptiTextStyles.subtitle,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 8),
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -222,11 +246,7 @@ class BillingShippingWidget extends StatelessWidget {
               textAlign: TextAlign.center,
               style: OptiTextStyles.body,
             ),
-            Text(
-              'Flat Carrier',
-              textAlign: TextAlign.center,
-              style: OptiTextStyles.body,
-            ),
+            ListPickerWidget(items: carriers),
             const Icon(
               Icons.arrow_forward_ios,
               color: Colors.grey,
@@ -234,7 +254,6 @@ class BillingShippingWidget extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 24),
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -244,11 +263,7 @@ class BillingShippingWidget extends StatelessWidget {
               textAlign: TextAlign.center,
               style: OptiTextStyles.body,
             ),
-            Text(
-              'Flat \$10',
-              textAlign: TextAlign.center,
-              style: OptiTextStyles.body,
-            ),
+            ListPickerWidget(items: services),
             const Icon(
               Icons.arrow_forward_ios,
               color: Colors.grey,
@@ -256,7 +271,6 @@ class BillingShippingWidget extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 16),
       ],
     );
   }
@@ -273,7 +287,7 @@ class BillingShippingWidget extends StatelessWidget {
           textAlign: TextAlign.center,
           style: OptiTextStyles.subtitle,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 8),
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -283,22 +297,7 @@ class BillingShippingWidget extends StatelessWidget {
               textAlign: TextAlign.center,
               style: OptiTextStyles.body,
             ),
-            BlocBuilder<DateSelectionCubit, DateSelectionState>(
-              builder: (context, state) {
-                return InkWell(
-                  child: Text(
-                    state.dateString,
-                    textAlign: TextAlign.center,
-                    style: OptiTextStyles.body,
-                  ),
-                  onTap: () {
-                    final firstDate = DateTime.now();
-                    final lastDate = maxDate ?? DateTime(2100);
-                    _selectRequestDeliveryDate(context, firstDate, lastDate);
-                  },
-                );
-              },
-            ),
+            DatePickerWidget(maxDate: maxDate),
             const Icon(
               Icons.arrow_forward_ios,
               color: Colors.grey,
@@ -306,7 +305,6 @@ class BillingShippingWidget extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
         Text(
           'This date is only a request and may not be fulfilled',
           textAlign: TextAlign.center,
@@ -315,24 +313,6 @@ class BillingShippingWidget extends StatelessWidget {
         const SizedBox(height: 16),
       ],
     );
-  }
-
-  void _selectRequestDeliveryDate(BuildContext context, DateTime firstDate,
-      DateTime lastDate) async {
-    final initialDate = context.read<DateSelectionCubit>().date ?? DateTime.now();
-
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: firstDate,
-      lastDate: lastDate,
-    );
-
-    if (pickedDate != null) {
-      Future.delayed(const Duration(seconds: 0), () {
-        context.read<DateSelectionCubit>().onDateSelect(pickedDate);
-      });
-    }
   }
 
 }

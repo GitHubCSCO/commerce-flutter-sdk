@@ -440,6 +440,7 @@ class LocalizationConstants {
   static const uPS = "UPS";
   static const nextDayAir = "Next Day Air";
   static const mastercard = "Mastercard";
+  static const selectCarrier = "Select Carrier";
 
   // Location Finder
   static const locationFinder = "Location Finder";

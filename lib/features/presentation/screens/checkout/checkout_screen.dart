@@ -6,6 +6,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkou
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/expansion_panel/expansion_panel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/date_selection/date_selection_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/list_picker/list_picker_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
 import 'package:flutter/material.dart';
@@ -111,8 +112,16 @@ class CheckoutPage extends StatelessWidget {
                                   title: Text('Billing & Shipping'),
                                 );
                               },
-                              body: BlocProvider<DateSelectionCubit>(
-                                create: (context) => sl<DateSelectionCubit>(),
+                              body: MultiBlocProvider(
+                                providers: [
+                                  BlocProvider<DateSelectionCubit>(
+                                    create: (context) =>
+                                        sl<DateSelectionCubit>(),
+                                  ),
+                                  BlocProvider<ListPickerCubit>(
+                                    create: (context) => sl<ListPickerCubit>(),
+                                  ),
+                                ],
                                 child: BillingShippingWidget(
                                     billingShippingEntity: billingShippingEntity),
                               ),
