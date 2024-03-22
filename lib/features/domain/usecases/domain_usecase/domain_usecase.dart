@@ -8,6 +8,15 @@ class DomainUsecase extends BaseUseCase {
 
   static const _domainKey = 'DomainKey';
 
+  Future<String?> getDomainInSettingsScreen() async {
+    bool isStaticDomain = coreServiceProvider
+            .getAppConfigurationService()
+            .shouldUseStaticDomain ??
+        false;
+
+    return isStaticDomain ? null : (await getDomain());
+  }
+
   Future<String?> getDomain() async {
     var domain = await commerceAPIServiceProvider
         .getLocalStorageService()
