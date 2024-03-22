@@ -114,6 +114,10 @@ class BaseActionItemWidget extends StatelessWidget {
         return () {
           navigateToSettings(context);
         };
+      case ActionType.orderHistory:
+        return () {
+          AppRoute.orderHistory.navigate(context);
+        };
       default:
         return () {
           CustomSnackBar.showComingSoonSnackBar(context);

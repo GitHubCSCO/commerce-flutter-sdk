@@ -1,7 +1,17 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/context.dart';
+import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/components/input.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
 class OrderHistoryScreen extends StatelessWidget {
@@ -9,16 +19,126 @@ class OrderHistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return BlocProvider(
+      create: (context) => sl<OrderHistoryCubit>()..loadOrderHistory(),
+      child: OrderHistoryPage(),
+    );
   }
 }
 
-class OrderHistoryPage extends StatelessWidget {
-  const OrderHistoryPage({super.key});
+class OrderHistoryPage extends BaseDynamicContentScreen {
+  OrderHistoryPage({super.key});
+
+  final _textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      backgroundColor: OptiAppColors.backgroundGray,
+      appBar: AppBar(
+        backgroundColor: OptiAppColors.backgroundWhite,
+        title: const Text('My Orders'),
+        centerTitle: false,
+      ),
+      body: Column(
+        children: [
+          Container(
+            color: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+            child: Input(
+              hintText: LocalizationConstants.search,
+              suffixIcon: IconButton(
+                icon: SvgPicture.asset(
+                  AssetConstants.iconClear,
+                  semanticsLabel: 'search query clear icon',
+                  fit: BoxFit.fitWidth,
+                ),
+                onPressed: () {
+                  _textEditingController.clear();
+                  context.closeKeyboard();
+                },
+              ),
+              onTapOutside: (p0) => context.closeKeyboard(),
+              textInputAction: TextInputAction.search,
+              controller: _textEditingController,
+            ),
+          ),
+          BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
+              builder: (context, state) {
+            if (state is OrderHistoryLoaded) {
+              return Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      height: 50,
+                      padding:
+                          const EdgeInsetsDirectional.symmetric(horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '${state.orderEntities.length} Orders',
+                            style: OptiTextStyles.header3,
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: SvgPicture.asset(
+                                  height: 20,
+                                  width: 20,
+                                  AssetConstants.sortIcon,
+                                  semanticsLabel: 'sort icon',
+                                  fit: BoxFit.fitWidth,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: SvgPicture.asset(
+                                  height: 20,
+                                  width: 20,
+                                  AssetConstants.filterIcon,
+                                  semanticsLabel: 'filter icon',
+                                  fit: BoxFit.fitWidth,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    ListView.separated(
+                      shrinkWrap: true,
+                      itemCount: state.orderEntities.length,
+                      itemBuilder: (context, index) {
+                        return _OrderHistoryListItem(
+                          orderEntity: state.orderEntities[index],
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return const Divider(
+                          height: 0,
+                          thickness: 1,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return const Expanded(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+          }),
+        ],
+      ),
+    );
   }
 }
 
@@ -29,11 +149,12 @@ class _OrderHistoryListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 16,
         vertical: 20,
       ),
+      color: OptiAppColors.backgroundWhite,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,9 +207,8 @@ class _OrderHistoryListItem extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(orderEntity.orderGrandTotalDisplay ?? ''),
               Text(
-                orderEntity.statusDisplay ?? '',
+                orderEntity.orderGrandTotalDisplay ?? '',
                 style: OptiTextStyles.bodySmallHighlight,
               ),
               Text(
