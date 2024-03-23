@@ -6,11 +6,11 @@ import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -65,82 +65,155 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
             ),
           ),
           BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
-              builder: (context, state) {
-            if (state is OrderHistoryLoaded) {
-              return Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Container(
-                      height: 50,
-                      padding:
-                          const EdgeInsetsDirectional.symmetric(horizontal: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
+            builder: (context, state) {
+              switch (state.orderStatus) {
+                case OrderStatus.loading || OrderStatus.initial:
+                  return const Expanded(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+
+                case OrderStatus.failure:
+                  return const Expanded(
+                    child: Center(
+                      child: Text('Error loading orders'),
+                    ),
+                  );
+                default:
+                  return Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                          height: 50,
+                          padding: const EdgeInsetsDirectional.symmetric(
+                              horizontal: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: SvgPicture.asset(
-                                  height: 20,
-                                  width: 20,
-                                  AssetConstants.sortIcon,
-                                  semanticsLabel: 'sort icon',
-                                  fit: BoxFit.fitWidth,
-                                ),
+                              Text(
+                                '${state.orderEntities.pagination?.totalItemCount ?? ' '} Orders',
+                                style: OptiTextStyles.header3,
                               ),
-                              const SizedBox(width: 10),
-                              Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: SvgPicture.asset(
-                                  height: 20,
-                                  width: 20,
-                                  AssetConstants.filterIcon,
-                                  semanticsLabel: 'filter icon',
-                                  fit: BoxFit.fitWidth,
-                                ),
-                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: SvgPicture.asset(
+                                      height: 20,
+                                      width: 20,
+                                      AssetConstants.sortIcon,
+                                      semanticsLabel: 'sort icon',
+                                      fit: BoxFit.fitWidth,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: SvgPicture.asset(
+                                      height: 20,
+                                      width: 20,
+                                      AssetConstants.filterIcon,
+                                      semanticsLabel: 'filter icon',
+                                      fit: BoxFit.fitWidth,
+                                    ),
+                                  ),
+                                ],
+                              )
                             ],
-                          )
-                        ],
-                      ),
+                          ),
+                        ),
+                        _OrderHistoryListWidget(
+                          orderEntities: state.orderEntities.orders ?? [],
+                        ),
+                      ],
                     ),
-                    Expanded(
-                      child: ListView.separated(
-                        itemCount: state.orderEntities.length,
-                        itemBuilder: (context, index) {
-                          return _OrderHistoryListItem(
-                            orderEntity: state.orderEntities[index],
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return const Divider(
-                            height: 0,
-                            thickness: 1,
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            } else if (state is OrderHistoryError) {
-              return const Expanded(
-                child: Center(
-                  child: Text('Error loading orders'),
-                ),
-              );
-            } else {
-              return const Expanded(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            }
-          }),
+                  );
+              }
+            },
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class _OrderHistoryListWidget extends StatefulWidget {
+  const _OrderHistoryListWidget({required this.orderEntities});
+
+  final List<OrderEntity> orderEntities;
+
+  @override
+  State<_OrderHistoryListWidget> createState() =>
+      __OrderHistoryListWidgetState();
+}
+
+class __OrderHistoryListWidgetState extends State<_OrderHistoryListWidget> {
+  final _scrollController = ScrollController();
+
+  void _onScroll() {
+    if (_isBottom) {
+      context.read<OrderHistoryCubit>().loadMoreOrderHistory();
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) {
+      return false;
+    }
+
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= (maxScroll * 0.9);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
+        builder: (context, state) {
+          return ListView.separated(
+            controller: _scrollController,
+            itemCount: state.orderStatus == OrderStatus.moreLoading
+                ? widget.orderEntities.length + 1
+                : widget.orderEntities.length,
+            itemBuilder: (context, index) {
+              if (index >= state.orderEntities.orders!.length &&
+                  state.orderStatus == OrderStatus.moreLoading) {
+                return const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+
+              return _OrderHistoryListItem(
+                orderEntity: widget.orderEntities[index],
+              );
+            },
+            separatorBuilder: (context, index) {
+              return const Divider(
+                height: 0,
+                thickness: 1,
+              );
+            },
+          );
+        },
       ),
     );
   }

@@ -1,23 +1,24 @@
 part of 'order_history_cubit.dart';
 
-sealed class OrderHistoryState extends Equatable {
-  const OrderHistoryState();
+class OrderHistoryState extends Equatable {
+  final GetOrderCollectionResultEntity orderEntities;
+  final OrderStatus orderStatus;
+
+  const OrderHistoryState({
+    required this.orderEntities,
+    required this.orderStatus,
+  });
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [orderEntities, orderStatus];
+
+  OrderHistoryState copyWith({
+    GetOrderCollectionResultEntity? orderEntities,
+    OrderStatus? orderStatus,
+  }) {
+    return OrderHistoryState(
+      orderEntities: orderEntities ?? this.orderEntities,
+      orderStatus: orderStatus ?? this.orderStatus,
+    );
+  }
 }
-
-final class OrderHistoryInitial extends OrderHistoryState {}
-
-final class OrderHistoryLoading extends OrderHistoryState {}
-
-final class OrderHistoryLoaded extends OrderHistoryState {
-  final List<OrderEntity> orderEntities;
-
-  const OrderHistoryLoaded(this.orderEntities);
-
-  @override
-  List<Object> get props => [orderEntities];
-}
-
-final class OrderHistoryError extends OrderHistoryState {}

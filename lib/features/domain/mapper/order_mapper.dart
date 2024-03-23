@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
+import 'package:commerce_flutter_app/features/domain/entity/order/get_order_collection_result_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_history_tax_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_line_entity.dart';
@@ -8,6 +9,7 @@ import 'package:commerce_flutter_app/features/domain/entity/order/shipment_packa
 import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/brand_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/pagination_entity_mapper.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class OrderEntityMapper {
@@ -92,6 +94,89 @@ class OrderEntityMapper {
         orderNumberLabel: order.orderNumberLabel,
         webOrderNumberLabel: order.webOrderNumberLabel,
         poNumberLabel: order.poNumberLabel,
+      );
+
+  static Order toModel(OrderEntity entity) => Order(
+        id: entity.id,
+        erpOrderNumber: entity.erpOrderNumber,
+        webOrderNumber: entity.webOrderNumber,
+        orderDate: entity.orderDate,
+        status: entity.status,
+        statusDisplay: entity.statusDisplay,
+        customerNumber: entity.customerNumber,
+        customerSequence: entity.customerSequence,
+        customerPO: entity.customerPO,
+        currencyCode: entity.currencyCode,
+        currencySymbol: entity.currencySymbol,
+        terms: entity.terms,
+        shipCode: entity.shipCode,
+        salesperson: entity.salesperson,
+        btCompanyName: entity.btCompanyName,
+        btAddress1: entity.btAddress1,
+        btAddress2: entity.btAddress2,
+        billToCity: entity.billToCity,
+        billToState: entity.billToState,
+        billToPostalCode: entity.billToPostalCode,
+        btCountry: entity.btCountry,
+        stCompanyName: entity.stCompanyName,
+        stAddress1: entity.stAddress1,
+        stAddress2: entity.stAddress2,
+        stAddress3: entity.stAddress3,
+        stAddress4: entity.stAddress4,
+        shipToCity: entity.shipToCity,
+        shipToState: entity.shipToState,
+        shipToPostalCode: entity.shipToPostalCode,
+        stCountry: entity.stCountry,
+        notes: entity.notes,
+        productTotal: entity.productTotal,
+        orderSubTotal: entity.orderSubTotal,
+        orderDiscountAmount: entity.orderDiscountAmount,
+        productDiscountAmount: entity.productDiscountAmount,
+        shippingAndHandling: entity.shippingAndHandling,
+        shippingCharges: entity.shippingCharges,
+        handlingCharges: entity.handlingCharges,
+        otherCharges: entity.otherCharges,
+        taxAmount: entity.taxAmount,
+        orderTotal: entity.orderTotal,
+        modifyDate: entity.modifyDate,
+        requestedDeliveryDateDisplay: entity.requestedDeliveryDateDisplay,
+        orderLines: entity.orderLines
+            ?.map((e) => OrderLineEntityMapper.toModel(e))
+            .toList(),
+        orderPromotions: entity.orderPromotions
+            ?.map((e) => OrderPromotionEntityMapper.toModel(e))
+            .toList(),
+        shipmentPackages: entity.shipmentPackages
+            ?.map((e) => ShipmentPackageDtoEntityMapper.toModel(e))
+            .toList(),
+        returnReasons: entity.returnReasons,
+        orderHistoryTaxes: entity.orderHistoryTaxes
+            ?.map((e) => OrderHistoryTaxDtoEntityMapper.toModel(e))
+            .toList(),
+        productTotalDisplay: entity.productTotalDisplay,
+        orderSubTotalDisplay: entity.orderSubTotalDisplay,
+        orderGrandTotalDisplay: entity.orderGrandTotalDisplay,
+        orderDiscountAmountDisplay: entity.orderDiscountAmountDisplay,
+        productDiscountAmountDisplay: entity.productDiscountAmountDisplay,
+        taxAmountDisplay: entity.taxAmountDisplay,
+        totalTaxDisplay: entity.totalTaxDisplay,
+        shippingAndHandlingDisplay: entity.shippingAndHandlingDisplay,
+        shippingChargesDisplay: entity.shippingChargesDisplay,
+        handlingChargesDisplay: entity.handlingChargesDisplay,
+        otherChargesDisplay: entity.otherChargesDisplay,
+        canAddToCart: entity.canAddToCart,
+        canAddAllToCart: entity.canAddAllToCart,
+        showTaxAndShipping: entity.showTaxAndShipping,
+        shipViaDescription: entity.shipViaDescription,
+        fulfillmentMethod: entity.fulfillmentMethod,
+        vmiLocationId: entity.vmiLocationId,
+        vmiLocationName: entity.vmiLocationName,
+        showWebOrderNumber: entity.showWebOrderNumber,
+        showPoNumber: entity.showPoNumber,
+        showTermsCode: entity.showTermsCode,
+        orderNumberLabel: entity.orderNumberLabel,
+        webOrderNumberLabel: entity.webOrderNumberLabel,
+        poNumberLabel: entity.poNumberLabel,
       );
 }
 
@@ -334,5 +419,29 @@ class OrderHistoryTaxDtoEntityMapper {
         taxRate: entity.taxRate,
         sortOrder: entity.sortOrder,
         taxDescription: entity.taxDescription,
+      );
+}
+
+class GetOrderCollectionResultEntityMapper {
+  static GetOrderCollectionResultEntity toEntity(
+          GetOrderCollectionResult model) =>
+      GetOrderCollectionResultEntity(
+        orders:
+            model.orders?.map((e) => OrderEntityMapper.toEntity(e)).toList(),
+        pagination: model.pagination != null
+            ? PaginationEntityMapper.toEntity(model.pagination!)
+            : null,
+        showErpOrderNumber: model.showErpOrderNumber,
+      );
+
+  static GetOrderCollectionResult toModel(
+          GetOrderCollectionResultEntity entity) =>
+      GetOrderCollectionResult(
+        orders:
+            entity.orders?.map((e) => OrderEntityMapper.toModel(e)).toList(),
+        pagination: entity.pagination != null
+            ? PaginationEntityMapper.toModel(entity.pagination!)
+            : null,
+        showErpOrderNumber: entity.showErpOrderNumber,
       );
 }
