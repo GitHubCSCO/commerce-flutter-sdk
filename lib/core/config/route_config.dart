@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/biometric/bio
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/nav_bar/nav_bar_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/order_history/order_history_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/root/root_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/search_screen.dart';
@@ -131,6 +132,14 @@ List<NavigationNode> _getNavigationRoot() {
       );
     },
     parent: null,
+  );
+
+  // path: /account/orderHistory
+  final orderHistory = createNode(
+    name: AppRoute.orderHistory.name,
+    path: AppRoute.orderHistory.suffix,
+    builder: (context, state) => const OrderHistoryScreen(),
+    parent: account,
   );
 
   return [root, navbarRoot, welcome, domainSelection, login, biometricLogin];
