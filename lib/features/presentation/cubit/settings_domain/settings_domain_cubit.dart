@@ -12,7 +12,7 @@ class SettingsDomainCubit extends Cubit<SettingsDomainState> {
 
   Future<void> fetchDomain() async {
     emit(SettingsDomainLoading());
-    final domain = await _domainUsecase.getDomain();
+    final domain = await _domainUsecase.getDomainInSettingsScreen();
     if (domain == null) {
       emit(SettingsDomainUnknown());
       return;

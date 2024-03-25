@@ -55,15 +55,21 @@ class SettingsPage extends StatelessWidget {
         title: const Text(LocalizationConstants.settings),
         centerTitle: false,
       ),
-      body: const SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              _SettingsListWidget(),
-              SizedBox(height: 16),
-              _SettingsDomainSelectorWidget(),
-            ],
-          ),
+      body: Center(
+        child: Column(
+          children: [
+            const _SettingsListWidget(),
+            const SizedBox(height: 16),
+            BlocBuilder<SettingsDomainCubit, SettingsDomainState>(
+              builder: (context, state) {
+                if (state is SettingsDomainLoaded) {
+                  return const _SettingsDomainSelectorWidget();
+                } else {
+                  return const SizedBox.shrink();
+                }
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -125,7 +131,7 @@ class _SettingsListWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       color: AppStyle.neutral00,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: ListView.separated(
         shrinkWrap: true,
         itemBuilder: (context, index) => settingsItems[index],
