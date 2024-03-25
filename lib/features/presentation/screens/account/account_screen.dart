@@ -28,10 +28,12 @@ class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
-      BlocProvider<PullToRefreshBloc>(create: (context) => sl<PullToRefreshBloc>()),
+      BlocProvider<PullToRefreshBloc>(
+          create: (context) => sl<PullToRefreshBloc>()),
       BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
       BlocProvider<AccountPageBloc>(
-          create: (context) => sl<AccountPageBloc>()..add(AccountPageLoadEvent())),
+          create: (context) =>
+              sl<AccountPageBloc>()..add(AccountPageLoadEvent())),
     ], child: const AccountPage());
   }
 }
@@ -45,7 +47,7 @@ class AccountPage extends BaseDynamicContentScreen {
       listeners: [
         BlocListener<PullToRefreshBloc, PullToRefreshState>(
           listener: (context, state) {
-            if(state is PullToRefreshLoadState) {
+            if (state is PullToRefreshLoadState) {
               _reloadAccountPage(context);
             }
           },
@@ -64,7 +66,8 @@ class AccountPage extends BaseDynamicContentScreen {
       ],
       child: RefreshIndicator(
         onRefresh: () async {
-          BlocProvider.of<PullToRefreshBloc>(context).add(PullToRefreshInitialEvent());
+          BlocProvider.of<PullToRefreshBloc>(context)
+              .add(PullToRefreshInitialEvent());
         },
         child: BlocBuilder<CmsCubit, CmsState>(
           builder: (context, state) {
@@ -79,7 +82,8 @@ class AccountPage extends BaseDynamicContentScreen {
                           AuthStatus.authenticated
                       ? null
                       : AppBar(
-                          backgroundColor: Theme.of(context).colorScheme.surface,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.surface,
                           title: Text(
                             LocalizationConstants.account,
                             style: OptiTextStyles.titleLarge,

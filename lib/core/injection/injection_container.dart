@@ -55,6 +55,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/order_history/o
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
+import 'package:commerce_flutter_app/services/secure_storage_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -213,8 +214,7 @@ Future<void> initInjectionContainer() async {
         ClientService(localStorageService: sl(), secureStorageService: sl()))
     ..registerLazySingleton<ICacheService>(() => FakeCacheService())
     ..registerLazySingleton<INetworkService>(() => FakeNetworkService(true))
-    ..registerLazySingleton<ISecureStorageService>(
-        () => FakeSecureStorageService())
+    ..registerLazySingleton<ISecureStorageService>(() => SecureStorageService())
     ..registerLazySingleton<ILocalStorageService>(() => LocalStorageService())
     ..registerLazySingleton<ISettingsService>(() => SettingsService(
           cacheService: sl(),
