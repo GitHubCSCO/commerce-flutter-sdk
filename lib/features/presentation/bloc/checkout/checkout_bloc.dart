@@ -6,12 +6,15 @@ part 'checkout_state.dart';
 part 'checkout_event.dart';
 
 class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
+
   final CheckoutUsecase _checkoutUseCase;
+  DateTime? requestDeliveryDate;
 
   CheckoutBloc({required CheckoutUsecase checkoutUsecase})
       : _checkoutUseCase = checkoutUsecase,
         super(CheckoutInitial()) {
     on<LoadCheckoutEvent>((event, emit) => _onCheckoutLoadEvent(event, emit));
+    on<RequestDeliveryDateEvent>((event, emit) => _onRequestDeliveryDateSelect(event, emit));
   }
 
   Future<void> _onCheckoutLoadEvent(
@@ -45,4 +48,9 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         break;
     }
   }
+
+  void _onRequestDeliveryDateSelect(RequestDeliveryDateEvent event, Emitter<CheckoutState> emit) {
+    requestDeliveryDate = event.dateTime;
+  }
+
 }

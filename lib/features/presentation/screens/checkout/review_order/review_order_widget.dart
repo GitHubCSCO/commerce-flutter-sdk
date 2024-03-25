@@ -1,19 +1,18 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shipping_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/warehouse_extension.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/date_picker_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:intl/intl.dart';
 
-class BillingShippingWidget extends StatelessWidget {
-  final BillingShippingEntity billingShippingEntity;
+class ReviewOrderWidget extends StatelessWidget {
 
-  const BillingShippingWidget({super.key, required this.billingShippingEntity});
+  final ReviewOrderEntity reviewOrderEntity;
+
+  const ReviewOrderWidget({super.key, required this.reviewOrderEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -24,40 +23,25 @@ class BillingShippingWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: _buildItems(),
+        children: _buildItems(context),
       ),
     );
   }
 
-  List<Widget> _buildItems() {
+  List<Widget> _buildItems(BuildContext context) {
     List<Widget> list = [];
 
     list.add(_buildBillingAddress());
 
-    if (billingShippingEntity.shippingMethod == ShippingOption.ship) {
+    if (reviewOrderEntity.shippingMethod == ShippingOption.ship) {
       list.add(_buildShippingAddress());
-
-      if (billingShippingEntity.carriers != null &&
-          billingShippingEntity.carriers!.isNotEmpty) {
-        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
-        list.add(_buildShippingMethod(billingShippingEntity.carriers!, billingShippingEntity.carriers![0].shipVias!));
-      }
-
-      if (billingShippingEntity.cartSettings != null &&
-          billingShippingEntity.cartSettings!.canRequestDeliveryDate!) {
-        DateTime? maximumDate;
-
-        if (billingShippingEntity.cartSettings!.maximumDeliveryPeriod! > 0) {
-          final duration = Duration(
-              days: billingShippingEntity.cartSettings!.maximumDeliveryPeriod!);
-          maximumDate = DateTime.now().add(duration);
-        }
-        list.add(_buildRequestDeliveryDate(maximumDate));
-      }
+      list.add(_buildShippingMethod(context));
     } else {
       list.add(_buildPickUpAddress());
-      list.add(_buildRequestDeliveryDate(null));
+      list.add(_buildRequestDeliveryDate(context));
     }
+
+    list.add(_buildPaymentMethod());
 
     return list;
   }
@@ -83,28 +67,28 @@ class BillingShippingWidget extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          billingShippingEntity.billTo?.companyName ?? '',
+          reviewOrderEntity.billTo?.companyName ?? '',
           textAlign: TextAlign.center,
           style: OptiTextStyles.body,
         ),
         Text(
-          billingShippingEntity.billTo?.fullAddress ?? '',
+          reviewOrderEntity.billTo?.fullAddress ?? '',
           textAlign: TextAlign.center,
           style: OptiTextStyles.body,
         ),
         Text(
-          billingShippingEntity.billTo?.country?.name ?? '',
+          reviewOrderEntity.billTo?.country?.name ?? '',
           textAlign: TextAlign.center,
           style: OptiTextStyles.body,
         ),
         const SizedBox(height: 16),
         Text(
-          billingShippingEntity.billTo?.email ?? '',
+          reviewOrderEntity.billTo?.email ?? '',
           textAlign: TextAlign.center,
           style: OptiTextStyles.body,
         ),
         Text(
-          billingShippingEntity.billTo?.phone ?? '',
+          reviewOrderEntity.billTo?.phone ?? '',
           textAlign: TextAlign.center,
           style: OptiTextStyles.body,
         ),
@@ -116,7 +100,7 @@ class BillingShippingWidget extends StatelessWidget {
 
   Widget _buildShippingAddress() {
     return Visibility(
-      visible: billingShippingEntity.shippingMethod == ShippingOption.ship,
+      visible: reviewOrderEntity.shippingMethod == ShippingOption.ship,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -130,17 +114,17 @@ class BillingShippingWidget extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            billingShippingEntity.shipTo?.companyName ?? '',
+            reviewOrderEntity.shipTo?.companyName ?? '',
             textAlign: TextAlign.center,
             style: OptiTextStyles.body,
           ),
           Text(
-            billingShippingEntity.shipTo?.fullAddress ?? '',
+            reviewOrderEntity.shipTo?.fullAddress ?? '',
             textAlign: TextAlign.center,
             style: OptiTextStyles.body,
           ),
           Text(
-            billingShippingEntity.shipTo?.country?.name ?? '',
+            reviewOrderEntity.shipTo?.country?.name ?? '',
             textAlign: TextAlign.center,
             style: OptiTextStyles.body,
           ),
@@ -153,7 +137,7 @@ class BillingShippingWidget extends StatelessWidget {
 
   Widget _buildPickUpAddress() {
     return Visibility(
-      visible: billingShippingEntity.shippingMethod == ShippingOption.pickUp,
+      visible: reviewOrderEntity.shippingMethod == ShippingOption.pickUp,
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -172,22 +156,22 @@ class BillingShippingWidget extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                billingShippingEntity.warehouse?.description ?? '',
+                reviewOrderEntity.warehouse?.description ?? '',
                 textAlign: TextAlign.center,
                 style: OptiTextStyles.subtitle,
               ),
               Text(
-                billingShippingEntity.warehouse?.wareHouseAddress() ?? '',
+                reviewOrderEntity.warehouse?.wareHouseAddress() ?? '',
                 textAlign: TextAlign.center,
                 style: OptiTextStyles.body,
               ),
               Text(
-                billingShippingEntity.warehouse?.wareHouseCity() ?? '',
+                reviewOrderEntity.warehouse?.wareHouseCity() ?? '',
                 textAlign: TextAlign.center,
                 style: OptiTextStyles.body,
               ),
               Text(
-                billingShippingEntity.warehouse?.phone ?? '',
+                reviewOrderEntity.warehouse?.phone ?? '',
                 textAlign: TextAlign.center,
                 style: OptiTextStyles.body,
               ),
@@ -205,7 +189,7 @@ class BillingShippingWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildShippingMethod(List<CarrierDto> carriers, List<ShipViaDto> services) {
+  Widget _buildShippingMethod(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -218,45 +202,21 @@ class BillingShippingWidget extends StatelessWidget {
           style: OptiTextStyles.subtitle,
         ),
         const SizedBox(height: 8),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              LocalizationConstants.carrier,
-              textAlign: TextAlign.center,
-              style: OptiTextStyles.body,
-            ),
-            ListPickerWidget(items: carriers),
-            const Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.grey,
-              size: 16,
-            ),
-          ],
+        Text(
+          'Standard Shipping (Free)',
+          textAlign: TextAlign.center,
+          style: OptiTextStyles.body,
         ),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              LocalizationConstants.service,
-              textAlign: TextAlign.center,
-              style: OptiTextStyles.body,
-            ),
-            ListPickerWidget(items: services),
-            const Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.grey,
-              size: 16,
-            ),
-          ],
+        Text(
+          _getRequestDateTime(context),
+          textAlign: TextAlign.center,
+          style: OptiTextStyles.bodySmall,
         ),
       ],
     );
   }
 
-  Widget _buildRequestDeliveryDate(DateTime? maxDate) {
+  Widget _buildRequestDeliveryDate(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -264,40 +224,48 @@ class BillingShippingWidget extends StatelessWidget {
       children: [
         const SizedBox(height: 12),
         Text(
-          LocalizationConstants.requestDeliveryDateOptional,
+          LocalizationConstants.requestDeliveryDate,
           textAlign: TextAlign.center,
           style: OptiTextStyles.subtitle,
         ),
         const SizedBox(height: 8),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              LocalizationConstants.date,
-              textAlign: TextAlign.center,
-              style: OptiTextStyles.body,
-            ),
-            DatePickerWidget(maxDate: maxDate, callback: _onSelectDate),
-            const Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.grey,
-              size: 16,
-            ),
-          ],
-        ),
         Text(
-          'This date is only a request and may not be fulfilled',
+          _getRequestDateTime(context),
           textAlign: TextAlign.center,
-          style: OptiTextStyles.bodySmall,
+          style: OptiTextStyles.body,
         ),
-        const SizedBox(height: 16),
       ],
     );
   }
 
-  void _onSelectDate(BuildContext context, DateTime dateTime) {
-    context.read<CheckoutBloc>().add(RequestDeliveryDateEvent(dateTime));
+  Widget _buildPaymentMethod() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 12),
+        Text(
+          LocalizationConstants.paymentMethod,
+          textAlign: TextAlign.center,
+          style: OptiTextStyles.subtitle,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Mastercard ***4004',
+          textAlign: TextAlign.center,
+          style: OptiTextStyles.body,
+        ),
+      ],
+    );
+  }
+
+  String _getRequestDateTime(BuildContext context) {
+    final dateTime = context.read<CheckoutBloc>().requestDeliveryDate;
+    if (dateTime != null && dateTime != DateTime(0)) {
+      return 'Arrives between ${DateFormat('E, MM/dd').format(dateTime)}';
+    }
+    return '';
   }
 
 }

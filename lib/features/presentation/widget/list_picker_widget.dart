@@ -32,7 +32,7 @@ class ListPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     int pickerIndex = context.read<ListPickerCubit>().pickerIndex;
     return TextButton(onPressed: () {
-      _selectCarrier(context, items, pickerIndex);
+      _selectItem(context, items, pickerIndex);
     }, child: Text(
       _getDescriptions(items[pickerIndex]),
       textAlign: TextAlign.center,
@@ -40,7 +40,7 @@ class ListPicker extends StatelessWidget {
     ));
   }
 
-  void _selectCarrier(BuildContext context, List<Object> carriers, int index) {
+  void _selectItem(BuildContext context, List<Object> items, int index) {
     showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) {
@@ -59,7 +59,7 @@ class ListPicker extends StatelessWidget {
                   onSelectedItemChanged: (int index) {
                     context.read<ListPickerCubit>().onPick(index);
                   },
-                  children: carriers.map((Object option) {
+                  children: items.map((Object option) {
                     return Center(child: Text(_getDescriptions(option)));
                   }).toList(),
                 ),
