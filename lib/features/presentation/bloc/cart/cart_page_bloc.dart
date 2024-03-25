@@ -20,8 +20,6 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
     emit(CartPageLoadingState());
 
     try {
-
-      
       var result = await _cartUseCase.loadCurrentCart();
       switch (result) {
         case Success(value: final data):
