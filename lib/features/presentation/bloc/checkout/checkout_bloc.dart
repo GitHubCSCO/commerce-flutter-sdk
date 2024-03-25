@@ -6,22 +6,42 @@ part 'checkout_state.dart';
 part 'checkout_event.dart';
 
 class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
-  final CheckoutUsecase _checkoutUsecase;
+
+  final CheckoutUsecase _checkoutUseCase;
+  DateTime? requestDeliveryDate;
   Cart? cart;
+
   CheckoutBloc({required CheckoutUsecase checkoutUsecase})
-      : _checkoutUsecase = checkoutUsecase,
+      : _checkoutUseCase = checkoutUsecase,
         super(CheckoutInitial()) {
-    on<LoadCheckoutEvent>((event, emit) => _fetchCheckoutData(event, emit));
+    on<LoadCheckoutEvent>((event, emit) => _onCheckoutLoadEvent(event, emit));
+    on<RequestDeliveryDateEvent>((event, emit) => _onRequestDeliveryDateSelect(event, emit));
   }
 
-  Future<void> _fetchCheckoutData(
+  Future<void> _onCheckoutLoadEvent(
       LoadCheckoutEvent event, Emitter<CheckoutState> emit) async {
     emit(CheckoutLoading());
-    var data = await _checkoutUsecase.getCart(event.cart.id!);
+    var data = await _checkoutUseCase.getCart(event.cart.id!);
     switch (data) {
-      case Success(value: final cartdata):
-        cart = cartdata;
-        emit(CheckoutDataLoaded(cart: cartdata!));
+      case Success(value: final cart):
+        final session = _checkoutUseCase.getCurrentSession();
+        final billToAddress = session?.billTo;
+        final shipToAddress = session?.shipTo;
+        final wareHouse = session?.pickUpWarehouse;
+        var shippingMethod = session?.fulfillmentMethod;
+        var promotionsResult = await _checkoutUseCase.loadCartPromotions();
+        PromotionCollectionModel? promotionCollection = promotionsResult is Success ? (promotionsResult as Success).value : null;
+        var cartSettingResult = await _checkoutUseCase.getCartSetting();
+        CartSettings cartSettings = cartSettingResult is Success ? (cartSettingResult as Success).value : null;
+
+        emit(CheckoutDataLoaded(
+            cart: cart!,
+            billToAddress: billToAddress!,
+            shipToAddress: shipToAddress!,
+            wareHouse: wareHouse!,
+            promotions: promotionCollection!,
+            shippingMethod: shippingMethod!,
+            cartSettings: cartSettings));
         break;
       case Failure(errorResponse: final errorResponse):
         emit(CheckoutDataFetchFailed(
@@ -29,4 +49,9 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         break;
     }
   }
+
+  void _onRequestDeliveryDateSelect(RequestDeliveryDateEvent event, Emitter<CheckoutState> emit) {
+    requestDeliveryDate = event.dateTime;
+  }
+
 }
