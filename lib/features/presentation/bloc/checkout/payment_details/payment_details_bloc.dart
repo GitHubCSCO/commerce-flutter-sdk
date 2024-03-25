@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/features/domain/enums/token_ex_view_mode.da
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/payment_details/payment_details_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -14,6 +15,7 @@ class PaymentDetailsBloc
   PaymentMethodDto? selectedPaymentMethod;
   Cart? cart;
   TokenExDto? tokenExConfiguration;
+  final _poNumberController = TextEditingController();
 
   PaymentDetailsBloc({required PaymentDetailsUseCase paymentDetailsUseCase})
       : _paymentDetailsUseCase = paymentDetailsUseCase,
@@ -31,6 +33,7 @@ class PaymentDetailsBloc
     cart?.paymentOptions?.creditCard?.cardNumber = event.cardNumber;
     cart?.paymentOptions?.creditCard?.cardType = event.cardType;
     cart?.paymentOptions?.creditCard?.securityCode = event.securityCode;
+    updateCart(emit);
   }
 
   Future<void> _loadPaymentDetailsData(
@@ -39,7 +42,11 @@ class PaymentDetailsBloc
     cart = event.cart;
     _setUpSelectedPaymentMethod(event.cart);
     var paymentMethodValue = _getCurrentlySelectedPaymentMethodTitle();
-    emit(PaymentDetailsLoaded(paymentMethodValue: paymentMethodValue));
+    var showPOField = cart?.showPoNumber;
+    emit(PaymentDetailsLoaded(
+        paymentMethodValue: paymentMethodValue,
+        showPOField: showPOField,
+        poTextEditingController: _poNumberController));
   }
 
   Future<void> _updatePaymentMethod(
@@ -51,7 +58,7 @@ class PaymentDetailsBloc
   Future<void> _setupPaymentDataSources(
       UpdatePaymentMethodEvent event, Emitter<PaymentDetailsState> emit) async {
     var paymentMethodValue = _getCurrentlySelectedPaymentMethodTitle();
-
+    var showPOField = cart?.showPoNumber;
     if (selectedPaymentMethod != null &&
         selectedPaymentMethod?.isCreditCard != null &&
         !selectedPaymentMethod!.isCreditCard!) {
@@ -129,13 +136,18 @@ class PaymentDetailsBloc
 
             emit(PaymentDetailsLoaded(
                 paymentMethodValue: paymentMethodValue,
-                tokenExEntity: tokenExEnity));
+                tokenExEntity: tokenExEnity,
+                showPOField: showPOField,
+                poTextEditingController: _poNumberController));
           }
         case Failure(errorResponse: final errorResponse):
           break;
       }
     } else {
-      emit(PaymentDetailsLoaded(paymentMethodValue: paymentMethodValue));
+      emit(PaymentDetailsLoaded(
+          paymentMethodValue: paymentMethodValue,
+          showPOField: showPOField,
+          poTextEditingController: _poNumberController));
     }
   }
 
@@ -172,5 +184,12 @@ class PaymentDetailsBloc
     }
 
     return paymentMethodValue;
+  }
+
+  void updateCart(
+       Emitter<PaymentDetailsState> emit) {
+    cart?.paymentMethod = selectedPaymentMethod;
+    cart?.poNumber = _poNumberController.text;
+    emit(PaymentDetailsCompletedState());
   }
 }

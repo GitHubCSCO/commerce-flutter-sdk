@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
@@ -69,6 +70,7 @@ class CheckoutPage extends StatelessWidget {
             onPressed: () {
               var index = context.read<ExpansionPanelCubit>().expansionIndex;
               if (index == 1) {
+                context.closeKeyboard();
                 context.read<TokenExBloc>().add(TokenExValidateEvent());
               } else {
                 context.read<ExpansionPanelCubit>().onContinueClick();
@@ -122,7 +124,7 @@ class CheckoutPage extends StatelessWidget {
                               );
                             },
                             body: _buildPaymentDetails(
-                                context.read<CheckoutBloc>().cart!),
+                                context.read<CheckoutBloc>().cart!, context),
                             isExpanded: list?[1].isExpanded ?? false,
                             canTapOnHeader: true),
                         ExpansionPanel(
@@ -151,7 +153,7 @@ class CheckoutPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPaymentDetails(Cart cart) {
+  Widget _buildPaymentDetails(Cart cart, BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<PaymentDetailsBloc>(
@@ -159,7 +161,12 @@ class CheckoutPage extends StatelessWidget {
             ..add(LoadPaymentDetailsEvent(cart: cart)),
         ),
       ],
-      child: CheckoutPaymentDetails(cart: cart),
+      child: CheckoutPaymentDetails(
+          cart: cart,
+          onCompleteCheckoutPaymentSection: (Cart updatedCart) {
+            context.read<ExpansionPanelCubit>().onContinueClick();
+          }
+          ),
     );
   }
 

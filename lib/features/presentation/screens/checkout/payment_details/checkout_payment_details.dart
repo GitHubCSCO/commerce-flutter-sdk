@@ -1,11 +1,13 @@
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
+import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/token_ex_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,14 +15,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
+typedef onCompleteCheckoutPaymentSection = void Function(Cart cart);
+
 class CheckoutPaymentDetails extends StatelessWidget {
   Cart cart;
-
-  CheckoutPaymentDetails({super.key, required this.cart});
+  Function onCompleteCheckoutPaymentSection;
+  CheckoutPaymentDetails(
+      {super.key,
+      required this.cart,
+      required this.onCompleteCheckoutPaymentSection});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PaymentDetailsBloc, PaymentDetailsState>(
+    return BlocListener<PaymentDetailsBloc, PaymentDetailsState>(listener: (context, state){
+      if(state is PaymentDetailsCompletedState){
+        var updatedCart = context.read<PaymentDetailsBloc>().cart;
+        onCompleteCheckoutPaymentSection(updatedCart);
+      }
+
+    }, child: BlocBuilder<PaymentDetailsBloc, PaymentDetailsState>(
         builder: (context, state) {
       switch (state) {
         case PaymentDetailsInitial():
@@ -79,7 +92,6 @@ class CheckoutPaymentDetails extends StatelessWidget {
                         tokenExEntity: loadedState.tokenExEntity!,
                         handleWebViewRequestFromTokenEX: (urlString) {
                           // Handle web view request
-                          print(urlString);
                           context
                               .read<TokenExBloc>()
                               .add(HandleTokenExEvent(urlString: urlString));
@@ -96,12 +108,24 @@ class CheckoutPaymentDetails extends StatelessWidget {
                         }),
                   ),
                 ),
+              if (loadedState.showPOField!)
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Input(
+                    label: LocalizationConstants.pONumber,
+                    hintText: LocalizationConstants.pONumberOptional,
+                    controller: loadedState.poTextEditingController,
+                    onTapOutside: (p0) => context.closeKeyboard(),
+                    onEditingComplete: () => context.nextFocus(),
+                  ),
+                )
             ],
           );
         default:
           return const SizedBox();
       }
-    });
+    }),);
+    
   }
 }
 

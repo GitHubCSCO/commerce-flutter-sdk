@@ -59,15 +59,17 @@ class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
             cardNumber: encodedCreditCardNumber,
             securityCode: encodedCVVCode,
             cardType: encodedType));
+            return ;
+      }
+    } 
 
+     if (isValid) {
+        emit(TokenExEncodeState());
+      } else {
+        // tokenExValidateCallback?.call(false);
         return;
       }
-    }
-    if (isValid) {
-      emit(TokenExEncodeState());
-    } else {
-      // tokenExValidateCallback?.call(false);
-      return;
-    }
+
+
   }
 }

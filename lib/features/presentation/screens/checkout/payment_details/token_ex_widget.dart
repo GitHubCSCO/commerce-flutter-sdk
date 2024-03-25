@@ -37,6 +37,7 @@ class TokenExWebView extends StatelessWidget {
         } else if (state is TokenExEncodingFinishedState) {
           handleTokenExFinishedData(
               state.cardNumber, state.cardType, state.securityCode);
+          
         }
       },
       child: WebViewWidget(
@@ -79,6 +80,8 @@ class TokenExWebView extends StatelessWidget {
               },
               onWebResourceError: (WebResourceError error) {},
               onNavigationRequest: (NavigationRequest request) {
+                final isTokenExConfigurationSet =
+                    context.read<TokenExBloc>().isTokenExConfigurationSet;
                 handleWebViewRequestFromTokenEX(request.url);
                 if (request.url.endsWith('loaded')) {
                   // Handle loaded event
@@ -91,10 +94,6 @@ class TokenExWebView extends StatelessWidget {
                   handleLoadFailed();
                   return NavigationDecision.prevent;
                 }
-
-                final isTokenExConfigurationSet =
-                    context.read<TokenExBloc>().isTokenExConfigurationSet;
-
                 if (!isTokenExConfigurationSet) {
                   return NavigationDecision.navigate;
                 } else {
