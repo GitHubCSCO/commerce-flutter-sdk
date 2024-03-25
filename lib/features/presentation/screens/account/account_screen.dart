@@ -28,10 +28,12 @@ class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
-      BlocProvider<PullToRefreshBloc>(create: (context) => sl<PullToRefreshBloc>()),
+      BlocProvider<PullToRefreshBloc>(
+          create: (context) => sl<PullToRefreshBloc>()),
       BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
       BlocProvider<AccountPageBloc>(
-          create: (context) => sl<AccountPageBloc>()..add(AccountPageLoadEvent())),
+          create: (context) =>
+              sl<AccountPageBloc>()..add(AccountPageLoadEvent())),
     ], child: const AccountPage());
   }
 }
@@ -45,7 +47,7 @@ class AccountPage extends BaseDynamicContentScreen {
       listeners: [
         BlocListener<PullToRefreshBloc, PullToRefreshState>(
           listener: (context, state) {
-            if(state is PullToRefreshLoadState) {
+            if (state is PullToRefreshLoadState) {
               _reloadAccountPage(context);
             }
           },
@@ -64,7 +66,8 @@ class AccountPage extends BaseDynamicContentScreen {
       ],
       child: RefreshIndicator(
         onRefresh: () async {
-          BlocProvider.of<PullToRefreshBloc>(context).add(PullToRefreshInitialEvent());
+          BlocProvider.of<PullToRefreshBloc>(context)
+              .add(PullToRefreshInitialEvent());
         },
         child: BlocBuilder<CmsCubit, CmsState>(
           builder: (context, state) {
@@ -75,11 +78,12 @@ class AccountPage extends BaseDynamicContentScreen {
               case CmsLoadedState():
                 return Scaffold(
                   backgroundColor: OptiAppColors.backgroundGray,
-                  appBar: context.read<AuthCubit>().state.status ==
+                  appBar: context.watch<AuthCubit>().state.status ==
                           AuthStatus.authenticated
                       ? null
                       : AppBar(
-                          backgroundColor: Theme.of(context).colorScheme.surface,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.surface,
                           title: Text(
                             LocalizationConstants.account,
                             style: OptiTextStyles.titleLarge,
@@ -128,7 +132,7 @@ class _AccountHeader extends StatelessWidget {
         ),
         child: BlocConsumer<AuthCubit, AuthState>(
           listenWhen: (previous, current) =>
-              AuthCubitChangeTrigger(previous, current),
+              authCubitChangeTrigger(previous, current),
           listener: (context, state) {
             _reloadAccountPage(context);
           },
@@ -163,25 +167,29 @@ class _AccountLoggedInHeader extends StatelessWidget {
       },
       child: BlocProvider(
         create: (context) => sl<AccountHeaderCubit>()..loadAccountHeader(),
-        child: BlocBuilder<AccountHeaderCubit, AccountHeaderState>(
-          builder: (context, state) {
-            return ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.blue,
-                child: Text(
-                  state is AccountHeaderLoaded ? state.firstName[0] : '',
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-              title: Text(
-                (state is AccountHeaderLoaded ? state.firstName : '') +
-                    (state is AccountHeaderLoaded ? state.lastName : ''),
-                style: OptiTextStyles.header2,
-              ),
-              subtitle: Text(
-                state is AccountHeaderLoaded ? state.email : '',
-                style: OptiTextStyles.body,
-              ),
+        child: Builder(
+          builder: (context) {
+            return BlocBuilder<AccountHeaderCubit, AccountHeaderState>(
+              builder: (context, state) {
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.blue,
+                    child: Text(
+                      state is AccountHeaderLoaded ? state.firstName[0] : '',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  title: Text(
+                    (state is AccountHeaderLoaded ? state.firstName : '') +
+                        (state is AccountHeaderLoaded ? state.lastName : ''),
+                    style: OptiTextStyles.header2,
+                  ),
+                  subtitle: Text(
+                    state is AccountHeaderLoaded ? state.email : '',
+                    style: OptiTextStyles.body,
+                  ),
+                );
+              },
             );
           },
         ),
