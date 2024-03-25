@@ -227,7 +227,7 @@ class BillingShippingWidget extends StatelessWidget {
               textAlign: TextAlign.center,
               style: OptiTextStyles.body,
             ),
-            ListPickerWidget(items: carriers),
+            ListPickerWidget(items: carriers, callback: _onCarrierSelect),
             const Icon(
               Icons.arrow_forward_ios,
               color: Colors.grey,
@@ -244,7 +244,7 @@ class BillingShippingWidget extends StatelessWidget {
               textAlign: TextAlign.center,
               style: OptiTextStyles.body,
             ),
-            ListPickerWidget(items: services),
+            ListPickerWidget(items: services, callback: _onCarrierSelect),
             const Icon(
               Icons.arrow_forward_ios,
               color: Colors.grey,
@@ -294,6 +294,10 @@ class BillingShippingWidget extends StatelessWidget {
         const SizedBox(height: 16),
       ],
     );
+  }
+
+  void _onCarrierSelect(BuildContext context, Object item) {
+
   }
 
   void _onSelectDate(BuildContext context, DateTime dateTime) {

@@ -8,15 +8,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ListPickerWidget extends StatelessWidget {
+
+  final void Function(BuildContext context, Object item)? callback;
   final List<Object> items;
 
-  const ListPickerWidget({super.key, required this.items});
+  const ListPickerWidget(
+      {super.key, required this.items, required this.callback});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ListPickerCubit>(
       create: (context) => sl<ListPickerCubit>(),
-      child: ListPicker(items: items),
+      child: ListPicker(items: items, callback: callback),
     );
   }
 
@@ -24,23 +27,34 @@ class ListPickerWidget extends StatelessWidget {
 
 class ListPicker extends StatelessWidget {
 
+  final void Function(BuildContext context, Object item)? callback;
   final List<Object> items;
 
-  const ListPicker({super.key, required this.items});
+  const ListPicker({super.key, required this.items, required this.callback});
 
   @override
   Widget build(BuildContext context) {
-    int pickerIndex = context.read<ListPickerCubit>().pickerIndex;
-    return TextButton(onPressed: () {
-      _selectItem(context, items, pickerIndex);
-    }, child: Text(
-      _getDescriptions(items[pickerIndex]),
-      textAlign: TextAlign.center,
-      style: OptiTextStyles.body,
-    ));
+    return BlocConsumer<ListPickerCubit, ListPickerState>(
+      listener: (context, state) {
+        if (callback != null) {
+          callback!(context, items[state.index]);
+        }
+      },
+      builder: (context, state) {
+        int pickerIndex = state.index;
+        return TextButton(onPressed: () {
+          _selectItem(context, items, pickerIndex);
+        }, child: Text(
+          _getDescriptions(items[pickerIndex]),
+          textAlign: TextAlign.center,
+          style: OptiTextStyles.body,
+        ));
+      },
+    );
   }
 
   void _selectItem(BuildContext context, List<Object> items, int index) {
+    int selectedIndex = index;
     showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) {
@@ -51,13 +65,16 @@ class ListPicker extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                    context.read<ListPickerCubit>().onPick(selectedIndex);
+                  },
                   child: const Text(LocalizationConstants.done)),
               Expanded(
                 child: CupertinoPicker(
                   itemExtent: 40,
                   onSelectedItemChanged: (int index) {
-                    context.read<ListPickerCubit>().onPick(index);
+                    selectedIndex = index;
                   },
                   children: items.map((Object option) {
                     return Center(child: Text(_getDescriptions(option)));
