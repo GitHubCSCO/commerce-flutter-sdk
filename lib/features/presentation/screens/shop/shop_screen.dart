@@ -21,7 +21,8 @@ class ShopScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
-      BlocProvider<PullToRefreshBloc>(create: (context) => sl<PullToRefreshBloc>()),
+      BlocProvider<PullToRefreshBloc>(
+          create: (context) => sl<PullToRefreshBloc>()),
       BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
       BlocProvider<ShopPageBloc>(
         create: (context) => sl<ShopPageBloc>()..add(const ShopPageLoadEvent()),
@@ -44,14 +45,14 @@ class ShopPage extends BaseDynamicContentScreen {
         listeners: [
           BlocListener<PullToRefreshBloc, PullToRefreshState>(
             listener: (context, state) {
-              if(state is PullToRefreshLoadState) {
+              if (state is PullToRefreshLoadState) {
                 _reloadShopPage(context);
               }
             },
           ),
           BlocListener<AuthCubit, AuthState>(
             listenWhen: (previous, current) =>
-                AuthCubitChangeTrigger(previous, current),
+                authCubitChangeTrigger(previous, current),
             listener: (context, state) {
               _reloadShopPage(context);
             },
@@ -78,7 +79,8 @@ class ShopPage extends BaseDynamicContentScreen {
         ],
         child: RefreshIndicator(
           onRefresh: () async {
-            BlocProvider.of<PullToRefreshBloc>(context).add(PullToRefreshInitialEvent());
+            BlocProvider.of<PullToRefreshBloc>(context)
+                .add(PullToRefreshInitialEvent());
           },
           child: BlocBuilder<CmsCubit, CmsState>(
             builder: (context, state) {

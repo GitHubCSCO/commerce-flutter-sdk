@@ -34,7 +34,8 @@ class AuthCubit extends Cubit<AuthState> {
   }
 }
 
-bool AuthCubitChangeTrigger(AuthState previous, AuthState current) {
+bool authCubitChangeTrigger(AuthState previous, AuthState current) {
   return previous.status != current.status &&
-      current.status != AuthStatus.unknown;
+      current.status != AuthStatus.unknown &&
+      previous.status != AuthStatus.unknown;
 }

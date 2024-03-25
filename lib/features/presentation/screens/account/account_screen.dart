@@ -78,7 +78,7 @@ class AccountPage extends BaseDynamicContentScreen {
               case CmsLoadedState():
                 return Scaffold(
                   backgroundColor: OptiAppColors.backgroundGray,
-                  appBar: context.read<AuthCubit>().state.status ==
+                  appBar: context.watch<AuthCubit>().state.status ==
                           AuthStatus.authenticated
                       ? null
                       : AppBar(
@@ -132,7 +132,7 @@ class _AccountHeader extends StatelessWidget {
         ),
         child: BlocConsumer<AuthCubit, AuthState>(
           listenWhen: (previous, current) =>
-              AuthCubitChangeTrigger(previous, current),
+              authCubitChangeTrigger(previous, current),
           listener: (context, state) {
             _reloadAccountPage(context);
           },
@@ -167,25 +167,29 @@ class _AccountLoggedInHeader extends StatelessWidget {
       },
       child: BlocProvider(
         create: (context) => sl<AccountHeaderCubit>()..loadAccountHeader(),
-        child: BlocBuilder<AccountHeaderCubit, AccountHeaderState>(
-          builder: (context, state) {
-            return ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.blue,
-                child: Text(
-                  state is AccountHeaderLoaded ? state.firstName[0] : '',
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-              title: Text(
-                (state is AccountHeaderLoaded ? state.firstName : '') +
-                    (state is AccountHeaderLoaded ? state.lastName : ''),
-                style: OptiTextStyles.header2,
-              ),
-              subtitle: Text(
-                state is AccountHeaderLoaded ? state.email : '',
-                style: OptiTextStyles.body,
-              ),
+        child: Builder(
+          builder: (context) {
+            return BlocBuilder<AccountHeaderCubit, AccountHeaderState>(
+              builder: (context, state) {
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.blue,
+                    child: Text(
+                      state is AccountHeaderLoaded ? state.firstName[0] : '',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  title: Text(
+                    (state is AccountHeaderLoaded ? state.firstName : '') +
+                        (state is AccountHeaderLoaded ? state.lastName : ''),
+                    style: OptiTextStyles.header2,
+                  ),
+                  subtitle: Text(
+                    state is AccountHeaderLoaded ? state.email : '',
+                    style: OptiTextStyles.body,
+                  ),
+                );
+              },
             );
           },
         ),

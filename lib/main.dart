@@ -18,7 +18,7 @@ Future<void> main() async {
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => sl<AuthCubit>()),
+        BlocProvider(create: (context) => sl<AuthCubit>()..loadAuthenticationState()),
         BlocProvider(create: (context) => sl<LogoutCubit>()),
         BlocProvider(create: (context) => sl<DomainCubit>()),
       ],

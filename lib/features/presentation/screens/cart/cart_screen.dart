@@ -75,7 +75,7 @@ class CartPage extends StatelessWidget {
           ),
           BlocListener<AuthCubit, AuthState>(
             listenWhen: (previous, current) =>
-                AuthCubitChangeTrigger(previous, current),
+                authCubitChangeTrigger(previous, current),
             listener: (context, state) {
               _reloadCartPage(context);
             },
