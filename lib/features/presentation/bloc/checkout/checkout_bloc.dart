@@ -23,7 +23,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     emit(CheckoutLoading());
     var data = await _checkoutUseCase.getCart(event.cart.id!);
     switch (data) {
-      case Success(value: final cart):
+      case Success(value: final cartData):
+        cart = cartData;
         final session = _checkoutUseCase.getCurrentSession();
         final billToAddress = session?.billTo;
         final shipToAddress = session?.shipTo;
@@ -35,7 +36,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         CartSettings cartSettings = cartSettingResult is Success ? (cartSettingResult as Success).value : null;
 
         emit(CheckoutDataLoaded(
-            cart: cart!,
+            cart: cartData!,
             billToAddress: billToAddress!,
             shipToAddress: shipToAddress!,
             wareHouse: wareHouse!,
