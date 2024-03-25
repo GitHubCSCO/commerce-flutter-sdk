@@ -1,4 +1,4 @@
-package com.example.commerce_flutter_app
+package com.dxp.commerce
 
 import android.content.Context
 import android.content.pm.PackageManager
