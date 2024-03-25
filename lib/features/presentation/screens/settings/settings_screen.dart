@@ -399,6 +399,9 @@ class __PassowordDialogState extends State<_PassowordDialog> {
         obscureText: true,
         onSubmitted: (password) => context.closeKeyboard(),
         controller: _passwordController,
+        decoration: const InputDecoration(
+          hintText: 'Password',
+        ),
       ),
       actions: [
         TextButton(
