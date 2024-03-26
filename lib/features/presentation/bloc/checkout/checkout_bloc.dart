@@ -10,12 +10,16 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   final CheckoutUsecase _checkoutUseCase;
   DateTime? requestDeliveryDate;
   Cart? cart;
+  CarrierDto? selectedCarrier;
+  ShipViaDto? selectedService;
 
   CheckoutBloc({required CheckoutUsecase checkoutUsecase})
       : _checkoutUseCase = checkoutUsecase,
         super(CheckoutInitial()) {
     on<LoadCheckoutEvent>((event, emit) => _onCheckoutLoadEvent(event, emit));
     on<RequestDeliveryDateEvent>((event, emit) => _onRequestDeliveryDateSelect(event, emit));
+    on<SelectCarrierEvent>((event, emit) => _onCarrierSelect(event, emit));
+    on<SelectServiceEvent>((event, emit) => _onServiceSelect(event, emit));
   }
 
   Future<void> _onCheckoutLoadEvent(
@@ -53,6 +57,14 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
 
   void _onRequestDeliveryDateSelect(RequestDeliveryDateEvent event, Emitter<CheckoutState> emit) {
     requestDeliveryDate = event.dateTime;
+  }
+
+  void _onCarrierSelect(SelectCarrierEvent event, Emitter<CheckoutState> emit) {
+    selectedCarrier = event.carrier;
+  }
+
+  void _onServiceSelect(SelectServiceEvent event, Emitter<CheckoutState> emit) {
+    selectedService = event.service;
   }
 
 }

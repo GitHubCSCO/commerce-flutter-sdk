@@ -3,10 +3,12 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/warehouse_extension.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ReviewOrderWidget extends StatelessWidget {
 
@@ -16,15 +18,19 @@ class ReviewOrderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      color: Colors.white,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: _buildItems(context),
-      ),
+    return BlocBuilder<ReviewOrderCubit, ReviewOrderState>(
+      builder: (context, state) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          color: Colors.white,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: _buildItems(context),
+          ),
+        );
+      },
     );
   }
 
@@ -34,8 +40,11 @@ class ReviewOrderWidget extends StatelessWidget {
     list.add(_buildBillingAddress());
 
     if (reviewOrderEntity.shippingMethod == ShippingOption.ship) {
+      final carrier = context.read<CheckoutBloc>().selectedCarrier;
+      final service = context.read<CheckoutBloc>().selectedService;
+
       list.add(_buildShippingAddress());
-      list.add(_buildShippingMethod(context));
+      list.add(_buildShippingMethod(context, carrier, service));
     } else {
       list.add(_buildPickUpAddress());
       list.add(_buildRequestDeliveryDate(context));
@@ -189,7 +198,7 @@ class ReviewOrderWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildShippingMethod(BuildContext context) {
+  Widget _buildShippingMethod(BuildContext context, CarrierDto? selectedCarrier, ShipViaDto? selectedService) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -202,39 +211,74 @@ class ReviewOrderWidget extends StatelessWidget {
           style: OptiTextStyles.subtitle,
         ),
         const SizedBox(height: 8),
-        Text(
-          'Standard Shipping (Free)',
-          textAlign: TextAlign.center,
-          style: OptiTextStyles.body,
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              LocalizationConstants.carrier,
+              textAlign: TextAlign.center,
+              style: OptiTextStyles.body,
+            ),
+            Text(
+              selectedCarrier?.description ?? '',
+              textAlign: TextAlign.center,
+              style: OptiTextStyles.body,
+            ),
+          ],
         ),
-        Text(
-          _getRequestDateTime(context),
-          textAlign: TextAlign.center,
-          style: OptiTextStyles.bodySmall,
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              LocalizationConstants.service,
+              textAlign: TextAlign.center,
+              style: OptiTextStyles.body,
+            ),
+            Text(
+              selectedService?.description ?? '',
+              textAlign: TextAlign.center,
+              style: OptiTextStyles.body,
+            ),
+          ],
+        ),
+        Visibility(
+          visible: _isRequestDateAvailable(context),
+          child: Text(
+            _getRequestDateTime(context),
+            textAlign: TextAlign.center,
+            style: OptiTextStyles.body,
+          ),
         ),
       ],
     );
   }
 
   Widget _buildRequestDeliveryDate(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 12),
-        Text(
-          LocalizationConstants.requestDeliveryDate,
-          textAlign: TextAlign.center,
-          style: OptiTextStyles.subtitle,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          _getRequestDateTime(context),
-          textAlign: TextAlign.center,
-          style: OptiTextStyles.body,
-        ),
-      ],
+    return Visibility(
+      visible: _isRequestDateAvailable(context),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 12),
+          Text(
+            LocalizationConstants.requestDeliveryDate,
+            textAlign: TextAlign.center,
+            style: OptiTextStyles.subtitle,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _getRequestDateTime(context),
+            textAlign: TextAlign.center,
+            style: OptiTextStyles.body,
+          ),
+          const SizedBox(height: 12),
+          _buildSeparator()
+        ],
+      ),
     );
   }
 
@@ -256,16 +300,27 @@ class ReviewOrderWidget extends StatelessWidget {
           textAlign: TextAlign.center,
           style: OptiTextStyles.body,
         ),
+        const SizedBox(height: 12),
+        _buildSeparator()
       ],
     );
   }
 
   String _getRequestDateTime(BuildContext context) {
-    final dateTime = context.read<CheckoutBloc>().requestDeliveryDate;
-    if (dateTime != null && dateTime != DateTime(0)) {
-      return 'Arrives between ${DateFormat('E, MM/dd').format(dateTime)}';
+    if (_isRequestDateAvailable(context)) {
+      final dateTime = context.read<CheckoutBloc>().requestDeliveryDate;
+      return 'Arrives between ${DateFormat('E, MM/dd').format(dateTime!)}';
     }
     return '';
+  }
+
+  bool _isRequestDateAvailable(BuildContext context) {
+    final dateTime = context.read<CheckoutBloc>().requestDeliveryDate;
+    if (dateTime != null && dateTime != DateTime(0)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
 }

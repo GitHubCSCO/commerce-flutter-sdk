@@ -40,7 +40,7 @@ class ListPicker extends StatelessWidget {
           callback!(context, items[state.index]);
         }
       },
-      builder: (context, state) {
+      builder: (_, state) {
         int pickerIndex = state.index;
         return TextButton(onPressed: () {
           _selectItem(context, items, pickerIndex);
@@ -57,7 +57,7 @@ class ListPicker extends StatelessWidget {
     int selectedIndex = index;
     showCupertinoModalPopup(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext _) {
         return Container(
           height: 200,
           color: Colors.white,

@@ -12,3 +12,15 @@ class RequestDeliveryDateEvent extends CheckoutEvent {
 
   RequestDeliveryDateEvent(this.dateTime);
 }
+
+class SelectCarrierEvent extends CheckoutEvent {
+  final CarrierDto carrier;
+
+  SelectCarrierEvent(this.carrier);
+}
+
+class SelectServiceEvent extends CheckoutEvent {
+  final ShipViaDto service;
+
+  SelectServiceEvent(this.service);
+}

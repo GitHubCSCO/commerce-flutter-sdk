@@ -51,6 +51,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/biometric_contr
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/expansion_panel/expansion_panel_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/date_selection/date_selection_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
@@ -139,6 +140,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => PaymentDetailsBloc(paymentDetailsUseCase: sl()))
     ..registerFactory(() => PaymentDetailsUseCase())
     ..registerFactory(() => TokenExBloc())
+    ..registerFactory(() => ReviewOrderCubit())
 
     //date selection
     ..registerFactory(() => DateSelectionCubit())

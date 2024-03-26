@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shipping_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/warehouse_extension.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/date_picker_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
@@ -39,7 +40,7 @@ class BillingShippingWidget extends StatelessWidget {
 
       if (billingShippingEntity.carriers != null &&
           billingShippingEntity.carriers!.isNotEmpty) {
-        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
+
         list.add(_buildShippingMethod(billingShippingEntity.carriers!, billingShippingEntity.carriers![0].shipVias!));
       }
 
@@ -244,7 +245,7 @@ class BillingShippingWidget extends StatelessWidget {
               textAlign: TextAlign.center,
               style: OptiTextStyles.body,
             ),
-            ListPickerWidget(items: services, callback: _onCarrierSelect),
+            ListPickerWidget(items: services, callback: _onServiceSelect),
             const Icon(
               Icons.arrow_forward_ios,
               color: Colors.grey,
@@ -297,11 +298,18 @@ class BillingShippingWidget extends StatelessWidget {
   }
 
   void _onCarrierSelect(BuildContext context, Object item) {
+    context.read<CheckoutBloc>().add(SelectCarrierEvent(item as CarrierDto));
+    context.read<ReviewOrderCubit>().onOrderConfigChange();
+  }
 
+  void _onServiceSelect(BuildContext context, Object item) {
+    context.read<CheckoutBloc>().add(SelectServiceEvent(item as ShipViaDto));
+    context.read<ReviewOrderCubit>().onOrderConfigChange();
   }
 
   void _onSelectDate(BuildContext context, DateTime dateTime) {
     context.read<CheckoutBloc>().add(RequestDeliveryDateEvent(dateTime));
+    context.read<ReviewOrderCubit>().onOrderConfigChange();
   }
 
 }
