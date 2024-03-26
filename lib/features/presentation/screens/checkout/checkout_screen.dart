@@ -11,9 +11,8 @@ import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/expansion_panel/expansion_panel_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/date_selection/date_selection_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/list_picker/list_picker_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/review_order/review_order_widget.dart';
@@ -36,7 +35,8 @@ class CheckoutScreen extends StatelessWidget {
         BlocProvider<CheckoutBloc>(
             create: (context) =>
                 sl<CheckoutBloc>()..add(LoadCheckoutEvent(cart: cart))),
-        BlocProvider<TokenExBloc>(create: (context) => sl<TokenExBloc>())
+        BlocProvider<TokenExBloc>(create: (context) => sl<TokenExBloc>()),
+        BlocProvider<ReviewOrderCubit>(create: (context) => sl<ReviewOrderCubit>())
       ],
       child: const CheckoutPage(),
     );
@@ -68,125 +68,130 @@ class CheckoutPage extends StatelessWidget {
         ],
         automaticallyImplyLeading: false,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: SizedBox(
-          height: 50,
-          child: PrimaryButton(
-            onPressed: () {
-              var index = context.read<ExpansionPanelCubit>().expansionIndex;
-              if (index == 1) {
-                context.closeKeyboard();
-                context.read<TokenExBloc>().add(TokenExValidateEvent());
-              } else {
-                context.read<ExpansionPanelCubit>().onContinueClick();
-              }
-            },
-            text: LocalizationConstants.continueText,
+      body: Column(
+        children: [
+          Expanded(
+            child: BlocBuilder<CheckoutBloc, CheckoutState>(
+              builder: (context, state) {
+                switch (state) {
+                  case CheckoutInitial():
+                  case CheckoutLoading():
+                    return const Center(child: CircularProgressIndicator());
+                  case CheckoutDataLoaded():
+                    return SingleChildScrollView(
+                      child: Column(mainAxisSize: MainAxisSize.min, children: [
+                        _buildSummary(),
+                        BlocBuilder<ExpansionPanelCubit, ExpansionPanelState>(
+                          builder: (context, panelState) {
+                            List<Item>? list;
+                            switch (panelState) {
+                              case ExpansionPanelChangeState():
+                                list = panelState.list;
+                            }
+
+                            final billingShippingEntity = BillingShippingEntity(
+                                billTo: state.billToAddress,
+                                shipTo: state.shipToAddress,
+                                warehouse: state.wareHouse,
+                                shippingMethod: (state.shippingMethod
+                                    .equalsIgnoreCase(ShippingOption.pickUp.name)
+                                    ? ShippingOption.pickUp
+                                    : ShippingOption.ship),
+                                carriers: state.cart.carriers,
+                                cartSettings: state.cartSettings);
+
+                            final reviewOrderEntity = ReviewOrderEntity(
+                                billTo: state.billToAddress,
+                                shipTo: state.shipToAddress,
+                                warehouse: state.wareHouse,
+                                shippingMethod: (state.shippingMethod
+                                    .equalsIgnoreCase(ShippingOption.pickUp.name)
+                                    ? ShippingOption.pickUp
+                                    : ShippingOption.ship),
+                                carriers: state.cart.carriers,
+                                cartSettings: state.cartSettings);
+
+                            return ExpansionPanelList(
+                              expansionCallback: (int index, bool isExpanded) {
+                                context
+                                    .read<ExpansionPanelCubit>()
+                                    .onPanelExpansionChange(index);
+                              },
+                              children: [
+                                ExpansionPanel(
+                                    headerBuilder:
+                                        (BuildContext context, bool isExpanded) {
+                                      return const ListTile(
+                                        title: Text(LocalizationConstants.billingShipping),
+                                      );
+                                    },
+                                    body: BillingShippingWidget(
+                                        billingShippingEntity: billingShippingEntity),
+                                    isExpanded: list?[0].isExpanded ?? true,
+                                    canTapOnHeader: true),
+                                ExpansionPanel(
+                                    headerBuilder:
+                                        (BuildContext context, bool isExpanded) {
+                                      return const ListTile(
+                                        title: Text(LocalizationConstants.paymentDetails),
+                                      );
+                                    },
+                                    body: _buildPaymentDetails(
+                                        context.read<CheckoutBloc>().cart!, context),
+                                    isExpanded: list?[1].isExpanded ?? false,
+                                    canTapOnHeader: true),
+                                ExpansionPanel(
+                                    headerBuilder:
+                                        (BuildContext context, bool isExpanded) {
+                                      return const ListTile(
+                                        title: Text(LocalizationConstants.reviewOrder),
+                                      );
+                                    },
+                                    body: ReviewOrderWidget(reviewOrderEntity: reviewOrderEntity),
+                                    isExpanded: list?[2].isExpanded ?? false,
+                                    canTapOnHeader: true),
+                              ],
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                      ]),
+                    );
+                  default:
+                    return const Center(child: Text('Error'));
+                }
+              },
+            ),
           ),
-        ),
-      ),
-      body: BlocBuilder<CheckoutBloc, CheckoutState>(
-        builder: (context, state) {
-          switch (state) {
-            case CheckoutInitial():
-            case CheckoutLoading():
-              return const Center(child: CircularProgressIndicator());
-            case CheckoutDataLoaded():
-              return SingleChildScrollView(
-                child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  _buildSummary(),
-                  BlocBuilder<ExpansionPanelCubit, ExpansionPanelState>(
-                    builder: (context, panelState) {
-                      List<Item>? list;
-                      switch (panelState) {
-                        case ExpansionPanelChangeState():
-                          list = panelState.list;
-                      }
-
-                      final billingShippingEntity = BillingShippingEntity(
-                          billTo: state.billToAddress,
-                          shipTo: state.shipToAddress,
-                          warehouse: state.wareHouse,
-                          shippingMethod: (state.shippingMethod
-                              .equalsIgnoreCase(ShippingOption.pickUp.name)
-                              ? ShippingOption.pickUp
-                              : ShippingOption.ship),
-                          carriers: state.cart.carriers,
-                          cartSettings: state.cartSettings);
-
-                      final reviewOrderEntity = ReviewOrderEntity(
-                          billTo: state.billToAddress,
-                          shipTo: state.shipToAddress,
-                          warehouse: state.wareHouse,
-                          shippingMethod: (state.shippingMethod
-                              .equalsIgnoreCase(ShippingOption.pickUp.name)
-                              ? ShippingOption.pickUp
-                              : ShippingOption.ship),
-                          carriers: state.cart.carriers,
-                          cartSettings: state.cartSettings);
-
-                      return ExpansionPanelList(
-                        expansionCallback: (int index, bool isExpanded) {
-                          context
-                              .read<ExpansionPanelCubit>()
-                              .onPanelExpansionChange(index);
-                        },
-                        children: [
-                          ExpansionPanel(
-                              headerBuilder:
-                                  (BuildContext context, bool isExpanded) {
-                                return ListTile(
-                                  title: Text('Billing & Shipping'),
-                                );
-                              },
-                              body: MultiBlocProvider(
-                                providers: [
-                                  BlocProvider<DateSelectionCubit>(
-                                    create: (context) =>
-                                        sl<DateSelectionCubit>(),
-                                  ),
-                                  BlocProvider<ListPickerCubit>(
-                                    create: (context) => sl<ListPickerCubit>(),
-                                  ),
-                                ],
-                                child: BillingShippingWidget(
-                                    billingShippingEntity: billingShippingEntity),
-                              ),
-                              isExpanded: list?[0].isExpanded ?? true,
-                              canTapOnHeader: true),
-                          ExpansionPanel(
-                              headerBuilder:
-                                  (BuildContext context, bool isExpanded) {
-                                return ListTile(
-                                  title: Text('Payment Details'),
-                                );
-                              },
-                              body: _buildPaymentDetails(
-                                  context.read<CheckoutBloc>().cart!, context),
-                              isExpanded: list?[1].isExpanded ?? false,
-                              canTapOnHeader: true),
-                          ExpansionPanel(
-                              headerBuilder:
-                                  (BuildContext context, bool isExpanded) {
-                                return ListTile(
-                                  title: Text('Review Order'),
-                                );
-                              },
-                              body: ReviewOrderWidget(reviewOrderEntity: reviewOrderEntity),
-                              isExpanded: list?[2].isExpanded ?? false,
-                              canTapOnHeader: true),
-                        ],
-                      );
-                    },
-                  )
-                ]),
-              );
-            default:
-              return const Center(child: Text('Error'));
-          }
-        },
+          Container(
+            height: 80,
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            clipBehavior: Clip.antiAlias,
+            decoration: const BoxDecoration(color: Colors.white),
+            child: PrimaryButton(
+              onPressed: () {
+                var index = context.read<ExpansionPanelCubit>().expansionIndex;
+                switch(index) {
+                  // case 0:
+                  //   final carrier = context.read<CheckoutBloc>().selectedCarrier;
+                  //   final service = context.read<CheckoutBloc>().selectedService;
+                  //   if (carrier != null && service != null) {
+                  //     context.read<ExpansionPanelCubit>().onContinueClick();
+                  //   }
+                  case 1:
+                    context.closeKeyboard();
+                    // context.read<TokenExBloc>().add(TokenExValidateEvent());
+                    context.read<ExpansionPanelCubit>().onContinueClick();
+                  case 2:
+                    context.read<ExpansionPanelCubit>().onContinueClick();
+                  default:
+                    context.read<ExpansionPanelCubit>().onContinueClick();
+                }
+              },
+              text: LocalizationConstants.continueText,
+            ),
+          ),
+        ],
       ),
     );
   }

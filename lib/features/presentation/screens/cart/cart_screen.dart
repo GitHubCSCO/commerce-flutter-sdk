@@ -17,6 +17,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_lin
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_payment_summary_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -46,20 +47,6 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: Container(
-          height: 50,
-          child: PrimaryButton(
-            onPressed: () {
-              AppRoute.checkout
-                  .navigateBackStack(context, extra: context.read<CartPageBloc>().cart);
-            },
-            text: LocalizationConstants.checkout,
-          ),
-        ),
-      ),
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         title: const Text(LocalizationConstants.cart),
@@ -102,17 +89,33 @@ class CartPage extends StatelessWidget {
                 case CartPageLoadingState():
                   return const Center(child: CircularProgressIndicator());
                 case CartPageLoadedState():
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 84.0),
-                    child: ListView(
-                      children: _buildCartWidgets(
-                          state.cart,
-                          state.cartSettings,
-                          state.warehouse,
-                          state.promotions,
-                          state.isCustomerOrderApproval,
-                          state.shippingMethod),
-                    ),
+                  return Column(
+                    children: [
+                      Expanded(
+                        child: ListView(
+                          children: _buildCartWidgets(
+                              state.cart,
+                              state.cartSettings,
+                              state.warehouse,
+                              state.promotions,
+                              state.isCustomerOrderApproval,
+                              state.shippingMethod),
+                        ),
+                      ),
+                      Container(
+                        height: 80,
+                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                        clipBehavior: Clip.antiAlias,
+                        decoration: const BoxDecoration(color: Colors.white),
+                        child: PrimaryButton(
+                          onPressed: () {
+                            AppRoute.checkout
+                                .navigateBackStack(context, extra: context.read<CartPageBloc>().cart);
+                          },
+                          text: LocalizationConstants.checkout,
+                        ),
+                      ),
+                    ],
                   );
                 case CartPageNoDataState():
                   return CustomScrollView(slivers: <Widget>[
@@ -196,6 +199,7 @@ class CartPage extends StatelessWidget {
           cartLineEntities: CartLineListMapper()
               .toEntity(CartLineList(cartLines: cart!.cartLines))),
     ));
+    list.add(const SizedBox(height: 8));
 
     return list;
   }
