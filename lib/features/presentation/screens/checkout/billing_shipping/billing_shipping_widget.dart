@@ -40,8 +40,30 @@ class BillingShippingWidget extends StatelessWidget {
 
       if (billingShippingEntity.carriers != null &&
           billingShippingEntity.carriers!.isNotEmpty) {
+        int selectedCarrierIndex = 0;
+        int selectedServiceIndex = 0;
 
-        list.add(_buildShippingMethod(billingShippingEntity.carriers!, billingShippingEntity.carriers![0].shipVias!));
+        for(int i = 0; i < (billingShippingEntity.carriers?.length ?? 0); i++) {
+          if (billingShippingEntity.selectedCarrier != null &&
+              billingShippingEntity.selectedCarrier!.id! ==
+                  billingShippingEntity.carriers![i].id!) {
+            selectedCarrierIndex = i;
+          }
+        }
+
+        for(int i = 0; i < (billingShippingEntity.carriers?[selectedCarrierIndex].shipVias?.length ?? 0); i++) {
+          if (billingShippingEntity.selectedService != null &&
+              billingShippingEntity.selectedService!.id! ==
+                  billingShippingEntity.carriers?[selectedCarrierIndex].shipVias?[i].id!) {
+            selectedServiceIndex = i;
+          }
+        }
+
+        list.add(_buildShippingMethod(
+            billingShippingEntity.carriers!,
+            billingShippingEntity.carriers![0].shipVias!,
+            selectedCarrierIndex,
+            selectedServiceIndex));
       }
 
       if (billingShippingEntity.cartSettings != null &&
@@ -206,7 +228,11 @@ class BillingShippingWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildShippingMethod(List<CarrierDto> carriers, List<ShipViaDto> services) {
+  Widget _buildShippingMethod(
+      List<CarrierDto> carriers,
+      List<ShipViaDto> services,
+      int selectedCarrierIndex,
+      int selectedServiceIndex) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -228,7 +254,7 @@ class BillingShippingWidget extends StatelessWidget {
               textAlign: TextAlign.center,
               style: OptiTextStyles.body,
             ),
-            ListPickerWidget(items: carriers, callback: _onCarrierSelect),
+            ListPickerWidget(items: carriers, selectedIndex: selectedCarrierIndex, callback: _onCarrierSelect),
             const Icon(
               Icons.arrow_forward_ios,
               color: Colors.grey,
@@ -245,7 +271,7 @@ class BillingShippingWidget extends StatelessWidget {
               textAlign: TextAlign.center,
               style: OptiTextStyles.body,
             ),
-            ListPickerWidget(items: services, callback: _onServiceSelect),
+            ListPickerWidget(items: services, selectedIndex: selectedServiceIndex, callback: _onServiceSelect),
             const Icon(
               Icons.arrow_forward_ios,
               color: Colors.grey,

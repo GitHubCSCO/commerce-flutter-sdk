@@ -30,3 +30,9 @@ class CheckoutDataFetchFailed extends CheckoutState {
 
   CheckoutDataFetchFailed({required this.error});
 }
+
+class CheckoutPlaceOrder extends CheckoutState {
+  final String orderNumber;
+
+  CheckoutPlaceOrder({required this.orderNumber});
+}
