@@ -7,6 +7,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,6 +74,13 @@ class ShopPage extends BaseDynamicContentScreen {
                   context.read<CmsCubit>().buildCMSWidgets(state.pageWidgets);
                 case ShopPageFailureState():
                   context.read<CmsCubit>().failedLoading();
+              }
+            },
+          ),
+          BlocListener<LogoutCubit, LogoutState>(
+            listener: (context, state) {
+              if (state is LogoutSuccess) {
+                context.read<AuthCubit>().loadAuthenticationState();
               }
             },
           ),
