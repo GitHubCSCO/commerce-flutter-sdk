@@ -15,6 +15,7 @@ import 'package:commerce_flutter_app/features/presentation/components/buttons.da
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -56,6 +57,7 @@ class AddToCartSignInWidget extends StatelessWidget {
         ProductDetailsAddtoCartState>(
       listener: (bloccontext, state) {
         if (state is ProductDetailsProdctAddedToCartSuccess) {
+          context.read<CartCountCubit>().loadCurrentCartCount();
           CustomSnackBar.showProductAddedToCart(context);
         }
       },
@@ -94,7 +96,7 @@ class AddToCartSuccessWidget extends StatefulWidget {
 }
 
 class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
-  int? quantity;
+  int? quantity = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +117,8 @@ class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
               text: LocalizationConstants.addToCart,
               onPressed: () {
                 context.read<ProductDetailsAddToCartBloc>().add(AddToCartEvent(
-                    productDetailsAddToCartEntity: widget.detailsAddToCartEntity.copyWith(quantityText: quantity.toString())));
+                    productDetailsAddToCartEntity: widget.detailsAddToCartEntity
+                        .copyWith(quantityText: quantity.toString())));
               })
         ],
       ),
@@ -164,6 +167,7 @@ class ProductDetailsAddCartRow extends StatelessWidget {
     );
   }
 }
+
 class ProductDetailsAddCartTtitleSubTitleColumn extends StatelessWidget {
   final String title;
   final String value;
