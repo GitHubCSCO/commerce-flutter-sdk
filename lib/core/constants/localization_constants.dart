@@ -372,8 +372,8 @@ class LocalizationConstants {
   static const orderConfirmation = "Order Confirmation";
   static const orderFailed = "Order Failed";
   static const placeYourOrder = "Place Your Order";
-  static const promoCodes = "Promo ({0})";
-  static const promoCodesMore = "Promo ({0} & {1} More)";
+  static const promoCodes = "Promo (%s)";
+  static const promoCodesMore = "Promo (%s & %s More)";
   static const yourOrderNumber = "Your Order Number";
   static const date = "Date";
   static const selectDate = "Select Date";

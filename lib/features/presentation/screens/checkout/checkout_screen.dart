@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
+import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shipping_entity.dart';
@@ -80,7 +81,7 @@ class CheckoutPage extends StatelessWidget {
                   case CheckoutDataLoaded():
                     return SingleChildScrollView(
                       child: Column(mainAxisSize: MainAxisSize.min, children: [
-                        _buildSummary(),
+                        _buildSummary(state.cart, state.promotions),
                         BlocBuilder<ExpansionPanelCubit, ExpansionPanelState>(
                           builder: (context, panelState) {
                             List<Item>? list;
@@ -94,11 +95,14 @@ class CheckoutPage extends StatelessWidget {
                                 shipTo: state.shipToAddress,
                                 warehouse: state.wareHouse,
                                 shippingMethod: (state.shippingMethod
-                                    .equalsIgnoreCase(ShippingOption.pickUp.name)
+                                        .equalsIgnoreCase(
+                                            ShippingOption.pickUp.name)
                                     ? ShippingOption.pickUp
                                     : ShippingOption.ship),
                                 carriers: state.cart.carriers,
-                                cartSettings: state.cartSettings);
+                                cartSettings: state.cartSettings,
+                                selectedCarrier: state.cart.carrier,
+                                selectedService: state.cart.shipVia);
 
                             final reviewOrderEntity = ReviewOrderEntity(
                                 billTo: state.billToAddress,
@@ -213,10 +217,41 @@ class CheckoutPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSummary() {
+  Widget _buildSummary(Cart cart, PromotionCollectionModel promotionCollectionModel) {
+    String promotionInfo;
+    String promotionValue;
+
+    var promotions = promotionCollectionModel.promotions?.where((x) => x.amount != 0).toList();
+
+    if (promotions == null || promotions.isEmpty) {
+      promotionInfo = '';
+      promotionValue = '';
+    }
+
+    var lastPromotion = promotions?.last;
+    var info = '';
+
+    if (promotions != null && promotions.length > 1) {
+      info = LocalizationConstants.promoCodesMore.format([lastPromotion?.name, promotions.length - 1]);
+    } else {
+      info = LocalizationConstants.promoCodes.format([lastPromotion?.name]);
+    }
+
+    var amount = promotions?.fold(0, (previousValue, element) => previousValue + (element.amount?.toInt() ?? 0));
+
+    var promotion = promotions?.first;
+    var currencySymbol = '';
+
+    if (promotion != null && promotion.amountDisplay != null && promotion.amountDisplay!.isNotEmpty) {
+      currencySymbol = promotion.amountDisplay!.substring(0, 1);
+    }
+
+    promotionInfo = info;
+    promotionValue = '- $currencySymbol${amount ?? 0.toStringAsFixed(2)}';
+
     List<Widget> list = [];
-    list.add(_buildRow('Promo', '-\$20', OptiTextStyles.bodyFade)!);
-    list.add(_buildRow('Subtotal', '-\$283.50', OptiTextStyles.subtitle)!);
+    list.add(_buildRow(promotionInfo, promotionValue, OptiTextStyles.bodyFade)!);
+    list.add(_buildRow(LocalizationConstants.subtotal, cart.orderGrandTotalDisplay ?? '', OptiTextStyles.subtitle)!);
 
     return Container(
       padding: const EdgeInsets.all(16),

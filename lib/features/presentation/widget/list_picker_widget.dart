@@ -11,14 +11,15 @@ class ListPickerWidget extends StatelessWidget {
 
   final void Function(BuildContext context, Object item)? callback;
   final List<Object> items;
+  final int? selectedIndex;
 
   const ListPickerWidget(
-      {super.key, required this.items, required this.callback});
+      {super.key, required this.items, this.selectedIndex, required this.callback});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ListPickerCubit>(
-      create: (context) => sl<ListPickerCubit>(),
+      create: (context) => sl<ListPickerCubit>()..onInitialSelection(selectedIndex),
       child: ListPicker(items: items, callback: callback),
     );
   }
