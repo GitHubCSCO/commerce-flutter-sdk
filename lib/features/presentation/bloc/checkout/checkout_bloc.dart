@@ -22,13 +22,19 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     on<SelectServiceEvent>((event, emit) => _onServiceSelect(event, emit));
   }
 
+  void updateCheckoutData(Cart cart) {
+    this.cart = cart;
+    selectedCarrier = cart.carrier;
+    selectedService = cart.shipVia;
+  }
+
   Future<void> _onCheckoutLoadEvent(
       LoadCheckoutEvent event, Emitter<CheckoutState> emit) async {
     emit(CheckoutLoading());
     var data = await _checkoutUseCase.getCart(event.cart.id!);
     switch (data) {
       case Success(value: final cartData):
-        cart = cartData;
+        updateCheckoutData(cartData!);
         final session = _checkoutUseCase.getCurrentSession();
         final billToAddress = session?.billTo;
         final shipToAddress = session?.shipTo;
@@ -40,7 +46,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         CartSettings cartSettings = cartSettingResult is Success ? (cartSettingResult as Success).value : null;
 
         emit(CheckoutDataLoaded(
-            cart: cartData!,
+            cart: cartData,
             billToAddress: billToAddress!,
             shipToAddress: shipToAddress!,
             wareHouse: wareHouse!,
@@ -59,12 +65,22 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     requestDeliveryDate = event.dateTime;
   }
 
-  void _onCarrierSelect(SelectCarrierEvent event, Emitter<CheckoutState> emit) {
+  Future<void> _onCarrierSelect(SelectCarrierEvent event, Emitter<CheckoutState> emit) async {
+    emit(CheckoutLoading());
     selectedCarrier = event.carrier;
+    selectedService = event.carrier.shipVias?.first;
+    cart?.carrier = selectedCarrier;
+    cart?.shipVia = selectedService;
+    await _checkoutUseCase.patchCart(cart!);
+    add(LoadCheckoutEvent(cart: cart!));
   }
 
-  void _onServiceSelect(SelectServiceEvent event, Emitter<CheckoutState> emit) {
+  Future<void> _onServiceSelect(SelectServiceEvent event, Emitter<CheckoutState> emit) async {
+    emit(CheckoutLoading());
     selectedService = event.service;
+    cart?.shipVia = selectedService;
+    await _checkoutUseCase.patchCart(cart!);
+    add(LoadCheckoutEvent(cart: cart!));
   }
 
 }
