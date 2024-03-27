@@ -67,7 +67,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     final result = await _checkoutUseCase.patchCart(cart!);
     switch (result) {
       case Success(value: final cartData):
-        emit(CheckoutPlaceOrder(orderNumber: (cartData?.erpOrderNumber ?? cartData?.orderNumber) ?? ''));
+        emit(CheckoutPlaceOrder(orderNumber: "bkjbkjlbkbk"));
         break;
       case Failure(errorResponse: final errorResponse):
         emit(CheckoutDataFetchFailed(

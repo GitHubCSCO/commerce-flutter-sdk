@@ -118,7 +118,10 @@ List<NavigationNode> _getNavigationRoot() {
   final checkoutSuccess = createNode(
     name: AppRoute.checkoutSuccess.name,
     path: AppRoute.checkoutSuccess.suffix,
-    builder: (context, state) => const CheckoutSuccessScreen(orderNumber: ''),
+    builder: (context, state)  {
+      final orderNumber = state.extra as String;
+      return CheckoutSuccessScreen(orderNumber: orderNumber);
+    },
     parent: null,
   );
 

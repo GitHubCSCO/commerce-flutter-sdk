@@ -76,7 +76,7 @@ class CheckoutPage extends StatelessWidget {
             child: BlocConsumer<CheckoutBloc, CheckoutState>(
               listener: (context, state) {
                 if (state is CheckoutPlaceOrder) {
-                  AppRoute.checkoutSuccess.navigate(context);
+                  AppRoute.checkoutSuccess.navigate(context, extra: state.orderNumber);
                 }
               },
               builder: (context, state) {
