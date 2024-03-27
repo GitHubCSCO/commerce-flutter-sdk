@@ -10,19 +10,12 @@ class PaymentDetailsInitial extends PaymentDetailsState {}
 class PaymentDetailsLoading extends PaymentDetailsState {}
 
 class PaymentDetailsLoaded extends PaymentDetailsState {
-  final String paymentMethodValue;
   final TokenExEntity? tokenExEntity;
   final bool? showPOField;
   final TextEditingController? poTextEditingController;
 
   PaymentDetailsLoaded(
-      {required this.paymentMethodValue,
-      this.tokenExEntity,
-      this.showPOField,
-      this.poTextEditingController});
+      {this.tokenExEntity, this.showPOField, this.poTextEditingController});
 }
 
-
-class PaymentDetailsCompletedState extends PaymentDetailsState{
-  
-}
+class PaymentDetailsCompletedState extends PaymentDetailsState {}

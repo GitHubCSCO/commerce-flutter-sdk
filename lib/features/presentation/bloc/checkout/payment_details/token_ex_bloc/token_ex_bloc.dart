@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
   bool isTokenExConfigurationSet = false;
+  bool isCardDataFetched = false;
   TokenExBloc() : super(TokenExInitial()) {
     on<LoadTokenExFieldEvent>((event, emit) => _setUpTokenExField(event, emit));
     on<HandleTokenExEvent>((event, emit) => _handleWebViewRequest(event, emit));
@@ -47,6 +48,14 @@ class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
     }
 
     var isValid = valid.toLowerCase() == 'true';
+
+    if (isValid && !isCardDataFetched) {
+      emit(TokenExEncodeState());
+    } else {
+      // tokenExValidateCallback?.call(false);
+      return;
+    }
+
     if (query.isNotEmpty) {
       var encodedCreditCardNumber = query["cardNumber"];
       var encodedCVVCode = query["securityCode"];
@@ -55,21 +64,13 @@ class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
           encodedCreditCardNumber != null &&
           encodedType != null) {
         print("TokenExEncodingFinishedState");
+        isCardDataFetched = true;
         emit(TokenExEncodingFinishedState(
             cardNumber: encodedCreditCardNumber,
             securityCode: encodedCVVCode,
             cardType: encodedType));
-            return ;
-      }
-    } 
-
-     if (isValid) {
-        emit(TokenExEncodeState());
-      } else {
-        // tokenExValidateCallback?.call(false);
         return;
       }
-
-
+    }
   }
 }

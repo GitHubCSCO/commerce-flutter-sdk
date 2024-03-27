@@ -93,7 +93,11 @@ class ListPicker extends StatelessWidget {
       return item.description!;
     } else if (item is ShipViaDto) {
       return item.description!;
-    } else {
+    } else if (item is PaymentMethodDto){
+      return item.description!;
+    }
+    
+    else {
       return '';
     }
   }

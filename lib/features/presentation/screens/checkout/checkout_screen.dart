@@ -36,7 +36,12 @@ class CheckoutScreen extends StatelessWidget {
             create: (context) =>
                 sl<CheckoutBloc>()..add(LoadCheckoutEvent(cart: cart))),
         BlocProvider<TokenExBloc>(create: (context) => sl<TokenExBloc>()),
-        BlocProvider<ReviewOrderCubit>(create: (context) => sl<ReviewOrderCubit>())
+        BlocProvider<ReviewOrderCubit>(
+            create: (context) => sl<ReviewOrderCubit>()),
+        BlocProvider<PaymentDetailsBloc>(
+          create: (context) => sl<PaymentDetailsBloc>()
+            ..add(LoadPaymentDetailsEvent(cart: cart)),
+        ),
       ],
       child: const CheckoutPage(),
     );
@@ -72,7 +77,7 @@ class CheckoutPage extends StatelessWidget {
         children: [
           Expanded(
             child: BlocBuilder<CheckoutBloc, CheckoutState>(
-              builder: (context, state) {
+              builder: (_, state) {
                 switch (state) {
                   case CheckoutInitial():
                   case CheckoutLoading():
@@ -82,7 +87,7 @@ class CheckoutPage extends StatelessWidget {
                       child: Column(mainAxisSize: MainAxisSize.min, children: [
                         _buildSummary(),
                         BlocBuilder<ExpansionPanelCubit, ExpansionPanelState>(
-                          builder: (context, panelState) {
+                          builder: (_, panelState) {
                             List<Item>? list;
                             switch (panelState) {
                               case ExpansionPanelChangeState():
@@ -94,7 +99,8 @@ class CheckoutPage extends StatelessWidget {
                                 shipTo: state.shipToAddress,
                                 warehouse: state.wareHouse,
                                 shippingMethod: (state.shippingMethod
-                                    .equalsIgnoreCase(ShippingOption.pickUp.name)
+                                        .equalsIgnoreCase(
+                                            ShippingOption.pickUp.name)
                                     ? ShippingOption.pickUp
                                     : ShippingOption.ship),
                                 carriers: state.cart.carriers,
@@ -105,7 +111,8 @@ class CheckoutPage extends StatelessWidget {
                                 shipTo: state.shipToAddress,
                                 warehouse: state.wareHouse,
                                 shippingMethod: (state.shippingMethod
-                                    .equalsIgnoreCase(ShippingOption.pickUp.name)
+                                        .equalsIgnoreCase(
+                                            ShippingOption.pickUp.name)
                                     ? ShippingOption.pickUp
                                     : ShippingOption.ship),
                                 carriers: state.cart.carriers,
@@ -119,35 +126,41 @@ class CheckoutPage extends StatelessWidget {
                               },
                               children: [
                                 ExpansionPanel(
-                                    headerBuilder:
-                                        (BuildContext context, bool isExpanded) {
+                                    headerBuilder: (BuildContext context,
+                                        bool isExpanded) {
                                       return const ListTile(
-                                        title: Text(LocalizationConstants.billingShipping),
+                                        title: Text(LocalizationConstants
+                                            .billingShipping),
                                       );
                                     },
                                     body: BillingShippingWidget(
-                                        billingShippingEntity: billingShippingEntity),
+                                        billingShippingEntity:
+                                            billingShippingEntity),
                                     isExpanded: list?[0].isExpanded ?? true,
                                     canTapOnHeader: true),
                                 ExpansionPanel(
-                                    headerBuilder:
-                                        (BuildContext context, bool isExpanded) {
+                                    headerBuilder: (BuildContext context,
+                                        bool isExpanded) {
                                       return const ListTile(
-                                        title: Text(LocalizationConstants.paymentDetails),
+                                        title: Text(LocalizationConstants
+                                            .paymentDetails),
                                       );
                                     },
                                     body: _buildPaymentDetails(
-                                        context.read<CheckoutBloc>().cart!, context),
+                                        context.read<CheckoutBloc>().cart!,
+                                        context),
                                     isExpanded: list?[1].isExpanded ?? false,
                                     canTapOnHeader: true),
                                 ExpansionPanel(
-                                    headerBuilder:
-                                        (BuildContext context, bool isExpanded) {
+                                    headerBuilder: (BuildContext context,
+                                        bool isExpanded) {
                                       return const ListTile(
-                                        title: Text(LocalizationConstants.reviewOrder),
+                                        title: Text(
+                                            LocalizationConstants.reviewOrder),
                                       );
                                     },
-                                    body: ReviewOrderWidget(reviewOrderEntity: reviewOrderEntity),
+                                    body: ReviewOrderWidget(
+                                        reviewOrderEntity: reviewOrderEntity),
                                     isExpanded: list?[2].isExpanded ?? false,
                                     canTapOnHeader: true),
                               ],
@@ -171,21 +184,35 @@ class CheckoutPage extends StatelessWidget {
             child: PrimaryButton(
               onPressed: () {
                 var index = context.read<ExpansionPanelCubit>().expansionIndex;
-                switch(index) {
-                  // case 0:
-                  //   final carrier = context.read<CheckoutBloc>().selectedCarrier;
-                  //   final service = context.read<CheckoutBloc>().selectedService;
-                  //   if (carrier != null && service != null) {
-                  //     context.read<ExpansionPanelCubit>().onContinueClick();
-                  //   }
+                switch (index) {
+                  case 0:
+                    // final carrier = context.read<CheckoutBloc>().selectedCarrier;
+                    // final service = context.read<CheckoutBloc>().selectedService;
+                    // if (carrier != null && service != null) {
+                    //   context.read<ExpansionPanelCubit>().onContinueClick();
+                    // }
+                    context.read<ExpansionPanelCubit>().onContinueClick();
                   case 1:
-                    context.closeKeyboard();
-                    // context.read<TokenExBloc>().add(TokenExValidateEvent());
-                    context.read<ExpansionPanelCubit>().onContinueClick();
+                    final paymentOptionsIsCardType = context
+                            .read<PaymentDetailsBloc>()
+                            .selectedPaymentMethod
+                            ?.cardType !=
+                        null;
+
+                    final isCreditCardSectionCompleted = context
+                        .read<PaymentDetailsBloc>()
+                        .isCreditCardSectionCompleted;
+                    if (paymentOptionsIsCardType &&
+                        !isCreditCardSectionCompleted) {
+                      context.read<TokenExBloc>().add(TokenExValidateEvent());
+                    } else {
+                      context.read<ExpansionPanelCubit>().onContinueClick();
+                    }
+
                   case 2:
-                    context.read<ExpansionPanelCubit>().onContinueClick();
+                  // context.read<ExpansionPanelCubit>().onContinueClick();
                   default:
-                    context.read<ExpansionPanelCubit>().onContinueClick();
+                  // context.read<ExpansionPanelCubit>().onContinueClick();
                 }
               },
               text: LocalizationConstants.continueText,
@@ -197,20 +224,11 @@ class CheckoutPage extends StatelessWidget {
   }
 
   Widget _buildPaymentDetails(Cart cart, BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<PaymentDetailsBloc>(
-          create: (context) => sl<PaymentDetailsBloc>()
-            ..add(LoadPaymentDetailsEvent(cart: cart)),
-        ),
-      ],
-      child: CheckoutPaymentDetails(
-          cart: cart,
-          onCompleteCheckoutPaymentSection: (Cart updatedCart) {
-            context.read<ExpansionPanelCubit>().onContinueClick();
-          }
-          ),
-    );
+    return CheckoutPaymentDetails(
+        cart: cart,
+        onCompleteCheckoutPaymentSection: () {
+          context.read<ExpansionPanelCubit>().onContinueClick();
+        });
   }
 
   Widget _buildSummary() {

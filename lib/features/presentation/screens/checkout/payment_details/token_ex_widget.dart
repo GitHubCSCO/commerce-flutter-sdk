@@ -25,7 +25,7 @@ class TokenExWebView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<TokenExBloc, TokenExState>(
-      listener: (context, state) {
+      listener: (_, state) {
         if (state is TokenExEncodeState) {
           String tokenExGetTokenScript =
               TokenExScripts.getTokenExGetTokenScript();
@@ -83,6 +83,8 @@ class TokenExWebView extends StatelessWidget {
                 final isTokenExConfigurationSet =
                     context.read<TokenExBloc>().isTokenExConfigurationSet;
                 handleWebViewRequestFromTokenEX(request.url);
+
+
                 if (request.url.endsWith('loaded')) {
                   // Handle loaded event
                   context.read<TokenExBloc>().add(
@@ -99,6 +101,8 @@ class TokenExWebView extends StatelessWidget {
                 } else {
                   return NavigationDecision.prevent;
                 }
+
+                
               },
             ),
           )

@@ -17,6 +17,8 @@ class PaymentDetailsBloc
   TokenExDto? tokenExConfiguration;
   final _poNumberController = TextEditingController();
 
+  bool isCreditCardSectionCompleted = false;
+
   PaymentDetailsBloc({required PaymentDetailsUseCase paymentDetailsUseCase})
       : _paymentDetailsUseCase = paymentDetailsUseCase,
         super(PaymentDetailsInitial()) {
@@ -25,14 +27,15 @@ class PaymentDetailsBloc
     on<UpdatePaymentMethodEvent>(
         (event, emit) => _updatePaymentMethod(event, emit));
     on<UpdateCreditCartInfoEvent>(
-        (event, emit) => _updateCteditCardInfoToCart(event, emit));
+        (event, emit) => _updateCreditCardInfoToCart(event, emit));
   }
 
-  void _updateCteditCardInfoToCart(
+  void _updateCreditCardInfoToCart(
       UpdateCreditCartInfoEvent event, Emitter<PaymentDetailsState> emit) {
     cart?.paymentOptions?.creditCard?.cardNumber = event.cardNumber;
     cart?.paymentOptions?.creditCard?.cardType = event.cardType;
     cart?.paymentOptions?.creditCard?.securityCode = event.securityCode;
+    isCreditCardSectionCompleted = true;
     updateCart(emit);
   }
 
@@ -41,10 +44,8 @@ class PaymentDetailsBloc
     emit(PaymentDetailsLoading());
     cart = event.cart;
     _setUpSelectedPaymentMethod(event.cart);
-    var paymentMethodValue = _getCurrentlySelectedPaymentMethodTitle();
     var showPOField = cart?.showPoNumber;
     emit(PaymentDetailsLoaded(
-        paymentMethodValue: paymentMethodValue,
         showPOField: showPOField,
         poTextEditingController: _poNumberController));
   }
@@ -57,7 +58,6 @@ class PaymentDetailsBloc
 
   Future<void> _setupPaymentDataSources(
       UpdatePaymentMethodEvent event, Emitter<PaymentDetailsState> emit) async {
-    var paymentMethodValue = _getCurrentlySelectedPaymentMethodTitle();
     var showPOField = cart?.showPoNumber;
     if (selectedPaymentMethod != null &&
         selectedPaymentMethod?.isCreditCard != null &&
@@ -135,7 +135,6 @@ class PaymentDetailsBloc
             // if (emit.isDone) return;
 
             emit(PaymentDetailsLoaded(
-                paymentMethodValue: paymentMethodValue,
                 tokenExEntity: tokenExEnity,
                 showPOField: showPOField,
                 poTextEditingController: _poNumberController));
@@ -145,7 +144,6 @@ class PaymentDetailsBloc
       }
     } else {
       emit(PaymentDetailsLoaded(
-          paymentMethodValue: paymentMethodValue,
           showPOField: showPOField,
           poTextEditingController: _poNumberController));
     }
@@ -171,25 +169,9 @@ class PaymentDetailsBloc
     }
   }
 
-  String _getCurrentlySelectedPaymentMethodTitle() {
-    String paymentMethodValue = '';
-
-    if (selectedPaymentMethod != null) {
-      if (selectedPaymentMethod?.description == null ||
-          selectedPaymentMethod!.description!.trim().isEmpty) {
-        paymentMethodValue = selectedPaymentMethod?.name ?? "";
-      } else {
-        paymentMethodValue = selectedPaymentMethod!.description!;
-      }
-    }
-
-    return paymentMethodValue;
-  }
-
-  void updateCart(
-       Emitter<PaymentDetailsState> emit) {
+  void updateCart(Emitter<PaymentDetailsState> emit) {
     cart?.paymentMethod = selectedPaymentMethod;
     cart?.poNumber = _poNumberController.text;
-    emit(PaymentDetailsCompletedState());
+    // emit(PaymentDetailsCompletedState());
   }
 }
