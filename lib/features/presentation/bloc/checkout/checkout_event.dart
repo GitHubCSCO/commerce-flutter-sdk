@@ -7,6 +7,8 @@ class LoadCheckoutEvent extends CheckoutEvent {
   LoadCheckoutEvent({required this.cart});
 }
 
+class PlaceOrderEvent extends CheckoutEvent {}
+
 class RequestDeliveryDateEvent extends CheckoutEvent {
   final DateTime dateTime;
 

@@ -17,6 +17,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       : _checkoutUseCase = checkoutUsecase,
         super(CheckoutInitial()) {
     on<LoadCheckoutEvent>((event, emit) => _onCheckoutLoadEvent(event, emit));
+    on<PlaceOrderEvent>((event, emit) => _onPlaceOrderEvent(event, emit));
     on<RequestDeliveryDateEvent>((event, emit) => _onRequestDeliveryDateSelect(event, emit));
     on<SelectCarrierEvent>((event, emit) => _onCarrierSelect(event, emit));
     on<SelectServiceEvent>((event, emit) => _onServiceSelect(event, emit));
@@ -61,8 +62,23 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     }
   }
 
+  Future<void> _onPlaceOrderEvent(PlaceOrderEvent event, Emitter<CheckoutState> emit) async {
+    emit(CheckoutLoading());
+    final result = await _checkoutUseCase.patchCart(cart!);
+    switch (result) {
+      case Success(value: final cartData):
+        emit(CheckoutPlaceOrder(orderNumber: (cartData?.erpOrderNumber ?? cartData?.orderNumber) ?? ''));
+        break;
+      case Failure(errorResponse: final errorResponse):
+        emit(CheckoutDataFetchFailed(
+            error: errorResponse.errorDescription ?? ''));
+        break;
+    }
+  }
+
   void _onRequestDeliveryDateSelect(RequestDeliveryDateEvent event, Emitter<CheckoutState> emit) {
     requestDeliveryDate = event.dateTime;
+    cart?.requestedDeliveryDate = event.dateTime.toIso8601String();
   }
 
   Future<void> _onCarrierSelect(SelectCarrierEvent event, Emitter<CheckoutState> emit) async {

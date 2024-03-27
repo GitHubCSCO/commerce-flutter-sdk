@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
@@ -72,98 +73,122 @@ class CheckoutPage extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: BlocBuilder<CheckoutBloc, CheckoutState>(
-              builder: (context, state) {
-                switch (state) {
-                  case CheckoutInitial():
-                  case CheckoutLoading():
-                    return const Center(child: CircularProgressIndicator());
-                  case CheckoutDataLoaded():
-                    return SingleChildScrollView(
-                      child: Column(mainAxisSize: MainAxisSize.min, children: [
-                        _buildSummary(state.cart, state.promotions),
-                        BlocBuilder<ExpansionPanelCubit, ExpansionPanelState>(
-                          builder: (context, panelState) {
-                            List<Item>? list;
-                            switch (panelState) {
-                              case ExpansionPanelChangeState():
-                                list = panelState.list;
-                            }
-
-                            final billingShippingEntity = BillingShippingEntity(
-                                billTo: state.billToAddress,
-                                shipTo: state.shipToAddress,
-                                warehouse: state.wareHouse,
-                                shippingMethod: (state.shippingMethod
-                                        .equalsIgnoreCase(
-                                            ShippingOption.pickUp.name)
-                                    ? ShippingOption.pickUp
-                                    : ShippingOption.ship),
-                                carriers: state.cart.carriers,
-                                cartSettings: state.cartSettings,
-                                selectedCarrier: state.cart.carrier,
-                                selectedService: state.cart.shipVia);
-
-                            final reviewOrderEntity = ReviewOrderEntity(
-                                billTo: state.billToAddress,
-                                shipTo: state.shipToAddress,
-                                warehouse: state.wareHouse,
-                                shippingMethod: (state.shippingMethod
-                                    .equalsIgnoreCase(ShippingOption.pickUp.name)
-                                    ? ShippingOption.pickUp
-                                    : ShippingOption.ship),
-                                carriers: state.cart.carriers,
-                                cartSettings: state.cartSettings);
-
-                            return ExpansionPanelList(
-                              expansionCallback: (int index, bool isExpanded) {
-                                context
-                                    .read<ExpansionPanelCubit>()
-                                    .onPanelExpansionChange(index);
-                              },
-                              children: [
-                                ExpansionPanel(
-                                    headerBuilder:
-                                        (BuildContext context, bool isExpanded) {
-                                      return const ListTile(
-                                        title: Text(LocalizationConstants.billingShipping),
-                                      );
-                                    },
-                                    body: BillingShippingWidget(
-                                        billingShippingEntity: billingShippingEntity),
-                                    isExpanded: list?[0].isExpanded ?? true,
-                                    canTapOnHeader: true),
-                                ExpansionPanel(
-                                    headerBuilder:
-                                        (BuildContext context, bool isExpanded) {
-                                      return const ListTile(
-                                        title: Text(LocalizationConstants.paymentDetails),
-                                      );
-                                    },
-                                    body: _buildPaymentDetails(
-                                        context.read<CheckoutBloc>().cart!, context),
-                                    isExpanded: list?[1].isExpanded ?? false,
-                                    canTapOnHeader: true),
-                                ExpansionPanel(
-                                    headerBuilder:
-                                        (BuildContext context, bool isExpanded) {
-                                      return const ListTile(
-                                        title: Text(LocalizationConstants.reviewOrder),
-                                      );
-                                    },
-                                    body: ReviewOrderWidget(reviewOrderEntity: reviewOrderEntity),
-                                    isExpanded: list?[2].isExpanded ?? false,
-                                    canTapOnHeader: true),
-                              ],
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 8),
-                      ]),
-                    );
-                  default:
-                    return const Center(child: Text('Error'));
+            child: BlocConsumer<CheckoutBloc, CheckoutState>(
+              listener: (context, state) {
+                if (state is CheckoutPlaceOrder) {
+                  AppRoute.checkoutSuccess.navigate(context);
                 }
+              },
+              builder: (context, state) {
+                return BlocBuilder<CheckoutBloc, CheckoutState>(
+                  builder: (context, state) {
+                    switch (state) {
+                      case CheckoutInitial():
+                      case CheckoutLoading():
+                        return const Center(child: CircularProgressIndicator());
+                      case CheckoutDataLoaded():
+                        return SingleChildScrollView(
+                          child:
+                              Column(mainAxisSize: MainAxisSize.min, children: [
+                            _buildSummary(state.cart, state.promotions),
+                            BlocBuilder<ExpansionPanelCubit,
+                                ExpansionPanelState>(
+                              builder: (context, panelState) {
+                                List<Item>? list;
+                                switch (panelState) {
+                                  case ExpansionPanelChangeState():
+                                    list = panelState.list;
+                                }
+
+                                final billingShippingEntity =
+                                    BillingShippingEntity(
+                                        billTo: state.billToAddress,
+                                        shipTo: state.shipToAddress,
+                                        warehouse: state.wareHouse,
+                                        shippingMethod: (state
+                                                .shippingMethod
+                                                .equalsIgnoreCase(
+                                                    ShippingOption.pickUp.name)
+                                            ? ShippingOption.pickUp
+                                            : ShippingOption.ship),
+                                        carriers: state.cart.carriers,
+                                        cartSettings: state.cartSettings,
+                                        selectedCarrier: state.cart.carrier,
+                                        selectedService: state.cart.shipVia);
+
+                                final reviewOrderEntity = ReviewOrderEntity(
+                                    billTo: state.billToAddress,
+                                    shipTo: state.shipToAddress,
+                                    warehouse: state.wareHouse,
+                                    shippingMethod: (state.shippingMethod
+                                            .equalsIgnoreCase(
+                                                ShippingOption.pickUp.name)
+                                        ? ShippingOption.pickUp
+                                        : ShippingOption.ship),
+                                    carriers: state.cart.carriers,
+                                    cartSettings: state.cartSettings);
+
+                                return ExpansionPanelList(
+                                  expansionCallback:
+                                      (int index, bool isExpanded) {
+                                    context
+                                        .read<ExpansionPanelCubit>()
+                                        .onPanelExpansionChange(index);
+                                  },
+                                  children: [
+                                    ExpansionPanel(
+                                        headerBuilder: (BuildContext context,
+                                            bool isExpanded) {
+                                          return const ListTile(
+                                            title: Text(LocalizationConstants
+                                                .billingShipping),
+                                          );
+                                        },
+                                        body: BillingShippingWidget(
+                                            billingShippingEntity:
+                                                billingShippingEntity),
+                                        isExpanded: list?[0].isExpanded ?? true,
+                                        canTapOnHeader: true),
+                                    ExpansionPanel(
+                                        headerBuilder: (BuildContext context,
+                                            bool isExpanded) {
+                                          return const ListTile(
+                                            title: Text(LocalizationConstants
+                                                .paymentDetails),
+                                          );
+                                        },
+                                        body: _buildPaymentDetails(
+                                            context.read<CheckoutBloc>().cart!,
+                                            context),
+                                        isExpanded:
+                                            list?[1].isExpanded ?? false,
+                                        canTapOnHeader: true),
+                                    ExpansionPanel(
+                                        headerBuilder: (BuildContext context,
+                                            bool isExpanded) {
+                                          return const ListTile(
+                                            title: Text(LocalizationConstants
+                                                .reviewOrder),
+                                          );
+                                        },
+                                        body: ReviewOrderWidget(
+                                            reviewOrderEntity:
+                                                reviewOrderEntity),
+                                        isExpanded:
+                                            list?[2].isExpanded ?? false,
+                                        canTapOnHeader: true),
+                                  ],
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 8),
+                          ]),
+                        );
+                      default:
+                        return const Center(child: Text('Error'));
+                    }
+                  },
+                );
               },
             ),
           ),
@@ -172,27 +197,36 @@ class CheckoutPage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             clipBehavior: Clip.antiAlias,
             decoration: const BoxDecoration(color: Colors.white),
-            child: PrimaryButton(
-              onPressed: () {
-                var index = context.read<ExpansionPanelCubit>().expansionIndex;
-                switch(index) {
-                  // case 0:
-                  //   final carrier = context.read<CheckoutBloc>().selectedCarrier;
-                  //   final service = context.read<CheckoutBloc>().selectedService;
-                  //   if (carrier != null && service != null) {
-                  //     context.read<ExpansionPanelCubit>().onContinueClick();
-                  //   }
-                  case 1:
-                    context.closeKeyboard();
-                    // context.read<TokenExBloc>().add(TokenExValidateEvent());
-                    context.read<ExpansionPanelCubit>().onContinueClick();
-                  case 2:
-                    context.read<ExpansionPanelCubit>().onContinueClick();
-                  default:
-                    context.read<ExpansionPanelCubit>().onContinueClick();
-                }
+            child: StreamBuilder<String>(
+              stream: context.read<ExpansionPanelCubit>().buttonTextStream,
+              initialData: LocalizationConstants.continueText,
+              builder: (context, snapshot) {
+                String buttonText = snapshot.data!;
+
+                return PrimaryButton(
+                  onPressed: () {
+                    var index =
+                        context.read<ExpansionPanelCubit>().expansionIndex;
+                    switch (index) {
+                      // case 0:
+                      //   final carrier = context.read<CheckoutBloc>().selectedCarrier;
+                      //   final service = context.read<CheckoutBloc>().selectedService;
+                      //   if (carrier != null && service != null) {
+                      //     context.read<ExpansionPanelCubit>().onContinueClick();
+                      //   }
+                      case 1:
+                        context.closeKeyboard();
+                        // context.read<TokenExBloc>().add(TokenExValidateEvent());
+                        context.read<ExpansionPanelCubit>().onContinueClick();
+                      case 2:
+                        context.read<CheckoutBloc>().add(PlaceOrderEvent());
+                      default:
+                        context.read<ExpansionPanelCubit>().onContinueClick();
+                    }
+                  },
+                  text: buttonText,
+                );
               },
-              text: LocalizationConstants.continueText,
             ),
           ),
         ],

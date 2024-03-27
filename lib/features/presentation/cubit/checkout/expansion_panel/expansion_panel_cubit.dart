@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,6 +14,9 @@ class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
 
   int expansionIndex = 0;
 
+  final _continueButtonController = StreamController<String>();
+  Stream<String> get buttonTextStream => _continueButtonController.stream;
+
   ExpansionPanelCubit() : super(ExpansionPanelInitialState());
 
   Future<void> onPanelExpansionChange(int index) async {
@@ -25,6 +30,7 @@ class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
         }
       }
       emit(ExpansionPanelChangeState(list: list));
+      _updateButtonText(expansionIndex == 2 ? LocalizationConstants.placeOrder : LocalizationConstants.continueText);
     }
   }
 
@@ -42,6 +48,15 @@ class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
       }
     }
     emit(ExpansionPanelChangeState(list: list));
+    _updateButtonText(expansionIndex == 2 ? LocalizationConstants.placeOrder : LocalizationConstants.continueText);
+  }
+
+  void _updateButtonText(String text) {
+    _continueButtonController.add(text);
+  }
+
+  void dispose() {
+    _continueButtonController.close();
   }
 
 }
