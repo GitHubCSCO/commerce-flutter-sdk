@@ -1,6 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
@@ -81,7 +80,8 @@ class CheckoutPage extends StatelessWidget {
             child: BlocConsumer<CheckoutBloc, CheckoutState>(
                 listener: (context, state) {
               if (state is CheckoutPlaceOrder) {
-                AppRoute.checkoutSuccess.navigate(context);
+                AppRoute.checkoutSuccess
+                    .navigate(context, extra: state.orderNumber);
               }
             }, builder: (context, state) {
               return BlocBuilder<CheckoutBloc, CheckoutState>(
