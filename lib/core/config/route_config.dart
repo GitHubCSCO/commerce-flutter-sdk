@@ -7,6 +7,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/account/accou
 import 'package:commerce_flutter_app/features/presentation/screens/biometric/biometric_login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/nav_bar/nav_bar_screen.dart';
@@ -113,6 +114,14 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
+  // path: /checkoutSuccess
+  final checkoutSuccess = createNode(
+    name: AppRoute.checkoutSuccess.name,
+    path: AppRoute.checkoutSuccess.suffix,
+    builder: (context, state) => const CheckoutSuccessScreen(orderNumber: ''),
+    parent: null,
+  );
+
   // path: /product details
   final productDetails = createNode(
     name: AppRoute.productDetails.name,
@@ -145,5 +154,5 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
-  return [root, navbarRoot, welcome, domainSelection, login, biometricLogin, checkout];
+  return [root, navbarRoot, welcome, domainSelection, login, biometricLogin, checkout, checkoutSuccess];
 }

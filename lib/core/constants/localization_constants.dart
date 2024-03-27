@@ -371,7 +371,7 @@ class LocalizationConstants {
   static const cancelCheckout = "Cancel Checkout?";
   static const orderConfirmation = "Order Confirmation";
   static const orderFailed = "Order Failed";
-  static const placeYourOrder = "Place Your Order";
+  static const placeOrder = "Place Order";
   static const promoCodes = "Promo (%s)";
   static const promoCodesMore = "Promo (%s & %s More)";
   static const yourOrderNumber = "Your Order Number";
@@ -441,6 +441,7 @@ class LocalizationConstants {
   static const nextDayAir = "Next Day Air";
   static const mastercard = "Mastercard";
   static const selectCarrier = "Select Carrier";
+  static const orderPlacedSuccessfully = "%s placed successfully";
 
   // Location Finder
   static const locationFinder = "Location Finder";
