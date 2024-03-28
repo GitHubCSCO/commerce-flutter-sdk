@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_con
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void _reloadShopPage(BuildContext context) {
+  context.read<CartCountCubit>().loadCurrentCartCount();
   context.read<ShopPageBloc>().add(const ShopPageLoadEvent());
 }
 

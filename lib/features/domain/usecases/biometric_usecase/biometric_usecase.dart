@@ -23,7 +23,6 @@ class BiometricUsecase extends BaseUseCase {
 
       return authenticated;
     } on PlatformException catch (e) {
-      print(e);
       return false;
     }
   }

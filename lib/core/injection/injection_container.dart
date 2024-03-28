@@ -17,6 +17,8 @@ import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_shipping_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/biometric_usecase/biometric_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/payment_details/payment_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
@@ -27,6 +29,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_us
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_cms_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_products_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
@@ -34,6 +37,9 @@ import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
@@ -46,13 +52,19 @@ import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_controller/biometric_controller_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/checkout/expansion_panel/expansion_panel_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/date_selection/date_selection_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/list_picker/list_picker_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/search_products/seardh_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:commerce_flutter_app/services/secure_storage_service.dart';
@@ -117,6 +129,8 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => SearchPageCmsBloc(searchUseCase: sl()))
     ..registerFactory(() => SearchCmsUseCase())
     ..registerFactory(() => SearchUseCase())
+    ..registerFactory(() => SearchProductsCubit(searchProductsusecase: sl()))
+    ..registerFactory(() => SearchProductsusecase())
 
     //account
     ..registerFactory(() => AccountPageBloc(accountUseCase: sl()))
@@ -130,6 +144,22 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => CartShippingUseCase())
     ..registerFactory(() => CartContentBloc(contentUseCase: sl()))
     ..registerFactory(() => CartContentUseCase())
+    ..registerFactory(() => CartCountCubit(cartUseCase: sl()))
+
+    //checkout
+    ..registerFactory(() => ExpansionPanelCubit())
+    ..registerFactory(() => CheckoutBloc(checkoutUsecase: sl()))
+    ..registerFactory(() => CheckoutUsecase())
+    ..registerFactory(() => PaymentDetailsBloc(paymentDetailsUseCase: sl()))
+    ..registerFactory(() => PaymentDetailsUseCase())
+    ..registerFactory(() => TokenExBloc())
+    ..registerFactory(() => ReviewOrderCubit())
+
+    //date selection
+    ..registerFactory(() => DateSelectionCubit())
+
+    //list picker
+    ..registerFactory(() => ListPickerCubit())
 
     //settings domain
     ..registerFactory(() => SettingsDomainCubit(domainUsecase: sl()))

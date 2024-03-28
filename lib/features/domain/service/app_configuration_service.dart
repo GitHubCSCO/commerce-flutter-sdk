@@ -177,7 +177,8 @@ class AppConfigurationService extends ServiceBase
   }
 
   @override
-  Future<TokenExDto> getTokenExConfiguration({String token = ""}) async {
+  Future<Result<TokenExDto, ErrorResponse>> getTokenExConfiguration(
+      String token ) async {
     var url = token.isEmpty
         ? _tokenExConfigurationUrl
         : '$_tokenExConfigurationUrl?token=$token';
@@ -188,11 +189,11 @@ class AppConfigurationService extends ServiceBase
     switch (tokenExDtoResponse) {
       case Success(value: final value):
         {
-          return value!;
+          return Success(value!);
         }
       case Failure(errorResponse: final errorResponse):
         {
-          throw Exception(errorResponse);
+          return Failure(ErrorResponse(errorDescription: errorResponse.errorDescription));
         }
     }
   }

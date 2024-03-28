@@ -11,6 +11,8 @@ import 'package:commerce_flutter_app/features/presentation/bloc/search/search/se
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_state.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/search_products/seardh_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
 import 'package:flutter/material.dart';
@@ -201,8 +203,11 @@ class SearchPage extends BaseDynamicContentScreen {
                 case SearchProductsLoadedState:
                   final productCollectionResult =
                       (state as SearchProductsLoadedState).result!;
-                  return SearchProductsWidget(
-                      productCollectionResult: productCollectionResult);
+                  return BlocProvider<SearchProductsCubit>(
+                    create: (context) => sl<SearchProductsCubit>(),
+                    child: SearchProductsWidget(
+                        productCollectionResult: productCollectionResult),
+                  );
                 case SearchProductsFailureState:
                   return Center(
                       child: Text(LocalizationConstants.searchNoResults,

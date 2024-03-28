@@ -1,5 +1,3 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
@@ -8,6 +6,9 @@ import 'package:commerce_flutter_app/features/presentation/helper/routing/route_
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/biometric/biometric_login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/nav_bar/nav_bar_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_history/order_history_screen.dart';
@@ -20,6 +21,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/welcome/domai
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 final GlobalKey<NavigatorState> _rootNavigator = GlobalKey(debugLabel: 'root');
 
@@ -102,6 +104,28 @@ List<NavigationNode> _getNavigationRoot() {
     parent: navbarRoot,
   );
 
+  // path: /checkout
+  final checkout = createNode(
+    name: AppRoute.checkout.name,
+    path: AppRoute.checkout.suffix,
+    builder: (context, state) {
+      final cart = state.extra as Cart;
+      return CheckoutScreen(cart: cart);
+    },
+    parent: null,
+  );
+
+  // path: /checkoutSuccess
+  final checkoutSuccess = createNode(
+    name: AppRoute.checkoutSuccess.name,
+    path: AppRoute.checkoutSuccess.suffix,
+    builder: (context, state)  {
+      final orderNumber = state.extra as String;
+      return CheckoutSuccessScreen(orderNumber: orderNumber);
+    },
+    parent: null,
+  );
+
   // path: /product details
   final productDetails = createNode(
     name: AppRoute.productDetails.name,
@@ -141,6 +165,7 @@ List<NavigationNode> _getNavigationRoot() {
     builder: (context, state) => const OrderHistoryScreen(),
     parent: account,
   );
+  
+  return [root, navbarRoot, welcome, domainSelection, login, biometricLogin, checkout, checkoutSuccess];
 
-  return [root, navbarRoot, welcome, domainSelection, login, biometricLogin];
 }
