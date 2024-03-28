@@ -46,8 +46,10 @@ class ListPicker extends StatelessWidget {
             _selectItem(context, items, pickerIndex);
           }, child: Text(
             _getDescriptions(items[pickerIndex]),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.start,
-            style: OptiTextStyles.bodySmall,
+            style: OptiTextStyles.body,
           )),
         );
       },
