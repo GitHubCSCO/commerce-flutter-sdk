@@ -31,10 +31,10 @@ class CheckoutPaymentDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<PaymentDetailsBloc, PaymentDetailsState>(
       listener: (_, state) {
-        // if (state is PaymentDetailsCompletedState) {
-        //   var updatedCart = context.read<PaymentDetailsBloc>().cart;
-        //   onCompleteCheckoutPaymentSection();
-        // }
+        if (state is PaymentDetailsLoaded) {
+          context
+               .read<TokenExBloc>().resetTokenExData();
+        }
       },
       child: BlocBuilder<PaymentDetailsBloc, PaymentDetailsState>(
         builder: (_, state) {
@@ -50,11 +50,12 @@ class CheckoutPaymentDetails extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildPaymentMethodPicker(state, context),
-                  if(state.cardDetails != null)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 24.0),
-                    child: Text(state.cardDetails!, style: OptiTextStyles.body),
-                  ),
+                  if (state.cardDetails != null)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 24.0),
+                      child:
+                          Text(state.cardDetails!, style: OptiTextStyles.body),
+                    ),
                   if (state.tokenExEntity != null)
                     _buildTokenExWebView(state, context),
                   if (state.showPOField!) _buildPOField(state, context),
@@ -87,15 +88,17 @@ class CheckoutPaymentDetails extends StatelessWidget {
               flex: 2,
               child: Row(
                 children: [
-                  Expanded(child: ListPickerWidget(items: cart.paymentOptions!.paymentMethods!, callback: _onPaymentMethodSelect)),
+                  Expanded(
+                      child: ListPickerWidget(
+                          items: cart.paymentOptions!.paymentMethods!,
+                          callback: _onPaymentMethodSelect)),
                   const Icon(
                     Icons.arrow_forward_ios,
                     color: Colors.grey,
                     size: 16,
                   ),
                 ],
-              )
-          ),
+              )),
         ],
       ),
     );
@@ -114,16 +117,12 @@ class CheckoutPaymentDetails extends StatelessWidget {
                 .read<TokenExBloc>()
                 .add(HandleTokenExEvent(urlString: urlString));
           },
-          handleTokenExFinishedData: (cardNumber, cardType, securityCode, isInvalidCVV) {
-
-            if(isInvalidCVV){
+          handleTokenExFinishedData:
+              (cardNumber, cardType, securityCode, isInvalidCVV) {
+            if (isInvalidCVV) {
               CustomSnackBar.showInvalidCVV(context);
               return;
             }
-            print("handleTokenExFinishedData");
-            print(cardNumber);
-            context.closeKeyboard();
-            
             context.read<PaymentDetailsBloc>().add(
                   UpdateCreditCartInfoEvent(
                     cardNumber: cardNumber,
@@ -132,7 +131,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
                   ),
                 );
 
-                onCompleteCheckoutPaymentSection();
+            onCompleteCheckoutPaymentSection();
           },
         ),
       ),

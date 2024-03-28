@@ -27,6 +27,11 @@ class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
     emit(TokenExLoaded(tokenExEntity: tokenExEntity));
   }
 
+  void resetTokenExData() {
+    isTokenExConfigurationSet = false;
+    isCardDataFetched = false;
+  }
+
   Future<void> _handleWebViewRequest(
       HandleTokenExEvent event, Emitter<TokenExState> emit) async {
     var urlString = event.urlString;
@@ -50,7 +55,7 @@ class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
 
     var isValid = valid.toLowerCase() == 'true';
 
-    if(!isValid){
+    if (!isValid) {
       emit(TokenExInvalidCvvState());
     }
 

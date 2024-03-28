@@ -25,7 +25,7 @@ class TokenExWebView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<TokenExBloc, TokenExState>(
-      listener: (_, state) {
+      listener: (context, state) {
         if (state is TokenExEncodeState) {
           String tokenExGetTokenScript =
               TokenExScripts.getTokenExGetTokenScript();
