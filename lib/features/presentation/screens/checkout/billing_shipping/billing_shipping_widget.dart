@@ -7,6 +7,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/date_picker_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -75,11 +76,11 @@ class BillingShippingWidget extends StatelessWidget {
               days: billingShippingEntity.cartSettings!.maximumDeliveryPeriod!);
           maximumDate = DateTime.now().add(duration);
         }
-        list.add(_buildRequestDeliveryDate(maximumDate));
+        list.add(_buildRequestDeliveryDate(maximumDate, billingShippingEntity.requestDeliveryDate));
       }
     } else {
       list.add(_buildPickUpAddress());
-      list.add(_buildRequestDeliveryDate(null));
+      list.add(_buildRequestDeliveryDate(null, billingShippingEntity.requestDeliveryDate));
     }
 
     return list;
@@ -101,34 +102,34 @@ class BillingShippingWidget extends StatelessWidget {
         const SizedBox(height: 12),
         Text(
           LocalizationConstants.billingAddress,
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
           style: OptiTextStyles.subtitle,
         ),
         const SizedBox(height: 8),
         Text(
           billingShippingEntity.billTo?.companyName ?? '',
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
           style: OptiTextStyles.body,
         ),
         Text(
           billingShippingEntity.billTo?.fullAddress ?? '',
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
           style: OptiTextStyles.body,
         ),
         Text(
           billingShippingEntity.billTo?.country?.name ?? '',
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
           style: OptiTextStyles.body,
         ),
         const SizedBox(height: 16),
         Text(
           billingShippingEntity.billTo?.email ?? '',
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
           style: OptiTextStyles.body,
         ),
         Text(
           billingShippingEntity.billTo?.phone ?? '',
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
           style: OptiTextStyles.body,
         ),
         const SizedBox(height: 12),
@@ -148,23 +149,23 @@ class BillingShippingWidget extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             LocalizationConstants.shippingAddress,
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.start,
             style: OptiTextStyles.subtitle,
           ),
           const SizedBox(height: 8),
           Text(
             billingShippingEntity.shipTo?.companyName ?? '',
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.start,
             style: OptiTextStyles.body,
           ),
           Text(
             billingShippingEntity.shipTo?.fullAddress ?? '',
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.start,
             style: OptiTextStyles.body,
           ),
           Text(
             billingShippingEntity.shipTo?.country?.name ?? '',
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.start,
             style: OptiTextStyles.body,
           ),
           const SizedBox(height: 12),
@@ -190,28 +191,28 @@ class BillingShippingWidget extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 LocalizationConstants.pickUpLocation,
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: OptiTextStyles.subtitle,
               ),
               const SizedBox(height: 8),
               Text(
                 billingShippingEntity.warehouse?.description ?? '',
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: OptiTextStyles.subtitle,
               ),
               Text(
                 billingShippingEntity.warehouse?.wareHouseAddress() ?? '',
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: OptiTextStyles.body,
               ),
               Text(
                 billingShippingEntity.warehouse?.wareHouseCity() ?? '',
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: OptiTextStyles.body,
               ),
               Text(
                 billingShippingEntity.warehouse?.phone ?? '',
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: OptiTextStyles.body,
               ),
               const SizedBox(height: 12),
@@ -247,35 +248,53 @@ class BillingShippingWidget extends StatelessWidget {
         const SizedBox(height: 8),
         Row(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              LocalizationConstants.carrier,
-              textAlign: TextAlign.center,
-              style: OptiTextStyles.body,
+            Expanded(
+              flex: 1,
+              child: Text(
+                LocalizationConstants.carrier,
+                textAlign: TextAlign.start,
+                style: OptiTextStyles.body,
+              ),
             ),
-            ListPickerWidget(items: carriers, selectedIndex: selectedCarrierIndex, callback: _onCarrierSelect),
-            const Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.grey,
-              size: 16,
+            Expanded(
+              flex: 2,
+                child: Row(
+                  children: [
+                    Expanded(child: ListPickerWidget(items: carriers, selectedIndex: selectedCarrierIndex, callback: _onCarrierSelect)),
+                    const Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey,
+                      size: 16,
+                    ),
+                  ],
+                )
             ),
           ],
         ),
         Row(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              LocalizationConstants.service,
-              textAlign: TextAlign.center,
-              style: OptiTextStyles.body,
+            Expanded(
+              flex: 1,
+              child: Text(
+                LocalizationConstants.service,
+                textAlign: TextAlign.start,
+                style: OptiTextStyles.body,
+              ),
             ),
-            ListPickerWidget(items: services, selectedIndex: selectedServiceIndex, callback: _onServiceSelect),
-            const Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.grey,
-              size: 16,
+            Expanded(
+                flex: 2,
+                child: Row(
+                  children: [
+                    Expanded(child: ListPickerWidget(items: services, selectedIndex: selectedServiceIndex, callback: _onServiceSelect)),
+                    const Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey,
+                      size: 16,
+                    ),
+                  ],
+                )
             ),
           ],
         ),
@@ -283,7 +302,7 @@ class BillingShippingWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildRequestDeliveryDate(DateTime? maxDate) {
+  Widget _buildRequestDeliveryDate(DateTime? maxDate, DateTime? selectedDate) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -298,18 +317,27 @@ class BillingShippingWidget extends StatelessWidget {
         const SizedBox(height: 8),
         Row(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              LocalizationConstants.date,
-              textAlign: TextAlign.center,
-              style: OptiTextStyles.body,
+            Expanded(
+              flex: 1,
+              child: Text(
+                LocalizationConstants.date,
+                textAlign: TextAlign.start,
+                style: OptiTextStyles.body,
+              ),
             ),
-            DatePickerWidget(maxDate: maxDate, callback: _onSelectDate),
-            const Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.grey,
-              size: 16,
+            Expanded(
+                flex: 2,
+                child: Row(
+                  children: [
+                    Expanded(child: DatePickerWidget(maxDate: maxDate, selectedDateTime: selectedDate, callback: _onSelectDate)),
+                    const Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.grey,
+                      size: 16,
+                    ),
+                  ],
+                )
             ),
           ],
         ),

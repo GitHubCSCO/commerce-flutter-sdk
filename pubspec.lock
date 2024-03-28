@@ -293,10 +293,10 @@ packages:
     dependency: transitive
     description:
       name: dio
-      sha256: "50fec96118958b97c727d0d8f67255d3683f16cc1f90d9bc917b5d4fe3abeca9"
+      sha256: "0978e9a3e45305a80a7210dbeaf79d6ee8bee33f70c8e542dc654c952070217f"
       url: "https://pub.dev"
     source: hosted
-    version: "5.4.2"
+    version: "5.4.2+1"
   dio_cookie_manager:
     dependency: transitive
     description:
@@ -797,7 +797,7 @@ packages:
     description:
       path: "."
       ref: "bug/ICM-4233-dart"
-      resolved-ref: "6af796ec487564e60b78b3b3fd95e781c3c11406"
+      resolved-ref: "224352f43106565f9a2348c4e2bb08446c242d05"
       url: "git@github.com:InsiteSoftware/commerce-dart-sdk.git"
     source: git
     version: "0.1.0-dev.1"

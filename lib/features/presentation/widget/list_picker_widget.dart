@@ -43,13 +43,16 @@ class ListPicker extends StatelessWidget {
       },
       builder: (_, state) {
         int pickerIndex = state.index;
-        return TextButton(onPressed: () {
-          _selectItem(context, items, pickerIndex);
-        }, child: Text(
-          _getDescriptions(items[pickerIndex]),
-          textAlign: TextAlign.center,
-          style: OptiTextStyles.bodySmall,
-        ));
+        return Container(
+          alignment: AlignmentDirectional.centerStart,
+          child: TextButton(onPressed: () {
+            _selectItem(context, items, pickerIndex);
+          }, child: Text(
+            _getDescriptions(items[pickerIndex]),
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.bodySmall,
+          )),
+        );
       },
     );
   }

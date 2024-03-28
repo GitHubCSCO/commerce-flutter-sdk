@@ -10,6 +10,7 @@ class BillingShippingEntity {
   final CartSettings? cartSettings;
   final CarrierDto? selectedCarrier;
   final ShipViaDto? selectedService;
+  final DateTime? requestDeliveryDate;
 
   BillingShippingEntity(
       {this.billTo,
@@ -19,7 +20,8 @@ class BillingShippingEntity {
       this.carriers,
       this.cartSettings,
       this.selectedCarrier,
-      this.selectedService});
+      this.selectedService,
+      this.requestDeliveryDate});
 
   BillingShippingEntity copyWith(
       {BillTo? billTo,
@@ -29,7 +31,8 @@ class BillingShippingEntity {
       List<CarrierDto>? carriers,
       CartSettings? cartSettings,
       CarrierDto? selectedCarrier,
-      ShipViaDto? selectedService}) {
+      ShipViaDto? selectedService,
+      DateTime? requestDeliveryDate}) {
     return BillingShippingEntity(
       billTo: billTo ?? this.billTo,
       shipTo: shipTo ?? this.shipTo,
@@ -39,6 +42,7 @@ class BillingShippingEntity {
       cartSettings: cartSettings ?? this.cartSettings,
       selectedCarrier: selectedCarrier ?? this.selectedCarrier,
       selectedService: selectedService ?? this.selectedService,
+      requestDeliveryDate: requestDeliveryDate ?? this.requestDeliveryDate,
     );
   }
 }
