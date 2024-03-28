@@ -253,13 +253,12 @@ class OptiTextStyles {
       );
 
   static TextStyle get subtitleLink => _getInterFontStyle(
-    const TextStyle(
-      fontSize: 14,
-      color: linkColor,
-      fontWeight: titleWeight,
-    ),
-  );
-
+        const TextStyle(
+          fontSize: 14,
+          color: linkColor,
+          fontWeight: titleWeight,
+        ),
+      );
 
   // Body
   static TextStyle get body => _getInterFontStyle(
@@ -271,12 +270,12 @@ class OptiTextStyles {
       );
 
   static TextStyle get bodyFade => _getInterFontStyle(
-    const TextStyle(
-      fontSize: 14,
-      color: bodyFadeColor,
-      fontWeight: bodyWeight,
-    ),
-  );
+        const TextStyle(
+          fontSize: 14,
+          color: bodyFadeColor,
+          fontWeight: bodyWeight,
+        ),
+      );
 
   static TextStyle get bodySmall => _getInterFontStyle(
         const TextStyle(
@@ -299,6 +298,14 @@ class OptiTextStyles {
           fontSize: 12,
           color: _primary,
           fontWeight: linkWeight,
+        ),
+      );
+
+  static TextStyle get badgesStyle => _getInterFontStyle(
+        const TextStyle(
+          fontSize: 14,
+          color: Colors.white,
+          fontWeight: titleWeight,
         ),
       );
 }

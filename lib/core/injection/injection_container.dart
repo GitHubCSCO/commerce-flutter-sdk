@@ -28,6 +28,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_us
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_cms_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_products_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
@@ -50,6 +51,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_controller/biometric_controller_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/expansion_panel/expansion_panel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
@@ -60,6 +62,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/list_picker/lis
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/search_products/seardh_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:get_it/get_it.dart';
@@ -119,6 +122,8 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => SearchPageCmsBloc(searchUseCase: sl()))
     ..registerFactory(() => SearchCmsUseCase())
     ..registerFactory(() => SearchUseCase())
+    ..registerFactory(() => SearchProductsCubit(searchProductsusecase: sl()))
+    ..registerFactory(() => SearchProductsusecase())
 
     //account
     ..registerFactory(() => AccountPageBloc(accountUseCase: sl()))
@@ -132,6 +137,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => CartShippingUseCase())
     ..registerFactory(() => CartContentBloc(contentUseCase: sl()))
     ..registerFactory(() => CartContentUseCase())
+    ..registerFactory(() => CartCountCubit(cartUseCase: sl()))
 
     //checkout
     ..registerFactory(() => ExpansionPanelCubit())

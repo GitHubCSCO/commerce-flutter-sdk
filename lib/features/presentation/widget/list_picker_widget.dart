@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ListPickerWidget extends StatelessWidget {
-
   final void Function(BuildContext context, Object item)? callback;
   final List<Object> items;
   final int? selectedIndex;
@@ -23,11 +22,9 @@ class ListPickerWidget extends StatelessWidget {
       child: ListPicker(items: items, callback: callback),
     );
   }
-
 }
 
 class ListPicker extends StatelessWidget {
-
   final void Function(BuildContext context, Object item)? callback;
   final List<Object> items;
 
@@ -102,5 +99,4 @@ class ListPicker extends StatelessWidget {
       return '';
     }
   }
-
 }

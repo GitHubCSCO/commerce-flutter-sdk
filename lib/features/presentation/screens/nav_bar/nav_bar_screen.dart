@@ -1,9 +1,14 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:badges/badges.dart' as badges;
 
 class NavBarScreen extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -12,6 +17,26 @@ class NavBarScreen extends StatelessWidget {
     super.key,
     required this.navigationShell,
   });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CartCountCubit, CartCountState>(
+        builder: (context, state) {
+      return NavBarPage(
+        navigationShell: navigationShell,
+        cartCount: state
+            .cartItemCount, // Pass the cartCount from the state to the NavBarPage.
+      );
+    });
+  }
+}
+
+class NavBarPage extends StatelessWidget {
+  final StatefulNavigationShell navigationShell;
+  int cartCount;
+
+  NavBarPage(
+      {super.key, required this.navigationShell, required this.cartCount});
 
   /// Navigate to the current location of the branch at the provided index when
   /// tapping an item in the BottomNavigationBar.
@@ -95,16 +120,16 @@ class NavBarScreen extends StatelessWidget {
   ) {
     return BottomNavigationBarItem(
       icon: Padding(
-        padding: const EdgeInsets.only(bottom: 5.0),
-        child: _getIcon(index, unselectedIconPath, selectedIconPath),
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
+        child: _getIcon(index, unselectedIconPath, selectedIconPath, cartCount),
       ),
       label: label,
     );
   }
 
-  Widget _getIcon(
-      int index, String unselectedIconPath, String selectedIconPath) {
-    return navigationShell.currentIndex == index
+  Widget _getIcon(int index, String unselectedIconPath, String selectedIconPath,
+      [int cartCount = 0]) {
+    Widget icon = navigationShell.currentIndex == index
         ? SvgPicture.asset(
             selectedIconPath,
             fit: BoxFit.fitWidth,
@@ -113,5 +138,22 @@ class NavBarScreen extends StatelessWidget {
             unselectedIconPath,
             fit: BoxFit.fitWidth,
           );
+
+    if (index == 3) {
+      return badges.Badge(
+        position: badges.BadgePosition.topEnd(top: -30, end: -20),
+        badgeStyle: badges.BadgeStyle(
+          shape: badges.BadgeShape.circle,
+          badgeColor: Colors.black,
+          padding: EdgeInsets.all(10),
+          elevation: 0,
+        ),
+        badgeContent:
+            Text(cartCount.toString(), style: OptiTextStyles.badgesStyle),
+        child: icon,
+      );
+    } else {
+      return icon;
+    }
   }
 }

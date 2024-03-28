@@ -25,7 +25,7 @@ class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
     this.isAddToCartAllowed,
     this.addToCartButtonEnabled,
     this.addToCartButtonText,
-    this.quantityText,
+    this.quantityText = "1",
     this.unitOfMeasurePickerTitle,
     this.selectedUnitOfMeasure,
     this.selectedUnitOfMeasureValueText,
