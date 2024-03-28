@@ -18,7 +18,7 @@ class PaymentDetailsUseCase extends BaseUseCase {
         .getTokenExConfiguration(token);
   }
 
-  String get tokenExIFrameUrl {
+  String? get tokenExIFrameUrl {
     var url = coreServiceProvider.getAppConfigurationService().tokenExIFrameUrl;
     return url;
   }
