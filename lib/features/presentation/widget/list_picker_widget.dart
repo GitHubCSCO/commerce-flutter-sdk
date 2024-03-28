@@ -48,7 +48,7 @@ class ListPicker extends StatelessWidget {
         }, child: Text(
           _getDescriptions(items[pickerIndex]),
           textAlign: TextAlign.center,
-          style: OptiTextStyles.body,
+          style: OptiTextStyles.bodySmall,
         ));
       },
     );
@@ -94,7 +94,11 @@ class ListPicker extends StatelessWidget {
       return item.description!;
     } else if (item is ShipViaDto) {
       return item.description!;
-    } else {
+    } else if (item is PaymentMethodDto){
+      return item.description!;
+    }
+    
+    else {
       return '';
     }
   }

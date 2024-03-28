@@ -6,21 +6,23 @@ part 'checkout_state.dart';
 part 'checkout_event.dart';
 
 class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
-
   final CheckoutUsecase _checkoutUseCase;
   DateTime? requestDeliveryDate;
   Cart? cart;
   CarrierDto? selectedCarrier;
   ShipViaDto? selectedService;
+  PaymentOptionsDto? selectedPayment;
 
   CheckoutBloc({required CheckoutUsecase checkoutUsecase})
       : _checkoutUseCase = checkoutUsecase,
         super(CheckoutInitial()) {
     on<LoadCheckoutEvent>((event, emit) => _onCheckoutLoadEvent(event, emit));
     on<PlaceOrderEvent>((event, emit) => _onPlaceOrderEvent(event, emit));
-    on<RequestDeliveryDateEvent>((event, emit) => _onRequestDeliveryDateSelect(event, emit));
+    on<RequestDeliveryDateEvent>(
+        (event, emit) => _onRequestDeliveryDateSelect(event, emit));
     on<SelectCarrierEvent>((event, emit) => _onCarrierSelect(event, emit));
     on<SelectServiceEvent>((event, emit) => _onServiceSelect(event, emit));
+    on<SelectPaymentEvent>((event, emit) => _onPaymentSelect(event, emit));
   }
 
   void updateCheckoutData(Cart cart) {
@@ -42,9 +44,14 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         final wareHouse = session?.pickUpWarehouse;
         var shippingMethod = session?.fulfillmentMethod;
         var promotionsResult = await _checkoutUseCase.loadCartPromotions();
-        PromotionCollectionModel? promotionCollection = promotionsResult is Success ? (promotionsResult as Success).value : null;
+        PromotionCollectionModel? promotionCollection =
+            promotionsResult is Success
+                ? (promotionsResult as Success).value
+                : null;
         var cartSettingResult = await _checkoutUseCase.getCartSetting();
-        CartSettings cartSettings = cartSettingResult is Success ? (cartSettingResult as Success).value : null;
+        CartSettings cartSettings = cartSettingResult is Success
+            ? (cartSettingResult as Success).value
+            : null;
 
         emit(CheckoutDataLoaded(
             cart: cartData,
@@ -62,12 +69,15 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     }
   }
 
-  Future<void> _onPlaceOrderEvent(PlaceOrderEvent event, Emitter<CheckoutState> emit) async {
+  Future<void> _onPlaceOrderEvent(
+      PlaceOrderEvent event, Emitter<CheckoutState> emit) async {
     emit(CheckoutLoading());
     final result = await _checkoutUseCase.patchCart(cart!);
     switch (result) {
       case Success(value: final cartData):
-        emit(CheckoutPlaceOrder(orderNumber: "bkjbkjlbkbk"));
+        emit(CheckoutPlaceOrder(
+            orderNumber:
+                (cartData?.erpOrderNumber ?? cartData?.orderNumber) ?? ''));
         break;
       case Failure(errorResponse: final errorResponse):
         emit(CheckoutDataFetchFailed(
@@ -76,12 +86,14 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     }
   }
 
-  void _onRequestDeliveryDateSelect(RequestDeliveryDateEvent event, Emitter<CheckoutState> emit) {
+  void _onRequestDeliveryDateSelect(
+      RequestDeliveryDateEvent event, Emitter<CheckoutState> emit) {
     requestDeliveryDate = event.dateTime;
     cart?.requestedDeliveryDate = event.dateTime.toIso8601String();
   }
 
-  Future<void> _onCarrierSelect(SelectCarrierEvent event, Emitter<CheckoutState> emit) async {
+  Future<void> _onCarrierSelect(
+      SelectCarrierEvent event, Emitter<CheckoutState> emit) async {
     emit(CheckoutLoading());
     selectedCarrier = event.carrier;
     selectedService = event.carrier.shipVias?.first;
@@ -91,7 +103,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     add(LoadCheckoutEvent(cart: cart!));
   }
 
-  Future<void> _onServiceSelect(SelectServiceEvent event, Emitter<CheckoutState> emit) async {
+  Future<void> _onServiceSelect(
+      SelectServiceEvent event, Emitter<CheckoutState> emit) async {
     emit(CheckoutLoading());
     selectedService = event.service;
     cart?.shipVia = selectedService;
@@ -99,4 +112,10 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     add(LoadCheckoutEvent(cart: cart!));
   }
 
+  Future<void> _onPaymentSelect(
+      SelectPaymentEvent event, Emitter<CheckoutState> emit) async {
+    emit(CheckoutLoading());
+    selectedPayment = event.paymentMethod;
+    cart?.paymentOptions = selectedPayment;
+  }
 }

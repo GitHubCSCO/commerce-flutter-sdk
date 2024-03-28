@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/tokenex_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/token_ex_view_mode.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/payment_details/payment_details_usecase.dart';
@@ -17,6 +18,8 @@ class PaymentDetailsBloc
   TokenExDto? tokenExConfiguration;
   final _poNumberController = TextEditingController();
 
+  bool isCreditCardSectionCompleted = false;
+
   PaymentDetailsBloc({required PaymentDetailsUseCase paymentDetailsUseCase})
       : _paymentDetailsUseCase = paymentDetailsUseCase,
         super(PaymentDetailsInitial()) {
@@ -25,14 +28,15 @@ class PaymentDetailsBloc
     on<UpdatePaymentMethodEvent>(
         (event, emit) => _updatePaymentMethod(event, emit));
     on<UpdateCreditCartInfoEvent>(
-        (event, emit) => _updateCteditCardInfoToCart(event, emit));
+        (event, emit) => _updateCreditCardInfoToCart(event, emit));
   }
 
-  void _updateCteditCardInfoToCart(
+  void _updateCreditCardInfoToCart(
       UpdateCreditCartInfoEvent event, Emitter<PaymentDetailsState> emit) {
     cart?.paymentOptions?.creditCard?.cardNumber = event.cardNumber;
     cart?.paymentOptions?.creditCard?.cardType = event.cardType;
     cart?.paymentOptions?.creditCard?.securityCode = event.securityCode;
+    isCreditCardSectionCompleted = true;
     updateCart(emit);
   }
 
@@ -41,10 +45,8 @@ class PaymentDetailsBloc
     emit(PaymentDetailsLoading());
     cart = event.cart;
     _setUpSelectedPaymentMethod(event.cart);
-    var paymentMethodValue = _getCurrentlySelectedPaymentMethodTitle();
     var showPOField = cart?.showPoNumber;
     emit(PaymentDetailsLoaded(
-        paymentMethodValue: paymentMethodValue,
         showPOField: showPOField,
         poTextEditingController: _poNumberController));
   }
@@ -57,11 +59,11 @@ class PaymentDetailsBloc
 
   Future<void> _setupPaymentDataSources(
       UpdatePaymentMethodEvent event, Emitter<PaymentDetailsState> emit) async {
-    var paymentMethodValue = _getCurrentlySelectedPaymentMethodTitle();
     var showPOField = cart?.showPoNumber;
     if (selectedPaymentMethod != null &&
         selectedPaymentMethod?.isCreditCard != null &&
-        !selectedPaymentMethod!.isCreditCard!) {
+        !selectedPaymentMethod!.isCreditCard! &&
+        selectedPaymentMethod?.cardType != null) {
       var parameters = PaymentProfileQueryParameters(
         page: 1,
         pageSize: double.maxFinite.toInt(),
@@ -99,6 +101,7 @@ class PaymentDetailsBloc
             var expDate =
                 "${LocalizationConstants.expires} ${creditCard.expirationDate}";
 
+            var cardDetails = _getCardDetails(creditCard);
             if (tokenExConfiguration == null ||
                 (tokenExConfiguration != null &&
                     !tokenExConfiguration!.token
@@ -135,8 +138,8 @@ class PaymentDetailsBloc
             // if (emit.isDone) return;
 
             emit(PaymentDetailsLoaded(
-                paymentMethodValue: paymentMethodValue,
                 tokenExEntity: tokenExEnity,
+                cardDetails: cardDetails,
                 showPOField: showPOField,
                 poTextEditingController: _poNumberController));
           }
@@ -145,11 +148,18 @@ class PaymentDetailsBloc
       }
     } else {
       emit(PaymentDetailsLoaded(
-          paymentMethodValue: paymentMethodValue,
+          tokenExEntity: null,
           showPOField: showPOField,
           poTextEditingController: _poNumberController));
     }
   }
+
+ 
+
+  String _getCardDetails(AccountPaymentProfile creditCard) {
+  String creditCardType = creditCard.cardType!.capitalize();
+  return "$creditCardType ${creditCard.maskedCardNumber} ${creditCard.expirationDate}";
+}
 
   void _setUpSelectedPaymentMethod(Cart cart) {
     if (cart.paymentOptions?.paymentMethods != null) {
@@ -171,25 +181,9 @@ class PaymentDetailsBloc
     }
   }
 
-  String _getCurrentlySelectedPaymentMethodTitle() {
-    String paymentMethodValue = '';
-
-    if (selectedPaymentMethod != null) {
-      if (selectedPaymentMethod?.description == null ||
-          selectedPaymentMethod!.description!.trim().isEmpty) {
-        paymentMethodValue = selectedPaymentMethod?.name ?? "";
-      } else {
-        paymentMethodValue = selectedPaymentMethod!.description!;
-      }
-    }
-
-    return paymentMethodValue;
-  }
-
-  void updateCart(
-       Emitter<PaymentDetailsState> emit) {
+  void updateCart(Emitter<PaymentDetailsState> emit) {
     cart?.paymentMethod = selectedPaymentMethod;
     cart?.poNumber = _poNumberController.text;
-    emit(PaymentDetailsCompletedState());
+    // emit(PaymentDetailsCompletedState());
   }
 }
