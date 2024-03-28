@@ -43,7 +43,6 @@ class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
     }
 
     if (urlString.endsWith("error")) {
-      // tokenExLoadFailedCallback?.call(true);
       emit(TokenExInvalidCvvState());
       return;
     }
@@ -62,7 +61,6 @@ class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
     if (isValid && !isCardDataFetched) {
       emit(TokenExEncodeState());
     } else {
-      // tokenExValidateCallback?.call(false);
       return;
     }
 
@@ -73,7 +71,6 @@ class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
       if (encodedCVVCode != null &&
           encodedCreditCardNumber != null &&
           encodedType != null) {
-        print("TokenExEncodingFinishedState");
         isCardDataFetched = true;
         emit(TokenExEncodingFinishedState(
             cardNumber: encodedCreditCardNumber,

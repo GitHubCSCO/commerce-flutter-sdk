@@ -93,8 +93,6 @@ class BiometricAuthenticationService
     final value =
         await _commerceAPIServiceProvider.getLocalStorageService().load(key);
 
-    print('hasCurrentUserSeenEnableBiometricOptionView: $key -----> $value');
-
     return !value.isNullOrEmpty;
   }
 
@@ -203,8 +201,5 @@ class BiometricAuthenticationService
     await _commerceAPIServiceProvider
         .getLocalStorageService()
         .save(key, userName);
-
-    print(
-        'markCurrentUserAsSeenEnableBiometricOptionView: $key -----> $userName');
   }
 }

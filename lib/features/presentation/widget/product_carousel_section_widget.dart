@@ -18,7 +18,8 @@ class ProductCarouselSectionWidget extends StatelessWidget {
       builder: (context, state) {
         switch (state.runtimeType) {
           case ProductCarouselLoadedState:
-            final isLoading = (state as ProductCarouselLoadedState).isPricingLoading;
+            final isLoading =
+                (state as ProductCarouselLoadedState).isPricingLoading;
             final productCarouselList =
                 (state as ProductCarouselLoadedState).productCarouselList;
             if (productCarouselList.isEmpty) {
@@ -44,24 +45,25 @@ class ProductCarouselSectionWidget extends StatelessWidget {
                       shrinkWrap: true,
                       itemCount: productCarouselList.length,
                       separatorBuilder: (context, index) =>
-                      const SizedBox(width: 12),
+                          const SizedBox(width: 12),
                       itemBuilder: (context, index) {
                         final productCarousel = productCarouselList[index];
-                        var productId = productCarousel.product!.styleParentId ??
-                            productCarousel.product!.id;
+                        var productId =
+                            productCarousel.product!.styleParentId ??
+                                productCarousel.product!.id;
                         return InkWell(
                           onTap: () {
-                            print("InkWell details ");
                             AppRoute.productDetails.navigateBackStack(
                               context,
-                              pathParameters: {"productId": productId.toString()},
+                              pathParameters: {
+                                "productId": productId.toString()
+                              },
                               extra: productCarousel.product!,
-                              // queryParameters: {
-                              //   "product": productCarousel.product!
-                              // },
                             );
                           },
-                          child: ProductCarouselItemWidget(productCarousel: productCarousel, isLoading: isLoading),
+                          child: ProductCarouselItemWidget(
+                              productCarousel: productCarousel,
+                              isLoading: isLoading),
                         );
                       },
                     ),

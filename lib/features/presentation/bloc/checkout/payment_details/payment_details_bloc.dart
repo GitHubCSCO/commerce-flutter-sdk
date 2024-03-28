@@ -117,9 +117,6 @@ class PaymentDetailsBloc
               }
             }
 
-            // if (tokenExConfiguration == null) {
-            //   return;
-            // }
             var tokenExStyle = TokenExStyleDto(
               baseColor: OptiAppColors.lightGrayTextColor.toString(),
               focusColor: OptiAppColors.primaryColor.toString(),
@@ -134,8 +131,6 @@ class PaymentDetailsBloc
                 tokenexMode: TokenExViewMode.cvv,
                 cardType: creditCard.cardType,
                 tokenExUrl: tokeExUrl);
-
-            // if (emit.isDone) return;
 
             emit(PaymentDetailsLoaded(
                 tokenExEntity: tokenExEnity,
@@ -154,12 +149,10 @@ class PaymentDetailsBloc
     }
   }
 
- 
-
   String _getCardDetails(AccountPaymentProfile creditCard) {
-  String creditCardType = creditCard.cardType!.capitalize();
-  return "$creditCardType ${creditCard.maskedCardNumber} ${creditCard.expirationDate}";
-}
+    String creditCardType = creditCard.cardType!.capitalize();
+    return "$creditCardType ${creditCard.maskedCardNumber} ${creditCard.expirationDate}";
+  }
 
   void _setUpSelectedPaymentMethod(Cart cart) {
     if (cart.paymentOptions?.paymentMethods != null) {
@@ -184,6 +177,5 @@ class PaymentDetailsBloc
   void updateCart(Emitter<PaymentDetailsState> emit) {
     cart?.paymentMethod = selectedPaymentMethod;
     cart?.poNumber = _poNumberController.text;
-    // emit(PaymentDetailsCompletedState());
   }
 }

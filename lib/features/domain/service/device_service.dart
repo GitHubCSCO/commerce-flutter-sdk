@@ -38,7 +38,6 @@ class DeviceService implements IDeviceService {
         final String result = await platform.invokeMethod('getBiometricType');
         type = result;
       } on PlatformException catch (e) {
-        print("Failed to get biometric type: '${e.message}'.");
         type = 'Unknown';
       }
 

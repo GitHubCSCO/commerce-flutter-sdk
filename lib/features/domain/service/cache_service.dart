@@ -4,7 +4,6 @@ import 'package:hive/hive.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class CacheService extends ICacheService {
-
   static const String _boxName = 'app_data';
 
   @override
@@ -27,7 +26,6 @@ class CacheService extends ICacheService {
       await box.put(key, value);
       return true;
     } catch (e) {
-      print('Error persisting data: $e');
       return false;
     }
   }
@@ -44,7 +42,6 @@ class CacheService extends ICacheService {
       final box = await Hive.openBox(_boxName);
       return box.get(key);
     } catch (e) {
-      print('Error loading persisted data: $e');
       return null as T;
     }
   }
@@ -60,9 +57,7 @@ class CacheService extends ICacheService {
     try {
       final box = await Hive.openBox(_boxName);
       await box.delete(key);
-    } catch (e) {
-      print('Error removing persisted data: $e');
-    }
+    } catch (e) {}
   }
 
   @override
@@ -75,13 +70,12 @@ class CacheService extends ICacheService {
   void clearAllCaches() async {
     try {
       await Hive.deleteBoxFromDisk(_boxName);
-    } catch (e) {
-      print('Error clearing all data: $e');
-    }
+    } catch (e) {}
   }
 
   @override
-  Future<T> getOrFetchObject<T>(String key, Future<T> Function() fetchFunc, {DateTime? absoluteExpiration}) {
+  Future<T> getOrFetchObject<T>(String key, Future<T> Function() fetchFunc,
+      {DateTime? absoluteExpiration}) {
     // TODO: implement getOrFetchObject
     throw UnimplementedError();
   }
@@ -111,7 +105,8 @@ class CacheService extends ICacheService {
   }
 
   @override
-  Future<void> insertObject<T>(String key, T value, {DateTime? absoluteExpiration}) {
+  Future<void> insertObject<T>(String key, T value,
+      {DateTime? absoluteExpiration}) {
     // TODO: implement insertObject
     throw UnimplementedError();
   }
@@ -121,5 +116,4 @@ class CacheService extends ICacheService {
     // TODO: implement getObject
     throw UnimplementedError();
   }
-  
 }
