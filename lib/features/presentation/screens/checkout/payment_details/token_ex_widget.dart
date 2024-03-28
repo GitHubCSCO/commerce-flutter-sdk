@@ -22,8 +22,6 @@ class TokenExWebView extends StatelessWidget {
       required this.handleWebViewRequestFromTokenEX,
       required this.handleTokenExFinishedData});
 
-
-
   @override
   Widget build(BuildContext context) {
     return BlocListener<TokenExBloc, TokenExState>(
@@ -36,8 +34,6 @@ class TokenExWebView extends StatelessWidget {
           String tokenExValidateScript =
               TokenExScripts.getTokenExValidateScript();
           _webViewController.runJavaScript(tokenExValidateScript);
-
-          
         } else if (state is TokenExEncodingFinishedState) {
           handleTokenExFinishedData(
               state.cardNumber, state.cardType, state.securityCode, false);
@@ -54,9 +50,7 @@ class TokenExWebView extends StatelessWidget {
               onProgress: (int progress) {
                 // Update loading bar.
               },
-              onPageStarted: (String url) {
-                print("onPageStarted: $url");
-              },
+              onPageStarted: (String url) {},
               onPageFinished: (String url) {
                 // DidFinishNavigation
 
@@ -87,7 +81,6 @@ class TokenExWebView extends StatelessWidget {
               },
               onWebResourceError: (WebResourceError error) {},
               onNavigationRequest: (NavigationRequest request) {
-                print(request.url);
                 final isTokenExConfigurationSet =
                     context.read<TokenExBloc>().isTokenExConfigurationSet;
                 handleWebViewRequestFromTokenEX(request.url);

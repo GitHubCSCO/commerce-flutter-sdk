@@ -123,8 +123,6 @@ class CheckoutPaymentDetails extends StatelessWidget {
               CustomSnackBar.showInvalidCVV(context);
               return;
             }
-            print("handleTokenExFinishedData");
-            print(cardNumber);
             context.read<PaymentDetailsBloc>().add(
                   UpdateCreditCartInfoEvent(
                     cardNumber: cardNumber,
