@@ -114,7 +114,11 @@ class CheckoutPage extends StatelessWidget {
                                           ? ShippingOption.pickUp
                                           : ShippingOption.ship),
                                       carriers: state.cart.carriers,
-                                      cartSettings: state.cartSettings);
+                                      cartSettings: state.cartSettings,
+                                      selectedCarrier: state.selectedCarrier,
+                                      selectedService: state.selectedService,
+                                      requestDeliveryDate: state.requestDeliveryDate,
+                                  );
 
                               final reviewOrderEntity = ReviewOrderEntity(
                                   billTo: state.billToAddress,
@@ -126,7 +130,8 @@ class CheckoutPage extends StatelessWidget {
                                       ? ShippingOption.pickUp
                                       : ShippingOption.ship),
                                   carriers: state.cart.carriers,
-                                  cartSettings: state.cartSettings);
+                                  cartSettings: state.cartSettings,
+                                  paymentMethod: state.cart.paymentMethod);
 
                               return ExpansionPanelList(
                                 expansionCallback:
@@ -232,11 +237,6 @@ class CheckoutPage extends StatelessWidget {
                         }
 
                       case 2:
-                        context.read<CheckoutBloc>().add(SelectPaymentEvent(
-                            context
-                                .read<PaymentDetailsBloc>()
-                                .cart!
-                                .paymentOptions!));
                         context.read<CheckoutBloc>().add(PlaceOrderEvent());
                       default:
                         context.read<ExpansionPanelCubit>().onContinueClick();
@@ -257,7 +257,11 @@ class CheckoutPage extends StatelessWidget {
         cart: cart,
         onCompleteCheckoutPaymentSection: () {
           // context.closeKeyboard();
-
+          context.read<CheckoutBloc>().add(SelectPaymentEvent(
+              context
+                  .read<PaymentDetailsBloc>()
+                  .cart!
+                  .paymentOptions!));
           context.read<ExpansionPanelCubit>().onContinueClick();
         });
   }
