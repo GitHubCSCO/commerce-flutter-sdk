@@ -11,11 +11,15 @@ class PaymentDetailsLoading extends PaymentDetailsState {}
 
 class PaymentDetailsLoaded extends PaymentDetailsState {
   final TokenExEntity? tokenExEntity;
+  final String? cardDetails;
   final bool? showPOField;
   final TextEditingController? poTextEditingController;
 
   PaymentDetailsLoaded(
-      {this.tokenExEntity, this.showPOField, this.poTextEditingController});
+      {this.tokenExEntity,
+      this.cardDetails,
+      this.showPOField,
+      this.poTextEditingController});
 }
 
 class PaymentDetailsCompletedState extends PaymentDetailsState {}

@@ -213,9 +213,24 @@ class CheckoutPage extends StatelessWidget {
                           context.read<ExpansionPanelCubit>().onContinueClick();
                         }
                       case 1:
-                        // context.closeKeyboard();
-                        context.read<TokenExBloc>().add(TokenExValidateEvent());
-                      // context.read<ExpansionPanelCubit>().onContinueClick();
+                        var isPaymentCardType = context
+                                .read<PaymentDetailsBloc>()
+                                .selectedPaymentMethod
+                                ?.cardType !=
+                            null;
+                        var isCreditCardSectionCompleted = context
+                            .read<PaymentDetailsBloc>()
+                            .isCreditCardSectionCompleted;
+
+                        if (isPaymentCardType &&
+                            !isCreditCardSectionCompleted) {
+                          context
+                              .read<TokenExBloc>()
+                              .add(TokenExValidateEvent());
+                        } else {
+                          context.read<ExpansionPanelCubit>().onContinueClick();
+                        }
+
                       case 2:
                         context.read<CheckoutBloc>().add(SelectPaymentEvent(
                             context

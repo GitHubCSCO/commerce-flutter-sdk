@@ -7,6 +7,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/token_ex_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,11 @@ class CheckoutPaymentDetails extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildPaymentMethodPicker(state, context),
+                  if(state.cardDetails != null)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 24.0),
+                    child: Text(state.cardDetails!, style: OptiTextStyles.body),
+                  ),
                   if (state.tokenExEntity != null)
                     _buildTokenExWebView(state, context),
                   if (state.showPOField!) _buildPOField(state, context),
@@ -64,7 +70,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
   Widget _buildPaymentMethodPicker(
       PaymentDetailsLoaded state, BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.fromLTRB(24.0, 0, 24.0, 0),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,7 +106,12 @@ class CheckoutPaymentDetails extends StatelessWidget {
                 .read<TokenExBloc>()
                 .add(HandleTokenExEvent(urlString: urlString));
           },
-          handleTokenExFinishedData: (cardNumber, cardType, securityCode) {
+          handleTokenExFinishedData: (cardNumber, cardType, securityCode, isInvalidCVV) {
+
+            if(isInvalidCVV){
+              CustomSnackBar.showInvalidCVV(context);
+              return;
+            }
             print("handleTokenExFinishedData");
             print(cardNumber);
             context.closeKeyboard();

@@ -49,6 +49,10 @@ class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
 
     var isValid = valid.toLowerCase() == 'true';
 
+    if(!isValid){
+      emit(TokenExInvalidCvvState());
+    }
+
     if (isValid && !isCardDataFetched) {
       emit(TokenExEncodeState());
     } else {

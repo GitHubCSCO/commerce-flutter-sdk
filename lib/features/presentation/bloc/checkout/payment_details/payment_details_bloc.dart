@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/tokenex_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/token_ex_view_mode.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/payment_details/payment_details_usecase.dart';
@@ -61,7 +62,8 @@ class PaymentDetailsBloc
     var showPOField = cart?.showPoNumber;
     if (selectedPaymentMethod != null &&
         selectedPaymentMethod?.isCreditCard != null &&
-        !selectedPaymentMethod!.isCreditCard!) {
+        !selectedPaymentMethod!.isCreditCard! &&
+        selectedPaymentMethod?.cardType != null) {
       var parameters = PaymentProfileQueryParameters(
         page: 1,
         pageSize: double.maxFinite.toInt(),
@@ -99,6 +101,7 @@ class PaymentDetailsBloc
             var expDate =
                 "${LocalizationConstants.expires} ${creditCard.expirationDate}";
 
+            var cardDetails = _getCardDetails(creditCard);
             if (tokenExConfiguration == null ||
                 (tokenExConfiguration != null &&
                     !tokenExConfiguration!.token
@@ -136,6 +139,7 @@ class PaymentDetailsBloc
 
             emit(PaymentDetailsLoaded(
                 tokenExEntity: tokenExEnity,
+                cardDetails: cardDetails,
                 showPOField: showPOField,
                 poTextEditingController: _poNumberController));
           }
@@ -144,10 +148,18 @@ class PaymentDetailsBloc
       }
     } else {
       emit(PaymentDetailsLoaded(
+          tokenExEntity: null,
           showPOField: showPOField,
           poTextEditingController: _poNumberController));
     }
   }
+
+ 
+
+  String _getCardDetails(AccountPaymentProfile creditCard) {
+  String creditCardType = creditCard.cardType!.capitalize();
+  return "$creditCardType ${creditCard.maskedCardNumber} ${creditCard.expirationDate}";
+}
 
   void _setUpSelectedPaymentMethod(Cart cart) {
     if (cart.paymentOptions?.paymentMethods != null) {
