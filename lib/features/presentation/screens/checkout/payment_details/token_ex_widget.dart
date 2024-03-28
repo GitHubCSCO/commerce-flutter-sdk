@@ -9,7 +9,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 typedef handleWebViewRequestFromTokenEX = void Function(String urlString);
 typedef handleTokenExFinishedData = void Function(
-    String cardNumber, String cardType, String securityCode);
+    String cardNumber, String cardType, String securityCode, bool isInvalidCVV);
 
 class TokenExWebView extends StatelessWidget {
   final TokenExEntity tokenExEntity;
@@ -25,7 +25,7 @@ class TokenExWebView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<TokenExBloc, TokenExState>(
-      listener: (context, state) {
+      listener: (_, state) {
         if (state is TokenExEncodeState) {
           String tokenExGetTokenScript =
               TokenExScripts.getTokenExGetTokenScript();
@@ -36,8 +36,9 @@ class TokenExWebView extends StatelessWidget {
           _webViewController.runJavaScript(tokenExValidateScript);
         } else if (state is TokenExEncodingFinishedState) {
           handleTokenExFinishedData(
-              state.cardNumber, state.cardType, state.securityCode);
-          
+              state.cardNumber, state.cardType, state.securityCode, false);
+        } else if (state is TokenExInvalidCvvState) {
+          handleTokenExFinishedData(null, null, null, true);
         }
       },
       child: WebViewWidget(
@@ -83,6 +84,7 @@ class TokenExWebView extends StatelessWidget {
                 final isTokenExConfigurationSet =
                     context.read<TokenExBloc>().isTokenExConfigurationSet;
                 handleWebViewRequestFromTokenEX(request.url);
+
                 if (request.url.endsWith('loaded')) {
                   // Handle loaded event
                   context.read<TokenExBloc>().add(

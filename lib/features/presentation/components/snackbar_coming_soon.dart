@@ -18,4 +18,13 @@ class CustomSnackBar {
       ),
     );
   }
+
+    static void showInvalidCVV(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Invalid CVV"),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
 }

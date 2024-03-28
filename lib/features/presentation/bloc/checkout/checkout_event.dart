@@ -7,8 +7,30 @@ class LoadCheckoutEvent extends CheckoutEvent {
   LoadCheckoutEvent({required this.cart});
 }
 
+class PlaceOrderEvent extends CheckoutEvent {}
+
 class RequestDeliveryDateEvent extends CheckoutEvent {
   final DateTime dateTime;
 
   RequestDeliveryDateEvent(this.dateTime);
 }
+
+class SelectCarrierEvent extends CheckoutEvent {
+  final CarrierDto carrier;
+
+  SelectCarrierEvent(this.carrier);
+}
+
+class SelectServiceEvent extends CheckoutEvent {
+  final ShipViaDto service;
+
+  SelectServiceEvent(this.service);
+}
+
+class SelectPaymentEvent extends CheckoutEvent {
+  final PaymentOptionsDto paymentMethod;
+
+  SelectPaymentEvent(this.paymentMethod);
+}
+
+

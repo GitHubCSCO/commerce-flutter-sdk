@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shipping_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/warehouse_extension.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/date_picker_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
@@ -39,8 +40,30 @@ class BillingShippingWidget extends StatelessWidget {
 
       if (billingShippingEntity.carriers != null &&
           billingShippingEntity.carriers!.isNotEmpty) {
-        billingShippingEntity.carriers!.add(billingShippingEntity.carriers![0]);
-        list.add(_buildShippingMethod(billingShippingEntity.carriers!, billingShippingEntity.carriers![0].shipVias!));
+        int selectedCarrierIndex = 0;
+        int selectedServiceIndex = 0;
+
+        for(int i = 0; i < (billingShippingEntity.carriers?.length ?? 0); i++) {
+          if (billingShippingEntity.selectedCarrier != null &&
+              billingShippingEntity.selectedCarrier!.id! ==
+                  billingShippingEntity.carriers![i].id!) {
+            selectedCarrierIndex = i;
+          }
+        }
+
+        for(int i = 0; i < (billingShippingEntity.carriers?[selectedCarrierIndex].shipVias?.length ?? 0); i++) {
+          if (billingShippingEntity.selectedService != null &&
+              billingShippingEntity.selectedService!.id! ==
+                  billingShippingEntity.carriers?[selectedCarrierIndex].shipVias?[i].id!) {
+            selectedServiceIndex = i;
+          }
+        }
+
+        list.add(_buildShippingMethod(
+            billingShippingEntity.carriers!,
+            billingShippingEntity.carriers![0].shipVias!,
+            selectedCarrierIndex,
+            selectedServiceIndex));
       }
 
       if (billingShippingEntity.cartSettings != null &&
@@ -205,7 +228,11 @@ class BillingShippingWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildShippingMethod(List<CarrierDto> carriers, List<ShipViaDto> services) {
+  Widget _buildShippingMethod(
+      List<CarrierDto> carriers,
+      List<ShipViaDto> services,
+      int selectedCarrierIndex,
+      int selectedServiceIndex) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -227,7 +254,7 @@ class BillingShippingWidget extends StatelessWidget {
               textAlign: TextAlign.center,
               style: OptiTextStyles.body,
             ),
-            ListPickerWidget(items: carriers, callback: _onCarrierSelect),
+            ListPickerWidget(items: carriers, selectedIndex: selectedCarrierIndex, callback: _onCarrierSelect),
             const Icon(
               Icons.arrow_forward_ios,
               color: Colors.grey,
@@ -244,7 +271,7 @@ class BillingShippingWidget extends StatelessWidget {
               textAlign: TextAlign.center,
               style: OptiTextStyles.body,
             ),
-            ListPickerWidget(items: services, callback: _onCarrierSelect),
+            ListPickerWidget(items: services, selectedIndex: selectedServiceIndex, callback: _onServiceSelect),
             const Icon(
               Icons.arrow_forward_ios,
               color: Colors.grey,
@@ -297,11 +324,18 @@ class BillingShippingWidget extends StatelessWidget {
   }
 
   void _onCarrierSelect(BuildContext context, Object item) {
+    context.read<CheckoutBloc>().add(SelectCarrierEvent(item as CarrierDto));
+    context.read<ReviewOrderCubit>().onOrderConfigChange();
+  }
 
+  void _onServiceSelect(BuildContext context, Object item) {
+    context.read<CheckoutBloc>().add(SelectServiceEvent(item as ShipViaDto));
+    context.read<ReviewOrderCubit>().onOrderConfigChange();
   }
 
   void _onSelectDate(BuildContext context, DateTime dateTime) {
     context.read<CheckoutBloc>().add(RequestDeliveryDateEvent(dateTime));
+    context.read<ReviewOrderCubit>().onOrderConfigChange();
   }
 
 }

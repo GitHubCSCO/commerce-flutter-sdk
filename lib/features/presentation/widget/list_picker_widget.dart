@@ -10,14 +10,15 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class ListPickerWidget extends StatelessWidget {
   final void Function(BuildContext context, Object item)? callback;
   final List<Object> items;
+  final int? selectedIndex;
 
   const ListPickerWidget(
-      {super.key, required this.items, required this.callback});
+      {super.key, required this.items, this.selectedIndex, required this.callback});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ListPickerCubit>(
-      create: (context) => sl<ListPickerCubit>(),
+      create: (context) => sl<ListPickerCubit>()..onInitialSelection(selectedIndex),
       child: ListPicker(items: items, callback: callback),
     );
   }
@@ -39,15 +40,13 @@ class ListPicker extends StatelessWidget {
       },
       builder: (_, state) {
         int pickerIndex = state.index;
-        return TextButton(
-            onPressed: () {
-              _selectItem(context, items, pickerIndex);
-            },
-            child: Text(
-              _getDescriptions(items[pickerIndex]),
-              textAlign: TextAlign.center,
-              style: OptiTextStyles.body,
-            ));
+        return TextButton(onPressed: () {
+          _selectItem(context, items, pickerIndex);
+        }, child: Text(
+          _getDescriptions(items[pickerIndex]),
+          textAlign: TextAlign.center,
+          style: OptiTextStyles.bodySmall,
+        ));
       },
     );
   }
@@ -92,9 +91,11 @@ class ListPicker extends StatelessWidget {
       return item.description!;
     } else if (item is ShipViaDto) {
       return item.description!;
-    } else if (item is PaymentMethodDto) {
+    } else if (item is PaymentMethodDto){
       return item.description!;
-    } else {
+    }
+    
+    else {
       return '';
     }
   }

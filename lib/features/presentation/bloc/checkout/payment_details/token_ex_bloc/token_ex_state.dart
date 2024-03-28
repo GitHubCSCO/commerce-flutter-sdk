@@ -28,3 +28,9 @@ class TokenExEncodingFinishedState extends TokenExState {
       required this.cardType,
       required this.securityCode});
 }
+
+
+
+class TokenExInvalidCvvState extends TokenExState {
+  TokenExInvalidCvvState();
+}

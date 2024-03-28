@@ -8,8 +8,13 @@ class ListPickerCubit extends Cubit<ListPickerState> {
 
   ListPickerCubit() : super(ListPickerState(0));
 
+  Future<void> onInitialSelection(int? index) async {
+    pickerIndex = index == -1 ? 0 : index ?? 0;
+    emit(ListPickerState(pickerIndex));
+  }
+
   Future<void> onPick(int index) async {
     pickerIndex = index;
-    emit(ListPickerState(index));
+    emit(ListPickerState(pickerIndex));
   }
 }
