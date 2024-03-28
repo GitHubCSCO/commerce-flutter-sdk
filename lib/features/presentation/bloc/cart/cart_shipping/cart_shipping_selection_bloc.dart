@@ -22,6 +22,7 @@ class CartShippingSelectionBloc extends Bloc<CartShippingSelectionEvent, CartShi
   }
 
   Future<void> _onCartShippingSelectionChangeState(CartShippingOptionChangeEvent event, Emitter<CartShippingSelectionState> emit) async {
+    emit(CartShippingDefaultState(event.selectedOption));
     await _shippingUseCase.patchCurrentShippingOption(event.selectedOption);
     emit(CartShippingSelectionChangeState(event.selectedOption));
   }

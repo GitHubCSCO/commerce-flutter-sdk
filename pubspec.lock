@@ -804,8 +804,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "bug/ICM-4233-dart"
-      resolved-ref: "224352f43106565f9a2348c4e2bb08446c242d05"
+      ref: develop
+      resolved-ref: "5bf49252883e3f37fbd01257ddc15b475803696b"
       url: "git@github.com:InsiteSoftware/commerce-dart-sdk.git"
     source: git
     version: "0.1.0-dev.1"
