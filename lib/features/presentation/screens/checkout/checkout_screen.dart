@@ -213,6 +213,7 @@ class CheckoutPage extends StatelessWidget {
                           context.read<ExpansionPanelCubit>().onContinueClick();
                         }
                       case 1:
+                      FocusManager.instance.primaryFocus?.unfocus();
                         var isPaymentCardType = context
                                 .read<PaymentDetailsBloc>()
                                 .selectedPaymentMethod

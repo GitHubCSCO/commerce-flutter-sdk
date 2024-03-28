@@ -22,6 +22,8 @@ class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
 
   Future<void> _setUpTokenExField(
       LoadTokenExFieldEvent event, Emitter<TokenExState> emit) async {
+    isTokenExConfigurationSet = false;
+    isCardDataFetched = false;
     emit(TokenExLoading());
     var tokenExEntity = event.tokenExEntity;
     emit(TokenExLoaded(tokenExEntity: tokenExEntity));
@@ -49,7 +51,7 @@ class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
 
     var isValid = valid.toLowerCase() == 'true';
 
-    if(!isValid){
+    if (!isValid) {
       emit(TokenExInvalidCvvState());
     }
 
