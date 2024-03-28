@@ -139,7 +139,7 @@ class NavBarPage extends StatelessWidget {
             fit: BoxFit.fitWidth,
           );
 
-    if (index == 3) {
+    if (index == 3 && cartCount > 0) {
       return badges.Badge(
         position: badges.BadgePosition.topEnd(top: -30, end: -20),
         badgeStyle: badges.BadgeStyle(

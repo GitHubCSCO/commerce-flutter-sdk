@@ -14,10 +14,14 @@ class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
 
   int expansionIndex = 0;
 
-  final _continueButtonController = StreamController<String>();
+  late StreamController<String> _continueButtonController;
+
   Stream<String> get buttonTextStream => _continueButtonController.stream;
 
-  ExpansionPanelCubit() : super(ExpansionPanelInitialState());
+  ExpansionPanelCubit() : super(ExpansionPanelInitialState()) {
+    _continueButtonController = StreamController<String>.broadcast();
+    _continueButtonController.add(LocalizationConstants.continueText);
+  }
 
   Future<void> onPanelExpansionChange(int index) async {
     if (expansionIndex > index) {
