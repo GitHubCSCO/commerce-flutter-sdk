@@ -317,10 +317,10 @@ class ReviewOrderWidget extends StatelessWidget {
   }
 
   String _paymentDescription(PaymentMethodDto paymentMethodDto) {
-    if (paymentMethodDto.name != null && paymentMethodDto.name!.isNotEmpty) {
-      return paymentMethodDto.name!;
-    } else {
+    if (paymentMethodDto.description != null && paymentMethodDto.description!.isNotEmpty) {
       return paymentMethodDto.description!;
+    } else {
+      return paymentMethodDto.name!;
     }
   }
 
