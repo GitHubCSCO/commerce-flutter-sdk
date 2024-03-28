@@ -8,17 +8,40 @@ class DomainUsecase extends BaseUseCase {
 
   static const _domainKey = 'DomainKey';
 
-  Future<String?> getSavedDomain() async {
-    final result = await commerceAPIServiceProvider
+  Future<String?> getDomainInSettingsScreen() async {
+    bool isStaticDomain = coreServiceProvider
+            .getAppConfigurationService()
+            .shouldUseStaticDomain ??
+        false;
+
+    return isStaticDomain ? null : (await getDomain());
+  }
+
+  Future<String?> getDomain() async {
+    var domain = await commerceAPIServiceProvider
         .getLocalStorageService()
         .load(_domainKey);
-    if (result != null) {
-      ClientConfig.hostUrl = result;
-      commerceAPIServiceProvider.getClientService().host = result;
-      commerceAPIServiceProvider.getAdminClientService().host = result;
+
+    if (coreServiceProvider
+            .getAppConfigurationService()
+            .shouldUseStaticDomain ??
+        false) {
+      domain =
+          coreServiceProvider.getAppConfigurationService().domain.isNullOrEmpty
+              ? domain
+              : coreServiceProvider.getAppConfigurationService().domain;
     }
 
-    return result;
+    if (domain.isNullOrEmpty) {
+      await commerceAPIServiceProvider.getSecureStorageService().clearAll();
+      return null;
+    }
+
+    ClientConfig.hostUrl = domain;
+    commerceAPIServiceProvider.getClientService().host = domain;
+    commerceAPIServiceProvider.getAdminClientService().host = domain;
+
+    return domain;
   }
 
   Future<DomainChangeStatus> domainSelectHandler(String domain) async {

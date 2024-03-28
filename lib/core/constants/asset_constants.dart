@@ -29,4 +29,8 @@ class AssetConstants {
 
   static const String checkoutArrowIcon =
       "assets/images/checkout_icons/arrow.svg";
+  static const String configuration = "assets/config/Configuration.json";
+
+  static const String sortIcon = "assets/images/icon_sort.svg";
+  static const String filterIcon = "assets/images/icon_filter.svg";
 }

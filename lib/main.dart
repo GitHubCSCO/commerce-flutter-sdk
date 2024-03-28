@@ -11,15 +11,15 @@ import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   initialHiveDatabase();
   initCommerceSDK();
-  initInjectionContainer();
+  await initInjectionContainer();
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => sl<AuthCubit>()),
+        BlocProvider(create: (context) => sl<AuthCubit>()..loadAuthenticationState()),
         BlocProvider(create: (context) => sl<LogoutCubit>()),
         BlocProvider(create: (context) => sl<DomainCubit>()),
         BlocProvider(

@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_b
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +24,8 @@ class ShopScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
-      BlocProvider<PullToRefreshBloc>(create: (context) => sl<PullToRefreshBloc>()),
+      BlocProvider<PullToRefreshBloc>(
+          create: (context) => sl<PullToRefreshBloc>()),
       BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
       BlocProvider<ShopPageBloc>(
         create: (context) => sl<ShopPageBloc>()..add(const ShopPageLoadEvent()),
@@ -46,14 +48,14 @@ class ShopPage extends BaseDynamicContentScreen {
         listeners: [
           BlocListener<PullToRefreshBloc, PullToRefreshState>(
             listener: (context, state) {
-              if(state is PullToRefreshLoadState) {
+              if (state is PullToRefreshLoadState) {
                 _reloadShopPage(context);
               }
             },
           ),
           BlocListener<AuthCubit, AuthState>(
             listenWhen: (previous, current) =>
-                AuthCubitChangeTrigger(previous, current),
+                authCubitChangeTrigger(previous, current),
             listener: (context, state) {
               _reloadShopPage(context);
             },
@@ -77,10 +79,18 @@ class ShopPage extends BaseDynamicContentScreen {
               }
             },
           ),
+          BlocListener<LogoutCubit, LogoutState>(
+            listener: (context, state) {
+              if (state is LogoutSuccess) {
+                context.read<AuthCubit>().loadAuthenticationState();
+              }
+            },
+          ),
         ],
         child: RefreshIndicator(
           onRefresh: () async {
-            BlocProvider.of<PullToRefreshBloc>(context).add(PullToRefreshInitialEvent());
+            BlocProvider.of<PullToRefreshBloc>(context)
+                .add(PullToRefreshInitialEvent());
           },
           child: BlocBuilder<CmsCubit, CmsState>(
             builder: (context, state) {

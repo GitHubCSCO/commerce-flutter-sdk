@@ -22,6 +22,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/p
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/order_usecase/order_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
@@ -61,10 +62,12 @@ import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect
 import 'package:commerce_flutter_app/features/presentation/cubit/list_picker/list_picker_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/seardh_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
+import 'package:commerce_flutter_app/services/secure_storage_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -103,6 +106,10 @@ Future<void> initInjectionContainer() async {
     //logout
     ..registerFactory(() => LogoutCubit(logoutUsecase: sl()))
     ..registerFactory(() => LogoutUsecase())
+
+    //order history
+    ..registerFactory(() => OrderHistoryCubit(orderUsecase: sl()))
+    ..registerFactory(() => OrderUsecase())
 
     //Pull to refresh
     ..registerFactory(() => PullToRefreshBloc())
@@ -221,12 +228,6 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
-    ..registerLazySingleton<IAppConfigurationService>(() =>
-        AppConfigurationService(
-            commerceAPIServiceProvider: sl(),
-            clientService: sl(),
-            cacheService: sl(),
-            networkService: sl()))
     ..registerLazySingleton<IContentConfigurationService>(
         () => ContentConfigurationService(commerceAPIServiceProvider: sl()))
     ..registerLazySingleton<IBiometricAuthenticationService>(
@@ -243,8 +244,7 @@ Future<void> initInjectionContainer() async {
         ClientService(localStorageService: sl(), secureStorageService: sl()))
     ..registerLazySingleton<ICacheService>(() => FakeCacheService())
     ..registerLazySingleton<INetworkService>(() => FakeNetworkService(true))
-    ..registerLazySingleton<ISecureStorageService>(
-        () => FakeSecureStorageService())
+    ..registerLazySingleton<ISecureStorageService>(() => SecureStorageService())
     ..registerLazySingleton<ILocalStorageService>(() => LocalStorageService())
     ..registerLazySingleton<ISettingsService>(() => SettingsService(
           cacheService: sl(),
@@ -275,5 +275,23 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
-    ..registerLazySingleton<IDeviceService>(() => DeviceService());
+    ..registerLazySingleton<IOrderService>(() => OrderService(
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
+    ..registerLazySingleton<IDeviceService>(() => DeviceService())
+    ..registerSingletonAsync<IAppConfigurationService>(
+      () async {
+        final service = AppConfigurationService(
+            commerceAPIServiceProvider: sl(),
+            clientService: sl(),
+            cacheService: sl(),
+            networkService: sl());
+        await service.init();
+        return service;
+      },
+    );
+
+  await sl.allReady();
 }

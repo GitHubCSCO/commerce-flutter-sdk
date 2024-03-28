@@ -100,7 +100,7 @@ class SearchPage extends BaseDynamicContentScreen {
               ),
               BlocListener<AuthCubit, AuthState>(
                 listenWhen: (previous, current) =>
-                    AuthCubitChangeTrigger(previous, current),
+                    authCubitChangeTrigger(previous, current),
                 listener: (context, state) {
                   _reloadSearchPage(context);
                 },

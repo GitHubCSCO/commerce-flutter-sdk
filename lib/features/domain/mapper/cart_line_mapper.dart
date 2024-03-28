@@ -133,6 +133,12 @@ class SectionOptionEntityMapper {
         sectionName: model.sectionName,
         optionName: model.optionName,
       );
+
+  SectionOptionDto toModel(SectionOptionEntity entity) => SectionOptionDto(
+        sectionOptionId: entity.sectionOptionId,
+        sectionName: entity.sectionName,
+        optionName: entity.optionName,
+      );
 }
 
 class ProductSubscriptionEntityMapper {
