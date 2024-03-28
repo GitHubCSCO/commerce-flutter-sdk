@@ -7,7 +7,6 @@ import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_state.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/token_ex_widget.dart';
@@ -32,20 +31,13 @@ class CheckoutPaymentDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<PaymentDetailsBloc, PaymentDetailsState>(
       listener: (_, state) {
-        // if (state is PaymentDetailsCompletedState) {
-        //   var updatedCart = context.read<PaymentDetailsBloc>().cart;
-        //   onCompleteCheckoutPaymentSection();
-        // }
         if (state is PaymentDetailsLoaded) {
-          
           context
-              .read<TokenExBloc>()
-              .add(LoadTokenExFieldEvent(tokenExEntity: state.tokenExEntity!));
+               .read<TokenExBloc>().resetTokenExData();
         }
       },
       child: BlocBuilder<PaymentDetailsBloc, PaymentDetailsState>(
         builder: (_, state) {
-        
           switch (state) {
             case PaymentDetailsInitial():
             case PaymentDetailsLoading():
@@ -96,15 +88,17 @@ class CheckoutPaymentDetails extends StatelessWidget {
               flex: 2,
               child: Row(
                 children: [
-                  Expanded(child: ListPickerWidget(items: cart.paymentOptions!.paymentMethods!, callback: _onPaymentMethodSelect)),
+                  Expanded(
+                      child: ListPickerWidget(
+                          items: cart.paymentOptions!.paymentMethods!,
+                          callback: _onPaymentMethodSelect)),
                   const Icon(
                     Icons.arrow_forward_ios,
                     color: Colors.grey,
                     size: 16,
                   ),
                 ],
-              )
-          ),
+              )),
         ],
       ),
     );
@@ -116,40 +110,32 @@ class CheckoutPaymentDetails extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(24.0, 0, 24.0, 0),
       child: Container(
         height: 60,
-        child:
-            BlocBuilder<TokenExBloc, TokenExState>(builder: (_, state) {
-          if (state is TokenExLoaded) {
-            return TokenExWebView(
-              tokenExEntity: state.tokenExEntity,
-              handleWebViewRequestFromTokenEX: (urlString) {
-                context
-                    .read<TokenExBloc>()
-                    .add(HandleTokenExEvent(urlString: urlString));
-              },
-              handleTokenExFinishedData:
-                  (cardNumber, cardType, securityCode, isInvalidCVV) {
-                if (isInvalidCVV) {
-                  CustomSnackBar.showInvalidCVV(context);
-                  return;
-                }
-                print("handleTokenExFinishedData");
-                print(cardNumber);
-                // context.closeKeyboard();
+        child: TokenExWebView(
+          tokenExEntity: state.tokenExEntity!,
+          handleWebViewRequestFromTokenEX: (urlString) {
+            context
+                .read<TokenExBloc>()
+                .add(HandleTokenExEvent(urlString: urlString));
+          },
+          handleTokenExFinishedData:
+              (cardNumber, cardType, securityCode, isInvalidCVV) {
+            if (isInvalidCVV) {
+              CustomSnackBar.showInvalidCVV(context);
+              return;
+            }
+            print("handleTokenExFinishedData");
+            print(cardNumber);
+            context.read<PaymentDetailsBloc>().add(
+                  UpdateCreditCartInfoEvent(
+                    cardNumber: cardNumber,
+                    cardType: cardType,
+                    securityCode: securityCode,
+                  ),
+                );
 
-                context.read<PaymentDetailsBloc>().add(
-                      UpdateCreditCartInfoEvent(
-                        cardNumber: cardNumber,
-                        cardType: cardType,
-                        securityCode: securityCode,
-                      ),
-                    );
-
-                onCompleteCheckoutPaymentSection();
-              },
-            );
-          }
-          return Container();
-        }),
+            onCompleteCheckoutPaymentSection();
+          },
+        ),
       ),
     );
   }

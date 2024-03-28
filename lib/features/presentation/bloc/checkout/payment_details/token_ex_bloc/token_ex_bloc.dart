@@ -22,11 +22,14 @@ class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
 
   Future<void> _setUpTokenExField(
       LoadTokenExFieldEvent event, Emitter<TokenExState> emit) async {
-    isTokenExConfigurationSet = false;
-    isCardDataFetched = false;
     emit(TokenExLoading());
     var tokenExEntity = event.tokenExEntity;
     emit(TokenExLoaded(tokenExEntity: tokenExEntity));
+  }
+
+  void resetTokenExData() {
+    isTokenExConfigurationSet = false;
+    isCardDataFetched = false;
   }
 
   Future<void> _handleWebViewRequest(

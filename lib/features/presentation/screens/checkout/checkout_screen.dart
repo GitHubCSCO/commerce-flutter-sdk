@@ -11,6 +11,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/expansion_panel/expansion_panel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
@@ -78,14 +79,15 @@ class CheckoutPage extends StatelessWidget {
         children: [
           Expanded(
             child: BlocConsumer<CheckoutBloc, CheckoutState>(
-                listener: (context, state) {
+                listener: (_, state) {
               if (state is CheckoutPlaceOrder) {
+                context.read<CartCountCubit>().loadCurrentCartCount();
                 AppRoute.checkoutSuccess
                     .navigate(context, extra: state.orderNumber);
               }
-            }, builder: (context, state) {
+            }, builder: (_, state) {
               return BlocBuilder<CheckoutBloc, CheckoutState>(
-                builder: (context, state) {
+                builder: (_, state) {
                   switch (state) {
                     case CheckoutInitial():
                     case CheckoutLoading():
