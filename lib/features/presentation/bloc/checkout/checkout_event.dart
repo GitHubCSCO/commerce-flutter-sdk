@@ -27,10 +27,16 @@ class SelectServiceEvent extends CheckoutEvent {
   SelectServiceEvent(this.service);
 }
 
-class SelectPaymentEvent extends CheckoutEvent {
-  final PaymentOptionsDto paymentMethod;
+class SelectPaymentMethodEvent extends CheckoutEvent {
+  final PaymentMethodDto paymentMethod;
 
-  SelectPaymentEvent(this.paymentMethod);
+  SelectPaymentMethodEvent(this.paymentMethod);
+}
+
+class SelectPaymentEvent extends CheckoutEvent {
+  final PaymentOptionsDto paymentOption;
+
+  SelectPaymentEvent(this.paymentOption);
 }
 
 

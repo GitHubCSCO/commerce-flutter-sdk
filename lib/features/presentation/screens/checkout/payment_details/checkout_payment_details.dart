@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_state.dart';
@@ -82,20 +83,27 @@ class CheckoutPaymentDetails extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(24.0, 0, 24.0, 0),
       child: Row(
         mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            LocalizationConstants.paymentMethod,
-            textAlign: TextAlign.center,
-            style: OptiTextStyles.body,
+          Expanded(
+            flex: 1,
+            child: Text(
+              LocalizationConstants.paymentMethod,
+              textAlign: TextAlign.start,
+              style: OptiTextStyles.body,
+            ),
           ),
-          ListPickerWidget(
-              items: cart.paymentOptions!.paymentMethods!,
-              callback: _onPaymentMethodSelect),
-          const Icon(
-            Icons.arrow_forward_ios,
-            color: Colors.grey,
-            size: 16,
+          Expanded(
+              flex: 2,
+              child: Row(
+                children: [
+                  Expanded(child: ListPickerWidget(items: cart.paymentOptions!.paymentMethods!, callback: _onPaymentMethodSelect)),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.grey,
+                    size: 16,
+                  ),
+                ],
+              )
           ),
         ],
       ),
@@ -160,8 +168,11 @@ class CheckoutPaymentDetails extends StatelessWidget {
   }
 
   void _onPaymentMethodSelect(BuildContext context, Object item) {
+    context.read<CheckoutBloc>().add(
+          SelectPaymentMethodEvent(item as PaymentMethodDto),
+        );
     context.read<PaymentDetailsBloc>().add(
-          UpdatePaymentMethodEvent(paymentMethodDto: item as PaymentMethodDto),
+          UpdatePaymentMethodEvent(paymentMethodDto: item),
         );
   }
 }

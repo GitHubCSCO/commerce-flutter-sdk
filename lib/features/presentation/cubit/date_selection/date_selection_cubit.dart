@@ -9,6 +9,14 @@ class DateSelectionCubit extends Cubit<DateSelectionState> {
 
   DateSelectionCubit() : super(DateSelectionState(LocalizationConstants.selectDate, DateTime(0)));
 
+  Future<void> onInitialDateSelect(DateTime? selectedDate) async {
+    if(selectedDate != null) {
+      String formattedDate = DateFormat('dd/MM/yyyy').format(selectedDate);
+      date = selectedDate;
+      emit(DateSelectionState(formattedDate, selectedDate));
+    }
+  }
+
   Future<void> onDateSelect(DateTime selectedDate) async {
     String formattedDate = DateFormat('dd/MM/yyyy').format(selectedDate);
     date = selectedDate;

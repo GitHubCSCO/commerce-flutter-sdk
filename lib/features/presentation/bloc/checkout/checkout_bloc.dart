@@ -22,6 +22,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         (event, emit) => _onRequestDeliveryDateSelect(event, emit));
     on<SelectCarrierEvent>((event, emit) => _onCarrierSelect(event, emit));
     on<SelectServiceEvent>((event, emit) => _onServiceSelect(event, emit));
+    on<SelectPaymentMethodEvent>((event, emit) => _onPaymentMethodSelect(event, emit));
     on<SelectPaymentEvent>((event, emit) => _onPaymentSelect(event, emit));
   }
 
@@ -60,7 +61,11 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
             wareHouse: wareHouse!,
             promotions: promotionCollection!,
             shippingMethod: shippingMethod!,
-            cartSettings: cartSettings));
+            cartSettings: cartSettings,
+            selectedCarrier: selectedCarrier,
+            selectedService: selectedService,
+            requestDeliveryDate: requestDeliveryDate,
+        ));
         break;
       case Failure(errorResponse: final errorResponse):
         emit(CheckoutDataFetchFailed(
@@ -72,12 +77,17 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   Future<void> _onPlaceOrderEvent(
       PlaceOrderEvent event, Emitter<CheckoutState> emit) async {
     emit(CheckoutLoading());
+    cart?.status = (cart?.requiresApproval ?? false) ? 'AwaitingApproval' : 'Submitted';
+
     final result = await _checkoutUseCase.patchCart(cart!);
     switch (result) {
       case Success(value: final cartData):
-        emit(CheckoutPlaceOrder(
-            orderNumber:
-                (cartData?.erpOrderNumber ?? cartData?.orderNumber) ?? ''));
+        String orderNumber = ((cartData?.erpOrderNumber != null &&
+                    cartData!.erpOrderNumber!.isNotEmpty)
+                ? cartData.erpOrderNumber
+                : cartData?.orderNumber) ??
+            '';
+        emit(CheckoutPlaceOrder(orderNumber: orderNumber));
         break;
       case Failure(errorResponse: final errorResponse):
         emit(CheckoutDataFetchFailed(
@@ -112,10 +122,18 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     add(LoadCheckoutEvent(cart: cart!));
   }
 
+  Future<void> _onPaymentMethodSelect(SelectPaymentMethodEvent event, Emitter<CheckoutState> emit) async {
+    cart?.paymentMethod = event.paymentMethod;
+  }
+
   Future<void> _onPaymentSelect(
       SelectPaymentEvent event, Emitter<CheckoutState> emit) async {
-    emit(CheckoutLoading());
-    selectedPayment = event.paymentMethod;
-    cart?.paymentOptions = selectedPayment;
+    // selectedPayment = event.paymentOption;
+    cart?.paymentOptions?.creditCard?.cardHolderName = selectedPayment?.creditCard?.cardHolderName;
+    cart?.paymentOptions?.creditCard?.cardNumber = selectedPayment?.creditCard?.cardNumber;
+    cart?.paymentOptions?.creditCard?.cardType = selectedPayment?.creditCard?.cardType;
+    cart?.paymentOptions?.creditCard?.expirationMonth = selectedPayment?.creditCard?.expirationMonth;
+    cart?.paymentOptions?.creditCard?.expirationYear = selectedPayment?.creditCard?.expirationYear;
   }
+
 }

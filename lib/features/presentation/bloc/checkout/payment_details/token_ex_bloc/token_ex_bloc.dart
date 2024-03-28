@@ -41,6 +41,7 @@ class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
 
     if (urlString.endsWith("error")) {
       // tokenExLoadFailedCallback?.call(true);
+      emit(TokenExInvalidCvvState());
       return;
     }
 

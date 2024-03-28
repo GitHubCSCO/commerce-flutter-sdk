@@ -7,14 +7,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class DatePickerWidget extends StatelessWidget {
 
   final void Function(BuildContext context, DateTime dateTime)? callback;
+  final DateTime? selectedDateTime;
   final DateTime? maxDate;
 
-  const DatePickerWidget({super.key, required this.maxDate, required this.callback});
+  const DatePickerWidget({super.key, required this.maxDate, required this.selectedDateTime, required this.callback});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<DateSelectionCubit>(
-      create: (context) => sl<DateSelectionCubit>(),
+      create: (context) => sl<DateSelectionCubit>()..onInitialDateSelect(selectedDateTime),
       child: PickDate(maxDate: maxDate, callback: callback),
     );
   }
@@ -39,15 +40,18 @@ class PickDate extends StatelessWidget {
       builder: (context, state) {
         return BlocBuilder<DateSelectionCubit, DateSelectionState>(
           builder: (context, state) {
-            return TextButton(onPressed: () {
-              final firstDate = DateTime.now();
-              final lastDate = maxDate ?? DateTime(2100);
-              _selectRequestDeliveryDate(context, firstDate, lastDate);
-            }, child: Text(
-              state.dateString,
-              textAlign: TextAlign.center,
-              style: OptiTextStyles.body,
-            ));
+            return Container(
+              alignment: AlignmentDirectional.centerStart,
+              child: TextButton(onPressed: () {
+                final firstDate = DateTime.now();
+                final lastDate = maxDate ?? DateTime(2100);
+                _selectRequestDeliveryDate(context, firstDate, lastDate);
+              }, child: Text(
+                state.dateString,
+                textAlign: TextAlign.center,
+                style: OptiTextStyles.body,
+              )),
+            );
           },
         );
       },

@@ -71,34 +71,34 @@ class ReviewOrderWidget extends StatelessWidget {
         const SizedBox(height: 12),
         Text(
           LocalizationConstants.billingAddress,
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
           style: OptiTextStyles.subtitle,
         ),
         const SizedBox(height: 8),
         Text(
           reviewOrderEntity.billTo?.companyName ?? '',
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
           style: OptiTextStyles.body,
         ),
         Text(
           reviewOrderEntity.billTo?.fullAddress ?? '',
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
           style: OptiTextStyles.body,
         ),
         Text(
           reviewOrderEntity.billTo?.country?.name ?? '',
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
           style: OptiTextStyles.body,
         ),
         const SizedBox(height: 16),
         Text(
           reviewOrderEntity.billTo?.email ?? '',
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
           style: OptiTextStyles.body,
         ),
         Text(
           reviewOrderEntity.billTo?.phone ?? '',
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
           style: OptiTextStyles.body,
         ),
         const SizedBox(height: 12),
@@ -118,23 +118,23 @@ class ReviewOrderWidget extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             LocalizationConstants.shippingAddress,
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.start,
             style: OptiTextStyles.subtitle,
           ),
           const SizedBox(height: 8),
           Text(
             reviewOrderEntity.shipTo?.companyName ?? '',
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.start,
             style: OptiTextStyles.body,
           ),
           Text(
             reviewOrderEntity.shipTo?.fullAddress ?? '',
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.start,
             style: OptiTextStyles.body,
           ),
           Text(
             reviewOrderEntity.shipTo?.country?.name ?? '',
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.start,
             style: OptiTextStyles.body,
           ),
           const SizedBox(height: 12),
@@ -160,28 +160,28 @@ class ReviewOrderWidget extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 LocalizationConstants.pickUpLocation,
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: OptiTextStyles.subtitle,
               ),
               const SizedBox(height: 8),
               Text(
                 reviewOrderEntity.warehouse?.description ?? '',
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: OptiTextStyles.subtitle,
               ),
               Text(
                 reviewOrderEntity.warehouse?.wareHouseAddress() ?? '',
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: OptiTextStyles.body,
               ),
               Text(
                 reviewOrderEntity.warehouse?.wareHouseCity() ?? '',
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: OptiTextStyles.body,
               ),
               Text(
                 reviewOrderEntity.warehouse?.phone ?? '',
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: OptiTextStyles.body,
               ),
               const SizedBox(height: 12),
@@ -213,33 +213,43 @@ class ReviewOrderWidget extends StatelessWidget {
         const SizedBox(height: 8),
         Row(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              LocalizationConstants.carrier,
-              textAlign: TextAlign.center,
-              style: OptiTextStyles.body,
+            Expanded(
+              flex: 1,
+              child: Text(
+                LocalizationConstants.carrier,
+                textAlign: TextAlign.start,
+                style: OptiTextStyles.body,
+              ),
             ),
-            Text(
-              selectedCarrier?.description ?? '',
-              textAlign: TextAlign.center,
-              style: OptiTextStyles.body,
+            Expanded(
+              flex: 1,
+              child: Text(
+                selectedCarrier?.description ?? '',
+                textAlign: TextAlign.start,
+                style: OptiTextStyles.body,
+              ),
             ),
           ],
         ),
         Row(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              LocalizationConstants.service,
-              textAlign: TextAlign.center,
-              style: OptiTextStyles.body,
+            Expanded(
+              flex: 1,
+              child: Text(
+                LocalizationConstants.service,
+                textAlign: TextAlign.start,
+                style: OptiTextStyles.body,
+              ),
             ),
-            Text(
-              selectedService?.description ?? '',
-              textAlign: TextAlign.center,
-              style: OptiTextStyles.body,
+            Expanded(
+              flex: 1,
+              child: Text(
+                selectedService?.description ?? '',
+                textAlign: TextAlign.start,
+                style: OptiTextStyles.body,
+              ),
             ),
           ],
         ),
@@ -248,7 +258,7 @@ class ReviewOrderWidget extends StatelessWidget {
           child: Text(
             _getRequestDateTime(context),
             textAlign: TextAlign.center,
-            style: OptiTextStyles.body,
+            style: OptiTextStyles.bodySmall,
           ),
         ),
       ],
@@ -296,7 +306,7 @@ class ReviewOrderWidget extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          'Mastercard ***4004',
+          _paymentDescription(reviewOrderEntity.paymentMethod!),
           textAlign: TextAlign.center,
           style: OptiTextStyles.body,
         ),
@@ -304,6 +314,14 @@ class ReviewOrderWidget extends StatelessWidget {
         _buildSeparator()
       ],
     );
+  }
+
+  String _paymentDescription(PaymentMethodDto paymentMethodDto) {
+    if (paymentMethodDto.name != null && paymentMethodDto.name!.isNotEmpty) {
+      return paymentMethodDto.name!;
+    } else {
+      return paymentMethodDto.description!;
+    }
   }
 
   String _getRequestDateTime(BuildContext context) {

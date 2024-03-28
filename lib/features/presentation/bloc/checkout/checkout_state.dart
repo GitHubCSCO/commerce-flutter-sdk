@@ -14,6 +14,9 @@ class CheckoutDataLoaded extends CheckoutState {
   final PromotionCollectionModel promotions;
   final String shippingMethod;
   final CartSettings cartSettings;
+  final CarrierDto? selectedCarrier;
+  final ShipViaDto? selectedService;
+  final DateTime? requestDeliveryDate;
 
   CheckoutDataLoaded(
       {required this.cart,
@@ -22,7 +25,11 @@ class CheckoutDataLoaded extends CheckoutState {
       required this.wareHouse,
       required this.promotions,
       required this.shippingMethod,
-      required this.cartSettings});
+      required this.cartSettings,
+      required this.selectedCarrier,
+      required this.selectedService,
+      required this.requestDeliveryDate,
+      });
 }
 
 class CheckoutDataFetchFailed extends CheckoutState {

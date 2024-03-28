@@ -8,14 +8,16 @@ class ReviewOrderEntity {
   final ShippingOption? shippingMethod;
   final List<CarrierDto>? carriers;
   final CartSettings? cartSettings;
+  final PaymentMethodDto? paymentMethod;
 
   ReviewOrderEntity(
       {this.billTo,
-        this.shipTo,
-        this.warehouse,
-        this.shippingMethod,
-        this.carriers,
-        this.cartSettings});
+      this.shipTo,
+      this.warehouse,
+      this.shippingMethod,
+      this.carriers,
+      this.cartSettings,
+      this.paymentMethod});
 
   ReviewOrderEntity copyWith(
       {BillTo? billTo,
@@ -23,7 +25,8 @@ class ReviewOrderEntity {
         Warehouse? warehouse,
         ShippingOption? shippingMethod,
         List<CarrierDto>? carriers,
-        CartSettings? cartSettings}) {
+        CartSettings? cartSettings,
+        PaymentMethodDto? paymentMethod}) {
     return ReviewOrderEntity(
       billTo: billTo ?? this.billTo,
       shipTo: shipTo ?? this.shipTo,
@@ -31,6 +34,7 @@ class ReviewOrderEntity {
       shippingMethod: shippingMethod ?? this.shippingMethod,
       carriers: carriers ?? this.carriers,
       cartSettings: cartSettings ?? this.cartSettings,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
     );
   }
 }
