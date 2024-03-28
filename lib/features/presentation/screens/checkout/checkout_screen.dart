@@ -74,26 +74,25 @@ class CheckoutPage extends StatelessWidget {
         ],
         automaticallyImplyLeading: false,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: BlocConsumer<CheckoutBloc, CheckoutState>(
-                listener: (context, state) {
-              if (state is CheckoutPlaceOrder) {
-                AppRoute.checkoutSuccess
-                    .navigate(context, extra: state.orderNumber);
-              }
-            }, builder: (context, state) {
-              return BlocBuilder<CheckoutBloc, CheckoutState>(
-                builder: (context, state) {
-                  switch (state) {
-                    case CheckoutInitial():
-                    case CheckoutLoading():
-                      return const Center(child: CircularProgressIndicator());
-                    case CheckoutDataLoaded():
-                      return SingleChildScrollView(
-                        child:
-                            Column(mainAxisSize: MainAxisSize.min, children: [
+      body: BlocConsumer<CheckoutBloc, CheckoutState>(
+          listener: (context, state) {
+        if (state is CheckoutPlaceOrder) {
+          AppRoute.checkoutSuccess
+              .navigate(context, extra: state.orderNumber);
+        }
+      }, builder: (context, state) {
+        return BlocBuilder<CheckoutBloc, CheckoutState>(
+          builder: (context, state) {
+            switch (state) {
+              case CheckoutInitial():
+              case CheckoutLoading():
+                return const Center(child: CircularProgressIndicator());
+              case CheckoutDataLoaded():
+                return Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(mainAxisSize: MainAxisSize.min, children: [
                           _buildSummary(state.cart, state.promotions),
                           BlocBuilder<ExpansionPanelCubit, ExpansionPanelState>(
                             builder: (context, panelState) {
@@ -185,70 +184,70 @@ class CheckoutPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                         ]),
-                      );
-                    default:
-                      return const Center(child: Text('Error'));
-                  }
-                },
-              );
-            }),
-          ),
-          Container(
-            height: 80,
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-            clipBehavior: Clip.antiAlias,
-            decoration: const BoxDecoration(color: Colors.white),
-            child: StreamBuilder<String>(
-              stream: context.read<ExpansionPanelCubit>().buttonTextStream,
-              initialData: LocalizationConstants.continueText,
-              builder: (context, snapshot) {
-                String buttonText = snapshot.data!;
+                      ),
+                    ),
+                    Container(
+                      height: 80,
+                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                      clipBehavior: Clip.antiAlias,
+                      decoration: const BoxDecoration(color: Colors.white),
+                      child: StreamBuilder<String>(
+                        stream: context.read<ExpansionPanelCubit>().buttonTextStream,
+                        initialData: LocalizationConstants.continueText,
+                        builder: (context, snapshot) {
+                          String buttonText = snapshot.data!;
 
-                return PrimaryButton(
-                  onPressed: () {
-                    var index =
-                        context.read<ExpansionPanelCubit>().expansionIndex;
-                    switch (index) {
-                      case 0:
-                        final carrier =
-                            context.read<CheckoutBloc>().selectedCarrier;
-                        final service =
-                            context.read<CheckoutBloc>().selectedService;
-                        if (carrier != null && service != null) {
-                          context.read<ExpansionPanelCubit>().onContinueClick();
-                        }
-                      case 1:
-                        var isPaymentCardType = context
-                                .read<PaymentDetailsBloc>()
-                                .selectedPaymentMethod
-                                ?.cardType !=
-                            null;
-                        var isCreditCardSectionCompleted = context
-                            .read<PaymentDetailsBloc>()
-                            .isCreditCardSectionCompleted;
+                          return PrimaryButton(
+                            onPressed: () {
+                              var index =
+                                  context.read<ExpansionPanelCubit>().expansionIndex;
+                              switch (index) {
+                                case 0:
+                                  final carrier =
+                                      context.read<CheckoutBloc>().selectedCarrier;
+                                  final service =
+                                      context.read<CheckoutBloc>().selectedService;
+                                  if (carrier != null && service != null) {
+                                    context.read<ExpansionPanelCubit>().onContinueClick();
+                                  }
+                                case 1:
+                                  var isPaymentCardType = context
+                                      .read<PaymentDetailsBloc>()
+                                      .selectedPaymentMethod
+                                      ?.cardType !=
+                                      null;
+                                  var isCreditCardSectionCompleted = context
+                                      .read<PaymentDetailsBloc>()
+                                      .isCreditCardSectionCompleted;
 
-                        if (isPaymentCardType &&
-                            !isCreditCardSectionCompleted) {
-                          context
-                              .read<TokenExBloc>()
-                              .add(TokenExValidateEvent());
-                        } else {
-                          context.read<ExpansionPanelCubit>().onContinueClick();
-                        }
+                                  if (isPaymentCardType &&
+                                      !isCreditCardSectionCompleted) {
+                                    context
+                                        .read<TokenExBloc>()
+                                        .add(TokenExValidateEvent());
+                                  } else {
+                                    context.read<ExpansionPanelCubit>().onContinueClick();
+                                  }
 
-                      case 2:
-                        context.read<CheckoutBloc>().add(PlaceOrderEvent());
-                      default:
-                        context.read<ExpansionPanelCubit>().onContinueClick();
-                    }
-                  },
-                  text: buttonText,
+                                case 2:
+                                  context.read<CheckoutBloc>().add(PlaceOrderEvent());
+                                default:
+                                  context.read<ExpansionPanelCubit>().onContinueClick();
+                              }
+                            },
+                            text: buttonText,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 );
-              },
-            ),
-          ),
-        ],
-      ),
+              default:
+                return const Center(child: Text('Error'));
+            }
+          },
+        );
+      }),
     );
   }
 
