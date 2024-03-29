@@ -41,6 +41,9 @@ class NavBarPage extends StatelessWidget {
   /// Navigate to the current location of the branch at the provided index when
   /// tapping an item in the BottomNavigationBar.
   void _onTap(BuildContext context, int index) {
+    if (index == 3) {
+      context.read<CartCountCubit>().onSelectCartTab();
+    }
     navigationShell.goBranch(
       index,
       initialLocation: index == navigationShell.currentIndex,
@@ -51,12 +54,12 @@ class NavBarPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: OptiAppColors.backgroundGray,
-      bottomNavigationBar: BottomNavagationBar(context),
+      bottomNavigationBar: bottomNavigationBar(context),
       body: navigationShell,
     );
   }
 
-  Container BottomNavagationBar(BuildContext context) {
+  Container bottomNavigationBar(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -142,7 +145,7 @@ class NavBarPage extends StatelessWidget {
     if (index == 3 && cartCount > 0) {
       return badges.Badge(
         position: badges.BadgePosition.topEnd(top: -30, end: -20),
-        badgeStyle: badges.BadgeStyle(
+        badgeStyle: const badges.BadgeStyle(
           shape: badges.BadgeShape.circle,
           badgeColor: Colors.black,
           padding: EdgeInsets.all(10),

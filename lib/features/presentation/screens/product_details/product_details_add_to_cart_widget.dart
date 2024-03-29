@@ -57,7 +57,7 @@ class AddToCartSignInWidget extends StatelessWidget {
         ProductDetailsAddtoCartState>(
       listener: (bloccontext, state) {
         if (state is ProductDetailsProdctAddedToCartSuccess) {
-          context.read<CartCountCubit>().loadCurrentCartCount();
+          context.read<CartCountCubit>().onCartItemChange();
           CustomSnackBar.showProductAddedToCart(context);
         }
       },
