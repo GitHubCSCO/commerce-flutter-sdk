@@ -260,6 +260,10 @@ class _BiometricListTile extends StatelessWidget {
                         ? LocalizationConstants.faceID
                         : LocalizationConstants.touchID;
 
+                if (biometricOption == DeviceAuthenticationOption.none) {
+                  return Container();
+                }
+
                 return BlocConsumer<BiometricControllerCubit,
                     BiometricControllerState>(
                   listenWhen: (previous, current) {
