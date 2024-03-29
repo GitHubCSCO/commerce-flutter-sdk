@@ -35,13 +35,13 @@ class CartShippingWidget extends StatelessWidget {
             }
           },
           builder: (context, state) {
-            ShippingOption shippingOption;
+            ShippingOption? shippingOption;
             if (state is CartShippingDefaultState) {
               shippingOption = state.selectedOption;
             } else if (state is CartShippingSelectionChangeState) {
               shippingOption = state.selectedOption;
             } else {
-              shippingOption = ShippingOption.ship;
+              shippingOption = null;
             }
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),
