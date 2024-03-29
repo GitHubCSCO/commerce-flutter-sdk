@@ -12,7 +12,7 @@ class CartShippingSelectionBloc extends Bloc<CartShippingSelectionEvent, CartShi
 
   CartShippingSelectionBloc({required CartShippingUseCase shippingUseCase})
       : _shippingUseCase = shippingUseCase,
-        super(CartShippingDefaultState(ShippingOption.ship)) {
+        super(CartShippingSelectionState()) {
     on<CartShippingOptionDefaultEvent>(_onCartShippingDefaultState);
     on<CartShippingOptionChangeEvent>(_onCartShippingSelectionChangeState);
   }

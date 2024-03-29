@@ -12,12 +12,13 @@ import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shippi
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line_list.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_payment_summary_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -73,6 +74,17 @@ class CartPage extends StatelessWidget {
             listener: (context, state) {
               if (state is DomainLoaded) {
                 _reloadCartPage(context);
+              }
+            },
+          ),
+          BlocListener<CartCountCubit, CartCountState>(
+            listener: (context, state) {
+              if (state is CartTabReloadState) {
+                bool isCartItemChanged = context.read<CartCountCubit>().cartItemChanged();
+                if (isCartItemChanged) {
+                  context.read<CartCountCubit>().setCartItemChange(false);
+                  _reloadCartPage(context);
+                }
               }
             },
           ),

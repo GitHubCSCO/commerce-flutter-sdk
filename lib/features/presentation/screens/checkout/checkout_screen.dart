@@ -78,7 +78,7 @@ class CheckoutPage extends StatelessWidget {
       body: BlocConsumer<CheckoutBloc, CheckoutState>(
           listener: (_, state) {
         if (state is CheckoutPlaceOrder) {
-                context.read<CartCountCubit>().loadCurrentCartCount();
+                context.read<CartCountCubit>().onCartItemChange();
           AppRoute.checkoutSuccess
               .navigate(context, extra: state.orderNumber);
         }

@@ -27,7 +27,7 @@ class SearchProductsWidget extends StatelessWidget {
       listener: (context, state) {
         switch (state) {
           case SearchProductsAddToCartSuccess():
-          context.read<CartCountCubit>().loadCurrentCartCount();
+          context.read<CartCountCubit>().onCartItemChange();
             CustomSnackBar.showProductAddedToCart(context);
             break;
           case SearchProductsAddToCartFailure(
