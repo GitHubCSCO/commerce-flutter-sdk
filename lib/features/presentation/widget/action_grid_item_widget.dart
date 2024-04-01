@@ -34,14 +34,14 @@ class ActionGridItemWidget extends BaseActionItemWidget {
             Container(
               width: double.infinity,
               height: 50,
-              padding: const EdgeInsets.only(left: 4, right: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 2),
               alignment: Alignment.center,
               child: Text(
                 getActionTitle(action),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: OptiTextStyles.body,
+                style: OptiTextStyles.bodyExtraSmall,
               ),
             ),
           ],
