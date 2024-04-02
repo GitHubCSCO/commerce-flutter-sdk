@@ -52,16 +52,14 @@ class CartPaymentSummaryWidget extends StatelessWidget {
 
     var orderApprove = _buildOrderApprove();
     var subTotal = _buildSubTotal();
-    var orderPromotion = _buildOrderPromotion(orderPromotions);
+    var promotions = _buildPromotions(orderPromotions, shippingPromotions);
     var shipping = _buildShipping(shouldShowTaxAndShipping);
     var estimatedShipping = _buildShippingHandling(shouldShowTaxAndShipping);
-    var shippingPromotion = _buildShippingPromotion(shippingPromotions);
     var handling = _buildHandling(shouldShowTaxAndShipping);
     var miscCharge = _buildMiscCharge(shouldShowTaxAndShipping);
     var tax = _buildEstimatedTax(shouldShowTaxAndShipping);
     var total = _buildEstimatedTotal(shouldShowTaxAndShipping);
     var savedAmount = _buildYouSaved(orderPromotions, shippingPromotions);
-
 
     if(orderApprove != null) {
       list.add(orderApprove);
@@ -69,17 +67,11 @@ class CartPaymentSummaryWidget extends StatelessWidget {
     if(subTotal != null) {
       list.add(subTotal);
     }
-    if(orderPromotion != null) {
-      list.add(orderPromotion);
-    }
     if(shipping != null) {
       list.add(shipping);
     }
     if(estimatedShipping != null) {
       list.add(estimatedShipping);
-    }
-    if(shippingPromotion != null) {
-      list.add(shippingPromotion);
     }
     if(handling != null) {
       list.add(handling);
@@ -92,6 +84,9 @@ class CartPaymentSummaryWidget extends StatelessWidget {
     }
     if(total != null) {
       list.add(total);
+    }
+    if(promotions != null) {
+      list.add(promotions);
     }
     if(savedAmount != null) {
       list.add(savedAmount);
@@ -131,7 +126,6 @@ class CartPaymentSummaryWidget extends StatelessWidget {
           children: [
             const SizedBox(height: 12),
             widget,
-            const SizedBox(height: 12),
           ]
       );
     } else {
@@ -187,6 +181,32 @@ class CartPaymentSummaryWidget extends StatelessWidget {
     return _buildRow(title, body, textStyle);
   }
 
+  Widget? _buildPromotions(List<Promotion>? orderPromotions, List<Promotion>? shippingPromotions) {
+    var orderPromotion = _buildOrderPromotion(orderPromotions);
+    var shippingPromotion = _buildShippingPromotion(shippingPromotions);
+
+    final list = [];
+    if(orderPromotion != null) {
+      list.add(orderPromotion);
+    }
+    if(shippingPromotion != null) {
+      list.add(shippingPromotion);
+    }
+
+    if(list.isEmpty) {
+      return null;
+    } else {
+      return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 12),
+            ...list,
+            const SizedBox(height: 12),
+          ]
+      );
+    }
+  }
+
   Widget? _buildOrderPromotion(List<Promotion>? orderPromotions) {
     List<Widget> list = [];
 
@@ -202,11 +222,7 @@ class CartPaymentSummaryWidget extends StatelessWidget {
     } else {
       return Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 12),
-            ...list,
-            const SizedBox(height: 12),
-          ]
+          children: list
       );
     }
   }
@@ -226,11 +242,7 @@ class CartPaymentSummaryWidget extends StatelessWidget {
     } else {
       return Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 12),
-            ...list,
-            const SizedBox(height: 12),
-          ]
+          children: list
       );
     }
   }
@@ -250,14 +262,21 @@ class CartPaymentSummaryWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: textStyle,
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.only(right: 8),
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.start,
+                style: textStyle,
+              ),
+            ),
           ),
           Text(
             body,
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.start,
             style: textStyle,
           )
         ],
