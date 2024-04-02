@@ -1,0 +1,1 @@
+enum FulfillmentMethodType { Ship, PickUp }

@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/shipping_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
@@ -80,7 +81,8 @@ class CartPage extends StatelessWidget {
           BlocListener<CartCountCubit, CartCountState>(
             listener: (context, state) {
               if (state is CartTabReloadState) {
-                bool isCartItemChanged = context.read<CartCountCubit>().cartItemChanged();
+                bool isCartItemChanged =
+                    context.read<CartCountCubit>().cartItemChanged();
                 if (isCartItemChanged) {
                   context.read<CartCountCubit>().setCartItemChange(false);
                   _reloadCartPage(context);
@@ -103,6 +105,19 @@ class CartPage extends StatelessWidget {
                 case CartPageLoadedState():
                   return Column(
                     children: [
+                      if (state.cartWarningMsg.isNotEmpty)
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          color: OptiAppColors.invalidColor,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                20.0, 15.0, 20.0, 15.0),
+                            child: Text(
+                              state.cartWarningMsg,
+                              style: OptiTextStyles.errorTextStyles,
+                            ),
+                          ),
+                        ),
                       Expanded(
                         child: ListView(
                           children: _buildCartWidgets(
@@ -116,13 +131,14 @@ class CartPage extends StatelessWidget {
                       ),
                       Container(
                         height: 80,
-                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 32, vertical: 16),
                         clipBehavior: Clip.antiAlias,
                         decoration: const BoxDecoration(color: Colors.white),
                         child: PrimaryButton(
                           onPressed: () {
-                            AppRoute.checkout
-                                .navigateBackStack(context, extra: context.read<CartPageBloc>().cart);
+                            AppRoute.checkout.navigateBackStack(context,
+                                extra: context.read<CartPageBloc>().cart);
                           },
                           text: LocalizationConstants.checkout,
                         ),

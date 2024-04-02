@@ -7,13 +7,13 @@ class CartPageInitialState extends CartPageState {}
 class CartPageLoadingState extends CartPageState {}
 
 class CartPageLoadedState extends CartPageState {
-
   final Cart cart;
   final CartSettings cartSettings;
   final Warehouse warehouse;
   final PromotionCollectionModel promotions;
   final bool isCustomerOrderApproval;
   final String shippingMethod;
+  String cartWarningMsg;
 
   CartPageLoadedState(
       {required this.cart,
@@ -21,15 +21,14 @@ class CartPageLoadedState extends CartPageState {
       required this.promotions,
       required this.isCustomerOrderApproval,
       required this.cartSettings,
-      required this.shippingMethod});
+      required this.shippingMethod,
+      this.cartWarningMsg = ""});
 }
 
 class CartPageNoDataState extends CartPageState {}
 
 class CartPageFailureState extends CartPageState {
-
   final String error;
 
   CartPageFailureState({required this.error});
-
 }

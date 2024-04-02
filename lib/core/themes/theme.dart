@@ -308,4 +308,12 @@ class OptiTextStyles {
           fontWeight: titleWeight,
         ),
       );
+
+  static TextStyle get errorTextStyles => _getInterFontStyle(
+        const TextStyle(
+          fontSize: 14,
+          color: Colors.white,
+          fontWeight: titleWeight,
+        ),
+      );
 }
