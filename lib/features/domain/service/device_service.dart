@@ -4,8 +4,23 @@ import 'package:commerce_flutter_app/features/domain/enums/device_authentication
 import 'package:commerce_flutter_app/features/domain/service/interfaces/device_interface.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class DeviceService implements IDeviceService {
+  PackageInfo? packageInfo;
+
+  DeviceService._();
+
+  static Future<DeviceService> create() async {
+    var deviceService = DeviceService._();
+    await deviceService._init();
+    return deviceService;
+  }
+
+  _init() async {
+    packageInfo = await PackageInfo.fromPlatform();
+  }
+
   @override
   // TODO: implement applicationName
   String get applicationName => throw UnimplementedError();
@@ -62,8 +77,14 @@ class DeviceService implements IDeviceService {
   }
 
   @override
-  // TODO: implement currentVersion
-  String get currentVersion => throw UnimplementedError();
+  String get currentVersion {
+    String version = packageInfo!.version;
+    String buildNumber = packageInfo!.buildNumber;
+
+    String verionAndBuildNum = 'Version $version ($buildNumber)';
+
+    return verionAndBuildNum;
+  }
 
   @override
   // TODO: implement hasCamera
