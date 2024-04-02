@@ -315,7 +315,7 @@ class _BiometricListTile extends StatelessWidget {
                       Navigator.of(context, rootNavigator: true).pop();
                       displayDialogWidget(
                         context: context,
-                        title: 'Error',
+                        title: LocalizationConstants.error,
                         message: 'Failed to enable $biometricDisplay',
                         actions: [
                           DialogPlainButton(
