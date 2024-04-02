@@ -112,11 +112,11 @@ class BaseActionItemWidget extends StatelessWidget {
         };
       case ActionType.settings:
         return () {
-          navigateToSettings(context);
+          AppRoute.settings.navigateBackStack(context);
         };
       case ActionType.orderHistory:
         return () {
-          AppRoute.orderHistory.navigate(context);
+          AppRoute.orderHistory.navigateBackStack(context);
         };
       default:
         return () {
@@ -144,9 +144,5 @@ class BaseActionItemWidget extends StatelessWidget {
             child: const Text(LocalizationConstants.oK),
           ),
         ]);
-  }
-
-  void navigateToSettings(BuildContext context) {
-    AppRoute.settings.navigate(context);
   }
 }
