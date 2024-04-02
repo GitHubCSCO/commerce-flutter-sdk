@@ -328,18 +328,26 @@ class CheckoutPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: textStyle,
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.only(right: 8),
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.start,
+                style: textStyle,
+              ),
+            ),
           ),
           Text(
             body,
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.start,
             style: textStyle,
           )
         ],
       );
     }
   }
+
 }
