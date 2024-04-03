@@ -12,11 +12,13 @@ final class AccountHeaderInitial extends AccountHeaderState {}
 final class AccountHeaderLoaded extends AccountHeaderState {
   final String firstName;
   final String lastName;
+  final String userName;
   final String email;
 
   const AccountHeaderLoaded({
     required this.firstName,
     required this.lastName,
+    required this.userName,
     required this.email,
   });
 

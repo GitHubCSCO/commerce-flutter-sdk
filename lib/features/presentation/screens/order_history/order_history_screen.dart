@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.d
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -99,9 +100,12 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Padding(
+                                  IconButton(
                                     padding: const EdgeInsets.all(10),
-                                    child: SvgPicture.asset(
+                                    onPressed: () =>
+                                        CustomSnackBar.showComingSoonSnackBar(
+                                            context),
+                                    icon: SvgPicture.asset(
                                       height: 20,
                                       width: 20,
                                       AssetConstants.sortIcon,
@@ -110,9 +114,12 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
                                     ),
                                   ),
                                   const SizedBox(width: 10),
-                                  Padding(
+                                  IconButton(
                                     padding: const EdgeInsets.all(10),
-                                    child: SvgPicture.asset(
+                                    onPressed: () =>
+                                        CustomSnackBar.showComingSoonSnackBar(
+                                            context),
+                                    icon: SvgPicture.asset(
                                       height: 20,
                                       width: 20,
                                       AssetConstants.filterIcon,
