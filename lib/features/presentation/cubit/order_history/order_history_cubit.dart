@@ -24,6 +24,16 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
           ),
         );
 
+  Future<void> changeSortOrder(OrderSortOrder orderSortOrder) async {
+    emit(
+      state.copyWith(
+        orderSortOrder: orderSortOrder,
+      ),
+    );
+
+    await loadOrderHistory();
+  }
+
   Future<void> loadOrderHistory() async {
     emit(
       state.copyWith(
