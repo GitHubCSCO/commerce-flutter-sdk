@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -65,8 +66,21 @@ class AutoCompleteProductWidget extends StatelessWidget {
                   border: Border.all(width: 1, color: const Color(0xFFD6D6D6)),
                 ),
                 child: Image.network(
-                  autocompleteProduct.image ?? "",
+                  autocompleteProduct.image.makeImageUrl(),
                   fit: BoxFit.fitWidth,
+                  errorBuilder: (BuildContext context, Object error,
+                      StackTrace? stackTrace) {
+                    // This function is called when the image fails to load
+                    return Container(
+                      color: OptiAppColors.backgroundGray, // Placeholder color
+                      alignment: Alignment.center,
+                      child: const Icon(
+                        Icons.image, // Icon to display
+                        color: Colors.grey, // Icon color
+                        size: 30, // Icon size
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
