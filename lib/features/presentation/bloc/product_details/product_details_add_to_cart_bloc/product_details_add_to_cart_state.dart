@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
 import 'package:equatable/equatable.dart';
 
@@ -27,10 +29,12 @@ class ProductDetailsAddtoCartError extends ProductDetailsAddtoCartState {
   List<Object> get props => [errorMessage];
 }
 
-
 // product added to cart
 class ProductDetailsProdctAddedToCartSuccess
-    extends ProductDetailsAddtoCartState {}
+    extends ProductDetailsAddtoCartState {
+  @override
+  List<Object> get props => [Random().nextDouble()];
+}
 
 class ProductDetailsProdctAddedToCartError
     extends ProductDetailsAddtoCartState {
