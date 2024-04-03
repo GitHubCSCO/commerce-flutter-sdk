@@ -9,15 +9,9 @@ import 'package:package_info_plus/package_info_plus.dart';
 class DeviceService implements IDeviceService {
   PackageInfo? packageInfo;
 
-  DeviceService._();
+  DeviceService();
 
-  static Future<DeviceService> create() async {
-    var deviceService = DeviceService._();
-    await deviceService._init();
-    return deviceService;
-  }
-
-  _init() async {
+  Future<void> init() async {
     packageInfo = await PackageInfo.fromPlatform();
   }
 

@@ -280,7 +280,11 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
-    ..registerSingletonAsync<IDeviceService>(() => DeviceService.create())
+    ..registerSingletonAsync<IDeviceService>(() async {
+      final service = DeviceService();
+      await service.init();
+      return service;
+    })
     ..registerSingletonAsync<IAppConfigurationService>(
       () async {
         final service = AppConfigurationService(
