@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/order_usecase/order_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 part 'order_history_state.dart';
 
@@ -19,6 +20,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
               showErpOrderNumber: null,
             ),
             orderStatus: OrderStatus.initial,
+            orderSortOrder: OrderSortOrder.orderDateDescending,
           ),
         );
 
@@ -36,6 +38,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
             OrderHistoryState(
               orderEntities: result,
               orderStatus: OrderStatus.success,
+              orderSortOrder: state.orderSortOrder,
             ),
           )
         : emit(
