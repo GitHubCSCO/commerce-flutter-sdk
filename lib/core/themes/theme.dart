@@ -252,6 +252,14 @@ class OptiTextStyles {
         ),
       );
 
+    static TextStyle get subtitleFade => _getInterFontStyle(
+        const TextStyle(
+          fontSize: 14,
+          color: bodyFadeColor,
+          fontWeight: titleWeight,
+        ),
+      );
+
   static TextStyle get subtitleLink => _getInterFontStyle(
         const TextStyle(
           fontSize: 14,
@@ -276,6 +284,7 @@ class OptiTextStyles {
           fontWeight: bodyWeight,
         ),
       );
+
 
   static TextStyle get bodySmall => _getInterFontStyle(
         const TextStyle(
