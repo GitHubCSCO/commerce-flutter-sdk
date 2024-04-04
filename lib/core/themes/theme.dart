@@ -302,6 +302,14 @@ class OptiTextStyles {
         ),
       );
 
+  static TextStyle get bodyExtraSmall => _getInterFontStyle(
+    const TextStyle(
+      fontSize: 11,
+      color: bodyColor,
+      fontWeight: bodyWeight,
+    ),
+  );
+
   static TextStyle get link => _getInterFontStyle(
         const TextStyle(
           fontSize: 12,

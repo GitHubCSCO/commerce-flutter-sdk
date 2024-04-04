@@ -25,7 +25,7 @@ class CarouselSectionWidget extends StatelessWidget {
           },
           options: CarouselOptions(
               enlargeCenterPage: true,
-              autoPlay: false,
+              autoPlay: true,
               aspectRatio: 16 / 9,
               autoPlayCurve: Curves.fastOutSlowIn,
               enableInfiniteScroll: false,
