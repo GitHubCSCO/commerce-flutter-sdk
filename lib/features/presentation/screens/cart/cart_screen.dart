@@ -23,7 +23,6 @@ import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_pay
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
