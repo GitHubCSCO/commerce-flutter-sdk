@@ -306,7 +306,7 @@ class ReviewOrderWidget extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          _paymentDescription(reviewOrderEntity.paymentMethod!),
+          _paymentDescription(reviewOrderEntity.paymentMethod),
           textAlign: TextAlign.center,
           style: OptiTextStyles.body,
         ),
@@ -316,11 +316,15 @@ class ReviewOrderWidget extends StatelessWidget {
     );
   }
 
-  String _paymentDescription(PaymentMethodDto paymentMethodDto) {
-    if (paymentMethodDto.description != null && paymentMethodDto.description!.isNotEmpty) {
-      return paymentMethodDto.description!;
+  String _paymentDescription(PaymentMethodDto? paymentMethodDto) {
+    if (paymentMethodDto != null) {
+      if (paymentMethodDto.description != null && paymentMethodDto.description!.isNotEmpty) {
+        return paymentMethodDto.description!;
+      } else {
+        return paymentMethodDto.name!;
+      }
     } else {
-      return paymentMethodDto.name!;
+      return '';
     }
   }
 
