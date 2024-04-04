@@ -26,6 +26,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 void _reloadCartPage(BuildContext context) {
+  context.read<CartCountCubit>().cartItemChanged();
   context.read<CartPageBloc>().add(CartPageLoadEvent());
 }
 
@@ -84,7 +85,8 @@ class CartPage extends StatelessWidget {
           BlocListener<CartCountCubit, CartCountState>(
             listener: (context, state) {
               if (state is CartTabReloadState) {
-                bool isCartItemChanged = context.read<CartCountCubit>().cartItemChanged();
+                bool isCartItemChanged =
+                    context.read<CartCountCubit>().cartItemChanged();
                 if (isCartItemChanged) {
                   context.read<CartCountCubit>().setCartItemChange(false);
                   _reloadCartPage(context);
@@ -120,13 +122,14 @@ class CartPage extends StatelessWidget {
                       ),
                       Container(
                         height: 80,
-                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 32, vertical: 16),
                         clipBehavior: Clip.antiAlias,
                         decoration: const BoxDecoration(color: Colors.white),
                         child: PrimaryButton(
                           onPressed: () {
-                            AppRoute.checkout
-                                .navigateBackStack(context, extra: context.read<CartPageBloc>().cart);
+                            AppRoute.checkout.navigateBackStack(context,
+                                extra: context.read<CartPageBloc>().cart);
                           },
                           text: LocalizationConstants.checkout,
                         ),
