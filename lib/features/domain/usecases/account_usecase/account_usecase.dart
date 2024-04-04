@@ -27,4 +27,9 @@ class AccountUseCase extends CmsUseCase {
 
   String? get email =>
       commerceAPIServiceProvider.getAccountService().currentAccount?.email;
+
+  String? get getAppVersionAndBuildNumber =>  coreServiceProvider.getDeviceService().currentVersion;
+
+  String? get userName =>
+      commerceAPIServiceProvider.getAccountService().currentAccount?.userName;
 }
