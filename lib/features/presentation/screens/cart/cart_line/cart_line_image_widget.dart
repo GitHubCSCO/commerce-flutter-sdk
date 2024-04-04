@@ -24,22 +24,25 @@ class CartContentProductImageWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
         ),
-        child: Image.network(
-          imagePath.makeImageUrl(),
-          fit: BoxFit.fitWidth,
-          errorBuilder: (BuildContext context, Object error,
-              StackTrace? stackTrace) {
-            // This function is called when the image fails to load
-            return Container(
-              color: OptiAppColors.backgroundGray, // Placeholder color
-              alignment: Alignment.center,
-              child: const Icon(
-                Icons.image, // Icon to display
-                color: Colors.grey, // Icon color
-                size: 30, // Icon size
-              ),
-            );
-          },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.network(
+            imagePath.makeImageUrl(),
+            fit: BoxFit.cover,
+            errorBuilder:
+                (BuildContext context, Object error, StackTrace? stackTrace) {
+              // This function is called when the image fails to load
+              return Container(
+                color: OptiAppColors.backgroundGray, // Placeholder color
+                alignment: Alignment.center,
+                child: const Icon(
+                  Icons.image, // Icon to display
+                  color: Colors.grey, // Icon color
+                  size: 30, // Icon size
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

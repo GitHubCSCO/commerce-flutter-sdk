@@ -59,28 +59,31 @@ class AutoCompleteProductWidget extends StatelessWidget {
               width: 60,
               height: 60,
               child: Container(
-                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(width: 1, color: const Color(0xFFD6D6D6)),
                 ),
-                child: Image.network(
-                  autocompleteProduct.image.makeImageUrl(),
-                  fit: BoxFit.fitWidth,
-                  errorBuilder: (BuildContext context, Object error,
-                      StackTrace? stackTrace) {
-                    // This function is called when the image fails to load
-                    return Container(
-                      color: OptiAppColors.backgroundGray, // Placeholder color
-                      alignment: Alignment.center,
-                      child: const Icon(
-                        Icons.image, // Icon to display
-                        color: Colors.grey, // Icon color
-                        size: 30, // Icon size
-                      ),
-                    );
-                  },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    autocompleteProduct.image.makeImageUrl(),
+                    fit: BoxFit.cover,
+                    errorBuilder: (BuildContext context, Object error,
+                        StackTrace? stackTrace) {
+                      // This function is called when the image fails to load
+                      return Container(
+                        color:
+                            OptiAppColors.backgroundGray, // Placeholder color
+                        alignment: Alignment.center,
+                        child: const Icon(
+                          Icons.image, // Icon to display
+                          color: Colors.grey, // Icon color
+                          size: 30, // Icon size
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
