@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
@@ -35,6 +36,9 @@ class ShopScreen extends StatelessWidget {
 }
 
 class ShopPage extends BaseDynamicContentScreen {
+
+  final websitePath = WebsitePaths.shopWebsitePath;
+
   const ShopPage({super.key});
 
   @override
@@ -42,7 +46,7 @@ class ShopPage extends BaseDynamicContentScreen {
     return Scaffold(
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(actions: <Widget>[
-        BottomMenuWidget(),
+        BottomMenuWidget(websitePath: websitePath),
       ], backgroundColor: Theme.of(context).colorScheme.surface),
       body: MultiBlocListener(
         listeners: [
