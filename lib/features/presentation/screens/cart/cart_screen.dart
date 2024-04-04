@@ -1,8 +1,10 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/shipping_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
@@ -21,6 +23,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_pay
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -109,6 +112,9 @@ class CartPage extends StatelessWidget {
                 case CartPageLoadedState():
                   return Column(
                     children: [
+                      if (state.cartWarningMsg.isNotEmpty)
+                        _buildCartEroorWidget(
+                            cartErrorMsg: state.cartWarningMsg),
                       Expanded(
                         child: ListView(
                           children: _buildCartWidgets(
@@ -221,5 +227,48 @@ class CartPage extends StatelessWidget {
     list.add(const SizedBox(height: 8));
 
     return list;
+  }
+}
+
+class _buildCartEroorWidget extends StatelessWidget {
+  final String cartErrorMsg;
+  const _buildCartEroorWidget({
+    required this.cartErrorMsg,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      color: OptiAppColors.invalidColor,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              padding: const EdgeInsets.all(10),
+              child: SvgPicture.asset(
+                AssetConstants.cartErrorIcon,
+                fit: BoxFit.fitWidth,
+                color: Colors.white,
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  maxLines: null,
+                  cartErrorMsg,
+                  style: OptiTextStyles.errorTextStyles,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
