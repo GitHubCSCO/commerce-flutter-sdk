@@ -96,6 +96,14 @@ class AccountPage extends BaseDynamicContentScreen {
                       const _AccountHeader(),
                       const SizedBox(height: AppStyle.defaultVerticalPadding),
                       ...buildContentWidgets(state.widgetEntities),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Text(
+                            context
+                                .read<AccountPageBloc>()
+                                .getAppVersionAndBuildNumber(),
+                            style: OptiTextStyles.subtitleFade),
+                      ),
                     ],
                   ),
                 );
@@ -171,17 +179,25 @@ class _AccountLoggedInHeader extends StatelessWidget {
           builder: (context) {
             return BlocBuilder<AccountHeaderCubit, AccountHeaderState>(
               builder: (context, state) {
+                final String nameLabel;
+                if (state is AccountHeaderLoaded) {
+                  final combinedName = state.firstName + state.lastName;
+                  nameLabel =
+                      combinedName.isNotEmpty ? combinedName : state.userName;
+                } else {
+                  nameLabel = '';
+                }
+
                 return ListTile(
                   leading: CircleAvatar(
                     backgroundColor: Colors.blue,
                     child: Text(
-                      state is AccountHeaderLoaded ? state.firstName[0] : '',
+                      nameLabel.isEmpty ? '' : nameLabel[0],
                       style: const TextStyle(color: Colors.white),
                     ),
                   ),
                   title: Text(
-                    (state is AccountHeaderLoaded ? state.firstName : '') +
-                        (state is AccountHeaderLoaded ? state.lastName : ''),
+                    nameLabel,
                     style: OptiTextStyles.header2,
                   ),
                   subtitle: Text(

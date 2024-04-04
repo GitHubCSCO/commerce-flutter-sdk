@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_carousel/product_carousel_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -31,7 +32,7 @@ class ProductCarouselItemWidget extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
-                productCarousel.product!.smallImagePath ?? "",
+                productCarousel.product!.smallImagePath.makeImageUrl(),
                 fit: BoxFit.fitHeight,
                 errorBuilder: (BuildContext context, Object error,
                     StackTrace? stackTrace) {

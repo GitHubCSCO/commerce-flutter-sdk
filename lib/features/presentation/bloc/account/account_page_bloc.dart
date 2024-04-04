@@ -27,4 +27,7 @@ class AccountPageBloc extends Bloc<AccountPageEvent, AccountPageState> {
     }
   }
 
+  String getAppVersionAndBuildNumber() {
+    return _accountUseCase.getAppVersionAndBuildNumber!;
+  }
 }

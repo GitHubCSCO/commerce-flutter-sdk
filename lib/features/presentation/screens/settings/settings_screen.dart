@@ -11,6 +11,7 @@ import 'package:commerce_flutter_app/features/domain/enums/device_authentication
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_controller/biometric_controller_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
@@ -148,22 +149,25 @@ class _SettingsListWidget extends StatelessWidget {
 final settingsItems = [
   const _BiometricListTile(),
   _SettingsListItemWidget(
-    onTap: () {},
+    onTap: (BuildContext context) =>
+        CustomSnackBar.showComingSoonSnackBar(context),
     title: LocalizationConstants.clearCache,
   ),
   _SettingsListItemWidget(
     title: LocalizationConstants.languages,
-    onTap: () {},
+    onTap: (BuildContext context) =>
+        CustomSnackBar.showComingSoonSnackBar(context),
     showTrailing: true,
   ),
   _SettingsListItemWidget(
     title: LocalizationConstants.adminLogin,
-    onTap: () {},
+    onTap: (BuildContext context) =>
+        CustomSnackBar.showComingSoonSnackBar(context),
   ),
 ];
 
 class _SettingsListItemWidget extends StatelessWidget {
-  final void Function() onTap;
+  final void Function(BuildContext context) onTap;
   final String title;
   final bool showTrailing;
   final Widget? trailingWidget;
@@ -178,7 +182,7 @@ class _SettingsListItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: () => onTap(context),
       child: SizedBox(
         width: double.infinity,
         height: 50,
@@ -354,7 +358,7 @@ class _BiometricListTile extends StatelessWidget {
                     }
 
                     return _SettingsListItemWidget(
-                      onTap: () {},
+                      onTap: (context) {},
                       title: 'Enable $biometricDisplay',
                       showTrailing: true,
                       trailingWidget: Switch(
