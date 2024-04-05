@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_action_item_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -20,7 +21,8 @@ class ActionGridItemWidget extends BaseActionItemWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
+            Container(
+              padding: const EdgeInsets.all(2),
               width: 32,
               height: 32,
               child: SvgPicture.asset(
@@ -32,14 +34,14 @@ class ActionGridItemWidget extends BaseActionItemWidget {
             Container(
               width: double.infinity,
               height: 50,
-              padding: const EdgeInsets.only(left: 4, right: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 2),
               alignment: Alignment.center,
               child: Text(
                 getActionTitle(action),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
-                style: OptiTextStyles.body,
+                style: OptiTextStyles.bodyExtraSmall,
               ),
             ),
           ],

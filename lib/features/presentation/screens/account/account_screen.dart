@@ -96,6 +96,14 @@ class AccountPage extends BaseDynamicContentScreen {
                       const _AccountHeader(),
                       const SizedBox(height: AppStyle.defaultVerticalPadding),
                       ...buildContentWidgets(state.widgetEntities),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Text(
+                            context
+                                .read<AccountPageBloc>()
+                                .getAppVersionAndBuildNumber(),
+                            style: OptiTextStyles.subtitleFade),
+                      ),
                     ],
                   ),
                 );
