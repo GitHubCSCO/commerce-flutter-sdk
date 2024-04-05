@@ -1,0 +1,160 @@
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/menu/display_option.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+
+List<DisplayOption> _getDisplayOptions(
+  List<SortOrderAttribute> availableSortOrders,
+  void Function(SortOrderAttribute) onSortOrderChanged,
+) {
+  final sortOrderGroups = availableSortOrders
+      .map((sortOrder) => sortOrder.groupTitle)
+      .toSet()
+      .toList();
+
+  final result = <DisplayOption>[];
+
+  for (final group in sortOrderGroups) {
+    final groupSortOrders = availableSortOrders
+        .where((sortOrder) => sortOrder.groupTitle == group)
+        .toList();
+
+    if (groupSortOrders.length > 1) {
+      final sortOrder = groupSortOrders.first;
+      final oppositeSortOrder = groupSortOrders.last;
+
+      final displayOption = DisplayOption(
+        action: () async {},
+        title: sortOrder.title,
+        sortOrder: sortOrder,
+        oppositeSortOrder: oppositeSortOrder,
+      );
+
+      result.add(displayOption);
+    } else {
+      final sortOrder = groupSortOrders.first;
+
+      final displayOption = DisplayOption(
+        action: () async {},
+        title: sortOrder.title,
+        sortOrder: sortOrder,
+      );
+
+      result.add(displayOption);
+    }
+  }
+
+  return result;
+}
+
+class SortToolMenu extends StatelessWidget {
+  final List<DisplayOption> displayOptions;
+  final SortOrderAttribute selectedSortOrder;
+  final Future<void> Function(SortOrderAttribute) onSortOrderChanged;
+
+  SortToolMenu({
+    super.key,
+    required List<SortOrderAttribute> availableSortOrders,
+    required this.onSortOrderChanged,
+    required this.selectedSortOrder,
+  }) : displayOptions = _getDisplayOptions(
+          availableSortOrders,
+          onSortOrderChanged,
+        ) {
+    init();
+  }
+
+  Future<void> _onSortOrderChanged(SortOrderAttribute sortOrder,
+      SortOrderAttribute? oppositeSortOrder) async {
+    debugPrint('SortOrder: $sortOrder');
+    if (sortOrder != selectedSortOrder) {
+      await onSortOrderChanged(sortOrder);
+    } else {
+      if (oppositeSortOrder != null) {
+        await onSortOrderChanged(oppositeSortOrder);
+      }
+    }
+  }
+
+  void init() {
+    for (var displayOption in displayOptions) {
+      displayOption.action = () async {
+        await _onSortOrderChanged(
+          displayOption.sortOrder!,
+          displayOption.oppositeSortOrder,
+        );
+      };
+    }
+  }
+
+  void _showBottomMenu(
+      BuildContext context, List<DisplayOption> displayOptionsList) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        return CupertinoActionSheet(
+          title: Text('Sort by...', style: OptiTextStyles.bodySmall),
+          actions: _getToolMenuWidgets(context, displayOptionsList),
+          cancelButton: CupertinoActionSheetAction(
+            child: const Text(
+              LocalizationConstants.cancel,
+              style: TextStyle(color: Colors.blue),
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+        );
+      },
+    );
+  }
+
+  List<Widget> _getToolMenuWidgets(
+    BuildContext context,
+    List<DisplayOption> displayOptionList,
+  ) {
+    List<Widget> widgets = [];
+
+    widgets.addAll(displayOptionList.map((value) {
+      return CupertinoActionSheetAction(
+        onPressed: () async {
+          if (context.mounted) {
+            Navigator.pop(context);
+          }
+          await value.action();
+        },
+        child: Text(
+          () {
+            if (value.sortOrder == selectedSortOrder) {
+              return value.sortOrder?.title ?? '';
+            } else if (value.oppositeSortOrder == selectedSortOrder) {
+              return value.oppositeSortOrder?.title ?? '';
+            } else {
+              return value.sortOrder?.groupTitle ?? '';
+            }
+          }(),
+          style: const TextStyle(color: Colors.blue),
+        ),
+      );
+    }));
+
+    return widgets;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      padding: const EdgeInsets.all(10),
+      onPressed: () => _showBottomMenu(context, displayOptions),
+      icon: SvgPicture.asset(
+        height: 20,
+        width: 20,
+        AssetConstants.sortIcon,
+        semanticsLabel: 'sort icon',
+        fit: BoxFit.fitWidth,
+      ),
+    );
+  }
+}

@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/order_usecase/order_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 part 'order_history_state.dart';
 
@@ -19,8 +20,19 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
               showErpOrderNumber: null,
             ),
             orderStatus: OrderStatus.initial,
+            orderSortOrder: OrderSortOrder.orderDateDescending,
           ),
         );
+
+  Future<void> changeSortOrder(OrderSortOrder orderSortOrder) async {
+    emit(
+      state.copyWith(
+        orderSortOrder: orderSortOrder,
+      ),
+    );
+
+    await loadOrderHistory();
+  }
 
   Future<void> loadOrderHistory() async {
     emit(
@@ -29,13 +41,14 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       ),
     );
 
-    final result = await _orderUsecase.getOrderHistory();
+    final result = await _orderUsecase.getOrderHistory(sortOrder: state.orderSortOrder);
 
     result != null
         ? emit(
             OrderHistoryState(
               orderEntities: result,
               orderStatus: OrderStatus.success,
+              orderSortOrder: state.orderSortOrder,
             ),
           )
         : emit(
@@ -56,6 +69,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
     emit(state.copyWith(orderStatus: OrderStatus.moreLoading));
     final result = await _orderUsecase.getOrderHistory(
       page: state.orderEntities.pagination!.page! + 1,
+      sortOrder: state.orderSortOrder,
     );
 
     if (result == null) {
@@ -76,4 +90,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       ),
     );
   }
+
+  List<OrderSortOrder> get availableSortOrders =>
+      _orderUsecase.availableSortOrders;
 }

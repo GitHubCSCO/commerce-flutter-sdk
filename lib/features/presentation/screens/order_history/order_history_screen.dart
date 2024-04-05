@@ -11,10 +11,12 @@ import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_con
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class OrderHistoryScreen extends StatelessWidget {
   const OrderHistoryScreen({super.key});
@@ -100,18 +102,19 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  IconButton(
-                                    padding: const EdgeInsets.all(10),
-                                    onPressed: () =>
-                                        CustomSnackBar.showComingSoonSnackBar(
-                                            context),
-                                    icon: SvgPicture.asset(
-                                      height: 20,
-                                      width: 20,
-                                      AssetConstants.sortIcon,
-                                      semanticsLabel: 'sort icon',
-                                      fit: BoxFit.fitWidth,
-                                    ),
+                                  SortToolMenu(
+                                    selectedSortOrder: state.orderSortOrder,
+                                    availableSortOrders: context
+                                        .read<OrderHistoryCubit>()
+                                        .availableSortOrders,
+                                    onSortOrderChanged:
+                                        (SortOrderAttribute sortOrder) async {
+                                      await context
+                                          .read<OrderHistoryCubit>()
+                                          .changeSortOrder(
+                                            sortOrder as OrderSortOrder,
+                                          );
+                                    },
                                   ),
                                   const SizedBox(width: 10),
                                   IconButton(
