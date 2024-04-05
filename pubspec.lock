@@ -37,10 +37,10 @@ packages:
     dependency: transitive
     description:
       name: audio_session
-      sha256: "6fdf255ed3af86535c96452c33ecff1245990bb25a605bfb1958661ccc3d467f"
+      sha256: a49af9981eec5d7cd73b37bacb6ee73f8143a6a9f9bd5b6021e6c346b9b6cf4e
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.18"
+    version: "0.1.19"
   badges:
     dependency: "direct main"
     description:
@@ -853,7 +853,7 @@ packages:
     description:
       path: "."
       ref: develop
-      resolved-ref: "7c1e433956a318a7374a366cc018ae1f8efbf3c0"
+      resolved-ref: "1ea0b7dc9ce6d1c002f7f9ee39f459af6d3fbaf8"
       url: "git@github.com:InsiteSoftware/commerce-dart-sdk.git"
     source: git
     version: "0.1.0-dev.1"
