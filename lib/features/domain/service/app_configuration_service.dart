@@ -171,14 +171,54 @@ class AppConfigurationService extends ServiceBase
   }
 
   @override
-  Future<RealTimeSupport> getRealtimeSupportType() {
-    // TODO: implement getRealtimeSupportType
-    throw UnimplementedError();
+  Future<RealTimeSupport?> getRealtimeSupportType() async {
+    var productSettings = await getProductSettings();
+
+    if (productSettings == null) {
+      return null;
+    }
+
+    var result = RealTimeSupport.NoRealTimePricingAndInventory;
+
+    if (productSettings.realTimePricing!) {
+      if (productSettings.realTimeInventory!) {
+        if (productSettings.inventoryIncludedWithPricing!) {
+          result = RealTimeSupport.RealTimePricingWithInventoryIncluded;
+        } else {
+          result = RealTimeSupport.RealTimePricingAndInventory;
+        }
+      } else {
+        result = RealTimeSupport.RealTimePricingOnly;
+      }
+    } else {
+      if (productSettings.realTimeInventory!) {
+        result = RealTimeSupport.RealTimeInventory;
+      }
+    }
+
+    return result;
+  }
+
+  Future<ProductSettings?> getProductSettings() async {
+    var productSettingsResponse = await _commerceAPIServiceProvider
+        .getSettingsService()
+        .getProductSettingsAsync();
+
+    switch (productSettingsResponse) {
+      case Success(value: final value):
+        {
+          return value!;
+        }
+      case Failure():
+        {
+          return null;
+        }
+    }
   }
 
   @override
   Future<Result<TokenExDto, ErrorResponse>> getTokenExConfiguration(
-      String token ) async {
+      String token) async {
     var url = token.isEmpty
         ? _tokenExConfigurationUrl
         : '$_tokenExConfigurationUrl?token=$token';
@@ -193,7 +233,8 @@ class AppConfigurationService extends ServiceBase
         }
       case Failure(errorResponse: final errorResponse):
         {
-          return Failure(ErrorResponse(errorDescription: errorResponse.errorDescription));
+          return Failure(
+              ErrorResponse(errorDescription: errorResponse.errorDescription));
         }
     }
   }

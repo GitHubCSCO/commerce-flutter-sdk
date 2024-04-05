@@ -203,11 +203,8 @@ class SearchPage extends BaseDynamicContentScreen {
                 case SearchProductsLoadedState:
                   final productCollectionResult =
                       (state as SearchProductsLoadedState).result!;
-                  return BlocProvider<SearchProductsCubit>(
-                    create: (context) => sl<SearchProductsCubit>(),
-                    child: SearchProductsWidget(
-                        productCollectionResult: productCollectionResult),
-                  );
+                  return SearchProductsWidget(
+                      productCollectionResult: productCollectionResult);
                 case SearchProductsFailureState:
                   return Center(
                       child: Text(LocalizationConstants.searchNoResults,
