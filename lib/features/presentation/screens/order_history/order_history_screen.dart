@@ -65,6 +65,9 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
               onTapOutside: (p0) => context.closeKeyboard(),
               textInputAction: TextInputAction.search,
               controller: _textEditingController,
+              onSubmitted: (value) {
+                CustomSnackBar.showComingSoonSnackBar(context);
+              },
             ),
           ),
           BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
