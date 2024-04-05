@@ -5,6 +5,10 @@ import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart'
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class OrderUsecase extends BaseUseCase {
+  List<OrderSortOrder> get availableSortOrders => commerceAPIServiceProvider
+      .getOrderService()
+      .availableSortOrders;
+
   Future<GetOrderCollectionResultEntity?> getOrderHistory({
     int? page,
     OrderSortOrder sortOrder = OrderSortOrder.orderDateDescending,

@@ -90,4 +90,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       ),
     );
   }
+
+  List<OrderSortOrder> get availableSortOrders =>
+      _orderUsecase.availableSortOrders;
 }

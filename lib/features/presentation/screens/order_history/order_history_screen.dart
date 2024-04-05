@@ -104,10 +104,9 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
                                 children: [
                                   SortToolMenu(
                                     selectedSortOrder: state.orderSortOrder,
-                                    availableSortOrders:
-                                        sl<ICommerceAPIServiceProvider>()
-                                            .getOrderService()
-                                            .availableSortOrders,
+                                    availableSortOrders: context
+                                        .read<OrderHistoryCubit>()
+                                        .availableSortOrders,
                                     onSortOrderChanged:
                                         (SortOrderAttribute sortOrder) async {
                                       await context
