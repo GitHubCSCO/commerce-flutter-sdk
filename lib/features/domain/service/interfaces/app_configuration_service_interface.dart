@@ -41,7 +41,7 @@ abstract class IAppConfigurationService {
 
   Future<bool> addToCartEnabled();
 
-  Future<RealTimeSupport> getRealtimeSupportType();
+  Future<RealTimeSupport?> getRealtimeSupportType();
 
   Future<bool> isSignInRequired();
 }
