@@ -1,3 +1,5 @@
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_products_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,5 +28,30 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
             errorResponse: errorResponse.errorDescription ?? ''));
         break;
     }
+  }
+
+  Future<void> updateAddToCartButton(ProductEntity product) async {
+    
+    emit(SearchProductsAddToCartButtonLoading());
+    var realTimeInventory = await _searchProductsusecase
+        .loadRealTimeInventory(ProductEntityMapper().toModel(product));
+
+    num qtyOnHand;
+
+    if (realTimeInventory != null) {
+      var inventory = realTimeInventory.realTimeInventoryResults
+          ?.firstWhere((o) => o.productId == product.id);
+      qtyOnHand = inventory!.qtyOnHand!;
+      product = product.copyWith(qtyOnHand: qtyOnHand);
+    }
+
+    if (product.canAddToCart! &&
+        !product.canBackOrder! &&
+        product.trackInventory! &&
+        product.qtyOnHand! <= 0) {
+      product = product.copyWith(canAddToCart: false);
+    }
+
+    emit(SearchProductsAddToCartEnable(canAddToCart: product.canAddToCart!));
   }
 }

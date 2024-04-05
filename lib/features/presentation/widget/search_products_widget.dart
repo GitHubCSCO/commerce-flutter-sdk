@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
+import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
@@ -14,6 +15,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/search_products
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class SearchProductsWidget extends StatelessWidget {
@@ -24,54 +26,40 @@ class SearchProductsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SearchProductsCubit, SearchProductsState>(
-      listener: (context, state) {
-        switch (state) {
-          case SearchProductsAddToCartSuccess():
-            context.read<CartCountCubit>().onCartItemChange();
-            CustomSnackBar.showProductAddedToCart(context);
-            break;
-          case SearchProductsAddToCartFailure(
-              errorResponse: final errorResponse
-            ):
-            break;
-        }
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              LocalizationConstants.resultsFor.format([
-                productCollectionResult.products?.isEmpty ?? true
-                    ? LocalizationConstants.no
-                    : productCollectionResult.products!.length,
-                productCollectionResult.originalQuery
-              ]),
-              style: OptiTextStyles.header3,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          child: Text(
+            LocalizationConstants.resultsFor.format([
+              productCollectionResult.products?.isEmpty ?? true
+                  ? LocalizationConstants.no
+                  : productCollectionResult.products!.length,
+              productCollectionResult.originalQuery
+            ]),
+            style: OptiTextStyles.header3,
           ),
-          Expanded(
-            child: ListView.separated(
-              padding: EdgeInsets.zero,
-              separatorBuilder: (context, index) => const Divider(
-                height: 1,
-                indent: 16,
-                endIndent: 16,
-                color: Color(0xFFF5F5F5),
-              ),
-              itemCount: productCollectionResult.products?.length ?? 0,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                final product = productCollectionResult.products![index];
-                return SearchProductWidget(
-                    product: ProductEntityMapper().toEntity(product));
-              },
+        ),
+        Expanded(
+          child: ListView.separated(
+            padding: EdgeInsets.zero,
+            separatorBuilder: (context, index) => const Divider(
+              height: 1,
+              indent: 16,
+              endIndent: 16,
+              color: Color(0xFFF5F5F5),
             ),
+            itemCount: productCollectionResult.products?.length ?? 0,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              final product = productCollectionResult.products![index];
+              var productEntity = ProductEntityMapper().toEntity(product);
+              return SearchProductWidget(product: productEntity);
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -158,27 +146,63 @@ class SearchProductWidget extends StatelessWidget {
                 ],
               ),
             ),
-            InkWell(
-              onTap: () {
-                var productId = product.styleParentId ?? product.id;
-                context
-                    .read<SearchProductsCubit>()
-                    .searchPorductAddToCard(productId!);
-              },
-              child: Container(
-                width: 40,
-                height: 40,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF5F5F5),
-                  borderRadius: BorderRadius.circular(32),
-                ),
-                child: SvgPicture.asset(
-                  AssetConstants.addToCart,
-                  fit: BoxFit.fitWidth,
-                ),
-              ),
-            ),
+            BlocProvider(
+              create: (context) =>
+                  sl<SearchProductsCubit>()..updateAddToCartButton(product),
+              child: BlocConsumer<SearchProductsCubit, SearchProductsState>(
+                  builder: (context, state) {
+                switch (state) {
+                  case SearchProductsInitial():
+                    return Container();
+                  case SearchProductsAddToCartButtonLoading():
+                    return Container(
+                      alignment: Alignment.bottomLeft,
+                      child: LoadingAnimationWidget.prograssiveDots(
+                        color: OptiAppColors.iconPrimary,
+                        size: 30,
+                      ),
+                    );
+                  case SearchProductsAddToCartEnable():
+                    if (state.canAddToCart) {
+                      return InkWell(
+                        onTap: () {
+                          var productId = product.styleParentId ?? product.id;
+                          context
+                              .read<SearchProductsCubit>()
+                              .searchPorductAddToCard(productId!);
+                        },
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF5F5F5),
+                            borderRadius: BorderRadius.circular(32),
+                          ),
+                          child: SvgPicture.asset(
+                            AssetConstants.addToCart,
+                            fit: BoxFit.fitWidth,
+                          ),
+                        ),
+                      );
+                    }
+                    return Container();
+                  default:
+                    return Container();
+                }
+              }, listener: (context, state) {
+                switch (state) {
+                  case SearchProductsAddToCartSuccess():
+                    context.read<CartCountCubit>().onCartItemChange();
+                    CustomSnackBar.showProductAddedToCart(context);
+                    break;
+                  case SearchProductsAddToCartFailure(
+                      errorResponse: final errorResponse
+                    ):
+                    break;
+                }
+              }),
+            )
           ],
         ),
       ),
