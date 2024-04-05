@@ -41,7 +41,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       ),
     );
 
-    final result = await _orderUsecase.getOrderHistory();
+    final result = await _orderUsecase.getOrderHistory(sortOrder: state.orderSortOrder);
 
     result != null
         ? emit(
@@ -69,6 +69,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
     emit(state.copyWith(orderStatus: OrderStatus.moreLoading));
     final result = await _orderUsecase.getOrderHistory(
       page: state.orderEntities.pagination!.page! + 1,
+      sortOrder: state.orderSortOrder,
     );
 
     if (result == null) {
