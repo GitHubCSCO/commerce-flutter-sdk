@@ -270,6 +270,8 @@ class CheckoutPage extends StatelessWidget {
       Cart cart, PromotionCollectionModel promotionCollectionModel) {
     String promotionInfo;
     String promotionValue;
+    Promotion? lastPromotion;
+    Promotion? promotion;
 
     var promotions = promotionCollectionModel.promotions
         ?.where((x) => x.amount != 0)
@@ -278,9 +280,11 @@ class CheckoutPage extends StatelessWidget {
     if (promotions == null || promotions.isEmpty) {
       promotionInfo = '';
       promotionValue = '';
+    } else {
+      lastPromotion = promotions.last;
+      promotion = promotions.first;
     }
 
-    var lastPromotion = promotions?.last;
     var info = '';
 
     if (promotions != null && promotions.length > 1) {
@@ -295,7 +299,6 @@ class CheckoutPage extends StatelessWidget {
         (previousValue, element) =>
             previousValue + (element.amount?.toInt() ?? 0));
 
-    var promotion = promotions?.first;
     var currencySymbol = '';
 
     if (promotion != null &&
@@ -308,8 +311,12 @@ class CheckoutPage extends StatelessWidget {
     promotionValue = '- $currencySymbol${amount ?? 0.toStringAsFixed(2)}';
 
     List<Widget> list = [];
-    list.add(
-        _buildRow(promotionInfo, promotionValue, OptiTextStyles.bodyFade)!);
+
+    if (promotion != null && lastPromotion != null) {
+      list.add(
+          _buildRow(promotionInfo, promotionValue, OptiTextStyles.bodyFade)!);
+    }
+
     list.add(_buildRow(LocalizationConstants.subtotal,
         cart.orderGrandTotalDisplay ?? '', OptiTextStyles.subtitle)!);
 
