@@ -143,7 +143,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
       padding: const EdgeInsets.all(24.0),
       child: Input(
         label: LocalizationConstants.pONumber,
-        hintText: LocalizationConstants.pONumberOptional,
+        hintText: cart.requiresPoNumber! ? LocalizationConstants.pONumberRequired :LocalizationConstants.pONumberOptional,
         controller: state.poTextEditingController,
         onTapOutside: (p0) => context.closeKeyboard(),
         onEditingComplete: () => context.nextFocus(),

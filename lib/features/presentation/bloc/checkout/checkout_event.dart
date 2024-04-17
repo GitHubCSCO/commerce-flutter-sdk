@@ -40,3 +40,8 @@ class SelectPaymentEvent extends CheckoutEvent {
 }
 
 
+class UpdatePONumberEvent extends CheckoutEvent {
+  final String poNumber;
+
+  UpdatePONumberEvent(this.poNumber);
+}

@@ -11,6 +11,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/expansion_panel/expansion_panel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
@@ -75,12 +76,10 @@ class CheckoutPage extends StatelessWidget {
         ],
         automaticallyImplyLeading: false,
       ),
-      body: BlocConsumer<CheckoutBloc, CheckoutState>(
-          listener: (_, state) {
+      body: BlocConsumer<CheckoutBloc, CheckoutState>(listener: (_, state) {
         if (state is CheckoutPlaceOrder) {
-                context.read<CartCountCubit>().onCartItemChange();
-          AppRoute.checkoutSuccess
-              .navigate(context, extra: state.orderNumber);
+          context.read<CartCountCubit>().onCartItemChange();
+          AppRoute.checkoutSuccess.navigate(context, extra: state.orderNumber);
         }
       }, builder: (_, state) {
         return BlocBuilder<CheckoutBloc, CheckoutState>(
@@ -94,7 +93,8 @@ class CheckoutPage extends StatelessWidget {
                   children: [
                     Expanded(
                       child: SingleChildScrollView(
-                        child: Column(mainAxisSize: MainAxisSize.min, children: [
+                        child:
+                            Column(mainAxisSize: MainAxisSize.min, children: [
                           _buildSummary(state.cart, state.promotions),
                           BlocBuilder<ExpansionPanelCubit, ExpansionPanelState>(
                             builder: (context, panelState) {
@@ -106,20 +106,20 @@ class CheckoutPage extends StatelessWidget {
 
                               final billingShippingEntity =
                                   BillingShippingEntity(
-                                      billTo: state.billToAddress,
-                                      shipTo: state.shipToAddress,
-                                      warehouse: state.wareHouse,
-                                      shippingMethod: (state.shippingMethod
-                                              .equalsIgnoreCase(
-                                                  ShippingOption.pickUp.name)
-                                          ? ShippingOption.pickUp
-                                          : ShippingOption.ship),
-                                      carriers: state.cart.carriers,
-                                      cartSettings: state.cartSettings,
-                                      selectedCarrier: state.selectedCarrier,
-                                      selectedService: state.selectedService,
-                                      requestDeliveryDate: state.requestDeliveryDate,
-                                  );
+                                billTo: state.billToAddress,
+                                shipTo: state.shipToAddress,
+                                warehouse: state.wareHouse,
+                                shippingMethod: (state.shippingMethod
+                                        .equalsIgnoreCase(
+                                            ShippingOption.pickUp.name)
+                                    ? ShippingOption.pickUp
+                                    : ShippingOption.ship),
+                                carriers: state.cart.carriers,
+                                cartSettings: state.cartSettings,
+                                selectedCarrier: state.selectedCarrier,
+                                selectedService: state.selectedService,
+                                requestDeliveryDate: state.requestDeliveryDate,
+                              );
 
                               final reviewOrderEntity = ReviewOrderEntity(
                                   billTo: state.billToAddress,
@@ -190,33 +190,41 @@ class CheckoutPage extends StatelessWidget {
                     ),
                     Container(
                       height: 80,
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 32, vertical: 16),
                       clipBehavior: Clip.antiAlias,
                       decoration: const BoxDecoration(color: Colors.white),
                       child: StreamBuilder<String>(
-                        stream: context.read<ExpansionPanelCubit>().buttonTextStream,
+                        stream: context
+                            .read<ExpansionPanelCubit>()
+                            .buttonTextStream,
                         initialData: LocalizationConstants.continueText,
                         builder: (context, snapshot) {
                           String buttonText = snapshot.data!;
 
                           return PrimaryButton(
                             onPressed: () {
-                              var index =
-                                  context.read<ExpansionPanelCubit>().expansionIndex;
+                              var index = context
+                                  .read<ExpansionPanelCubit>()
+                                  .expansionIndex;
                               switch (index) {
                                 case 0:
-                                  final carrier =
-                                      context.read<CheckoutBloc>().selectedCarrier;
-                                  final service =
-                                      context.read<CheckoutBloc>().selectedService;
+                                  final carrier = context
+                                      .read<CheckoutBloc>()
+                                      .selectedCarrier;
+                                  final service = context
+                                      .read<CheckoutBloc>()
+                                      .selectedService;
                                   if (carrier != null && service != null) {
-                                    context.read<ExpansionPanelCubit>().onContinueClick();
+                                    context
+                                        .read<ExpansionPanelCubit>()
+                                        .onContinueClick();
                                   }
                                 case 1:
                                   var isPaymentCardType = context
-                                      .read<PaymentDetailsBloc>()
-                                      .selectedPaymentMethod
-                                      ?.cardType !=
+                                          .read<PaymentDetailsBloc>()
+                                          .selectedPaymentMethod
+                                          ?.cardType !=
                                       null;
                                   var isCreditCardSectionCompleted = context
                                       .read<PaymentDetailsBloc>()
@@ -228,13 +236,35 @@ class CheckoutPage extends StatelessWidget {
                                         .read<TokenExBloc>()
                                         .add(TokenExValidateEvent());
                                   } else {
-                                    context.read<ExpansionPanelCubit>().onContinueClick();
+                                    var poNumber = context
+                                        .read<PaymentDetailsBloc>()
+                                        .getPONumber();
+                                    var cart =
+                                        context.read<PaymentDetailsBloc>().cart;
+
+                                    if (cart!.requiresPoNumber! &&
+                                        poNumber.isNullOrEmpty) {
+                                      CustomSnackBar.showPoNumberRequired(
+                                          context);
+                                    } else {
+                                      context
+                                          .read<CheckoutBloc>()
+                                          .add(UpdatePONumberEvent(poNumber));
+
+                                      context
+                                          .read<ExpansionPanelCubit>()
+                                          .onContinueClick();
+                                    }
                                   }
 
                                 case 2:
-                                  context.read<CheckoutBloc>().add(PlaceOrderEvent());
+                                  context
+                                      .read<CheckoutBloc>()
+                                      .add(PlaceOrderEvent());
                                 default:
-                                  context.read<ExpansionPanelCubit>().onContinueClick();
+                                  context
+                                      .read<ExpansionPanelCubit>()
+                                      .onContinueClick();
                               }
                             },
                             text: buttonText,
@@ -258,10 +288,7 @@ class CheckoutPage extends StatelessWidget {
         cart: cart,
         onCompleteCheckoutPaymentSection: () {
           context.read<CheckoutBloc>().add(SelectPaymentEvent(
-              context
-                  .read<PaymentDetailsBloc>()
-                  .cart!
-                  .paymentOptions!));
+              context.read<PaymentDetailsBloc>().cart!.paymentOptions!));
           context.read<ExpansionPanelCubit>().onContinueClick();
         });
   }
@@ -356,5 +383,4 @@ class CheckoutPage extends StatelessWidget {
       );
     }
   }
-
 }
