@@ -44,6 +44,27 @@ class ProductDetailsUseCase extends BaseUseCase {
       this.styledProduct})
       : super();
 
+  // var getCurrentAccountSettingsTask = this.commerceAPIServiceProvider.GetSettingsService().GetAccountSettingsAsync();
+  //   var getCurrentSessionTask = this.commerceAPIServiceProvider.GetSessionService().GetCurrentSession();
+  //   var getAddToCartEnabledResultTask = this.coreServiceProvider.GetAppConfigurationService().AddToCartEnabled();
+  //   var getProductPricingEnabledResultTask = this.coreServiceProvider.GetAppConfigurationService().ProductPricingEnabled();
+  //   var getCurrentRealtimeSupportTask = this.coreServiceProvider.GetAppConfigurationService().GetRealtimeSupportType();
+  //   var hasCheckoutTask = this.coreServiceProvider.GetAppConfigurationService().HasCheckout();
+
+  Future<bool> getCurrentSession() async {
+    return coreServiceProvider.getAppConfigurationService().addToCartEnabled();
+  }
+
+  Future<Result<Session, ErrorResponse>> getCurrentSession() async {
+    return commerceAPIServiceProvider.getSessionService().getCurrentSession();
+  }
+
+  Future<Result<ProductSettings, ErrorResponse>> loadSetting() async {
+    return commerceAPIServiceProvider
+        .getSettingsService()
+        .getProductSettingsAsync();
+  }
+
   Future<Result<ProductEntity, ErrorResponse>> getProductDetails(
       String productId, ProductEntity? product) async {
     // (await this.commerceAPIServiceProvider.getCatalogpagesService()

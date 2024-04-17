@@ -8,10 +8,26 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class ProductDetailsBloc
     extends Bloc<ProductDetailsEvent, ProductDetailsState> {
   final ProductDetailsUseCase _productDetailsUseCase;
+
+
+
   ProductDetailsBloc({required ProductDetailsUseCase productDetailsUseCase})
       : _productDetailsUseCase = productDetailsUseCase,
         super(ProductDetailsInitial()) {
     on<FetchProductDetailsEvent>(_fetchProductDetails);
+  }
+          // var getCurrentAccountSettingsTask = this.commerceAPIServiceProvider.GetSettingsService().GetAccountSettingsAsync();
+          //   var getCurrentSessionTask = this.commerceAPIServiceProvider.GetSessionService().GetCurrentSession();
+          //   var getAddToCartEnabledResultTask = this.coreServiceProvider.GetAppConfigurationService().AddToCartEnabled();
+          //   var getProductPricingEnabledResultTask = this.coreServiceProvider.GetAppConfigurationService().ProductPricingEnabled();
+          //   var getCurrentRealtimeSupportTask = this.coreServiceProvider.GetAppConfigurationService().GetRealtimeSupportType();
+          //   var hasCheckoutTask = this.coreServiceProvider.GetAppConfigurationService().HasCheckout();
+
+  Future<void> _loadSetting() async {
+    var productSettingsResult = await _productDetailsUseCase.loadSetting();
+
+
+
   }
 
   Future<void> _fetchProductDetails(
