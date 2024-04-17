@@ -178,4 +178,8 @@ class PaymentDetailsBloc
     cart?.paymentMethod = selectedPaymentMethod;
     cart?.poNumber = _poNumberController.text;
   }
+
+  String getPONumber() {
+    return _poNumberController.text;
+  }
 }

@@ -27,4 +27,13 @@ class CustomSnackBar {
       ),
     );
   }
+
+  static void showPoNumberRequired(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("PO Number Required"),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
 }
