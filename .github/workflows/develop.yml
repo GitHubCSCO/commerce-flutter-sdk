@@ -1,0 +1,75 @@
+name: Dev Build
+on: push
+
+jobs:
+  ios:
+    runs-on: macos-latest
+    steps: 
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: List
+        run: |
+          ls -l
+
+      - name: Cloning build scripts
+        uses: actions/checkout@master
+        with:
+          repository: InsiteSoftware/commerce-mobile-build-scripts
+          ref: refs/heads/flutter
+          token: ${{ secrets.my_pat }}
+          path: build-scripts
+      - name: List out everything
+        run: |
+          mv build-scripts/* ./
+          ls -l
+      - name: Extract branch name
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+
+      - name: Fastlane
+        run: |
+          fastlane ios qa release:test
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          APPCENTER_API_TOKEN: ${{ secrets.APPCENTER_API_TOKEN }}
+          APPCENTER_SECRET_IOS_6W95DY6FX8: ${{ secrets.APPCENTER_SECRET_IOS_OPTIMIZELYTEST }}
+          BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
+  android:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: List
+        run: |
+          ls -l
+
+      - name: Cloning build scripts
+        uses: actions/checkout@master
+        with:
+          repository: InsiteSoftware/commerce-mobile-build-scripts
+          ref: refs/heads/flutter
+          token: ${{ secrets.my_pat }}
+          path: build-scripts
+      - name: List out everything
+        run: |
+          mv build-scripts/* ./
+          ls -l
+      - name: Extract branch name
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+
+      - name: Fastlane
+        run: |
+          fastlane android qa release:test
+          ls -l
+        env:
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          APPCENTER_API_TOKEN: ${{ secrets.APPCENTER_API_TOKEN }}
+          APPCENTER_SECRET_ANDROID_6W95DY6FX8: ${{ secrets.APPCENTER_SECRET_ANDROID_OPTIMIZELYTEST }}
+          ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+          ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
