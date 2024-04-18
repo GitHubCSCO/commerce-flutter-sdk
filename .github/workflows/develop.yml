@@ -34,7 +34,6 @@ jobs:
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
           APPCENTER_API_TOKEN: ${{ secrets.APPCENTER_API_TOKEN }}
-          APPCENTER_SECRET_IOS_6W95DY6FX8: ${{ secrets.APPCENTER_SECRET_IOS_OPTIMIZELYTEST }}
           BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
   android:
     runs-on: macos-latest
@@ -65,11 +64,8 @@ jobs:
           fastlane android qa release:test
           ls -l
         env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
           APPCENTER_API_TOKEN: ${{ secrets.APPCENTER_API_TOKEN }}
-          APPCENTER_SECRET_ANDROID_6W95DY6FX8: ${{ secrets.APPCENTER_SECRET_ANDROID_OPTIMIZELYTEST }}
-          ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
-          ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
