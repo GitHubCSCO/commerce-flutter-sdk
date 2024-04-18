@@ -4,6 +4,14 @@ on: push
 jobs:
   ios:
     runs-on: macos-latest
+    strategy:
+        matrix:
+          os: [macos-latest]
+          include:
+            - os: macos-latest
+              flutter_path: /opt/hostedtoolcache/flutter
+        fail-fast: false
+
     steps: 
       - name: Checkout
         uses: actions/checkout@v3
@@ -59,6 +67,13 @@ jobs:
           BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
   android:
     runs-on: macos-latest
+    strategy:
+        matrix:
+          os: [macos-latest]
+          include:
+            - os: macos-latest
+              flutter_path: /opt/hostedtoolcache/flutter
+        fail-fast: false
     steps:
       - name: Checkout
         uses: actions/checkout@v3
