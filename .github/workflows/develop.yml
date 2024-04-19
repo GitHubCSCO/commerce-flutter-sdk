@@ -23,7 +23,7 @@ jobs:
     runs-on: macos-latest
     steps: 
       - name: Preparing build
-        run: echo preparing this build for ${{ inputs.release }}
+        run: echo "Preparing this build for ${{ github.event.inputs.release }}"
       - name: Checkout
         uses: actions/checkout@v3
       - name: List
@@ -75,7 +75,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Preparing build
-        run: echo preparing this build for ${{ inputs.release }}
+        run: echo "Preparing this build for ${{ github.event.inputs.release }}"
       - name: Checkout
         uses: actions/checkout@v3
       - name: List
