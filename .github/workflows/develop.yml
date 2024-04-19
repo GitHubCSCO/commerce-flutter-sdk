@@ -6,6 +6,17 @@ on:
       - develop
       - epic/*
       - story/*
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Release for'
+        required: true
+        default: 'qa'
+        type: choice
+        options:
+          - qa
+          - customers
+          - test
 
 jobs:
   ios:
@@ -51,7 +62,7 @@ jobs:
 
       - name: Fastlane
         run: |
-          fastlane ios qa release:qa
+          fastlane ios qa release:${{ inputs.release }} 
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
@@ -108,7 +119,7 @@ jobs:
 
       - name: Fastlane
         run: |
-          fastlane android qa release:qa
+          fastlane android qa release:${{ inputs.release }} 
           ls -l
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
