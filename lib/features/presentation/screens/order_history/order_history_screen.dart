@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
@@ -123,8 +124,7 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
                                   IconButton(
                                     padding: const EdgeInsets.all(10),
                                     onPressed: () =>
-                                        CustomSnackBar.showComingSoonSnackBar(
-                                            context),
+                                        showOrderHistoryFilter(context),
                                     icon: SvgPicture.asset(
                                       height: 20,
                                       width: 20,
