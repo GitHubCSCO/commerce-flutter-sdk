@@ -14,6 +14,7 @@ import 'package:commerce_flutter_app/features/domain/extensions/product_extensio
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 enum ProdcutDeatilsPageWidgets {
@@ -25,8 +26,8 @@ enum ProdcutDeatilsPageWidgets {
 }
 
 class ProductDetailsUseCase extends BaseUseCase {
-  late Session? session;
-  late AccountSettings? accountSettings;
+  // late Session? session;
+  // late AccountSettings? accountSettings;
   late ProductSettings? productSettings;
   late ProductUnitOfMeasure? chosenUnitOfMeasure;
   late StyledProductEntity? styledProduct;
@@ -35,8 +36,7 @@ class ProductDetailsUseCase extends BaseUseCase {
   late ProductPriceEntity? productPricing;
 
   ProductDetailsUseCase(
-      {this.session,
-      this.accountSettings,
+      {
       this.productSettings,
       this.chosenUnitOfMeasure,
       this.quantity,
@@ -44,14 +44,30 @@ class ProductDetailsUseCase extends BaseUseCase {
       this.styledProduct})
       : super();
 
-  // var getCurrentAccountSettingsTask = this.commerceAPIServiceProvider.GetSettingsService().GetAccountSettingsAsync();
-  //   var getCurrentSessionTask = this.commerceAPIServiceProvider.GetSessionService().GetCurrentSession();
-  //   var getAddToCartEnabledResultTask = this.coreServiceProvider.GetAppConfigurationService().AddToCartEnabled();
-  //   var getProductPricingEnabledResultTask = this.coreServiceProvider.GetAppConfigurationService().ProductPricingEnabled();
-  //   var getCurrentRealtimeSupportTask = this.coreServiceProvider.GetAppConfigurationService().GetRealtimeSupportType();
-  //   var hasCheckoutTask = this.coreServiceProvider.GetAppConfigurationService().HasCheckout();
+  Future<bool> hasCheckout() {
+    return coreServiceProvider.getAppConfigurationService().hasCheckout();
+  }
 
-  Future<bool> getCurrentSession() async {
+  Future<RealTimeSupport?> getRealtimeSupportType() async {
+    return coreServiceProvider
+        .getAppConfigurationService()
+        .getRealtimeSupportType();
+  }
+
+  Future<bool?> productPricingEnabled() async {
+    return coreServiceProvider
+        .getAppConfigurationService()
+        .productPricingEnabled();
+  }
+
+  Future<Result<AccountSettings, ErrorResponse>>
+      getCurrentAccountSettings() async {
+    return commerceAPIServiceProvider
+        .getSettingsService()
+        .getAccountSettingsAsync();
+  }
+
+  Future<bool?> addToCartEnabled() async {
     return coreServiceProvider.getAppConfigurationService().addToCartEnabled();
   }
 
@@ -66,9 +82,10 @@ class ProductDetailsUseCase extends BaseUseCase {
   }
 
   Future<Result<ProductEntity, ErrorResponse>> getProductDetails(
-      String productId, ProductEntity? product) async {
-    // (await this.commerceAPIServiceProvider.getCatalogpagesService()
-    //     .getProductCatalogInformation(this.productParameter.urlSegment));
+      String productId,
+      ProductEntity? product,
+      AccountSettings accountSettings,
+      Session session) async {
 
     if (productId.isNullOrEmpty) {
       var urlSegment = product?.urlSegment ?? '';
@@ -88,11 +105,8 @@ class ProductDetailsUseCase extends BaseUseCase {
       }
     }
 
-    // var includeAlternateInventory =
-    //     !this.accountSettings.EnableWarehousePickup ||
-    //         this.session.FulfillmentMethod != "PickUp";
-
-    var includeAlternateInventory = true;
+    var includeAlternateInventory = !accountSettings.enableWarehousePickup! ||
+        session.fulfillmentMethod != "PickUp";
 
     var parameters = ProductQueryParameters(
       addToRecentlyViewed: true,
