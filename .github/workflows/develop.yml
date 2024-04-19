@@ -22,6 +22,8 @@ jobs:
   ios:
     runs-on: macos-latest
     steps: 
+      - name: Preparing build
+        run: echo preparing this build for ${{ inputs.release }}
       - name: Checkout
         uses: actions/checkout@v3
       - name: List
@@ -72,6 +74,8 @@ jobs:
   android:
     runs-on: macos-latest
     steps:
+      - name: Preparing build
+        run: echo preparing this build for ${{ inputs.release }}
       - name: Checkout
         uses: actions/checkout@v3
       - name: List
