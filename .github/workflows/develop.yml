@@ -5,7 +5,7 @@ on:
       - main
       - develop
       - epic/*
-      - dev/*
+      - story/*
 
 jobs:
   ios:
