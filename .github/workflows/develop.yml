@@ -22,8 +22,6 @@ jobs:
   ios:
     runs-on: macos-latest
     steps: 
-      - name: Preparing build
-        run: echo "Preparing this build for ${{ github.event.inputs.release }}"
       - name: Checkout
         uses: actions/checkout@v3
       - name: List
@@ -64,7 +62,17 @@ jobs:
 
       - name: Fastlane
         run: |
-          fastlane ios qa release:${{ inputs.release }} 
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "Running in PR. Using default value."
+            RELEASE_GROUP='qa'
+          else
+            echo "Not running in PR."
+            RELEASE_GROUP='${{ github.event.inputs.release }}'
+          fi
+
+          echo "Using RELEASE_GROUP: $RELEASE_GROUP"
+          
+          fastlane ios qa release:$RELEASE_GROUP
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
@@ -74,8 +82,6 @@ jobs:
   android:
     runs-on: macos-latest
     steps:
-      - name: Preparing build
-        run: echo "Preparing this build for ${{ github.event.inputs.release }}"
       - name: Checkout
         uses: actions/checkout@v3
       - name: List
@@ -123,8 +129,17 @@ jobs:
 
       - name: Fastlane
         run: |
-          fastlane android qa release:${{ inputs.release }} 
-          ls -l
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "Running in PR. Using default value."
+            RELEASE_GROUP='qa'
+          else
+            echo "Not running in PR."
+            RELEASE_GROUP='${{ github.event.inputs.release }}'
+          fi
+
+          echo "Using RELEASE_GROUP: $RELEASE_GROUP"
+          
+          fastlane android qa release:$RELEASE_GROUP
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
