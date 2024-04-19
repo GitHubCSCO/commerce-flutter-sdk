@@ -2,78 +2,56 @@ name: Dev Build
 on: push
 
 jobs:
-  # ios:
-  #   runs-on: macos-latest
-  #   strategy:
-  #       matrix:
-  #         os: [macos-latest]
-  #         include:
-  #           - os: macos-latest
-  #             flutter_path: /opt/hostedtoolcache/flutter
-  #       fail-fast: false
+  ios:
+    runs-on: macos-latest
+    steps: 
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: List
+        run: |
+          ls -l
 
-  #   steps: 
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-  #     - name: List
-  #       run: |
-  #         ls -l
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
 
-  #     - name: Set up Java
-  #       uses: actions/setup-java@v3
-  #       with: 
-  #         distribution: 'zulu'
-  #         java-version: '17'
-  #         cache: 'gradle'
+      - run: flutter --version
 
-  #     - name: Install Flutter
-  #       uses: subosito/flutter-action@v2
-  #       with:
-  #         channel: 'stable'
-  #         cache: true
+      - uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          name: id_rsa
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
-  #     - run: flutter --version
+      - name: Cloning build scripts
+        uses: actions/checkout@master
+        with:
+          repository: InsiteSoftware/commerce-mobile-build-scripts
+          ref: refs/heads/flutter
+          token: ${{ secrets.my_pat }}
+          path: build-scripts
+      - name: List out everything
+        run: |
+          mv build-scripts/* ./
+          ls -l
+          ls -l fastlane
+      - name: Extract branch name
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
 
-  #     - uses: shimataro/ssh-key-action@v2
-  #       with:
-  #         key: ${{ secrets.SSH_PRIVATE_KEY }}
-  #         name: id_rsa
-  #         known_hosts: ${{ secrets.KNOWN_HOSTS }}
-
-  #     - name: Cloning build scripts
-  #       uses: actions/checkout@master
-  #       with:
-  #         repository: InsiteSoftware/commerce-mobile-build-scripts
-  #         ref: refs/heads/flutter
-  #         token: ${{ secrets.my_pat }}
-  #         path: build-scripts
-  #     - name: List out everything
-  #       run: |
-  #         mv build-scripts/* ./
-  #         ls -l
-  #         ls -l fastlane
-  #     - name: Extract branch name
-  #       run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-  #       id: extract_branch
-
-  #     - name: Fastlane
-  #       run: |
-  #         fastlane ios qa release:test
-  #       env:
-  #         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-  #         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-  #         MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
-  #         APPCENTER_API_TOKEN: ${{ secrets.APPCENTER_API_TOKEN }}
-  #         BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
+      - name: Fastlane
+        run: |
+          fastlane ios qa release:test
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          APPCENTER_API_TOKEN: ${{ secrets.APPCENTER_API_TOKEN }}
+          BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
   android:
     runs-on: macos-latest
-    strategy:
-        matrix:
-          os: [macos-latest]
-          include:
-            - os: macos-latest
-              flutter_path: /opt/hostedtoolcache/flutter
-        fail-fast: false
     steps:
       - name: Checkout
         uses: actions/checkout@v3
