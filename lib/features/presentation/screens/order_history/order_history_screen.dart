@@ -124,7 +124,7 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
                                   IconButton(
                                     padding: const EdgeInsets.all(10),
                                     onPressed: () =>
-                                        showOrderHistoryFilter(context),
+                                        showFilterModalSheet(context),
                                     icon: SvgPicture.asset(
                                       height: 20,
                                       width: 20,
