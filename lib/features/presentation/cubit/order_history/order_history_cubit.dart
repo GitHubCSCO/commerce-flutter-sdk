@@ -14,6 +14,8 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       : _orderUsecase = orderUsecase,
         super(
           const OrderHistoryState(
+            showMyOrders: false,
+            selectedFilterValues: [],
             orderEntities: GetOrderCollectionResultEntity(
               pagination: null,
               orders: null,
@@ -34,6 +36,17 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
     await loadOrderHistory();
   }
 
+  Future<void> resetFilter() async {
+    emit(
+      state.copyWith(
+        selectedFilterValues: [],
+        showMyOrders: false,
+      ),
+    );
+
+    await loadOrderHistory();
+  }
+
   Future<void> loadOrderHistory() async {
     emit(
       state.copyWith(
@@ -46,6 +59,8 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
     result != null
         ? emit(
             OrderHistoryState(
+              showMyOrders: state.showMyOrders,
+              selectedFilterValues: state.selectedFilterValues,
               orderEntities: result,
               orderStatus: OrderStatus.success,
               orderSortOrder: state.orderSortOrder,
