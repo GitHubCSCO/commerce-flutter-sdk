@@ -31,6 +31,21 @@ class OrderHistoryScreen extends StatelessWidget {
   }
 }
 
+void showOrderHistoryFilter(
+  BuildContext context, {
+  required void Function() onApply,
+}) {
+  showFilterModalSheet(
+    context,
+    onApply: onApply,
+    onReset: () {},
+    child: const FilterOptionsWidget(
+      label: LocalizationConstants.status,
+      values: ['Canceled', 'Processing'],
+    ),
+  );
+}
+
 class OrderHistoryPage extends BaseDynamicContentScreen {
   OrderHistoryPage({super.key});
 

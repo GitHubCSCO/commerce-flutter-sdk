@@ -104,17 +104,89 @@ void showFilterModalSheet(
   );
 }
 
-void showOrderHistoryFilter(
-  BuildContext context, {
-  required void Function() onApply,
-}) {
-  showFilterModalSheet(
-    context,
-    onApply: onApply,
-    onReset: () {},
-    child: Text(
-      'Somevalue',
-      style: OptiTextStyles.titleSmall,
-    ),
-  );
+class FilterOptionsWidget extends StatefulWidget {
+  const FilterOptionsWidget({
+    super.key,
+    required this.label,
+    required this.values,
+    this.selectedValues = const {},
+  });
+
+  final String label;
+  final List<String> values;
+  final Set<String> selectedValues;
+
+  @override
+  State<FilterOptionsWidget> createState() => _FilterOptionsWidgetState();
+}
+
+class _FilterOptionsWidgetState extends State<FilterOptionsWidget> {
+  late Set<String> selectedValues;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedValues = {};
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 10,
+          ),
+          child: Text(
+            widget.label,
+            style: OptiTextStyles.body.copyWith(
+              color: OptiAppColors.textSecondary,
+            ),
+          ),
+        ),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: widget.values
+              .map(
+                (value) => FilterChip(
+                  label: Text(
+                    value,
+                    style: selectedValues.contains(value)
+                        ? OptiTextStyles.bodySmallHighlight
+                            .copyWith(color: OptiAppColors.backgroundWhite)
+                        : OptiTextStyles.bodySmallHighlight,
+                  ),
+                  selectedColor: OptiAppColors.textPrimary,
+                  showCheckmark: false,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  selected: selectedValues.contains(value),
+                  onSelected: (bool selected) {
+                    setState(() {
+                      if (selected) {
+                        selectedValues.add(value);
+                      } else {
+                        selectedValues.remove(value);
+                      }
+                    });
+                  },
+                  backgroundColor: OptiAppColors.backgroundWhite,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                    side: const BorderSide(
+                      color: OptiAppColors.textPrimary,
+                      width: 1,
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      ],
+    );
+  }
 }
