@@ -104,30 +104,19 @@ void showFilterModalSheet(
   );
 }
 
-class FilterOptionsWidget extends StatefulWidget {
-  const FilterOptionsWidget({
+class FilterOptionsChip extends StatelessWidget {
+  const FilterOptionsChip({
     super.key,
     required this.label,
     required this.values,
-    this.selectedValues = const {},
+    required this.selectedValues,
+    required this.onSelectionChanged,
   });
 
   final String label;
   final List<String> values;
   final Set<String> selectedValues;
-
-  @override
-  State<FilterOptionsWidget> createState() => _FilterOptionsWidgetState();
-}
-
-class _FilterOptionsWidgetState extends State<FilterOptionsWidget> {
-  late Set<String> selectedValues;
-
-  @override
-  void initState() {
-    super.initState();
-    selectedValues = {};
-  }
+  final void Function() onSelectionChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +128,7 @@ class _FilterOptionsWidgetState extends State<FilterOptionsWidget> {
             vertical: 10,
           ),
           child: Text(
-            widget.label,
+            label,
             style: OptiTextStyles.body.copyWith(
               color: OptiAppColors.textSecondary,
             ),
@@ -148,7 +137,7 @@ class _FilterOptionsWidgetState extends State<FilterOptionsWidget> {
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: widget.values
+          children: values
               .map(
                 (value) => FilterChip(
                   label: Text(
@@ -166,13 +155,13 @@ class _FilterOptionsWidgetState extends State<FilterOptionsWidget> {
                   ),
                   selected: selectedValues.contains(value),
                   onSelected: (bool selected) {
-                    setState(() {
-                      if (selected) {
-                        selectedValues.add(value);
-                      } else {
-                        selectedValues.remove(value);
-                      }
-                    });
+                    if (selected) {
+                      selectedValues.add(value);
+                    } else {
+                      selectedValues.remove(value);
+                    }
+
+                    onSelectionChanged();
                   },
                   backgroundColor: OptiAppColors.backgroundWhite,
                   shape: RoundedRectangleBorder(

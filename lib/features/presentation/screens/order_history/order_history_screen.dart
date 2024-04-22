@@ -39,11 +39,31 @@ void showOrderHistoryFilter(
     context,
     onApply: onApply,
     onReset: () {},
-    child: const FilterOptionsWidget(
-      label: LocalizationConstants.status,
-      values: ['Canceled', 'Processing'],
-    ),
+    child: const _StatusFilterWidget(),
   );
+}
+
+class _StatusFilterWidget extends StatefulWidget {
+  const _StatusFilterWidget();
+
+  @override
+  State<_StatusFilterWidget> createState() => __StatusFilterWidgetState();
+}
+
+class __StatusFilterWidgetState extends State<_StatusFilterWidget> {
+  Set<String> selectedValues = {};
+
+  @override
+  Widget build(BuildContext context) {
+    return FilterOptionsChip(
+      label: LocalizationConstants.status,
+      values: const ['Canceled', 'Processing'],
+      selectedValues: selectedValues,
+      onSelectionChanged: () {
+        setState(() {});
+      },
+    );
+  }
 }
 
 class OrderHistoryPage extends BaseDynamicContentScreen {
