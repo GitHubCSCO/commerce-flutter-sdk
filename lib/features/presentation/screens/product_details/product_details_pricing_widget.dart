@@ -6,6 +6,7 @@ import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_state.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,9 +21,19 @@ class ProductDetailsPricingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var event = context.read<ProductDetailsPricingBloc>();
+    var productDetailsBloc = context.read<ProductDetailsBloc>();
 
     event.add(LoadProductDetailsPricing(
-        productDetailsPriceEntity: productDetailsPricingEntity));
+        productDetailsPricingEntity: productDetailsPricingEntity,
+        product: productDetailsBloc.product,
+        styledProduct: productDetailsBloc.styledProduct,
+        productPricingEnabled: productDetailsBloc.productPricingEnabled,
+        quantity: 1,
+        chosenUnitOfMeasure: productDetailsBloc.chosenUnitOfMeasure,
+        realtimeProductAvailabilityEnabled:
+            productDetailsBloc.realtimeProductAvailabilityEnabled,
+        realtimeProductPricingEnabled:
+            productDetailsBloc.realtimeProductPricingEnabled));
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
@@ -45,9 +56,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                   style: OptiTextStyles.link,
                 ),
               ),
-              productDetailsPricingEntity.availability?.message != null
-                  ? _buildInventorySection(context)
-                  : Container(),
+              _buildInventorySection(context),
               // _buildInventorySection(context),
               // For "View Availability by Warehouse"
               GestureDetector(
@@ -83,7 +92,8 @@ class ProductDetailsPricingWidget extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is ProductDetailsPricingLoaded) {
-          var discountMessage = state.productDetailsPriceEntity.product?.pricing?.getDiscountValue();
+          var discountMessage = state.productDetailsPriceEntity.product?.pricing
+              ?.getDiscountValue();
           if (discountMessage != null &&
               discountMessage.isNotEmpty &&
               discountMessage != "null") {

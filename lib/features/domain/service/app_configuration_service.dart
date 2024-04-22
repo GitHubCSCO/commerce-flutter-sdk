@@ -305,6 +305,7 @@ class AppConfigurationService extends ServiceBase
                   StorefrontAccessConstants
                       .signInRequiredToAddToCartOrSeePrices ||
               isUserSignedIn);
+      return result;
     }
     return null;
   }
