@@ -110,13 +110,15 @@ class FilterOptionsChip extends StatelessWidget {
     required this.label,
     required this.values,
     required this.selectedValues,
-    required this.onSelectionChanged,
+    required this.onSelectionAdded,
+    required this.onSelectionRemoved,
   });
 
   final String label;
   final List<String> values;
   final Set<String> selectedValues;
-  final void Function() onSelectionChanged;
+  final void Function(String selection) onSelectionAdded;
+  final void Function(String selection) onSelectionRemoved;
 
   @override
   Widget build(BuildContext context) {
@@ -156,12 +158,10 @@ class FilterOptionsChip extends StatelessWidget {
                   selected: selectedValues.contains(value),
                   onSelected: (bool selected) {
                     if (selected) {
-                      selectedValues.add(value);
+                      onSelectionAdded(value);
                     } else {
-                      selectedValues.remove(value);
+                      onSelectionRemoved(value);
                     }
-
-                    onSelectionChanged();
                   },
                   backgroundColor: OptiAppColors.backgroundWhite,
                   shape: RoundedRectangleBorder(

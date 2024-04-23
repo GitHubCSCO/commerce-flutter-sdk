@@ -6,8 +6,10 @@ import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/filter_status.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
@@ -27,41 +29,6 @@ class OrderHistoryScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => sl<OrderHistoryCubit>()..loadOrderHistory(),
       child: OrderHistoryPage(),
-    );
-  }
-}
-
-void showOrderHistoryFilter(
-  BuildContext context, {
-  required void Function() onApply,
-}) {
-  showFilterModalSheet(
-    context,
-    onApply: onApply,
-    onReset: () {},
-    child: const _StatusFilterWidget(),
-  );
-}
-
-class _StatusFilterWidget extends StatefulWidget {
-  const _StatusFilterWidget();
-
-  @override
-  State<_StatusFilterWidget> createState() => __StatusFilterWidgetState();
-}
-
-class __StatusFilterWidgetState extends State<_StatusFilterWidget> {
-  Set<String> selectedValues = {};
-
-  @override
-  Widget build(BuildContext context) {
-    return FilterOptionsChip(
-      label: LocalizationConstants.status,
-      values: const ['Canceled', 'Processing'],
-      selectedValues: selectedValues,
-      onSelectionChanged: () {
-        setState(() {});
-      },
     );
   }
 }
@@ -156,20 +123,7 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
                                     },
                                   ),
                                   const SizedBox(width: 10),
-                                  IconButton(
-                                    padding: const EdgeInsets.all(10),
-                                    onPressed: () => showOrderHistoryFilter(
-                                      context,
-                                      onApply: () {},
-                                    ),
-                                    icon: SvgPicture.asset(
-                                      height: 20,
-                                      width: 20,
-                                      AssetConstants.filterIcon,
-                                      semanticsLabel: 'filter icon',
-                                      fit: BoxFit.fitWidth,
-                                    ),
-                                  ),
+                                  const _OrderHistoryFilter(),
                                 ],
                               )
                             ],
@@ -334,4 +288,96 @@ class _OrderHistoryListItem extends StatelessWidget {
       ),
     );
   }
+}
+
+class _OrderHistoryFilter extends StatelessWidget {
+  const _OrderHistoryFilter();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      padding: const EdgeInsets.all(10),
+      onPressed: () {
+        _showOrderHistoryFilter(
+          context,
+          onApply: () {
+            context.read<OrderHistoryCubit>().applyFilter();
+          },
+          onReset: () {
+            context.read<OrderHistoryCubit>().resetFilter();
+          },
+          onStatusValueAdded: context.read<OrderHistoryCubit>().addFilterValue,
+          onStatusValueRemoved:
+              context.read<OrderHistoryCubit>().removeFilterValue,
+          onShowMyOrdersToggled:
+              context.read<OrderHistoryCubit>().toggleShowMyOrders,
+        );
+      },
+      icon: SvgPicture.asset(
+        height: 20,
+        width: 20,
+        AssetConstants.filterIcon,
+        semanticsLabel: 'filter icon',
+        fit: BoxFit.fitWidth,
+      ),
+    );
+  }
+}
+
+void _showOrderHistoryFilter(
+  BuildContext context, {
+  required void Function() onApply,
+  required void Function() onReset,
+  required void Function(String value) onStatusValueAdded,
+  required void Function(String value) onStatusValueRemoved,
+  required void Function() onShowMyOrdersToggled,
+}) {
+  context.read<OrderHistoryCubit>().loadFilterValues();
+  showFilterModalSheet(
+    context,
+    onApply: onApply,
+    onReset: onReset,
+    child: BlocProvider.value(
+      value: BlocProvider.of<OrderHistoryCubit>(context),
+      child: StatefulBuilder(
+        builder: (context, setState) {
+          return BlocConsumer<OrderHistoryCubit, OrderHistoryState>(
+            listener: (context, state) {
+              setState(() {});
+            },
+            builder: (context, state) {
+              if (state.filterStatus == FilterStatus.loading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state.filterStatus == FilterStatus.failure) {
+                return const Center(
+                  child: Text('Error loading filter values'),
+                );
+              }
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  PrimaryButton(
+                    text: state.showMyOrders
+                        ? 'Hide My Orders'
+                        : 'Show My Orders',
+                    onPressed: onShowMyOrdersToggled,
+                  ),
+                  FilterOptionsChip(
+                    label: LocalizationConstants.status,
+                    values: state.filterValues,
+                    selectedValues: state.selectedFilterValues,
+                    onSelectionAdded: onStatusValueAdded,
+                    onSelectionRemoved: onStatusValueRemoved,
+                  ),
+                ],
+              );
+            },
+          );
+        },
+      ),
+    ),
+  );
 }

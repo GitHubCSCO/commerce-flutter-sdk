@@ -5,7 +5,11 @@ class OrderHistoryState extends Equatable {
   final OrderStatus orderStatus;
   final OrderSortOrder orderSortOrder;
   final bool showMyOrders;
-  final List<String> selectedFilterValues;
+  final bool temporaryShowMyOrdersValue;
+  final Set<String> selectedFilterValues;
+  final Set<String> temporarySelectedFilterValues;
+  final List<String> filterValues;
+  final FilterStatus filterStatus;
 
   const OrderHistoryState({
     required this.orderEntities,
@@ -13,6 +17,10 @@ class OrderHistoryState extends Equatable {
     required this.orderSortOrder,
     required this.showMyOrders,
     required this.selectedFilterValues,
+    this.filterStatus = FilterStatus.unknown,
+    required this.filterValues,
+    required this.temporarySelectedFilterValues,
+    required this.temporaryShowMyOrdersValue,
   });
 
   @override
@@ -22,6 +30,10 @@ class OrderHistoryState extends Equatable {
         orderSortOrder,
         showMyOrders,
         selectedFilterValues,
+        filterStatus,
+        filterValues,
+        temporarySelectedFilterValues,
+        temporaryShowMyOrdersValue,
       ];
 
   OrderHistoryState copyWith({
@@ -29,14 +41,24 @@ class OrderHistoryState extends Equatable {
     OrderStatus? orderStatus,
     OrderSortOrder? orderSortOrder,
     bool? showMyOrders,
-    List<String>? selectedFilterValues,
+    bool? temporaryShowMyOrdersValue,
+    Set<String>? selectedFilterValues,
+    Set<String>? temporarySelectedFilterValues,
+    List<String>? filterValues,
+    FilterStatus? filterStatus,
   }) {
     return OrderHistoryState(
       orderEntities: orderEntities ?? this.orderEntities,
       orderStatus: orderStatus ?? this.orderStatus,
       orderSortOrder: orderSortOrder ?? this.orderSortOrder,
       showMyOrders: showMyOrders ?? this.showMyOrders,
+      temporaryShowMyOrdersValue:
+          temporaryShowMyOrdersValue ?? this.temporaryShowMyOrdersValue,
       selectedFilterValues: selectedFilterValues ?? this.selectedFilterValues,
+      temporarySelectedFilterValues:
+          temporarySelectedFilterValues ?? this.temporarySelectedFilterValues,
+      filterValues: filterValues ?? this.filterValues,
+      filterStatus: filterStatus ?? this.filterStatus,
     );
   }
 

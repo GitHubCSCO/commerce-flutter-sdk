@@ -44,4 +44,14 @@ class OrderUsecase extends BaseUseCase {
         return null;
     }
   }
+
+  Future<List<String>?> getFilterValues() async {
+    return Future.delayed(
+      const Duration(seconds: 2),
+      () => [
+        'Processing',
+        'Not Processing',
+      ],
+    );
+  }
 }
