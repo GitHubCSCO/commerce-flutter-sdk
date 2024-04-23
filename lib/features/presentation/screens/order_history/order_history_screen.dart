@@ -339,42 +339,35 @@ void _showOrderHistoryFilter(
     onReset: onReset,
     child: BlocProvider.value(
       value: BlocProvider.of<OrderHistoryCubit>(context),
-      child: StatefulBuilder(
-        builder: (context, setState) {
-          return BlocConsumer<OrderHistoryCubit, OrderHistoryState>(
-            listener: (context, state) {
-              setState(() {});
-            },
-            builder: (context, state) {
-              if (state.filterStatus == FilterStatus.loading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (state.filterStatus == FilterStatus.failure) {
-                return const Center(
-                  child: Text('Error loading filter values'),
-                );
-              }
+      child: BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
+        builder: (context, state) {
+          if (state.filterStatus == FilterStatus.loading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state.filterStatus == FilterStatus.failure) {
+            return const Center(
+              child: Text('Error loading filter values'),
+            );
+          }
 
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  PrimaryButton(
-                    text: state.temporaryShowMyOrdersValue
-                        ? 'Hide My Orders'
-                        : 'Show My Orders',
-                    onPressed: onShowMyOrdersToggled,
-                  ),
-                  FilterOptionsChip(
-                    label: LocalizationConstants.status,
-                    values: state.filterValues,
-                    selectedValues: state.temporarySelectedFilterValues,
-                    onSelectionAdded: onStatusValueAdded,
-                    onSelectionRemoved: onStatusValueRemoved,
-                  ),
-                ],
-              );
-            },
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              PrimaryButton(
+                text: state.temporaryShowMyOrdersValue
+                    ? 'Hide My Orders'
+                    : 'Show My Orders',
+                onPressed: onShowMyOrdersToggled,
+              ),
+              FilterOptionsChip(
+                label: LocalizationConstants.status,
+                values: state.filterValues,
+                selectedValues: state.temporarySelectedFilterValues,
+                onSelectionAdded: onStatusValueAdded,
+                onSelectionRemoved: onStatusValueRemoved,
+              ),
+            ],
           );
         },
       ),
