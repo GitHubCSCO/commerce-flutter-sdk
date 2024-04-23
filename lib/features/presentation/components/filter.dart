@@ -138,7 +138,7 @@ class FilterOptionsChip extends StatelessWidget {
         ),
         Wrap(
           spacing: 8,
-          runSpacing: 8,
+          runSpacing: 2,
           children: values
               .map(
                 (value) => FilterChip(
