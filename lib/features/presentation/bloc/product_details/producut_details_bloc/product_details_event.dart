@@ -8,3 +8,5 @@ class FetchProductDetailsEvent extends ProductDetailsEvent {
 
   FetchProductDetailsEvent(this.productId, this.product);
 }
+
+

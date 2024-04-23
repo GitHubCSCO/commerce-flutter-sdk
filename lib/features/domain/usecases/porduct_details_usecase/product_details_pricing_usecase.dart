@@ -11,40 +11,25 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductDetailsPricingUseCase extends BaseUseCase {
   late var productPricingEnabled;
-  late var realtimeProductPricingEnabled;
-  late var chosenUnitOfMeasure;
+
   late Map<String, ConfigSectionOption> selectedConfigurations = {};
-  late var realtimeProductAvailabilityEnabled;
 
   ProductDetailsPricingUseCase() : super() {
     productPricingEnabled = true;
-    realtimeProductPricingEnabled = true;
-    realtimeProductAvailabilityEnabled = true;
   }
 
   Future<Result<ProductPriceEntity, ErrorResponse>> loadProductPricing(
       ProductEntity productEntity,
       StyledProductEntity? styledProduct,
+      ProductUnitOfMeasureEntity? chosenUnitOfMeasure,
+      bool realtimeProductPricingEnabled,
       int quantity) async {
     if (productEntity.quoteRequired!) {
       return Failure(ErrorResponse(
           errorDescription: 'Product requires a quote to be purchased'));
     }
 
-    if ((styledProduct?.productUnitOfMeasures?.isEmpty ?? true) &&
-        (productEntity.productUnitOfMeasures?.isEmpty ?? true)) {
-      // THIS NEED TO FIX LATER, productUnitOfMeasures is gettign empty thats why
-      chosenUnitOfMeasure = ProductUnitOfMeasureEntity();
-    } else {
-      chosenUnitOfMeasure = styledProduct != null
-          ? styledProduct.productUnitOfMeasures?.first ??
-              productEntity.productUnitOfMeasures?.firstWhere(
-                  (p) => p.unitOfMeasure == productEntity.unitOfMeasure)
-          : productEntity.productUnitOfMeasures?.firstWhere(
-              (p) => p.unitOfMeasure == productEntity.unitOfMeasure);
-    }
-
-    for (var s in productEntity?.configurationDto?.sections ?? []) {
+    for (var s in productEntity.configurationDto?.sections ?? []) {
       if (selectedConfigurations.containsKey(s.sectionName)) {
         selectedConfigurations[s.sectionName] = ConfigSectionOption();
       } else {
@@ -97,7 +82,7 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
 
         var parameters = ProductPriceQueryParameter(
           qtyOrdered: quantity,
-          unitOfMeasure: chosenUnitOfMeasure.unitOfMeasure ?? '',
+          unitOfMeasure: chosenUnitOfMeasure?.unitOfMeasure ?? '',
           configuration: configurations
               .where((element) => element != null)
               .toList()
@@ -126,52 +111,46 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
 
   Future<Result<GetRealTimeInventoryResult, ErrorResponse>>
       loadRealTimeInventory(ProductEntity productEntity) async {
-    if (realtimeProductAvailabilityEnabled) {
-      var inventoryProducts = <String>[productEntity.id ?? ''];
+    var inventoryProducts = <String>[productEntity.id ?? ''];
 
-      if (productEntity.styledProducts != null &&
-          productEntity.styledProducts!.isNotEmpty) {
-        inventoryProducts.addAll(productEntity.styledProducts!
-            .map((o) => o.productId ?? '')
-            .where((productId) => productId.isNotEmpty));
-      }
-
-      var parameters =
-          RealTimeInventoryParameters(productIds: inventoryProducts);
-
-      var realTimeInventoryResultResponse = await commerceAPIServiceProvider
-          .getRealTimeInventoryService()
-          .getProductRealTimeInventory(parameters: parameters);
-
-      switch (realTimeInventoryResultResponse) {
-        case Success(value: final data):
-          var realTimeInventoryResult = data;
-          return Success(realTimeInventoryResult);
-        case Failure(errorResponse: final errorResponse):
-          return Failure(
-              ErrorResponse(errorDescription: errorResponse.errorDescription));
-      }
-
-      // this.updateProductOrStyleProductRealTimeInventory(
-      //     realTimeInventoryResult);
-
-      // this.updateAllNeededDetailItems();
-      // this.isLoadingInventory = false;
+    if (productEntity.styledProducts != null &&
+        productEntity.styledProducts!.isNotEmpty) {
+      inventoryProducts.addAll(productEntity.styledProducts!
+          .map((o) => o.productId ?? '')
+          .where((productId) => productId.isNotEmpty));
     }
-    return Failure(ErrorResponse(
-        errorDescription:
-            'Real time inventory is not enabled for this product'));
+
+    var parameters = RealTimeInventoryParameters(productIds: inventoryProducts);
+
+    var realTimeInventoryResultResponse = await commerceAPIServiceProvider
+        .getRealTimeInventoryService()
+        .getProductRealTimeInventory(parameters: parameters);
+
+    switch (realTimeInventoryResultResponse) {
+      case Success(value: final data):
+        var realTimeInventoryResult = data;
+        return Success(realTimeInventoryResult);
+      case Failure(errorResponse: final errorResponse):
+        return Failure(
+            ErrorResponse(errorDescription: errorResponse.errorDescription));
+    }
+
+    // this.updateProductOrStyleProductRealTimeInventory(
+    //     realTimeInventoryResult);
+
+    // this.updateAllNeededDetailItems();
+    // this.isLoadingInventory = false;
   }
 
   ProductDetailsPriceEntity updateProductOrStyleProductRealTimeInventory(
-    GetRealTimeInventoryResult getRealTimeInventoryResult,
-    ProductEntity productEntity,
-    StyledProductEntity? styledProduct,
-    ProductDetailsPriceEntity productDetailsPriceEntity,
-  ) {
+      GetRealTimeInventoryResult? getRealTimeInventoryResult,
+      ProductEntity productEntity,
+      StyledProductEntity? styledProduct,
+      ProductDetailsPriceEntity productDetailsPriceEntity,
+      ProductUnitOfMeasureEntity? chosenUnitOfMeasure) {
     var productId =
         styledProduct != null ? styledProduct.productId : productEntity.id;
-    var inventory = getRealTimeInventoryResult.realTimeInventoryResults
+    var inventory = getRealTimeInventoryResult?.realTimeInventoryResults
         ?.firstWhere((o) => o.productId == productId);
 
     if (inventory != null) {

@@ -14,6 +14,7 @@ import 'package:commerce_flutter_app/features/domain/extensions/product_extensio
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 enum ProdcutDeatilsPageWidgets {
@@ -25,30 +26,63 @@ enum ProdcutDeatilsPageWidgets {
 }
 
 class ProductDetailsUseCase extends BaseUseCase {
-  late Session? session;
-  late AccountSettings? accountSettings;
+  // late Session? session;
+  // late AccountSettings? accountSettings;
   late ProductSettings? productSettings;
   late ProductUnitOfMeasure? chosenUnitOfMeasure;
-  late StyledProductEntity? styledProduct;
   late int? quantity;
 
   late ProductPriceEntity? productPricing;
 
-  ProductDetailsUseCase(
-      {this.session,
-      this.accountSettings,
-      this.productSettings,
-      this.chosenUnitOfMeasure,
-      this.quantity,
-      this.productPricing,
-      this.styledProduct})
-      : super();
+  ProductDetailsUseCase({
+    this.productSettings,
+    this.chosenUnitOfMeasure,
+    this.quantity,
+    this.productPricing,
+  }) : super();
+
+  Future<bool> hasCheckout() {
+    return coreServiceProvider.getAppConfigurationService().hasCheckout();
+  }
+
+  Future<RealTimeSupport?> getRealtimeSupportType() async {
+    return coreServiceProvider
+        .getAppConfigurationService()
+        .getRealtimeSupportType();
+  }
+
+  Future<bool?> productPricingEnabled() async {
+    return coreServiceProvider
+        .getAppConfigurationService()
+        .productPricingEnabled();
+  }
+
+  Future<Result<AccountSettings, ErrorResponse>>
+      getCurrentAccountSettings() async {
+    return commerceAPIServiceProvider
+        .getSettingsService()
+        .getAccountSettingsAsync();
+  }
+
+  Future<bool?> addToCartEnabled() async {
+    return coreServiceProvider.getAppConfigurationService().addToCartEnabled();
+  }
+
+  Future<Result<Session, ErrorResponse>> getCurrentSession() async {
+    return commerceAPIServiceProvider.getSessionService().getCurrentSession();
+  }
+
+  Future<Result<ProductSettings, ErrorResponse>> loadSetting() async {
+    return commerceAPIServiceProvider
+        .getSettingsService()
+        .getProductSettingsAsync();
+  }
 
   Future<Result<ProductEntity, ErrorResponse>> getProductDetails(
-      String productId, ProductEntity? product) async {
-    // (await this.commerceAPIServiceProvider.getCatalogpagesService()
-    //     .getProductCatalogInformation(this.productParameter.urlSegment));
-
+      String productId,
+      ProductEntity? product,
+      AccountSettings accountSettings,
+      Session session) async {
     if (productId.isNullOrEmpty) {
       var urlSegment = product?.urlSegment ?? '';
       var response = await commerceAPIServiceProvider
@@ -67,11 +101,8 @@ class ProductDetailsUseCase extends BaseUseCase {
       }
     }
 
-    // var includeAlternateInventory =
-    //     !this.accountSettings.EnableWarehousePickup ||
-    //         this.session.FulfillmentMethod != "PickUp";
-
-    var includeAlternateInventory = true;
+    var includeAlternateInventory = !accountSettings.enableWarehousePickup! ||
+        session.fulfillmentMethod != "PickUp";
 
     var parameters = ProductQueryParameters(
       addToRecentlyViewed: true,
@@ -90,19 +121,15 @@ class ProductDetailsUseCase extends BaseUseCase {
       case Success(value: final data):
         final productEntity =
             ProductEntityMapper().toEntity(data?.product ?? Product());
-        if (productEntity.styledProducts != null) {
-          if (productEntity.styleParentId != null) {
-            styledProduct = productEntity.styledProducts
-                ?.firstWhere((o) => o.productId == productEntity.id);
-          }
-        }
+
         return Success(productEntity);
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
     }
   }
 
-  List<ProductImageEntity> makeProductImages(ProductEntity product) {
+  List<ProductImageEntity> makeProductImages(
+      ProductEntity product, StyledProductEntity? styledProduct) {
     List<ProductImageEntity> result;
     var correctProductImages = styledProduct?.productImages != null
         ? styledProduct?.productImages
@@ -120,13 +147,13 @@ class ProductDetailsUseCase extends BaseUseCase {
     } else {
       var imageNotFoundImage = ProductImageEntity(
         smallImagePath: (styledProduct != null
-            ? styledProduct?.smallImagePath
+            ? styledProduct.smallImagePath
             : product.smallImagePath),
         mediumImagePath: (styledProduct != null
-            ? styledProduct?.mediumImagePath
+            ? styledProduct.mediumImagePath
             : product.mediumImagePath),
         largeImagePath: (styledProduct != null
-            ? styledProduct?.largeImagePath
+            ? styledProduct.largeImagePath
             : product.largeImagePath),
       );
       imageNotFoundImage.smallImagePath.makeImageUrl();
@@ -138,7 +165,8 @@ class ProductDetailsUseCase extends BaseUseCase {
     return result;
   }
 
-  ProductDetailsGeneralInfoEntity makeGeneralInfoEntity(ProductEntity product) {
+  ProductDetailsGeneralInfoEntity makeGeneralInfoEntity(
+      ProductEntity product, StyledProductEntity? styledProduct) {
     var genralInfoEntity = ProductDetailsGeneralInfoEntity(
         detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsGeneralInfo,
         productNumber: product.getProductNumber(),
@@ -149,22 +177,25 @@ class ProductDetailsUseCase extends BaseUseCase {
             ? product.brand?.name
             : product.brand?.logoSmallImagePath.makeImageUrl());
 
-    genralInfoEntity = updateGeneralInfoViewModel(product, genralInfoEntity);
+    genralInfoEntity =
+        updateGeneralInfoViewModel(product, styledProduct, genralInfoEntity);
     return genralInfoEntity;
   }
 
   ProductDetailsGeneralInfoEntity updateGeneralInfoViewModel(
-      ProductEntity product, ProductDetailsGeneralInfoEntity genralInfoEntity) {
+      ProductEntity product,
+      StyledProductEntity? styledProduct,
+      ProductDetailsGeneralInfoEntity genralInfoEntity) {
     genralInfoEntity = genralInfoEntity.copyWith(
         productName: styledProduct == null
             ? product.shortDescription
-            : styledProduct?.shortDescription);
+            : styledProduct.shortDescription);
     genralInfoEntity = genralInfoEntity.copyWith(
         originalPartNumberValue: styledProduct == null
             ? product.getProductNumber()
             : styledProduct.getProductNumber());
-    genralInfoEntity =
-        genralInfoEntity.copyWith(thumbnails: makeProductImages(product));
+    genralInfoEntity = genralInfoEntity.copyWith(
+        thumbnails: makeProductImages(product, styledProduct));
     genralInfoEntity = genralInfoEntity.copyWith(
         hasMultipleImages: (product.productImages?.length ?? 0) > 1);
     genralInfoEntity =
@@ -180,18 +211,15 @@ class ProductDetailsUseCase extends BaseUseCase {
     return genralInfoEntity;
   }
 
-  List<ProductDetailsBaseEntity> makeAllDetailsItems(ProductEntity product) {
+  List<ProductDetailsBaseEntity> makeAllDetailsItems(
+      ProductEntity product, StyledProductEntity? styledProduct) {
     List<ProductDetailsBaseEntity> items = [];
 
     var quantity = (product.minimumOrderQty! > 0) ? product.minimumOrderQty : 1;
 
-    items.add(makeGeneralInfoEntity(product));
+    items.add(makeGeneralInfoEntity(product, styledProduct));
     items.add(ProductDetailsPriceEntity(
-        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsPrice,
-        product: product,
-        styledProduct: styledProduct,
-        productPricingEnabled: true,
-        quantity: quantity));
+        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsPrice));
 
     items.add(ProductDetailsAddtoCartEntity(
         detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart,

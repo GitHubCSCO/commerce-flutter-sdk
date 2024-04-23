@@ -19,7 +19,7 @@ class Configuration {
 
   String? SandboxDomain;
 
-  bool? HasCheckout;
+  bool? HasCheckoutConfiguration;
 
   String? CheckoutUrl;
 
@@ -35,7 +35,7 @@ class Configuration {
     this.AppCenterSecretAndroid,
     this.Domain,
     this.SandboxDomain,
-    this.HasCheckout,
+    this.HasCheckoutConfiguration,
     this.CheckoutUrl,
     this.ViewOnWebsiteEnabled,
     this.StartingCategoryForBrowsing,
@@ -49,7 +49,7 @@ class Configuration {
       'AppCenterSecretAndroid': AppCenterSecretAndroid,
       'Domain': Domain,
       'SandboxDomain': SandboxDomain,
-      'HasCheckout': HasCheckout,
+      'HasCheckout': HasCheckoutConfiguration,
       'CheckoutUrl': CheckoutUrl,
       'ViewOnWebsiteEnabled': ViewOnWebsiteEnabled,
       'StartingCategoryForBrowsing': StartingCategoryForBrowsing,
@@ -71,7 +71,7 @@ class Configuration {
       Domain: map['Domain'] != null ? map['Domain'] as String : null,
       SandboxDomain:
           map['SandboxDomain'] != null ? map['SandboxDomain'] as String : null,
-      HasCheckout:
+      HasCheckoutConfiguration:
           map['HasCheckout'] != null ? map['HasCheckout'] as bool : null,
       CheckoutUrl:
           map['CheckoutUrl'] != null ? map['CheckoutUrl'] as String : null,
@@ -160,8 +160,24 @@ class AppConfigurationService extends ServiceBase
   }
 
   @override
-  Future<bool> addToCartEnabled() {
-    return Future.value(true);
+  Future<bool?> addToCartEnabled() async {
+    var productSettings = await getProductSettings();
+
+    if (productSettings != null) {
+      var isUserSignedInResponse = await _commerceAPIServiceProvider
+          .getAuthenticationService()
+          .isAuthenticatedAsync();
+      var isUserSignedIn = (isUserSignedInResponse is Success)
+          ? (isUserSignedInResponse as Success).value
+          : false;
+      var isSignInRequiredForAddToCart = productSettings.storefrontAccess ==
+              StorefrontAccessConstants.signInRequiredToAddToCart ||
+          productSettings.storefrontAccess ==
+              StorefrontAccessConstants.signInRequiredToAddToCartOrSeePrices;
+      var result = !isSignInRequiredForAddToCart || isUserSignedIn;
+      return result;
+    }
+    return null;
   }
 
   @override
@@ -240,9 +256,18 @@ class AppConfigurationService extends ServiceBase
   }
 
   @override
-  Future<bool> hasCheckout() {
-    // TODO: implement hasCheckout
-    throw UnimplementedError();
+  Future<bool> hasCheckout() async {
+    var mobileSettingsResponse = await _commerceAPIServiceProvider
+        .getSettingsService()
+        .getMobileAppSettingAsync();
+    MobileAppSettings? mobileSettings = mobileSettingsResponse is Success
+        ? (mobileSettingsResponse as Success).value
+        : null;
+    if (mobileSettings != null) {
+      return mobileSettings.hasCheckout ?? true;
+    }
+
+    return hasCheckoutConfiguration;
   }
 
   @override
@@ -264,9 +289,25 @@ class AppConfigurationService extends ServiceBase
   }
 
   @override
-  Future<bool> productPricingEnabled() {
-    // TODO: implement productPricingEnabled
-    throw UnimplementedError();
+  Future<bool?> productPricingEnabled() async {
+    var productSettings = await getProductSettings();
+    if (productSettings != null) {
+      var result = productSettings.canSeePrices ?? true;
+      var isUserSignedInResponse = await _commerceAPIServiceProvider
+          .getAuthenticationService()
+          .isAuthenticatedAsync();
+      var isUserSignedIn = (isUserSignedInResponse is Success)
+          ? (isUserSignedInResponse as Success).value
+          : false;
+
+      result = result &
+          (productSettings.storefrontAccess !=
+                  StorefrontAccessConstants
+                      .signInRequiredToAddToCartOrSeePrices ||
+              isUserSignedIn);
+      return result;
+    }
+    return null;
   }
 
   @override
@@ -274,4 +315,8 @@ class AppConfigurationService extends ServiceBase
     // TODO: implement startingCategoryForBrowsing
     throw UnimplementedError();
   }
+
+  @override
+  // TODO: implement hasCheckoutConfiguration
+  bool get hasCheckoutConfiguration => throw UnimplementedError();
 }

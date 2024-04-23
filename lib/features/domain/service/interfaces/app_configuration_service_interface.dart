@@ -6,6 +6,8 @@ abstract class IAppConfigurationService {
 
   String? get sandboxDomain;
 
+  bool get hasCheckoutConfiguration;
+
   bool? get shouldUseStaticDomain;
 
   String? get appCenterSecretiOS;
@@ -37,9 +39,9 @@ abstract class IAppConfigurationService {
   Future<Result<TokenExDto, ErrorResponse>> getTokenExConfiguration(
       String token);
 
-  Future<bool> productPricingEnabled();
+  Future<bool?> productPricingEnabled();
 
-  Future<bool> addToCartEnabled();
+  Future<bool?> addToCartEnabled();
 
   Future<RealTimeSupport?> getRealtimeSupportType();
 
