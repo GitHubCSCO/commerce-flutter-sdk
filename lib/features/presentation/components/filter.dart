@@ -179,3 +179,33 @@ class FilterOptionsChip extends StatelessWidget {
     );
   }
 }
+
+class FilterOptionSwitch extends StatelessWidget {
+  const FilterOptionSwitch({
+    super.key,
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final String label;
+  final bool value;
+  final void Function(bool value) onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: OptiTextStyles.body,
+        ),
+        Switch(
+          value: value,
+          onChanged: onChanged,
+        ),
+      ],
+    );
+  }
+}
