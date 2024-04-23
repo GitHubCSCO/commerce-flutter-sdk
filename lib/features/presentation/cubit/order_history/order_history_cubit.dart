@@ -162,6 +162,8 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
     final result = await _orderUsecase.getOrderHistory(
       page: state.orderEntities.pagination!.page! + 1,
       sortOrder: state.orderSortOrder,
+      showMyOrders: state.showMyOrders,
+      filterAttributes: state.selectedFilterValues.toList(),
     );
 
     if (result == null) {
