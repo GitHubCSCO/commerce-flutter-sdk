@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -22,8 +24,10 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         (event, emit) => _onRequestDeliveryDateSelect(event, emit));
     on<SelectCarrierEvent>((event, emit) => _onCarrierSelect(event, emit));
     on<SelectServiceEvent>((event, emit) => _onServiceSelect(event, emit));
-    on<SelectPaymentMethodEvent>((event, emit) => _onPaymentMethodSelect(event, emit));
+    on<SelectPaymentMethodEvent>(
+        (event, emit) => _onPaymentMethodSelect(event, emit));
     on<SelectPaymentEvent>((event, emit) => _onPaymentSelect(event, emit));
+    on<UpdatePONumberEvent>((event, emit) => _onUpdatePONumber(event, emit));
   }
 
   void updateCheckoutData(Cart cart) {
@@ -55,16 +59,16 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
             : null;
 
         emit(CheckoutDataLoaded(
-            cart: cartData,
-            billToAddress: billToAddress!,
-            shipToAddress: shipToAddress!,
-            wareHouse: wareHouse!,
-            promotions: promotionCollection!,
-            shippingMethod: shippingMethod!,
-            cartSettings: cartSettings,
-            selectedCarrier: selectedCarrier,
-            selectedService: selectedService,
-            requestDeliveryDate: requestDeliveryDate,
+          cart: cartData,
+          billToAddress: billToAddress!,
+          shipToAddress: shipToAddress!,
+          wareHouse: wareHouse!,
+          promotions: promotionCollection!,
+          shippingMethod: shippingMethod!,
+          cartSettings: cartSettings,
+          selectedCarrier: selectedCarrier,
+          selectedService: selectedService,
+          requestDeliveryDate: requestDeliveryDate,
         ));
         break;
       case Failure(errorResponse: final errorResponse):
@@ -77,7 +81,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   Future<void> _onPlaceOrderEvent(
       PlaceOrderEvent event, Emitter<CheckoutState> emit) async {
     emit(CheckoutLoading());
-    cart?.status = (cart?.requiresApproval ?? false) ? 'AwaitingApproval' : 'Submitted';
+    cart?.status =
+        (cart?.requiresApproval ?? false) ? 'AwaitingApproval' : 'Submitted';
 
     final result = await _checkoutUseCase.patchCart(cart!);
     switch (result) {
@@ -122,18 +127,27 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     add(LoadCheckoutEvent(cart: cart!));
   }
 
-  Future<void> _onPaymentMethodSelect(SelectPaymentMethodEvent event, Emitter<CheckoutState> emit) async {
+  Future<void> _onPaymentMethodSelect(
+      SelectPaymentMethodEvent event, Emitter<CheckoutState> emit) async {
     cart?.paymentMethod = event.paymentMethod;
   }
 
   Future<void> _onPaymentSelect(
       SelectPaymentEvent event, Emitter<CheckoutState> emit) async {
     // selectedPayment = event.paymentOption;
-    cart?.paymentOptions?.creditCard?.cardHolderName = selectedPayment?.creditCard?.cardHolderName;
-    cart?.paymentOptions?.creditCard?.cardNumber = selectedPayment?.creditCard?.cardNumber;
-    cart?.paymentOptions?.creditCard?.cardType = selectedPayment?.creditCard?.cardType;
-    cart?.paymentOptions?.creditCard?.expirationMonth = selectedPayment?.creditCard?.expirationMonth;
-    cart?.paymentOptions?.creditCard?.expirationYear = selectedPayment?.creditCard?.expirationYear;
+    cart?.paymentOptions?.creditCard?.cardHolderName =
+        selectedPayment?.creditCard?.cardHolderName;
+    cart?.paymentOptions?.creditCard?.cardNumber =
+        selectedPayment?.creditCard?.cardNumber;
+    cart?.paymentOptions?.creditCard?.cardType =
+        selectedPayment?.creditCard?.cardType;
+    cart?.paymentOptions?.creditCard?.expirationMonth =
+        selectedPayment?.creditCard?.expirationMonth;
+    cart?.paymentOptions?.creditCard?.expirationYear =
+        selectedPayment?.creditCard?.expirationYear;
   }
 
+  void _onUpdatePONumber(UpdatePONumberEvent event, Emitter<CheckoutState> emit) {
+    cart?.poNumber = event.poNumber;
+  }
 }
