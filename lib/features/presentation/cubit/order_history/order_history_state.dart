@@ -39,4 +39,7 @@ class OrderHistoryState extends Equatable {
       selectedFilterValues: selectedFilterValues ?? this.selectedFilterValues,
     );
   }
+
+  int get numberOfFilters =>
+      selectedFilterValues.length + (showMyOrders ? 1 : 0);
 }
