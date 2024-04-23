@@ -33,7 +33,8 @@ class ProductDetailsPricingWidget extends StatelessWidget {
         realtimeProductAvailabilityEnabled:
             productDetailsBloc.realtimeProductAvailabilityEnabled,
         realtimeProductPricingEnabled:
-            productDetailsBloc.realtimeProductPricingEnabled));
+            productDetailsBloc.realtimeProductPricingEnabled,
+        productSettings: productDetailsBloc.productSettings));
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
@@ -46,33 +47,60 @@ class ProductDetailsPricingWidget extends StatelessWidget {
             children: [
               _buildDiscountMessageSection(context),
               _buildPricingSection(context),
-              GestureDetector(
-                onTap: () {
-                  // TODO: Implement the logic for "View Quantity Pricing"
-                  CustomSnackBar.showComingSoonSnackBar(context);
-                },
-                child: Text(
-                  "View Quantity Pricing",
-                  style: OptiTextStyles.link,
-                ),
-              ),
+              _buildQuantityPricingSection(context),
               _buildInventorySection(context),
               // _buildInventorySection(context),
               // For "View Availability by Warehouse"
-              GestureDetector(
-                onTap: () {
-                  // TODO: Implement the logic for "View Quantity Pricing"
-                  CustomSnackBar.showComingSoonSnackBar(context);
-                },
-                child: Text(
-                  "View Availability by Warehouse",
-                  style: OptiTextStyles.link,
-                ),
-              ),
+              _buildInventoryAvailabilitySection(context)
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildQuantityPricingSection(BuildContext context) {
+    return BlocBuilder<ProductDetailsPricingBloc, ProductDetailsPricingState>(
+      builder: (context, state) {
+        if (state is ProductDetailsPricingLoaded &&
+            state.productDetailsPriceEntity.viewQuantityPricingButtonShown !=
+                null &&
+            state.productDetailsPriceEntity.viewQuantityPricingButtonShown!) {
+          return GestureDetector(
+            onTap: () {
+              // TODO: Implement the logic for "View Quantity Pricing"
+              CustomSnackBar.showComingSoonSnackBar(context);
+            },
+            child: Text(
+              "View Quantity Pricing",
+              style: OptiTextStyles.link,
+            ),
+          );
+        }
+        return Container();
+      },
+    );
+  }
+
+  Widget _buildInventoryAvailabilitySection(BuildContext context) {
+    return BlocBuilder<ProductDetailsPricingBloc, ProductDetailsPricingState>(
+      builder: (context, state) {
+        if (state is ProductDetailsPricingLoaded &&
+            state.productDetailsPriceEntity.showInventoryAvailability != null &&
+            state.productDetailsPriceEntity.showInventoryAvailability!) {
+          return GestureDetector(
+            onTap: () {
+              // TODO: Implement the logic for "View Quantity Pricing"
+              CustomSnackBar.showComingSoonSnackBar(context);
+            },
+            child: Text(
+              "View Availability by Warehouse",
+              style: OptiTextStyles.link,
+            ),
+          );
+        }
+        return Container();
+      },
     );
   }
 

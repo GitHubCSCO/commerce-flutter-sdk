@@ -164,7 +164,8 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                                 productDetailsBloc
                                     .realtimeProductAvailabilityEnabled,
                             realtimeProductPricingEnabled: productDetailsBloc
-                                .realtimeProductPricingEnabled));
+                                .realtimeProductPricingEnabled,
+                                productSettings:  productDetailsBloc.productSettings));
                   }
                 }),
           ),
