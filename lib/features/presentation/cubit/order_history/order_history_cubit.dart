@@ -70,8 +70,9 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
   void removeFilterValue(String value) {
     emit(
       state.copyWith(
-        temporarySelectedFilterValues: state.temporarySelectedFilterValues
-          ..remove(value),
+        temporarySelectedFilterValues:
+            Set<String>.from(state.temporarySelectedFilterValues)
+              ..remove(value),
       ),
     );
   }
