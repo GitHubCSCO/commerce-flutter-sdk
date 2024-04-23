@@ -34,6 +34,8 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
   Future<void> loadFilterValues() async {
     emit(
       state.copyWith(
+        temporarySelectedFilterValues: {},
+        temporaryShowMyOrdersValue: false,
         filterStatus: FilterStatus.loading,
       ),
     );
@@ -120,8 +122,11 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       ),
     );
 
-    final result =
-        await _orderUsecase.getOrderHistory(sortOrder: state.orderSortOrder);
+    final result = await _orderUsecase.getOrderHistory(
+      sortOrder: state.orderSortOrder,
+      showMyOrders: state.showMyOrders,
+      filterAttributes: state.selectedFilterValues.toList(),
+    );
 
     result != null
         ? emit(
