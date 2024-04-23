@@ -360,7 +360,7 @@ void _showOrderHistoryFilter(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   PrimaryButton(
-                    text: state.showMyOrders
+                    text: state.temporaryShowMyOrdersValue
                         ? 'Hide My Orders'
                         : 'Show My Orders',
                     onPressed: onShowMyOrdersToggled,
@@ -368,7 +368,7 @@ void _showOrderHistoryFilter(
                   FilterOptionsChip(
                     label: LocalizationConstants.status,
                     values: state.filterValues,
-                    selectedValues: state.selectedFilterValues,
+                    selectedValues: state.temporarySelectedFilterValues,
                     onSelectionAdded: onStatusValueAdded,
                     onSelectionRemoved: onStatusValueRemoved,
                   ),
