@@ -46,12 +46,14 @@ class OrderUsecase extends BaseUseCase {
   }
 
   Future<List<String>?> getFilterValues() async {
-    return Future.delayed(
-      const Duration(seconds: 2),
-      () => [
-        'Processing',
-        'Not Processing',
-      ],
-    );
+    final result = await commerceAPIServiceProvider
+        .getOrderService()
+        .getOrderStatusMappings();
+    switch (result) {
+      case Success(value: final value):
+        return value?.map((e) => e.displayName ?? '').toList();
+      case Failure():
+        return null;
+    }
   }
 }

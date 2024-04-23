@@ -63,8 +63,6 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
             Set<String>.from(state.temporarySelectedFilterValues)..add(value),
       ),
     );
-
-    print(state.temporarySelectedFilterValues);
   }
 
   void removeFilterValue(String value) {
