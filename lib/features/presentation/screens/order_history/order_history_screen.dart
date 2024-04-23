@@ -299,12 +299,8 @@ class _OrderHistoryFilter extends StatelessWidget {
       onPressed: () {
         _showOrderHistoryFilter(
           context,
-          onApply: () {
-            context.read<OrderHistoryCubit>().applyFilter();
-          },
-          onReset: () {
-            context.read<OrderHistoryCubit>().resetFilter();
-          },
+          onApply: context.read<OrderHistoryCubit>().applyFilter,
+          onReset: context.read<OrderHistoryCubit>().resetFilter,
           onStatusValueAdded: context.read<OrderHistoryCubit>().addFilterValue,
           onStatusValueRemoved:
               context.read<OrderHistoryCubit>().removeFilterValue,
@@ -354,9 +350,10 @@ void _showOrderHistoryFilter(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FilterOptionSwitch(
-                  label: LocalizationConstants.showMyOrdersOnly,
-                  value: state.temporaryShowMyOrdersValue,
-                  onChanged: (_) => onShowMyOrdersToggled()),
+                label: LocalizationConstants.showMyOrdersOnly,
+                value: state.temporaryShowMyOrdersValue,
+                onChanged: (_) => onShowMyOrdersToggled(),
+              ),
               FilterOptionsChip(
                 label: LocalizationConstants.status,
                 values: state.filterValues,
