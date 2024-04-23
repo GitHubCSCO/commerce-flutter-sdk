@@ -27,6 +27,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/platform_usecase/p
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/warehouse_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_cms_usecase.dart';
@@ -68,6 +69,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/order_history/o
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/seardh_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:commerce_flutter_app/services/secure_storage_service.dart';
 import 'package:get_it/get_it.dart';
@@ -187,6 +189,12 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(
         () => ProductDetailsAddToCartBloc(productDetailsAddToCartUseCase: sl()))
     ..registerFactory(() => ProductDetailsAddToCartUseCase())
+
+    // warehouse inventory
+
+    ..registerFactory(
+        () => WarehouseInventoryCubit(warehouseInventoryUsecase: sl()))
+    ..registerFactory(() => WarehouseInventoryUsecase())
 
     //carousel
     ..registerFactory(() => CarouselIndicatorCubit())

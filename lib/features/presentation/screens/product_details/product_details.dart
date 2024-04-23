@@ -17,6 +17,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/produc_details_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_event.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_add_to_cart_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_general_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_pricing_widget.dart';
@@ -156,11 +157,11 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
       listener: (context, state) {
         if (state is ProductDetailsPricingLoaded) {
           final priceEntity = state.productDetailsPriceEntity;
-          detailsAddToCartEntity = detailsAddToCartEntity.copyWith(productDetailsPriceEntity:  priceEntity);
+          detailsAddToCartEntity = detailsAddToCartEntity.copyWith(
+              productDetailsPriceEntity: priceEntity);
           buildContext.read<ProductDetailsAddToCartBloc>().add(
                 LoadProductDetailsAddToCartEvent(
-                  productDetailsAddToCartEntity: detailsAddToCartEntity
-                ),
+                    productDetailsAddToCartEntity: detailsAddToCartEntity),
               );
         }
       },
