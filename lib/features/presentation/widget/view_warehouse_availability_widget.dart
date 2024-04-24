@@ -1,9 +1,13 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/warehouse_inventory/warehouse_inventory_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 void viewWarehouseWidget(BuildContext context, String? id, String productNumber,
     String unitOfMeasure) {
@@ -18,7 +22,8 @@ void viewWarehouseWidget(BuildContext context, String? id, String productNumber,
         scrollable: true,
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
-        title: Text("Warehouse Details"),
+        title: Text(LocalizationConstants.warehouseInventory,
+            style: OptiTextStyles.titleLarge),
         content: Padding(
           padding: const EdgeInsets.all(8.0),
           child: BlocProvider(
@@ -31,14 +36,33 @@ void viewWarehouseWidget(BuildContext context, String? id, String productNumber,
               child:
                   BlocBuilder<WarehouseInventoryCubit, WareHouseInventoryState>(
                       builder: (_, state) {
-                if (state is WareHouseInventoryLoading ||
+                if (state is WareHouseInventoryLoadingState ||
                     state is WareHouseInventoryInitialState) {
-                  return Center(child: CircularProgressIndicator());
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        alignment: Alignment.bottomLeft,
+                        child: LoadingAnimationWidget.prograssiveDots(
+                          color: OptiAppColors.iconPrimary,
+                          size: 30,
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.bottomLeft,
+                        child: LoadingAnimationWidget.prograssiveDots(
+                          color: OptiAppColors.iconPrimary,
+                          size: 30,
+                        ),
+                      )
+                    ],
+                  );
                 }
                 if (state is WareHouseInventoryLoadedState) {
-                  return Container(
-                    height: state.warehouses.length * 25 +
-                        100, // adjust the value as needed
+                  var cellHeight = state.warehouses.length > 1 ? 40 : 20;
+                  return SizedBox(
+                    height: state.warehouses.length * cellHeight +
+                        100.0, // adjust the value as needed
                     width: 300.0,
                     child: Column(
                       children: [
@@ -47,15 +71,34 @@ void viewWarehouseWidget(BuildContext context, String? id, String productNumber,
                             itemCount: state.warehouses.length,
                             itemBuilder: (context, index) {
                               final warehouse = state.warehouses[index];
-                              return Row(
+                              return Column(
                                 children: [
-                                  Text(warehouse.name!),
-                                  Text(warehouse.qty.toString()),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        0.0, 10.0, 0.0, 10.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(warehouse.name!),
+                                        Text(warehouse.qty.toString()),
+                                      ],
+                                    ),
+                                  ),
+                                  const Divider(
+                                    color: OptiAppColors.border,
+                                    thickness: 1.0,
+                                  )
                                 ],
                               );
                             },
                           ),
                         ),
+                        PrimaryButton(
+                            text: "OK",
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            })
                       ],
                     ),
                   );
@@ -63,17 +106,7 @@ void viewWarehouseWidget(BuildContext context, String? id, String productNumber,
                 return Container();
               })),
         ),
-        actions: [
-          ElevatedButton(
-            child: const Text("Close"),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
       );
     },
   );
 }
-
-class WareHouseInventoryLoading {}
