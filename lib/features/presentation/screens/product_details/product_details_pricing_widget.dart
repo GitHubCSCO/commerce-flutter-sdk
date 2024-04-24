@@ -8,6 +8,8 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/view_warehouse_availability_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -84,14 +86,18 @@ class ProductDetailsPricingWidget extends StatelessWidget {
 
   Widget _buildInventoryAvailabilitySection(BuildContext context) {
     return BlocBuilder<ProductDetailsPricingBloc, ProductDetailsPricingState>(
-      builder: (context, state) {
+      builder: (_, state) {
         if (state is ProductDetailsPricingLoaded &&
             state.productDetailsPriceEntity.showInventoryAvailability != null &&
             state.productDetailsPriceEntity.showInventoryAvailability!) {
           return GestureDetector(
             onTap: () {
-              // TODO: Implement the logic for "View Quantity Pricing"
-              CustomSnackBar.showComingSoonSnackBar(context);
+
+              viewWarehouseWidget(
+                  context,
+                  state.productDetailsPriceEntity.product?.id,
+                  state.productDetailsPriceEntity.product.getProductNumber(),
+                  state.productDetailsPriceEntity.product?.unitOfMeasure ?? "");
             },
             child: Text(
               "View Availability by Warehouse",
