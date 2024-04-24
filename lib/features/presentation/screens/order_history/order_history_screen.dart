@@ -19,6 +19,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:badges/badges.dart' as badges;
 
 class OrderHistoryScreen extends StatelessWidget {
   const OrderHistoryScreen({super.key});
@@ -294,26 +295,41 @@ class _OrderHistoryFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      padding: const EdgeInsets.all(10),
-      onPressed: () {
-        _showOrderHistoryFilter(
-          context,
-          onApply: context.read<OrderHistoryCubit>().applyFilter,
-          onReset: context.read<OrderHistoryCubit>().resetFilter,
-          onStatusValueAdded: context.read<OrderHistoryCubit>().addFilterValue,
-          onStatusValueRemoved:
-              context.read<OrderHistoryCubit>().removeFilterValue,
-          onShowMyOrdersToggled:
-              context.read<OrderHistoryCubit>().toggleShowMyOrders,
-        );
-      },
-      icon: SvgPicture.asset(
-        height: 20,
-        width: 20,
-        AssetConstants.filterIcon,
-        semanticsLabel: 'filter icon',
-        fit: BoxFit.fitWidth,
+    return badges.Badge(
+      position: badges.BadgePosition.topEnd(top: 0, end: 0),
+      badgeStyle: const badges.BadgeStyle(
+        shape: badges.BadgeShape.circle,
+        badgeColor: Colors.black,
+        padding: EdgeInsets.all(6),
+        elevation: 0,
+      ),
+      showBadge: context.watch<OrderHistoryCubit>().state.numberOfFilters > 0,
+      badgeContent: Text(
+        context.watch<OrderHistoryCubit>().state.numberOfFilters.toString(),
+        style: OptiTextStyles.badgesStyle,
+      ),
+      child: IconButton(
+        padding: const EdgeInsets.all(10),
+        onPressed: () {
+          _showOrderHistoryFilter(
+            context,
+            onApply: context.read<OrderHistoryCubit>().applyFilter,
+            onReset: context.read<OrderHistoryCubit>().resetFilter,
+            onStatusValueAdded:
+                context.read<OrderHistoryCubit>().addFilterValue,
+            onStatusValueRemoved:
+                context.read<OrderHistoryCubit>().removeFilterValue,
+            onShowMyOrdersToggled:
+                context.read<OrderHistoryCubit>().toggleShowMyOrders,
+          );
+        },
+        icon: SvgPicture.asset(
+          height: 20,
+          width: 20,
+          AssetConstants.filterIcon,
+          semanticsLabel: 'filter icon',
+          fit: BoxFit.fitWidth,
+        ),
       ),
     );
   }
