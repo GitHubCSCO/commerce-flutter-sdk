@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/view_pricing_quantity_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/view_warehouse_availability_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,7 +72,11 @@ class ProductDetailsPricingWidget extends StatelessWidget {
           return GestureDetector(
             onTap: () {
               // TODO: Implement the logic for "View Quantity Pricing"
-              CustomSnackBar.showComingSoonSnackBar(context);
+              viewPricingQuantityWidget(
+                  context,
+                  state.productDetailsPriceEntity.product?.pricing
+                          ?.unitRegularBreakPrices ??
+                      []);
             },
             child: Text(
               "View Quantity Pricing",
@@ -92,7 +97,6 @@ class ProductDetailsPricingWidget extends StatelessWidget {
             state.productDetailsPriceEntity.showInventoryAvailability!) {
           return GestureDetector(
             onTap: () {
-
               viewWarehouseWidget(
                   context,
                   state.productDetailsPriceEntity.product?.id,

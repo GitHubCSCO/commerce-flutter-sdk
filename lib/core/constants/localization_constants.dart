@@ -274,6 +274,7 @@ class LocalizationConstants {
   static const productLine = "Product Line";
   static const categories = "Categories";
   static const warehouseInventory = "Warehouse Inventory";
+  static const quantityPricing = "Quantity Pricing";
   static const previouslyPurchased = "Previously Purchased";
   static const stockedItems = "Stocked Items";
   static const stockedItemsOnly = "Stocked Items Only";
