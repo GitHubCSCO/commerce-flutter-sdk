@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/features/domain/entity/order/get_order_coll
 import 'package:commerce_flutter_app/features/domain/mapper/order_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/pagination_entity_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:collection/collection.dart';
 
@@ -46,7 +47,7 @@ class OrderUsecase extends BaseUseCase {
     }
   }
 
-  Future<List<String>?> getFilterValues() async {
+  Future<List<FilterValueViewModel>?> getFilterValues() async {
     final result = await commerceAPIServiceProvider
         .getOrderService()
         .getOrderStatusMappings();
@@ -56,8 +57,12 @@ class OrderUsecase extends BaseUseCase {
             groupBy(value ?? <OrderStatusMapping>[], (e) => e.displayName)
                 .values
                 .map((e) => e.first)
-                .map((e) => e.displayName ?? '')
-                .toList();
+                .map((e) => FilterValueViewModel(
+                      id: e.erpOrderStatus ?? '',
+                      title: e.displayName ?? '',
+                    ))
+                .toList()
+                ..sort((a, b) => a.title.compareTo(b.title));
         return filterValues;
       case Failure():
         return null;

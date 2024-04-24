@@ -373,9 +373,9 @@ void _showOrderHistoryFilter(
               FilterOptionsChip(
                 label: LocalizationConstants.status,
                 values: state.filterValues,
-                selectedValues: state.temporarySelectedFilterValues,
-                onSelectionAdded: onStatusValueAdded,
-                onSelectionRemoved: onStatusValueRemoved,
+                selectedValueIds: state.temporarySelectedFilterValueIds,
+                onSelectionIdAdded: onStatusValueAdded,
+                onSelectionIdRemoved: onStatusValueRemoved,
               ),
             ],
           );

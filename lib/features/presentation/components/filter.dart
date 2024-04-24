@@ -1,8 +1,44 @@
+import 'package:flutter/material.dart';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
-import 'package:flutter/material.dart';
+
+class FilterValueViewModel {
+  FilterValueViewModel({
+    required this.id,
+    required this.title,
+    this.facetType,
+  });
+
+  final String id;
+
+  final String title;
+
+  final FacetType? facetType;
+
+  FilterValueViewModel copyWith({
+    String? id,
+    String? title,
+    FacetType? facetType,
+  }) {
+    return FilterValueViewModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      facetType: facetType ?? this.facetType,
+    );
+  }
+}
+
+enum FacetType {
+  previouslyPurchased,
+  stockedItemsFacet,
+  attributeValueFacet,
+  brandFacet,
+  productLineFacet,
+  categoryFacet
+}
 
 void showFilterModalSheet(
   BuildContext context, {
@@ -109,16 +145,16 @@ class FilterOptionsChip extends StatelessWidget {
     super.key,
     required this.label,
     required this.values,
-    required this.selectedValues,
-    required this.onSelectionAdded,
-    required this.onSelectionRemoved,
+    required this.selectedValueIds,
+    required this.onSelectionIdAdded,
+    required this.onSelectionIdRemoved,
   });
 
   final String label;
-  final List<String> values;
-  final Set<String> selectedValues;
-  final void Function(String selection) onSelectionAdded;
-  final void Function(String selection) onSelectionRemoved;
+  final List<FilterValueViewModel> values;
+  final Set<String> selectedValueIds;
+  final void Function(String selectionId) onSelectionIdAdded;
+  final void Function(String selectionId) onSelectionIdRemoved;
 
   @override
   Widget build(BuildContext context) {
@@ -143,8 +179,8 @@ class FilterOptionsChip extends StatelessWidget {
               .map(
                 (value) => FilterChip(
                   label: Text(
-                    value,
-                    style: selectedValues.contains(value)
+                    value.title,
+                    style: selectedValueIds.contains(value.id)
                         ? OptiTextStyles.bodySmallHighlight
                             .copyWith(color: OptiAppColors.backgroundWhite)
                         : OptiTextStyles.bodySmallHighlight,
@@ -155,12 +191,12 @@ class FilterOptionsChip extends StatelessWidget {
                     horizontal: 12,
                     vertical: 6,
                   ),
-                  selected: selectedValues.contains(value),
+                  selected: selectedValueIds.contains(value.id),
                   onSelected: (bool selected) {
                     if (selected) {
-                      onSelectionAdded(value);
+                      onSelectionIdAdded(value.id);
                     } else {
-                      onSelectionRemoved(value);
+                      onSelectionIdRemoved(value.id);
                     }
                   },
                   backgroundColor: OptiAppColors.backgroundWhite,
