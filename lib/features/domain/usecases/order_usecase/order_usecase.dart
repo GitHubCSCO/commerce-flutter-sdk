@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/features/domain/mapper/order_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/pagination_entity_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:collection/collection.dart';
 
 class OrderUsecase extends BaseUseCase {
   List<OrderSortOrder> get availableSortOrders =>
@@ -51,7 +52,13 @@ class OrderUsecase extends BaseUseCase {
         .getOrderStatusMappings();
     switch (result) {
       case Success(value: final value):
-        return value?.map((e) => e.displayName ?? '').toList();
+        final filterValues =
+            groupBy(value ?? <OrderStatusMapping>[], (e) => e.displayName)
+                .values
+                .map((e) => e.first)
+                .map((e) => e.displayName ?? '')
+                .toList();
+        return filterValues;
       case Failure():
         return null;
     }
