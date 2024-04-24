@@ -5,7 +5,6 @@ on:
       - main
       - develop
       - epic/*
-      - story/*
   workflow_dispatch:
     inputs:
       release:
