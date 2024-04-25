@@ -1,12 +1,14 @@
 import 'dart:math';
 import 'package:camera/camera.dart';
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
+import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 
 import 'detector_view.dart';
-import 'painters/barcode_detector_painter.dart';
 
 class BarcodeScannerView extends StatefulWidget {
   const BarcodeScannerView({super.key});
@@ -52,9 +54,12 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
           decoration: const BoxDecoration(color: Colors.white),
           child: PrimaryButton(
             onPressed: () {
-              _canProcess = true;
+              setState(() {
+                _canProcess = !_canProcess;
+              });
             },
-            text: LocalizationConstants.tapToScan,
+            backgroundColor: _canProcess ? OptiAppColors.buttonDarkRedBackgroudColor : AppStyle.primary500,
+            text: _canProcess ? LocalizationConstants.cancel : LocalizationConstants.tapToScan,
           ),
         )
       ],
@@ -70,10 +75,6 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
     });
     final barcodes = await _barcodeScanner.processImage(inputImage);
 
-    barcodes.forEach((element) {
-      // print(element.boundingBox);
-    });
-
     final size = rotateSize(inputImage.metadata!.size, inputImage.metadata?.rotation.rawValue ?? 0);
     const areaHeight = 300;
     const left = 20.00;
@@ -84,35 +85,26 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
     Rect mainRect = Rect.fromLTRB(left, top, right, bottom);
     final barCodesWithIn = barcodesWithinMainRect(mainRect, barcodes);
 
-    // print(mainRect);
-
     if (barCodesWithIn.isNotEmpty) {
       if (barCodesWithIn.length == 1) {
-        print('testbarcode ${barCodesWithIn[0].rawValue}');
+        Navigator.of(context).pop(barCodesWithIn[0].rawValue);
+        return;
       } else {
-        print('testbarcode more than one barcode found');
+        displayDialogWidget(
+            context: context,
+            title: LocalizationConstants.multipleBarcodeWarningTitle,
+            message: LocalizationConstants.multipleBarcodeWarningMessage,
+            actions: [
+              DialogPlainButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text(LocalizationConstants.oK),
+              ),
+            ]);
       }
     }
 
-    if (inputImage.metadata?.size != null &&
-        inputImage.metadata?.rotation != null) {
-
-      final painter = BarcodeDetectorPainter(
-        barcodes,
-        inputImage.metadata!.size,
-        inputImage.metadata!.rotation,
-        _cameraLensDirection,
-      );
-      _customPaint = CustomPaint(painter: painter);
-    } else {
-      String text = 'Barcodes found: ${barcodes.length}\n\n';
-      for (final barcode in barcodes) {
-        text += 'Barcode: ${barcode.rawValue}\n\n';
-      }
-      _text = text;
-      // TODO: set _customPaint to draw boundingRect on top of image
-      _customPaint = null;
-    }
     _isBusy = false;
     if (mounted) {
       setState(() {});

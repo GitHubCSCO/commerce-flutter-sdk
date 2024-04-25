@@ -35,13 +35,8 @@ class _CameraViewState extends State<CameraView> {
   static List<CameraDescription> _cameras = [];
   CameraController? _controller;
   int _cameraIndex = -1;
-  double _currentZoomLevel = 1.0;
-  double _minAvailableZoom = 1.0;
-  double _maxAvailableZoom = 1.0;
-  double _minAvailableExposureOffset = 0.0;
-  double _maxAvailableExposureOffset = 0.0;
-  double _currentExposureOffset = 0.0;
   bool _changingCameraLens = false;
+  bool _cameraFlash = false;
 
   @override
   void initState() {
@@ -87,20 +82,17 @@ class _CameraViewState extends State<CameraView> {
         children: <Widget>[
           Center(
             child: _changingCameraLens
-                ? Center(
-              child: const Text('Changing camera lens'),
+                ? const Center(
+              child: Text('Changing camera lens'),
             )
                 : CameraPreview(
               _controller!,
               child: widget.customPaint,
             ),
           ),
-          _backButton(),
-          // _switchLiveCameraToggle(),
-          // _detectionViewModeToggle(),
-          // _zoomControl(),
-          // _exposureControl(),
           _rectangleScanArea(),
+          _switchFlashToggle(),
+          _backButton(),
         ],
       ),
     );
@@ -108,155 +100,44 @@ class _CameraViewState extends State<CameraView> {
 
   Widget _backButton() => Positioned(
     top: 40,
-    left: 8,
+    right: 24,
     child: SizedBox(
-      height: 50.0,
-      width: 50.0,
+      height: 32.0,
+      width: 32.0,
       child: FloatingActionButton(
         heroTag: Object(),
+        shape: const CircleBorder(),
         onPressed: () => Navigator.of(context).pop(),
-        backgroundColor: Colors.black54,
-        child: Icon(
-          Icons.arrow_back_ios_outlined,
+        backgroundColor: Colors.grey.shade100,
+        child: const Icon(
+          Icons.close,
           size: 20,
+          color: Colors.black,
         ),
       ),
     ),
   );
 
-  Widget _detectionViewModeToggle() => Positioned(
-    bottom: 8,
-    left: 8,
-    child: SizedBox(
-      height: 50.0,
-      width: 50.0,
-      child: FloatingActionButton(
-        heroTag: Object(),
-        onPressed: widget.onDetectorViewModeChanged,
-        backgroundColor: Colors.black54,
-        child: Icon(
-          Icons.photo_library_outlined,
-          size: 25,
-        ),
-      ),
-    ),
-  );
-
-  Widget _switchLiveCameraToggle() => Positioned(
-    bottom: 8,
-    right: 8,
-    child: SizedBox(
-      height: 50.0,
-      width: 50.0,
-      child: FloatingActionButton(
-        heroTag: Object(),
-        onPressed: _switchLiveCamera,
-        backgroundColor: Colors.black54,
-        child: Icon(
-          Platform.isIOS
-              ? Icons.flip_camera_ios_outlined
-              : Icons.flip_camera_android_outlined,
-          size: 25,
-        ),
-      ),
-    ),
-  );
-
-  Widget _zoomControl() => Positioned(
-    bottom: 16,
-    left: 0,
-    right: 0,
-    child: Align(
-      alignment: Alignment.bottomCenter,
-      child: SizedBox(
-        width: 250,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Slider(
-                value: _currentZoomLevel,
-                min: _minAvailableZoom,
-                max: _maxAvailableZoom,
-                activeColor: Colors.white,
-                inactiveColor: Colors.white30,
-                onChanged: (value) async {
-                  setState(() {
-                    _currentZoomLevel = value;
-                  });
-                  await _controller?.setZoomLevel(value);
-                },
-              ),
-            ),
-            Container(
-              width: 50,
-              decoration: BoxDecoration(
-                color: Colors.black54,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Text(
-                    '${_currentZoomLevel.toStringAsFixed(1)}x',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-
-  Widget _exposureControl() => Positioned(
+  Widget _switchFlashToggle() => Positioned(
     top: 40,
-    right: 8,
-    child: ConstrainedBox(
-      constraints: BoxConstraints(
-        maxHeight: 250,
-      ),
-      child: Column(children: [
-        Container(
-          width: 55,
-          decoration: BoxDecoration(
-            color: Colors.black54,
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Text(
-                '${_currentExposureOffset.toStringAsFixed(1)}x',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
+    left: 24,
+    child: SizedBox(
+      height: 32.0,
+      width: 32.0,
+      child: FloatingActionButton(
+        heroTag: Object(),
+        shape: const CircleBorder(),
+        onPressed: () {
+          setState(() => _cameraFlash = !_cameraFlash);
+          _controller?.setFlashMode(_cameraFlash ? FlashMode.torch : FlashMode.off);
+        },
+        backgroundColor: Colors.grey.shade100,
+        child: Icon(
+          _cameraFlash ? Icons.flash_on : Icons.flash_off,
+          size: 20,
+          color: Colors.black,
         ),
-        Expanded(
-          child: RotatedBox(
-            quarterTurns: 3,
-            child: SizedBox(
-              height: 30,
-              child: Slider(
-                value: _currentExposureOffset,
-                min: _minAvailableExposureOffset,
-                max: _maxAvailableExposureOffset,
-                activeColor: Colors.white,
-                inactiveColor: Colors.white30,
-                onChanged: (value) async {
-                  setState(() {
-                    _currentExposureOffset = value;
-                  });
-                  await _controller?.setExposureOffset(value);
-                },
-              ),
-            ),
-          ),
-        )
-      ]),
+      ),
     ),
   );
 
@@ -281,20 +162,6 @@ class _CameraViewState extends State<CameraView> {
       if (!mounted) {
         return;
       }
-      _controller?.getMinZoomLevel().then((value) {
-        _currentZoomLevel = value;
-        _minAvailableZoom = value;
-      });
-      _controller?.getMaxZoomLevel().then((value) {
-        _maxAvailableZoom = value;
-      });
-      _currentExposureOffset = 0.0;
-      _controller?.getMinExposureOffset().then((value) {
-        _minAvailableExposureOffset = value;
-      });
-      _controller?.getMaxExposureOffset().then((value) {
-        _maxAvailableExposureOffset = value;
-      });
       _controller?.startImageStream(_processCameraImage).then((value) {
         if (widget.onCameraFeedReady != null) {
           widget.onCameraFeedReady!();
@@ -377,104 +244,21 @@ class _CameraViewState extends State<CameraView> {
         (Platform.isAndroid && format != InputImageFormat.nv21) ||
         (Platform.isIOS && format != InputImageFormat.bgra8888)) return null;
 
-    final cropImage = image;
-    // final cropImage = croppCameraImage(image);
-
     // since format is constraint to nv21 or bgra8888, both only have one plane
-    if (cropImage.planes.length != 1) return null;
-    final plane = cropImage.planes.first;
-
-    // Size screenSize = MediaQuery.of(context).size;
-    //
-    // // Calculate middle point
-    // int cropX = (screenSize.width.toInt() - 200) ~/ 2;
-    // int cropY = (screenSize.height.toInt() - 200) ~/ 2;
-
-    // return cropCameraImage(image, format, rotation, cropX, cropY, 200, 200);
+    if (image.planes.length != 1) return null;
+    final plane = image.planes.first;
 
     // compose InputImage using bytes
     return InputImage.fromBytes(
       bytes: plane.bytes,
       metadata: InputImageMetadata(
-        size: Size(cropImage.width.toDouble() * 1, cropImage.height.toDouble() * 1),
+        size: Size(image.width.toDouble() * 1, image.height.toDouble() * 1),
         rotation: rotation, // used only in Android
         format: format, // used only in iOS
         bytesPerRow: plane.bytesPerRow, // used only in iOS
       ),
     );
   }
-
-  CameraImage croppCameraImage(CameraImage inputImage) {
-
-    double cropWidth = 200; // Width of the cropped area
-    double cropHeight = 200; // Height of the cropped area
-    double cropOffsetX = 100; // X offset of the cropped area from the left
-    double cropOffsetY = 100; // Y offset of the cropped area from the top
-
-    //Calculate the bounds of the cropped area
-    int left = (cropOffsetX - (cropWidth / 2)).toInt();
-    int top = (cropOffsetY - (cropHeight / 2)).toInt();
-    int width = cropWidth.toInt();
-    int height = cropHeight.toInt();
-
-    // Size screenSize = MediaQuery.of(context).size;
-    //
-    // double cropWidth = screenSize.width - 20; // Width of the cropped area
-    // double cropHeight = screenSize.width - 20; // Height of the cropped area
-    // double cropOffsetX = 10; // X offset of the cropped area from the left
-    // double cropOffsetY = (screenSize.height / 2) - (cropHeight / 2); // Y offset of the cropped area from the top
-    //
-    // // Calculate the bounds of the cropped area
-    // int left = cropOffsetX.toInt();
-    // int top = cropOffsetY.toInt();
-    // int width = cropWidth.toInt();
-    // int height = cropHeight.toInt();
-
-    // Ensure the bounds are within the dimensions of the input image
-    left = left.clamp(0, inputImage.width - 1);
-    top = top.clamp(0, inputImage.height - 1);
-    width = width.clamp(0, inputImage.width - left);
-    height = height.clamp(0, inputImage.height - top);
-
-    final croppedImage = CameraImage.fromPlatformInterface(CameraImageData(
-      format: CameraImageFormat(inputImage.format.group ,raw: inputImage.format.raw),
-      width: width,
-      height: height,
-      planes: inputImage.planes.map((Plane plane) {
-        return CameraImagePlane(
-          bytes: plane.bytes.sublist(
-            plane.bytesPerRow * top + left,
-            plane.bytesPerRow * (top + height) - (plane.bytesPerRow - width),
-          ),
-          bytesPerRow: width,
-          height: height,
-          width: width,
-        );
-      }).toList(),
-    ));
-
-    // Create a new CameraImage object for the cropped area
-    // CameraImage croppedImage = CameraImage(
-    //   format: inputImage.format,
-    //   width: width,
-    //   height: height,
-    //   planes: inputImage.planes.map((Plane plane) {
-    //     return Plane(
-    //       bytes: plane.bytes.sublist(
-    //         plane.bytesPerRow * top + left,
-    //         plane.bytesPerRow * (top + height) - (plane.bytesPerRow - width),
-    //       ),
-    //       bytesPerRow: width,
-    //       height: height,
-    //       width: width,
-    //     );
-    //   }).toList(),
-    // );
-
-    return croppedImage;
-  }
-
-
 
 }
 

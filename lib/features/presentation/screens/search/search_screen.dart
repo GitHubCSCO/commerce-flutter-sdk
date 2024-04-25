@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
@@ -18,6 +19,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 void _reloadSearchPage(BuildContext context) {
   context.read<SearchPageCmsBloc>().add(SearchPageCmsLoadEvent());
@@ -97,9 +100,14 @@ class SearchPage extends BaseDynamicContentScreen {
                   semanticsLabel: 'barcode scan icon',
                   fit: BoxFit.fitWidth,
                 ),
-                onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => BarcodeScannerView()));
+                onPressed: () async {
+                  final result = await GoRouter.of(context).pushNamed(
+                    AppRoute.barcodeScanner.name
+                  ) as String;
+                  if (!result.isNullOrEmpty) {
+                    context.read<SearchBloc>().searchQuery = result;
+                    context.read<SearchBloc>().add(SearchSearchEvent());
+                  }
                 },
               )
             ],
