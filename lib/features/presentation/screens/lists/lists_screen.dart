@@ -1,8 +1,8 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
-import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +17,10 @@ class ListsScreen extends StatelessWidget {
   }
 }
 
-class ListsPage extends BaseDynamicContentScreen {
+class ListsPage extends StatelessWidget {
   ListsPage({super.key});
 
+  final websitePath = WebsitePaths.listsWebsitePath;
   final _textEditingController = TextEditingController();
 
   @override
