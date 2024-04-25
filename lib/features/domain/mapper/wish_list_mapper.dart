@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_collection_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
@@ -163,5 +164,30 @@ class WishListLineEntityMapper {
         isDiscontinued: wishListLineEntity.isDiscontinued,
         sortOrder: wishListLineEntity.sortOrder,
         isQtyAdjusted: wishListLineEntity.isQtyAdjusted,
+      );
+}
+
+class WishListCollectionEntityMapper {
+  static WishListCollectionEntity toEntity(
+          WishListCollectionModel wishListCollection) =>
+      WishListCollectionEntity(
+        wishListCollection: wishListCollection.wishListCollection
+            ?.map((e) => WishListEntityMapper.toEntity(e))
+            .toList(),
+        pagination: wishListCollection.pagination != null
+            ? PaginationEntityMapper.toEntity(wishListCollection.pagination!)
+            : null,
+      );
+
+  static WishListCollectionModel toModel(
+          WishListCollectionEntity wishListCollectionEntity) =>
+      WishListCollectionModel(
+        wishListCollection: wishListCollectionEntity.wishListCollection
+            ?.map((e) => WishListEntityMapper.toModel(e))
+            .toList(),
+        pagination: wishListCollectionEntity.pagination != null
+            ? PaginationEntityMapper.toModel(
+                wishListCollectionEntity.pagination!)
+            : null,
       );
 }
