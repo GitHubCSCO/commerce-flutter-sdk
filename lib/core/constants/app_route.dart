@@ -19,6 +19,7 @@ class RouteNames {
   static const String settings = 'settings';
   static const String biometricLogin = 'biometricLogin';
   static const String orderHistory = 'orderHistory';
+  static const String lists = 'lists';
 }
 
 class RoutePaths {
@@ -41,6 +42,7 @@ class RoutePaths {
   static const String biometricLogin = '/${RouteNames.biometricLogin}';
   static const String orderHistory =
       '/${RoutePaths.account}/${RouteNames.orderHistory}';
+  static const String lists = '${RoutePaths.account}/${RouteNames.lists}';
 }
 
 enum AppRoute {
@@ -57,12 +59,14 @@ enum AppRoute {
   productDetails(
       name: RouteNames.productDetails, fullPath: RoutePaths.productDetails),
   checkout(name: RouteNames.checkout, fullPath: RoutePaths.checkout),
-  checkoutSuccess(name: RouteNames.checkoutSuccess, fullPath: RoutePaths.checkoutSuccess),
+  checkoutSuccess(
+      name: RouteNames.checkoutSuccess, fullPath: RoutePaths.checkoutSuccess),
   settings(name: RouteNames.settings, fullPath: RoutePaths.settings),
   biometricLogin(
       name: RouteNames.biometricLogin, fullPath: RoutePaths.biometricLogin),
   orderHistory(
-      name: RouteNames.orderHistory, fullPath: RoutePaths.orderHistory);
+      name: RouteNames.orderHistory, fullPath: RoutePaths.orderHistory),
+  lists(name: RouteNames.lists, fullPath: RoutePaths.lists);
 
   const AppRoute({
     required this.name,
