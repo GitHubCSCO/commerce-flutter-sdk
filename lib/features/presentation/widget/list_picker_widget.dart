@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/list_picker/list_picker_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,12 +14,16 @@ class ListPickerWidget extends StatelessWidget {
   final int? selectedIndex;
 
   const ListPickerWidget(
-      {super.key, required this.items, this.selectedIndex, required this.callback});
+      {super.key,
+      required this.items,
+      this.selectedIndex,
+      required this.callback});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ListPickerCubit>(
-      create: (context) => sl<ListPickerCubit>()..onInitialSelection(selectedIndex),
+      create: (context) =>
+          sl<ListPickerCubit>()..onInitialSelection(selectedIndex),
       child: ListPicker(items: items, callback: callback),
     );
   }
@@ -38,19 +43,22 @@ class ListPicker extends StatelessWidget {
           callback!(context, items[state.index]);
         }
       },
-      builder: (_, state) {
+      builder: (context, state) {
         int pickerIndex = state.index;
         return Container(
+          // color: Colors.blue,
           alignment: AlignmentDirectional.centerStart,
-          child: TextButton(onPressed: () {
-            _selectItem(context, items, pickerIndex);
-          }, child: Text(
-            _getDescriptions(items[pickerIndex]),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
-          )),
+          child: TextButton(
+              onPressed: () {
+                _selectItem(context, items, pickerIndex);
+              },
+              child: Text(
+                _getDescriptions(items[pickerIndex]),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.start,
+                style: OptiTextStyles.body,
+              )),
         );
       },
     );
@@ -60,7 +68,7 @@ class ListPicker extends StatelessWidget {
     int selectedIndex = index;
     showCupertinoModalPopup(
       context: context,
-      builder: (BuildContext _) {
+      builder: (BuildContext innerContext) {
         return Container(
           height: 200,
           color: Colors.white,
@@ -69,7 +77,7 @@ class ListPicker extends StatelessWidget {
             children: [
               TextButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.pop(innerContext);
                     context.read<ListPickerCubit>().onPick(selectedIndex);
                   },
                   child: const Text(LocalizationConstants.done)),
@@ -96,10 +104,10 @@ class ListPicker extends StatelessWidget {
       return item.description!;
     } else if (item is ShipViaDto) {
       return item.description!;
-    } else if (item is PaymentMethodDto){
+    } else if (item is PaymentMethodDto) {
       return item.description!;
-    }
-    
+    } else if (item is ConfigSectionOptionEntity)
+      return item.description!;
     else {
       return '';
     }

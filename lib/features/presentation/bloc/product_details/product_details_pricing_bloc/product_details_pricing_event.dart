@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
@@ -18,6 +19,7 @@ class LoadProductDetailsPricing extends ProductDetailsPricingEvent {
   final bool realtimeProductAvailabilityEnabled;
   final bool realtimeProductPricingEnabled;
   final ProductSettings productSettings;
+  final Map<String, ConfigSectionOptionEntity?> selectedConfigurations;
 
   LoadProductDetailsPricing(
       {required this.productDetailsPricingEntity,
@@ -28,5 +30,6 @@ class LoadProductDetailsPricing extends ProductDetailsPricingEvent {
       required this.chosenUnitOfMeasure,
       required this.realtimeProductAvailabilityEnabled,
       required this.realtimeProductPricingEnabled,
-      required this.productSettings});
+      required this.productSettings,
+      required this.selectedConfigurations});
 }

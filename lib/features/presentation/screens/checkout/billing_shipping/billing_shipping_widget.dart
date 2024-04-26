@@ -352,8 +352,8 @@ class BillingShippingWidget extends StatelessWidget {
   }
 
   void _onCarrierSelect(BuildContext context, Object item) {
-    context.read<CheckoutBloc>().add(SelectCarrierEvent(item as CarrierDto));
-    context.read<ReviewOrderCubit>().onOrderConfigChange();
+    // context.read<CheckoutBloc>().add(SelectCarrierEvent(item as CarrierDto));
+    // context.read<ReviewOrderCubit>().onOrderConfigChange();
   }
 
   void _onServiceSelect(BuildContext context, Object item) {

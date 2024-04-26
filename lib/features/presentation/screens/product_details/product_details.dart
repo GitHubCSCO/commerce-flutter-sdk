@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_detail_item_entity.dart';
@@ -7,6 +8,7 @@ import 'package:commerce_flutter_app/features/domain/entity/product_details/prod
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_description_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_standard_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
@@ -17,13 +19,17 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/produc_details_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_event.dart';
+import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_add_to_cart_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_general_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_pricing_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_spefication_expansion_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_standart_configuration_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:commerce_flutter_app/core/extensions/html_string_extension.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -60,7 +66,7 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
-      builder: (context, state) {
+      builder: (_, state) {
         switch (state) {
           case ProductDetailsInitial():
           case ProductDetailsLoading():
@@ -101,6 +107,13 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
         case ProdcutDeatilsPageWidgets.productDetailsGeneralInfo:
           final generalInfoEntity = item as ProductDetailsGeneralInfoEntity;
           widgets.add(buildGeneralInfoWidget(generalInfoEntity));
+          break;
+        case ProdcutDeatilsPageWidgets
+              .productDeatilsStanddardConfigurationSection:
+          final productDetailsStandardConfigurationEntity =
+              item as ProductDetailsStandardConfigurationEntity;
+          widgets.add(buildStandanrConfigurationWidget(
+              productDetailsStandardConfigurationEntity));
           break;
         case ProdcutDeatilsPageWidgets.productDetailsAddtoCart:
           final detailsAddToCartEntity = item as ProductDetailsAddtoCartEntity;
@@ -173,5 +186,13 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
       ProductDetailsPriceEntity productDetailsPriceEntity) {
     return ProductDetailsPricingWidget(
         productDetailsPricingEntity: productDetailsPriceEntity);
+  }
+
+  Widget buildStandanrConfigurationWidget(
+      ProductDetailsStandardConfigurationEntity
+          productDetailsStandardConfigurationEntity) {
+    return ProductDetailsStandardConfigurationWidget(
+        productDetailsStandardConfigurationEntity:
+            productDetailsStandardConfigurationEntity);
   }
 }

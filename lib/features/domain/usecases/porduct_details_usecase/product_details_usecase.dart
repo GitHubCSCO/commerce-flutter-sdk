@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/features/domain/entity/product_details/prod
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_description_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_standard_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_image_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
@@ -23,6 +24,7 @@ enum ProdcutDeatilsPageWidgets {
   productDetailsGeneralInfo,
   productDetailsAddtoCart,
   productDetailsPrice,
+  productDeatilsStanddardConfigurationSection
 }
 
 class ProductDetailsUseCase extends BaseUseCase {
@@ -220,6 +222,18 @@ class ProductDetailsUseCase extends BaseUseCase {
     items.add(makeGeneralInfoEntity(product, styledProduct));
     items.add(ProductDetailsPriceEntity(
         detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsPrice));
+
+    if (!(product.styleTraits != null && product.styleTraits!.isNotEmpty) &&
+        product.configurationDto != null &&
+        product.configurationDto!.sections != null &&
+        product.configurationDto!.sections!.isNotEmpty &&
+        !product.isFixedConfiguration!) {
+      items.add(ProductDetailsStandardConfigurationEntity(
+          detailsSectionType: ProdcutDeatilsPageWidgets
+              .productDeatilsStanddardConfigurationSection,
+          configSectionOptions: product.configurationDto!.sections));
+      //  implemtentation in complete
+    }
 
     items.add(ProductDetailsAddtoCartEntity(
         detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart,
