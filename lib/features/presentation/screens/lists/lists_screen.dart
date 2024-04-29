@@ -117,7 +117,10 @@ class ListsPage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const _WishListsSection(),
+                    _WishListsSection(
+                      wishListEntities:
+                          state.wishLists.wishListCollection ?? [],
+                    ),
                   ],
                 ),
               );
@@ -129,8 +132,47 @@ class ListsPage extends StatelessWidget {
   }
 }
 
-class _WishListsSection extends StatelessWidget {
-  const _WishListsSection();
+class _WishListsSection extends StatefulWidget {
+  const _WishListsSection({required this.wishListEntities});
+
+  final List<WishListEntity> wishListEntities;
+
+  @override
+  State<_WishListsSection> createState() => _WishListsSectionState();
+}
+
+class _WishListsSectionState extends State<_WishListsSection> {
+  final _scrollController = ScrollController();
+
+  void _onScroll() {
+    if (_isBottom) {
+      context.read<WishListCubit>().loadMoreWishlists();
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) {
+      return false;
+    }
+
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= (maxScroll * 0.9);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,9 +180,18 @@ class _WishListsSection extends StatelessWidget {
       child: BlocBuilder<WishListCubit, WishListState>(
         builder: (context, state) {
           return ListView.separated(
+            controller: _scrollController,
             itemBuilder: (context, index) {
+              if (index >= state.wishLists.wishListCollection!.length &&
+                  state.status == WishListStatus.moreLoading) {
+                return const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+
               return _WishListItem(
-                wishList: state.wishLists.wishListCollection![index],
+                wishList: widget.wishListEntities[index],
               );
             },
             separatorBuilder: (context, index) {
@@ -149,7 +200,9 @@ class _WishListsSection extends StatelessWidget {
                 thickness: 1,
               );
             },
-            itemCount: state.wishLists.wishListCollection?.length ?? 0,
+            itemCount: state.status == WishListStatus.moreLoading
+                ? widget.wishListEntities.length + 1
+                : widget.wishListEntities.length,
           );
         },
       ),

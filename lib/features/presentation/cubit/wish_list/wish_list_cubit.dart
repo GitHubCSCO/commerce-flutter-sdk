@@ -21,8 +21,10 @@ class WishListCubit extends Cubit<WishListState> {
   Future<void> loadWishLists() async {
     emit(state.copyWith(status: WishListStatus.loading));
 
-    final result =
-        await _wishListUsecase.getWishLists(sortOrder: state.sortOrder);
+    final result = await _wishListUsecase.getWishLists(
+      sortOrder: state.sortOrder,
+      page: 1,
+    );
 
     result != null
         ? emit(
