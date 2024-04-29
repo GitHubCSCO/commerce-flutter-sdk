@@ -197,13 +197,17 @@ class _WishListItem extends StatelessWidget {
           Text(wishList.name ?? '', style: OptiTextStyles.body),
           Text(
             wishList.description ?? '',
-            style: OptiTextStyles.bodySmall,
+            style: OptiTextStyles.bodySmall.copyWith(
+              color: OptiAppColors.textSecondary,
+            ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
           Text(
             _constructListSharingDisplay(),
-            style: OptiTextStyles.bodySmall,
+            style: OptiTextStyles.bodySmall.copyWith(
+              color: OptiAppColors.textSecondary,
+            ),
           ),
           Text(
             LocalizationConstants.updateBy.format(
@@ -215,7 +219,9 @@ class _WishListItem extends StatelessWidget {
                 wishList.updatedByDisplayName ?? '',
               ],
             ),
-            style: OptiTextStyles.bodySmall,
+            style: OptiTextStyles.bodySmall.copyWith(
+              color: OptiAppColors.textSecondary,
+            ),
           )
         ],
       ),
