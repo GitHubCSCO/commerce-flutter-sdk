@@ -79,11 +79,48 @@ class ListsPage extends StatelessWidget {
           BlocBuilder<WishListCubit, WishListState>(
             builder: (context, state) {
               if (state.status == WishListStatus.loading) {
-                return const Center(child: CircularProgressIndicator());
+                return const Expanded(
+                    child: Center(child: CircularProgressIndicator()));
               } else if (state.status == WishListStatus.failure) {
-                return const Center(child: Text(LocalizationConstants.error));
+                return const Expanded(
+                    child: Center(child: Text(LocalizationConstants.error)));
               }
-              return const Expanded(child: _WishListsSection());
+              return Expanded(
+                child: Column(
+                  children: [
+                    Container(
+                      height: 50,
+                      padding:
+                          const EdgeInsetsDirectional.symmetric(horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SizedBox(width: 10),
+                              IconButton(
+                                padding: const EdgeInsets.all(10),
+                                onPressed: () =>
+                                    CustomSnackBar.showComingSoonSnackBar(
+                                        context),
+                                icon: SvgPicture.asset(
+                                  height: 20,
+                                  width: 20,
+                                  AssetConstants.sortIcon,
+                                  semanticsLabel: 'sort icon',
+                                  fit: BoxFit.fitWidth,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    const _WishListsSection(),
+                  ],
+                ),
+              );
             },
           )
         ],
@@ -97,23 +134,25 @@ class _WishListsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WishListCubit, WishListState>(
-      builder: (context, state) {
-        return ListView.separated(
-          itemBuilder: (context, index) {
-            return _WishListItem(
-              wishList: state.wishLists.wishListCollection![index],
-            );
-          },
-          separatorBuilder: (context, index) {
-            return const Divider(
-              height: 0,
-              thickness: 1,
-            );
-          },
-          itemCount: state.wishLists.wishListCollection?.length ?? 0,
-        );
-      },
+    return Expanded(
+      child: BlocBuilder<WishListCubit, WishListState>(
+        builder: (context, state) {
+          return ListView.separated(
+            itemBuilder: (context, index) {
+              return _WishListItem(
+                wishList: state.wishLists.wishListCollection![index],
+              );
+            },
+            separatorBuilder: (context, index) {
+              return const Divider(
+                height: 0,
+                thickness: 1,
+              );
+            },
+            itemCount: state.wishLists.wishListCollection?.length ?? 0,
+          );
+        },
+      ),
     );
   }
 }
