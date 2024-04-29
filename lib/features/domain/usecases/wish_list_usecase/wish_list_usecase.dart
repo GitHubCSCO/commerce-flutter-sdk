@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_collection_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/wish_list_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
@@ -12,6 +13,8 @@ class WishListUsecase extends BaseUseCase {
         await commerceAPIServiceProvider.getWishListService().getWishLists(
               WishListsQueryParameters(
                 sort: sortOrder.value,
+                pageSize: CoreConstants.defaultPageSize,
+                page: page,
               ),
             );
 
