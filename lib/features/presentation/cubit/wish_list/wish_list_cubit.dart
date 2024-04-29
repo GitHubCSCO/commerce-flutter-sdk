@@ -14,9 +14,7 @@ class WishListCubit extends Cubit<WishListState> {
           const WishListState(
             sortOrder: WishListSortOrder.modifiedOnDescending,
             status: WishListStatus.initial,
-            wishLists: WishListCollectionEntity(
-              wishListCollection: [],
-            ),
+            wishLists: WishListCollectionEntity(),
           ),
         );
 
@@ -28,11 +26,45 @@ class WishListCubit extends Cubit<WishListState> {
 
     result != null
         ? emit(
-            state.copyWith(
+            WishListState(
               wishLists: result,
               status: WishListStatus.success,
+              sortOrder: state.sortOrder,
             ),
           )
         : emit(state.copyWith(status: WishListStatus.failure));
+  }
+
+  Future<void> loadMoreWishlists() async {
+    if (state.wishLists.pagination?.page == null ||
+        state.wishLists.pagination!.page! + 1 >
+            state.wishLists.pagination!.numberOfPages! ||
+        state.status == WishListStatus.moreLoading) {
+      return;
+    }
+
+    emit(state.copyWith(status: WishListStatus.moreLoading));
+    final result = await _wishListUsecase.getWishLists(
+      page: state.wishLists.pagination!.page! + 1,
+      sortOrder: state.sortOrder,
+    );
+
+    if (result == null) {
+      emit(state.copyWith(status: WishListStatus.moreLoadingFailure));
+      return;
+    }
+
+    final newWishLists = state.wishLists.wishListCollection;
+    newWishLists?.addAll(result.wishListCollection!);
+
+    emit(
+      state.copyWith(
+        wishLists: state.wishLists.copyWith(
+          wishListCollection: newWishLists,
+          pagination: result.pagination,
+        ),
+        status: WishListStatus.success,
+      ),
+    );
   }
 }
