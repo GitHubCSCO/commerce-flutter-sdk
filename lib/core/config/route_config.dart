@@ -1,11 +1,17 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/biometric/biometric_login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/nav_bar/nav_bar_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/order_history/order_history_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/root/root_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/search_screen.dart';
@@ -13,9 +19,9 @@ import 'package:commerce_flutter_app/features/presentation/screens/settings/sett
 import 'package:commerce_flutter_app/features/presentation/screens/shop/shop_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/domain_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_screen.dart';
-import 'package:commerce_flutter_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 final GlobalKey<NavigatorState> _rootNavigator = GlobalKey(debugLabel: 'root');
 
@@ -23,11 +29,12 @@ GoRouter getRouter() {
   return GoRouter(
     navigatorKey: _rootNavigator,
     initialLocation: AppRoute.root.fullPath,
-    routes: [generateRoutes(_getNavigationRoot())],
+    debugLogDiagnostics: true,
+    routes: _getNavigationRoot().map((e) => generateRoutes(e)).toList(),
   );
 }
 
-NavigationNode _getNavigationRoot() {
+List<NavigationNode> _getNavigationRoot() {
   // path: /
   final root = createNode(
     path: AppRoute.root.fullPath,
@@ -40,7 +47,6 @@ NavigationNode _getNavigationRoot() {
     name: AppRoute.welcome.name,
     path: AppRoute.welcome.suffix,
     builder: (context, state) => const WelcomeScreen(),
-    parent: root,
   );
 
   // path: /domainSelection
@@ -48,7 +54,6 @@ NavigationNode _getNavigationRoot() {
     name: AppRoute.domainSelection.name,
     path: AppRoute.domainSelection.suffix,
     builder: (context, state) => const DomainScreen(),
-    parent: root,
   );
 
   // path: /login
@@ -57,14 +62,14 @@ NavigationNode _getNavigationRoot() {
     path: AppRoute.login.suffix,
     builder: (context, state) => const LoginScreen(),
     navigatorKey: _rootNavigator,
-    parent: root,
+    parent: null,
   );
 
   final navbarRoot = createNavbarRoot(
     statefulShellBuilder: (context, state, navigationShell) => NavBarScreen(
       navigationShell: navigationShell,
     ),
-    parent: root,
+    parent: null,
   );
 
   // path: /shop
@@ -99,12 +104,35 @@ NavigationNode _getNavigationRoot() {
     parent: navbarRoot,
   );
 
+  // path: /checkout
+  final checkout = createNode(
+    name: AppRoute.checkout.name,
+    path: AppRoute.checkout.suffix,
+    builder: (context, state) {
+      final cart = state.extra as Cart;
+      return CheckoutScreen(cart: cart);
+    },
+    parent: null,
+  );
+
+  // path: /checkoutSuccess
+  final checkoutSuccess = createNode(
+    name: AppRoute.checkoutSuccess.name,
+    path: AppRoute.checkoutSuccess.suffix,
+    builder: (context, state)  {
+      final orderNumber = state.extra as String;
+      return CheckoutSuccessScreen(orderNumber: orderNumber);
+    },
+    parent: null,
+  );
+
   // path: /product details
   final productDetails = createNode(
     name: AppRoute.productDetails.name,
     path: AppRoute.productDetails.suffix,
     builder: (context, state) => ProductDetailsScreen(
-        productId: state.pathParameters['productId'] ?? ''),
+        productId: state.pathParameters['productId'] ?? '',
+        product: state.extra as ProductEntity),
     parent: shop,
   );
 
@@ -114,8 +142,30 @@ NavigationNode _getNavigationRoot() {
     path: AppRoute.settings.suffix,
     builder: (context, state) => const SettingsScreen(),
     parent: account,
-
   );
 
-  return root;
+  // path: /biometric
+  final biometricLogin = createNode(
+    name: AppRoute.biometricLogin.name,
+    path: AppRoute.biometricLogin.suffix,
+    builder: (context, state) {
+      final biometricInfo = state.extra as BiometricInfoEntity;
+      return BiometricLoginScreen(
+        biometricOption: biometricInfo.biometricOption,
+        password: biometricInfo.password,
+      );
+    },
+    parent: null,
+  );
+
+  // path: /account/orderHistory
+  final orderHistory = createNode(
+    name: AppRoute.orderHistory.name,
+    path: AppRoute.orderHistory.suffix,
+    builder: (context, state) => const OrderHistoryScreen(),
+    parent: account,
+  );
+  
+  return [root, navbarRoot, welcome, domainSelection, login, biometricLogin, checkout, checkoutSuccess];
+
 }

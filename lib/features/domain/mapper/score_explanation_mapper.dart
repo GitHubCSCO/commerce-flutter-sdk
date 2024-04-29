@@ -15,4 +15,16 @@ class ScoreExplanationEntityMapper {
                 FieldScoreDetailedEntityMapper().toEntity(fieldScoreDetailed))
             .toList(),
       );
+
+  ScoreExplanation? toModel(ScoreExplanationEntity entity) => ScoreExplanation(
+        totalBoost: entity.totalBoost,
+        aggregateFieldScores: entity.aggregateFieldScores
+            ?.map((fieldScoreEntity) =>
+                FieldScoreEntityMapper().toModel(fieldScoreEntity))
+            .toList(),
+        detailedFieldScores: entity.detailedFieldScores
+            ?.map((fieldScoreDetailedEntity) => FieldScoreDetailedEntityMapper()
+                .toModel(fieldScoreDetailedEntity))
+            .toList(),
+      );
 }

@@ -10,6 +10,9 @@ class AuthUsecase extends BaseUseCase {
         .isAuthenticatedAsync();
     switch (authResult) {
       case Success(value: final value):
+        await commerceAPIServiceProvider
+            .getAccountService()
+            .getCurrentAccountAsync();
         return value!;
       case Failure():
         return false;

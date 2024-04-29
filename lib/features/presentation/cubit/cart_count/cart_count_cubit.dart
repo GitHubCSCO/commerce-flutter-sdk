@@ -1,0 +1,54 @@
+import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_usecase.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+
+class CartCountCubit extends Cubit<CartCountState> {
+
+  final CartUseCase _cartUseCase;
+  int cartItemCount = 0;
+  bool _isCartItemsChanged = false;
+
+  CartCountCubit({required CartUseCase cartUseCase})
+      : _cartUseCase = cartUseCase,
+        super(const CartCountState(cartItemCount: 0));
+
+  Future<void> loadCurrentCartCount() async {
+    var result = await _cartUseCase.loadCurrentCart();
+
+    switch (result) {
+      case Success(value: final data):
+        var cart = data;
+        if (cart?.cartLines == null || cart!.cartLines!.isEmpty) {
+          emitCartCount(0);
+          return;
+        }
+        emitCartCount(cart.cartLines!.length);
+        break;
+      case Failure(errorResponse: final errorResponse):
+        emitCartCount(0);
+        break;
+    }
+  }
+
+  Future<void> emitCartCount(int count) async {
+    cartItemCount = count;
+    emit(CartCountState(cartItemCount: count));
+  }
+
+  Future<void> onCartItemChange() async {
+    setCartItemChange(true);
+    await loadCurrentCartCount();
+  }
+
+  void setCartItemChange(bool change) {
+    _isCartItemsChanged = change;
+  }
+
+  Future<void> onSelectCartTab() async {
+    emit(CartTabReloadState(cartItemCount: cartItemCount));
+  }
+
+  bool cartItemChanged() => _isCartItemsChanged;
+
+}

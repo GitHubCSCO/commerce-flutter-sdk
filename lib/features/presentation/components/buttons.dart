@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -57,7 +58,12 @@ class PrimaryButton extends StatelessWidget {
             children: [
               leadingIcon ?? const SizedBox.shrink(),
               const SizedBox(width: 10),
-              Text(text),
+              Text(
+                text,
+                style: OptiTextStyles.subtitle.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
               const SizedBox(width: 10),
               trailingIcon ?? const SizedBox.shrink(),
             ],

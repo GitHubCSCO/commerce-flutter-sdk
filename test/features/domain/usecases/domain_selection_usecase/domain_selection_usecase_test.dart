@@ -14,27 +14,6 @@ void main() {
       domainSelectionUsecase = DomainUsecase();
     });
 
-    test('getSavedDomain should load and set the saved domain', () async {
-      const savedDomain = 'test.com';
-
-      when(() => domainSelectionUsecase.commerceAPIServiceProvider
-          .getLocalStorageService()
-          .load(any())).thenAnswer((_) async => savedDomain);
-
-      final result = await domainSelectionUsecase.getSavedDomain();
-
-      expect(result, equals(savedDomain));
-      verify(() => domainSelectionUsecase.commerceAPIServiceProvider
-          .getLocalStorageService()
-          .load("DomainKey"));
-      verify(() => domainSelectionUsecase.commerceAPIServiceProvider
-          .getClientService()
-          .host = savedDomain);
-      verify(() => domainSelectionUsecase.commerceAPIServiceProvider
-          .getAdminClientService()
-          .host = savedDomain);
-    });
-
     test(
       'domainSelectHandler should set the extracted domain and return success status when settings are retrieved successfully',
       () async {

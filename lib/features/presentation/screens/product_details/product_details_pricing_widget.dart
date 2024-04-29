@@ -1,8 +1,12 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_state.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -34,24 +38,27 @@ class ProductDetailsPricingWidget extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   // TODO: Implement the logic for "View Quantity Pricing"
+                  CustomSnackBar.showComingSoonSnackBar(context);
                 },
-                child: const Text("View Quantity Pricing",
-                    style: TextStyle(
-                        color: AppColors.primaryColor,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12)),
+                child: Text(
+                  "View Quantity Pricing",
+                  style: OptiTextStyles.link,
+                ),
               ),
-              _buildInventorySection(context),
+              productDetailsPricingEntity.availability?.message != null
+                  ? _buildInventorySection(context)
+                  : Container(),
+              // _buildInventorySection(context),
               // For "View Availability by Warehouse"
               GestureDetector(
                 onTap: () {
                   // TODO: Implement the logic for "View Quantity Pricing"
+                  CustomSnackBar.showComingSoonSnackBar(context);
                 },
-                child: const Text("View Availability by Warehouse",
-                    style: TextStyle(
-                        color: AppColors.primaryColor,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12)),
+                child: Text(
+                  "View Availability by Warehouse",
+                  style: OptiTextStyles.link,
+                ),
               ),
             ],
           ),
@@ -76,7 +83,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is ProductDetailsPricingLoaded) {
-          var discountMessage = state.productDetailsPriceEntity.discountMessage;
+          var discountMessage = state.productDetailsPriceEntity.product?.pricing?.getDiscountValue();
           if (discountMessage != null &&
               discountMessage.isNotEmpty &&
               discountMessage != "null") {
@@ -86,7 +93,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                   fontSize: 12,
                   fontWeight: FontWeight.normal,
                   fontStyle: FontStyle.italic,
-                  color: AppColors.lightGrayTextColor),
+                  color: OptiAppColors.textSecondary),
             );
           }
         }
@@ -103,13 +110,13 @@ class ProductDetailsPricingWidget extends StatelessWidget {
           return Container(
             child: Row(
               children: [
-                Text(productDetailsPriceEntity.priceValueText ?? '',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    )),
                 Text(
-                    '/${productDetailsPriceEntity.selectedUnitOfMeasureValueText ?? ''}'),
+                    '${productDetailsPriceEntity.product.updatePriceValueText(productDetailsPriceEntity.productPricingEnabled)}',
+                    style: OptiTextStyles.subtitle),
+                Text(
+                  '${productDetailsPriceEntity.product.updateUnitOfMeasure(productDetailsPriceEntity.productPricingEnabled)}',
+                  style: OptiTextStyles.body,
+                ),
               ],
             ),
           );
@@ -117,7 +124,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
         return Container(
           alignment: Alignment.bottomLeft,
           child: LoadingAnimationWidget.prograssiveDots(
-            color: Colors.black87,
+            color: OptiAppColors.iconPrimary,
             size: 30,
           ),
         );
@@ -131,13 +138,16 @@ class ProductDetailsPricingWidget extends StatelessWidget {
         if (state is ProductDetailsPricingLoaded) {
           var productDetailsPriceEntity = state.productDetailsPriceEntity;
           return Container(
-            child: Text(productDetailsPriceEntity.availability?.message ?? ''),
+            child: Text(
+              productDetailsPriceEntity.availability?.message ?? '',
+              style: OptiTextStyles.body,
+            ),
           );
         }
         return Container(
           alignment: Alignment.bottomLeft,
           child: LoadingAnimationWidget.prograssiveDots(
-            color: Colors.black87,
+            color: OptiAppColors.iconPrimary,
             size: 30,
           ),
         );

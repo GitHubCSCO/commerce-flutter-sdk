@@ -18,4 +18,23 @@ class SpecificationEntityMapper {
             ? toEntity(model.specifications ?? Specification())
             : null,
       );
+
+  Specification toModel(SpecificationEntity entity) => Specification(
+        specificationId: entity.specificationId,
+        name: entity.name,
+        nameDisplay: entity.nameDisplay,
+        value: entity.value,
+        description: entity.description,
+        sortOrder: entity.sortOrder,
+        isActive: entity.isActive,
+        parentSpecification: entity.parentSpecification != null
+            ? SpecificationEntityMapper()
+                .toModel(entity.parentSpecification ?? SpecificationEntity())
+            : null,
+        htmlContent: entity.htmlContent,
+        specifications: entity.specifications != null
+            ? SpecificationEntityMapper()
+                .toModel(entity.specifications ?? SpecificationEntity())
+            : null,
+      );
 }

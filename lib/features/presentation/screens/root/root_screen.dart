@@ -1,5 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
+import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/features/domain/enums/domain_redirect_status.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -8,7 +10,10 @@ class RootScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const RootPage();
+    return BlocProvider(
+      create: (context) => sl<DomainRedirectCubit>()..redirect(),
+      child: const RootPage(),
+    );
   }
 }
 
@@ -17,7 +22,7 @@ class RootPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<DomainCubit, DomainState>(
+    return BlocConsumer<DomainRedirectCubit, DomainRedirectStatus>(
       builder: (context, state) {
         return const Scaffold(
           body: Center(
@@ -26,9 +31,9 @@ class RootPage extends StatelessWidget {
         );
       },
       listener: (context, state) {
-        if (state is DomainLoaded) {
+        if (state == DomainRedirectStatus.redirect) {
           AppRoute.shop.navigate(context);
-        } else if (state is DomainOperationFailed) {
+        } else if (state == DomainRedirectStatus.doNotRedirect) {
           AppRoute.welcome.navigate(context);
         }
       },

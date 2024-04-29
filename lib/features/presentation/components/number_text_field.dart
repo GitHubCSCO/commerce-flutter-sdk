@@ -1,8 +1,8 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 class NumberTextField extends StatefulWidget {
   final TextEditingController? controller;
@@ -16,10 +16,12 @@ class NumberTextField extends StatefulWidget {
   final double borderWidth;
   final ValueChanged<int?>? onChanged;
   final String? initialtText;
+  final bool shouldShowIncrementDecermentIcon;
 
   const NumberTextField({
     Key? key,
     this.initialtText,
+    this.shouldShowIncrementDecermentIcon = false,
     this.controller,
     this.focusNode,
     this.min = 1,
@@ -41,6 +43,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
   late FocusNode _focusNode;
   bool _canGoUp = false;
   bool _canGoDown = false;
+  bool _shouldShowIncrementDecermentIcon = false;
 
   @override
   void initState() {
@@ -48,6 +51,8 @@ class _NumberTextFieldState extends State<NumberTextField> {
     _controller = widget.controller ?? TextEditingController();
     _focusNode = widget.focusNode ?? FocusNode();
     _controller.text = widget.initialtText!;
+    _shouldShowIncrementDecermentIcon =
+        widget.shouldShowIncrementDecermentIcon!;
     _updateArrows(int.tryParse(_controller.text));
   }
 
@@ -63,24 +68,24 @@ class _NumberTextFieldState extends State<NumberTextField> {
   Widget build(BuildContext context) => Row(
         children: [
           // Minus button
-
-          TextButton(
-            onPressed: () {
-              if (_canGoDown) {
-                _update(false);
-              }
-            },
-            style: TextButton.styleFrom(
-              backgroundColor: AppColors.grayBackgroundColor,
-              padding: EdgeInsets.all(16),
-              shape: CircleBorder(),
+          if (_shouldShowIncrementDecermentIcon)
+            TextButton(
+              onPressed: () {
+                if (_canGoDown) {
+                  _update(false);
+                }
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: OptiAppColors.backgroundGray,
+                padding: EdgeInsets.all(16),
+                shape: CircleBorder(),
+              ),
+              child: Icon(
+                Icons.remove,
+                color: Colors.black,
+                size: 24,
+              ),
             ),
-            child: Icon(
-              Icons.remove,
-              color: Colors.black,
-              size: 24,
-            ),
-          ),
           // TextField
           Expanded(
             child: TextField(
@@ -117,6 +122,10 @@ class _NumberTextFieldState extends State<NumberTextField> {
                       : AppStyle.neutral100,
                 ),
                 maxLines: 1,
+                onTapOutside: (p0) => context.closeKeyboard(),
+                onSubmitted: (value) {
+                  _focusNode.unfocus();
+                },
                 onChanged: (value) {
                   final intValue = int.tryParse(value);
                   widget.onChanged?.call(intValue);
@@ -127,24 +136,24 @@ class _NumberTextFieldState extends State<NumberTextField> {
                 ]),
           ),
           // Plus button
-
-          TextButton(
-            onPressed: () {
-              if (_canGoUp) {
-                _update(true);
-              }
-            },
-            style: TextButton.styleFrom(
-              backgroundColor: AppColors.grayBackgroundColor,
-              padding: EdgeInsets.all(16),
-              shape: CircleBorder(),
-            ),
-            child: Icon(
-              Icons.add,
-              color: Colors.black,
-              size: 24,
-            ),
-          )
+          if (_shouldShowIncrementDecermentIcon)
+            TextButton(
+              onPressed: () {
+                if (_canGoUp) {
+                  _update(true);
+                }
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: OptiAppColors.backgroundGray,
+                padding: EdgeInsets.all(16),
+                shape: CircleBorder(),
+              ),
+              child: Icon(
+                Icons.add,
+                color: Colors.black,
+                size: 24,
+              ),
+            )
         ],
       );
 

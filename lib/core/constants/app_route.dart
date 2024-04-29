@@ -14,8 +14,11 @@ class RouteNames {
   static const String cart = 'cart';
   static const String productDetails = 'productDetails';
   static const String checkout = 'checkout';
+  static const String checkoutSuccess = 'checkoutSuccess';
   static const String productList = 'productList';
   static const String settings = 'settings';
+  static const String biometricLogin = 'biometricLogin';
+  static const String orderHistory = 'orderHistory';
 }
 
 class RoutePaths {
@@ -29,11 +32,15 @@ class RoutePaths {
   static const String cart = '/${RouteNames.cart}';
   static const String productDetails =
       '/${RouteNames.productDetails}/:productId';
-  static const String checkout = '/:id';
+  static const String checkout = '/${RouteNames.checkout}';
+  static const String checkoutSuccess = '/${RouteNames.checkoutSuccess}';
   static const String shopProdlist =
       '/${RouteNames.shop}/${RouteNames.productList}';
   static const String shopProdDetails = '$shopProdlist/:id';
   static const String settings = '${RoutePaths.account}/${RouteNames.settings}';
+  static const String biometricLogin = '/${RouteNames.biometricLogin}';
+  static const String orderHistory =
+      '/${RoutePaths.account}/${RouteNames.orderHistory}';
 }
 
 enum AppRoute {
@@ -50,7 +57,12 @@ enum AppRoute {
   productDetails(
       name: RouteNames.productDetails, fullPath: RoutePaths.productDetails),
   checkout(name: RouteNames.checkout, fullPath: RoutePaths.checkout),
-  settings(name: RouteNames.settings, fullPath: RoutePaths.settings);
+  checkoutSuccess(name: RouteNames.checkoutSuccess, fullPath: RoutePaths.checkoutSuccess),
+  settings(name: RouteNames.settings, fullPath: RoutePaths.settings),
+  biometricLogin(
+      name: RouteNames.biometricLogin, fullPath: RoutePaths.biometricLogin),
+  orderHistory(
+      name: RouteNames.orderHistory, fullPath: RoutePaths.orderHistory);
 
   const AppRoute({
     required this.name,
@@ -72,6 +84,10 @@ enum AppRoute {
 
     if (splittedList.isEmpty) {
       return fullPath;
+    }
+
+    if (splittedList.length == 1) {
+      return '/${splittedList.first}';
     }
 
     return splittedList.last;

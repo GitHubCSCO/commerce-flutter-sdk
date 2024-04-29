@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_base_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 
@@ -16,6 +17,7 @@ class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
   final String? subtotalTitleText;
   final bool? isLoadingPrice;
   final String? subtotalValueText;
+  final ProductDetailsPriceEntity? productDetailsPriceEntity;
 
   const ProductDetailsAddtoCartEntity({
     this.showHidePricing,
@@ -23,7 +25,7 @@ class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
     this.isAddToCartAllowed,
     this.addToCartButtonEnabled,
     this.addToCartButtonText,
-    this.quantityText,
+    this.quantityText = "1",
     this.unitOfMeasurePickerTitle,
     this.selectedUnitOfMeasure,
     this.selectedUnitOfMeasureValueText,
@@ -31,6 +33,7 @@ class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
     this.subtotalTitleText,
     this.isLoadingPrice,
     this.subtotalValueText,
+     this.productDetailsPriceEntity,
     required super.detailsSectionType,
   });
 
@@ -49,6 +52,7 @@ class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
     String? subtotalTitleText,
     bool? isLoadingPrice,
     String? subtotalValueText,
+    ProductDetailsPriceEntity? productDetailsPriceEntity,
     ProdcutDeatilsPageWidgets? detailsSectionType,
   }) {
     return ProductDetailsAddtoCartEntity(
@@ -71,6 +75,7 @@ class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
       isLoadingPrice: isLoadingPrice ?? this.isLoadingPrice,
       subtotalValueText: subtotalValueText ?? this.subtotalValueText,
       detailsSectionType: detailsSectionType ?? this.detailsSectionType,
+      productDetailsPriceEntity: productDetailsPriceEntity ?? this.productDetailsPriceEntity,
     );
   }
 }

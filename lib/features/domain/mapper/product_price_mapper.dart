@@ -48,4 +48,50 @@ class ProductPriceEntityMapper {
             ?.map((e) => BreakPriceEntityMapper().toEntity(e))
             .toList(),
       );
+
+  ProductPrice toModel(ProductPriceEntity entity) => ProductPrice(
+        productId: entity.productId,
+        isOnSale: entity.isOnSale,
+        requiresRealTimePrice: entity.requiresRealTimePrice,
+        quoteRequired: entity.quoteRequired,
+        additionalResults: entity.additionalResults,
+        unitCost: entity.unitCost,
+        unitCostDisplay: entity.unitCostDisplay,
+        unitListPrice: entity.unitListPrice,
+        unitListPriceDisplay: entity.unitListPriceDisplay,
+        extendedUnitListPrice: entity.extendedUnitListPrice,
+        extendedUnitListPriceDisplay: entity.extendedUnitListPriceDisplay,
+        unitRegularPrice: entity.unitRegularPrice,
+        unitRegularPriceDisplay: entity.unitRegularPriceDisplay,
+        extendedUnitRegularPrice: entity.extendedUnitRegularPrice,
+        extendedUnitRegularPriceDisplay: entity.extendedUnitRegularPriceDisplay,
+        unitNetPrice: entity.unitNetPrice,
+        unitNetPriceDisplay: entity.unitNetPriceDisplay,
+        extendedUnitNetPrice: entity.extendedUnitNetPrice,
+        extendedUnitNetPriceDisplay: entity.extendedUnitNetPriceDisplay,
+        unitOfMeasure: entity.unitOfMeasure,
+        vatRate: entity.vatRate,
+        vatAmount: entity.vatAmount,
+        vatAmountDisplay: entity.vatAmountDisplay,
+        unitListBreakPrices: entity.unitListBreakPrices
+            ?.map((e) => BreakPriceEntityMapper().toModel(e))
+            .toList(),
+        unitRegularBreakPrices: entity.unitRegularBreakPrices
+            ?.map((e) => BreakPriceEntityMapper().toModel(e))
+            .toList(),
+        regularPrice: entity.regularPrice,
+        regularPriceDisplay: entity.regularPriceDisplay,
+        extendedRegularPrice: entity.extendedRegularPrice,
+        extendedRegularPriceDisplay: entity.extendedRegularPriceDisplay,
+        actualPrice: entity.actualPrice,
+        actualPriceDisplay: entity.actualPriceDisplay,
+        extendedActualPrice: entity.extendedActualPrice,
+        extendedActualPriceDisplay: entity.extendedActualPriceDisplay,
+        regularBreakPrices: entity.regularBreakPrices
+            ?.map((e) => BreakPriceEntityMapper().toModel(e))
+            .toList(),
+        actualBreakPrices: entity.actualBreakPrices
+            ?.map((e) => BreakPriceEntityMapper().toModel(e))
+            .toList(),
+      );
 }

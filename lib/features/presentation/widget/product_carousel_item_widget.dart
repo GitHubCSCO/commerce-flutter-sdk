@@ -1,17 +1,17 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_carousel/product_carousel_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductCarouselItemWidget extends StatelessWidget {
   final ProductCarouselEntity productCarousel;
   final bool isLoading;
 
-  const ProductCarouselItemWidget({super.key, required this.productCarousel, required this.isLoading});
+  const ProductCarouselItemWidget(
+      {super.key, required this.productCarousel, required this.isLoading});
 
   @override
   Widget build(BuildContext context) {
@@ -32,72 +32,51 @@ class ProductCarouselItemWidget extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
-                productCarousel.product!.smallImagePath ?? "",
+                productCarousel.product!.smallImagePath.makeImageUrl(),
                 fit: BoxFit.fitHeight,
+                errorBuilder: (BuildContext context, Object error,
+                    StackTrace? stackTrace) {
+                  // This function is called when the image fails to load
+                  return Container(
+                    color: OptiAppColors.backgroundGray, // Placeholder color
+                    alignment: Alignment.center,
+                    child: const Icon(
+                      Icons.image, // Icon to display
+                      color: Colors.grey, // Icon color
+                      size: 30, // Icon size
+                    ),
+                  );
+                },
               ),
             ),
           ),
           const SizedBox(height: 8),
           SizedBox(
             height: 30,
-            child: Text(
-              productCarousel.product!.shortDescription ?? "",
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: Color(0xFF222222),
-                fontSize: 12,
-              ),
-            ),
+            child: Text(productCarousel.product!.shortDescription ?? "",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: OptiTextStyles.bodySmall),
           ),
-          if (isLoading) ... {
+          if (isLoading) ...{
             Container(
               alignment: Alignment.bottomLeft,
               child: LoadingAnimationWidget.prograssiveDots(
-                color: Colors.black87,
+                color: OptiAppColors.iconPrimary,
                 size: 30,
               ),
             ),
-          } else ... {
+          } else ...{
             const SizedBox(height: 8),
             Text(
-              '${updatePriceValueText()} ${updateUnitOfMeasure()}',
-              style: const TextStyle(
-                color: Color(0xFF222222),
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
+              '${productCarousel.product.updatePriceValueText(productCarousel.productPricingEnabled)} ${productCarousel.product.updateUnitOfMeasure(productCarousel.productPricingEnabled)}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: OptiTextStyles.bodySmallHighlight,
             ),
           },
         ],
       ),
     );
   }
-
-  String updateUnitOfMeasure() {
-    if (!(productCarousel.productPricingEnabled ?? false)) {
-      return '';
-    }
-
-    String uomText = productCarousel.product?.getUnitOfMeasure() ?? '';
-
-    if (productCarousel.product?.pricing != null && !(productCarousel.product?.pricing?.isOnSale ?? false)) {
-      uomText = productCarousel.product?.pricing?.getUnitOfMeasure(uomText) ?? '';
-    }
-
-    return uomText.isNullOrEmpty ? '' : " / $uomText";
-  }
-
-  String updatePriceValueText() {
-    if (productCarousel.product != null && (productCarousel.product!.quoteRequired ?? false)) {
-      return LocalizationConstants.requiresQuote;
-    }
-
-    final priceDisplay = (productCarousel.product?.pricing != null && (productCarousel.product!.pricing!.isOnSale ?? false))
-        ? productCarousel.product!.pricing!.unitNetPriceDisplay
-        : productCarousel.product?.pricing?.getPriceValue() ?? '';
-
-    return (productCarousel.productPricingEnabled ?? false) ? priceDisplay! : SiteMessageConstants.valuePricingSignInForPrice;
-  }
-
 }

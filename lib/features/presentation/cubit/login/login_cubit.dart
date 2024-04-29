@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,7 +36,7 @@ class LoginCubit extends Cubit<LoginState> {
       case LoginStatus.loginErrorUnsuccessful:
         emit(
           const LoginFailureState(
-            message: LocalizationConstants.incorrectLoginOrPassword,
+            title: LocalizationConstants.incorrectLoginOrPassword,
             buttonText: LocalizationConstants.dismiss,
           ),
         );
@@ -43,11 +44,71 @@ class LoginCubit extends Cubit<LoginState> {
       case LoginStatus.loginErrorUnknown:
         emit(
           const LoginFailureState(
-            message: LocalizationConstants.unableToGetCurrentSession,
+            title: LocalizationConstants.unableToGetCurrentSession,
             buttonText: LocalizationConstants.dismiss,
           ),
         );
         break;
+      case LoginStatus.loginFailed:
+        emit(
+          const LoginFailureState(
+            title: LocalizationConstants.authenticationFailed,
+            buttonText: LocalizationConstants.oK,
+          ),
+        );
+        break;
+    }
+  }
+
+  Future<void> onBiometricLoginSubmit(DeviceAuthenticationOption option) async {
+    emit(LoginLoadingState());
+
+    final loginStatus = await loginUsecase.authenticateBiometrically(option);
+    switch (loginStatus) {
+      case LoginStatus.loginSuccessBillToShipTo:
+        emit(const LoginSuccessState(showBiometricOptionView: false));
+        break;
+      case LoginStatus.loginErrorOffline:
+        emit(
+          LoginFailureState(
+            title: SiteMessageConstants.defaultMobileAppAlertNoInternet,
+            message:
+                SiteMessageConstants.defaultMobileAppAlertNoInternetDescription,
+            buttonText: LocalizationConstants.dismiss,
+          ),
+        );
+        break;
+      case LoginStatus.loginErrorUnsuccessful:
+        emit(
+          const LoginFailureState(
+            title: LocalizationConstants.incorrectLoginOrPassword,
+            buttonText: LocalizationConstants.dismiss,
+          ),
+        );
+        break;
+      case LoginStatus.loginErrorUnknown:
+        emit(
+          const LoginFailureState(
+            title: LocalizationConstants.unableToGetCurrentSession,
+            buttonText: LocalizationConstants.dismiss,
+          ),
+        );
+        break;
+      case LoginStatus.loginFailed:
+        emit(
+          const LoginFailureState(
+            title: LocalizationConstants.authenticationFailed,
+            buttonText: LocalizationConstants.oK,
+          ),
+        );
+        break;
+      default:
+        emit(
+          const LoginFailureState(
+            title: LocalizationConstants.authenticationFailed,
+            buttonText: LocalizationConstants.oK,
+          ),
+        );
     }
   }
 }

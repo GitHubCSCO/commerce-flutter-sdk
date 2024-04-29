@@ -12,4 +12,15 @@ class StyleValueEntityMapper {
         isDefault: model.isDefault,
         id: model.id,
       );
+
+  StyleValue toModel(StyleValueEntity entity) => StyleValue(
+        styleTraitName: entity.styleTraitName,
+        styleTraitId: entity.styleTraitId,
+        styleTraitValueId: entity.styleTraitValueId,
+        value: entity.value,
+        valueDisplay: entity.valueDisplay,
+        sortOrder: entity.sortOrder,
+        isDefault: entity.isDefault,
+        id: entity.id,
+      );
 }

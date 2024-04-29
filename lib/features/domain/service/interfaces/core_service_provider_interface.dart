@@ -1,10 +1,13 @@
+import 'package:commerce_flutter_app/features/domain/service/interfaces/app_configuration_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/biometric_authentication_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/device_interface.dart';
 
 abstract class ICoreServiceProvider {
-  // IAppConfigurationService getAppConfigurationService();
-  // IBiometricAuthenticationService getBiometricAuthenticationService();
+  IAppConfigurationService getAppConfigurationService();
+  IBiometricAuthenticationService getBiometricAuthenticationService();
   IContentConfigurationService getContentConfigurationService();
-  // IDeviceService getDeviceService();
+  IDeviceService getDeviceService();
   // IFlashlightService getFlashlightService();
   // IGeoLocationService getGeoLocationService();
   // IHapticFeedbackService getHapticFeedbackService();

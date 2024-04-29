@@ -13,4 +13,15 @@ class DocumentEntityMapper {
         languageId: model.languageId,
         fileTypeString: model.fileTypeString,
       );
+  Document toModel(DocumentEntity entity) => Document(
+        id: entity.id,
+        name: entity.name,
+        description: entity.description,
+        createdOn: entity.createdOn,
+        filePath: entity.filePath,
+        fileUrl: entity.fileUrl,
+        documentType: entity.documentType,
+        languageId: entity.languageId,
+        fileTypeString: entity.fileTypeString,
+      );
 }

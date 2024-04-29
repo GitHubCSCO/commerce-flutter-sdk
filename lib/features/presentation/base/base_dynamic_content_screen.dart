@@ -8,7 +8,6 @@ import 'package:commerce_flutter_app/features/domain/entity/content_management/w
 import 'package:commerce_flutter_app/features/presentation/cubit/action_link/action_link_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_id_fetch_cubit/product_id_fetch_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_history/search_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/action_grid_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/action_list_section_widget.dart';
@@ -104,11 +103,7 @@ class BaseDynamicContentScreen extends StatelessWidget {
 
   Widget buildActionListSectionWidget(
       {required ActionsWidgetEntity actionsWidgetEntity}) {
-    return BlocProvider(
-      create: (context) =>
-          sl<ActionLinkCubit>()..viewableActions(actionsWidgetEntity),
-      child: ActionListSectionWidget(actionsWidgetEntity: actionsWidgetEntity),
-    );
+    return ActionListSectionWidget(actionsWidgetEntity: actionsWidgetEntity);
   }
 
   Widget buildProductCarouselSectionWidget(
@@ -119,7 +114,6 @@ class BaseDynamicContentScreen extends StatelessWidget {
             create: (context) => sl<ProductCarouselCubit>()
               ..getCarouselProducts(productCarouselWidgetEntity)),
 
-          BlocProvider<ProductIDFetchCubit>(create: (context) => sl<ProductIDFetchCubit>())
       ],
       child: ProductCarouselSectionWidget(
           productCarouselWidgetEntity: productCarouselWidgetEntity),
@@ -128,9 +122,7 @@ class BaseDynamicContentScreen extends StatelessWidget {
 
   Widget buildSearchHistorySectionWidget(
       {required SearchHistoryWidgetEntity searchHistoryWidgetEntity}) {
-    return BlocProvider<SearchHistoryCubit>(
-        create: (context) => sl<SearchHistoryCubit>()..getSearchHistory(),
-        child: SearchHistorySectionWidget(
-            searchHistoryWidgetEntity: searchHistoryWidgetEntity));
+    return SearchHistorySectionWidget(
+        searchHistoryWidgetEntity: searchHistoryWidgetEntity);
   }
 }

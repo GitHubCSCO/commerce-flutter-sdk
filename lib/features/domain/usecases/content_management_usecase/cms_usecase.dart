@@ -4,8 +4,12 @@ import 'package:commerce_flutter_app/features/domain/entity/content_management/p
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_slide_widget.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/cart_contents_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/cart_buttons_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/order_summary_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/shipping_method_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
@@ -131,7 +135,7 @@ class CmsUseCase extends BaseUseCase {
       convertWidgetToProductCarouselListEntityClassic(
           PageClassicWidgetEntity pageClassicWidget,
           Session? currentSession) async {
-    var productCarouselWidget = const ProductCarouselWidgetEntity();
+    var productCarouselWidget = ProductCarouselWidgetEntity();
     productCarouselWidget = productCarouselWidget.copyWith(
         carouselType: pageClassicWidget.carouselType,
         displayTopSellersFrom: pageClassicWidget.displayTopSellersFrom,
@@ -149,7 +153,7 @@ class CmsUseCase extends BaseUseCase {
   Future<SearchHistoryWidgetEntity> convertWidgetToSearchHistoryEntityClassic(
       PageClassicWidgetEntity pageClassicWidget,
       Session? currentSession) async {
-    var searchhistoryWidget = const SearchHistoryWidgetEntity();
+    var searchhistoryWidget = SearchHistoryWidgetEntity();
 
     searchhistoryWidget = searchhistoryWidget.copyWith(
         itemsCount: pageClassicWidget.numberOfPreviousSearches.toString(),
@@ -194,7 +198,6 @@ class CmsUseCase extends BaseUseCase {
   }
 
   // spire
-
   Future<List<WidgetEntity>> getWidgetEntityListSpire(
       List<PageWidgetEntity> pageWidgets, Session? currentSession) async {
     List<WidgetEntity> widgetEntities = [];
@@ -224,6 +227,21 @@ class CmsUseCase extends BaseUseCase {
                 await convertWidgetToSearchHistoryEntity(
                     pageWidget, currentSession);
             widgetEntities.add(searchHistoryWidget);
+          case WidgetType.mobileCartButtonsWidget:
+            final mobileCartWidget =
+                await convertWidgetToMobileCartButtonWidgetEntity(
+                    pageWidget, currentSession);
+            // going for now for development, later backend will add cart widgets support
+            //
+            widgetEntities.add(const OrderSummaryWidgetEntity(
+                type: WidgetType.mobileOrderSummary, title: "Order Summary"));
+            widgetEntities.add(const ShippingMethodWidgetEntity(
+                type: WidgetType.mobileShippingMethod,
+                title: "Shipping Method"));
+            widgetEntities.add(const CartContentsWidgetEntity(
+                type: WidgetType.mobileCartContents, title: "Cart Contents"));
+
+            widgetEntities.add(mobileCartWidget);
           case WidgetType.unknown:
           default:
             break;
@@ -235,7 +253,7 @@ class CmsUseCase extends BaseUseCase {
 
   Future<SearchHistoryWidgetEntity> convertWidgetToSearchHistoryEntity(
       PageWidgetEntity pageWidget, Session? currentSession) async {
-    var searchhistoryWidget = const SearchHistoryWidgetEntity();
+    var searchhistoryWidget = SearchHistoryWidgetEntity();
     if (pageWidget.generalFields != null &&
         pageWidget.generalFields?.previousSearches != null) {
       searchhistoryWidget = searchhistoryWidget.copyWith(
@@ -257,7 +275,7 @@ class CmsUseCase extends BaseUseCase {
 
   Future<ProductCarouselWidgetEntity> convertWidgetToProductCarouselListEntity(
       PageWidgetEntity pageWidget, Session? currentSession) async {
-    var productCarouselWidget = const ProductCarouselWidgetEntity();
+    var productCarouselWidget = ProductCarouselWidgetEntity();
     if (pageWidget.generalFields != null) {
       productCarouselWidget = productCarouselWidget.copyWith(
           carouselType: pageWidget.generalFields?.carouselType,
@@ -388,5 +406,31 @@ class CmsUseCase extends BaseUseCase {
     }
 
     return carouselWidget;
+  }
+
+  Future<CartButtonsWidgetEntity> convertWidgetToMobileCartButtonWidgetEntity(
+      PageWidgetEntity pageWidget, Session? currentSession) async {
+    var cartWidget = const CartButtonsWidgetEntity();
+    if (pageWidget.contextualFields != null) {
+      var slides = pageWidget.contextualFields as Map<String, dynamic>;
+      slides.forEach((key, value) {
+        if (value is Map<String, dynamic>) {
+          value.forEach((innerKey, innerValue) {
+            switch (key) {
+              case 'addDiscount':
+                cartWidget =
+                    cartWidget.copyWith(isAddDiscountEnabled: innerValue);
+                break;
+              case 'saveOrder':
+                cartWidget =
+                    cartWidget.copyWith(isSavedOrderEnabled: innerValue);
+                break;
+            }
+          });
+        }
+      });
+    }
+
+    return cartWidget;
   }
 }

@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_type_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,9 +20,9 @@ class BaseActionItemWidget extends StatelessWidget {
   String getActionIconPath(ActionLinkEntity actionLink) {
     switch (actionLink.type) {
       case ActionType.categories:
-        return "assets/images/icon_shop_categories.svg";
+        return "assets/images/icon_categories.svg";
       case ActionType.brands:
-        return "assets/images/icon_shop_brands.svg";
+        return "assets/images/icon_brands.svg";
       case ActionType.quickOrder:
         return "assets/images/icon_quick_orders.svg";
       case ActionType.orderHistory:
@@ -29,11 +30,11 @@ class BaseActionItemWidget extends StatelessWidget {
       case ActionType.lists:
         return "assets/images/icon_lists.svg";
       case ActionType.locationFinder:
-        return "assets/images/icon_location_finder.svg";
+        return "assets/images/icon_store_finder.svg";
       case ActionType.settings:
         return "assets/images/icon_setting.svg";
       case ActionType.changeCustomer:
-        return "assets/images/icon_change_customer.svg";
+        return "assets/images/icon_delivery_method.svg";
       case ActionType.signOut:
         return "assets/images/icon_sign_out.svg";
       case ActionType.viewAccountOnWebsite:
@@ -111,10 +112,16 @@ class BaseActionItemWidget extends StatelessWidget {
         };
       case ActionType.settings:
         return () {
-          navigateToSettings(context);
+          AppRoute.settings.navigateBackStack(context);
+        };
+      case ActionType.orderHistory:
+        return () {
+          AppRoute.orderHistory.navigateBackStack(context);
         };
       default:
-        return () {};
+        return () {
+          CustomSnackBar.showComingSoonSnackBar(context);
+        };
     }
   }
 
@@ -137,9 +144,5 @@ class BaseActionItemWidget extends StatelessWidget {
             child: const Text(LocalizationConstants.oK),
           ),
         ]);
-  }
-
-  void navigateToSettings(BuildContext context) {
-    AppRoute.settings.navigate(context);
   }
 }

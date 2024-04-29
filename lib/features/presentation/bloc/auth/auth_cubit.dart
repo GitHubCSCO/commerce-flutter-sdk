@@ -10,9 +10,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit({required AuthUsecase authUsecase})
       : _authUsecase = authUsecase,
-        super(const AuthState(status: AuthStatus.unknown)) {
-    loadAuthenticationState();
-  }
+        super(const AuthState(status: AuthStatus.unknown));
 
   Future<void> loadAuthenticationState() async {
     final isAuthenticated = await _authUsecase.isAuthenticated();
@@ -27,9 +25,16 @@ class AuthCubit extends Cubit<AuthState> {
 
   void unauthenticated() => emit(const AuthState.unauthenticated());
 
+  void reset() => emit(const AuthState(status: AuthStatus.unknown));
+
   @override
   void onChange(Change<AuthState> change) {
-    print(change);
     super.onChange(change);
   }
+}
+
+bool authCubitChangeTrigger(AuthState previous, AuthState current) {
+  return previous.status != current.status &&
+      current.status != AuthStatus.unknown &&
+      previous.status != AuthStatus.unknown;
 }

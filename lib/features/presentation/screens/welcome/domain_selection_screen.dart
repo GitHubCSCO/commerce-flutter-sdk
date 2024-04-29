@@ -1,5 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/context.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
@@ -76,16 +78,18 @@ class _DomainPageState extends State<DomainPage> {
             Input(
               controller: _textEditingController,
               hintText: LocalizationConstants.enterDomainHint,
+              onTapOutside: (p0) => context.closeKeyboard(),
               label: 'Enter Storefront URL',
             ),
             const Expanded(child: SizedBox()),
             BlocConsumer<DomainCubit, DomainState>(
               listener: (context, state) {
                 if (state is DomainLoaded) {
-                  AppRoute.account.navigate(context);
-                  context.pop();
-
-                  AppRoute.shop.navigate(context);
+                  context.read<AuthCubit>().reset();
+                  while (context.canPop()) {
+                    context.pop();
+                  }
+                  AppRoute.root.navigateBackStack(context);
                 }
 
                 if (state is DomainOperationFailed) {
@@ -111,6 +115,7 @@ class _DomainPageState extends State<DomainPage> {
                     ? const Center(child: CircularProgressIndicator())
                     : PrimaryButton(
                         onPressed: () {
+                          context.closeKeyboard();
                           context
                               .read<DomainCubit>()
                               .selectDomain(_textEditingController.text);

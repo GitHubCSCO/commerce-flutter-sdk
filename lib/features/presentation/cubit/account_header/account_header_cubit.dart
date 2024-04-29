@@ -12,12 +12,14 @@ class AccountHeaderCubit extends Cubit<AccountHeaderState> {
   void loadAccountHeader() {
     final firstName = accountUseCase.firstName;
     final lastName = accountUseCase.lastName;
+    final userName = accountUseCase.userName;
     final email = accountUseCase.email;
 
     emit(
       AccountHeaderLoaded(
         firstName: firstName ?? '',
         lastName: lastName ?? '',
+        userName: userName ?? '',
         email: email ?? '',
       ),
     );
