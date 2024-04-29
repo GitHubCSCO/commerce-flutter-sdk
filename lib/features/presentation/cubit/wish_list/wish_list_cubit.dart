@@ -18,6 +18,19 @@ class WishListCubit extends Cubit<WishListState> {
           ),
         );
 
+  List<WishListSortOrder> get availableSortOrders =>
+      _wishListUsecase.availableSortOrders;
+
+  Future<void> changeSortOrder(WishListSortOrder sortOrder) async {
+    emit(
+      state.copyWith(
+        sortOrder: sortOrder,
+      ),
+    );
+
+    await loadWishLists();
+  }
+
   Future<void> loadWishLists() async {
     emit(state.copyWith(status: WishListStatus.loading));
 

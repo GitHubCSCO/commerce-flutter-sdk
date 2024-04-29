@@ -12,10 +12,12 @@ import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ListsScreen extends StatelessWidget {
   const ListsScreen({super.key});
@@ -99,18 +101,19 @@ class ListsPage extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               const SizedBox(width: 10),
-                              IconButton(
-                                padding: const EdgeInsets.all(10),
-                                onPressed: () =>
-                                    CustomSnackBar.showComingSoonSnackBar(
-                                        context),
-                                icon: SvgPicture.asset(
-                                  height: 20,
-                                  width: 20,
-                                  AssetConstants.sortIcon,
-                                  semanticsLabel: 'sort icon',
-                                  fit: BoxFit.fitWidth,
-                                ),
+                              SortToolMenu(
+                                availableSortOrders: context
+                                    .read<WishListCubit>()
+                                    .availableSortOrders,
+                                onSortOrderChanged:
+                                    (SortOrderAttribute sortOrder) async {
+                                  await context
+                                      .read<WishListCubit>()
+                                      .changeSortOrder(
+                                        sortOrder as WishListSortOrder,
+                                      );
+                                },
+                                selectedSortOrder: state.sortOrder,
                               ),
                             ],
                           )
