@@ -1,10 +1,12 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_detail_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_base_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_description_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_standard_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_image_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
@@ -23,6 +25,7 @@ enum ProdcutDeatilsPageWidgets {
   productDetailsGeneralInfo,
   productDetailsAddtoCart,
   productDetailsPrice,
+  productDeatilsStanddardConfigurationSection
 }
 
 class ProductDetailsUseCase extends BaseUseCase {
@@ -220,6 +223,27 @@ class ProductDetailsUseCase extends BaseUseCase {
     items.add(makeGeneralInfoEntity(product, styledProduct));
     items.add(ProductDetailsPriceEntity(
         detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsPrice));
+
+    if (!(product.styleTraits != null && product.styleTraits!.isNotEmpty) &&
+        product.configurationDto != null &&
+        product.configurationDto!.sections != null &&
+        product.configurationDto!.sections!.isNotEmpty &&
+        !product.isFixedConfiguration!) {
+      for (var index = 0;
+          index < product.configurationDto!.sections!.length;
+          index++) {
+        var configSection = product.configurationDto!.sections![index];
+        var option = ConfigSectionOptionEntity(
+            sectionName: configSection.sectionName,
+            description: "${LocalizationConstants.selectSomething} ${configSection.sectionName!}");
+        product.configurationDto!.sections![index].options!.insert(0, option);
+      }
+      items.add(ProductDetailsStandardConfigurationEntity(
+          detailsSectionType: ProdcutDeatilsPageWidgets
+              .productDeatilsStanddardConfigurationSection,
+          configSectionOptions: product.configurationDto!.sections));
+      //  implemtentation in complete
+    }
 
     items.add(ProductDetailsAddtoCartEntity(
         detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart,

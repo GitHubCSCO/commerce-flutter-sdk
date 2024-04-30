@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
@@ -24,6 +25,8 @@ class ProductDetailsBloc
   late ProductEntity product;
   StyledProductEntity? styledProduct;
   ProductUnitOfMeasureEntity? chosenUnitOfMeasure;
+  Map<String, ConfigSectionOptionEntity?> selectedConfigurations = {};
+  late int quantity;
 
   ProductDetailsBloc({required ProductDetailsUseCase productDetailsUseCase})
       : _productDetailsUseCase = productDetailsUseCase,
@@ -92,14 +95,14 @@ class ProductDetailsBloc
 
     switch (result) {
       case Success(value: final data):
-        _extradeValuesFromData(data!);
+        _extractValuesFromData(data!);
         _makeAllDetailsItems(product, emit);
       case Failure(errorResponse: final errorResponse):
         emit(ProductDetailsErrorState(errorResponse.errorDescription ?? ''));
     }
   }
 
-  void _extradeValuesFromData(ProductEntity productEntity) {
+  void _extractValuesFromData(ProductEntity productEntity) {
     product = productEntity;
     if (product.styledProducts != null) {
       if (product.styleParentId != null) {
@@ -107,17 +110,32 @@ class ProductDetailsBloc
             ?.firstWhere((o) => o.productId == product.id);
       }
     }
+    chosenUnitOfMeasure = styledProduct != null &&
+            styledProduct?.productUnitOfMeasures != null &&
+            styledProduct!.productUnitOfMeasures!.isNotEmpty
+        ? styledProduct?.productUnitOfMeasures?.first
+        : product.productUnitOfMeasures != null &&
+                product.productUnitOfMeasures!.isNotEmpty &&
+                product.productUnitOfMeasures!.firstWhere(
+                        (p) => p.unitOfMeasure == product.unitOfMeasure) !=
+                    null
+            ? product.productUnitOfMeasures
+                ?.firstWhere((p) => p.unitOfMeasure == product.unitOfMeasure)
+            : null;
 
-    // chosenUnitOfMeasure = styledProduct != null
-    //     ? styledProduct?.productUnitOfMeasures?.first
-    //     : product.productUnitOfMeasures
-    //         ?.firstWhere((p) => p.unitOfMeasure == product.unitOfMeasure);
-
-    chosenUnitOfMeasure = styledProduct != null && styledProduct?.productUnitOfMeasures != null && styledProduct!.productUnitOfMeasures!.isNotEmpty
-    ? styledProduct?.productUnitOfMeasures?.first
-    : product.productUnitOfMeasures != null && product.productUnitOfMeasures!.isNotEmpty && product.productUnitOfMeasures!.firstWhere((p) => p.unitOfMeasure == product.unitOfMeasure) != null
-        ? product.productUnitOfMeasures?.firstWhere((p) => p.unitOfMeasure == product.unitOfMeasure)
-        : null;
+    if (!(product.styleTraits != null && product.styleTraits!.isNotEmpty) &&
+        product.configurationDto != null &&
+        product.configurationDto!.sections != null &&
+        product.configurationDto!.sections!.isNotEmpty &&
+        !product.isFixedConfiguration!) {
+      for (var s in product.configurationDto!.sections!) {
+        if (selectedConfigurations.containsKey(s.sectionName)) {
+          selectedConfigurations[s.sectionName!] = null;
+        } else {
+          selectedConfigurations[s.sectionName!] = null;
+        }
+      }
+    }
   }
 
   Future<void> _makeAllDetailsItems(
@@ -126,5 +144,18 @@ class ProductDetailsBloc
         _productDetailsUseCase.makeAllDetailsItems(productData, styledProduct);
     emit(
         ProductDetailsLoaded(productDetailsEntities: productDetailsEntotities));
+  }
+
+  void onSelectedConfiguration(ConfigSectionOptionEntity option) {
+    if (option.sectionOptionId!.isEmpty) {
+      selectedConfigurations[option.sectionName!] = null;
+    } else {
+      selectedConfigurations[option.sectionName!] = option;
+    }
+  }
+
+
+  void updateQuantity(int quantity){
+    this.quantity = quantity;
   }
 }

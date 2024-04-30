@@ -1,6 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
-import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
@@ -16,6 +16,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class ProductDetailsPricingBloc
     extends Bloc<ProductDetailsPricingEvent, ProductDetailsPricingState> {
   final ProductDetailsPricingUseCase _productDetailsPricingUseCase;
+  late ProductDetailsPriceEntity productDetailsPricingEntity;
   ProductDetailsPricingBloc(
       {required ProductDetailsPricingUseCase productDetailsPricingUseCase})
       : _productDetailsPricingUseCase = productDetailsPricingUseCase,
@@ -37,13 +38,16 @@ class ProductDetailsPricingBloc
         event.realtimeProductAvailabilityEnabled;
     final realtimeProductPricingEnabled = event.realtimeProductPricingEnabled;
     final productSettings = event.productSettings;
+    final selectedConfigurations = event.selectedConfigurations;
 
     final result = await _productDetailsPricingUseCase.loadProductPricing(
         product,
         styledProduct,
         chosenUnitOfMeasure,
         realtimeProductPricingEnabled,
-        quantity!);
+        productPricingEnabled!,
+        quantity!,
+        selectedConfigurations);
 
     ProductPriceEntity? data =
         (result is Success) ? (result as Success).value : null;
@@ -79,19 +83,15 @@ class ProductDetailsPricingBloc
           productDetailsPricingEntity, chosenUnitOfMeasure, product);
     }
 
-    var availability = productDetailsPricingEntity.styledProduct == null
-        ? productDetailsPricingEntity.product?.availability
-        : productDetailsPricingEntity.styledProduct?.availability;
-
     productDetailsPricingEntity =
         await _loadQuantityPricingAndShowInventoryData(
             productDetailsPricingEntity,
             productSettings,
             styledProduct,
             product,
-            availability,
-            data);
-
+            data,
+            selectedConfigurations);
+    this.productDetailsPricingEntity = productDetailsPricingEntity;
     emit(ProductDetailsPricingLoaded(
         productDetailsPriceEntity: productDetailsPricingEntity));
   }
@@ -117,22 +117,24 @@ class ProductDetailsPricingBloc
 
     // need to implement hide/show inventory and quanty button logix
 
-    var availability = productDetailsPricingEntity.styledProduct == null
-        ? productDetailsPricingEntity.product?.availability
-        : productDetailsPricingEntity.styledProduct?.availability;
-
-    productDetailsPricingEntity =
-        productDetailsPricingEntity.copyWith(availability: availability);
     return productDetailsPricingEntity;
   }
 
   Future<ProductDetailsPriceEntity> _loadQuantityPricingAndShowInventoryData(
-      ProductDetailsPriceEntity productDetailsPricingEntity,
-      ProductSettings productSettings,
-      StyledProductEntity? styledProduct,
-      ProductEntity product,
-      AvailabilityEntity? availability,
-      ProductPriceEntity? productPricing) async {
+    ProductDetailsPriceEntity productDetailsPricingEntity,
+    ProductSettings productSettings,
+    StyledProductEntity? styledProduct,
+    ProductEntity product,
+    ProductPriceEntity? productPricing,
+    Map<String, ConfigSectionOptionEntity?> selectedConfigurations,
+  ) async {
+    var availability = styledProduct == null
+        ? product.availability
+        : styledProduct.availability;
+
+    productDetailsPricingEntity =
+        productDetailsPricingEntity.copyWith(availability: availability);
+
     if (productSettings.showInventoryAvailability!) {
       var showAvailabilityMessage = true;
       var showAvailabilityPerWarehouseLink = true;
@@ -141,8 +143,9 @@ class ProductDetailsPricingBloc
         var isStyleSelectionComplete = _isProductStyleSelectionCompleted();
         showAvailabilityMessage = isStyleSelectionComplete;
         showAvailabilityPerWarehouseLink = isStyleSelectionComplete;
-      } else if (_isProductConfigurable()) {
-        var configurationCompleted = _isProductConfigurationCompleted();
+      } else if (_isProductConfigurable(selectedConfigurations)) {
+        var configurationCompleted =
+            _isProductConfigurationCompleted(selectedConfigurations);
 
         showAvailabilityMessage = configurationCompleted;
         showAvailabilityPerWarehouseLink = configurationCompleted;
@@ -179,15 +182,12 @@ class ProductDetailsPricingBloc
   }
 
   bool _isProductStyleable() {
-    // need to implement
-
     return true;
   }
 
-  bool _isProductConfigurable() {
-    // need to implement
-
-    return true;
+  bool _isProductConfigurable(
+      Map<String, ConfigSectionOptionEntity?> selectedConfigurations) {
+    return selectedConfigurations.keys.isNotEmpty;
   }
 
   bool _isProductStyleSelectionCompleted() {
@@ -196,9 +196,15 @@ class ProductDetailsPricingBloc
     return true;
   }
 
-  bool _isProductConfigurationCompleted() {
-    // need to implement
+  bool _isProductConfigurationCompleted(
+      Map<String, ConfigSectionOptionEntity?> selectedConfigurations) {
+    if (selectedConfigurations.isEmpty) {
+      return false;
+    }
 
-    return true;
+    return selectedConfigurations.keys
+        .every((k) => selectedConfigurations[k] != null);
   }
+
+  
 }

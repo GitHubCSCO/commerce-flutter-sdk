@@ -148,6 +148,7 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                     var productDetailsPricingEntity =
                         pricingState.productDetailsPriceEntity;
                     var productDetailsBloc = context.read<ProductDetailsBloc>();
+                    productDetailsBloc.updateQuantity(quantity!);
 
                     context.read<ProductDetailsPricingBloc>().add(
                         LoadProductDetailsPricing(
@@ -165,7 +166,8 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                                     .realtimeProductAvailabilityEnabled,
                             realtimeProductPricingEnabled: productDetailsBloc
                                 .realtimeProductPricingEnabled,
-                                productSettings:  productDetailsBloc.productSettings));
+                                productSettings:  productDetailsBloc.productSettings,
+                            selectedConfigurations: productDetailsBloc.selectedConfigurations));
                   }
                 }),
           ),
