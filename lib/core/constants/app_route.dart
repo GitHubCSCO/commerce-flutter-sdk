@@ -59,14 +59,13 @@ enum AppRoute {
   productDetails(
       name: RouteNames.productDetails, fullPath: RoutePaths.productDetails),
   checkout(name: RouteNames.checkout, fullPath: RoutePaths.checkout),
-  checkoutSuccess(
-      name: RouteNames.checkoutSuccess, fullPath: RoutePaths.checkoutSuccess),
+  checkoutSuccess(name: RouteNames.checkoutSuccess, fullPath: RoutePaths.checkoutSuccess),
   settings(name: RouteNames.settings, fullPath: RoutePaths.settings),
   biometricLogin(
       name: RouteNames.biometricLogin, fullPath: RoutePaths.biometricLogin),
   orderHistory(
       name: RouteNames.orderHistory, fullPath: RoutePaths.orderHistory),
-  lists(name: RouteNames.lists, fullPath: RoutePaths.lists);
+  wishlist(name: RouteNames.lists, fullPath: RoutePaths.lists);
 
   const AppRoute({
     required this.name,

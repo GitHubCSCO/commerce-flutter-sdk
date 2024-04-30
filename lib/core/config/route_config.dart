@@ -8,8 +8,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/biometric/bio
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/lists/lists_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/nav_bar/nav_bar_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_history/order_history_screen.dart';
@@ -169,8 +168,8 @@ List<NavigationNode> _getNavigationRoot() {
 
   // path: /account/list
   final lists = createNode(
-    name: AppRoute.lists.name,
-    path: AppRoute.lists.suffix,
+    name: AppRoute.wishlist.name,
+    path: AppRoute.wishlist.suffix,
     builder: (context, state) => const ListsScreen(),
     parent: account,
   );

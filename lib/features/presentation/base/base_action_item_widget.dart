@@ -120,7 +120,7 @@ class BaseActionItemWidget extends StatelessWidget {
         };
       case ActionType.lists:
         return () {
-          AppRoute.lists.navigateBackStack(context);
+          AppRoute.wishlist.navigateBackStack(context);
         };
       default:
         return () {
