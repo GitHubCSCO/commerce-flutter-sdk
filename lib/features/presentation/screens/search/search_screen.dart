@@ -9,10 +9,10 @@ import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_state.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/search_products/seardh_products_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +34,8 @@ class SearchScreen extends StatelessWidget {
       BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
       BlocProvider<SearchPageCmsBloc>(
         create: (context) =>
-            sl<SearchPageCmsBloc>()..add(SearchPageCmsLoadEvent()),
+        sl<SearchPageCmsBloc>()
+          ..add(SearchPageCmsLoadEvent()),
       ),
       BlocProvider<SearchBloc>(
         create: (context) => sl<SearchBloc>(),
@@ -128,7 +129,7 @@ class SearchPage extends BaseDynamicContentScreen {
               ),
             ],
             child:
-                BlocBuilder<SearchBloc, SearchState>(builder: (context, state) {
+            BlocBuilder<SearchBloc, SearchState>(builder: (context, state) {
               switch (state.runtimeType) {
                 case SearchCmsInitialState:
                   return RefreshIndicator(
@@ -162,7 +163,7 @@ class SearchPage extends BaseDynamicContentScreen {
                               child: ListView(
                                 padding: EdgeInsets.zero,
                                 children:
-                                    buildContentWidgets(state.widgetEntities),
+                                buildContentWidgets(state.widgetEntities),
                               ),
                             );
                           default:
@@ -191,20 +192,31 @@ class SearchPage extends BaseDynamicContentScreen {
                   );
                 case SearchAutoCompleteLoadedState:
                   final autoCompleteResult =
-                      (state as SearchAutoCompleteLoadedState).result!;
+                  (state as SearchAutoCompleteLoadedState).result!;
                   return AutoCompleteWidget(
                       autocompleteResult: autoCompleteResult);
                 case SearchAutoCompleteFailureState:
                   return Center(
                       child: Text(
-                    LocalizationConstants.searchNoResults,
-                    style: OptiTextStyles.body,
-                  ));
+                        LocalizationConstants.searchNoResults,
+                        style: OptiTextStyles.body,
+                      ));
                 case SearchProductsLoadedState:
                   final productCollectionResult =
-                      (state as SearchProductsLoadedState).result!;
-                  return SearchProductsWidget(
-                      productCollectionResult: productCollectionResult);
+                  (state as SearchProductsLoadedState).result!;
+                  return MultiBlocProvider(
+                    providers: [
+                      BlocProvider<AddToCartCubit>(
+                        create: (context) => sl<AddToCartCubit>(),
+                      ),
+                      BlocProvider(
+                        create: (context) => sl<SearchProductsCubit>()..loadInitialSearchProducts(productCollectionResult),
+                      ),
+                    ],
+                    child: SearchProductsWidget(
+                      // productCollectionResult: productCollectionResult,
+                      onPageChanged: (int) {},),
+                  );
                 case SearchProductsFailureState:
                   return Center(
                       child: Text(LocalizationConstants.searchNoResults,

@@ -5,61 +5,134 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/search_product_status.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_state.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/search_products/seardh_products_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class SearchProductsWidget extends StatelessWidget {
-  final GetProductCollectionResult productCollectionResult;
+class SearchProductsWidget extends StatefulWidget {
+  // final GetProductCollectionResult productCollectionResult;
+  final Function(int) onPageChanged; // Callback to handle page changes
 
-  const SearchProductsWidget(
-      {super.key, required this.productCollectionResult});
+  const SearchProductsWidget({
+    Key? key,
+    // required this.productCollectionResult,
+    required this.onPageChanged,
+  }) : super(key: key);
+
+  @override
+  _SearchProductsWidgetState createState() => _SearchProductsWidgetState();
+}
+
+class _SearchProductsWidgetState extends State<SearchProductsWidget> {
+  final _scrollController = ScrollController();
+
+  void _onScroll() {
+    if (_isBottom) {
+      context.read<SearchProductsCubit>().loadMoreSearchProducts();
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) {
+      return false;
+    }
+
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= (maxScroll * 0.9);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(16),
-          child: Text(
-            LocalizationConstants.resultsFor.format([
-              productCollectionResult.products?.isEmpty ?? true
-                  ? LocalizationConstants.no
-                  : productCollectionResult.products!.length,
-              productCollectionResult.originalQuery
-            ]),
-            style: OptiTextStyles.header3,
+    return BlocBuilder<SearchProductsCubit, SearchProductsState>(
+      builder: (context, state) {
+        return BlocListener<AddToCartCubit, AddToCartState>(
+          listener: (context, state) {
+            switch (state) {
+              case AddToCartSuccess():
+                context.read<CartCountCubit>().onCartItemChange();
+                CustomSnackBar.showProductAddedToCart(context);
+                break;
+              case AddToCartFailure(errorResponse: final errorResponse):
+                break;
+            }
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  LocalizationConstants.resultsFor.format([
+                    (state.productEntities?.pagination?.totalItemCount == 0)
+                        ? LocalizationConstants.no
+                        : state.productEntities?.pagination?.totalItemCount,
+                    state.productEntities?.originalQuery
+                  ]),
+                  style: OptiTextStyles.header3,
+                ),
+              ),
+              Expanded(
+                child: ListView.separated(
+                  controller: _scrollController,
+                  padding: EdgeInsets.zero,
+                  separatorBuilder: (context, index) => const Divider(
+                    height: 1,
+                    indent: 16,
+                    endIndent: 16,
+                    color: Color(0xFFF5F5F5),
+                  ),
+                  itemCount: state.searchProductStatus ==
+                          SearchProductStatus.moreLoading
+                      ? (state.productEntities?.products?.length ?? 0) + 1
+                      : state.productEntities?.products?.length ?? 0,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    if (index >=
+                            (state.productEntities?.products?.length ?? 0) &&
+                        state.searchProductStatus ==
+                            SearchProductStatus.moreLoading) {
+                      return const Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }
+
+                    final product = state.productEntities?.products![index];
+                    return SearchProductWidget(
+                        product: ProductEntityMapper().toEntity(product!));
+                  },
+                ),
+              ),
+            ],
           ),
-        ),
-        Expanded(
-          child: ListView.separated(
-            padding: EdgeInsets.zero,
-            separatorBuilder: (context, index) => const Divider(
-              height: 1,
-              indent: 16,
-              endIndent: 16,
-              color: Color(0xFFF5F5F5),
-            ),
-            itemCount: productCollectionResult.products?.length ?? 0,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              final product = productCollectionResult.products![index];
-              var productEntity = ProductEntityMapper().toEntity(product);
-              return SearchProductWidget(product: productEntity);
-            },
-          ),
-        ),
-      ],
+        );
+      },
     );
   }
 }
@@ -148,13 +221,13 @@ class SearchProductWidget extends StatelessWidget {
             ),
             BlocProvider(
               create: (context) =>
-                  sl<SearchProductsCubit>()..updateAddToCartButton(product),
-              child: BlocConsumer<SearchProductsCubit, SearchProductsState>(
+                  sl<AddToCartCubit>()..updateAddToCartButton(product),
+              child: BlocConsumer<AddToCartCubit, AddToCartState>(
                   builder: (context, state) {
                 switch (state) {
-                  case SearchProductsInitial():
+                  case AddToCartInitial():
                     return Container();
-                  case SearchProductsAddToCartButtonLoading():
+                  case AddToCartButtonLoading():
                     return Container(
                       alignment: Alignment.bottomLeft,
                       child: LoadingAnimationWidget.prograssiveDots(
@@ -162,13 +235,13 @@ class SearchProductWidget extends StatelessWidget {
                         size: 30,
                       ),
                     );
-                  case SearchProductsAddToCartEnable():
+                  case AddToCartEnable():
                     if (state.canAddToCart) {
                       return InkWell(
                         onTap: () {
                           var productId = product.styleParentId ?? product.id;
                           context
-                              .read<SearchProductsCubit>()
+                              .read<AddToCartCubit>()
                               .searchPorductAddToCard(productId!);
                         },
                         child: Container(
@@ -192,13 +265,11 @@ class SearchProductWidget extends StatelessWidget {
                 }
               }, listener: (context, state) {
                 switch (state) {
-                  case SearchProductsAddToCartSuccess():
+                  case AddToCartSuccess():
                     context.read<CartCountCubit>().onCartItemChange();
                     CustomSnackBar.showProductAddedToCart(context);
                     break;
-                  case SearchProductsAddToCartFailure(
-                      errorResponse: final errorResponse
-                    ):
+                  case AddToCartFailure(errorResponse: final errorResponse):
                     break;
                 }
               }),

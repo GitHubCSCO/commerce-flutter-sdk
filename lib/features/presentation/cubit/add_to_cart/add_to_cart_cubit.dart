@@ -1,39 +1,39 @@
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_products_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_state.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/add_to_cart_usecase.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class SearchProductsCubit extends Cubit<SearchProductsState> {
-  final SearchProductsusecase _searchProductsusecase;
+class AddToCartCubit extends Cubit<AddToCartState> {
+  final AddToCartUsecase _addToCartUsecase;
 
-  SearchProductsCubit({required SearchProductsusecase searchProductsusecase})
-      : _searchProductsusecase = searchProductsusecase,
-        super(SearchProductsInitial());
+  AddToCartCubit({required AddToCartUsecase addToCartUsecase})
+      : _addToCartUsecase = addToCartUsecase,
+        super(AddToCartInitial());
 
   Future<void> searchPorductAddToCard(String productId) async {
     var addCartLine = AddCartLine(
       productId: productId,
     );
 
-    final response = await _searchProductsusecase.addToCart(addCartLine);
+    final response = await _addToCartUsecase.addToCart(addCartLine);
 
     switch (response) {
       case Success(value: final data):
-        emit(SearchProductsAddToCartSuccess());
+        emit(AddToCartSuccess());
         break;
       case Failure(errorResponse: final errorResponse):
-        emit(SearchProductsAddToCartFailure(
+        emit(AddToCartFailure(
             errorResponse: errorResponse.errorDescription ?? ''));
         break;
     }
   }
 
   Future<void> updateAddToCartButton(ProductEntity product) async {
-    
-    emit(SearchProductsAddToCartButtonLoading());
-    var realTimeInventory = await _searchProductsusecase
+
+    emit(AddToCartButtonLoading());
+    var realTimeInventory = await _addToCartUsecase
         .loadRealTimeInventory(ProductEntityMapper().toModel(product));
 
     num qtyOnHand;
@@ -52,6 +52,6 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
       product = product.copyWith(canAddToCart: false);
     }
 
-    emit(SearchProductsAddToCartEnable(canAddToCart: product.canAddToCart!));
+    emit(AddToCartEnable(canAddToCart: product.canAddToCart!));
   }
 }
