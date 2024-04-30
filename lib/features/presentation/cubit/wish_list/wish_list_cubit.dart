@@ -15,8 +15,13 @@ class WishListCubit extends Cubit<WishListState> {
             sortOrder: WishListSortOrder.modifiedOnDescending,
             status: WishListStatus.initial,
             wishLists: WishListCollectionEntity(),
+            searchQuery: '',
           ),
         );
+
+  bool get noWishListFound =>
+      state.status == WishListStatus.success &&
+      state.wishLists.wishListCollection?.isEmpty == true;
 
   List<WishListSortOrder> get availableSortOrders =>
       _wishListUsecase.availableSortOrders;
@@ -37,6 +42,7 @@ class WishListCubit extends Cubit<WishListState> {
     final result = await _wishListUsecase.getWishLists(
       sortOrder: state.sortOrder,
       page: 1,
+      searchText: state.searchQuery,
     );
 
     result != null
@@ -45,9 +51,15 @@ class WishListCubit extends Cubit<WishListState> {
               wishLists: result,
               status: WishListStatus.success,
               sortOrder: state.sortOrder,
+              searchQuery: state.searchQuery,
             ),
           )
         : emit(state.copyWith(status: WishListStatus.failure));
+  }
+
+  Future<void> searchQueryChanged(String query) async {
+    emit(state.copyWith(searchQuery: query));
+    await loadWishLists();
   }
 
   Future<void> loadMoreWishlists() async {
@@ -62,6 +74,7 @@ class WishListCubit extends Cubit<WishListState> {
     final result = await _wishListUsecase.getWishLists(
       page: state.wishLists.pagination!.page! + 1,
       sortOrder: state.sortOrder,
+      searchText: state.searchQuery,
     );
 
     if (result == null) {
