@@ -8,6 +8,7 @@ class WishListUsecase extends BaseUseCase {
   Future<WishListCollectionEntity?> getWishLists({
     int? page,
     WishListSortOrder sortOrder = WishListSortOrder.modifiedOnDescending,
+    required String searchText,
   }) async {
     final result =
         await commerceAPIServiceProvider.getWishListService().getWishLists(
@@ -15,6 +16,7 @@ class WishListUsecase extends BaseUseCase {
                 sort: sortOrder.value,
                 pageSize: CoreConstants.defaultPageSize,
                 page: page,
+                query: searchText != '' ? searchText : null,
               ),
             );
 

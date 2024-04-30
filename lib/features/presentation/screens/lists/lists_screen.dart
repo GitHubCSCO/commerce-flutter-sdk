@@ -67,14 +67,21 @@ class ListsPage extends StatelessWidget {
                 ),
                 onPressed: () {
                   _textEditingController.clear();
+
+                  context
+                      .read<WishListCubit>()
+                      .searchQueryChanged(_textEditingController.text);
                   context.closeKeyboard();
                 },
               ),
               onTapOutside: (p0) => context.closeKeyboard(),
               textInputAction: TextInputAction.search,
               controller: _textEditingController,
+              onChanged: (value) {
+                context.read<WishListCubit>().searchQueryChanged(value);
+              },
               onSubmitted: (value) {
-                CustomSnackBar.showComingSoonSnackBar(context);
+                context.read<WishListCubit>().searchQueryChanged(value);
               },
             ),
           ),
@@ -86,40 +93,47 @@ class ListsPage extends StatelessWidget {
               } else if (state.status == WishListStatus.failure) {
                 return const Expanded(
                     child: Center(child: Text(LocalizationConstants.error)));
+              } else if (context.read<WishListCubit>().noWishListFound) {
+                return const Expanded(
+                  child: Center(
+                    child: Text(LocalizationConstants.noListsAvailable),
+                  ),
+                );
               }
               return Expanded(
                 child: Column(
                   children: [
-                    Container(
-                      height: 50,
-                      padding:
-                          const EdgeInsetsDirectional.symmetric(horizontal: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const SizedBox(width: 10),
-                              SortToolMenu(
-                                availableSortOrders: context
-                                    .read<WishListCubit>()
-                                    .availableSortOrders,
-                                onSortOrderChanged:
-                                    (SortOrderAttribute sortOrder) async {
-                                  await context
+                    if (!context.read<WishListCubit>().noWishListFound)
+                      Container(
+                        height: 50,
+                        padding: const EdgeInsetsDirectional.symmetric(
+                            horizontal: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const SizedBox(width: 10),
+                                SortToolMenu(
+                                  availableSortOrders: context
                                       .read<WishListCubit>()
-                                      .changeSortOrder(
-                                        sortOrder as WishListSortOrder,
-                                      );
-                                },
-                                selectedSortOrder: state.sortOrder,
-                              ),
-                            ],
-                          )
-                        ],
+                                      .availableSortOrders,
+                                  onSortOrderChanged:
+                                      (SortOrderAttribute sortOrder) async {
+                                    await context
+                                        .read<WishListCubit>()
+                                        .changeSortOrder(
+                                          sortOrder as WishListSortOrder,
+                                        );
+                                  },
+                                  selectedSortOrder: state.sortOrder,
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
-                    ),
                     _WishListsSection(
                       wishListEntities:
                           state.wishLists.wishListCollection ?? [],
