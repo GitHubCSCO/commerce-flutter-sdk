@@ -11,9 +11,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart'
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductDetailsPricingUseCase extends BaseUseCase {
-
-  ProductDetailsPricingUseCase() : super() {
-  }
+  ProductDetailsPricingUseCase() : super();
 
   Future<Result<ProductPriceEntity, ErrorResponse>> loadProductPricing(
       ProductEntity productEntity,
@@ -27,15 +25,6 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
       return Failure(ErrorResponse(
           errorDescription: 'Product requires a quote to be purchased'));
     }
-
-    // for (var s in productEntity.configurationDto?.sections ?? []) {
-    //   if (selectedConfigurations.containsKey(s.sectionName)) {
-    //     selectedConfigurations[s.sectionName] = ConfigSectionOptionEntity();
-    //   } else {
-    //     selectedConfigurations[s.sectionName] = ConfigSectionOptionEntity();
-    //   }
-    // }
-
     ProductPriceEntity productPricing;
 
     if (quantity < 1) {
@@ -47,11 +36,17 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
 
     if (productPricingEnabled) {
       if (realtimeProductPricingEnabled) {
+        List<String>? configurations = selectedConfigurations.values
+            .map((config) => config?.sectionOptionId ?? "")
+            .where((id) => id.isNotEmpty)
+            .toList();
+
         var priceProducts = <ProductPriceQueryParameter>[
           ProductPriceQueryParameter(
             productId: productId,
             unitOfMeasure: chosenUnitOfMeasure?.unitOfMeasure,
             qtyOrdered: quantity,
+            configuration: configurations,
           ),
         ];
 
@@ -74,19 +69,14 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
                 errorDescription: errorResponse.errorDescription));
         }
       } else {
-        var configurations = selectedConfigurations.values
-            .where((v) => v != null)
-            .map((s) => s?.sectionOptionId)
+        List<String>? configurations = selectedConfigurations.values
+            .map((config) => config?.sectionOptionId ?? "")
             .toList();
 
         var parameters = ProductPriceQueryParameter(
-          qtyOrdered: quantity,
-          unitOfMeasure: chosenUnitOfMeasure?.unitOfMeasure ?? '',
-          configuration: configurations
-              .where((element) => element != null)
-              .toList()
-              .cast<String>(),
-        );
+            qtyOrdered: quantity,
+            unitOfMeasure: chosenUnitOfMeasure?.unitOfMeasure ?? '',
+            configuration: configurations);
 
         var productPricingResponse = await commerceAPIServiceProvider
             .getProductService()
@@ -131,12 +121,6 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
         return Failure(
             ErrorResponse(errorDescription: errorResponse.errorDescription));
     }
-
-    // this.updateProductOrStyleProductRealTimeInventory(
-    //     realTimeInventoryResult);
-
-    // this.updateAllNeededDetailItems();
-    // this.isLoadingInventory = false;
   }
 
   ProductDetailsPriceEntity updateProductOrStyleProductRealTimeInventory(

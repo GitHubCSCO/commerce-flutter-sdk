@@ -26,6 +26,7 @@ class ProductDetailsBloc
   StyledProductEntity? styledProduct;
   ProductUnitOfMeasureEntity? chosenUnitOfMeasure;
   Map<String, ConfigSectionOptionEntity?> selectedConfigurations = {};
+  late int quantity;
 
   ProductDetailsBloc({required ProductDetailsUseCase productDetailsUseCase})
       : _productDetailsUseCase = productDetailsUseCase,
@@ -109,12 +110,6 @@ class ProductDetailsBloc
             ?.firstWhere((o) => o.productId == product.id);
       }
     }
-
-    // chosenUnitOfMeasure = styledProduct != null
-    //     ? styledProduct?.productUnitOfMeasures?.first
-    //     : product.productUnitOfMeasures
-    //         ?.firstWhere((p) => p.unitOfMeasure == product.unitOfMeasure);
-
     chosenUnitOfMeasure = styledProduct != null &&
             styledProduct?.productUnitOfMeasures != null &&
             styledProduct!.productUnitOfMeasures!.isNotEmpty
@@ -157,5 +152,10 @@ class ProductDetailsBloc
     } else {
       selectedConfigurations[option.sectionName!] = option;
     }
+  }
+
+
+  void updateQuantity(int quantity){
+    this.quantity = quantity;
   }
 }

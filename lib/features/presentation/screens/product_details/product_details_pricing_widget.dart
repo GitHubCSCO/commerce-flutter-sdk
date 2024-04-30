@@ -7,8 +7,6 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/view_pricing_quantity_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/view_warehouse_availability_widget.dart';
 import 'package:flutter/material.dart';

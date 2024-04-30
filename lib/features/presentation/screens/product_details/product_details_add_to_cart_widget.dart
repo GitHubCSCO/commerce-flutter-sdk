@@ -148,6 +148,7 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                     var productDetailsPricingEntity =
                         pricingState.productDetailsPriceEntity;
                     var productDetailsBloc = context.read<ProductDetailsBloc>();
+                    productDetailsBloc.updateQuantity(quantity!);
 
                     context.read<ProductDetailsPricingBloc>().add(
                         LoadProductDetailsPricing(

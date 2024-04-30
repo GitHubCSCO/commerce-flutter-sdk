@@ -11,7 +11,6 @@ import 'package:commerce_flutter_app/features/presentation/widget/list_picker_wi
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductDetailsStandardConfigurationWidget extends StatelessWidget {
   final ProductDetailsStandardConfigurationEntity
@@ -25,7 +24,7 @@ class ProductDetailsStandardConfigurationWidget extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.only(bottom: 10.0),
+          padding: const EdgeInsets.only(bottom: 10.0),
           color: Colors.white,
           child: Column(
             children: productDetailsStandardConfigurationEntity
@@ -34,14 +33,13 @@ class ProductDetailsStandardConfigurationWidget extends StatelessWidget {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                      child: Padding(
+                  Padding(
                     padding: const EdgeInsets.fromLTRB(25.0, 15.0, 0.0, 5.0),
                     child: Text(
                       configSectionOption.sectionName!,
                       style: OptiTextStyles.body,
                     ),
-                  )),
+                  ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
                     child: Container(
@@ -64,7 +62,7 @@ class ProductDetailsStandardConfigurationWidget extends StatelessWidget {
                                     callback: _onSelectConfigurationPicker),
                               )),
                               Padding(
-                                padding: EdgeInsets.only(right: 10),
+                                padding: const EdgeInsets.only(right: 10),
                                 child: Container(
                                   width: 40,
                                   height: 40,
@@ -92,18 +90,17 @@ class ProductDetailsStandardConfigurationWidget extends StatelessWidget {
   }
 
   void _onSelectConfigurationPicker(BuildContext context, Object item) {
-    print('_onSelectConfigurationPicker');
-
     var event = context.read<ProductDetailsPricingBloc>();
     var productDetailsBloc = context.read<ProductDetailsBloc>();
-    productDetailsBloc.onSelectedConfiguration(item as ConfigSectionOptionEntity);
+    productDetailsBloc
+        .onSelectedConfiguration(item as ConfigSectionOptionEntity);
 
     event.add(LoadProductDetailsPricing(
         productDetailsPricingEntity: event.productDetailsPricingEntity,
         product: productDetailsBloc.product,
         styledProduct: productDetailsBloc.styledProduct,
         productPricingEnabled: productDetailsBloc.productPricingEnabled,
-        quantity: 1,
+        quantity: productDetailsBloc.quantity,
         chosenUnitOfMeasure: productDetailsBloc.chosenUnitOfMeasure,
         realtimeProductAvailabilityEnabled:
             productDetailsBloc.realtimeProductAvailabilityEnabled,

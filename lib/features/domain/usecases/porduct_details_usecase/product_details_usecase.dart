@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_detail_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_base_entity.dart';
@@ -228,6 +229,15 @@ class ProductDetailsUseCase extends BaseUseCase {
         product.configurationDto!.sections != null &&
         product.configurationDto!.sections!.isNotEmpty &&
         !product.isFixedConfiguration!) {
+      for (var index = 0;
+          index < product.configurationDto!.sections!.length;
+          index++) {
+        var configSection = product.configurationDto!.sections![index];
+        var option = ConfigSectionOptionEntity(
+            sectionName: configSection.sectionName,
+            description: "${LocalizationConstants.selectSomething} ${configSection.sectionName!}");
+        product.configurationDto!.sections![index].options!.insert(0, option);
+      }
       items.add(ProductDetailsStandardConfigurationEntity(
           detailsSectionType: ProdcutDeatilsPageWidgets
               .productDeatilsStanddardConfigurationSection,

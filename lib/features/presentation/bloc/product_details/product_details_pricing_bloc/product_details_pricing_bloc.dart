@@ -1,6 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
-import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
@@ -40,9 +39,6 @@ class ProductDetailsPricingBloc
     final realtimeProductPricingEnabled = event.realtimeProductPricingEnabled;
     final productSettings = event.productSettings;
     final selectedConfigurations = event.selectedConfigurations;
-
-
-
 
     final result = await _productDetailsPricingUseCase.loadProductPricing(
         product,
@@ -87,17 +83,12 @@ class ProductDetailsPricingBloc
           productDetailsPricingEntity, chosenUnitOfMeasure, product);
     }
 
-    var availability = productDetailsPricingEntity.styledProduct == null
-        ? productDetailsPricingEntity.product?.availability
-        : productDetailsPricingEntity.styledProduct?.availability;
-
     productDetailsPricingEntity =
         await _loadQuantityPricingAndShowInventoryData(
             productDetailsPricingEntity,
             productSettings,
             styledProduct,
             product,
-            availability,
             data,
             selectedConfigurations);
     this.productDetailsPricingEntity = productDetailsPricingEntity;
@@ -126,12 +117,6 @@ class ProductDetailsPricingBloc
 
     // need to implement hide/show inventory and quanty button logix
 
-    var availability = productDetailsPricingEntity.styledProduct == null
-        ? productDetailsPricingEntity.product?.availability
-        : productDetailsPricingEntity.styledProduct?.availability;
-
-    productDetailsPricingEntity =
-        productDetailsPricingEntity.copyWith(availability: availability);
     return productDetailsPricingEntity;
   }
 
@@ -140,10 +125,16 @@ class ProductDetailsPricingBloc
     ProductSettings productSettings,
     StyledProductEntity? styledProduct,
     ProductEntity product,
-    AvailabilityEntity? availability,
     ProductPriceEntity? productPricing,
     Map<String, ConfigSectionOptionEntity?> selectedConfigurations,
   ) async {
+    var availability = styledProduct == null
+        ? product.availability
+        : styledProduct.availability;
+
+    productDetailsPricingEntity =
+        productDetailsPricingEntity.copyWith(availability: availability);
+
     if (productSettings.showInventoryAvailability!) {
       var showAvailabilityMessage = true;
       var showAvailabilityPerWarehouseLink = true;
@@ -214,4 +205,6 @@ class ProductDetailsPricingBloc
     return selectedConfigurations.keys
         .every((k) => selectedConfigurations[k] != null);
   }
+
+  
 }
