@@ -26,16 +26,28 @@ class ListsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<WishListCubit>()..loadWishLists(),
-      child: ListsPage(),
+      child: const ListsPage(),
     );
   }
 }
 
-class ListsPage extends StatelessWidget {
-  ListsPage({super.key});
+class ListsPage extends StatefulWidget {
+  const ListsPage({super.key});
 
+  @override
+  State<ListsPage> createState() => _ListsPageState();
+}
+
+class _ListsPageState extends State<ListsPage> {
   final websitePath = WebsitePaths.listsWebsitePath;
+
   final _textEditingController = TextEditingController();
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
