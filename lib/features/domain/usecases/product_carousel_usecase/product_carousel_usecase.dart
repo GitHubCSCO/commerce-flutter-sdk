@@ -34,6 +34,7 @@ class ProductCarouselUseCase extends BaseUseCase {
   }
 
   Future<bool> getProductPricingEnable() async {
+    // need to implement
     var productPricingPresentationEnabledResult = Future.value(true);
     bool productPricingPresentationEnabled = await productPricingPresentationEnabledResult;
     return productPricingPresentationEnabled;

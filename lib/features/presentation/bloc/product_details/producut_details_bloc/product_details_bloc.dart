@@ -26,7 +26,7 @@ class ProductDetailsBloc
   StyledProductEntity? styledProduct;
   ProductUnitOfMeasureEntity? chosenUnitOfMeasure;
   Map<String, ConfigSectionOptionEntity?> selectedConfigurations = {};
-  late int quantity;
+  int quantity = 1;
 
   ProductDetailsBloc({required ProductDetailsUseCase productDetailsUseCase})
       : _productDetailsUseCase = productDetailsUseCase,
@@ -141,7 +141,7 @@ class ProductDetailsBloc
   Future<void> _makeAllDetailsItems(
       ProductEntity productData, Emitter<ProductDetailsState> emit) async {
     final productDetailsEntotities =
-        _productDetailsUseCase.makeAllDetailsItems(productData, styledProduct);
+        _productDetailsUseCase.makeAllDetailsItems(productData, styledProduct, productPricingEnabled);
     emit(
         ProductDetailsLoaded(productDetailsEntities: productDetailsEntotities));
   }
@@ -154,8 +154,7 @@ class ProductDetailsBloc
     }
   }
 
-
-  void updateQuantity(int quantity){
+  void updateQuantity(int quantity) {
     this.quantity = quantity;
   }
 }
