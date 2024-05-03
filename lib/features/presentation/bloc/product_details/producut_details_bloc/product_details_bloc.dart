@@ -1,7 +1,9 @@
 import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/produc_details_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_event.dart';
@@ -12,6 +14,8 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class ProductDetailsBloc
     extends Bloc<ProductDetailsEvent, ProductDetailsState> {
   final ProductDetailsUseCase _productDetailsUseCase;
+  final ProductDetailsStyleTraitsUseCase _productDetailsStyleTraitsUseCase =
+      ProductDetailsStyleTraitsUseCase();
   late AccountSettings accountSettings;
   late ProductSettings productSettings;
   late bool addToCartEnabled;
@@ -26,12 +30,16 @@ class ProductDetailsBloc
   StyledProductEntity? styledProduct;
   ProductUnitOfMeasureEntity? chosenUnitOfMeasure;
   Map<String, ConfigSectionOptionEntity?> selectedConfigurations = {};
+  Map<String, List<StyleValueEntity>?> availableStyleValues = {};
+  Map<String, StyleValueEntity?>? selectedStyleValues = {};
+
   int quantity = 1;
 
   ProductDetailsBloc({required ProductDetailsUseCase productDetailsUseCase})
       : _productDetailsUseCase = productDetailsUseCase,
         super(ProductDetailsInitial()) {
     on<FetchProductDetailsEvent>(_fetchProductDetails);
+    on<StyleTraitSelectedEvent>(_onStyleTraitSelected);
   }
 
   Future<void> _loadSettings() async {
@@ -117,8 +125,8 @@ class ProductDetailsBloc
         : product.productUnitOfMeasures != null &&
                 product.productUnitOfMeasures!.isNotEmpty &&
                 product.productUnitOfMeasures!.firstWhere(
-                        (p) => p.unitOfMeasure == product.unitOfMeasure) !=
-                    null
+                    // ignore: unnecessary_null_comparison
+                    (p) => p.unitOfMeasure == product.unitOfMeasure) != null
             ? product.productUnitOfMeasures
                 ?.firstWhere((p) => p.unitOfMeasure == product.unitOfMeasure)
             : null;
@@ -136,12 +144,21 @@ class ProductDetailsBloc
         }
       }
     }
+
+    selectedStyleValues = _productDetailsStyleTraitsUseCase
+        .getSelectedStyleValues(product, styledProduct);
+    availableStyleValues =
+        _productDetailsStyleTraitsUseCase.getAvailableStyleValues(product);
   }
 
   Future<void> _makeAllDetailsItems(
       ProductEntity productData, Emitter<ProductDetailsState> emit) async {
-    final productDetailsEntotities =
-        _productDetailsUseCase.makeAllDetailsItems(productData, styledProduct, productPricingEnabled);
+    final productDetailsEntotities = _productDetailsUseCase.makeAllDetailsItems(
+        productData,
+        styledProduct,
+        productPricingEnabled,
+        availableStyleValues,
+        selectedStyleValues);
     emit(
         ProductDetailsLoaded(productDetailsEntities: productDetailsEntotities));
   }
@@ -152,6 +169,50 @@ class ProductDetailsBloc
     } else {
       selectedConfigurations[option.sectionName!] = option;
     }
+  }
+
+  void _onStyleTraitSelected(
+      StyleTraitSelectedEvent event, Emitter<ProductDetailsState> emit) async {
+    var selectedStyleValue = event.selectedStyleValue;
+    if (selectedStyleValue.styleTraitValueId!.isEmpty) {
+      selectedStyleValues?[selectedStyleValue.styleTraitId!] = null;
+    } else {
+      selectedStyleValues?[selectedStyleValue.styleTraitId!] =
+          selectedStyleValue;
+    }
+
+    var isStyleSelectionComplete = isProductStyleSelectionCompleted();
+
+    if (isStyleSelectionComplete!) {
+      var filteredStyledProducts = product.styledProducts
+          ?.where((o) =>
+              o.styleValues?.every((v) => selectedStyleValues!.values
+                  .any((s) => s?.styleTraitValueId == v.styleTraitValueId)) ??
+              false)
+          .toList();
+      styledProduct = filteredStyledProducts?.firstWhere((element) => true);
+      chosenUnitOfMeasure =
+          styledProduct?.productUnitOfMeasures?.firstWhere((element) => true);
+
+      _makeAllDetailsItems(product, emit);
+
+      // this.loadProductPricing();
+      // this.loadRealTimeInventory();
+    } else {
+      // not all traits has value => the product variant cannot be identified
+      styledProduct = null;
+      chosenUnitOfMeasure = product.productUnitOfMeasures
+          ?.firstWhere((p) => p.unitOfMeasure == product.unitOfMeasure);
+    }
+  }
+
+  bool? isProductStyleSelectionCompleted() {
+    if (selectedStyleValues!.isEmpty) {
+      return false;
+    }
+
+    return selectedStyleValues?.keys
+        .every((k) => selectedStyleValues?[k] != null);
   }
 
   void updateQuantity(int quantity) {

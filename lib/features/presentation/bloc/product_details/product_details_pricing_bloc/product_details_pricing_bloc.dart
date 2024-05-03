@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/features/domain/entity/product_details/prod
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
@@ -39,6 +40,7 @@ class ProductDetailsPricingBloc
     final realtimeProductPricingEnabled = event.realtimeProductPricingEnabled;
     final productSettings = event.productSettings;
     final selectedConfigurations = event.selectedConfigurations;
+    final selectedStyleValues = event.selectedStyleValues;
 
     final result = await _productDetailsPricingUseCase.loadProductPricing(
         product,
@@ -87,10 +89,11 @@ class ProductDetailsPricingBloc
         await _loadQuantityPricingAndShowInventoryData(
             productDetailsPricingEntity,
             productSettings,
-            styledProduct,
-            product,
+            productDetailsPricingEntity.styledProduct,
+            productDetailsPricingEntity.product!,
             data,
-            selectedConfigurations);
+            selectedConfigurations,
+            selectedStyleValues);
     this.productDetailsPricingEntity = productDetailsPricingEntity;
     emit(ProductDetailsPricingLoaded(
         productDetailsPriceEntity: productDetailsPricingEntity));
@@ -121,13 +124,13 @@ class ProductDetailsPricingBloc
   }
 
   Future<ProductDetailsPriceEntity> _loadQuantityPricingAndShowInventoryData(
-    ProductDetailsPriceEntity productDetailsPricingEntity,
-    ProductSettings productSettings,
-    StyledProductEntity? styledProduct,
-    ProductEntity product,
-    ProductPriceEntity? productPricing,
-    Map<String, ConfigSectionOptionEntity?> selectedConfigurations,
-  ) async {
+      ProductDetailsPriceEntity productDetailsPricingEntity,
+      ProductSettings productSettings,
+      StyledProductEntity? styledProduct,
+      ProductEntity product,
+      ProductPriceEntity? productPricing,
+      Map<String, ConfigSectionOptionEntity?> selectedConfigurations,
+      Map<String, StyleValueEntity?>? selectedStyleValues) async {
     var availability = styledProduct == null
         ? product.availability
         : styledProduct.availability;
@@ -139,8 +142,9 @@ class ProductDetailsPricingBloc
       var showAvailabilityMessage = true;
       var showAvailabilityPerWarehouseLink = true;
 
-      if (_isProductStyleable()) {
-        var isStyleSelectionComplete = _isProductStyleSelectionCompleted();
+      if (_isProductStyleable(selectedStyleValues)) {
+        var isStyleSelectionComplete =
+            _isProductStyleSelectionCompleted(selectedStyleValues);
         showAvailabilityMessage = isStyleSelectionComplete;
         showAvailabilityPerWarehouseLink = isStyleSelectionComplete;
       } else if (_isProductConfigurable(selectedConfigurations)) {
@@ -181,8 +185,9 @@ class ProductDetailsPricingBloc
     return productDetailsPricingEntity;
   }
 
-  bool _isProductStyleable() {
-    return true;
+  bool _isProductStyleable(
+      Map<String, StyleValueEntity?>? selectedStyleValues) {
+    return selectedStyleValues!.keys.isNotEmpty;
   }
 
   bool _isProductConfigurable(
@@ -190,10 +195,14 @@ class ProductDetailsPricingBloc
     return selectedConfigurations.keys.isNotEmpty;
   }
 
-  bool _isProductStyleSelectionCompleted() {
-    // need to implement
+  bool _isProductStyleSelectionCompleted(
+      Map<String, StyleValueEntity?>? selectedStyleValues) {
+    if (selectedStyleValues!.isEmpty) {
+      return false;
+    }
 
-    return true;
+    return selectedStyleValues.keys
+        .every((k) => selectedStyleValues[k] != null);
   }
 
   bool _isProductConfigurationCompleted(
@@ -205,6 +214,4 @@ class ProductDetailsPricingBloc
     return selectedConfigurations.keys
         .every((k) => selectedConfigurations[k] != null);
   }
-
-  
 }

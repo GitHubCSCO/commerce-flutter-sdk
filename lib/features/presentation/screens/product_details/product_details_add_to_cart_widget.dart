@@ -154,18 +154,21 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                                 productDetailsPricingEntity,
                             product: productDetailsBloc.product,
                             styledProduct: productDetailsBloc.styledProduct,
-                            productPricingEnabled:
-                                productDetailsBloc.productPricingEnabled,
+                            productPricingEnabled: productDetailsBloc
+                                .productPricingEnabled,
                             quantity: quantity,
-                            chosenUnitOfMeasure:
-                                productDetailsBloc.chosenUnitOfMeasure,
+                            chosenUnitOfMeasure: productDetailsBloc
+                                .chosenUnitOfMeasure,
                             realtimeProductAvailabilityEnabled:
                                 productDetailsBloc
                                     .realtimeProductAvailabilityEnabled,
                             realtimeProductPricingEnabled: productDetailsBloc
                                 .realtimeProductPricingEnabled,
-                                productSettings:  productDetailsBloc.productSettings,
-                            selectedConfigurations: productDetailsBloc.selectedConfigurations));
+                            productSettings: productDetailsBloc.productSettings,
+                            selectedConfigurations:
+                                productDetailsBloc.selectedConfigurations,
+                            selectedStyleValues:
+                                productDetailsBloc.selectedStyleValues));
                   }
                 }),
           ),

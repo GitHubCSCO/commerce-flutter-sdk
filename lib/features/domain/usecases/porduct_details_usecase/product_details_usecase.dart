@@ -10,9 +10,11 @@ import 'package:commerce_flutter_app/features/domain/entity/product_details/prod
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_standard_configuration_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_image_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/specification_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
@@ -28,7 +30,8 @@ enum ProdcutDeatilsPageWidgets {
   productDetailsAddtoCart,
   productDetailsPrice,
   productDeatilsStanddardConfigurationSection,
-  productDetailsCrossSellSection
+  productDetailsCrossSellSection,
+  productDetailsStyleTraits
 }
 
 class ProductDetailsUseCase extends BaseUseCase {
@@ -203,8 +206,12 @@ class ProductDetailsUseCase extends BaseUseCase {
     return genralInfoEntity;
   }
 
-  List<ProductDetailsBaseEntity> makeAllDetailsItems(ProductEntity product,
-      StyledProductEntity? styledProduct, bool productPricingEnabled) {
+  List<ProductDetailsBaseEntity> makeAllDetailsItems(
+      ProductEntity product,
+      StyledProductEntity? styledProduct,
+      bool productPricingEnabled,
+      Map<String, List<StyleValueEntity>?> availableStyleValues,
+      Map<String, StyleValueEntity?>? selectedStyleValues) {
     List<ProductDetailsBaseEntity> items = [];
 
     var quantity = getQuantity(product);
@@ -215,6 +222,10 @@ class ProductDetailsUseCase extends BaseUseCase {
       items.add(addConfigSection(product));
     }
 
+    if (product.styleTraits != null && product.styleTraits!.isNotEmpty) {
+      items.add(makeProductDetailsStyleTraitsEntity(
+          product, availableStyleValues, selectedStyleValues));
+    }
     items.add(makeProductDetailsAddToCartEntity(quantity));
 
     if (product.htmlContent != null) {
@@ -227,11 +238,12 @@ class ProductDetailsUseCase extends BaseUseCase {
 
     if (product.crossSells != null && product.crossSells!.isNotEmpty) {
       var porductCarouselWidget = ProductCarouselWidgetEntity(
-          carouselType: ProductCarouselType.webCrossSells, title: "Recommended");
+          carouselType: ProductCarouselType.webCrossSells,
+          title: LocalizationConstants.recommendedProducts);
 
-      final List<ProductCarouselEntity>? productCarouselList = [];
+      final List<ProductCarouselEntity> productCarouselList = [];
       for (var crosSell in product.crossSells!) {
-        productCarouselList?.add(ProductCarouselEntity(
+        productCarouselList.add(ProductCarouselEntity(
             product: crosSell, productPricingEnabled: productPricingEnabled));
       }
 
@@ -240,7 +252,7 @@ class ProductDetailsUseCase extends BaseUseCase {
       items.add(ProductDetailsCrossSellEntity(
           detailsSectionType:
               ProdcutDeatilsPageWidgets.productDetailsCrossSellSection,
-              productCarouselWidgetEntity: porductCarouselWidget));
+          productCarouselWidgetEntity: porductCarouselWidget));
     }
     return items;
   }
@@ -310,5 +322,65 @@ class ProductDetailsUseCase extends BaseUseCase {
                   ProdcutDeatilsPageWidgets.productDetailsSpecification,
             ))
         .toList();
+  }
+
+  ProductDetailsStyletraitsEntity makeProductDetailsStyleTraitsEntity(
+      ProductEntity product,
+      Map<String, List<StyleValueEntity>?> availableStyleValues,
+      Map<String, StyleValueEntity?>? selectedStyleValues) {
+    final List<ProductDetailStyleTrait> styleTraitsEntity = [];
+
+    for (var styleTrait in product.styleTraits!) {
+      var styleTraitNullValue = ProductDetailStyleValue(
+          styleValue: StyleValueEntity(
+              styleTraitId: styleTrait.id,
+              valueDisplay: LocalizationConstants.selectSomething +
+                  styleTrait.nameDisplay!),
+          displayName:
+              LocalizationConstants.selectSomething + styleTrait.nameDisplay!,
+          isAvailable: true);
+
+      List<ProductDetailStyleValue> styleValues = [];
+      styleValues.add(styleTraitNullValue);
+
+      for (var styleValue in styleTrait.styleValues!) {
+        var styleValueEntity = ProductDetailStyleValue(
+            styleValue: styleValue,
+            displayName: availableStyleValues[styleValue.styleTraitId] !=
+                        null &&
+                    availableStyleValues[styleValue.styleTraitId]!.any((x) =>
+                        x.styleTraitValueId == styleValue.styleTraitValueId)
+                ? styleValue.valueDisplay
+                : "N/A - ${styleValue.valueDisplay!}",
+            isAvailable: availableStyleValues[styleValue.styleTraitId]!.any(
+                (x) => x.styleTraitValueId == styleValue.styleTraitValueId));
+        styleValues.add(styleValueEntity);
+      }
+
+      getDefaultStyleTrait() {
+        return styleValues.firstWhere(
+          (x) => x.styleValue?.isDefault == true,
+          orElse: () => styleTraitNullValue,
+        );
+      }
+
+      var selectedStyle = (selectedStyleValues?[styleTrait.styleTraitId] == null
+          ? (getDefaultStyleTrait())
+          : styleValues.firstWhere((x) =>
+              selectedStyleValues?[styleTrait.styleTraitId]
+                  ?.styleTraitValueId ==
+              x.styleValue?.styleTraitValueId));
+
+      var styleTraitEntity = ProductDetailStyleTrait(
+          styleTraitName: styleTrait.nameDisplay,
+          styleValues: styleValues,
+          selectedStyleValue: selectedStyle);
+
+      styleTraitsEntity.add(styleTraitEntity);
+    }
+
+    return ProductDetailsStyletraitsEntity(
+        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsStyleTraits,
+        styleTraits: styleTraitsEntity);
   }
 }

@@ -36,7 +36,8 @@ class ProductDetailsPricingWidget extends StatelessWidget {
         realtimeProductPricingEnabled:
             productDetailsBloc.realtimeProductPricingEnabled,
         productSettings: productDetailsBloc.productSettings,
-        selectedConfigurations: productDetailsBloc.selectedConfigurations));
+        selectedConfigurations: productDetailsBloc.selectedConfigurations,
+        selectedStyleValues: productDetailsBloc.selectedStyleValues));
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),

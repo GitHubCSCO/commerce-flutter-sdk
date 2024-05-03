@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/list_picker/list_picker_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -106,8 +107,13 @@ class ListPicker extends StatelessWidget {
       return item.description!;
     } else if (item is PaymentMethodDto) {
       return item.description!;
-    } else if (item is ConfigSectionOptionEntity)
-      return item.description!;
+    } else if (item is ConfigSectionOptionEntity){
+       return item.description!;
+    }
+      else if (item is ProductDetailStyleValue){
+       return item.displayName!;
+    }
+     
     else {
       return '';
     }

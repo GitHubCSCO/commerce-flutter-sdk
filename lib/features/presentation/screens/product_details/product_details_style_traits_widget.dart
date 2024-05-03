@@ -1,23 +1,22 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_standard_configuration_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
+
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
-class ProductDetailsStandardConfigurationWidget extends StatelessWidget {
-  final ProductDetailsStandardConfigurationEntity
-      productDetailsStandardConfigurationEntity;
+class ProductDetailsStyleTraitWidget extends StatelessWidget {
+  final ProductDetailsStyletraitsEntity productDetailsStyletraitsEntity;
 
-  const ProductDetailsStandardConfigurationWidget(
-      {super.key, required this.productDetailsStandardConfigurationEntity});
+  const ProductDetailsStyleTraitWidget(
+      {super.key, required this.productDetailsStyletraitsEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +26,7 @@ class ProductDetailsStandardConfigurationWidget extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 10.0),
           color: Colors.white,
           child: Column(
-            children: productDetailsStandardConfigurationEntity
-                .configSectionOptions!
+            children: productDetailsStyletraitsEntity.styleTraits!
                 .map((configSectionOption) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,7 +34,7 @@ class ProductDetailsStandardConfigurationWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(25.0, 15.0, 0.0, 5.0),
                     child: Text(
-                      configSectionOption.sectionName!,
+                      configSectionOption.styleTraitName!,
                       style: OptiTextStyles.body,
                     ),
                   ),
@@ -58,8 +56,8 @@ class ProductDetailsStandardConfigurationWidget extends StatelessWidget {
                                   child: Padding(
                                 padding: const EdgeInsets.only(left: 10.0),
                                 child: ListPickerWidget(
-                                    items: configSectionOption.options!,
-                                    callback: _onSelectConfigurationPicker),
+                                    items: configSectionOption.styleValues!,
+                                    callback: _onSelectStyle),
                               )),
                               Padding(
                                 padding: const EdgeInsets.only(right: 10),
@@ -89,25 +87,10 @@ class ProductDetailsStandardConfigurationWidget extends StatelessWidget {
     );
   }
 
-  void _onSelectConfigurationPicker(BuildContext context, Object item) {
-    var event = context.read<ProductDetailsPricingBloc>();
+  void _onSelectStyle(BuildContext context, Object item) {
     var productDetailsBloc = context.read<ProductDetailsBloc>();
-    productDetailsBloc
-        .onSelectedConfiguration(item as ConfigSectionOptionEntity);
-
-    event.add(LoadProductDetailsPricing(
-        productDetailsPricingEntity: event.productDetailsPricingEntity,
-        product: productDetailsBloc.product,
-        styledProduct: productDetailsBloc.styledProduct,
-        productPricingEnabled: productDetailsBloc.productPricingEnabled,
-        quantity: productDetailsBloc.quantity,
-        chosenUnitOfMeasure: productDetailsBloc.chosenUnitOfMeasure,
-        realtimeProductAvailabilityEnabled:
-            productDetailsBloc.realtimeProductAvailabilityEnabled,
-        realtimeProductPricingEnabled:
-            productDetailsBloc.realtimeProductPricingEnabled,
-        productSettings: productDetailsBloc.productSettings,
-        selectedConfigurations: productDetailsBloc.selectedConfigurations,
-        selectedStyleValues: productDetailsBloc.selectedStyleValues));
+    var value = item as ProductDetailStyleValue;
+    productDetailsBloc.add(StyleTraitSelectedEvent(value.styleValue!));
+    
   }
 }
