@@ -1,13 +1,11 @@
-
 import 'dart:io';
 import 'dart:ui';
 import 'dart:ui' as ui;
 
 import 'package:camera/camera.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/painters/coordinates_translator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
-
-import 'coordinates_translator.dart';
 
 class BarcodeDetectorPainter extends CustomPainter {
   BarcodeDetectorPainter(
