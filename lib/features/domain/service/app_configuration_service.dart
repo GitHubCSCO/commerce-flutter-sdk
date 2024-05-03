@@ -29,6 +29,19 @@ class Configuration {
 
   bool? CustomHideCheckoutOrderNotes;
 
+  String? FirebaseAndroidApiKey;
+  String? FirebaseAndroidAppId;
+  String? FirebaseAndroidMessagingSenderId;
+  String? FirebaseAndroidProjectId;
+  String? FirebaseAndroidStorageBucket;
+
+  String? FirebaseIOSApiKey;
+  String? FirebaseIOSAppId;
+  String? FirebaseIOSMessagingSenderId;
+  String? FirebaseIOSProjectId;
+  String? FirebaseIOSStorageBucket;
+  String? FirebaseIOSBundleId;
+
   Configuration({
     this.ShouldUseStaticDomain,
     this.AppCenterSecretiOS,
@@ -40,6 +53,17 @@ class Configuration {
     this.ViewOnWebsiteEnabled,
     this.StartingCategoryForBrowsing,
     this.CustomHideCheckoutOrderNotes,
+    this.FirebaseAndroidApiKey,
+    this.FirebaseAndroidAppId,
+    this.FirebaseAndroidMessagingSenderId,
+    this.FirebaseAndroidProjectId,
+    this.FirebaseAndroidStorageBucket,
+    this.FirebaseIOSApiKey,
+    this.FirebaseIOSAppId,
+    this.FirebaseIOSMessagingSenderId,
+    this.FirebaseIOSProjectId,
+    this.FirebaseIOSStorageBucket,
+    this.FirebaseIOSBundleId,
   });
 
   Map<String, dynamic> toMap() {
@@ -54,6 +78,17 @@ class Configuration {
       'ViewOnWebsiteEnabled': ViewOnWebsiteEnabled,
       'StartingCategoryForBrowsing': StartingCategoryForBrowsing,
       'CustomHideCheckoutOrderNotes': CustomHideCheckoutOrderNotes,
+      'FirebaseAndroidApiKey': FirebaseAndroidApiKey,
+      'FirebaseAndroidAppId': FirebaseAndroidAppId,
+      'FirebaseAndroidMessagingSenderId': FirebaseAndroidMessagingSenderId,
+      'FirebaseAndroidProjectId': FirebaseAndroidProjectId,
+      'FirebaseAndroidStorageBucket': FirebaseAndroidStorageBucket,
+      'FirebaseIOSApiKey': FirebaseIOSApiKey,
+      'FirebaseIOSAppId': FirebaseIOSAppId,
+      'FirebaseIOSMessagingSenderId': FirebaseIOSMessagingSenderId,
+      'FirebaseIOSProjectId': FirebaseIOSProjectId,
+      'FirebaseIOSStorageBucket': FirebaseIOSStorageBucket,
+      'FirebaseIOSBundleId': FirebaseIOSBundleId,
     };
   }
 
@@ -83,6 +118,40 @@ class Configuration {
           : null,
       CustomHideCheckoutOrderNotes: map['CustomHideCheckoutOrderNotes'] != null
           ? map['CustomHideCheckoutOrderNotes'] as bool
+          : null,
+      FirebaseAndroidApiKey: map['FirebaseAndroidApiKey'] != null
+          ? map['FirebaseAndroidApiKey'] as String
+          : null,
+      FirebaseAndroidAppId: map['FirebaseAndroidAppId'] != null
+          ? map['FirebaseAndroidAppId'] as String
+          : null,
+      FirebaseAndroidMessagingSenderId:
+          map['FirebaseAndroidMessagingSenderId'] != null
+              ? map['FirebaseAndroidMessagingSenderId'] as String
+              : null,
+      FirebaseAndroidProjectId: map['FirebaseAndroidProjectId'] != null
+          ? map['FirebaseAndroidProjectId'] as String
+          : null,
+      FirebaseAndroidStorageBucket: map['FirebaseAndroidStorageBucket'] != null
+          ? map['FirebaseAndroidStorageBucket'] as String
+          : null,
+      FirebaseIOSApiKey: map['FirebaseIOSApiKey'] != null
+          ? map['FirebaseIOSApiKey'] as String
+          : null,
+      FirebaseIOSAppId: map['FirebaseIOSAppId'] != null
+          ? map['FirebaseIOSAppId'] as String
+          : null,
+      FirebaseIOSMessagingSenderId: map['FirebaseIOSMessagingSenderId'] != null
+          ? map['FirebaseIOSMessagingSenderId'] as String
+          : null,
+      FirebaseIOSProjectId: map['FirebaseIOSProjectId'] != null
+          ? map['FirebaseIOSProjectId'] as String
+          : null,
+      FirebaseIOSStorageBucket: map['FirebaseIOSStorageBucket'] != null
+          ? map['FirebaseIOSStorageBucket'] as String
+          : null,
+      FirebaseIOSBundleId: map['FirebaseIOSBundleId'] != null
+          ? map['FirebaseIOSBundleId'] as String
           : null,
     );
   }
@@ -126,6 +195,39 @@ class AppConfigurationService extends ServiceBase
   @override
   bool? viewOnWebsiteEnabled;
 
+  @override
+  String? firebaseAndroidApiKey;
+
+  @override
+  String? firebaseAndroidAppId;
+
+  @override
+  String? firebaseAndroidMessagingSenderId;
+
+  @override
+  String? firebaseAndroidProjectId;
+
+  @override
+  String? firebaseAndroidStorageBucket;
+
+  @override
+  String? firebaseIOSApiKey;
+
+  @override
+  String? firebaseIOSAppId;
+
+  @override
+  String? firebaseIOSMessagingSenderId;
+
+  @override
+  String? firebaseIOSProjectId;
+
+  @override
+  String? firebaseIOSStorageBucket;
+
+  @override
+  String? firebaseIOSBundleId;
+
   AppConfigurationService({
     required ICommerceAPIServiceProvider commerceAPIServiceProvider,
     required super.clientService,
@@ -148,6 +250,20 @@ class AppConfigurationService extends ServiceBase
     termsOfUseUrl = configuration.CheckoutUrl;
     privacyPolicyUrl = configuration.CheckoutUrl;
     customHideCheckoutOrderNotes = configuration.CustomHideCheckoutOrderNotes;
+
+    firebaseAndroidApiKey = configuration.FirebaseAndroidApiKey;
+    firebaseAndroidAppId = configuration.FirebaseAndroidAppId;
+    firebaseAndroidMessagingSenderId =
+        configuration.FirebaseAndroidMessagingSenderId;
+    firebaseAndroidProjectId = configuration.FirebaseAndroidProjectId;
+    firebaseAndroidStorageBucket = configuration.FirebaseAndroidStorageBucket;
+
+    firebaseIOSApiKey = configuration.FirebaseIOSApiKey;
+    firebaseIOSAppId = configuration.FirebaseIOSAppId;
+    firebaseIOSMessagingSenderId = configuration.FirebaseIOSMessagingSenderId;
+    firebaseIOSProjectId = configuration.FirebaseIOSProjectId;
+    firebaseIOSStorageBucket = configuration.FirebaseIOSStorageBucket;
+    firebaseIOSBundleId = configuration.FirebaseIOSBundleId;
   }
 
   static const String _tokenExConfigurationUrl = "/api/v1/tokenexconfig";

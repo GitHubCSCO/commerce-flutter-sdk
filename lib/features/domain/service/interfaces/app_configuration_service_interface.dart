@@ -24,6 +24,28 @@ abstract class IAppConfigurationService {
 
   String? get termsOfUseUrl;
 
+  String? get firebaseAndroidApiKey;
+
+  String? get firebaseAndroidAppId;
+
+  String? get firebaseAndroidMessagingSenderId;
+
+  String? get firebaseAndroidProjectId;
+
+  String? get firebaseAndroidStorageBucket;
+
+  String? get firebaseIOSApiKey;
+
+  String? get firebaseIOSAppId;
+
+  String? get firebaseIOSMessagingSenderId;
+
+  String? get firebaseIOSProjectId;
+
+  String? get firebaseIOSStorageBucket;
+
+  String? get firebaseIOSBundleId;
+
   Future loadRemoteSettings();
 
   Future<bool> hasWillCall();
