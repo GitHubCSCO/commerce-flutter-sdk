@@ -8,11 +8,7 @@ abstract class IAppConfigurationService {
 
   bool? get shouldUseStaticDomain;
 
-  String? get appCenterSecretiOS;
-
   String? get tokenExIFrameUrl;
-
-  String? get appCenterSecretAndroid;
 
   bool? get hasOrderHistory;
 

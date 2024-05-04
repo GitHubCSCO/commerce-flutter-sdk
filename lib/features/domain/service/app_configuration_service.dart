@@ -11,10 +11,6 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class Configuration {
   bool? ShouldUseStaticDomain;
 
-  String? AppCenterSecretiOS;
-
-  String? AppCenterSecretAndroid;
-
   String? Domain;
 
   String? SandboxDomain;
@@ -44,8 +40,6 @@ class Configuration {
 
   Configuration({
     this.ShouldUseStaticDomain,
-    this.AppCenterSecretiOS,
-    this.AppCenterSecretAndroid,
     this.Domain,
     this.SandboxDomain,
     this.HasCheckout,
@@ -69,8 +63,6 @@ class Configuration {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'ShouldUseStaticDomain': ShouldUseStaticDomain,
-      'AppCenterSecretiOS': AppCenterSecretiOS,
-      'AppCenterSecretAndroid': AppCenterSecretAndroid,
       'Domain': Domain,
       'SandboxDomain': SandboxDomain,
       'HasCheckout': HasCheckout,
@@ -96,12 +88,6 @@ class Configuration {
     return Configuration(
       ShouldUseStaticDomain: map['ShouldUseStaticDomain'] != null
           ? map['ShouldUseStaticDomain'] as bool
-          : null,
-      AppCenterSecretiOS: map['AppCenterSecretiOS'] != null
-          ? map['AppCenterSecretiOS'] as String
-          : null,
-      AppCenterSecretAndroid: map['AppCenterSecretAndroid'] != null
-          ? map['AppCenterSecretAndroid'] as String
           : null,
       Domain: map['Domain'] != null ? map['Domain'] as String : null,
       SandboxDomain:
@@ -167,12 +153,6 @@ class AppConfigurationService extends ServiceBase
   final ICommerceAPIServiceProvider _commerceAPIServiceProvider;
   @override
   String? termsOfUseUrl;
-
-  @override
-  String? appCenterSecretAndroid;
-
-  @override
-  String? appCenterSecretiOS;
 
   @override
   bool? customHideCheckoutOrderNotes;
@@ -241,8 +221,6 @@ class AppConfigurationService extends ServiceBase
 
     final configuration = Configuration.fromJson(configurationString);
 
-    appCenterSecretAndroid = configuration.AppCenterSecretAndroid;
-    appCenterSecretiOS = configuration.AppCenterSecretiOS;
     domain = configuration.Domain;
     sandboxDomain = configuration.SandboxDomain;
     shouldUseStaticDomain = configuration.ShouldUseStaticDomain;
