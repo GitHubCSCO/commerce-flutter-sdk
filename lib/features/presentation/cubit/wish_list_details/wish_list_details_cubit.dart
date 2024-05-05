@@ -54,4 +54,43 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       emit(state.copyWith(status: WishListStatus.failure));
     }
   }
+
+  bool get noWishListFound =>
+      state.status == WishListStatus.success &&
+      state.wishListLines.wishListLines?.isEmpty == true;
+
+  Future<void> loadMoreWishListLines() async {
+     if (state.wishListLines.pagination?.page == null ||
+        state.wishListLines.pagination!.page! + 1 >
+            state.wishListLines.pagination!.numberOfPages! ||
+        state.status == WishListStatus.moreLoading) {
+      return;
+    }
+
+    emit(state.copyWith(status: WishListStatus.moreLoading));
+    final result = await _wishListDetailsUsecase.loadWishListLines(
+      wishListEntity: state.wishList,
+      page: state.wishListLines.pagination!.page! + 1,
+      sortOrder: state.sortOrder,
+      searchText: state.searchQuery,
+    );
+
+    if(result == null) {
+      emit(state.copyWith(status: WishListStatus.moreLoadingFailure));
+      return;
+    }
+
+    final newWishListLines = state.wishListLines.wishListLines;
+    newWishListLines?.addAll(result.wishListLines!);
+
+    emit(
+      state.copyWith(
+        wishListLines: state.wishListLines.copyWith(
+          wishListLines: newWishListLines,
+          pagination: result.pagination,
+        ),
+        status: WishListStatus.success,
+      ),
+    );
+  }
 }

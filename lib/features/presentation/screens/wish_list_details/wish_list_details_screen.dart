@@ -1,8 +1,16 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
+import 'package:commerce_flutter_app/features/presentation/components/input.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list_details/wish_list_details_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 class WishListDetailsScreen extends StatelessWidget {
   final String wishListId;
@@ -22,16 +30,174 @@ class WishListDetailsScreen extends StatelessWidget {
   }
 }
 
-class WishListDetailsPage extends StatelessWidget {
+class WishListDetailsPage extends StatefulWidget {
   const WishListDetailsPage({super.key});
+
+  @override
+  State<WishListDetailsPage> createState() => _WishListDetailsPageState();
+}
+
+class _WishListDetailsPageState extends State<WishListDetailsPage> {
+  final _textEditingController = TextEditingController();
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
-        title: const Text('Wish List Details'),
+        backgroundColor: OptiAppColors.backgroundWhite,
+        centerTitle: false,
+        title: Text(
+          context.watch<WishListDetailsCubit>().state.wishList.name ?? '',
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () => CustomSnackBar.showComingSoonSnackBar(context),
+          )
+        ],
       ),
-      body: BlocBuilder<WishListDetailsCubit, WishListDetailsState>(
+      body: Column(
+        children: [
+          Container(
+            color: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+            child: Input(
+              hintText: LocalizationConstants.search,
+              suffixIcon: IconButton(
+                icon: SvgPicture.asset(
+                  AssetConstants.iconClear,
+                  semanticsLabel: 'search query clear icon',
+                  fit: BoxFit.fitWidth,
+                ),
+                onPressed: () {
+                  _textEditingController.clear();
+
+                  CustomSnackBar.showComingSoonSnackBar(context);
+                  context.closeKeyboard();
+                },
+              ),
+              onTapOutside: (p0) => context.closeKeyboard(),
+              textInputAction: TextInputAction.search,
+              controller: _textEditingController,
+              onChanged: (value) {},
+              onSubmitted: (value) {
+                CustomSnackBar.showComingSoonSnackBar(context);
+              },
+            ),
+          ),
+          BlocBuilder<WishListDetailsCubit, WishListDetailsState>(
+            builder: (context, state) {
+              if (state.status == WishListStatus.loading) {
+                return const Expanded(
+                    child: Center(child: CircularProgressIndicator()));
+              } else if (state.status == WishListStatus.failure) {
+                return const Expanded(
+                    child: Center(child: Text(LocalizationConstants.error)));
+              } else if (context.read<WishListDetailsCubit>().noWishListFound) {
+                return const Expanded(
+                  child: Center(
+                    child: Text(LocalizationConstants.noListsAvailable),
+                  ),
+                );
+              }
+              return Expanded(
+                child: Column(
+                  children: [
+                    if (!context.read<WishListDetailsCubit>().noWishListFound)
+                      Container(
+                        height: 50,
+                        padding: const EdgeInsetsDirectional.symmetric(
+                            horizontal: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const SizedBox(width: 10),
+                                IconButton(
+                                  onPressed: () {
+                                    CustomSnackBar.showComingSoonSnackBar(
+                                        context);
+                                  },
+                                  icon: SvgPicture.asset(
+                                    AssetConstants.sortIcon,
+                                    semanticsLabel: 'sort icon',
+                                    fit: BoxFit.fitWidth,
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    _WishListLinesSection(
+                      wishListLines: state.wishListLines.wishListLines ?? [],
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WishListLinesSection extends StatefulWidget {
+  const _WishListLinesSection({required this.wishListLines});
+
+  final List<WishListLineEntity> wishListLines;
+
+  @override
+  State<_WishListLinesSection> createState() => _WishListLinesSectionState();
+}
+
+class _WishListLinesSectionState extends State<_WishListLinesSection> {
+  final _scrollController = ScrollController();
+
+  void _onScroll() {
+    if (_isBottom) {
+      context.read<WishListDetailsCubit>().loadMoreWishListLines();
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) {
+      return false;
+    }
+
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= (maxScroll * 0.9);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: BlocBuilder<WishListDetailsCubit, WishListDetailsState>(
         builder: (context, state) {
           if (state.status == WishListStatus.loading) {
             return const Center(
@@ -42,25 +208,32 @@ class WishListDetailsPage extends StatelessWidget {
               child: Text('Failed to load wish list details'),
             );
           } else {
-            return ListView(
-              children: [
-                ListTile(
-                  title: Text(state.wishList.name ?? ''),
-                  subtitle: Text(state.wishList.description ?? ''),
-                ),
-                ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: state.wishListLines.wishListLines?.length ?? 0,
-                  itemBuilder: (context, index) {
-                    final line = state.wishListLines.wishListLines?[index];
-                    return ListTile(
-                      title: Text(line?.productName ?? line?.altText ?? ''),
-                      subtitle: Text(line?.qtyOnHand?.toString() ?? ''),
-                    );
-                  },
-                  separatorBuilder: (context, index) => const Divider(),
-                ),
-              ],
+            return ListView.separated(
+              controller: _scrollController,
+              shrinkWrap: true,
+              itemCount: state.status == WishListStatus.moreLoading
+                  ? widget.wishListLines.length + 1
+                  : widget.wishListLines.length,
+              itemBuilder: (context, index) {
+                if (index >= state.wishListLines.wishListLines!.length &&
+                    state.status == WishListStatus.moreLoading) {
+                  return const Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+
+                final line = state.wishListLines.wishListLines?[index];
+                return ListTile(
+                  title: Text(
+                    line?.productName ?? line?.altText ?? '',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: Text(line?.qtyOnHand?.toString() ?? ''),
+                );
+              },
+              separatorBuilder: (context, index) => const Divider(),
             );
           }
         },
