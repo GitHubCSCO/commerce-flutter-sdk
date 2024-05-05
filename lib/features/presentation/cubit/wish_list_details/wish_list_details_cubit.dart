@@ -23,6 +23,27 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
           ),
         );
 
+  bool get noWishListFound =>
+      state.status == WishListStatus.success &&
+      state.wishListLines.wishListLines?.isEmpty == true;
+
+  List<WishListLineSortOrder> get availableSortOrders => _wishListDetailsUsecase.availableSortOrders;
+
+  Future<void> changeSortOrder(WishListLineSortOrder sortOrder) async {
+    emit(
+      state.copyWith(
+        sortOrder: sortOrder,
+      ),
+    );
+
+    await loadWishListLines(state.wishList);
+  }
+
+  Future<void> searchQueryChanged(String query) async {
+    emit(state.copyWith(searchQuery: query));
+    await loadWishListLines(state.wishList);
+  }
+
   Future<void> loadWishListDetails(String id) async {
     emit(state.copyWith(status: WishListStatus.loading));
 
@@ -31,6 +52,14 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     if (wishList == null) {
       emit(state.copyWith(status: WishListStatus.failure));
       return;
+    }
+
+    await loadWishListLines(wishList);
+  }
+
+  Future<void> loadWishListLines(WishListEntity wishList) async {
+    if (state.status != WishListStatus.loading) {
+      emit(state.copyWith(status: WishListStatus.loading));
     }
 
     final wishListLines = await _wishListDetailsUsecase.loadWishListLines(
@@ -55,12 +84,8 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     }
   }
 
-  bool get noWishListFound =>
-      state.status == WishListStatus.success &&
-      state.wishListLines.wishListLines?.isEmpty == true;
-
   Future<void> loadMoreWishListLines() async {
-     if (state.wishListLines.pagination?.page == null ||
+    if (state.wishListLines.pagination?.page == null ||
         state.wishListLines.pagination!.page! + 1 >
             state.wishListLines.pagination!.numberOfPages! ||
         state.status == WishListStatus.moreLoading) {
@@ -75,7 +100,7 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       searchText: state.searchQuery,
     );
 
-    if(result == null) {
+    if (result == null) {
       emit(state.copyWith(status: WishListStatus.moreLoadingFailure));
       return;
     }

@@ -8,9 +8,11 @@ import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list_details/wish_list_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WishListDetailsScreen extends StatelessWidget {
   final String wishListId;
@@ -122,17 +124,20 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 const SizedBox(width: 10),
-                                IconButton(
-                                  onPressed: () {
-                                    CustomSnackBar.showComingSoonSnackBar(
-                                        context);
+                                SortToolMenu(
+                                  availableSortOrders: context
+                                      .read<WishListDetailsCubit>()
+                                      .availableSortOrders,
+                                  onSortOrderChanged:
+                                      (SortOrderAttribute sortOrder) async {
+                                    context
+                                        .read<WishListDetailsCubit>()
+                                        .changeSortOrder(
+                                          sortOrder as WishListLineSortOrder,
+                                        );
                                   },
-                                  icon: SvgPicture.asset(
-                                    AssetConstants.sortIcon,
-                                    semanticsLabel: 'sort icon',
-                                    fit: BoxFit.fitWidth,
-                                  ),
-                                ),
+                                  selectedSortOrder: state.sortOrder,
+                                )
                               ],
                             )
                           ],

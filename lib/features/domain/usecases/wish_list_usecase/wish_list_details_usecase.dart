@@ -46,4 +46,7 @@ class WishListDetailsUsecase extends BaseUseCase {
         return null;
     }
   }
+
+  List<WishListLineSortOrder> get availableSortOrders =>
+      WishListLineSortOrder.values;
 }
