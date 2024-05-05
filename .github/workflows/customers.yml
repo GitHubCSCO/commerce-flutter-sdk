@@ -35,6 +35,14 @@ jobs:
         run: |
           ls -l
 
+      - name: Cache Flutter SDK
+        uses: actions/cache@v2
+        with:
+          path: ~/.flutter # Path to the Flutter SDK directory
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -88,6 +96,14 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
           cache: 'gradle'
+
+      - name: Cache Flutter SDK
+        uses: actions/cache@v2
+        with:
+          path: ~/.flutter # Path to the Flutter SDK directory
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2
