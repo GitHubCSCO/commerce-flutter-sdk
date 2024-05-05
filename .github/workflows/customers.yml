@@ -41,10 +41,15 @@ jobs:
         with:
           channel: 'stable'
           cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:" # optional, change this to force refresh cache
-          cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:" # optional, change this to specify the cache path
-          pub-cache-key: "flutter-pub:os:-:channel:-:version:-:arch:-:hash:" # optional, change this to force refresh cache of dart pub get dependencies
-          pub-cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:" # optional, change this to specify the cache path
+
+      - name: Cache Flutter SDK
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.flutter-action.outputs.PUB-CACHE-PATH }}
+          key: ${{ steps.flutter-action.outputs.PUB-CACHE-KEY }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ steps.flutter-action.outputs.PUB-CACHE-KEY }}-${{ hashFiles('**/pubspec.lock') }}
+            ${{ steps.flutter-action.outputs.PUB-CACHE-KEY }}
 
       - name: Print outputs
         shell: bash
@@ -105,16 +110,22 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
+
       - name: Install Flutter
         id: flutter-action
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:" # optional, change this to force refresh cache
-          cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:" # optional, change this to specify the cache path
-          pub-cache-key: "flutter-pub:os:-:channel:-:version:-:arch:-:hash:" # optional, change this to force refresh cache of dart pub get dependencies
-          pub-cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:" # optional, change this to specify the cache path
+
+      - name: Cache Flutter SDK
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.flutter-action.outputs.PUB-CACHE-PATH }}
+          key: ${{ steps.flutter-action.outputs.PUB-CACHE-KEY }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ steps.flutter-action.outputs.PUB-CACHE-KEY }}-${{ hashFiles('**/pubspec.lock') }}
+            ${{ steps.flutter-action.outputs.PUB-CACHE-KEY }}
 
       - name: Print outputs
         shell: bash
