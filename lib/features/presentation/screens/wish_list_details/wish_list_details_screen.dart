@@ -80,17 +80,20 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                 ),
                 onPressed: () {
                   _textEditingController.clear();
-
-                  CustomSnackBar.showComingSoonSnackBar(context);
+                  context
+                      .read<WishListDetailsCubit>()
+                      .searchQueryChanged(_textEditingController.text);
                   context.closeKeyboard();
                 },
               ),
               onTapOutside: (p0) => context.closeKeyboard(),
               textInputAction: TextInputAction.search,
               controller: _textEditingController,
-              onChanged: (value) {},
+              onChanged: (value) {
+                context.read<WishListDetailsCubit>().searchQueryChanged(value);
+              },
               onSubmitted: (value) {
-                CustomSnackBar.showComingSoonSnackBar(context);
+                context.read<WishListDetailsCubit>().searchQueryChanged(value);
               },
             ),
           ),
