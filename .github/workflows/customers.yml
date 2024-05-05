@@ -39,7 +39,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: "${{ runner.tool_cache }}/flutter/stable-3.19.6-arm64"
-          key: "flutter-macos-stable-3.19.6-arm64-${{ hashFiles('**/pubspec.lock') }}"
+          key: "flutter-macos-stable-3.19.6-arm64-${{ hashFiles('**/pubspec.yml') }}"
 
       - name: Install Flutter
         id: flutter-action
