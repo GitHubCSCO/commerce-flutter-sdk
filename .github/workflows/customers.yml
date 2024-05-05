@@ -45,11 +45,10 @@ jobs:
       - name: Cache Flutter SDK
         uses: actions/cache@v4
         with:
-          path: ${{ steps.flutter-action.outputs.PUB-CACHE-PATH }}
-          key: ${{ steps.flutter-action.outputs.PUB-CACHE-KEY }}-${{ hashFiles('**/pubspec.lock') }}
+          path: ${{ steps.flutter-action.outputs.CACHE-PATH }}
+          key: ${{ steps.flutter-action.outputs.CACHE-KEY }}
           restore-keys: |
-            ${{ steps.flutter-action.outputs.PUB-CACHE-KEY }}-${{ hashFiles('**/pubspec.lock') }}
-            ${{ steps.flutter-action.outputs.PUB-CACHE-KEY }}
+            ${{ steps.flutter-action.outputs.CACHE-KEY }}
 
       - name: Print outputs
         shell: bash
@@ -94,79 +93,79 @@ jobs:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
-  android:    
-    runs-on: macos-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: List
-        run: |
-          ls -l
+  # android:    
+  #   runs-on: macos-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #     - name: List
+  #       run: |
+  #         ls -l
 
-      - name: Set up Java
-        uses: actions/setup-java@v2
-        with: 
-          distribution: 'zulu'
-          java-version: '17'
-          cache: 'gradle'
+  #     - name: Set up Java
+  #       uses: actions/setup-java@v2
+  #       with: 
+  #         distribution: 'zulu'
+  #         java-version: '17'
+  #         cache: 'gradle'
 
 
-      - name: Install Flutter
-        id: flutter-action
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          cache: true
+  #     - name: Install Flutter
+  #       id: flutter-action
+  #       uses: subosito/flutter-action@v2
+  #       with:
+  #         channel: 'stable'
+  #         cache: true
 
-      - name: Cache Flutter SDK
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.flutter-action.outputs.PUB-CACHE-PATH }}
-          key: ${{ steps.flutter-action.outputs.PUB-CACHE-KEY }}-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ steps.flutter-action.outputs.PUB-CACHE-KEY }}-${{ hashFiles('**/pubspec.lock') }}
-            ${{ steps.flutter-action.outputs.PUB-CACHE-KEY }}
+  #     - name: Cache Flutter SDK
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: ${{ steps.flutter-action.outputs.PUB-CACHE-PATH }}
+  #         key: ${{ steps.flutter-action.outputs.PUB-CACHE-KEY }}-${{ hashFiles('**/pubspec.lock') }}
+  #         restore-keys: |
+  #           ${{ steps.flutter-action.outputs.PUB-CACHE-KEY }}-${{ hashFiles('**/pubspec.lock') }}
+  #           ${{ steps.flutter-action.outputs.PUB-CACHE-KEY }}
 
-      - name: Print outputs
-        shell: bash
-        run: |
-          echo CACHE-PATH=${{ steps.flutter-action.outputs.CACHE-PATH }}
-          echo CACHE-KEY=${{ steps.flutter-action.outputs.CACHE-KEY }}
-          echo CHANNEL=${{ steps.flutter-action.outputs.CHANNEL }}
-          echo VERSION=${{ steps.flutter-action.outputs.VERSION }}
-          echo ARCHITECTURE=${{ steps.flutter-action.outputs.ARCHITECTURE }}
-          echo PUB-CACHE-PATH=${{ steps.flutter-action.outputs.PUB-CACHE-PATH }}
-          echo PUB-CACHE-KEY=${{ steps.flutter-action.outputs.PUB-CACHE-KEY }}
+  #     - name: Print outputs
+  #       shell: bash
+  #       run: |
+  #         echo CACHE-PATH=${{ steps.flutter-action.outputs.CACHE-PATH }}
+  #         echo CACHE-KEY=${{ steps.flutter-action.outputs.CACHE-KEY }}
+  #         echo CHANNEL=${{ steps.flutter-action.outputs.CHANNEL }}
+  #         echo VERSION=${{ steps.flutter-action.outputs.VERSION }}
+  #         echo ARCHITECTURE=${{ steps.flutter-action.outputs.ARCHITECTURE }}
+  #         echo PUB-CACHE-PATH=${{ steps.flutter-action.outputs.PUB-CACHE-PATH }}
+  #         echo PUB-CACHE-KEY=${{ steps.flutter-action.outputs.PUB-CACHE-KEY }}
 
-      - run: flutter --version
+  #     - run: flutter --version
 
-      - run: flutter doctor -v
+  #     - run: flutter doctor -v
 
-      - uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          name: id_rsa
-          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+  #     - uses: shimataro/ssh-key-action@v2
+  #       with:
+  #         key: ${{ secrets.SSH_PRIVATE_KEY }}
+  #         name: id_rsa
+  #         known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
-      - name: Fastlane
-        run: |
-          RELEASE_ENV='${{ github.event.inputs.release_env }}'
+  #     - name: Fastlane
+  #       run: |
+  #         RELEASE_ENV='${{ github.event.inputs.release_env }}'
           
-          if [ -n "${{ github.event.inputs.custom_test_group }}" ]; then
-              TEST_GROUP="${{ github.event.inputs.custom_test_group }}"
-          else
-              TEST_GROUP="${{ github.event.inputs.test_group }}"
-          fi
+  #         if [ -n "${{ github.event.inputs.custom_test_group }}" ]; then
+  #             TEST_GROUP="${{ github.event.inputs.custom_test_group }}"
+  #         else
+  #             TEST_GROUP="${{ github.event.inputs.test_group }}"
+  #         fi
 
-          echo "Using RELEASE_ENV: $RELEASE_ENV"
-          echo "Using TEST_GROUP: $TEST_GROUP"
+  #         echo "Using RELEASE_ENV: $RELEASE_ENV"
+  #         echo "Using TEST_GROUP: $TEST_GROUP"
           
-          if [ -z "$TEST_GROUP" ] || [ "$TEST_GROUP" == "none" ]; then
-              fastlane ios "$RELEASE_ENV"
-          else
-              fastlane ios "$RELEASE_ENV" release:"$TEST_GROUP"
-          fi
-        env:
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+  #         if [ -z "$TEST_GROUP" ] || [ "$TEST_GROUP" == "none" ]; then
+  #             fastlane ios "$RELEASE_ENV"
+  #         else
+  #             fastlane ios "$RELEASE_ENV" release:"$TEST_GROUP"
+  #         fi
+  #       env:
+  #         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+  #         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+  #         MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
