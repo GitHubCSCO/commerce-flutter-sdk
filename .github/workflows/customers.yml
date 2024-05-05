@@ -44,9 +44,9 @@ jobs:
       - name: Cache Flutter dependencies
         uses: actions/cache@v4
         with:
-          path: "${{ runner.tool_cache }}/flutter/stable-3.19.6-arm64"
-          key: "flutter-macos-stable-3.19.6-arm64-${{ hashFiles('**/pubspec.lock') }}"
-          restore-keys: "flutter-macos-stable-3.19.6-arm64-${{ hashFiles('**/pubspec.lock') }}"
+          path: ${{ steps.flutter-action.outputs.CACHE-PATH }}
+          key: ${{ steps.flutter-action.outputs.CACHE-KEY }}
+          restore-keys: ${{ steps.flutter-action.outputs.CACHE-KEY }}
 
       # - name: Cache Flutter SDK
       #   uses: actions/cache@v4
