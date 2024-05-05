@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
+import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list_details/wish_list_details_cubit.dart';
@@ -148,6 +149,19 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                       ),
                     _WishListLinesSection(
                       wishListLines: state.wishListLines.wishListLines ?? [],
+                    ),
+                    Container(
+                      height: 80,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 32, vertical: 16),
+                      clipBehavior: Clip.antiAlias,
+                      decoration: const BoxDecoration(color: Colors.white),
+                      child: PrimaryButton(
+                        onPressed: () {
+                          CustomSnackBar.showComingSoonSnackBar(context);
+                        },
+                        text: LocalizationConstants.addListToCart,
+                      ),
                     ),
                   ],
                 ),
