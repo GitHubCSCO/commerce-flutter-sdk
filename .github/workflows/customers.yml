@@ -40,13 +40,14 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          cache: true
 
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.flutter-action.outputs.CACHE-PATH }}
-          key: ${{ steps.flutter-action.outputs.CACHE-KEY }}
-          restore-keys: ${{ steps.flutter-action.outputs.CACHE-KEY }}
+      # - name: Cache Flutter dependencies
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ${{ steps.flutter-action.outputs.CACHE-PATH }}
+      #     key: ${{ steps.flutter-action.outputs.CACHE-KEY }}
+      #     restore-keys: ${{ steps.flutter-action.outputs.CACHE-KEY }}
 
       # - name: Cache Flutter SDK
       #   uses: actions/cache@v4
