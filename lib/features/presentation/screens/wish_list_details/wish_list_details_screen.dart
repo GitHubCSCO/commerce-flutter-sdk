@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/presentation/components/input.dart
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list_details/wish_list_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/wish_list_details/wish_list_line/wish_list_line_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -246,14 +247,7 @@ class _WishListLinesSectionState extends State<_WishListLinesSection> {
                 }
 
                 final line = state.wishListLines.wishListLines?[index];
-                return ListTile(
-                  title: Text(
-                    line?.productName ?? line?.altText ?? '',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  subtitle: Text(line?.qtyOnHand?.toString() ?? ''),
-                );
+                return WishListLineWidget(wishListLineEntity: line!);
               },
               separatorBuilder: (context, index) => const Divider(),
             );
