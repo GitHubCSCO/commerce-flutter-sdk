@@ -62,11 +62,11 @@ jobs:
           fi
 
           echo "Using RELEASE_ENV: $RELEASE_ENV"
+          echo "Using TEST_GROUP: $TEST_GROUP"
           
           if [ -z "$TEST_GROUP" ] || [ "$TEST_GROUP" == "none" ]; then
               fastlane ios "$RELEASE_ENV"
           else
-              echo "Using TEST_GROUP: $TEST_GROUP"
               fastlane ios "$RELEASE_ENV" release:"$TEST_GROUP"
           fi
         env:
@@ -116,11 +116,11 @@ jobs:
           fi
 
           echo "Using RELEASE_ENV: $RELEASE_ENV"
+          echo "Using TEST_GROUP: $TEST_GROUP"
           
           if [ -z "$TEST_GROUP" ] || [ "$TEST_GROUP" == "none" ]; then
               fastlane ios "$RELEASE_ENV"
           else
-              echo "Using TEST_GROUP: $TEST_GROUP"
               fastlane ios "$RELEASE_ENV" release:"$TEST_GROUP"
           fi
         env:
