@@ -12,7 +12,7 @@ on:
           - beta
       test_group:
         description: 'Tester group'
-        required: true
+        required: false
         default: 'none'
         type: choice
         options:
@@ -21,6 +21,9 @@ on:
           - qa
           - customers
           - dummy
+      custom_test_group:
+        description: 'Custom Test Group (optional)'
+        required: false
 
 jobs:
   ios:
@@ -51,11 +54,21 @@ jobs:
       - name: Fastlane
         run: |
           RELEASE_ENV='${{ github.event.inputs.release_env }}'
-          TEST_GROUP='${{ github.event.inputs.test_group }}'
-
-          echo "Using RELEASE_ENV: $RELEASE_ENV and TEST_GROUP: $TEST_GROUP"
           
-          fastlane ios $RELEASE_ENV release:$TEST_GROUP
+          if [ -n "${{ github.event.inputs.custom_test_group }}" ]; then
+              TEST_GROUP="${{ github.event.inputs.custom_test_group }}"
+          else
+              TEST_GROUP="${{ github.event.inputs.test_group }}"
+          fi
+
+          echo "Using RELEASE_ENV: $RELEASE_ENV"
+          
+          if [ -z "$TEST_GROUP" ] || [ "$TEST_GROUP" == "none" ]; then
+              fastlane ios "$RELEASE_ENV"
+          else
+              echo "Using TEST_GROUP: $TEST_GROUP"
+              fastlane ios "$RELEASE_ENV" release:"$TEST_GROUP"
+          fi
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
@@ -95,11 +108,21 @@ jobs:
       - name: Fastlane
         run: |
           RELEASE_ENV='${{ github.event.inputs.release_env }}'
-          TEST_GROUP='${{ github.event.inputs.test_group }}'
-
-          echo "Using RELEASE_ENV: $RELEASE_ENV and TEST_GROUP: $TEST_GROUP"
           
-          fastlane android $RELEASE_ENV release:$TEST_GROUP
+          if [ -n "${{ github.event.inputs.custom_test_group }}" ]; then
+              TEST_GROUP="${{ github.event.inputs.custom_test_group }}"
+          else
+              TEST_GROUP="${{ github.event.inputs.test_group }}"
+          fi
+
+          echo "Using RELEASE_ENV: $RELEASE_ENV"
+          
+          if [ -z "$TEST_GROUP" ] || [ "$TEST_GROUP" == "none" ]; then
+              fastlane ios "$RELEASE_ENV"
+          else
+              echo "Using TEST_GROUP: $TEST_GROUP"
+              fastlane ios "$RELEASE_ENV" release:"$TEST_GROUP"
+          fi
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
