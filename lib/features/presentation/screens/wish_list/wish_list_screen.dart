@@ -19,26 +19,26 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class ListsScreen extends StatelessWidget {
-  const ListsScreen({super.key});
+class WishListsScreen extends StatelessWidget {
+  const WishListsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<WishListCubit>()..loadWishLists(),
-      child: const ListsPage(),
+      child: const WishListsPage(),
     );
   }
 }
 
-class ListsPage extends StatefulWidget {
-  const ListsPage({super.key});
+class WishListsPage extends StatefulWidget {
+  const WishListsPage({super.key});
 
   @override
-  State<ListsPage> createState() => _ListsPageState();
+  State<WishListsPage> createState() => _WishListsPageState();
 }
 
-class _ListsPageState extends State<ListsPage> {
+class _WishListsPageState extends State<WishListsPage> {
   final websitePath = WebsitePaths.listsWebsitePath;
 
   final _textEditingController = TextEditingController();

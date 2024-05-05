@@ -167,10 +167,10 @@ List<NavigationNode> _getNavigationRoot() {
   );
 
   // path: /account/list
-  final lists = createNode(
+  final wishlists = createNode(
     name: AppRoute.wishlist.name,
     path: AppRoute.wishlist.suffix,
-    builder: (context, state) => const ListsScreen(),
+    builder: (context, state) => const WishListsScreen(),
     parent: account,
   );
 
