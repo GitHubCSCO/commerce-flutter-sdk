@@ -70,6 +70,7 @@ class WishListDetailsUsecase extends BaseUseCase {
 
         final productIds = updatedLines.wishListLines
                 ?.map((line) => line.productId ?? '')
+                .where((element) => element != '')
                 .toList() ??
             [];
 
@@ -108,12 +109,13 @@ class WishListDetailsUsecase extends BaseUseCase {
             wishListLineCollection.wishListLines ?? <WishListLineEntity>[];
         final newLines = lines.map((line) {
           final realTimePrice = realTimePrices?.realTimePricingResults
-              ?.firstWhere((element) => element.productId == line.productId);
+              ?.firstWhere((element) => element.productId == line.productId,
+                  orElse: () => ProductPrice());
 
           return line.copyWith(
             pricing: realTimePrice != null
                 ? ProductPriceEntityMapper().toEntity(realTimePrice)
-                : null,
+                : line.pricing,
           );
         }).toList();
 
