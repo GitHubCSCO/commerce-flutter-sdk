@@ -1,7 +1,9 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_collection_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/wish_list_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
@@ -62,11 +64,26 @@ class WishListDetailsUsecase extends BaseUseCase {
         }
 
         final updatedLines = await loadWishListLinesWithRealTimePricing(
-          wishListLineColelction: valueEntity,
+          wishListLineCollection: valueEntity,
           priceParameters: priceParameters,
         );
 
-        return updatedLines;
+        final productIds = updatedLines.wishListLines
+                ?.map((line) => line.productId ?? '')
+                .toList() ??
+            [];
+
+        if (productIds.isEmpty) {
+          return updatedLines;
+        }
+
+        final updatedLinesWithInventory =
+            await loadWishListLinesWithRealTimeInventory(
+          wishListLineCollection: updatedLines,
+          productIds: productIds,
+        );
+
+        return updatedLinesWithInventory;
 
       case Failure():
         return null;
@@ -74,7 +91,7 @@ class WishListDetailsUsecase extends BaseUseCase {
   }
 
   Future<WishListLineCollectionEntity> loadWishListLinesWithRealTimePricing({
-    required WishListLineCollectionEntity wishListLineColelction,
+    required WishListLineCollectionEntity wishListLineCollection,
     required List<ProductPriceQueryParameter> priceParameters,
   }) async {
     final realTimePricesResult = await commerceAPIServiceProvider
@@ -88,7 +105,7 @@ class WishListDetailsUsecase extends BaseUseCase {
     switch (realTimePricesResult) {
       case Success(value: final realTimePrices):
         final lines =
-            wishListLineColelction.wishListLines ?? <WishListLineEntity>[];
+            wishListLineCollection.wishListLines ?? <WishListLineEntity>[];
         final newLines = lines.map((line) {
           final realTimePrice = realTimePrices?.realTimePricingResults
               ?.firstWhere((element) => element.productId == line.productId);
@@ -100,9 +117,73 @@ class WishListDetailsUsecase extends BaseUseCase {
           );
         }).toList();
 
-        return wishListLineColelction.copyWith(wishListLines: newLines);
+        return wishListLineCollection.copyWith(wishListLines: newLines);
       case Failure():
-        return wishListLineColelction;
+        return wishListLineCollection;
+    }
+  }
+
+  Future<WishListLineCollectionEntity> loadWishListLinesWithRealTimeInventory({
+    required WishListLineCollectionEntity wishListLineCollection,
+    required List<String> productIds,
+  }) async {
+    final realTimeInventoryResult = await commerceAPIServiceProvider
+        .getRealTimeInventoryService()
+        .getProductRealTimeInventory(
+          parameters: RealTimeInventoryParameters(
+            productIds: productIds,
+          ),
+        );
+
+    switch (realTimeInventoryResult) {
+      case Success(value: final realTimeInventory):
+        final lines =
+            wishListLineCollection.wishListLines ?? <WishListLineEntity>[];
+        final newLines = lines.map(
+          (line) {
+            final realTimeInventoryItem = realTimeInventory
+                ?.realTimeInventoryResults
+                ?.firstWhere((element) => element.productId == line.productId,
+                    orElse: () => ProductInventory());
+
+            if (realTimeInventoryItem == null) {
+              return line.copyWith(
+                availability: const AvailabilityEntity(messageType: 0),
+              );
+            }
+
+            final inventoryAvailablility =
+                realTimeInventoryItem.inventoryAvailabilityDtos?.singleWhere(
+              (element) => element.unitOfMeasure == line.unitOfMeasure,
+              orElse: () => InventoryAvailability(
+                availability: Availability(messageType: 0),
+              ),
+            );
+
+            if (inventoryAvailablility == null) {
+              return line.copyWith(
+                availability: const AvailabilityEntity(messageType: 0),
+              );
+            }
+
+            return line.copyWith(
+              availability: AvailabilityEntityMapper()
+                  .toEntity(inventoryAvailablility.availability),
+            );
+          },
+        ).toList();
+
+        return wishListLineCollection.copyWith(wishListLines: newLines);
+      case Failure():
+        return wishListLineCollection.copyWith(
+          wishListLines: wishListLineCollection.wishListLines?.map(
+            (line) {
+              return line.copyWith(
+                availability: const AvailabilityEntity(messageType: 0),
+              );
+            },
+          ).toList(),
+        );
     }
   }
 
