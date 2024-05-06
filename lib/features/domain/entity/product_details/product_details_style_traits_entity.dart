@@ -23,23 +23,36 @@ class ProductDetailsStyletraitsEntity extends ProductDetailsBaseEntity {
 
 class ProductDetailStyleTrait {
   final String? styleTraitName;
+  String? displayType;
+  int? numberOfSwatchesVisible;
+  bool? displayTextWithSwatch;
   final List<ProductDetailStyleValue>? styleValues;
   final ProductDetailStyleValue? selectedStyleValue;
   ProductDetailStyleTrait({
     this.styleTraitName,
     this.styleValues,
     this.selectedStyleValue,
+    this.displayTextWithSwatch,
+    this.displayType,
+    this.numberOfSwatchesVisible,
   });
 
-  ProductDetailStyleTrait copyWith({
-    String? styleTraitName,
-    List<ProductDetailStyleValue>? styleValues,
-    ProductDetailStyleValue? selectedStyleValue,
-  }) {
+  ProductDetailStyleTrait copyWith(
+      {String? styleTraitName,
+      List<ProductDetailStyleValue>? styleValues,
+      ProductDetailStyleValue? selectedStyleValue,
+      String? displayType,
+      int? numberOfSwatchesVisible,
+      bool? displayTextWithSwatch}) {
     return ProductDetailStyleTrait(
       styleTraitName: styleTraitName ?? this.styleTraitName,
       styleValues: styleValues ?? this.styleValues,
       selectedStyleValue: selectedStyleValue ?? this.selectedStyleValue,
+      displayType: displayType ?? this.displayType,
+      numberOfSwatchesVisible:
+          numberOfSwatchesVisible ?? this.numberOfSwatchesVisible,
+      displayTextWithSwatch:
+          displayTextWithSwatch ?? this.displayTextWithSwatch,
     );
   }
 }

@@ -12,6 +12,16 @@ import 'package:commerce_flutter_app/features/domain/entity/product_details/prod
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
+enum StyleTraitType {
+  swatchDropdown,
+  button,
+}
+
+final styleTraitTypeValues = {
+  StyleTraitType.swatchDropdown: 'SwatchDropdown',
+  StyleTraitType.button: 'button',
+};
+
 class ProductDetailsStyleTraitWidget extends StatelessWidget {
   final ProductDetailsStyletraitsEntity productDetailsStyletraitsEntity;
 
@@ -26,15 +36,15 @@ class ProductDetailsStyleTraitWidget extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 10.0),
           color: Colors.white,
           child: Column(
-            children: productDetailsStyletraitsEntity.styleTraits!
-                .map((configSectionOption) {
+            children:
+                productDetailsStyletraitsEntity.styleTraits!.map((styleTrait) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
                     padding: const EdgeInsets.fromLTRB(25.0, 15.0, 0.0, 5.0),
                     child: Text(
-                      configSectionOption.styleTraitName!,
+                      styleTrait.styleTraitName!,
                       style: OptiTextStyles.body,
                     ),
                   ),
@@ -55,9 +65,9 @@ class ProductDetailsStyleTraitWidget extends StatelessWidget {
                               Expanded(
                                   child: Padding(
                                 padding: const EdgeInsets.only(left: 10.0),
-                                child: ListPickerWidget(
-                                    items: configSectionOption.styleValues!,
-                                    callback: _onSelectStyle),
+                                child: _buildStyleTraitSelectorWidget(
+                                    styleTrait.displayType,
+                                    styleTrait.styleValues),
                               )),
                               Padding(
                                 padding: const EdgeInsets.only(right: 10),
@@ -91,6 +101,19 @@ class ProductDetailsStyleTraitWidget extends StatelessWidget {
     var productDetailsBloc = context.read<ProductDetailsBloc>();
     var value = item as ProductDetailStyleValue;
     productDetailsBloc.add(StyleTraitSelectedEvent(value.styleValue!));
-    
+  }
+
+  Widget _buildStyleTraitSelectorWidget(String? displayType,
+      List<ProductDetailStyleValue>? styleValues, BuildContext context) {
+    switch (displayType) {
+      case "SwatchDropdown":
+        return ListPickerWidget(items: styleValues!, callback: _onSelectStyle);
+      case "button":
+        return Container(
+          child: Text("Button"),
+        );
+      default:
+        return Container();
+    }
   }
 }

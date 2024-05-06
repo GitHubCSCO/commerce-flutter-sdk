@@ -374,7 +374,12 @@ class ProductDetailsUseCase extends BaseUseCase {
       var styleTraitEntity = ProductDetailStyleTrait(
           styleTraitName: styleTrait.nameDisplay,
           styleValues: styleValues,
-          selectedStyleValue: selectedStyle);
+          selectedStyleValue: selectedStyle,
+          displayTextWithSwatch: styleTrait.displayTextWithSwatch,
+          displayType: styleTrait.displayType,
+          numberOfSwatchesVisible: styleTrait.numberOfSwatchesVisible
+          
+          );
 
       styleTraitsEntity.add(styleTraitEntity);
     }
