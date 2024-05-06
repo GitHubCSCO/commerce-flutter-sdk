@@ -33,6 +33,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/sea
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_products_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
@@ -68,6 +69,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/order_history/o
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/seardh_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:commerce_flutter_app/services/secure_storage_service.dart';
 import 'package:get_it/get_it.dart';
@@ -156,6 +158,10 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => PaymentDetailsUseCase())
     ..registerFactory(() => TokenExBloc())
     ..registerFactory(() => ReviewOrderCubit())
+
+    //wishlist
+    ..registerFactory(() => WishListCubit(wishListUsecase: sl()))
+    ..registerFactory(() => WishListUsecase())
 
     //date selection
     ..registerFactory(() => DateSelectionCubit())
@@ -301,7 +307,12 @@ Future<void> initInjectionContainer() async {
         await service.init();
         return service;
       },
-    );
+    )
+    ..registerLazySingleton<IWishListService>(() => WishListService(
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ));
 
   await sl.allReady();
 }
