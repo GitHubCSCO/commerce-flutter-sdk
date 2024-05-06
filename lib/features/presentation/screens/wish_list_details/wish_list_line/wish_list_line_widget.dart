@@ -28,7 +28,10 @@ class WishListLineWidget extends StatelessWidget {
           children: [
             _buildProductImage(),
             _buildProductDetails(),
-            _buildRemoveButton(context),
+            _buildRemoveAndAddToCartButton(
+              context,
+              canAddToCart: wishListLineEntity.canAddToCart == true,
+            ),
           ],
         ),
       ),
@@ -64,27 +67,29 @@ class WishListLineWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildRemoveButton(BuildContext context) {
+  Widget _buildRemoveAndAddToCartButton(BuildContext context,
+      {bool canAddToCart = false}) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        InkWell(
-          onTap: () {
-            /// TODO : add to cart
-            CustomSnackBar.showComingSoonSnackBar(context);
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(15.0).copyWith(right: 8),
-            child: SizedBox(
-              width: 30,
-              height: 30,
-              child: SvgPicture.asset(
-                AssetConstants.wishListLineAddToCartIcon,
-                fit: BoxFit.fitWidth,
+        if (canAddToCart)
+          InkWell(
+            onTap: () {
+              /// TODO : add to cart
+              CustomSnackBar.showComingSoonSnackBar(context);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(15.0).copyWith(right: 8),
+              child: SizedBox(
+                width: 30,
+                height: 30,
+                child: SvgPicture.asset(
+                  AssetConstants.wishListLineAddToCartIcon,
+                  fit: BoxFit.fitWidth,
+                ),
               ),
             ),
           ),
-        ),
         InkWell(
           onTap: () {
             /// TODO : Remove from wish list
