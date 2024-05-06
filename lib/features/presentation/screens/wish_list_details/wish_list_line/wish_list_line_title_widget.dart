@@ -6,7 +6,8 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class WishListContentProductTitleWidget extends StatelessWidget {
   final WishListLineEntity wishListLineEntity;
 
-  const WishListContentProductTitleWidget({super.key, required this.wishListLineEntity});
+  const WishListContentProductTitleWidget(
+      {super.key, required this.wishListLineEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +25,8 @@ class WishListContentProductTitleWidget extends StatelessWidget {
                   wishListLineEntity.shortDescription ?? '',
                   style: OptiTextStyles.body,
                   textAlign: TextAlign.left,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 if (!wishListLineEntity.erpNumber.isNullOrEmpty)
                   Text(

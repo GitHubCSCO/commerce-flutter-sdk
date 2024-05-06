@@ -55,4 +55,5 @@ flutter:
     - assets/images/cart_page_icons/
     - assets/images/biometric_icons/
     - assets/images/checkout_icons/
+    - assets/images/wish_list_icons/
     - assets/config/

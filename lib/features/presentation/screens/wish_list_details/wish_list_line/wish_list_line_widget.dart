@@ -54,33 +54,55 @@ class WishListLineWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          WishListContentProductTitleWidget(wishListLineEntity: wishListLineEntity),
+          WishListContentProductTitleWidget(
+              wishListLineEntity: wishListLineEntity),
           WishListContentPricingWidget(wishListLineEntity: wishListLineEntity),
-          WishListContentQuantityGroupWidget(wishListLineEntity: wishListLineEntity),
+          WishListContentQuantityGroupWidget(
+              wishListLineEntity: wishListLineEntity),
         ],
       ),
     );
   }
 
   Widget _buildRemoveButton(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        /// TODO : Remove from wish list
-        CustomSnackBar.showComingSoonSnackBar(context);
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: SizedBox(
-          width: 30,
-          height: 30,
-          child: SvgPicture.asset(
-            AssetConstants.cartItemRemoveIcon,
-            fit: BoxFit.fitWidth,
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        InkWell(
+          onTap: () {
+            /// TODO : add to cart
+            CustomSnackBar.showComingSoonSnackBar(context);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(15.0).copyWith(right: 8),
+            child: SizedBox(
+              width: 30,
+              height: 30,
+              child: SvgPicture.asset(
+                AssetConstants.wishListLineAddToCartIcon,
+                fit: BoxFit.fitWidth,
+              ),
+            ),
           ),
         ),
-      ),
+        InkWell(
+          onTap: () {
+            /// TODO : Remove from wish list
+            CustomSnackBar.showComingSoonSnackBar(context);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(15.0).copyWith(left: 8),
+            child: SizedBox(
+              width: 30,
+              height: 30,
+              child: SvgPicture.asset(
+                AssetConstants.cartItemRemoveIcon,
+                fit: BoxFit.fitWidth,
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 }
-
-
