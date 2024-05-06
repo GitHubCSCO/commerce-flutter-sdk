@@ -1,0 +1,59 @@
+name: iOS Cert
+on:
+  workflow_dispatch:
+    inputs:
+      match_purpose:
+        description: 'Sync or Nuke'
+        required: true
+        default: 'sync'
+        type: choice
+        options:
+          - sync
+          - nuke
+      release_env:
+        description: 'Environment'
+        required: true
+        default: 'qa'
+        type: choice
+        options:
+          - qa
+          - beta
+      match_type:
+        description: 'Match type'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - appstore
+          - adhoc
+          - development
+
+jobs:
+  ios:
+    runs-on: macos-latest
+    steps: 
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: List
+        run: |
+          ls -l
+      
+      - name: Extract branch name
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+
+      - name: Fastlane
+        run: |
+          if [ "${{ github.event.inputs.match_purpose }}" = "sync" ]; then
+            fastlane ios sync_certificates readonly:false type:${{ github.event.inputs.match_type }} --env ${{ github.event.inputs.release_env }}
+          else
+            fastlane ios nuke_certificates type:${{ github.event.inputs.match_type }} --env ${{ github.event.inputs.release_env }}
+          fi
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
