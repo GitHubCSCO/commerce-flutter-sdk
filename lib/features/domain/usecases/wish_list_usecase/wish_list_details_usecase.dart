@@ -12,9 +12,13 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WishListDetailsUsecase extends BaseUseCase {
   Future<WishListEntity?> loadWishList(String wishListId) async {
-    final result = await commerceAPIServiceProvider
-        .getWishListService()
-        .getWishList(wishListId, WishListQueryParameters());
+    final result =
+        await commerceAPIServiceProvider.getWishListService().getWishList(
+              wishListId,
+              WishListQueryParameters(
+                exclude: ['listlines'],
+              ),
+            );
 
     switch (result) {
       case Success(value: final value):
