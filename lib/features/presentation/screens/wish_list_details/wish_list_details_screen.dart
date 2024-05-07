@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_add_to_cart_status.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
@@ -157,8 +158,12 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                         padding: const EdgeInsetsDirectional.symmetric(
                             horizontal: 16),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            Text(
+                              '${state.wishListLines.pagination?.totalItemCount ?? ' '} Products',
+                              style: OptiTextStyles.header3,
+                            ),
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
