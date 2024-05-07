@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_collection_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/wish_list_add_to_cart_status.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_details_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +21,7 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
             status: WishListStatus.initial,
             sortOrder: WishListLineSortOrder.customSort,
             searchQuery: '',
+            addToCartStatus: WishListAddToCartStatus.unknown,
           ),
         );
 
@@ -27,7 +29,8 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       state.status == WishListStatus.success &&
       state.wishListLines.wishListLines?.isEmpty == true;
 
-  List<WishListLineSortOrder> get availableSortOrders => _wishListDetailsUsecase.availableSortOrders;
+  List<WishListLineSortOrder> get availableSortOrders =>
+      _wishListDetailsUsecase.availableSortOrders;
 
   Future<void> changeSortOrder(WishListLineSortOrder sortOrder) async {
     emit(
@@ -77,6 +80,7 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
           wishList: wishList,
           wishListLines: wishListLines,
           status: WishListStatus.success,
+          addToCartStatus: WishListAddToCartStatus.unknown,
         ),
       );
     } else {
@@ -117,5 +121,21 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
         status: WishListStatus.success,
       ),
     );
+  }
+
+  Future<void> addWishListToCart({bool ignoreOutOfStock = false}) async {
+    if (state.wishList.id != null && state.wishList.canAddAllToCart != true && !ignoreOutOfStock) {
+      emit(state.copyWith(
+          addToCartStatus: WishListAddToCartStatus.failureOutOfStock));
+      return;
+    }
+
+    emit(state.copyWith(addToCartStatus: WishListAddToCartStatus.loading));
+
+    final result = await _wishListDetailsUsecase.addWishListToCart(
+      state.wishList,
+    );
+
+    emit(state.copyWith(addToCartStatus: result));
   }
 }

@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:flutter/material.dart';
 
 class CustomSnackBar {
@@ -19,7 +20,7 @@ class CustomSnackBar {
     );
   }
 
-    static void showInvalidCVV(BuildContext context) {
+  static void showInvalidCVV(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text("Invalid CVV"),
@@ -33,6 +34,24 @@ class CustomSnackBar {
       const SnackBar(
         content: Text("PO Number Required"),
         duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showWishListAddToCart(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(SiteMessageConstants.defaultValueAddToCartAllProductsFromList),
+        duration: const Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showWishListAddToCartError(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(SiteMessageConstants.defaultValueAddToCartFail),
+        duration: const Duration(seconds: 1),
       ),
     );
   }

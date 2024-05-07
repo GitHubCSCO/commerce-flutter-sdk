@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/features/domain/entity/availability_entity.
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_collection_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/wish_list_add_to_cart_status.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/wish_list_mapper.dart';
@@ -186,6 +187,29 @@ class WishListDetailsUsecase extends BaseUseCase {
             },
           ).toList(),
         );
+    }
+  }
+
+  Future<WishListAddToCartStatus> addWishListToCart(
+    WishListEntity wishListEntity,
+  ) async {
+    final result = await commerceAPIServiceProvider
+        .getCartService()
+        .addWishListToCart(wishListEntity.id ?? '');
+
+    switch (result) {
+      case Success(value: final value):
+        return value != null
+            ? WishListAddToCartStatus.success
+            : WishListAddToCartStatus.failure;
+      case Failure(errorResponse: final errorResponse):
+        switch (errorResponse.message) {
+          case 'Cloudflare gateway timeout':
+          case 'Connection timeout':
+            return WishListAddToCartStatus.failureTimeOut;
+          default:
+            return WishListAddToCartStatus.failure;
+        }
     }
   }
 

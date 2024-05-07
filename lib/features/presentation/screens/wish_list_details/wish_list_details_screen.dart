@@ -4,10 +4,13 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/wish_list_add_to_cart_status.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list_details/wish_list_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list_details/wish_list_line/wish_list_line_widget.dart';
@@ -99,9 +102,40 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
               },
             ),
           ),
-          BlocBuilder<WishListDetailsCubit, WishListDetailsState>(
+          BlocConsumer<WishListDetailsCubit, WishListDetailsState>(
+            listener: (context, state) {
+              if (state.addToCartStatus == WishListAddToCartStatus.success) {
+                context.read<CartCountCubit>().onCartItemChange();
+                CustomSnackBar.showWishListAddToCart(context);
+              }
+
+              if (state.addToCartStatus == WishListAddToCartStatus.failure) {
+                CustomSnackBar.showWishListAddToCartError(context);
+              }
+
+              if (state.addToCartStatus ==
+                  WishListAddToCartStatus.failureOutOfStock) {
+                displayDialogWidget(
+                  context: context,
+                  title: LocalizationConstants.productsOutOfStock,
+                  message: LocalizationConstants.productsOutOfStockMessage,
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        context
+                            .read<WishListDetailsCubit>()
+                            .addWishListToCart(ignoreOutOfStock: true);
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text(LocalizationConstants.oK),
+                    )
+                  ],
+                );
+              }
+            },
             builder: (context, state) {
-              if (state.status == WishListStatus.loading) {
+              if (state.status == WishListStatus.loading ||
+                  state.addToCartStatus == WishListAddToCartStatus.loading) {
                 return const Expanded(
                     child: Center(child: CircularProgressIndicator()));
               } else if (state.status == WishListStatus.failure) {
@@ -159,7 +193,9 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                       decoration: const BoxDecoration(color: Colors.white),
                       child: PrimaryButton(
                         onPressed: () {
-                          CustomSnackBar.showComingSoonSnackBar(context);
+                          context
+                              .read<WishListDetailsCubit>()
+                              .addWishListToCart();
                         },
                         text: LocalizationConstants.addListToCart,
                       ),
