@@ -1,22 +1,20 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:camera_platform_interface/camera_platform_interface.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
-import 'package:image/image.dart' as img;
 
 class CameraView extends StatefulWidget {
   CameraView(
       {Key? key,
-        required this.customPaint,
-        required this.onImage,
-        this.onCameraFeedReady,
-        this.onDetectorViewModeChanged,
-        this.onCameraLensDirectionChanged,
-        this.initialCameraLensDirection = CameraLensDirection.back})
+      required this.customPaint,
+      required this.onImage,
+      this.onCameraFeedReady,
+      this.onDetectorViewModeChanged,
+      this.onCameraLensDirectionChanged,
+      this.initialCameraLensDirection = CameraLensDirection.back,
+      this.resolutionPreset})
       : super(key: key);
 
   final CustomPaint? customPaint;
@@ -25,6 +23,7 @@ class CameraView extends StatefulWidget {
   final VoidCallback? onDetectorViewModeChanged;
   final Function(CameraLensDirection direction)? onCameraLensDirectionChanged;
   final CameraLensDirection initialCameraLensDirection;
+  final ResolutionPreset? resolutionPreset;
 
   @override
   State<CameraView> createState() => _CameraViewState();
@@ -34,7 +33,6 @@ class _CameraViewState extends State<CameraView> {
   static List<CameraDescription> _cameras = [];
   CameraController? _controller;
   int _cameraIndex = -1;
-  bool _changingCameraLens = false;
   bool _cameraFlash = false;
 
   @override
@@ -80,11 +78,7 @@ class _CameraViewState extends State<CameraView> {
         fit: StackFit.expand,
         children: <Widget>[
           Center(
-            child: _changingCameraLens
-                ? const Center(
-              child: Text('Changing camera lens'),
-            )
-                : CameraPreview(
+            child: CameraPreview(
               _controller!,
               child: widget.customPaint,
             ),
@@ -98,60 +92,61 @@ class _CameraViewState extends State<CameraView> {
   }
 
   Widget _backButton() => Positioned(
-    top: 40,
-    right: 24,
-    child: SizedBox(
-      height: 32.0,
-      width: 32.0,
-      child: FloatingActionButton(
-        heroTag: Object(),
-        shape: const CircleBorder(),
-        onPressed: () => Navigator.of(context).pop(),
-        backgroundColor: Colors.grey.shade100,
-        child: const Icon(
-          Icons.close,
-          size: 20,
-          color: Colors.black,
+        top: 40,
+        right: 24,
+        child: SizedBox(
+          height: 32.0,
+          width: 32.0,
+          child: FloatingActionButton(
+            heroTag: Object(),
+            shape: const CircleBorder(),
+            onPressed: () => Navigator.of(context).pop(),
+            backgroundColor: Colors.grey.shade100,
+            child: const Icon(
+              Icons.close,
+              size: 20,
+              color: Colors.black,
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 
   Widget _switchFlashToggle() => Positioned(
-    top: 40,
-    left: 24,
-    child: SizedBox(
-      height: 32.0,
-      width: 32.0,
-      child: FloatingActionButton(
-        heroTag: Object(),
-        shape: const CircleBorder(),
-        onPressed: () {
-          setState(() => _cameraFlash = !_cameraFlash);
-          _controller?.setFlashMode(_cameraFlash ? FlashMode.torch : FlashMode.off);
-        },
-        backgroundColor: Colors.grey.shade100,
-        child: Icon(
-          _cameraFlash ? Icons.flash_on : Icons.flash_off,
-          size: 20,
-          color: Colors.black,
+        top: 40,
+        left: 24,
+        child: SizedBox(
+          height: 32.0,
+          width: 32.0,
+          child: FloatingActionButton(
+            heroTag: Object(),
+            shape: const CircleBorder(),
+            onPressed: () {
+              setState(() => _cameraFlash = !_cameraFlash);
+              _controller?.setFlashMode(
+                  _cameraFlash ? FlashMode.torch : FlashMode.off);
+            },
+            backgroundColor: Colors.grey.shade100,
+            child: Icon(
+              _cameraFlash ? Icons.flash_on : Icons.flash_off,
+              size: 20,
+              color: Colors.black,
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 
   Widget _rectangleScanArea() => Positioned.fill(
-    child: CustomPaint(
-      painter: RectanglePainter(),
-    ),
-  );
+        child: CustomPaint(
+          painter: RectanglePainter(),
+        ),
+      );
 
   Future _startLiveFeed() async {
     final camera = _cameras[_cameraIndex];
     _controller = CameraController(
       camera,
       // Set to ResolutionPreset.high. Do NOT set it to ResolutionPreset.max because for some phones does NOT work.
-      ResolutionPreset.high,
+      widget.resolutionPreset ?? ResolutionPreset.high,
       enableAudio: false,
       imageFormatGroup: Platform.isAndroid
           ? ImageFormatGroup.nv21
@@ -177,15 +172,6 @@ class _CameraViewState extends State<CameraView> {
     await _controller?.stopImageStream();
     await _controller?.dispose();
     _controller = null;
-  }
-
-  Future _switchLiveCamera() async {
-    setState(() => _changingCameraLens = true);
-    _cameraIndex = (_cameraIndex + 1) % _cameras.length;
-
-    await _stopLiveFeed();
-    await _startLiveFeed();
-    setState(() => _changingCameraLens = false);
   }
 
   void _processCameraImage(CameraImage image) {
@@ -217,7 +203,7 @@ class _CameraViewState extends State<CameraView> {
       rotation = InputImageRotationValue.fromRawValue(sensorOrientation);
     } else if (Platform.isAndroid) {
       var rotationCompensation =
-      _orientations[_controller!.value.deviceOrientation];
+          _orientations[_controller!.value.deviceOrientation];
       if (rotationCompensation == null) return null;
       if (camera.lensDirection == CameraLensDirection.front) {
         // front-facing
@@ -258,7 +244,6 @@ class _CameraViewState extends State<CameraView> {
       ),
     );
   }
-
 }
 
 class RectanglePainter extends CustomPainter {
@@ -270,7 +255,8 @@ class RectanglePainter extends CustomPainter {
       ..strokeWidth = 4.0;
 
     final rect = Rect.fromLTWH(
-      size.width * 0.10, // Adjust these values as needed to position the rectangle
+      size.width *
+          0.10, // Adjust these values as needed to position the rectangle
       size.height * 0.4,
       size.width * 0.80,
       size.height * 0.20,
