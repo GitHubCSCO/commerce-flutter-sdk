@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
@@ -11,13 +12,15 @@ import 'package:commerce_flutter_app/features/presentation/bloc/search/search/se
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_state.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/search_products/seardh_products_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/barcode_scanner_view.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 void _reloadSearchPage(BuildContext context) {
   context.read<SearchPageCmsBloc>().add(SearchPageCmsLoadEvent());
@@ -55,37 +58,59 @@ class SearchPage extends BaseDynamicContentScreen {
         const SizedBox(height: 36),
         Container(
           color: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-          child: Input(
-            hintText: LocalizationConstants.search,
-            suffixIcon: IconButton(
-              icon: SvgPicture.asset(
-                AssetConstants.iconClear,
-                semanticsLabel: 'search query clear icon',
-                fit: BoxFit.fitWidth,
+          padding: const EdgeInsets.only(left: 16, top: 16, bottom: 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Input(
+                  hintText: LocalizationConstants.search,
+                  suffixIcon: IconButton(
+                    icon: SvgPicture.asset(
+                      AssetConstants.iconClear,
+                      semanticsLabel: 'search query clear icon',
+                      fit: BoxFit.fitWidth,
+                    ),
+                    onPressed: () {
+                      textEditingController.clear();
+                      context.read<SearchBloc>().add(SearchTypingEvent(''));
+                      context.closeKeyboard();
+                    },
+                  ),
+                  onTapOutside: (p0) => context.closeKeyboard(),
+                  textInputAction: TextInputAction.search,
+                  focusListener: (bool hasFocus) {
+                    if (hasFocus) {
+                      context.read<SearchBloc>().add(SearchFocusEvent());
+                    } else {
+                      context.read<SearchBloc>().add(SearchUnFocusEvent());
+                    }
+                  },
+                  onChanged: (String searchQuery) {
+                    context.read<SearchBloc>().add(SearchTypingEvent(searchQuery));
+                  },
+                  onSubmitted: (String query) {
+                    context.read<SearchBloc>().add(SearchSearchEvent());
+                  },
+                  controller: textEditingController,
+                ),
               ),
-              onPressed: () {
-                textEditingController.clear();
-                context.read<SearchBloc>().add(SearchTypingEvent(''));
-                context.closeKeyboard();
-              },
-            ),
-            onTapOutside: (p0) => context.closeKeyboard(),
-            textInputAction: TextInputAction.search,
-            focusListener: (bool hasFocus) {
-              if (hasFocus) {
-                context.read<SearchBloc>().add(SearchFocusEvent());
-              } else {
-                context.read<SearchBloc>().add(SearchUnFocusEvent());
-              }
-            },
-            onChanged: (String searchQuery) {
-              context.read<SearchBloc>().add(SearchTypingEvent(searchQuery));
-            },
-            onSubmitted: (String query) {
-              context.read<SearchBloc>().add(SearchSearchEvent());
-            },
-            controller: textEditingController,
+              IconButton(
+                icon: SvgPicture.asset(
+                  AssetConstants.iconBarcodeScan,
+                  semanticsLabel: 'barcode scan icon',
+                  fit: BoxFit.fitWidth,
+                ),
+                onPressed: () async {
+                  final result = await GoRouter.of(context).pushNamed(
+                    AppRoute.barcodeScanner.name
+                  ) as String;
+                  if (!result.isNullOrEmpty) {
+                    context.read<SearchBloc>().searchQuery = result;
+                    context.read<SearchBloc>().add(SearchSearchEvent());
+                  }
+                },
+              )
+            ],
           ),
         ),
         Expanded(

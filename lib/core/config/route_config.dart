@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/barcode_scanner_view.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
@@ -166,6 +167,14 @@ List<NavigationNode> _getNavigationRoot() {
     parent: account,
   );
 
+  // path: /barcodeScanner
+  final barcodeScanner = createNode(
+    name: AppRoute.barcodeScanner.name,
+    path: AppRoute.barcodeScanner.suffix,
+    builder: (context, state) => const BarcodeScannerView(),
+    parent: null,
+  );
+  
   // path: /account/list
   final lists = createNode(
     name: AppRoute.wishlist.name,
@@ -174,14 +183,6 @@ List<NavigationNode> _getNavigationRoot() {
     parent: account,
   );
 
-  return [
-    root,
-    navbarRoot,
-    welcome,
-    domainSelection,
-    login,
-    biometricLogin,
-    checkout,
-    checkoutSuccess,
-  ];
+  return [root, navbarRoot, welcome, domainSelection, login, biometricLogin, checkout, checkoutSuccess, barcodeScanner];
+
 }
