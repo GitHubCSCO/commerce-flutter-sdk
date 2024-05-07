@@ -11,10 +11,6 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class Configuration {
   bool? ShouldUseStaticDomain;
 
-  String? AppCenterSecretiOS;
-
-  String? AppCenterSecretAndroid;
-
   String? Domain;
 
   String? SandboxDomain;
@@ -29,10 +25,21 @@ class Configuration {
 
   bool? CustomHideCheckoutOrderNotes;
 
+  String? FirebaseAndroidApiKey;
+  String? FirebaseAndroidAppId;
+  String? FirebaseAndroidMessagingSenderId;
+  String? FirebaseAndroidProjectId;
+  String? FirebaseAndroidStorageBucket;
+
+  String? FirebaseIOSApiKey;
+  String? FirebaseIOSAppId;
+  String? FirebaseIOSMessagingSenderId;
+  String? FirebaseIOSProjectId;
+  String? FirebaseIOSStorageBucket;
+  String? FirebaseIOSBundleId;
+
   Configuration({
     this.ShouldUseStaticDomain,
-    this.AppCenterSecretiOS,
-    this.AppCenterSecretAndroid,
     this.Domain,
     this.SandboxDomain,
     this.HasCheckout,
@@ -40,13 +47,22 @@ class Configuration {
     this.ViewOnWebsiteEnabled,
     this.StartingCategoryForBrowsing,
     this.CustomHideCheckoutOrderNotes,
+    this.FirebaseAndroidApiKey,
+    this.FirebaseAndroidAppId,
+    this.FirebaseAndroidMessagingSenderId,
+    this.FirebaseAndroidProjectId,
+    this.FirebaseAndroidStorageBucket,
+    this.FirebaseIOSApiKey,
+    this.FirebaseIOSAppId,
+    this.FirebaseIOSMessagingSenderId,
+    this.FirebaseIOSProjectId,
+    this.FirebaseIOSStorageBucket,
+    this.FirebaseIOSBundleId,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'ShouldUseStaticDomain': ShouldUseStaticDomain,
-      'AppCenterSecretiOS': AppCenterSecretiOS,
-      'AppCenterSecretAndroid': AppCenterSecretAndroid,
       'Domain': Domain,
       'SandboxDomain': SandboxDomain,
       'HasCheckout': HasCheckout,
@@ -54,6 +70,17 @@ class Configuration {
       'ViewOnWebsiteEnabled': ViewOnWebsiteEnabled,
       'StartingCategoryForBrowsing': StartingCategoryForBrowsing,
       'CustomHideCheckoutOrderNotes': CustomHideCheckoutOrderNotes,
+      'FirebaseAndroidApiKey': FirebaseAndroidApiKey,
+      'FirebaseAndroidAppId': FirebaseAndroidAppId,
+      'FirebaseAndroidMessagingSenderId': FirebaseAndroidMessagingSenderId,
+      'FirebaseAndroidProjectId': FirebaseAndroidProjectId,
+      'FirebaseAndroidStorageBucket': FirebaseAndroidStorageBucket,
+      'FirebaseIOSApiKey': FirebaseIOSApiKey,
+      'FirebaseIOSAppId': FirebaseIOSAppId,
+      'FirebaseIOSMessagingSenderId': FirebaseIOSMessagingSenderId,
+      'FirebaseIOSProjectId': FirebaseIOSProjectId,
+      'FirebaseIOSStorageBucket': FirebaseIOSStorageBucket,
+      'FirebaseIOSBundleId': FirebaseIOSBundleId,
     };
   }
 
@@ -61,12 +88,6 @@ class Configuration {
     return Configuration(
       ShouldUseStaticDomain: map['ShouldUseStaticDomain'] != null
           ? map['ShouldUseStaticDomain'] as bool
-          : null,
-      AppCenterSecretiOS: map['AppCenterSecretiOS'] != null
-          ? map['AppCenterSecretiOS'] as String
-          : null,
-      AppCenterSecretAndroid: map['AppCenterSecretAndroid'] != null
-          ? map['AppCenterSecretAndroid'] as String
           : null,
       Domain: map['Domain'] != null ? map['Domain'] as String : null,
       SandboxDomain:
@@ -84,6 +105,40 @@ class Configuration {
       CustomHideCheckoutOrderNotes: map['CustomHideCheckoutOrderNotes'] != null
           ? map['CustomHideCheckoutOrderNotes'] as bool
           : null,
+      FirebaseAndroidApiKey: map['FirebaseAndroidApiKey'] != null
+          ? map['FirebaseAndroidApiKey'] as String
+          : null,
+      FirebaseAndroidAppId: map['FirebaseAndroidAppId'] != null
+          ? map['FirebaseAndroidAppId'] as String
+          : null,
+      FirebaseAndroidMessagingSenderId:
+          map['FirebaseAndroidMessagingSenderId'] != null
+              ? map['FirebaseAndroidMessagingSenderId'] as String
+              : null,
+      FirebaseAndroidProjectId: map['FirebaseAndroidProjectId'] != null
+          ? map['FirebaseAndroidProjectId'] as String
+          : null,
+      FirebaseAndroidStorageBucket: map['FirebaseAndroidStorageBucket'] != null
+          ? map['FirebaseAndroidStorageBucket'] as String
+          : null,
+      FirebaseIOSApiKey: map['FirebaseIOSApiKey'] != null
+          ? map['FirebaseIOSApiKey'] as String
+          : null,
+      FirebaseIOSAppId: map['FirebaseIOSAppId'] != null
+          ? map['FirebaseIOSAppId'] as String
+          : null,
+      FirebaseIOSMessagingSenderId: map['FirebaseIOSMessagingSenderId'] != null
+          ? map['FirebaseIOSMessagingSenderId'] as String
+          : null,
+      FirebaseIOSProjectId: map['FirebaseIOSProjectId'] != null
+          ? map['FirebaseIOSProjectId'] as String
+          : null,
+      FirebaseIOSStorageBucket: map['FirebaseIOSStorageBucket'] != null
+          ? map['FirebaseIOSStorageBucket'] as String
+          : null,
+      FirebaseIOSBundleId: map['FirebaseIOSBundleId'] != null
+          ? map['FirebaseIOSBundleId'] as String
+          : null,
     );
   }
 
@@ -98,12 +153,6 @@ class AppConfigurationService extends ServiceBase
   final ICommerceAPIServiceProvider _commerceAPIServiceProvider;
   @override
   String? termsOfUseUrl;
-
-  @override
-  String? appCenterSecretAndroid;
-
-  @override
-  String? appCenterSecretiOS;
 
   @override
   bool? customHideCheckoutOrderNotes;
@@ -126,6 +175,39 @@ class AppConfigurationService extends ServiceBase
   @override
   bool? viewOnWebsiteEnabled;
 
+  @override
+  String? firebaseAndroidApiKey;
+
+  @override
+  String? firebaseAndroidAppId;
+
+  @override
+  String? firebaseAndroidMessagingSenderId;
+
+  @override
+  String? firebaseAndroidProjectId;
+
+  @override
+  String? firebaseAndroidStorageBucket;
+
+  @override
+  String? firebaseIOSApiKey;
+
+  @override
+  String? firebaseIOSAppId;
+
+  @override
+  String? firebaseIOSMessagingSenderId;
+
+  @override
+  String? firebaseIOSProjectId;
+
+  @override
+  String? firebaseIOSStorageBucket;
+
+  @override
+  String? firebaseIOSBundleId;
+
   AppConfigurationService({
     required ICommerceAPIServiceProvider commerceAPIServiceProvider,
     required super.clientService,
@@ -139,8 +221,6 @@ class AppConfigurationService extends ServiceBase
 
     final configuration = Configuration.fromJson(configurationString);
 
-    appCenterSecretAndroid = configuration.AppCenterSecretAndroid;
-    appCenterSecretiOS = configuration.AppCenterSecretiOS;
     domain = configuration.Domain;
     sandboxDomain = configuration.SandboxDomain;
     shouldUseStaticDomain = configuration.ShouldUseStaticDomain;
@@ -148,6 +228,20 @@ class AppConfigurationService extends ServiceBase
     termsOfUseUrl = configuration.CheckoutUrl;
     privacyPolicyUrl = configuration.CheckoutUrl;
     customHideCheckoutOrderNotes = configuration.CustomHideCheckoutOrderNotes;
+
+    firebaseAndroidApiKey = configuration.FirebaseAndroidApiKey;
+    firebaseAndroidAppId = configuration.FirebaseAndroidAppId;
+    firebaseAndroidMessagingSenderId =
+        configuration.FirebaseAndroidMessagingSenderId;
+    firebaseAndroidProjectId = configuration.FirebaseAndroidProjectId;
+    firebaseAndroidStorageBucket = configuration.FirebaseAndroidStorageBucket;
+
+    firebaseIOSApiKey = configuration.FirebaseIOSApiKey;
+    firebaseIOSAppId = configuration.FirebaseIOSAppId;
+    firebaseIOSMessagingSenderId = configuration.FirebaseIOSMessagingSenderId;
+    firebaseIOSProjectId = configuration.FirebaseIOSProjectId;
+    firebaseIOSStorageBucket = configuration.FirebaseIOSStorageBucket;
+    firebaseIOSBundleId = configuration.FirebaseIOSBundleId;
   }
 
   static const String _tokenExConfigurationUrl = "/api/v1/tokenexconfig";
