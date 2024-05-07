@@ -68,7 +68,7 @@ enum AppRoute {
   orderHistory(
       name: RouteNames.orderHistory, fullPath: RoutePaths.orderHistory),
   barcodeScanner(
-      name: RouteNames.barcodeScanner, fullPath: RoutePaths.barcodeScanner);
+      name: RouteNames.barcodeScanner, fullPath: RoutePaths.barcodeScanner),
   wishlist(name: RouteNames.lists, fullPath: RoutePaths.lists);
 
   const AppRoute({
