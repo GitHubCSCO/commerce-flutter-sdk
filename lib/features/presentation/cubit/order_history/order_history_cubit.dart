@@ -1,6 +1,8 @@
 import 'package:commerce_flutter_app/features/domain/entity/order/get_order_collection_result_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/filter_status.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/order_usecase/order_usecase.dart';
+import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -14,6 +16,8 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       : _orderUsecase = orderUsecase,
         super(
           const OrderHistoryState(
+            showMyOrders: false,
+            selectedFilterValueIds: {},
             orderEntities: GetOrderCollectionResultEntity(
               pagination: null,
               orders: null,
@@ -21,13 +25,91 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
             ),
             orderStatus: OrderStatus.initial,
             orderSortOrder: OrderSortOrder.orderDateDescending,
+            filterValues: [],
+            temporarySelectedFilterValueIds: {},
+            filterStatus: FilterStatus.unknown,
+            temporaryShowMyOrdersValue: false,
           ),
         );
+
+  Future<void> loadFilterValues() async {
+    emit(
+      state.copyWith(
+        temporarySelectedFilterValueIds: {},
+        temporaryShowMyOrdersValue: false,
+        filterStatus: FilterStatus.loading,
+      ),
+    );
+
+    final result = await _orderUsecase.getFilterValues();
+
+    result != null
+        ? emit(
+            state.copyWith(
+              filterValues: result,
+              filterStatus: FilterStatus.success,
+              temporarySelectedFilterValueIds: state.selectedFilterValueIds,
+              temporaryShowMyOrdersValue: state.showMyOrders,
+            ),
+          )
+        : emit(
+            state.copyWith(
+              filterStatus: FilterStatus.failure,
+            ),
+          );
+  }
+
+  void addFilterValue(String id) {
+    emit(
+      state.copyWith(
+        temporarySelectedFilterValueIds:
+            Set<String>.from(state.temporarySelectedFilterValueIds)..add(id),
+      ),
+    );
+  }
+
+  void removeFilterValue(String id) {
+    emit(
+      state.copyWith(
+        temporarySelectedFilterValueIds:
+            Set<String>.from(state.temporarySelectedFilterValueIds)
+              ..remove(id),
+      ),
+    );
+  }
+
+  void toggleShowMyOrders() {
+    emit(
+      state.copyWith(
+        temporaryShowMyOrdersValue: !state.temporaryShowMyOrdersValue,
+      ),
+    );
+  }
+
+  void resetFilter() {
+    emit(
+      state.copyWith(
+        temporarySelectedFilterValueIds: {},
+        temporaryShowMyOrdersValue: false,
+      ),
+    );
+  }
 
   Future<void> changeSortOrder(OrderSortOrder orderSortOrder) async {
     emit(
       state.copyWith(
         orderSortOrder: orderSortOrder,
+      ),
+    );
+
+    await loadOrderHistory();
+  }
+
+  Future<void> applyFilter() async {
+    emit(
+      state.copyWith(
+        selectedFilterValueIds: state.temporarySelectedFilterValueIds,
+        showMyOrders: state.temporaryShowMyOrdersValue,
       ),
     );
 
@@ -41,14 +123,25 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       ),
     );
 
-    final result = await _orderUsecase.getOrderHistory(sortOrder: state.orderSortOrder);
+    final result = await _orderUsecase.getOrderHistory(
+      sortOrder: state.orderSortOrder,
+      showMyOrders: state.showMyOrders,
+      filterAttributes: state.selectedFilterValueIds.toList(),
+    );
 
     result != null
         ? emit(
             OrderHistoryState(
+              showMyOrders: state.showMyOrders,
+              selectedFilterValueIds: state.selectedFilterValueIds,
               orderEntities: result,
               orderStatus: OrderStatus.success,
               orderSortOrder: state.orderSortOrder,
+              filterValues: state.filterValues,
+              temporarySelectedFilterValueIds:
+                  state.temporarySelectedFilterValueIds,
+              filterStatus: state.filterStatus,
+              temporaryShowMyOrdersValue: state.temporaryShowMyOrdersValue,
             ),
           )
         : emit(
@@ -70,6 +163,8 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
     final result = await _orderUsecase.getOrderHistory(
       page: state.orderEntities.pagination!.page! + 1,
       sortOrder: state.orderSortOrder,
+      showMyOrders: state.showMyOrders,
+      filterAttributes: state.selectedFilterValueIds.toList(),
     );
 
     if (result == null) {
