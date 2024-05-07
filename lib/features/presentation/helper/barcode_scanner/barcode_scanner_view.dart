@@ -9,7 +9,6 @@ import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanne
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 
-
 class BarcodeScannerView extends StatefulWidget {
   const BarcodeScannerView({super.key});
 
@@ -43,13 +42,13 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
             text: _text,
             onImage: _processImage,
             initialCameraLensDirection: _cameraLensDirection,
-            onCameraLensDirectionChanged: (value) => _cameraLensDirection = value,
+            onCameraLensDirectionChanged: (value) =>
+                _cameraLensDirection = value,
           ),
         ),
         Container(
           height: 80,
-          padding: const EdgeInsets.symmetric(
-              horizontal: 32, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
           clipBehavior: Clip.antiAlias,
           decoration: const BoxDecoration(color: Colors.white),
           child: PrimaryButton(
@@ -58,8 +57,12 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
                 _canProcess = !_canProcess;
               });
             },
-            backgroundColor: _canProcess ? OptiAppColors.buttonDarkRedBackgroudColor : AppStyle.primary500,
-            text: _canProcess ? LocalizationConstants.cancel : LocalizationConstants.tapToScan,
+            backgroundColor: _canProcess
+                ? OptiAppColors.buttonDarkRedBackgroudColor
+                : AppStyle.primary500,
+            text: _canProcess
+                ? LocalizationConstants.cancel
+                : LocalizationConstants.tapToScan,
           ),
         )
       ],
@@ -75,7 +78,8 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
     });
     final barcodes = await _barcodeScanner.processImage(inputImage);
 
-    final size = rotateSize(inputImage.metadata!.size, inputImage.metadata?.rotation.rawValue ?? 0);
+    final size = rotateSize(
+        inputImage.metadata!.size, inputImage.metadata?.rotation.rawValue ?? 0);
     const areaHeight = 300;
     const left = 20.00;
     final right = size.width - left;
@@ -115,8 +119,10 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
     List<Barcode> barcodesWithin = [];
 
     for (var barcode in barcodes) {
-      if (scanArea.contains(Offset(barcode.boundingBox.left, barcode.boundingBox.top)) &&
-          scanArea.contains(Offset(barcode.boundingBox.right, barcode.boundingBox.bottom))) {
+      if (scanArea.contains(
+              Offset(barcode.boundingBox.left, barcode.boundingBox.top)) &&
+          scanArea.contains(
+              Offset(barcode.boundingBox.right, barcode.boundingBox.bottom))) {
         barcodesWithin.add(barcode);
       }
     }
@@ -129,10 +135,11 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
     double rotationRad = rotation * pi / 180;
 
     // Calculate rotated width and height
-    double rotatedWidth = (size.width * cos(rotationRad)).abs() + (size.height * sin(rotationRad)).abs();
-    double rotatedHeight = (size.width * sin(rotationRad)).abs() + (size.height * cos(rotationRad)).abs();
+    double rotatedWidth = (size.width * cos(rotationRad)).abs() +
+        (size.height * sin(rotationRad)).abs();
+    double rotatedHeight = (size.width * sin(rotationRad)).abs() +
+        (size.height * cos(rotationRad)).abs();
 
     return Size(rotatedWidth, rotatedHeight);
   }
-
 }
