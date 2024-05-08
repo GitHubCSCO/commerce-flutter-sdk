@@ -1,7 +1,10 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list_details/wish_list_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list_details/wish_list_line/wish_list_line_image_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list_details/wish_list_line/wish_list_line_pricing_widgert.dart';
@@ -10,6 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/wish_list_det
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WishListLineWidget extends StatelessWidget {
   final WishListLineEntity wishListLineEntity;
@@ -28,7 +32,48 @@ class WishListLineWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => _navigateToProductDetails(context),
+      onTap: () {
+        String? errorMessage;
+        if (wishListLineEntity.isDiscontinued == true ||
+            wishListLineEntity.isActive != true) {
+          errorMessage = SiteMessageConstants
+              .defaultValueWishListItemsDiscontinuedAndRemoved;
+        }
+
+        if (wishListLineEntity.isVisible != true) {
+          errorMessage = SiteMessageConstants
+              .defaultValueWishListItemsNotDisplayedDueRestrictions;
+        }
+
+        if (!errorMessage.isNullOrEmpty) {
+          displayDialogWidget(
+            context: context,
+            message:
+                '${errorMessage ?? ''} ${LocalizationConstants.removeItemFromTheList}',
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text(LocalizationConstants.cancel),
+              ),
+              TextButton(
+                onPressed: () {
+                  context.read<WishListDetailsCubit>().deleteWishListLine(
+                        wishListLineEntity,
+                      );
+                  Navigator.of(context).pop();
+                },
+                child: const Text(LocalizationConstants.oK),
+              ),
+            ],
+          );
+
+          return;
+        }
+
+        _navigateToProductDetails(context);
+      },
       child: Container(
         color: Colors.white,
         child: Row(
