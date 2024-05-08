@@ -52,54 +52,56 @@ class WishListDetailsUsecase extends BaseUseCase {
           return null;
         }
 
-        final valueEntity = WishListLineCollectionEntityMapper.toEntity(value);
-        final priceParameters = value.wishListLines
-                ?.map(
-                  (line) => ProductPriceQueryParameter(
-                    productId: line.productId,
-                    qtyOrdered: line.qtyOrdered,
-                    unitOfMeasure: line.unitOfMeasure,
-                  ),
-                )
-                .toList() ??
-            [];
-
-        if (priceParameters.isEmpty) {
-          return valueEntity;
-        }
-
-        final updatedLines = await loadWishListLinesWithRealTimePricing(
-          wishListLineCollection: valueEntity,
-          priceParameters: priceParameters,
+        final wishListLineCollection =
+            WishListLineCollectionEntityMapper.toEntity(value);
+            
+        final wishListLines = await loadRealTimeAttributes(
+          wishListLines: wishListLineCollection.wishListLines ?? [],
         );
 
-        final productIds = updatedLines.wishListLines
-                ?.map((line) => line.productId ?? '')
-                .where((element) => element != '')
-                .toList() ??
-            [];
-
-        if (productIds.isEmpty) {
-          return updatedLines;
-        }
-
-        final updatedLinesWithInventory =
-            await loadWishListLinesWithRealTimeInventory(
-          wishListLineCollection: updatedLines,
-          productIds: productIds,
+        return wishListLineCollection.copyWith(
+          wishListLines: wishListLines,
         );
-
-        return updatedLinesWithInventory;
 
       case Failure():
         return null;
     }
   }
 
-  Future<WishListLineCollectionEntity> loadWishListLinesWithRealTimePricing({
-    required WishListLineCollectionEntity wishListLineCollection,
-    required List<ProductPriceQueryParameter> priceParameters,
+  Future<List<WishListLineEntity>> loadRealTimeAttributes({
+    required List<WishListLineEntity> wishListLines,
   }) async {
+    final realTimeAttributes = Future.wait([
+      loadRealTimePricing(wishListLines: wishListLines),
+      loadRealTimeInventory(wishListLines: wishListLines),
+    ]);
+
+    final results = await realTimeAttributes;
+    return List.generate(wishListLines.length, (index) {
+      return wishListLines[index].copyWith(
+        pricing: results[0][index].pricing,
+        availability: results[1][index].availability,
+      );
+    });
+  }
+
+  Future<List<WishListLineEntity>> loadRealTimePricing({
+    required List<WishListLineEntity> wishListLines,
+  }) async {
+    final priceParameters = wishListLines
+        .map(
+          (line) => ProductPriceQueryParameter(
+            productId: line.productId,
+            qtyOrdered: line.qtyOrdered,
+            unitOfMeasure: line.unitOfMeasure,
+          ),
+        )
+        .toList();
+
+    if (priceParameters.isEmpty) {
+      return wishListLines;
+    }
+
     final realTimePricesResult = await commerceAPIServiceProvider
         .getRealTimePricingService()
         .getProductRealTimePrices(
@@ -110,9 +112,7 @@ class WishListDetailsUsecase extends BaseUseCase {
 
     switch (realTimePricesResult) {
       case Success(value: final realTimePrices):
-        final lines =
-            wishListLineCollection.wishListLines ?? <WishListLineEntity>[];
-        final newLines = lines.map((line) {
+        final newLines = wishListLines.map((line) {
           final realTimePrice = realTimePrices?.realTimePricingResults
               ?.firstWhere((element) => element.productId == line.productId,
                   orElse: () => ProductPrice());
@@ -124,16 +124,24 @@ class WishListDetailsUsecase extends BaseUseCase {
           );
         }).toList();
 
-        return wishListLineCollection.copyWith(wishListLines: newLines);
+        return newLines;
       case Failure():
-        return wishListLineCollection;
+        return wishListLines;
     }
   }
 
-  Future<WishListLineCollectionEntity> loadWishListLinesWithRealTimeInventory({
-    required WishListLineCollectionEntity wishListLineCollection,
-    required List<String> productIds,
+  Future<List<WishListLineEntity>> loadRealTimeInventory({
+    required List<WishListLineEntity> wishListLines,
   }) async {
+    final productIds = wishListLines
+        .map((line) => line.productId ?? '')
+        .where((element) => element != '')
+        .toList();
+
+    if (productIds.isEmpty) {
+      return wishListLines;
+    }
+
     final realTimeInventoryResult = await commerceAPIServiceProvider
         .getRealTimeInventoryService()
         .getProductRealTimeInventory(
@@ -144,9 +152,7 @@ class WishListDetailsUsecase extends BaseUseCase {
 
     switch (realTimeInventoryResult) {
       case Success(value: final realTimeInventory):
-        final lines =
-            wishListLineCollection.wishListLines ?? <WishListLineEntity>[];
-        final newLines = lines.map(
+        final newLines = wishListLines.map(
           (line) {
             final realTimeInventoryItem = realTimeInventory
                 ?.realTimeInventoryResults
@@ -180,17 +186,15 @@ class WishListDetailsUsecase extends BaseUseCase {
           },
         ).toList();
 
-        return wishListLineCollection.copyWith(wishListLines: newLines);
+        return newLines;
       case Failure():
-        return wishListLineCollection.copyWith(
-          wishListLines: wishListLineCollection.wishListLines?.map(
-            (line) {
-              return line.copyWith(
-                availability: const AvailabilityEntity(messageType: 0),
-              );
-            },
-          ).toList(),
-        );
+        return wishListLines.map(
+          (line) {
+            return line.copyWith(
+              availability: const AvailabilityEntity(messageType: 0),
+            );
+          },
+        ).toList();
     }
   }
 
@@ -214,6 +218,29 @@ class WishListDetailsUsecase extends BaseUseCase {
           default:
             return WishListAddToCartStatus.failure;
         }
+    }
+  }
+
+  Future<WishListLineEntity?> updateWishListLine({
+    required String wishListId,
+    required WishListLineEntity wishListLineEntity,
+  }) async {
+    final result = await commerceAPIServiceProvider
+        .getWishListService()
+        .updateWishListLine(
+          wishListId,
+          WishListLineEntityMapper.toModel(wishListLineEntity),
+        );
+
+    switch (result) {
+      case Success(value: final value):
+        if (value == null) {
+          return null;
+        }
+
+        return WishListLineEntityMapper.toEntity(value);
+      case Failure():
+        return null;
     }
   }
 

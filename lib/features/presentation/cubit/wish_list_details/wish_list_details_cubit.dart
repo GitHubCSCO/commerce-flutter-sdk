@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_collection_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_add_to_cart_status.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_details_usecase.dart';
@@ -124,7 +125,9 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
   }
 
   Future<void> addWishListToCart({bool ignoreOutOfStock = false}) async {
-    if (state.wishList.id != null && state.wishList.canAddAllToCart != true && !ignoreOutOfStock) {
+    if (state.wishList.id != null &&
+        state.wishList.canAddAllToCart != true &&
+        !ignoreOutOfStock) {
       emit(state.copyWith(
           addToCartStatus: WishListAddToCartStatus.failureOutOfStock));
       return;
@@ -137,5 +140,39 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     );
 
     emit(state.copyWith(addToCartStatus: result));
+  }
+
+  Future<void> updateWishListLineQuantity(
+    WishListLineEntity wishListLine,
+    int quantity,
+  ) async {
+    final modifiedWishListLine = wishListLine.copyWith(qtyOrdered: quantity);
+    final modificationResult = await _wishListDetailsUsecase.updateWishListLine(
+      wishListId: state.wishList.id ?? '',
+      wishListLineEntity: modifiedWishListLine,
+    );
+
+    if (modificationResult == null) {
+      emit(state.copyWith(status: WishListStatus.errorModification));
+      return;
+    }
+
+    final newWishListLines = state.wishListLines.wishListLines?.map((line) {
+      if (line.id == modificationResult.id) {
+        return modificationResult;
+      }
+      return line;
+    }).toList();
+
+    final realTimeLoadedWishListLines = await _wishListDetailsUsecase
+        .loadRealTimeAttributes(wishListLines: newWishListLines ?? []);
+
+    emit(
+      state.copyWith(
+        wishListLines: state.wishListLines.copyWith(
+          wishListLines: realTimeLoadedWishListLines,
+        ),
+      ),
+    );
   }
 }

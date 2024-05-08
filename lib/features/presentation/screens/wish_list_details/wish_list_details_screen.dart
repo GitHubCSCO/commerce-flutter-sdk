@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
@@ -126,6 +127,23 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                         context
                             .read<WishListDetailsCubit>()
                             .addWishListToCart(ignoreOutOfStock: true);
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text(LocalizationConstants.oK),
+                    )
+                  ],
+                );
+              }
+
+              if (state.status == WishListStatus.errorModification) {
+                displayDialogWidget(
+                  context: context,
+                  title: LocalizationConstants.error,
+                  message: SiteMessageConstants
+                      .defaultMobileAppAlertCommunicationError,
+                  actions: [
+                    TextButton(
+                      onPressed: () {
                         Navigator.of(context).pop();
                       },
                       child: const Text(LocalizationConstants.oK),

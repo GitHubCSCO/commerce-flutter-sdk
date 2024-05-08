@@ -2,8 +2,9 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/wish_list_line_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/wish_list_details/wish_list_details_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WishListContentQuantityGroupWidget extends StatelessWidget {
   final WishListLineEntity wishListLineEntity;
@@ -25,13 +26,15 @@ class WishListContentQuantityGroupWidget extends StatelessWidget {
                 initialtText: wishListLineEntity.qtyOrdered?.toInt().toString(),
                 shouldShowIncrementDecermentIcon: false,
                 onChanged: (int? quantity) {
-                  // wishListLineEntity =
-                  //     wishListLineEntity.copyWith(qtyOrdered: quantity);
-                  // context.read<WishListContentBloc>().add(
-                  //     WishListContentQuantityChangedEvent(
-                  //         WishListLineEntity: wishListLineEntity));
-
-                  CustomSnackBar.showComingSoonSnackBar(context);
+                  final newWishListLineEntity =
+                      wishListLineEntity.copyWith(qtyOrdered: quantity);
+                  context
+                      .read<WishListDetailsCubit>()
+                      .updateWishListLineQuantity(
+                          newWishListLineEntity,
+                          quantity ??
+                              (wishListLineEntity.qtyOrdered as int?) ??
+                              1);
                 }),
           ),
           // WishListContentTitleSubTitleColumn('U/M', 'E/A'),

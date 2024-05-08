@@ -4,5 +4,6 @@ enum WishListStatus {
   moreLoading,
   success,
   failure,
+  errorModification,
   moreLoadingFailure,
 }
