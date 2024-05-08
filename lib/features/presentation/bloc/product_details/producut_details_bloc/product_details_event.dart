@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
 
@@ -11,7 +12,7 @@ class FetchProductDetailsEvent extends ProductDetailsEvent {
 }
 
 class StyleTraitSelectedEvent extends ProductDetailsEvent {
-  final StyleValueEntity selectedStyleValue;
+  final ProductDetailStyleValue selectedStyleValue;
 
   StyleTraitSelectedEvent(this.selectedStyleValue);
 }

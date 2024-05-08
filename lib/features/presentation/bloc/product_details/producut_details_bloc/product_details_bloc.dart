@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
@@ -32,6 +33,7 @@ class ProductDetailsBloc
   Map<String, ConfigSectionOptionEntity?> selectedConfigurations = {};
   Map<String, List<StyleValueEntity>?> availableStyleValues = {};
   Map<String, StyleValueEntity?>? selectedStyleValues = {};
+  ProductDetailStyleValue? selectedStyleValue;
 
   int quantity = 1;
 
@@ -173,12 +175,13 @@ class ProductDetailsBloc
 
   void _onStyleTraitSelected(
       StyleTraitSelectedEvent event, Emitter<ProductDetailsState> emit) async {
-    var selectedStyleValue = event.selectedStyleValue;
-    if (selectedStyleValue.styleTraitValueId!.isEmpty) {
-      selectedStyleValues?[selectedStyleValue.styleTraitId!] = null;
+    selectedStyleValue = event.selectedStyleValue;
+    if (selectedStyleValue!.styleValue!.styleTraitValueId!.isEmpty) {
+      selectedStyleValues?[selectedStyleValue!.styleValue!.styleTraitId!] =
+          null;
     } else {
-      selectedStyleValues?[selectedStyleValue.styleTraitId!] =
-          selectedStyleValue;
+      selectedStyleValues?[selectedStyleValue!.styleValue!.styleTraitId!] =
+          selectedStyleValue!.styleValue!;
     }
 
     var isStyleSelectionComplete = isProductStyleSelectionCompleted();
