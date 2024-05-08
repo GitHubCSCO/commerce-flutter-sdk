@@ -80,8 +80,21 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
           sortOrder: state.sortOrder,
           wishList: wishList,
           wishListLines: wishListLines,
-          status: WishListStatus.success,
+          status: WishListStatus.realTimeAttributesLoading,
           addToCartStatus: WishListAddToCartStatus.unknown,
+        ),
+      );
+
+      final realTimeLoadedWishListLines =
+          await _wishListDetailsUsecase.loadRealTimeAttributes(
+              wishListLines: wishListLines.wishListLines ?? []);
+
+      emit(
+        state.copyWith(
+          wishListLines: state.wishListLines.copyWith(
+            wishListLines: realTimeLoadedWishListLines,
+          ),
+          status: WishListStatus.success,
         ),
       );
     } else {
@@ -110,8 +123,11 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       return;
     }
 
+    final realTimeLoadedWishListLines = await _wishListDetailsUsecase
+        .loadRealTimeAttributes(wishListLines: result.wishListLines ?? []);
+
     final newWishListLines = state.wishListLines.wishListLines;
-    newWishListLines?.addAll(result.wishListLines!);
+    newWishListLines?.addAll(realTimeLoadedWishListLines);
 
     emit(
       state.copyWith(
@@ -152,25 +168,27 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       wishListLineEntity: modifiedWishListLine,
     );
 
+    emit(state.copyWith(status: WishListStatus.realTimeAttributesLoading));
+
     if (modificationResult == null) {
       emit(state.copyWith(status: WishListStatus.errorModification));
       return;
     }
 
+    final realTimeLoadedList = await _wishListDetailsUsecase
+        .loadRealTimeAttributes(wishListLines: [modificationResult]);
+
     final newWishListLines = state.wishListLines.wishListLines?.map((line) {
-      if (line.id == modificationResult.id) {
-        return modificationResult;
+      if (line.id == realTimeLoadedList.first.id) {
+        return realTimeLoadedList.first;
       }
       return line;
     }).toList();
 
-    final realTimeLoadedWishListLines = await _wishListDetailsUsecase
-        .loadRealTimeAttributes(wishListLines: newWishListLines ?? []);
-
     emit(
       state.copyWith(
         wishListLines: state.wishListLines.copyWith(
-          wishListLines: realTimeLoadedWishListLines,
+          wishListLines: newWishListLines,
         ),
       ),
     );

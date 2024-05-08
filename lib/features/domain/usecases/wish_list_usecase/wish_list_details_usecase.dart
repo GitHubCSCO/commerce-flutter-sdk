@@ -54,14 +54,8 @@ class WishListDetailsUsecase extends BaseUseCase {
 
         final wishListLineCollection =
             WishListLineCollectionEntityMapper.toEntity(value);
-            
-        final wishListLines = await loadRealTimeAttributes(
-          wishListLines: wishListLineCollection.wishListLines ?? [],
-        );
 
-        return wishListLineCollection.copyWith(
-          wishListLines: wishListLines,
-        );
+        return wishListLineCollection;
 
       case Failure():
         return null;

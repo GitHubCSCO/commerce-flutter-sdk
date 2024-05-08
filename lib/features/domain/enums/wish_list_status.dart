@@ -4,6 +4,7 @@ enum WishListStatus {
   moreLoading,
   success,
   failure,
+  realTimeAttributesLoading,
   errorModification,
   moreLoadingFailure,
 }
