@@ -845,7 +845,7 @@ packages:
     description:
       path: "."
       ref: develop
-      resolved-ref: a0746d6ca65727f78e8627c08c0009a6be118572
+      resolved-ref: "57685f62a1992aad25b07a8d63385f0ff0976d8d"
       url: "git@github.com:InsiteSoftware/commerce-dart-sdk.git"
     source: git
     version: "0.1.0-dev.7"
@@ -909,10 +909,10 @@ packages:
     dependency: transitive
     description:
       name: path_provider_foundation
-      sha256: "5a7999be66e000916500be4f15a3633ebceb8302719b47b9cc49ce924125350f"
+      sha256: f234384a3fdd67f989b4d54a5d73ca2a6c422fa55ae694381ae0f4375cd1ea16
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.2"
+    version: "2.4.0"
   path_provider_linux:
     dependency: transitive
     description:
