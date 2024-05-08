@@ -29,10 +29,10 @@ class WishListContentQuantityGroupWidget extends StatelessWidget {
             child: NumberTextField(
                 initialtText: wishListLineEntity.qtyOrdered?.toInt().toString(),
                 shouldShowIncrementDecermentIcon: false,
-                onChanged: (int? quantity) {
+                onChanged: (int? quantity) async {
                   final newWishListLineEntity =
                       wishListLineEntity.copyWith(qtyOrdered: quantity);
-                  context
+                  await context
                       .read<WishListDetailsCubit>()
                       .updateWishListLineQuantity(
                           newWishListLineEntity,
