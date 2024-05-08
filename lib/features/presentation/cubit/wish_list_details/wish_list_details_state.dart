@@ -6,7 +6,6 @@ class WishListDetailsState extends Equatable {
   final WishListStatus status;
   final WishListLineSortOrder sortOrder;
   final String searchQuery;
-  final WishListAddToCartStatus addToCartStatus;
 
   const WishListDetailsState({
     required this.wishList,
@@ -14,7 +13,6 @@ class WishListDetailsState extends Equatable {
     required this.status,
     required this.sortOrder,
     required this.searchQuery,
-    required this.addToCartStatus,
   });
 
   @override
@@ -24,7 +22,6 @@ class WishListDetailsState extends Equatable {
         status,
         sortOrder,
         searchQuery,
-        addToCartStatus,
       ];
 
   WishListDetailsState copyWith({
@@ -33,7 +30,6 @@ class WishListDetailsState extends Equatable {
     WishListStatus? status,
     WishListLineSortOrder? sortOrder,
     String? searchQuery,
-    WishListAddToCartStatus? addToCartStatus,
   }) {
     return WishListDetailsState(
       wishList: wishList ?? this.wishList,
@@ -41,7 +37,6 @@ class WishListDetailsState extends Equatable {
       status: status ?? this.status,
       sortOrder: sortOrder ?? this.sortOrder,
       searchQuery: searchQuery ?? this.searchQuery,
-      addToCartStatus: addToCartStatus ?? this.addToCartStatus,
     );
   }
 }

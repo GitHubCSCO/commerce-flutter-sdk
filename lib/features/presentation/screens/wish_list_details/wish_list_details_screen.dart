@@ -6,7 +6,6 @@ import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/wish_list_add_to_cart_status.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
@@ -106,17 +105,17 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
           ),
           BlocConsumer<WishListDetailsCubit, WishListDetailsState>(
             listener: (context, state) {
-              if (state.addToCartStatus == WishListAddToCartStatus.success) {
+              if (state.status == WishListStatus.listAddToCartSuccess) {
                 context.read<CartCountCubit>().onCartItemChange();
                 CustomSnackBar.showWishListAddToCart(context);
               }
 
-              if (state.addToCartStatus == WishListAddToCartStatus.failure) {
+              if (state.status == WishListStatus.listAddToCartFailure) {
                 CustomSnackBar.showWishListAddToCartError(context);
               }
 
-              if (state.addToCartStatus ==
-                  WishListAddToCartStatus.failureOutOfStock) {
+              if (state.status ==
+                  WishListStatus.listAddToCartFailureOutOfStock) {
                 displayDialogWidget(
                   context: context,
                   title: LocalizationConstants.productsOutOfStock,
@@ -151,10 +150,21 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                   ],
                 );
               }
+
+              if (state.status ==
+                  WishListStatus.listLineAddToCartSuccess) {
+                CustomSnackBar.showProductAddedToCart(context);
+                context.read<CartCountCubit>().onCartItemChange();
+              }
+
+              if (state.status ==
+                  WishListStatus.listLineAddToCartFailure) {
+                CustomSnackBar.showAddToCartFailed(context);
+              }
             },
             builder: (context, state) {
               if (state.status == WishListStatus.loading ||
-                  state.addToCartStatus == WishListAddToCartStatus.loading) {
+                  state.status == WishListStatus.listAddToCartLoading) {
                 return const Expanded(
                     child: Center(child: CircularProgressIndicator()));
               } else if (state.status == WishListStatus.failure) {

@@ -7,4 +7,14 @@ enum WishListStatus {
   realTimeAttributesLoading,
   errorModification,
   moreLoadingFailure,
+
+  listAddToCartSuccess,
+  listAddToCartFailure,
+  listAddToCartFailureTimeOut,
+  listAddToCartFailureOutOfStock,
+  listAddToCartLoading,
+
+  listLineAddToCartSuccess,
+  listLineAddToCartFailure,
+  listLineAddToCartLoading,
 }

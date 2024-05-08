@@ -3,7 +3,7 @@ import 'package:commerce_flutter_app/features/domain/entity/availability_entity.
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_collection_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/wish_list_add_to_cart_status.dart';
+import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/wish_list_mapper.dart';
@@ -192,7 +192,7 @@ class WishListDetailsUsecase extends BaseUseCase {
     }
   }
 
-  Future<WishListAddToCartStatus> addWishListToCart(
+  Future<WishListStatus> addWishListToCart(
     WishListEntity wishListEntity,
   ) async {
     final result = await commerceAPIServiceProvider
@@ -202,15 +202,15 @@ class WishListDetailsUsecase extends BaseUseCase {
     switch (result) {
       case Success(value: final value):
         return value != null
-            ? WishListAddToCartStatus.success
-            : WishListAddToCartStatus.failure;
+            ? WishListStatus.listAddToCartSuccess
+            : WishListStatus.listAddToCartFailure;
       case Failure(errorResponse: final errorResponse):
         switch (errorResponse.message) {
           case 'Cloudflare gateway timeout':
           case 'Connection timeout':
-            return WishListAddToCartStatus.failureTimeOut;
+            return WishListStatus.listAddToCartFailureTimeOut;
           default:
-            return WishListAddToCartStatus.failure;
+            return WishListStatus.listAddToCartFailure;
         }
     }
   }
@@ -235,6 +235,34 @@ class WishListDetailsUsecase extends BaseUseCase {
         return WishListLineEntityMapper.toEntity(value);
       case Failure():
         return null;
+    }
+  }
+
+  Future<WishListStatus> addWishListLineToCart({
+    required WishListLineEntity wishListLineEntity,
+  }) async {
+    if (wishListLineEntity.canAddToCart != true) {
+      return WishListStatus.listLineAddToCartFailure;
+    }
+
+    final cartLineResult =
+        await commerceAPIServiceProvider.getCartService().addCartLine(
+              AddCartLine(
+                productId: wishListLineEntity.productId,
+                qtyOrdered: wishListLineEntity.qtyOrdered,
+                unitOfMeasure: wishListLineEntity.unitOfMeasure,
+                notes: wishListLineEntity.notes,
+                sectionOptions: <SectionOptionDto>[],
+              ),
+            );
+
+    switch (cartLineResult) {
+      case Success(value: final value):
+        return value != null
+            ? WishListStatus.listLineAddToCartSuccess
+            : WishListStatus.listLineAddToCartFailure;
+      case Failure():
+        return WishListStatus.listLineAddToCartFailure;
     }
   }
 

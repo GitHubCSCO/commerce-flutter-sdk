@@ -20,6 +20,15 @@ class CustomSnackBar {
     );
   }
 
+  static void showAddToCartFailed(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(SiteMessageConstants.defaultValueAddToCartFail),
+        duration: const Duration(seconds: 1),
+      ),
+    );
+  }
+
   static void showInvalidCVV(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -41,7 +50,8 @@ class CustomSnackBar {
   static void showWishListAddToCart(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(SiteMessageConstants.defaultValueAddToCartAllProductsFromList),
+        content:
+            Text(SiteMessageConstants.defaultValueAddToCartAllProductsFromList),
         duration: const Duration(seconds: 1),
       ),
     );
