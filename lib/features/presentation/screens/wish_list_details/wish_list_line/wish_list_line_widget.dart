@@ -12,8 +12,13 @@ import 'package:flutter_svg/svg.dart';
 
 class WishListLineWidget extends StatelessWidget {
   final WishListLineEntity wishListLineEntity;
+  final bool realTimeLoading;
 
-  const WishListLineWidget({super.key, required this.wishListLineEntity});
+  const WishListLineWidget({
+    super.key,
+    required this.wishListLineEntity,
+    this.realTimeLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +32,7 @@ class WishListLineWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildProductImage(),
-            _buildProductDetails(),
+            _buildProductDetails(realTimeLoading),
             _buildRemoveAndAddToCartButton(
               context,
               canAddToCart: wishListLineEntity.canAddToCart == true,
@@ -50,7 +55,7 @@ class WishListLineWidget extends StatelessWidget {
         imagePath: wishListLineEntity.smallImagePath ?? "");
   }
 
-  Widget _buildProductDetails() {
+  Widget _buildProductDetails(bool realTimeLoading) {
     return Expanded(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -59,9 +64,14 @@ class WishListLineWidget extends StatelessWidget {
         children: [
           WishListContentProductTitleWidget(
               wishListLineEntity: wishListLineEntity),
-          WishListContentPricingWidget(wishListLineEntity: wishListLineEntity),
+          WishListContentPricingWidget(
+            wishListLineEntity: wishListLineEntity,
+            realTimeLoading: realTimeLoading,
+          ),
           WishListContentQuantityGroupWidget(
-              wishListLineEntity: wishListLineEntity),
+            wishListLineEntity: wishListLineEntity,
+            realTimeLoading: realTimeLoading,
+          ),
         ],
       ),
     );

@@ -190,6 +190,7 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
         wishListLines: state.wishListLines.copyWith(
           wishListLines: newWishListLines,
         ),
+        status: WishListStatus.success,
       ),
     );
   }

@@ -6,12 +6,15 @@ import 'package:commerce_flutter_app/features/domain/extensions/wish_list_line_e
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class WishListContentPricingWidget extends StatelessWidget {
   final WishListLineEntity wishListLineEntity;
+  final bool realTimeLoading;
 
   const WishListContentPricingWidget({
     required this.wishListLineEntity,
+    this.realTimeLoading = false,
     super.key,
   });
 
@@ -27,7 +30,15 @@ class WishListContentPricingWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildDiscountMessageSection(context, wishListLineEntity),
-              _buildPricingSection(context, wishListLineEntity),
+              realTimeLoading
+                  ? Container(
+                      alignment: Alignment.bottomLeft,
+                      child: LoadingAnimationWidget.prograssiveDots(
+                        color: OptiAppColors.iconPrimary,
+                        size: 30,
+                      ),
+                    )
+                  : _buildPricingSection(context, wishListLineEntity),
               GestureDetector(
                 onTap: () {
                   // TODO: Implement the logic for "View Quantity Pricing"

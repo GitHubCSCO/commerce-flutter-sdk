@@ -306,7 +306,11 @@ class _WishListLinesSectionState extends State<_WishListLinesSection> {
                 }
 
                 final line = state.wishListLines.wishListLines?[index];
-                return WishListLineWidget(wishListLineEntity: line!);
+                return WishListLineWidget(
+                  wishListLineEntity: line!,
+                  realTimeLoading:
+                      state.status == WishListStatus.realTimeAttributesLoading,
+                );
               },
               separatorBuilder: (context, index) => const Divider(),
             );

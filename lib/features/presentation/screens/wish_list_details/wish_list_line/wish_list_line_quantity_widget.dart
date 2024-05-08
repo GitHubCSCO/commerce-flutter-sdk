@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/wish_list_line_extensions.dart';
@@ -5,12 +6,15 @@ import 'package:commerce_flutter_app/features/presentation/components/number_tex
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list_details/wish_list_details_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class WishListContentQuantityGroupWidget extends StatelessWidget {
   final WishListLineEntity wishListLineEntity;
+  final bool realTimeLoading;
 
   const WishListContentQuantityGroupWidget({
     super.key,
+    this.realTimeLoading = false,
     required this.wishListLineEntity,
   });
 
@@ -39,7 +43,10 @@ class WishListContentQuantityGroupWidget extends StatelessWidget {
           ),
           // WishListContentTitleSubTitleColumn('U/M', 'E/A'),
           WishListContentTitleSubTitleColumn(
-              'Subtotal', wishListLineEntity.updateSubtotalPriceValueText),
+            'Subtotal',
+            wishListLineEntity.updateSubtotalPriceValueText,
+            realTimeLoading: realTimeLoading,
+          ),
         ],
       ),
     );
@@ -49,8 +56,14 @@ class WishListContentQuantityGroupWidget extends StatelessWidget {
 class WishListContentTitleSubTitleColumn extends StatelessWidget {
   final String title;
   final String value;
+  final bool realTimeLoading;
 
-  const WishListContentTitleSubTitleColumn(this.title, this.value, {super.key});
+  const WishListContentTitleSubTitleColumn(
+    this.title,
+    this.value, {
+    super.key,
+    this.realTimeLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +75,18 @@ class WishListContentTitleSubTitleColumn extends StatelessWidget {
             title,
             style: OptiTextStyles.bodySmall,
           ),
-          Text(
-            value,
-            style: OptiTextStyles.titleLarge,
-          )
+          realTimeLoading
+              ? Container(
+                  alignment: Alignment.center,
+                  child: LoadingAnimationWidget.prograssiveDots(
+                    color: OptiAppColors.iconPrimary,
+                    size: 30,
+                  ),
+                )
+              : Text(
+                  value,
+                  style: OptiTextStyles.titleLarge,
+                )
         ],
       ),
     );
