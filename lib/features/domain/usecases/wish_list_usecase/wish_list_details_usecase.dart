@@ -266,6 +266,36 @@ class WishListDetailsUsecase extends BaseUseCase {
     }
   }
 
+  Future<WishListStatus> deleteWishListLine({
+    required WishListEntity wishListEntity,
+    required WishListLineEntity wishListLineEntity,
+  }) async {
+    final wishListId = wishListEntity.id;
+    final wishListLineId = wishListLineEntity.id;
+
+    if (wishListId.isNullOrEmpty || wishListLineId.isNullOrEmpty) {
+      return WishListStatus.listLineDeleteFailure;
+    }
+
+    if (!(wishListEntity.allowEditingBySharedWithUsers == true ||
+        wishListEntity.isSharedList != true)) {
+      return WishListStatus.listLineDeleteFailure;
+    }
+
+    final result = await commerceAPIServiceProvider
+        .getWishListService()
+        .deleteWishListLine(wishListId!, wishListLineId!);
+
+    switch (result) {
+      case Success(value: final value):
+        return value != null
+            ? WishListStatus.listLineDeleteSuccess
+            : WishListStatus.listLineDeleteFailure;
+      case Failure():
+        return WishListStatus.listLineDeleteFailure;
+    }
+  }
+
   List<WishListLineSortOrder> get availableSortOrders =>
       WishListLineSortOrder.values;
 }

@@ -151,14 +151,23 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                 );
               }
 
-              if (state.status ==
-                  WishListStatus.listLineAddToCartSuccess) {
+              if (state.status == WishListStatus.listLineAddToCartSuccess) {
                 CustomSnackBar.showProductAddedToCart(context);
                 context.read<CartCountCubit>().onCartItemChange();
               }
 
-              if (state.status ==
-                  WishListStatus.listLineAddToCartFailure) {
+              if (state.status == WishListStatus.listLineAddToCartFailure) {
+                CustomSnackBar.showAddToCartFailed(context);
+              }
+
+              if (state.status == WishListStatus.listLineDeleteSuccess) {
+                CustomSnackBar.showProductDeleted(context);
+                context
+                    .read<WishListDetailsCubit>()
+                    .loadWishListLines(state.wishList);
+              }
+
+              if (state.status == WishListStatus.listLineDeleteFailure) {
                 CustomSnackBar.showAddToCartFailed(context);
               }
             },
@@ -320,6 +329,12 @@ class _WishListLinesSectionState extends State<_WishListLinesSection> {
                   wishListLineEntity: line!,
                   realTimeLoading:
                       state.status == WishListStatus.realTimeAttributesLoading,
+                  isDeleteButtonVisible:
+                      state.wishList.allowEditingBySharedWithUsers == true ||
+                          state.wishList.isSharedList != true,
+                  canEditQuantity: line.canEnterQuantity == true &&
+                      (state.wishList.allowEditingBySharedWithUsers == true ||
+                          state.wishList.isSharedList != true),
                 );
               },
               separatorBuilder: (context, index) => const Divider(),

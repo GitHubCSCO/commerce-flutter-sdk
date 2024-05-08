@@ -17,4 +17,7 @@ enum WishListStatus {
   listLineAddToCartSuccess,
   listLineAddToCartFailure,
   listLineAddToCartLoading,
+
+  listLineDeleteSuccess,
+  listLineDeleteFailure,
 }

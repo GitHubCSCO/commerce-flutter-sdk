@@ -2,7 +2,6 @@ import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list_details/wish_list_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list_details/wish_list_line/wish_list_line_image_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list_details/wish_list_line/wish_list_line_pricing_widgert.dart';
@@ -15,11 +14,15 @@ import 'package:flutter_svg/svg.dart';
 class WishListLineWidget extends StatelessWidget {
   final WishListLineEntity wishListLineEntity;
   final bool realTimeLoading;
+  final bool isDeleteButtonVisible;
+  final bool canEditQuantity;
 
   const WishListLineWidget({
     super.key,
     required this.wishListLineEntity,
+    this.isDeleteButtonVisible = true,
     this.realTimeLoading = false,
+    this.canEditQuantity = true,
   });
 
   @override
@@ -34,10 +37,14 @@ class WishListLineWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildProductImage(),
-            _buildProductDetails(realTimeLoading),
+            _buildProductDetails(
+              realTimeLoading: realTimeLoading,
+              canEditQuantity: canEditQuantity,
+            ),
             _buildRemoveAndAddToCartButton(
               context,
               canAddToCart: wishListLineEntity.canAddToCart == true,
+              isDeleteButtonVisible: isDeleteButtonVisible,
               wishListLineEntity: wishListLineEntity,
             ),
           ],
@@ -58,7 +65,10 @@ class WishListLineWidget extends StatelessWidget {
         imagePath: wishListLineEntity.smallImagePath ?? "");
   }
 
-  Widget _buildProductDetails(bool realTimeLoading) {
+  Widget _buildProductDetails({
+    required bool realTimeLoading,
+    required bool canEditQuantity,
+  }) {
     return Expanded(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -83,6 +93,7 @@ class WishListLineWidget extends StatelessWidget {
   Widget _buildRemoveAndAddToCartButton(
     BuildContext context, {
     bool canAddToCart = false,
+    bool isDeleteButtonVisible = true,
     required WishListLineEntity wishListLineEntity,
   }) {
     return Row(
@@ -90,13 +101,14 @@ class WishListLineWidget extends StatelessWidget {
       children: [
         if (canAddToCart)
           InkWell(
-            onTap: () {
-              context.read<WishListDetailsCubit>().addWishListLineToCart(
+            onTap: () async {
+              await context.read<WishListDetailsCubit>().addWishListLineToCart(
                     wishListLineEntity,
                   );
             },
             child: Padding(
-              padding: const EdgeInsets.all(15.0).copyWith(right: 8),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 15).copyWith(left: 15),
               child: SizedBox(
                 width: 30,
                 height: 30,
@@ -107,23 +119,27 @@ class WishListLineWidget extends StatelessWidget {
               ),
             ),
           ),
-        InkWell(
-          onTap: () {
-            /// TODO : Remove from wish list
-            CustomSnackBar.showComingSoonSnackBar(context);
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(15.0).copyWith(left: 8),
-            child: SizedBox(
-              width: 30,
-              height: 30,
-              child: SvgPicture.asset(
-                AssetConstants.cartItemRemoveIcon,
-                fit: BoxFit.fitWidth,
+        if (isDeleteButtonVisible)
+          InkWell(
+            onTap: () async {
+              await context.read<WishListDetailsCubit>().deleteWishListLine(
+                    wishListLineEntity,
+                  );
+            },
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 15).copyWith(left: 15),
+              child: SizedBox(
+                width: 30,
+                height: 30,
+                child: SvgPicture.asset(
+                  AssetConstants.cartItemRemoveIcon,
+                  fit: BoxFit.fitWidth,
+                ),
               ),
             ),
           ),
-        )
+        const SizedBox(width: 20),
       ],
     );
   }

@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -62,6 +63,24 @@ class CustomSnackBar {
       SnackBar(
         content: Text(SiteMessageConstants.defaultValueAddToCartFail),
         duration: const Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showProductDeleted(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(LocalizationConstants.productDeleted),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showProductDeleteFailed(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(LocalizationConstants.errorDeletingProduct),
+        duration: Duration(seconds: 1),
       ),
     );
   }

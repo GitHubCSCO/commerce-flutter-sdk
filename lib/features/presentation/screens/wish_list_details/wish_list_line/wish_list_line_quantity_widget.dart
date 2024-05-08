@@ -11,10 +11,12 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 class WishListContentQuantityGroupWidget extends StatelessWidget {
   final WishListLineEntity wishListLineEntity;
   final bool realTimeLoading;
+  final bool canEditQuantity;
 
   const WishListContentQuantityGroupWidget({
     super.key,
     this.realTimeLoading = false,
+    this.canEditQuantity = true,
     required this.wishListLineEntity,
   });
 
@@ -30,6 +32,10 @@ class WishListContentQuantityGroupWidget extends StatelessWidget {
                 initialtText: wishListLineEntity.qtyOrdered?.toInt().toString(),
                 shouldShowIncrementDecermentIcon: false,
                 onChanged: (int? quantity) async {
+                  if (canEditQuantity == false) {
+                    return;
+                  }
+
                   final newWishListLineEntity =
                       wishListLineEntity.copyWith(qtyOrdered: quantity);
                   await context

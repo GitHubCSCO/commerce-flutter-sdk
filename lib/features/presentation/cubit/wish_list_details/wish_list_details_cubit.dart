@@ -193,9 +193,17 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
   }
 
   Future<void> addWishListLineToCart(WishListLineEntity wishListLine) async {
-    emit(state.copyWith(
-        status: WishListStatus.listLineAddToCartLoading));
+    emit(state.copyWith(status: WishListStatus.listLineAddToCartLoading));
     final result = await _wishListDetailsUsecase.addWishListLineToCart(
+      wishListLineEntity: wishListLine,
+    );
+
+    emit(state.copyWith(status: result));
+  }
+
+  Future<void> deleteWishListLine(WishListLineEntity wishListLine) async {
+    final result = await _wishListDetailsUsecase.deleteWishListLine(
+      wishListEntity: state.wishList,
       wishListLineEntity: wishListLine,
     );
 
