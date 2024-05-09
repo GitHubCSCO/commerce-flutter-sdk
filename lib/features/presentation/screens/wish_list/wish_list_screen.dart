@@ -13,6 +13,7 @@ import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_screen_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -279,9 +280,14 @@ class _WishListItem extends StatelessWidget {
           pathParameters: {
             'id': wishList.id ?? '',
           },
-          extra: () {
-            context.read<WishListCubit>().loadWishLists();
-          },
+          extra: WishListScreenCallbackHelper(
+            onWishListRenamed: () {
+              context.read<WishListCubit>().loadWishLists();
+            },
+            onWishListDeleted: () {
+              context.read<WishListCubit>().loadWishLists();
+            },
+          ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

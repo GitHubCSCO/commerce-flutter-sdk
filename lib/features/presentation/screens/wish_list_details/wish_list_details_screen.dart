@@ -26,12 +26,14 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WishListDetailsScreen extends StatelessWidget {
   final String wishListId;
-  final void Function() onWishListRenamed;
+  final void Function()? onWishListRenamed;
+  final void Function()? onWishListDeleted;
 
   const WishListDetailsScreen({
     super.key,
     required this.wishListId,
-    required this.onWishListRenamed,
+    this.onWishListRenamed,
+    this.onWishListDeleted,
   });
 
   @override
@@ -41,15 +43,21 @@ class WishListDetailsScreen extends StatelessWidget {
           sl<WishListDetailsCubit>()..loadWishListDetails(wishListId),
       child: WishListDetailsPage(
         onWishListRenamed: onWishListRenamed,
+        onWishListDeleted: onWishListDeleted,
       ),
     );
   }
 }
 
 class WishListDetailsPage extends StatefulWidget {
-  const WishListDetailsPage({super.key, required this.onWishListRenamed});
+  const WishListDetailsPage({
+    super.key,
+    this.onWishListRenamed,
+    this.onWishListDeleted,
+  });
 
-  final void Function() onWishListRenamed;
+  final void Function()? onWishListRenamed;
+  final void Function()? onWishListDeleted;
 
   @override
   State<WishListDetailsPage> createState() => _WishListDetailsPageState();
@@ -178,7 +186,9 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
 
               if (state.status == WishListStatus.listRenameSuccess) {
                 CustomSnackBar.showListSaved(context);
-                widget.onWishListRenamed();
+                if (widget.onWishListRenamed != null) {
+                  widget.onWishListRenamed!();
+                }
               }
 
               if (state.status == WishListStatus.listRenameFailure) {

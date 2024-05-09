@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_screen_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
@@ -181,8 +182,13 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.wishlistsDetails.suffix,
     builder: (context, state) {
       final wishListId = state.pathParameters['id'] ?? '';
-      return WishListDetailsScreen(wishListId: wishListId,
-        onWishListRenamed: state.extra as void Function(),);
+      final callbackHelper = state.extra as WishListScreenCallbackHelper;
+
+      return WishListDetailsScreen(
+        wishListId: wishListId,
+        onWishListRenamed: callbackHelper.onWishListRenamed,
+        onWishListDeleted: callbackHelper.onWishListDeleted,
+      );
     },
     parent: wishlists,
   );
