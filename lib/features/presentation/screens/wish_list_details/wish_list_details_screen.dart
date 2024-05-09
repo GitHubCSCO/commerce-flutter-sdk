@@ -2,7 +2,9 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
+import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
@@ -14,7 +16,9 @@ import 'package:commerce_flutter_app/features/presentation/components/snackbar_c
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list_details/wish_list_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list_details/wish_list_line/wish_list_line_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -64,12 +68,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
         title: Text(
           context.watch<WishListDetailsCubit>().state.wishList.name ?? '',
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () => CustomSnackBar.showComingSoonSnackBar(context),
-          )
-        ],
+        actions: const [_OptionsMenu()],
       ),
       body: Column(
         children: [
@@ -342,6 +341,63 @@ class _WishListLinesSectionState extends State<_WishListLinesSection> {
           }
         },
       ),
+    );
+  }
+}
+
+class _OptionsMenu extends StatelessWidget {
+  const _OptionsMenu();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<WishListDetailsCubit, WishListDetailsState>(
+      builder: (context, state) {
+        return BottomMenuWidget(
+          websitePath: WebsitePaths.listDetailsWebsitePath.format(
+            [
+              state.wishList.id ?? '',
+            ],
+          ),
+          toolMenuList: [
+            ToolMenu(
+              title: LocalizationConstants.listInformation,
+              action: () {
+                CustomSnackBar.showComingSoonSnackBar(context);
+              },
+            ),
+            if (state.wishList.isSharedList != true)
+              ToolMenu(
+                title: LocalizationConstants.rename,
+                action: () {
+                  CustomSnackBar.showComingSoonSnackBar(context);
+                },
+              ),
+            if (state.settings.allowEditingOfWishLists == true &&
+                state.wishList.isSharedList == true &&
+                state.wishList.shareOption != "AllCustomerUsers")
+              ToolMenu(
+                title: LocalizationConstants.leave,
+                action: () {
+                  CustomSnackBar.showComingSoonSnackBar(context);
+                },
+              ),
+            if (state.settings.allowEditingOfWishLists == true &&
+                state.wishList.isSharedList != true)
+              ToolMenu(
+                title: LocalizationConstants.delete,
+                action: () {
+                  CustomSnackBar.showComingSoonSnackBar(context);
+                },
+              ),
+            ToolMenu(
+              title: LocalizationConstants.copy,
+              action: () {
+                CustomSnackBar.showComingSoonSnackBar(context);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

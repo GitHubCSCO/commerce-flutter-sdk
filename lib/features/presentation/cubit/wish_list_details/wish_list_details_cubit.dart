@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/features/domain/entity/settings/wish_list_settings_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_collection_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
@@ -20,6 +21,7 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
             wishListLines: WishListLineCollectionEntity(),
             status: WishListStatus.initial,
             sortOrder: WishListLineSortOrder.customSort,
+            settings: WishListSettingsEntity(),
             searchQuery: '',
           ),
         );
@@ -49,12 +51,20 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
   Future<void> loadWishListDetails(String id) async {
     emit(state.copyWith(status: WishListStatus.loading));
 
-    final wishList = await _wishListDetailsUsecase.loadWishList(id);
+    final wishListRelatedData = await Future.wait([
+      _wishListDetailsUsecase.loadWishList(id),
+      _wishListDetailsUsecase.loadWishListSettings(),
+    ]);
 
-    if (wishList == null) {
+    final wishList = wishListRelatedData.first as WishListEntity?;
+    final settings = wishListRelatedData.last as WishListSettingsEntity?;
+
+    if (wishList == null || settings == null) {
       emit(state.copyWith(status: WishListStatus.failure));
       return;
     }
+
+    emit(state.copyWith(settings: settings));
 
     await loadWishListLines(wishList);
   }
@@ -79,6 +89,7 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
           wishList: wishList,
           wishListLines: wishListLines,
           status: WishListStatus.realTimeAttributesLoading,
+          settings: state.settings,
         ),
       );
 
