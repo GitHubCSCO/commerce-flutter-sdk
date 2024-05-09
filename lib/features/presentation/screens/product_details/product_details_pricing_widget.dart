@@ -111,10 +111,10 @@ class ProductDetailsPricingWidget extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                    '${productDetailsPriceEntity.product.updatePriceValueText(productDetailsPriceEntity.productPricingEnabled)}',
+                    productDetailsPriceEntity.product.updatePriceValueText(productDetailsPriceEntity.productPricingEnabled),
                     style: OptiTextStyles.subtitle),
                 Text(
-                  '${productDetailsPriceEntity.product.updateUnitOfMeasure(productDetailsPriceEntity.productPricingEnabled)}',
+                  productDetailsPriceEntity.product.updateUnitOfMeasure(productDetailsPriceEntity.productPricingEnabled),
                   style: OptiTextStyles.body,
                 ),
               ],

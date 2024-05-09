@@ -1,17 +1,18 @@
-import 'package:commerce_flutter_app/core/constants/app_route.dart';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class AutoCompleteWidget extends StatelessWidget {
+
+  final Function(BuildContext, AutocompleteProduct) callback;
   final AutocompleteResult autocompleteResult;
 
-  const AutoCompleteWidget({super.key, required this.autocompleteResult});
+  const AutoCompleteWidget({super.key, required this.callback, required this.autocompleteResult});
 
   @override
   Widget build(BuildContext context) {
@@ -28,26 +29,25 @@ class AutoCompleteWidget extends StatelessWidget {
       itemBuilder: (context, index) {
         final autoCompleteProduct = autocompleteResult.products![index];
         return AutoCompleteProductWidget(
-            autocompleteProduct: autoCompleteProduct);
+            callback: callback, autocompleteProduct: autoCompleteProduct);
       },
     );
   }
 }
 
 class AutoCompleteProductWidget extends StatelessWidget {
+
+  final Function(BuildContext, AutocompleteProduct) callback;
   final AutocompleteProduct autocompleteProduct;
 
   const AutoCompleteProductWidget(
-      {super.key, required this.autocompleteProduct});
+      {super.key, required this.callback, required this.autocompleteProduct});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        var productId = autocompleteProduct.id;
-        AppRoute.productDetails.navigateBackStack(context,
-            pathParameters: {"productId": productId.toString()},
-            extra: ProductEntity());
+        callback(context, autocompleteProduct);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

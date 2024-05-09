@@ -1,8 +1,10 @@
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
@@ -11,13 +13,12 @@ import 'package:commerce_flutter_app/features/presentation/bloc/search/search/se
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_state.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/search_products/seardh_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 void _reloadSearchPage(BuildContext context) {
   context.read<SearchPageCmsBloc>().add(SearchPageCmsLoadEvent());
@@ -193,6 +194,7 @@ class SearchPage extends BaseDynamicContentScreen {
                   final autoCompleteResult =
                       (state as SearchAutoCompleteLoadedState).result!;
                   return AutoCompleteWidget(
+                      callback: handleAutoCompleteCallback,
                       autocompleteResult: autoCompleteResult);
                 case SearchAutoCompleteFailureState:
                   return Center(
@@ -220,4 +222,11 @@ class SearchPage extends BaseDynamicContentScreen {
       ],
     );
   }
+
+  void handleAutoCompleteCallback(BuildContext context, AutocompleteProduct product) {
+    AppRoute.productDetails.navigateBackStack(context,
+        pathParameters: {"productId": product.id.toString()},
+        extra: ProductEntity());
+  }
+
 }

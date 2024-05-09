@@ -28,6 +28,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_us
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/quick_order_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_cms_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_products_usecase.dart';
@@ -44,6 +45,9 @@ import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/auto_complete/quick_order_auto_complete_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/quick_order_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
@@ -156,6 +160,12 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => PaymentDetailsUseCase())
     ..registerFactory(() => TokenExBloc())
     ..registerFactory(() => ReviewOrderCubit())
+
+    //quickOrder
+    ..registerFactory(() => QuickOrderBloc())
+    ..registerFactory(() => OrderListBloc(quickOrderUseCase: sl()))
+    ..registerFactory(() => QuickOrderUseCase())
+    ..registerFactory(() => QuickOrderAutoCompleteBloc(searchUseCase: sl()))
 
     //date selection
     ..registerFactory(() => DateSelectionCubit())

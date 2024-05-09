@@ -21,6 +21,24 @@ extension ProductExtensions on ProductEntity? {
     return uomText.isNullOrEmpty ? '' : " / $uomText";
   }
 
+  String updateSubtotalPriceValueText() {
+    if (this == null) {
+      return "";
+    }
+    var subtotalValueText = "";
+    if (this!.pricing != null && this!.pricing!.isOnSale!) {
+      subtotalValueText = this!.pricing!.extendedUnitNetPriceDisplay ?? "";
+    } else {
+      if (this!.quoteRequired != null && this!.quoteRequired!) {
+        return LocalizationConstants.requiresQuote.toString();
+      } else {
+        subtotalValueText = this!.pricing.getSubtotalValue() ?? "";
+      }
+    }
+
+    return subtotalValueText;
+  }
+
   String updatePriceValueText(bool? productPricingEnabled) {
     if (this != null && (this!.quoteRequired ?? false)) {
       return LocalizationConstants.requiresQuote;

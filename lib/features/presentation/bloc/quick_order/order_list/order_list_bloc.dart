@@ -1,0 +1,250 @@
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/quick_order_usecase.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+
+part 'order_list_event.dart';
+part 'order_list_state.dart';
+
+enum ScanningMode {
+  quick,
+  count,
+  create,
+}
+
+class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
+
+  List<QuickOrderItemEntity> quickOrderItemList = [];
+  final QuickOrderUseCase _quickOrderUseCase;
+  final ScanningMode scanningMode = ScanningMode.quick;
+  bool isPreviouslyScannedItem = false;
+  ProductSettings? productSettings;
+
+  OrderListBloc({required QuickOrderUseCase quickOrderUseCase})
+      : _quickOrderUseCase = quickOrderUseCase,
+        super(OrderListInitialState()) {
+    on<OrderListLoadEvent>(_onOrderListLoadEvent);
+    on<OrderListItemAddEvent>(_onOrderLisItemAddEvent);
+    on<OrderListItemRemoveEvent>(_onOrderListItemRemoveEvent);
+    on<OrderListAddToCartEvent>(_onOrderListAddToCartEvent);
+    on<OrderListRemoveEvent>(_onOrderListRemoveEvent);
+    on<OrderListAddToListEvent>(_onOrderListAddToListEvent);
+  }
+
+  Future<void> _onOrderListLoadEvent(OrderListLoadEvent event, Emitter<OrderListState> emit) async {
+    if (productSettings == null) {
+      var result = await _quickOrderUseCase.getProductSetting();
+      productSettings = result is Success
+          ? (result as Success).value
+          : null;
+    }
+
+    final subtotal = calculateSubtotal();
+
+    emit(OrderListLoadedState(quickOrderItemList, productSettings, subtotal));
+  }
+
+  Future<void> _onOrderLisItemAddEvent(OrderListItemAddEvent event, Emitter<OrderListState> emit) async {
+    emit(OrderListLoadingState());
+    final result = await _quickOrderUseCase.getProduct(
+        event.autocompleteProduct.id!, event.autocompleteProduct);
+
+    switch (result) {
+      case Success(value: final product):
+        if (product == null) {
+          return;
+        }
+
+        var quantity = (product.minimumOrderQty! > 0) ? product.minimumOrderQty : 1;
+
+        if (product.isStyleProductParent!) {
+          // need to implement style product logic
+        } else if (product.isConfigured! || (product.isConfigured! && !product.isFixedConfiguration!)) {
+          // this.coreServiceProvider.GetPlatformService().DisplayNoResultAlert(string.Empty, this.cannotOrderConfigurableProductMessage, LocalizationConstants.Keyword.OK.Localized());
+          emit(OrderListAddFailedState('cannotOrderConfigurableProductMessage'));
+        } else if (!product.canAddToCart!) {
+          // this.coreServiceProvider.GetPlatformService().DisplayNoResultAlert(string.Empty, this.cannotOrderUnavailableMessage, LocalizationConstants.Keyword.OK.Localized());
+          emit(OrderListAddFailedState('cannotOrderUnavailableMessage'));
+        } else {
+          var newItem = _convertProductToQuickOrderItemEntity(product, quantity!);
+          _insertItemIntoQuickOrderList(newItem);
+        }
+
+        final subtotal = calculateSubtotal();
+        emit(OrderListLoadedState(quickOrderItemList, productSettings, subtotal));
+      case Failure(errorResponse: final errorResponse):
+        emit(OrderListFailedState());
+    }
+  }
+
+  Future<void> _onOrderListItemRemoveEvent(OrderListItemRemoveEvent event, Emitter<OrderListState> emit) async {
+    quickOrderItemList.removeWhere((e) => e.productEntity == event.productEntity);
+    if (productSettings == null) {
+      var result = await _quickOrderUseCase.getProductSetting();
+      productSettings = result is Success
+          ? (result as Success).value
+          : null;
+    }
+
+    final subtotal = calculateSubtotal();
+
+    emit(OrderListLoadedState(quickOrderItemList, productSettings, subtotal));
+  }
+
+  Future<void> _onOrderListRemoveEvent(OrderListRemoveEvent event, Emitter<OrderListState> emit) async {
+    quickOrderItemList.clear();
+    if (productSettings == null) {
+      var result = await _quickOrderUseCase.getProductSetting();
+      productSettings = result is Success
+          ? (result as Success).value
+          : null;
+    }
+
+    final subtotal = calculateSubtotal();
+
+    emit(OrderListLoadedState(quickOrderItemList, productSettings, subtotal));
+  }
+
+  Future<void> _onOrderListAddToListEvent(OrderListAddToListEvent event, Emitter<OrderListState> emit) async {
+    bool isUserAuthenticated = await _quickOrderUseCase.isAuthenticated();
+    if (isUserAuthenticated) {
+      emit(OrderListAddToListFailedState());
+    } else {
+      List<AddCartLine> products = [];
+
+      for (var quickOrderItemEntity in quickOrderItemList) {
+        products.add(AddCartLine(
+          productId: quickOrderItemEntity.productEntity.id,
+          qtyOrdered: quickOrderItemEntity.quantityOrdered,
+          unitOfMeasure: quickOrderItemEntity.productEntity.selectedUnitOfMeasureDisplay,
+        ));
+      }
+
+      var wishListLines = WishListAddToCartCollection(
+        wishListLines: products,
+      );
+
+      emit(OrderListAddToListSuccessState(wishListLines));
+    }
+  }
+
+
+  List<QuickOrderItemEntity> getReversedQuickOrderItemEntityList() {
+    List<QuickOrderItemEntity> reversedQuickOrderProductsList = List.from(quickOrderItemList);
+    reversedQuickOrderProductsList = reversedQuickOrderProductsList.reversed.toList();
+    return reversedQuickOrderProductsList;
+  }
+
+  List<AddCartLine> getAddCartLines(List<QuickOrderItemEntity> reversedQuickOrderProductsList, Set<String> currentCartProducts) {
+    List<AddCartLine> addCartLines = reversedQuickOrderProductsList.map((x) {
+      if (scanningMode == ScanningMode.count) {
+        currentCartProducts.add(x.productEntity.id.toString());
+        return AddCartLine(
+          // productId: x.productEntity.id,
+          // qtyOrdered: x.vmiBin.maximumQty - x.quantityOrdered,
+          // unitOfMeasure: x.productEntity.selectedUnitOfMeasure,
+          // vmiBinId: x.vmiBin.id,
+          // properties: Properties(),
+        );
+      } else if (scanningMode == ScanningMode.create) {
+        return AddCartLine(
+          // productId: x.product.id,
+          // qtyOrdered: x.quantityOrdered,
+          // unitOfMeasure: x.selectedUnitOfMeasure?.unitOfMeasure,
+          // vmiBinId: x.vmiBin.id,
+          // properties: Properties(),
+        );
+      } else {
+        return AddCartLine(
+          productId: x.productEntity.id,
+          qtyOrdered: x.quantityOrdered,
+          unitOfMeasure: x.productEntity.selectedUnitOfMeasure,
+          // properties: Properties(),
+        );
+      }
+    }).toList();
+
+    return addCartLines;
+  }
+
+  Future<void> deleteExistingCartLine(Set<String> currentCartProducts) async {
+    if (scanningMode == ScanningMode.count) {
+      var cartLines = await _quickOrderUseCase.getCartLineCollection();
+      List<Future> listOfTasks = [];
+      for (var oldCartLine in cartLines) {
+        if (currentCartProducts.contains(oldCartLine.productId.toString())) {
+          listOfTasks.add(_quickOrderUseCase.deleteCartLine(oldCartLine));
+        }
+      }
+      await Future.wait(listOfTasks);
+    }
+  }
+
+  Future<List<CartLine>?> addCartLineCollection(List<AddCartLine> addCartLines) async {
+    var result = await _quickOrderUseCase.addCartLineCollection(addCartLines);
+    return result is Success ? (result as Success).value
+        : null;
+  }
+
+  Future<void> _onOrderListAddToCartEvent(OrderListAddToCartEvent event, Emitter<OrderListState> emit) async {
+    if (scanningMode == ScanningMode.count || scanningMode == ScanningMode.create) {
+      //Navigate to VMI
+    } else {
+      //Navigate to cart
+    }
+  }
+
+  QuickOrderItemEntity _convertProductToQuickOrderItemEntity(ProductEntity productEntity, int quantity) {
+    return QuickOrderItemEntity(productEntity, quantity);
+  }
+
+  void _insertItemIntoQuickOrderList(QuickOrderItemEntity item, {bool scanned = true}) {
+    var sameProducts = quickOrderItemList.where((x) => x.productEntity.id == item.productEntity.id);
+
+    if (sameProducts.isNotEmpty) {
+      QuickOrderItemEntity existingItem = sameProducts.first;
+
+      var itemIndexToFocus = quickOrderItemList.indexOf(existingItem);
+
+      if (scanningMode == ScanningMode.count) {
+        quickOrderItemList[itemIndexToFocus] = item;
+      } else {
+        isPreviouslyScannedItem = true;
+        // scrollToItemIndex = itemIndexToFocus;
+        // existingItem.shouldFocusOnQuantity = true;
+      }
+    } else {
+      if (scanned) {
+        quickOrderItemList.insert(0, item);
+        // item.shouldFocusOnQuantity = true;
+      } else {
+        quickOrderItemList.add(item);
+      }
+    }
+  }
+
+  String calculateSubtotal() {
+    var canSeeAllPrices = productSettings!.canSeePrices;
+
+    if (canSeeAllPrices != null && canSeeAllPrices) {
+      double subtotalDecimal = quickOrderItemList.fold(0, (subtotal, x) {
+        var unitPrice = 0.0;
+
+        if (x.productEntity.pricing != null) {
+          unitPrice = x.productEntity.pricing!.unitNetPrice!.toDouble();
+        }
+
+        return subtotal + (unitPrice * x.quantityOrdered);
+      });
+
+      return "${CoreConstants.currencySymbol}${subtotalDecimal.toStringAsFixed(2)}";
+    } else {
+      return SiteMessageConstants.valuePricingSignInForPrice;
+    }
+  }
+
+}
