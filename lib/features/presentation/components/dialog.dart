@@ -92,18 +92,15 @@ void displayDialogWidget({
     useRootNavigator: false,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              title ?? '',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
+        title: title != null
+            ? Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            : null,
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

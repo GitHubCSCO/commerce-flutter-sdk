@@ -194,6 +194,30 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
               if (state.status == WishListStatus.listRenameFailure) {
                 CustomSnackBar.showRenameFailed(context);
               }
+
+              if (state.status == WishListStatus.listDeleteSuccess) {
+                CustomSnackBar.showListDeleted(context);
+                if (widget.onWishListDeleted != null) {
+                  widget.onWishListDeleted!();
+                }
+
+                Navigator.of(context).pop();
+              }
+
+              if (state.status == WishListStatus.listDeleteFailure) {
+                displayDialogWidget(
+                  context: context,
+                  title: LocalizationConstants.error,
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text(LocalizationConstants.oK),
+                    )
+                  ],
+                );
+              }
             },
             builder: (context, state) {
               if (state.status == WishListStatus.loading ||
@@ -429,7 +453,28 @@ class _OptionsMenu extends StatelessWidget {
               ToolMenu(
                 title: LocalizationConstants.delete,
                 action: () {
-                  CustomSnackBar.showComingSoonSnackBar(context);
+                  displayDialogWidget(
+                      context: context,
+                      message: LocalizationConstants.deleteSpecificList.format(
+                        [state.wishList.name ?? ''],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(LocalizationConstants.cancel),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            context
+                                .read<WishListDetailsCubit>()
+                                .deleteWishList();
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(LocalizationConstants.oK),
+                        ),
+                      ]);
                 },
               ),
             ToolMenu(

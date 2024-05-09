@@ -102,4 +102,13 @@ class CustomSnackBar {
       ),
     );
   }
+
+  static void showListDeleted(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(LocalizationConstants.listDeleted),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
 }

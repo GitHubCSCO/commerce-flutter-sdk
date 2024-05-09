@@ -12,6 +12,10 @@ enum WishListStatus {
   listRenameFailure,
   listRenameLoading,
 
+  listDeleteSuccess,
+  listDeleteFailure,
+  listDeleteLoading,
+
   listAddToCartSuccess,
   listAddToCartFailure,
   listAddToCartFailureTimeOut,

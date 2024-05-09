@@ -38,7 +38,7 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       state.searchQuery.isNullOrEmpty == false;
 
   List<WishListLineSortOrder> get availableSortOrders =>
-      _wishListDetailsUsecase.availableSortOrders;
+      _wishListDetailsUsecase.listLineAvailableSortOrders;
 
   Future<void> changeSortOrder(WishListLineSortOrder sortOrder) async {
     emit(
@@ -243,5 +243,14 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     } else {
       emit(state.copyWith(status: result));
     }
+  }
+
+  Future<void> deleteWishList() async {
+    emit(state.copyWith(status: WishListStatus.listDeleteLoading));
+    final result = await _wishListDetailsUsecase.deleteWishList(
+      wishListId: state.wishList.id,
+    );
+
+    emit(state.copyWith(status: result));
   }
 }

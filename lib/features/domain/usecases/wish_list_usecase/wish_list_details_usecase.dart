@@ -9,10 +9,10 @@ import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.
 import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/settings_entity_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/wish_list_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class WishListDetailsUsecase extends BaseUseCase {
+class WishListDetailsUsecase extends WishListUsecase {
   Future<WishListSettingsEntity?> loadWishListSettings() async {
     final result = await commerceAPIServiceProvider
         .getSettingsService()
@@ -334,6 +334,6 @@ class WishListDetailsUsecase extends BaseUseCase {
     }
   }
 
-  List<WishListLineSortOrder> get availableSortOrders =>
+  List<WishListLineSortOrder> get listLineAvailableSortOrders =>
       WishListLineSortOrder.values;
 }
