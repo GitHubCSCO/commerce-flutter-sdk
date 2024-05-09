@@ -122,6 +122,10 @@ class BaseActionItemWidget extends StatelessWidget {
         return () {
           AppRoute.quickOrder.navigateBackStack(context);
         };
+      case ActionType.lists:
+        return () {
+          AppRoute.wishlist.navigateBackStack(context);
+        };
       default:
         return () {
           CustomSnackBar.showComingSoonSnackBar(context);

@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/barcode_scanner_view.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
@@ -8,7 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/biometric/bio
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/nav_bar/nav_bar_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_history/order_history_screen.dart';
@@ -120,7 +121,7 @@ List<NavigationNode> _getNavigationRoot() {
   final checkoutSuccess = createNode(
     name: AppRoute.checkoutSuccess.name,
     path: AppRoute.checkoutSuccess.suffix,
-    builder: (context, state)  {
+    builder: (context, state) {
       final orderNumber = state.extra as String;
       return CheckoutSuccessScreen(orderNumber: orderNumber);
     },
@@ -175,6 +176,22 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
-  return [root, navbarRoot, welcome, domainSelection, login, biometricLogin, checkout, checkoutSuccess, quickOrder];
+  // path: /barcodeScanner
+  final barcodeScanner = createNode(
+    name: AppRoute.barcodeScanner.name,
+    path: AppRoute.barcodeScanner.suffix,
+    builder: (context, state) => const BarcodeScannerView(),
+    parent: null,
+  );
+
+  // path: /account/list
+  final lists = createNode(
+    name: AppRoute.wishlist.name,
+    path: AppRoute.wishlist.suffix,
+    builder: (context, state) => const ListsScreen(),
+    parent: account,
+  );
+
+  return [root, navbarRoot, welcome, domainSelection, login, biometricLogin, checkout, checkoutSuccess, quickOrder, barcodeScanner];
 
 }

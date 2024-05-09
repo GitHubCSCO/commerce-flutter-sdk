@@ -6,8 +6,10 @@ import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/filter_status.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
@@ -17,6 +19,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:badges/badges.dart' as badges;
 
 class OrderHistoryScreen extends StatelessWidget {
   const OrderHistoryScreen({super.key});
@@ -120,19 +123,7 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
                                     },
                                   ),
                                   const SizedBox(width: 10),
-                                  IconButton(
-                                    padding: const EdgeInsets.all(10),
-                                    onPressed: () =>
-                                        CustomSnackBar.showComingSoonSnackBar(
-                                            context),
-                                    icon: SvgPicture.asset(
-                                      height: 20,
-                                      width: 20,
-                                      AssetConstants.filterIcon,
-                                      semanticsLabel: 'filter icon',
-                                      fit: BoxFit.fitWidth,
-                                    ),
-                                  ),
+                                  const _OrderHistoryFilter(),
                                 ],
                               )
                             ],
@@ -297,4 +288,99 @@ class _OrderHistoryListItem extends StatelessWidget {
       ),
     );
   }
+}
+
+class _OrderHistoryFilter extends StatelessWidget {
+  const _OrderHistoryFilter();
+
+  @override
+  Widget build(BuildContext context) {
+    return badges.Badge(
+      position: badges.BadgePosition.topEnd(top: 0, end: 0),
+      badgeStyle: const badges.BadgeStyle(
+        shape: badges.BadgeShape.circle,
+        badgeColor: Colors.black,
+        padding: EdgeInsets.all(6),
+        elevation: 0,
+      ),
+      showBadge: context.watch<OrderHistoryCubit>().state.numberOfFilters > 0,
+      badgeContent: Text(
+        context.watch<OrderHistoryCubit>().state.numberOfFilters.toString(),
+        style: OptiTextStyles.badgesStyle,
+      ),
+      child: IconButton(
+        padding: const EdgeInsets.all(10),
+        onPressed: () {
+          _showOrderHistoryFilter(
+            context,
+            onApply: context.read<OrderHistoryCubit>().applyFilter,
+            onReset: context.read<OrderHistoryCubit>().resetFilter,
+            onStatusValueAdded:
+                context.read<OrderHistoryCubit>().addFilterValue,
+            onStatusValueRemoved:
+                context.read<OrderHistoryCubit>().removeFilterValue,
+            onShowMyOrdersToggled:
+                context.read<OrderHistoryCubit>().toggleShowMyOrders,
+          );
+        },
+        icon: SvgPicture.asset(
+          height: 20,
+          width: 20,
+          AssetConstants.filterIcon,
+          semanticsLabel: 'filter icon',
+          fit: BoxFit.fitWidth,
+        ),
+      ),
+    );
+  }
+}
+
+void _showOrderHistoryFilter(
+  BuildContext context, {
+  required void Function() onApply,
+  required void Function() onReset,
+  required void Function(String value) onStatusValueAdded,
+  required void Function(String value) onStatusValueRemoved,
+  required void Function() onShowMyOrdersToggled,
+}) {
+  context.read<OrderHistoryCubit>().loadFilterValues();
+  showFilterModalSheet(
+    context,
+    onApply: onApply,
+    onReset: onReset,
+    child: BlocProvider.value(
+      value: BlocProvider.of<OrderHistoryCubit>(context),
+      child: BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
+        builder: (context, state) {
+          if (state.filterStatus == FilterStatus.loading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state.filterStatus == FilterStatus.failure) {
+            return const Center(
+              child: Text('Error loading filter values'),
+            );
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FilterOptionSwitch(
+                label: LocalizationConstants.showMyOrdersOnly,
+                value: state.temporaryShowMyOrdersValue,
+                onChanged: (_) => onShowMyOrdersToggled(),
+              ),
+              FilterOptionsChip(
+                label: LocalizationConstants.status,
+                values: state.filterValues,
+                selectedValueIds: state.temporarySelectedFilterValueIds,
+                onSelectionIdAdded: onStatusValueAdded,
+                onSelectionIdRemoved: onStatusValueRemoved,
+              ),
+            ],
+          );
+        },
+      ),
+    ),
+  );
 }
