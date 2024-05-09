@@ -209,4 +209,21 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
 
     emit(state.copyWith(status: result));
   }
+
+  Future<void> renameWishList(String newName) async {
+    emit(state.copyWith(status: WishListStatus.listRenameLoading));
+    final result = await _wishListDetailsUsecase.renameWishList(
+      wishListEntity: state.wishList,
+      newName: newName,
+    );
+
+    if (result == WishListStatus.listRenameSuccess) {
+      emit(state.copyWith(
+        wishList: state.wishList.copyWith(name: newName),
+        status: result,
+      ));
+    } else {
+      emit(state.copyWith(status: result));
+    }
+  }
 }
