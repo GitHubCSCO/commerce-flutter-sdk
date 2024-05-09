@@ -17,6 +17,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list_details/wish_list_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_delete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list_details/wish_list_line/wish_list_line_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
@@ -227,14 +228,14 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
               } else if (state.status == WishListStatus.failure) {
                 return const Expanded(
                     child: Center(child: Text(LocalizationConstants.error)));
-              } else if (context.watch<WishListDetailsCubit>().emptyWishList) {
+              } else if (context.read<WishListDetailsCubit>().emptyWishList) {
                 return Expanded(
                   child: Center(
                     child: Text(
                         SiteMessageConstants.defaultValueWishListNoProducts),
                   ),
                 );
-              } else if (context.watch<WishListDetailsCubit>().noSearchResult) {
+              } else if (context.read<WishListDetailsCubit>().noSearchResult) {
                 return Expanded(
                   child: Center(
                     child: Text(
@@ -448,33 +449,19 @@ class _OptionsMenu extends StatelessWidget {
                   CustomSnackBar.showComingSoonSnackBar(context);
                 },
               ),
-            if (state.settings.allowEditingOfWishLists == true &&
-                state.wishList.isSharedList != true)
+            if (context
+                .read<WishListDetailsCubit>()
+                .canDeleteWishList(wishList: state.wishList))
               ToolMenu(
                 title: LocalizationConstants.delete,
                 action: () {
-                  displayDialogWidget(
-                      context: context,
-                      message: LocalizationConstants.deleteSpecificList.format(
-                        [state.wishList.name ?? ''],
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text(LocalizationConstants.cancel),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            context
-                                .read<WishListDetailsCubit>()
-                                .deleteWishList();
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text(LocalizationConstants.oK),
-                        ),
-                      ]);
+                  displayWishListDeleteWidget(
+                    wishList: state.wishList,
+                    context: context,
+                    onDelete: () {
+                      context.read<WishListDetailsCubit>().deleteWishList();
+                    },
+                  );
                 },
               ),
             ToolMenu(

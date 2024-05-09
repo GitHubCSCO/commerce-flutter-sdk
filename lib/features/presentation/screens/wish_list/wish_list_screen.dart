@@ -10,11 +10,13 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_screen_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_delete_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -99,7 +101,28 @@ class _WishListsPageState extends State<WishListsPage> {
               },
             ),
           ),
-          BlocBuilder<WishListCubit, WishListState>(
+          BlocConsumer<WishListCubit, WishListState>(
+            listener: (context, state) {
+              if (state.status == WishListStatus.listDeleteSuccess) {
+                CustomSnackBar.showListDeleted(context);
+                context.read<WishListCubit>().loadWishLists();
+              }
+
+              if (state.status == WishListStatus.listDeleteFailure) {
+                displayDialogWidget(
+                  context: context,
+                  title: LocalizationConstants.error,
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text(LocalizationConstants.oK),
+                    )
+                  ],
+                );
+              }
+            },
             builder: (context, state) {
               if (state.status == WishListStatus.loading) {
                 return const Expanded(
@@ -289,39 +312,70 @@ class _WishListItem extends StatelessWidget {
             },
           ),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
           children: [
-            Text(wishList.name ?? '', style: OptiTextStyles.body),
-            Text(
-              wishList.description ?? '',
-              style: OptiTextStyles.bodySmall.copyWith(
-                color: OptiAppColors.textSecondary,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(wishList.name ?? '', style: OptiTextStyles.body),
+                Text(
+                  wishList.description ?? '',
+                  style: OptiTextStyles.bodySmall.copyWith(
+                    color: OptiAppColors.textSecondary,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  _constructListSharingDisplay(),
+                  style: OptiTextStyles.bodySmall.copyWith(
+                    color: OptiAppColors.textSecondary,
+                  ),
+                ),
+                Text(
+                  LocalizationConstants.updateBy.format(
+                    [
+                      wishList.updatedOn != null
+                          ? DateFormat(CoreConstants.dateFormatString)
+                              .format(wishList.updatedOn!)
+                          : '',
+                      wishList.updatedByDisplayName ?? '',
+                    ],
+                  ),
+                  style: OptiTextStyles.bodySmall.copyWith(
+                    color: OptiAppColors.textSecondary,
+                  ),
+                )
+              ],
             ),
-            Text(
-              _constructListSharingDisplay(),
-              style: OptiTextStyles.bodySmall.copyWith(
-                color: OptiAppColors.textSecondary,
+            if (context
+                .read<WishListCubit>()
+                .canDeleteWishList(wishList: wishList))
+              InkWell(
+                onTap: () async {
+                  displayWishListDeleteWidget(
+                    wishList: wishList,
+                    context: context,
+                    onDelete: () {
+                      context.read<WishListCubit>().deleteWishList(
+                            wishListId: wishList.id,
+                          );
+                    },
+                  );
+                },
+                child: SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: SvgPicture.asset(
+                    AssetConstants.cartItemRemoveIcon,
+                    fit: BoxFit.fitWidth,
+                  ),
+                ),
               ),
-            ),
-            Text(
-              LocalizationConstants.updateBy.format(
-                [
-                  wishList.updatedOn != null
-                      ? DateFormat(CoreConstants.dateFormatString)
-                          .format(wishList.updatedOn!)
-                      : '',
-                  wishList.updatedByDisplayName ?? '',
-                ],
-              ),
-              style: OptiTextStyles.bodySmall.copyWith(
-                color: OptiAppColors.textSecondary,
-              ),
-            )
           ],
         ),
       ),

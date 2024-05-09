@@ -253,4 +253,11 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
 
     emit(state.copyWith(status: result));
   }
+
+  bool canDeleteWishList({required WishListEntity wishList}) {
+    return _wishListDetailsUsecase.canDeleteWishList(
+      settings: state.settings,
+      wishList: wishList,
+    );
+  }
 }

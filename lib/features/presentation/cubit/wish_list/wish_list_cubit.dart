@@ -1,4 +1,6 @@
+import 'package:commerce_flutter_app/features/domain/entity/settings/wish_list_settings_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_collection_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +18,7 @@ class WishListCubit extends Cubit<WishListState> {
             status: WishListStatus.initial,
             wishLists: WishListCollectionEntity(),
             searchQuery: '',
+            settings: WishListSettingsEntity(),
           ),
         );
 
@@ -39,19 +42,22 @@ class WishListCubit extends Cubit<WishListState> {
   Future<void> loadWishLists() async {
     emit(state.copyWith(status: WishListStatus.loading));
 
+    final settings = await _wishListUsecase.loadWishListSettings();
+
     final result = await _wishListUsecase.getWishLists(
       sortOrder: state.sortOrder,
       page: 1,
       searchText: state.searchQuery,
     );
 
-    result != null
+    result != null && settings != null
         ? emit(
             WishListState(
               wishLists: result,
               status: WishListStatus.success,
               sortOrder: state.sortOrder,
               searchQuery: state.searchQuery,
+              settings: settings,
             ),
           )
         : emit(state.copyWith(status: WishListStatus.failure));
@@ -93,6 +99,22 @@ class WishListCubit extends Cubit<WishListState> {
         ),
         status: WishListStatus.success,
       ),
+    );
+  }
+
+  Future<void> deleteWishList({required String? wishListId}) async {
+    emit(state.copyWith(status: WishListStatus.listDeleteLoading));
+    final result = await _wishListUsecase.deleteWishList(
+      wishListId: wishListId,
+    );
+
+    emit(state.copyWith(status: result));
+  }
+
+  bool canDeleteWishList({required WishListEntity wishList}) {
+    return _wishListUsecase.canDeleteWishList(
+      settings: state.settings,
+      wishList: wishList,
     );
   }
 }
