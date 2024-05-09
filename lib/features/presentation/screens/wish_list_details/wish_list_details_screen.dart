@@ -193,17 +193,26 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
               } else if (state.status == WishListStatus.failure) {
                 return const Expanded(
                     child: Center(child: Text(LocalizationConstants.error)));
-              } else if (context.read<WishListDetailsCubit>().noWishListFound) {
-                return const Expanded(
+              } else if (context.watch<WishListDetailsCubit>().emptyWishList) {
+                return Expanded(
                   child: Center(
-                    child: Text(LocalizationConstants.noListsAvailable),
+                    child: Text(
+                        SiteMessageConstants.defaultValueWishListNoProducts),
+                  ),
+                );
+              } else if (context.watch<WishListDetailsCubit>().noSearchResult) {
+                return Expanded(
+                  child: Center(
+                    child: Text(
+                      SiteMessageConstants.defaultDealerLocatorNoResultsMessage,
+                    ),
                   ),
                 );
               }
               return Expanded(
                 child: Column(
                   children: [
-                    if (!context.read<WishListDetailsCubit>().noWishListFound)
+                    if (!context.read<WishListDetailsCubit>().emptyWishList)
                       Container(
                         height: 50,
                         padding: const EdgeInsetsDirectional.symmetric(

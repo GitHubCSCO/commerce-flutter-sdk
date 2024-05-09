@@ -26,9 +26,16 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
           ),
         );
 
-  bool get noWishListFound =>
-      (state.status != WishListStatus.failure) &&
-      state.wishListLines.wishListLines?.isEmpty == true;
+  bool get emptyWishList =>
+      state.status != WishListStatus.failure &&
+      state.status != WishListStatus.initial &&
+      state.status != WishListStatus.loading &&
+      state.searchQuery.isNullOrEmpty &&
+      (state.wishListLines.pagination?.totalItemCount ?? 0) == 0;
+
+  bool get noSearchResult =>
+      (state.wishListLines.pagination?.totalItemCount ?? 0) == 0 &&
+      state.searchQuery.isNullOrEmpty == false;
 
   List<WishListLineSortOrder> get availableSortOrders =>
       _wishListDetailsUsecase.availableSortOrders;
