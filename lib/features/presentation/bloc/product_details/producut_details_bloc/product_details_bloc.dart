@@ -33,7 +33,6 @@ class ProductDetailsBloc
   Map<String, ConfigSectionOptionEntity?> selectedConfigurations = {};
   Map<String, List<StyleValueEntity>?> availableStyleValues = {};
   Map<String, StyleValueEntity?>? selectedStyleValues = {};
-  ProductDetailStyleValue? selectedStyleValue;
 
   int quantity = 1;
 
@@ -175,24 +174,56 @@ class ProductDetailsBloc
 
   void _onStyleTraitSelected(
       StyleTraitSelectedEvent event, Emitter<ProductDetailsState> emit) async {
-    selectedStyleValue = event.selectedStyleValue;
-    if (selectedStyleValue!.styleValue!.styleTraitValueId!.isEmpty) {
-      selectedStyleValues?[selectedStyleValue!.styleValue!.styleTraitId!] =
-          null;
+    var selectedStyleValue = event.selectedStyleValue;
+    if (selectedStyleValue.styleTraitValueId!.isEmpty) {
+      selectedStyleValues?[selectedStyleValue.styleTraitId!] = null;
     } else {
-      selectedStyleValues?[selectedStyleValue!.styleValue!.styleTraitId!] =
-          selectedStyleValue!.styleValue!;
+      selectedStyleValues?[selectedStyleValue.styleTraitId!] =
+          selectedStyleValue;
     }
 
     var isStyleSelectionComplete = isProductStyleSelectionCompleted();
 
     if (isStyleSelectionComplete!) {
-      var filteredStyledProducts = product.styledProducts
-          ?.where((o) =>
-              o.styleValues?.every((v) => selectedStyleValues!.values
-                  .any((s) => s?.styleTraitValueId == v.styleTraitValueId)) ??
-              false)
-          .toList();
+      List<StyledProductEntity>? filteredStyledProducts = [];
+      if (product.styledProducts != null) {
+        for (var o in product.styledProducts!) {
+          if (o.styleValues != null) {
+            bool allValuesMatch = true;
+            for (var v in o.styleValues!) {
+              if (selectedStyleValues != null) {
+                bool anyMatch = false;
+                for (var s in selectedStyleValues!.values) {
+                  if (s != null && s.styleTraitValueId == v.styleTraitValueId) {
+                    anyMatch = true;
+                    break;
+                  }
+                }
+                if (!anyMatch) {
+                  allValuesMatch = false;
+                  break;
+                }
+              } else {
+                allValuesMatch = false;
+                break;
+              }
+            }
+            if (allValuesMatch) {
+              filteredStyledProducts.add(o);
+            }
+          }
+        }
+      }
+
+      for (var styleProd in product.styledProducts!) {
+        for (var styleVal in styleProd.styleValues!) {
+          if (styleVal.styleTraitValueId ==
+              selectedStyleValue.styleTraitValueId) {
+            styledProduct = styleProd;
+            break;
+          }
+        }
+      }
       styledProduct = filteredStyledProducts?.firstWhere((element) => true);
       chosenUnitOfMeasure =
           styledProduct?.productUnitOfMeasures?.firstWhere((element) => true);
@@ -204,8 +235,10 @@ class ProductDetailsBloc
     } else {
       // not all traits has value => the product variant cannot be identified
       styledProduct = null;
-      chosenUnitOfMeasure = product.productUnitOfMeasures
-          ?.firstWhere((p) => p.unitOfMeasure == product.unitOfMeasure);
+      if (product.productUnitOfMeasures!.isNotEmpty) {
+        chosenUnitOfMeasure = product.productUnitOfMeasures
+            ?.firstWhere((p) => p.unitOfMeasure == product.unitOfMeasure);
+      }
     }
   }
 

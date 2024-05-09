@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/single_selection_swatch_chip.dart';
@@ -129,11 +130,10 @@ class ProductDetailsStyleTraitWidget extends StatelessWidget {
 
   void _onSelectStyleFromDropDown(BuildContext context, Object item) {
     var value = item as ProductDetailStyleValue;
-    _onSelectStyle(context, value);
+    _onSelectStyle(context, value.styleValue!);
   }
 
-  void _onSelectStyle(
-      BuildContext context, ProductDetailStyleValue selectedValue) {
+  void _onSelectStyle(BuildContext context, StyleValueEntity selectedValue) {
     var productDetailsBloc = context.read<ProductDetailsBloc>();
     productDetailsBloc.add(StyleTraitSelectedEvent(selectedValue));
   }
@@ -148,12 +148,15 @@ class ProductDetailsStyleTraitWidget extends StatelessWidget {
       case StyleTraitType.button:
         return Column(
           children: [
-            SingleSelectionOptionChip<ProductDetailStyleValue>(
-                values: styleTrait.styleValues!,
+            SingleSelectionOptionChip<StyleValueEntity>(
+                values:
+                    styleTrait.styleValues!.map((e) => e.styleValue!).toList(),
                 chipTitle: title,
                 selectedValue:
-                    context.read<ProductDetailsBloc>().selectedStyleValue,
-                onSelectionChanged: (ProductDetailStyleValue? selection) {
+                    context.read<ProductDetailsBloc>().selectedStyleValues?[
+                        styleTrait?.selectedStyleValue?.styleValue
+                            ?.styleTraitValueId],
+                onSelectionChanged: (StyleValueEntity? selection) {
                   _onSelectStyle(context, selection!);
                 }),
           ],
@@ -161,14 +164,17 @@ class ProductDetailsStyleTraitWidget extends StatelessWidget {
       case StyleTraitType.swatchList:
         return Column(
           children: [
-            SingleSelectionSwatchChip<ProductDetailStyleValue>(
-                values: styleTrait.styleValues!,
+            SingleSelectionSwatchChip<StyleValueEntity>(
+                values:
+                    styleTrait.styleValues!.map((e) => e.styleValue!).toList(),
                 chipTitle: title,
                 maxItemsToShow: styleTrait.numberOfSwatchesVisible!,
                 orientation: ChipOrientation.vertical,
                 selectedValue:
-                    context.read<ProductDetailsBloc>().selectedStyleValue,
-                onSelectionChanged: (ProductDetailStyleValue? selection) {
+                    context.read<ProductDetailsBloc>().selectedStyleValues?[
+                        styleTrait
+                            .selectedStyleValue?.styleValue?.styleTraitValueId],
+                onSelectionChanged: (StyleValueEntity? selection) {
                   _onSelectStyle(context, selection!);
                 }),
           ],
@@ -177,14 +183,17 @@ class ProductDetailsStyleTraitWidget extends StatelessWidget {
       case StyleTraitType.swatchGrid:
         return Column(
           children: [
-            SingleSelectionSwatchChip<ProductDetailStyleValue>(
-                values: styleTrait.styleValues!,
+            SingleSelectionSwatchChip<StyleValueEntity>(
+                values:
+                    styleTrait.styleValues!.map((e) => e.styleValue!).toList(),
                 chipTitle: title,
                 maxItemsToShow: styleTrait.numberOfSwatchesVisible!,
                 orientation: ChipOrientation.horizontal,
                 selectedValue:
-                    context.read<ProductDetailsBloc>().selectedStyleValue,
-                onSelectionChanged: (ProductDetailStyleValue? selection) {
+                    context.read<ProductDetailsBloc>().selectedStyleValues?[
+                        styleTrait.selectedStyleValue?.styleValue
+                            ?.styleTraitValueId],
+                onSelectionChanged: (StyleValueEntity? selection) {
                   _onSelectStyle(context, selection!);
                 }),
           ],

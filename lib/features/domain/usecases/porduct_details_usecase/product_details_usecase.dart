@@ -105,6 +105,7 @@ class ProductDetailsUseCase extends BaseUseCase {
       applyPersonalization: true,
       includeAttributes: "IncludeOnProduct",
       includeAlternateInventory: includeAlternateInventory,
+      productId: productId,
       expand:
           "documents,specifications,styledproducts,htmlcontent,attributes,crosssells,pricing,brand",
     );

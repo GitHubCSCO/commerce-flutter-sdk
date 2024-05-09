@@ -12,7 +12,7 @@ class FetchProductDetailsEvent extends ProductDetailsEvent {
 }
 
 class StyleTraitSelectedEvent extends ProductDetailsEvent {
-  final ProductDetailStyleValue selectedStyleValue;
+  final StyleValueEntity selectedStyleValue;
 
   StyleTraitSelectedEvent(this.selectedStyleValue);
 }

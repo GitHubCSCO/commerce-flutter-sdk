@@ -1,20 +1,23 @@
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
 import 'package:flutter/material.dart';
 
 enum ChipOrientation { vertical, horizontal }
 
 class SingleSelectionSwatchChip<T> extends StatefulWidget {
   const SingleSelectionSwatchChip({
-    Key? key,
+    super.key,
     required this.values,
     this.selectedValue,
     required this.onSelectionChanged,
     this.chipTitle,
     required this.maxItemsToShow,
     this.orientation = ChipOrientation.horizontal,
-  }) : super(key: key);
+    this.isAvailable,
+  });
 
+  final bool? isAvailable;
   final List<T> values;
   final T? selectedValue;
   final void Function(T? selection) onSelectionChanged;
@@ -42,26 +45,24 @@ class _SingleSelectionSwatchChipState<T>
   }
 
   Widget _getAvatar(T item) {
-    if (item is ProductDetailStyleValue) {
-      if (item.styleValue?.swatchImageValue != null &&
-          item.styleValue!.swatchImageValue!.isNotEmpty) {
+    if (item is StyleValueEntity) {
+      if (item.swatchImageValue != null && item.swatchImageValue!.isNotEmpty) {
         return ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Image.network(
-            item.styleValue!.swatchImageValue!,
+            item.swatchImageValue!,
             fit: BoxFit.cover,
             width: 40,
             height: 40,
           ),
         );
-      } else if (item.styleValue?.swatchColorValue != null &&
-          item.styleValue!.swatchColorValue!.isNotEmpty) {
+      } else if (item.swatchColorValue != null &&
+          item.swatchColorValue!.isNotEmpty) {
         return Container(
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: Color(int.parse("FF" + item.styleValue!.swatchColorValue!,
-                radix: 16)),
+            color: Color(int.parse("FF" + item.swatchColorValue!, radix: 16)),
             borderRadius: BorderRadius.circular(8),
           ),
         );
@@ -77,18 +78,18 @@ class _SingleSelectionSwatchChipState<T>
   }
 
   String _getValueTitle(T item) {
-    if (item is ProductDetailStyleValue) {
-      return item.styleValue?.value ?? "";
+    if (item is StyleValueEntity) {
+      return item.value ?? "";
     }
     return "";
   }
 
   @override
   Widget build(BuildContext context) {
-    // removeing first item from the list as it is the dummy value
+    // removing first item from the list as it is the dummy value
     List<T> itemsToShow = showAll
-        ? widget.values.skip(1).toList()
-        : widget.values.take(maxItemsToShow).skip(1).toList();
+        ? widget.values.toList()
+        : widget.values.take(maxItemsToShow).toList();
 
     return Padding(
       padding: const EdgeInsets.all(20.0),
@@ -121,13 +122,16 @@ class _SingleSelectionSwatchChipState<T>
             spacing: 20,
             runSpacing: 8,
             children: itemsToShow.map((value) {
+              bool isAvailable = widget.isAvailable ?? true;
               return InkWell(
-                onTap: () {
-                  setState(() {
-                    selectedValue = value;
-                    widget.onSelectionChanged(selectedValue);
-                  });
-                },
+                onTap: isAvailable
+                    ? () {
+                        setState(() {
+                          selectedValue = value;
+                          widget.onSelectionChanged(selectedValue);
+                        });
+                      }
+                    : null, // If not available, onTap is null (disabling onTap)
                 child: widget.orientation == ChipOrientation.horizontal
                     ? Column(
                         children: _buildChildren(value),
@@ -144,15 +148,25 @@ class _SingleSelectionSwatchChipState<T>
   }
 
   List<Widget> _buildChildren(T value) {
+    bool isAvailable = widget.isAvailable ?? true;
     return [
       Container(
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: selectedValue == value ? Colors.black : Colors.white,
+          color: selectedValue == value
+              ? Colors.black
+              : (isAvailable
+                  ? Colors.white
+                  : Colors.grey), // Change color to gray if not available
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: selectedValue == value ? Colors.black : Colors.white,
+            color: selectedValue == value
+                ? Colors.black
+                : (isAvailable
+                    ? Colors.black
+                    : Colors
+                        .grey), // Change border color to black if selected, otherwise to gray if not available
             width: 2,
           ),
         ),

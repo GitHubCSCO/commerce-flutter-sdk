@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
 import 'package:flutter/material.dart';
 
 class SingleSelectionOptionChip<T> extends StatefulWidget {
@@ -87,8 +88,8 @@ class _SingleSelectionOptionChipState<T>
   }
 
   String _getValueTitle(T item) {
-    if (item is ProductDetailStyleValue) {
-      return item.displayName!;
+    if (item is StyleValueEntity) {
+      return item.valueDisplay!;
     }
     return "";
   }
