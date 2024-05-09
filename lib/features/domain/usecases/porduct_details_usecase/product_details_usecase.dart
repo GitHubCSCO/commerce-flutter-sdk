@@ -345,6 +345,12 @@ class ProductDetailsUseCase extends BaseUseCase {
       styleValues.add(styleTraitNullValue);
 
       for (var styleValue in styleTrait.styleValues!) {
+        
+
+        styleValue = styleValue.copyWith(
+            isAvailable: availableStyleValues[styleValue.styleTraitId]!.any(
+                (x) => x.styleTraitValueId == styleValue.styleTraitValueId));
+
         var styleValueEntity = ProductDetailStyleValue(
             styleValue: styleValue,
             displayName: availableStyleValues[styleValue.styleTraitId] !=
@@ -378,9 +384,7 @@ class ProductDetailsUseCase extends BaseUseCase {
           selectedStyleValue: selectedStyle,
           displayTextWithSwatch: styleTrait.displayTextWithSwatch,
           displayType: styleTrait.displayType,
-          numberOfSwatchesVisible: styleTrait.numberOfSwatchesVisible
-          
-          );
+          numberOfSwatchesVisible: styleTrait.numberOfSwatchesVisible);
 
       styleTraitsEntity.add(styleTraitEntity);
     }

@@ -154,7 +154,7 @@ class ProductDetailsStyleTraitWidget extends StatelessWidget {
                 chipTitle: title,
                 selectedValue:
                     context.read<ProductDetailsBloc>().selectedStyleValues?[
-                        styleTrait?.selectedStyleValue?.styleValue
+                        styleTrait.selectedStyleValue?.styleValue
                             ?.styleTraitValueId],
                 onSelectionChanged: (StyleValueEntity? selection) {
                   _onSelectStyle(context, selection!);

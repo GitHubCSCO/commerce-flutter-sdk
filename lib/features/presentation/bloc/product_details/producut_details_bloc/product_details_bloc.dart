@@ -228,8 +228,6 @@ class ProductDetailsBloc
       chosenUnitOfMeasure =
           styledProduct?.productUnitOfMeasures?.firstWhere((element) => true);
 
-      _makeAllDetailsItems(product, emit);
-
       // this.loadProductPricing();
       // this.loadRealTimeInventory();
     } else {
@@ -238,6 +236,57 @@ class ProductDetailsBloc
       if (product.productUnitOfMeasures!.isNotEmpty) {
         chosenUnitOfMeasure = product.productUnitOfMeasures
             ?.firstWhere((p) => p.unitOfMeasure == product.unitOfMeasure);
+      }
+    }
+
+    resetAvailabilityStyleTraitsValues();
+
+    _makeAllDetailsItems(product, emit);
+  }
+
+  void resetAvailabilityStyleTraitsValues() {
+    // Reset available style traits values
+    for (var s in product.styleTraits!) {
+      availableStyleValues[s.styleTraitId!] =
+          List<StyleValueEntity>.from(s.styleValues!);
+    }
+
+    if (selectedStyleValues != null) {
+      for (var styleTraitId1 in selectedStyleValues!.keys) {
+        var styleTraitSelectedStyleValue = selectedStyleValues![styleTraitId1];
+
+        // Given trait has style value => filter
+        if (styleTraitSelectedStyleValue != null) {
+          for (var styleTraitId2 in selectedStyleValues!.keys) {
+            // Include all available values for the current trait
+            if (styleTraitId2 != styleTraitSelectedStyleValue.styleTraitId) {
+              var styleValues =
+                  List<StyleValueEntity>.from(availableStyleValues[styleTraitId2]!);
+              for (var styleValue in styleValues) {
+                // Styled products grouped by style value
+                var styleValueProducts = product.styledProducts!
+                    .where((o) => o.styleValues!.any((s) =>
+                        s.styleTraitValueId == styleValue.styleTraitValueId))
+                    .toList();
+                var currentlySelectedStyleValues = selectedStyleValues!.values
+                    .where((v) => v != null && v.styleTraitId != styleTraitId2)
+                    .toList();
+
+                var hasSelectedStyleValues = styleValueProducts.any((p) =>
+                    currentlySelectedStyleValues.every((s) => p.styleValues!
+                        .any((v) =>
+                            v.styleTraitValueId == s!.styleTraitValueId)));
+
+                // Check if the filtered product list has ANY object with the selected style values
+                // If not, remove style value as not available
+                if (!hasSelectedStyleValues) {
+                  availableStyleValues[styleTraitId2]!.removeWhere((v) =>
+                      v.styleTraitValueId == styleValue.styleTraitValueId);
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -1,5 +1,4 @@
 import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
 import 'package:flutter/material.dart';
 
@@ -14,10 +13,8 @@ class SingleSelectionSwatchChip<T> extends StatefulWidget {
     this.chipTitle,
     required this.maxItemsToShow,
     this.orientation = ChipOrientation.horizontal,
-    this.isAvailable,
   });
 
-  final bool? isAvailable;
   final List<T> values;
   final T? selectedValue;
   final void Function(T? selection) onSelectionChanged;
@@ -46,7 +43,17 @@ class _SingleSelectionSwatchChipState<T>
 
   Widget _getAvatar(T item) {
     if (item is StyleValueEntity) {
-      if (item.swatchImageValue != null && item.swatchImageValue!.isNotEmpty) {
+      if (!_getValueAvailibility(item)) {
+        return Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(8),
+          ),
+        );
+      } else if (item.swatchImageValue != null &&
+          item.swatchImageValue!.isNotEmpty) {
         return ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Image.network(
@@ -84,12 +91,19 @@ class _SingleSelectionSwatchChipState<T>
     return "";
   }
 
+  bool _getValueAvailibility(T item) {
+    if (item is StyleValueEntity) {
+      return item.isAvailable ?? true;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     // removing first item from the list as it is the dummy value
     List<T> itemsToShow = showAll
-        ? widget.values.toList()
-        : widget.values.take(maxItemsToShow).toList();
+        ? widget.values.skip(1).toList()
+        : widget.values.skip(1).take(maxItemsToShow).toList();
 
     return Padding(
       padding: const EdgeInsets.all(20.0),
@@ -122,7 +136,7 @@ class _SingleSelectionSwatchChipState<T>
             spacing: 20,
             runSpacing: 8,
             children: itemsToShow.map((value) {
-              bool isAvailable = widget.isAvailable ?? true;
+              bool isAvailable = _getValueAvailibility(value);
               return InkWell(
                 onTap: isAvailable
                     ? () {
@@ -148,7 +162,7 @@ class _SingleSelectionSwatchChipState<T>
   }
 
   List<Widget> _buildChildren(T value) {
-    bool isAvailable = widget.isAvailable ?? true;
+    bool isAvailable = _getValueAvailibility(value);
     return [
       Container(
         width: 40,
@@ -164,7 +178,7 @@ class _SingleSelectionSwatchChipState<T>
             color: selectedValue == value
                 ? Colors.black
                 : (isAvailable
-                    ? Colors.black
+                    ? Colors.white
                     : Colors
                         .grey), // Change border color to black if selected, otherwise to gray if not available
             width: 2,

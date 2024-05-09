@@ -13,6 +13,8 @@ class StyleValueEntity extends Equatable {
   final String? swatchColorValue;
   final String? swatchImageValue;
   final String? swatchType;
+  final bool? isAvailable;
+
 
   const StyleValueEntity({
     this.styleTraitName,
@@ -26,6 +28,7 @@ class StyleValueEntity extends Equatable {
     this.swatchColorValue,
     this.swatchImageValue,
     this.swatchType,
+    this.isAvailable,
   });
 
   StyleValueEntity copyWith({
@@ -40,6 +43,7 @@ class StyleValueEntity extends Equatable {
     String? swatchColorValue,
     String? swatchImageValue,
     String? swatchType,
+     bool? isAvailable,
   }) {
     return StyleValueEntity(
       styleTraitName: styleTraitName ?? this.styleTraitName,
@@ -53,6 +57,7 @@ class StyleValueEntity extends Equatable {
       swatchColorValue: swatchColorValue ?? this.swatchColorValue,
       swatchImageValue: swatchImageValue ?? this.swatchImageValue,
       swatchType: swatchType ?? this.swatchType,
+      isAvailable: isAvailable ?? this.isAvailable,
     );
   }
 

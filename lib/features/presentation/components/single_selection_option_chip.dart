@@ -35,6 +35,7 @@ class _SingleSelectionOptionChipState<T>
 
   @override
   Widget build(BuildContext context) {
+    List<T> itemsToShow = widget.values.skip(1).toList();
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 10.0, 0.0, 0.0),
       child: Column(
@@ -47,7 +48,7 @@ class _SingleSelectionOptionChipState<T>
           Wrap(
             spacing: 8,
             runSpacing: 2,
-            children: widget.values
+            children: itemsToShow
                 .map(
                   (value) => ChoiceChip(
                     label: Text(
@@ -65,16 +66,23 @@ class _SingleSelectionOptionChipState<T>
                     ),
                     selected: selectedValue == value,
                     onSelected: (bool selected) {
+                      if (!_getValueAvailibility(value)) {
+                        return;
+                      }
                       setState(() {
                         selectedValue = selected ? value : null;
                       });
                       widget.onSelectionChanged(selected ? value : null);
                     },
-                    backgroundColor: OptiAppColors.backgroundWhite,
+                    backgroundColor: (!_getValueAvailibility(value))
+                        ? Colors.grey // Gray if not available
+                        : OptiAppColors.backgroundWhite,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
-                      side: const BorderSide(
-                        color: OptiAppColors.textPrimary,
+                      side: BorderSide(
+                        color: (!_getValueAvailibility(value))
+                            ? Colors.grey // Gray if not available
+                            : OptiAppColors.textPrimary,
                         width: 1,
                       ),
                     ),
@@ -92,5 +100,12 @@ class _SingleSelectionOptionChipState<T>
       return item.valueDisplay!;
     }
     return "";
+  }
+
+  bool _getValueAvailibility(T item) {
+    if (item is StyleValueEntity) {
+      return item.isAvailable ?? true;
+    }
+    return true;
   }
 }
