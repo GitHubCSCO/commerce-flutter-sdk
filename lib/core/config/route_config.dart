@@ -181,7 +181,8 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.wishlistsDetails.suffix,
     builder: (context, state) {
       final wishListId = state.pathParameters['id'] ?? '';
-      return WishListDetailsScreen(wishListId: wishListId);
+      return WishListDetailsScreen(wishListId: wishListId,
+        onWishListRenamed: state.extra as void Function(),);
     },
     parent: wishlists,
   );

@@ -27,7 +27,7 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
         );
 
   bool get noWishListFound =>
-      state.status == WishListStatus.success &&
+      (state.status != WishListStatus.failure) &&
       state.wishListLines.wishListLines?.isEmpty == true;
 
   List<WishListLineSortOrder> get availableSortOrders =>

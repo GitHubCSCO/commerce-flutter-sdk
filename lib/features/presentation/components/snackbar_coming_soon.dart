@@ -84,4 +84,22 @@ class CustomSnackBar {
       ),
     );
   }
+
+  static void showListSaved(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(LocalizationConstants.listSaved),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showRenameFailed(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(LocalizationConstants.renameFailed),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
 }

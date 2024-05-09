@@ -274,10 +274,15 @@ class _WishListItem extends StatelessWidget {
       ),
       color: OptiAppColors.backgroundWhite,
       child: InkWell(
-        onTap: () => AppRoute.wishlistsDetails
-            .navigateBackStack(context, pathParameters: {
-          'id': wishList.id ?? '',
-        }),
+        onTap: () => AppRoute.wishlistsDetails.navigateBackStack(
+          context,
+          pathParameters: {
+            'id': wishList.id ?? '',
+          },
+          extra: () {
+            context.read<WishListCubit>().loadWishLists();
+          },
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

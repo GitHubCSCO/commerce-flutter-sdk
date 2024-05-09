@@ -26,10 +26,12 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WishListDetailsScreen extends StatelessWidget {
   final String wishListId;
+  final void Function() onWishListRenamed;
 
   const WishListDetailsScreen({
     super.key,
     required this.wishListId,
+    required this.onWishListRenamed,
   });
 
   @override
@@ -37,13 +39,17 @@ class WishListDetailsScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           sl<WishListDetailsCubit>()..loadWishListDetails(wishListId),
-      child: const WishListDetailsPage(),
+      child: WishListDetailsPage(
+        onWishListRenamed: onWishListRenamed,
+      ),
     );
   }
 }
 
 class WishListDetailsPage extends StatefulWidget {
-  const WishListDetailsPage({super.key});
+  const WishListDetailsPage({super.key, required this.onWishListRenamed});
+
+  final void Function() onWishListRenamed;
 
   @override
   State<WishListDetailsPage> createState() => _WishListDetailsPageState();
@@ -168,6 +174,15 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
 
               if (state.status == WishListStatus.listLineDeleteFailure) {
                 CustomSnackBar.showAddToCartFailed(context);
+              }
+
+              if (state.status == WishListStatus.listRenameSuccess) {
+                CustomSnackBar.showListSaved(context);
+                widget.onWishListRenamed();
+              }
+
+              if (state.status == WishListStatus.listRenameFailure) {
+                CustomSnackBar.showRenameFailed(context);
               }
             },
             builder: (context, state) {
@@ -369,7 +384,16 @@ class _OptionsMenu extends StatelessWidget {
               ToolMenu(
                 title: LocalizationConstants.rename,
                 action: () {
-                  CustomSnackBar.showComingSoonSnackBar(context);
+                  displayInputDialog(
+                    context: context,
+                    title: LocalizationConstants.rename,
+                    hintText: LocalizationConstants.enterListName,
+                    confirmText: LocalizationConstants.save,
+                    existingValue: state.wishList.name ?? '',
+                    onSubmit: (text) {
+                      context.read<WishListDetailsCubit>().renameWishList(text);
+                    },
+                  );
                 },
               ),
             if (state.settings.allowEditingOfWishLists == true &&
