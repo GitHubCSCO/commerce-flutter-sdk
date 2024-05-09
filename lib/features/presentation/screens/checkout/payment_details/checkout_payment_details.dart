@@ -1,5 +1,4 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
@@ -145,8 +144,12 @@ class CheckoutPaymentDetails extends StatelessWidget {
         label: LocalizationConstants.pONumber,
         hintText: cart.requiresPoNumber! ? LocalizationConstants.pONumberRequired :LocalizationConstants.pONumberOptional,
         controller: state.poTextEditingController,
-        onTapOutside: (p0) => context.closeKeyboard(),
-        onEditingComplete: () => context.nextFocus(),
+        onTapOutside: (_) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        onEditingComplete: () {
+          FocusManager.instance.primaryFocus?.nextFocus();
+        },
       ),
     );
   }
