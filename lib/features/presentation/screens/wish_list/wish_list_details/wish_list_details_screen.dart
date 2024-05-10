@@ -21,6 +21,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_delete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_details/wish_list_line/wish_list_line_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,13 +30,13 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WishListDetailsScreen extends StatelessWidget {
   final String wishListId;
-  final void Function()? onWishListRenamed;
+  final void Function()? onWishListUpdated;
   final void Function()? onWishListDeleted;
 
   const WishListDetailsScreen({
     super.key,
     required this.wishListId,
-    this.onWishListRenamed,
+    this.onWishListUpdated,
     this.onWishListDeleted,
   });
 
@@ -45,7 +46,7 @@ class WishListDetailsScreen extends StatelessWidget {
       create: (context) =>
           sl<WishListDetailsCubit>()..loadWishListDetails(wishListId),
       child: WishListDetailsPage(
-        onWishListRenamed: onWishListRenamed,
+        onWishListUpdated: onWishListUpdated,
         onWishListDeleted: onWishListDeleted,
       ),
     );
@@ -55,11 +56,11 @@ class WishListDetailsScreen extends StatelessWidget {
 class WishListDetailsPage extends StatefulWidget {
   const WishListDetailsPage({
     super.key,
-    this.onWishListRenamed,
+    this.onWishListUpdated,
     this.onWishListDeleted,
   });
 
-  final void Function()? onWishListRenamed;
+  final void Function()? onWishListUpdated;
   final void Function()? onWishListDeleted;
 
   @override
@@ -85,7 +86,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
         title: Text(
           context.watch<WishListDetailsCubit>().state.wishList.name ?? '',
         ),
-        actions: const [_OptionsMenu()],
+        actions: [_OptionsMenu(onWishListUpdated: widget.onWishListUpdated)],
       ),
       body: Column(
         children: [
@@ -189,8 +190,8 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
 
               if (state.status == WishListStatus.listUpdateSuccess) {
                 CustomSnackBar.showListSaved(context);
-                if (widget.onWishListRenamed != null) {
-                  widget.onWishListRenamed!();
+                if (widget.onWishListUpdated != null) {
+                  widget.onWishListUpdated!();
                 }
               }
 
@@ -407,7 +408,11 @@ class _WishListLinesSectionState extends State<_WishListLinesSection> {
 }
 
 class _OptionsMenu extends StatelessWidget {
-  const _OptionsMenu();
+  const _OptionsMenu({
+    this.onWishListUpdated,
+  });
+
+  final void Function()? onWishListUpdated;
 
   @override
   Widget build(BuildContext context) {
@@ -423,15 +428,13 @@ class _OptionsMenu extends StatelessWidget {
             ToolMenu(
               title: LocalizationConstants.listInformation,
               action: () {
-                AppRoute.wishListInfo.navigateBackStack(
-                  context,
-                  extra: WishListInfoScreenCallbackHelper(
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => WishListInformationScreen(
                       wishList: state.wishList,
-                      onWishListUpdated: () {
-                        context
-                            .read<WishListDetailsCubit>()
-                            .loadWishListDetails(state.wishList.id ?? '');
-                      }),
+                      onWishListUpdated: onWishListUpdated,
+                    ),
+                  ),
                 );
               },
             ),

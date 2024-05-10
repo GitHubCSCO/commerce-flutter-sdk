@@ -188,7 +188,7 @@ List<NavigationNode> _getNavigationRoot() {
 
       return WishListDetailsScreen(
         wishListId: wishListId,
-        onWishListRenamed: callbackHelper.onWishListRenamed,
+        onWishListUpdated: callbackHelper.onWishListUpdated,
         onWishListDeleted: callbackHelper.onWishListDeleted,
       );
     },

@@ -5,11 +5,12 @@ import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_information/wish_list_information_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class WishListInformationScreen extends StatelessWidget {
   const WishListInformationScreen({
@@ -77,14 +78,21 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
         backgroundColor: OptiAppColors.backgroundWhite,
         title: const Text(LocalizationConstants.listInformation),
       ),
-      body: BlocListener<WishListInformationCubit, WishListInformationState>(
+      body: BlocConsumer<WishListInformationCubit, WishListInformationState>(
         listener: (context, state) {
           if (state.status == WishListStatus.listUpdateSuccess) {
-            widget.onWishListUpdated?.call();
+            CustomSnackBar.showListUpdated(context);
+            if (widget.onWishListUpdated != null) {
+              widget.onWishListUpdated!();
+            }
             Navigator.of(context).pop();
           }
+
+          if (state.status == WishListStatus.listUpdateFailure) {
+            CustomSnackBar.showUpdateFailed(context);
+          }
         },
-        child: Column(
+        builder: (context, state) => Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
@@ -103,7 +111,7 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                             .canEditNameDesc,
                       ),
                       const SizedBox(height: 32),
-                      ListDetailsWidget(wishList: widget.wishList),
+                      ListDetailsWidget(wishList: state.wishList),
                       const SizedBox(height: 32),
                       ListDescriptionInputWidget(
                         listDescriptionController:

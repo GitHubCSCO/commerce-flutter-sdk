@@ -304,7 +304,7 @@ class _WishListItem extends StatelessWidget {
             'id': wishList.id ?? '',
           },
           extra: WishListScreenCallbackHelper(
-            onWishListRenamed: () {
+            onWishListUpdated: () {
               context.read<WishListCubit>().loadWishLists();
             },
             onWishListDeleted: () {

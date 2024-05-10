@@ -4,7 +4,7 @@ class WishListInfoScreenCallbackHelper {
   final WishListEntity wishList;
   final void Function()? onWishListUpdated;
 
-  WishListInfoScreenCallbackHelper({
+  const WishListInfoScreenCallbackHelper({
     required this.wishList,
     this.onWishListUpdated,
   });

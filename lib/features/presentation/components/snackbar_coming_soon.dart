@@ -111,4 +111,22 @@ class CustomSnackBar {
       ),
     );
   }
+
+  static void showListUpdated(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(LocalizationConstants.listUpdated),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showUpdateFailed(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(LocalizationConstants.update),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
 }

@@ -1,9 +1,9 @@
 class WishListScreenCallbackHelper {
-  final void Function()? onWishListRenamed;
+  final void Function()? onWishListUpdated;
   final void Function()? onWishListDeleted;
 
   const WishListScreenCallbackHelper({
-    this.onWishListRenamed,
+    this.onWishListUpdated,
     this.onWishListDeleted,
   });
 }

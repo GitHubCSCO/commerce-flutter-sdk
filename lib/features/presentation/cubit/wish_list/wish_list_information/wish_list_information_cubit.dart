@@ -52,7 +52,19 @@ class WishListInformationCubit extends Cubit<WishListInformationState> {
       newDescription: description ?? '',
     );
 
-    emit(state.copyWith(status: result));
+    if (result == WishListStatus.listUpdateSuccess) {
+      emit(
+        state.copyWith(
+          status: result,
+          wishList: state.wishList.copyWith(
+            name: name,
+            description: description ?? '',
+          ),
+        ),
+      );
+    } else {
+      emit(state.copyWith(status: result));
+    }
   }
 
   bool get canEditNameDesc =>
