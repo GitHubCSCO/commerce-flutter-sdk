@@ -54,4 +54,8 @@ class WishListInformationCubit extends Cubit<WishListInformationState> {
 
     emit(state.copyWith(status: result));
   }
+
+  bool get canEditNameDesc =>
+      state.settings.allowEditingOfWishLists == true &&
+      state.wishList.isSharedList == false;
 }

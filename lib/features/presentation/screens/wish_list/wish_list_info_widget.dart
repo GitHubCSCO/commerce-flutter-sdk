@@ -12,17 +12,22 @@ class ListNameInputWidget extends StatelessWidget {
   const ListNameInputWidget({
     super.key,
     required this.listNameController,
+    this.readOnly = false,
   });
 
   final TextEditingController listNameController;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
-    return Input(
-      label: LocalizationConstants.listName,
-      controller: listNameController,
-      onTapOutside: (p0) => context.closeKeyboard(),
-      onEditingComplete: () => context.nextFocus(),
+    return AbsorbPointer(
+      absorbing: readOnly,
+      child: Input(
+        label: LocalizationConstants.listName,
+        controller: listNameController,
+        onTapOutside: (p0) => context.closeKeyboard(),
+        onEditingComplete: () => context.closeKeyboard(),
+      ),
     );
   }
 }
@@ -30,20 +35,25 @@ class ListNameInputWidget extends StatelessWidget {
 class ListDescriptionInputWidget extends StatelessWidget {
   const ListDescriptionInputWidget({
     super.key,
-    required this.listDetailsController,
+    required this.listDescriptionController,
+    this.readOnly = false,
   });
 
-  final TextEditingController listDetailsController;
+  final TextEditingController listDescriptionController;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 100,
-      child: Input(
-        label: LocalizationConstants.descriptionOptional,
-        controller: listDetailsController,
-        onTapOutside: (p0) => context.closeKeyboard(),
-        onEditingComplete: () => context.closeKeyboard(),
+    return AbsorbPointer(
+      absorbing: readOnly,
+      child: SizedBox(
+        height: 100,
+        child: Input(
+          label: LocalizationConstants.descriptionOptional,
+          controller: listDescriptionController,
+          onTapOutside: (p0) => context.closeKeyboard(),
+          onEditingComplete: () => context.closeKeyboard(),
+        ),
       ),
     );
   }
