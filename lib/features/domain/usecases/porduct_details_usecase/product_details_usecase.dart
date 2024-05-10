@@ -14,12 +14,14 @@ import 'package:commerce_flutter_app/features/domain/entity/product_details/prod
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_image_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/specification_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/style_trait_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -35,6 +37,8 @@ enum ProdcutDeatilsPageWidgets {
 }
 
 class ProductDetailsUseCase extends BaseUseCase {
+  final ProductDetailsStyleTraitsUseCase _productDetailsStyleTraitsUseCase =
+      ProductDetailsStyleTraitsUseCase();
   ProductDetailsUseCase() : super();
 
   Future<bool> hasCheckout() {
@@ -332,59 +336,22 @@ class ProductDetailsUseCase extends BaseUseCase {
     final List<ProductDetailStyleTrait> styleTraitsEntity = [];
 
     for (var styleTrait in product.styleTraits!) {
-      var styleTraitNullValue = ProductDetailStyleValue(
-          styleValue: StyleValueEntity(
-              styleTraitId: styleTrait.id,
-              valueDisplay: LocalizationConstants.selectSomething +
-                  styleTrait.nameDisplay!),
-          displayName:
-              LocalizationConstants.selectSomething + styleTrait.nameDisplay!,
-          isAvailable: true);
-
-      List<ProductDetailStyleValue> styleValues = [];
-      styleValues.add(styleTraitNullValue);
+      var styleTraitNullValue = _productDetailsStyleTraitsUseCase
+          .createStyleTraitNullValue(styleTrait);
+      List<ProductDetailStyleValue> styleValues = [styleTraitNullValue];
 
       for (var styleValue in styleTrait.styleValues!) {
-        
-
-        styleValue = styleValue.copyWith(
-            isAvailable: availableStyleValues[styleValue.styleTraitId]!.any(
-                (x) => x.styleTraitValueId == styleValue.styleTraitValueId));
-
-        var styleValueEntity = ProductDetailStyleValue(
-            styleValue: styleValue,
-            displayName: availableStyleValues[styleValue.styleTraitId] !=
-                        null &&
-                    availableStyleValues[styleValue.styleTraitId]!.any((x) =>
-                        x.styleTraitValueId == styleValue.styleTraitValueId)
-                ? styleValue.valueDisplay
-                : "N/A - ${styleValue.valueDisplay!}",
-            isAvailable: availableStyleValues[styleValue.styleTraitId]!.any(
-                (x) => x.styleTraitValueId == styleValue.styleTraitValueId));
+        styleValue = _productDetailsStyleTraitsUseCase
+            .updateStyleValueAvailability(styleValue, availableStyleValues);
+        var styleValueEntity = _productDetailsStyleTraitsUseCase
+            .createStyleValueEntity(styleValue, availableStyleValues);
         styleValues.add(styleValueEntity);
       }
 
-      getDefaultStyleTrait() {
-        return styleValues.firstWhere(
-          (x) => x.styleValue?.isDefault == true,
-          orElse: () => styleTraitNullValue,
-        );
-      }
-
-      var selectedStyle = (selectedStyleValues?[styleTrait.styleTraitId] == null
-          ? (getDefaultStyleTrait())
-          : styleValues.firstWhere((x) =>
-              selectedStyleValues?[styleTrait.styleTraitId]
-                  ?.styleTraitValueId ==
-              x.styleValue?.styleTraitValueId));
-
-      var styleTraitEntity = ProductDetailStyleTrait(
-          styleTraitName: styleTrait.nameDisplay,
-          styleValues: styleValues,
-          selectedStyleValue: selectedStyle,
-          displayTextWithSwatch: styleTrait.displayTextWithSwatch,
-          displayType: styleTrait.displayType,
-          numberOfSwatchesVisible: styleTrait.numberOfSwatchesVisible);
+      var selectedStyle = _productDetailsStyleTraitsUseCase.getSelectedStyle(
+          styleValues, styleTrait, selectedStyleValues, styleTraitNullValue);
+      var styleTraitEntity = _productDetailsStyleTraitsUseCase
+          .createStyleTraitEntity(styleTrait, styleValues, selectedStyle);
 
       styleTraitsEntity.add(styleTraitEntity);
     }
