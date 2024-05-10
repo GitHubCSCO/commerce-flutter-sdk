@@ -12,6 +12,14 @@ class OrderListItemAddEvent extends OrderListEvent {
 
 }
 
+class OrderListItemScanAddEvent extends OrderListEvent {
+
+  final String? name;
+
+  OrderListItemScanAddEvent(this.name);
+
+}
+
 class OrderListItemRemoveEvent extends OrderListEvent {
 
   final ProductEntity productEntity;

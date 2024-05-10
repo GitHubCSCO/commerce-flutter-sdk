@@ -6,11 +6,18 @@ import 'package:commerce_flutter_app/features/presentation/components/buttons.da
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/detector_view.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 
 class BarcodeScannerView extends StatefulWidget {
-  const BarcodeScannerView({super.key});
+
+  final Function(BuildContext, String?) callback;
+  bool canProcess = false;
+  bool cameraFlash = false;
+  bool barcodeFullView = false;
+
+  BarcodeScannerView({required this.callback, required this.canProcess, required this.cameraFlash, required this.barcodeFullView, super.key});
 
   @override
   State<BarcodeScannerView> createState() => _BarcodeScannerViewState();
@@ -18,7 +25,6 @@ class BarcodeScannerView extends StatefulWidget {
 
 class _BarcodeScannerViewState extends State<BarcodeScannerView> {
   final BarcodeScanner _barcodeScanner = BarcodeScanner();
-  bool _canProcess = false;
   bool _isBusy = false;
   CustomPaint? _customPaint;
   String? _text;
@@ -26,7 +32,7 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
 
   @override
   void dispose() {
-    _canProcess = false;
+    widget.canProcess = false;
     _barcodeScanner.close();
     super.dispose();
   }
@@ -40,29 +46,34 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
             title: 'Barcode Scanner',
             customPaint: _customPaint,
             text: _text,
+            cameraFlash: widget.cameraFlash,
+            barcodeFullView: widget.barcodeFullView,
             onImage: _processImage,
             initialCameraLensDirection: _cameraLensDirection,
             onCameraLensDirectionChanged: (value) =>
                 _cameraLensDirection = value,
           ),
         ),
-        Container(
-          height: 80,
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-          clipBehavior: Clip.antiAlias,
-          decoration: const BoxDecoration(color: Colors.white),
-          child: PrimaryButton(
-            onPressed: () {
-              setState(() {
-                _canProcess = !_canProcess;
-              });
-            },
-            backgroundColor: _canProcess
-                ? OptiAppColors.buttonDarkRedBackgroudColor
-                : AppStyle.primary500,
-            text: _canProcess
-                ? LocalizationConstants.cancel
-                : LocalizationConstants.tapToScan,
+        Visibility(
+          visible: widget.barcodeFullView,
+          child: Container(
+            height: 80,
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            clipBehavior: Clip.antiAlias,
+            decoration: const BoxDecoration(color: Colors.white),
+            child: PrimaryButton(
+              onPressed: () {
+                setState(() {
+                  widget.canProcess = !widget.canProcess;
+                });
+              },
+              backgroundColor: widget.canProcess
+                  ? OptiAppColors.buttonDarkRedBackgroudColor
+                  : AppStyle.primary500,
+              text: widget.canProcess
+                  ? LocalizationConstants.cancel
+                  : LocalizationConstants.tapToScan,
+            ),
           ),
         )
       ],
@@ -70,7 +81,7 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
   }
 
   Future<void> _processImage(InputImage inputImage) async {
-    if (!_canProcess) return;
+    if (!widget.canProcess) return;
     if (_isBusy) return;
     _isBusy = true;
     setState(() {
@@ -91,7 +102,7 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
 
     if (barCodesWithIn.isNotEmpty) {
       if (barCodesWithIn.length == 1) {
-        Navigator.of(context).pop(barCodesWithIn[0].rawValue);
+        widget.callback(context, barCodesWithIn[0].rawValue);
         return;
       } else {
         displayDialogWidget(

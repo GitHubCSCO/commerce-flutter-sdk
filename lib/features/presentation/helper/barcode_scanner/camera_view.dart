@@ -10,6 +10,8 @@ class CameraView extends StatefulWidget {
       {Key? key,
       required this.customPaint,
       required this.onImage,
+      required this.cameraFlash,
+      required this.barcodeFullView,
       this.onCameraFeedReady,
       this.onDetectorViewModeChanged,
       this.onCameraLensDirectionChanged,
@@ -19,6 +21,8 @@ class CameraView extends StatefulWidget {
 
   final CustomPaint? customPaint;
   final Function(InputImage inputImage) onImage;
+  bool cameraFlash;
+  bool barcodeFullView;
   final VoidCallback? onCameraFeedReady;
   final VoidCallback? onDetectorViewModeChanged;
   final Function(CameraLensDirection direction)? onCameraLensDirectionChanged;
@@ -33,7 +37,6 @@ class _CameraViewState extends State<CameraView> {
   static List<CameraDescription> _cameras = [];
   CameraController? _controller;
   int _cameraIndex = -1;
-  bool _cameraFlash = false;
 
   @override
   void initState() {
@@ -91,49 +94,55 @@ class _CameraViewState extends State<CameraView> {
     );
   }
 
-  Widget _backButton() => Positioned(
-        top: 40,
-        right: 24,
-        child: SizedBox(
-          height: 32.0,
-          width: 32.0,
-          child: FloatingActionButton(
-            heroTag: Object(),
-            shape: const CircleBorder(),
-            onPressed: () => Navigator.of(context).pop(),
-            backgroundColor: Colors.grey.shade100,
-            child: const Icon(
-              Icons.close,
-              size: 20,
-              color: Colors.black,
+  Widget _backButton() => Visibility(
+    visible: widget.barcodeFullView,
+    child: Positioned(
+          top: 40,
+          right: 24,
+          child: SizedBox(
+            height: 32.0,
+            width: 32.0,
+            child: FloatingActionButton(
+              heroTag: Object(),
+              shape: const CircleBorder(),
+              onPressed: () => Navigator.of(context).pop(),
+              backgroundColor: Colors.grey.shade100,
+              child: const Icon(
+                Icons.close,
+                size: 20,
+                color: Colors.black,
+              ),
             ),
           ),
         ),
-      );
+  );
 
-  Widget _switchFlashToggle() => Positioned(
-        top: 40,
-        left: 24,
-        child: SizedBox(
-          height: 32.0,
-          width: 32.0,
-          child: FloatingActionButton(
-            heroTag: Object(),
-            shape: const CircleBorder(),
-            onPressed: () {
-              setState(() => _cameraFlash = !_cameraFlash);
-              _controller?.setFlashMode(
-                  _cameraFlash ? FlashMode.torch : FlashMode.off);
-            },
-            backgroundColor: Colors.grey.shade100,
-            child: Icon(
-              _cameraFlash ? Icons.flash_on : Icons.flash_off,
-              size: 20,
-              color: Colors.black,
+  Widget _switchFlashToggle() => Visibility(
+    visible: !widget.barcodeFullView,
+    child: Positioned(
+          top: 40,
+          left: 24,
+          child: SizedBox(
+            height: 32.0,
+            width: 32.0,
+            child: FloatingActionButton(
+              heroTag: Object(),
+              shape: const CircleBorder(),
+              onPressed: () {
+                setState(() => widget.cameraFlash = !widget.cameraFlash);
+                _controller?.setFlashMode(
+                    widget.cameraFlash ? FlashMode.torch : FlashMode.off);
+              },
+              backgroundColor: Colors.grey.shade100,
+              child: Icon(
+                widget.cameraFlash ? Icons.flash_on : Icons.flash_off,
+                size: 20,
+                color: Colors.black,
+              ),
             ),
           ),
         ),
-      );
+  );
 
   Widget _rectangleScanArea() => Positioned.fill(
         child: CustomPaint(

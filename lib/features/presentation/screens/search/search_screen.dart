@@ -106,7 +106,7 @@ class SearchPage extends BaseDynamicContentScreen {
                 ),
                 onPressed: () async {
                   final result = await GoRouter.of(context).pushNamed(
-                    AppRoute.barcodeScanner.name
+                    AppRoute.barcodeSearch.name
                   ) as String;
                   if (!result.isNullOrEmpty) {
                     context.read<SearchBloc>().searchQuery = result;

@@ -29,6 +29,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         super(OrderListInitialState()) {
     on<OrderListLoadEvent>(_onOrderListLoadEvent);
     on<OrderListItemAddEvent>(_onOrderLisItemAddEvent);
+    on<OrderListItemScanAddEvent>(_onOrderLisScanItemAddEvent);
     on<OrderListItemRemoveEvent>(_onOrderListItemRemoveEvent);
     on<OrderListAddToCartEvent>(_onOrderListAddToCartEvent);
     on<OrderListRemoveEvent>(_onOrderListRemoveEvent);
@@ -52,6 +53,39 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     emit(OrderListLoadingState());
     final result = await _quickOrderUseCase.getProduct(
         event.autocompleteProduct.id!, event.autocompleteProduct);
+
+    switch (result) {
+      case Success(value: final product):
+        if (product == null) {
+          return;
+        }
+
+        var quantity = (product.minimumOrderQty! > 0) ? product.minimumOrderQty : 1;
+
+        if (product.isStyleProductParent!) {
+          // need to implement style product logic
+        } else if (product.isConfigured! || (product.isConfigured! && !product.isFixedConfiguration!)) {
+          // this.coreServiceProvider.GetPlatformService().DisplayNoResultAlert(string.Empty, this.cannotOrderConfigurableProductMessage, LocalizationConstants.Keyword.OK.Localized());
+          emit(OrderListAddFailedState('cannotOrderConfigurableProductMessage'));
+        } else if (!product.canAddToCart!) {
+          // this.coreServiceProvider.GetPlatformService().DisplayNoResultAlert(string.Empty, this.cannotOrderUnavailableMessage, LocalizationConstants.Keyword.OK.Localized());
+          emit(OrderListAddFailedState('cannotOrderUnavailableMessage'));
+        } else {
+          var newItem = _convertProductToQuickOrderItemEntity(product, quantity!);
+          _insertItemIntoQuickOrderList(newItem);
+        }
+
+        final subtotal = calculateSubtotal();
+        emit(OrderListLoadedState(quickOrderItemList, productSettings, subtotal));
+      case Failure(errorResponse: final errorResponse):
+        emit(OrderListFailedState());
+    }
+  }
+
+  Future<void> _onOrderLisScanItemAddEvent(OrderListItemScanAddEvent event, Emitter<OrderListState> emit) async {
+    emit(OrderListLoadingState());
+    final result = await _quickOrderUseCase.getScanProduct(
+        event.name!);
 
     switch (result) {
       case Success(value: final product):
