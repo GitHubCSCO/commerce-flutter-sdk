@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
@@ -151,6 +152,41 @@ class _ListDetailsPropertiesRow extends StatelessWidget {
           style: OptiTextStyles.body,
         ),
       ],
+    );
+  }
+}
+
+class ListInformationBottomSubmitWidget extends StatelessWidget {
+  const ListInformationBottomSubmitWidget({super.key, required this.actions});
+
+  final List<Widget> actions;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: OptiAppColors.backgroundWhite,
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.05),
+            blurRadius: 5,
+            offset: Offset(0, -4),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(
+        vertical: 13.5,
+        horizontal: 31.5,
+      ),
+      child: Row(
+        children: actions
+            .map(
+              (widget) => Expanded(
+                child: widget,
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 }
