@@ -29,6 +29,7 @@ class WishListInformationScreen extends StatelessWidget {
           sl<WishListInformationCubit>()..initialize(wishList: wishList),
       child: WishListInformationPage(
         wishList: wishList,
+        onWishListUpdated: onWishListUpdated,
       ),
     );
   }
@@ -85,7 +86,7 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
             if (widget.onWishListUpdated != null) {
               widget.onWishListUpdated!();
             }
-            Navigator.of(context).pop();
+            context.pop();
           }
 
           if (state.status == WishListStatus.listUpdateFailure) {
