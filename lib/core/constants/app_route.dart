@@ -21,6 +21,7 @@ class RouteNames {
   static const String orderHistory = 'orderHistory';
   static const String wishlists = 'wishlists';
   static const String wishlistsDetails = 'wishlistsDetails';
+  static const String wishListInfo = 'wishListInfo';
 }
 
 class RoutePaths {
@@ -43,8 +44,10 @@ class RoutePaths {
   static const String biometricLogin = '/${RouteNames.biometricLogin}';
   static const String orderHistory =
       '/${RoutePaths.account}/${RouteNames.orderHistory}';
-  static const String wishlists = '${RoutePaths.account}/${RouteNames.wishlists}';
+  static const String wishlists =
+      '${RoutePaths.account}/${RouteNames.wishlists}';
   static const String wishlistsDetails = '$wishlists/:id';
+  static const String wishListInfo = '/${RouteNames.wishListInfo}';
 }
 
 enum AppRoute {
@@ -61,7 +64,8 @@ enum AppRoute {
   productDetails(
       name: RouteNames.productDetails, fullPath: RoutePaths.productDetails),
   checkout(name: RouteNames.checkout, fullPath: RoutePaths.checkout),
-  checkoutSuccess(name: RouteNames.checkoutSuccess, fullPath: RoutePaths.checkoutSuccess),
+  checkoutSuccess(
+      name: RouteNames.checkoutSuccess, fullPath: RoutePaths.checkoutSuccess),
   settings(name: RouteNames.settings, fullPath: RoutePaths.settings),
   biometricLogin(
       name: RouteNames.biometricLogin, fullPath: RoutePaths.biometricLogin),
@@ -69,7 +73,9 @@ enum AppRoute {
       name: RouteNames.orderHistory, fullPath: RoutePaths.orderHistory),
   wishlist(name: RouteNames.wishlists, fullPath: RoutePaths.wishlists),
   wishlistsDetails(
-      name: RouteNames.wishlistsDetails, fullPath: RoutePaths.wishlistsDetails);
+      name: RouteNames.wishlistsDetails, fullPath: RoutePaths.wishlistsDetails),
+  wishListInfo(
+      name: RouteNames.wishListInfo, fullPath: RoutePaths.wishListInfo);
 
   const AppRoute({
     required this.name,

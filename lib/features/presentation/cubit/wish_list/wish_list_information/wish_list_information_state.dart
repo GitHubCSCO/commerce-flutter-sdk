@@ -1,10 +1,32 @@
 part of 'wish_list_information_cubit.dart';
 
-sealed class WishListInformationState extends Equatable {
-  const WishListInformationState();
+class WishListInformationState extends Equatable {
+  final WishListEntity wishList;
+  final WishListSettingsEntity settings;
+  final WishListStatus status;
+
+  const WishListInformationState({
+    required this.wishList,
+    required this.settings,
+    required this.status,
+  });
 
   @override
-  List<Object> get props => [];
-}
+  List<Object> get props => [
+        wishList,
+        settings,
+        status,
+      ];
 
-final class WishListInformationInitial extends WishListInformationState {}
+  WishListInformationState copyWith({
+    WishListEntity? wishList,
+    WishListSettingsEntity? settings,
+    WishListStatus? status,
+  }) {
+    return WishListInformationState(
+      wishList: wishList ?? this.wishList,
+      settings: settings ?? this.settings,
+      status: status ?? this.status,
+    );
+  }
+}

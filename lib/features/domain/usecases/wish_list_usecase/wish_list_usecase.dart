@@ -72,6 +72,31 @@ class WishListUsecase extends BaseUseCase {
     }
   }
 
+  Future<WishListStatus> updateWishList({
+    required WishListEntity wishListEntity,
+    required String newName,
+    String? newDescription,
+  }) async {
+    final newWishList = wishListEntity.copyWith(
+      name: newName,
+      description: newDescription ?? wishListEntity.description,
+    );
+
+    final result =
+        await commerceAPIServiceProvider.getWishListService().updateWishList(
+              WishListEntityMapper.toModel(newWishList),
+            );
+
+    switch (result) {
+      case Success(value: final value):
+        return value != null
+            ? WishListStatus.listUpdateSuccess
+            : WishListStatus.listUpdateFailure;
+      case Failure():
+        return WishListStatus.listUpdateFailure;
+    }
+  }
+
   List<WishListSortOrder> get availableSortOrders => WishListSortOrder.values;
 
   bool canDeleteWishList({

@@ -163,7 +163,7 @@ class LocalizationConstants {
   static const renameFailed = "Rename Failed";
   static const sharedWith = "Shared with %s others";
   static const sharedBy = "Shared by %s";
-  static const items = "{0} Items";
+  static const items = "% Items";
   static const itemNumber = "Item # %s";
   static const removeItem = "Remove Item";
   static const removeItemInfoMessage =
@@ -172,7 +172,7 @@ class LocalizationConstants {
   static const selectList = "Select List";
   static const createNewListInfoMessage =
       "Creates a new list and adds the product to it.";
-  static const updateOnBy = "{0} by {1}";
+  static const updateOnBy = "%s by %s";
   static const updateBy = "Updated %s by %s";
   static const deleteIsDiscontinued =
       "The product '{0}' have been discontinued. Would you like to remove this item from the list?";

@@ -8,8 +8,8 @@ enum WishListStatus {
   errorModification,
   moreLoadingFailure,
 
-  listRenameSuccess,
-  listRenameFailure,
+  listUpdateSuccess,
+  listUpdateFailure,
   listRenameLoading,
 
   listDeleteSuccess,

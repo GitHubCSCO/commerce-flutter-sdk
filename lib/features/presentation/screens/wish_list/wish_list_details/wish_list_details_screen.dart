@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
@@ -15,6 +16,7 @@ import 'package:commerce_flutter_app/features/presentation/components/input.dart
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_details/wish_list_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_info_screen_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_delete_widget.dart';
@@ -185,14 +187,14 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                 CustomSnackBar.showAddToCartFailed(context);
               }
 
-              if (state.status == WishListStatus.listRenameSuccess) {
+              if (state.status == WishListStatus.listUpdateSuccess) {
                 CustomSnackBar.showListSaved(context);
                 if (widget.onWishListRenamed != null) {
                   widget.onWishListRenamed!();
                 }
               }
 
-              if (state.status == WishListStatus.listRenameFailure) {
+              if (state.status == WishListStatus.listUpdateFailure) {
                 CustomSnackBar.showRenameFailed(context);
               }
 
@@ -421,7 +423,16 @@ class _OptionsMenu extends StatelessWidget {
             ToolMenu(
               title: LocalizationConstants.listInformation,
               action: () {
-                CustomSnackBar.showComingSoonSnackBar(context);
+                AppRoute.wishListInfo.navigateBackStack(
+                  context,
+                  extra: WishListInfoScreenCallbackHelper(
+                      wishList: state.wishList,
+                      onWishListUpdated: () {
+                        context
+                            .read<WishListDetailsCubit>()
+                            .loadWishListDetails(state.wishList.id ?? '');
+                      }),
+                );
               },
             ),
             if (state.wishList.isSharedList != true)

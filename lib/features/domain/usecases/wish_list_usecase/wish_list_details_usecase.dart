@@ -297,27 +297,6 @@ class WishListDetailsUsecase extends WishListUsecase {
     }
   }
 
-  Future<WishListStatus> renameWishList({
-    required WishListEntity wishListEntity,
-    required String newName,
-  }) async {
-    final newWishList = wishListEntity.copyWith(name: newName);
-
-    final result =
-        await commerceAPIServiceProvider.getWishListService().updateWishList(
-              WishListEntityMapper.toModel(newWishList),
-            );
-
-    switch (result) {
-      case Success(value: final value):
-        return value != null
-            ? WishListStatus.listRenameSuccess
-            : WishListStatus.listRenameFailure;
-      case Failure():
-        return WishListStatus.listRenameFailure;
-    }
-  }
-
   List<WishListLineSortOrder> get listLineAvailableSortOrders =>
       WishListLineSortOrder.values;
 }

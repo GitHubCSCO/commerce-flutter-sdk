@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_info_screen_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_screen_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
@@ -9,6 +10,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/biometric/bio
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/nav_bar/nav_bar_screen.dart';
@@ -193,6 +195,24 @@ List<NavigationNode> _getNavigationRoot() {
     parent: wishlists,
   );
 
+  // path: /account/wishlist/info
+  final wishListInfo = createNode(
+    name: AppRoute.wishListInfo.name,
+    path: AppRoute.wishListInfo.suffix,
+    builder: (context, state) {
+      final callbackHelper = state.extra as WishListInfoScreenCallbackHelper;
+
+      final wishList = callbackHelper.wishList;
+      final onWishListUpdated = callbackHelper.onWishListUpdated;
+
+      return WishListInformationScreen(
+        wishList: wishList,
+        onWishListUpdated: onWishListUpdated,
+      );
+    },
+    parent: null,
+  );
+
   return [
     root,
     navbarRoot,
@@ -202,5 +222,6 @@ List<NavigationNode> _getNavigationRoot() {
     biometricLogin,
     checkout,
     checkoutSuccess,
+    wishListInfo,
   ];
 }
