@@ -1,5 +1,5 @@
 class AssetConstants {
-  static const String logo = 'assets/images/optimizely-logo.png';
+  static const String logo = 'assets/images/logo.png';
   static const String iconChangeDomain = 'assets/images/icon_change_domain.svg';
   static const String shopIcon = 'assets/images/bar_icons/shop.svg';
   static const String shopSelectedIcon =
