@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_state.dart';
@@ -15,9 +16,11 @@ import 'package:commerce_flutter_app/features/presentation/components/number_tex
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/style_trait_select_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductDetailsAddToCartWidget extends StatelessWidget {
   const ProductDetailsAddToCartWidget();
@@ -111,9 +114,16 @@ class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
               ),
               text: LocalizationConstants.addToCart,
               onPressed: () {
-                context.read<ProductDetailsAddToCartBloc>().add(AddToCartEvent(
-                    productDetailsAddToCartEntity: widget.detailsAddToCartEntity
-                        .copyWith(quantityText: quantity.toString())));
+                showStyleTraitFilter(
+                    widget.detailsAddToCartEntity.productDetailsPriceEntity!
+                        .product!,
+                    context,
+                    ongetProduct:
+                        (StyledProductEntity? styledProductEntity) {});
+
+                // context.read<ProductDetailsAddToCartBloc>().add(AddToCartEvent(
+                //     productDetailsAddToCartEntity: widget.detailsAddToCartEntity
+                //         .copyWith(quantityText: quantity.toString())));
               })
         ],
       ),

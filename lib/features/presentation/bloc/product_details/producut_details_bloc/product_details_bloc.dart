@@ -178,7 +178,6 @@ class ProductDetailsBloc
         _productDetailsStyleTraitsUseCase.getStyledProductBasedOnSelection(
             selectedStyleValue,
             product,
-            styledProduct,
             availableStyleValues,
             selectedStyleValues);
 

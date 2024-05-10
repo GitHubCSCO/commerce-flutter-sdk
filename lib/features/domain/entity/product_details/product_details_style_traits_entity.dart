@@ -2,6 +2,7 @@
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_base_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
+import 'package:equatable/equatable.dart';
 
 class ProductDetailsStyletraitsEntity extends ProductDetailsBaseEntity {
   final List<ProductDetailStyleTrait>? styleTraits;
@@ -21,7 +22,7 @@ class ProductDetailsStyletraitsEntity extends ProductDetailsBaseEntity {
   }
 }
 
-class ProductDetailStyleTrait {
+class ProductDetailStyleTrait extends Equatable {
   final String? styleTraitName;
   String? displayType;
   int? numberOfSwatchesVisible;
@@ -55,9 +56,21 @@ class ProductDetailStyleTrait {
           displayTextWithSwatch ?? this.displayTextWithSwatch,
     );
   }
+
+  @override
+  List<Object?> get props {
+    return [
+      styleTraitName,
+      displayType,
+      numberOfSwatchesVisible,
+      displayTextWithSwatch,
+      styleValues,
+      selectedStyleValue
+    ];
+  }
 }
 
-class ProductDetailStyleValue {
+class ProductDetailStyleValue extends Equatable {
   final StyleValueEntity? styleValue;
   final String? displayName;
   final bool? isAvailable;
@@ -81,5 +94,10 @@ class ProductDetailStyleValue {
       isAvailable: isAvailable ?? this.isAvailable,
       isSelected: isSelected ?? this.isSelected,
     );
+  }
+
+  @override
+  List<Object?> get props {
+    return [styleValue, displayName, isAvailable, isSelected];
   }
 }

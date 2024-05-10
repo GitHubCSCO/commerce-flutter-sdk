@@ -52,9 +52,9 @@ class ProductDetailsStyleTraitsUseCase {
   StyledProductEntity? getStyledProductBasedOnSelection(
       StyleValueEntity selectedStyleValue,
       ProductEntity product,
-      StyledProductEntity? styledProduct,
       Map<String, List<StyleValueEntity>?> availableStyleValues,
       Map<String, StyleValueEntity?>? selectedStyleValues) {
+    StyledProductEntity? styledProduct;
     if (selectedStyleValue.styleTraitValueId!.isEmpty) {
       selectedStyleValues?[selectedStyleValue.styleTraitId!] = null;
     } else {

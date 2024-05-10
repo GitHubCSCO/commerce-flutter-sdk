@@ -26,6 +26,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/order_usecase/orde
 import 'package:commerce_flutter_app/features/domain/usecases/platform_usecase/platform_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/warehouse_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
@@ -68,6 +69,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/order_history/o
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/seardh_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/style_trait_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:commerce_flutter_app/services/secure_storage_service.dart';
@@ -161,8 +163,6 @@ Future<void> initInjectionContainer() async {
     //date selection
     ..registerFactory(() => DateSelectionCubit())
 
-
-
     //settings domain
     ..registerFactory(() => SettingsDomainCubit(domainUsecase: sl()))
 
@@ -187,6 +187,11 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(
         () => ProductDetailsAddToCartBloc(productDetailsAddToCartUseCase: sl()))
     ..registerFactory(() => ProductDetailsAddToCartUseCase())
+
+    //product style trait
+
+    ..registerFactory(() => ProductDetailsStyleTraitsUseCase())
+    ..registerFactory(() => StyleTraitCubit(styleTraitsUseCase: sl()))
 
     // warehouse inventory
 

@@ -24,6 +24,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/style_trait_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_add_to_cart_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_general_widget.dart';
@@ -59,6 +60,9 @@ class ProductDetailsScreen extends StatelessWidget {
         ),
         BlocProvider<ProductDetailsAddToCartBloc>(
           create: (context) => sl<ProductDetailsAddToCartBloc>(),
+        ),
+        BlocProvider<StyleTraitCubit>(
+          create: (context) => sl<StyleTraitCubit>(),
         ),
       ],
       child: const ProductDetailsPage(),
@@ -141,7 +145,8 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
           final productDetailsStyletraitsEntity =
               item as ProductDetailsStyletraitsEntity;
           widgets.add(buildProductDetailsStyleTraitWidget(
-              productDetailsStyletraitsEntity: productDetailsStyletraitsEntity));
+              productDetailsStyletraitsEntity:
+                  productDetailsStyletraitsEntity));
         default:
           break;
       }
