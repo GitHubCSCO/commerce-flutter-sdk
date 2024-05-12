@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/auto_complete/quick_order_auto_complete_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
@@ -152,6 +153,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                         .pleaseSignInBeforeAddingToList);
                               } else if (state is OrderListAddFailedState) {
                                 _showAlert(context, '', state.message);
+                              } else if (state is OrderListStyleProductAddState) {
+                                handleStyleProductAdd(state.productEntity);
                               }
                             },
                             buildWhen: (previous, current) =>
@@ -539,6 +542,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   _handleBarcodeValue(BuildContext context, String? rawValue) {
     //need to change canProcess value
     context.read<OrderListBloc>().add(OrderListItemScanAddEvent(rawValue!));
+  }
+
+  void handleStyleProductAdd(ProductEntity productEntity) {
+    // context.read<OrderListBloc>().add(OrderListAddStyleProductEvent());
   }
 
 }

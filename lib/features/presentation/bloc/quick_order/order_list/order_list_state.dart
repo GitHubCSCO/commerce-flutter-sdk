@@ -63,3 +63,16 @@ class OrderListAddToListSuccessState extends OrderListState {
 
 }
 
+class OrderListStyleProductAddState extends OrderListState {
+
+  final ProductEntity productEntity;
+
+  OrderListStyleProductAddState(this.productEntity);
+
+  @override
+  List<Object?> get props => [productEntity];
+
+
+}
+
+

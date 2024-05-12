@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/quick_order_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,6 +35,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     on<OrderListAddToCartEvent>(_onOrderListAddToCartEvent);
     on<OrderListRemoveEvent>(_onOrderListRemoveEvent);
     on<OrderListAddToListEvent>(_onOrderListAddToListEvent);
+    on<OrderListAddStyleProductEvent>(_onOrderListAddStyleProductEvent);
   }
 
   Future<void> _onOrderListLoadEvent(OrderListLoadEvent event, Emitter<OrderListState> emit) async {
@@ -65,7 +67,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         var quantity = (product.minimumOrderQty! > 0) ? product.minimumOrderQty : 1;
 
         if (product.isStyleProductParent!) {
-          // need to implement style product logic
+          emit(OrderListStyleProductAddState(product));
         } else if (product.isConfigured! || (product.isConfigured! && !product.isFixedConfiguration!)) {
           // this.coreServiceProvider.GetPlatformService().DisplayNoResultAlert(string.Empty, this.cannotOrderConfigurableProductMessage, LocalizationConstants.Keyword.OK.Localized());
           emit(OrderListAddFailedState('cannotOrderConfigurableProductMessage'));
@@ -79,7 +81,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
         emit(OrderListLoadedState(quickOrderItemList, productSettings));
       case Failure(errorResponse: final errorResponse):
-        emit(OrderListFailedState());
+        emit(OrderListLoadedState(quickOrderItemList, productSettings));
     }
   }
 
@@ -111,7 +113,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
         emit(OrderListLoadedState(quickOrderItemList, productSettings));
       case Failure(errorResponse: final errorResponse):
-        emit(OrderListFailedState());
+        emit(OrderListLoadedState(quickOrderItemList, productSettings));
     }
   }
 
@@ -160,6 +162,19 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     }
   }
 
+  Future<void> _onOrderListAddStyleProductEvent(OrderListAddStyleProductEvent event, Emitter<OrderListState> emit) async {
+    final result = _quickOrderUseCase.getStyleProduct(event.styledProductEntity.productId!);
+    switch (result) {
+      case Success(value: final product):
+        var quantity = (product.minimumOrderQty! > 0) ? product.minimumOrderQty : 1;
+        var newItem = _convertProductToQuickOrderItemEntity(product, quantity!);
+        _insertItemIntoQuickOrderList(newItem);
+        emit(OrderListLoadedState(quickOrderItemList, productSettings));
+      case Failure():
+        emit(OrderListLoadedState(quickOrderItemList, productSettings));
+    }
+
+  }
 
   List<QuickOrderItemEntity> getReversedQuickOrderItemEntityList() {
     List<QuickOrderItemEntity> reversedQuickOrderProductsList = List.from(quickOrderItemList);

@@ -54,6 +54,12 @@ class QuickOrderUseCase extends BaseUseCase {
     }
   }
 
+  Future<Result<GetProductResult, ErrorResponse>> getStyleProduct(String productId) async {
+    var parameters = ProductQueryParameters();
+    var result = await commerceAPIServiceProvider.getProductService().getProduct(productId, parameters: parameters);
+    return result;
+  }
+
   Future<Result<ProductSettings, ErrorResponse>> getProductSetting() async {
     var productSettingsResponse = await commerceAPIServiceProvider.getSettingsService().getProductSettingsAsync();
     return productSettingsResponse;

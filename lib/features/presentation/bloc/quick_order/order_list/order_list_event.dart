@@ -33,3 +33,11 @@ class OrderListAddToCartEvent extends OrderListEvent {}
 class OrderListRemoveEvent extends OrderListEvent {}
 
 class OrderListAddToListEvent extends OrderListEvent {}
+
+class OrderListAddStyleProductEvent extends OrderListEvent {
+
+  final StyledProductEntity styledProductEntity;
+
+  OrderListAddStyleProductEvent(this.styledProductEntity);
+
+}
