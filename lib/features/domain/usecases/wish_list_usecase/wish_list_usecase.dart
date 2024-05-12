@@ -187,6 +187,40 @@ class WishListUsecase extends BaseUseCase {
     }
   }
 
+  Future<WishListStatus> copyWishList({
+    required WishListEntity copyFromWishList,
+    required String name,
+  }) async {
+    if (copyFromWishList.id.isNullOrEmpty) {
+      return WishListStatus.listCopyFailure;
+    }
+
+    final wishList = WishList(
+      name: name,
+    );
+
+    final parameter = CreateWishListQueryParameters(
+      wishListObj: wishList,
+    );
+
+    final result = await commerceAPIServiceProvider
+        .getWishListService()
+        .createWishList(parameter);
+
+    switch (result) {
+      case Success(value: final value):
+        if (value == null) {
+          return WishListStatus.listCopyFailure;
+        }
+
+        /// TODO - get copy result
+
+        return WishListStatus.listCopySuccess;
+      case Failure():
+        return WishListStatus.listCopyFailure;
+    }
+  }
+
   List<WishListSortOrder> get availableSortOrders => WishListSortOrder.values;
 
   bool canDeleteWishList({

@@ -254,6 +254,16 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     emit(state.copyWith(status: result));
   }
 
+  Future<void> copyWishList({required String name}) async {
+    emit(state.copyWith(status: WishListStatus.listCopyLoading));
+    final result = await _wishListDetailsUsecase.copyWishList(
+      copyFromWishList: state.wishList,
+      name: name,
+    );
+
+    emit(state.copyWith(status: result));
+  }
+
   bool canDeleteWishList({required WishListEntity wishList}) {
     return _wishListDetailsUsecase.canDeleteWishList(
       settings: state.settings,

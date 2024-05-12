@@ -221,6 +221,31 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                   ],
                 );
               }
+
+              if (state.status == WishListStatus.listCopySuccess) {
+                CustomSnackBar.showCustomSnackBar(
+                  context,
+                  message: LocalizationConstants.listCopied,
+                );
+
+                if (widget.onWishListUpdated != null) {
+                  widget.onWishListUpdated!();
+                }
+              }
+
+              if (state.status == WishListStatus.listCopyLoading) {
+                CustomSnackBar.showCustomSnackBar(
+                  context,
+                  message: 'Copying list...',
+                );
+              }
+
+              if (state.status == WishListStatus.listCopyFailure) {
+                CustomSnackBar.showCustomSnackBar(
+                  context,
+                  message: LocalizationConstants.copyFailed,
+                );
+              }
             },
             builder: (context, state) {
               if (state.status == WishListStatus.loading ||
@@ -487,7 +512,16 @@ class _OptionsMenu extends StatelessWidget {
             ToolMenu(
               title: LocalizationConstants.copy,
               action: () {
-                CustomSnackBar.showComingSoonSnackBar(context);
+                displayInputDialog(
+                  context: context,
+                  title: LocalizationConstants.copyList,
+                  hintText: LocalizationConstants.enterListName,
+                  onSubmit: (name) async {
+                    await context
+                        .read<WishListDetailsCubit>()
+                        .copyWishList(name: name);
+                  },
+                );
               },
             ),
           ],

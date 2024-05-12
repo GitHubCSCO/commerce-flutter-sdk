@@ -12,6 +12,10 @@ enum WishListStatus {
   listCreateSuccess,
   listCreateFailure,
 
+  listCopyLoading,
+  listCopySuccess,
+  listCopyFailure,
+
   listUpdateSuccess,
   listUpdateFailure,
   listRenameLoading,
