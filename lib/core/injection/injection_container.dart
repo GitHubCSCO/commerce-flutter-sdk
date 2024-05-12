@@ -38,6 +38,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_
 import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
@@ -178,8 +179,10 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => OrderItemPricingInventoryCubit(pricingInventoryUseCase: sl()))
     ..registerFactory(() => OrderPricingInventoryUseCase())
 
+    //barcode
+    ..registerFactory(() => BarcodeScanBloc())
 
-  //wishlist
+    //wishlist
     ..registerFactory(() => WishListCubit(wishListUsecase: sl()))
     ..registerFactory(() => WishListUsecase())
 

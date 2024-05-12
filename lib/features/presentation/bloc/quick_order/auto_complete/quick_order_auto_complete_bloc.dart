@@ -55,7 +55,7 @@ class QuickOrderAutoCompleteBloc extends Bloc<QuickOrderAutoCompleteEvent, Quick
 
   Future<void> _onSearchUnFocusEvent(QuickOrderUnFocusEvent event, Emitter<QuickOrderAutoCompleteState> emit) async {
     if (searchQuery.isEmpty) {
-      // emit(SearchCmsInitialState());
+      emit(QuickOrderAutoCompleteInitialState());
     }
   }
 

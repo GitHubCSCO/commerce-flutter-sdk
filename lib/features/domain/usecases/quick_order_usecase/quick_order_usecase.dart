@@ -31,24 +31,28 @@ class QuickOrderUseCase extends BaseUseCase {
   }
 
   Future<Result<ProductEntity, ErrorResponse>> getScanProduct(String name) async {
-    var parameters = ProductQueryParameters(
-      expand: name,
+    var parameters = ProductsQueryParameters(
+      expand: [name],
     );
 
     var resultResponse = await commerceAPIServiceProvider
         .getProductService()
-        .getProducts(parameters as ProductsQueryParameters);
+        .getProducts(parameters);
 
     switch (resultResponse) {
       case Success(value: final data):
-        final productEntity = ProductEntityMapper().toEntity(data?.products![0] ?? Product());
-        // if (productEntity.styledProducts != null) {
-        //   if (productEntity.styleParentId != null) {
-        //     styledProduct = productEntity.styledProducts
-        //         ?.firstWhere((o) => o.productId == productEntity.id);
-        //   }
-        // }
-        return Success(productEntity);
+        if ((data?.products ?? []).isNotEmpty && (data?.products ?? []).length == 1) {
+          final productEntity = ProductEntityMapper().toEntity(data?.products![0] ?? Product());
+          // if (productEntity.styledProducts != null) {
+          //   if (productEntity.styleParentId != null) {
+          //     styledProduct = productEntity.styledProducts
+          //         ?.firstWhere((o) => o.productId == productEntity.id);
+          //   }
+          // }
+          return Success(productEntity);
+        } else {
+          return const Success(null);
+        }
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
     }

@@ -2,28 +2,27 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 
 class CameraView extends StatefulWidget {
-  CameraView(
-      {Key? key,
-      required this.customPaint,
-      required this.onImage,
-      required this.cameraFlash,
-      required this.barcodeFullView,
-      this.onCameraFeedReady,
-      this.onDetectorViewModeChanged,
-      this.onCameraLensDirectionChanged,
-      this.initialCameraLensDirection = CameraLensDirection.back,
-      this.resolutionPreset})
+  CameraView({Key? key,
+    required this.customPaint,
+    required this.onImage,
+    required this.barcodeFullView,
+    this.onCameraFeedReady,
+    this.onDetectorViewModeChanged,
+    this.onCameraLensDirectionChanged,
+    this.initialCameraLensDirection = CameraLensDirection.back,
+    this.resolutionPreset})
       : super(key: key);
 
   final CustomPaint? customPaint;
   final Function(InputImage inputImage) onImage;
-  bool cameraFlash;
-  bool barcodeFullView;
+  final bool barcodeFullView;
   final VoidCallback? onCameraFeedReady;
   final VoidCallback? onDetectorViewModeChanged;
   final Function(CameraLensDirection direction)? onCameraLensDirectionChanged;
@@ -38,6 +37,7 @@ class _CameraViewState extends State<CameraView> {
   static List<CameraDescription> _cameras = [];
   CameraController? _controller;
   int _cameraIndex = -1;
+  bool cameraFlash = false;
 
   @override
   void initState() {
@@ -69,7 +69,18 @@ class _CameraViewState extends State<CameraView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _liveFeedBody());
+    return BlocListener<BarcodeScanBloc, BarcodeScanState>(
+      listener: (context, state) {
+        if (state is ScannerFlashOnOffState) {
+          setState(() {
+            cameraFlash = state.cameraFlash;
+          });
+          _controller?.setFlashMode(
+              cameraFlash ? FlashMode.torch : FlashMode.off);
+        }
+      },
+      child: Scaffold(body: _liveFeedBody()),
+    );
   }
 
   Widget _liveFeedBody() {
@@ -93,9 +104,10 @@ class _CameraViewState extends State<CameraView> {
     );
   }
 
-  Widget _backButton() => Visibility(
-    visible: widget.barcodeFullView,
-    child: Positioned(
+  Widget _backButton() =>
+      Visibility(
+        visible: widget.barcodeFullView,
+        child: Positioned(
           top: 40,
           right: 24,
           child: SizedBox(
@@ -114,11 +126,12 @@ class _CameraViewState extends State<CameraView> {
             ),
           ),
         ),
-  );
+      );
 
-  Widget _switchFlashToggle() => Visibility(
-    visible: widget.barcodeFullView,
-    child: Positioned(
+  Widget _switchFlashToggle() =>
+      Visibility(
+        visible: widget.barcodeFullView,
+        child: Positioned(
           top: 40,
           left: 24,
           child: SizedBox(
@@ -128,24 +141,26 @@ class _CameraViewState extends State<CameraView> {
               heroTag: Object(),
               shape: const CircleBorder(),
               onPressed: () {
-                setState(() => widget.cameraFlash = !widget.cameraFlash);
+                setState(() => cameraFlash = !cameraFlash);
                 _controller?.setFlashMode(
-                    widget.cameraFlash ? FlashMode.torch : FlashMode.off);
+                    cameraFlash ? FlashMode.torch : FlashMode.off);
               },
               backgroundColor: Colors.grey.shade100,
               child: Icon(
-                widget.cameraFlash ? Icons.flash_on : Icons.flash_off,
+                cameraFlash ? Icons.flash_on : Icons.flash_off,
                 size: 20,
                 color: Colors.black,
               ),
             ),
           ),
         ),
-  );
+      );
 
   Widget _rectangleScanArea() {
     double rectangleHeight = CoreConstants.barcodeRectangleSize;
-    Size screenSize = MediaQuery.of(context).size;
+    Size screenSize = MediaQuery
+        .of(context)
+        .size;
     final topMargin = (screenSize.height - 180) / 2;
 
     return Positioned(
@@ -223,7 +238,7 @@ class _CameraViewState extends State<CameraView> {
       rotation = InputImageRotationValue.fromRawValue(sensorOrientation);
     } else if (Platform.isAndroid) {
       var rotationCompensation =
-          _orientations[_controller!.value.deviceOrientation];
+      _orientations[_controller!.value.deviceOrientation];
       if (rotationCompensation == null) return null;
       if (camera.lensDirection == CameraLensDirection.front) {
         // front-facing

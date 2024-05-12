@@ -17,14 +17,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuickOrderItemWidget extends StatelessWidget {
   final Function(BuildContext context, QuickOrderItemEntity,
       OrderCallBackType orderCallBackType) callback;
   final QuickOrderItemEntity quickOrderItemEntity;
+  final ProductSettings setting;
 
   QuickOrderItemWidget(
-      {required this.callback, required this.quickOrderItemEntity});
+      {required this.callback, required this.quickOrderItemEntity, required this.setting});
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +101,7 @@ class QuickOrderItemWidget extends StatelessWidget {
               }
             },
           ),
-          OrderProductQuantityGroupWidget(callback, quickOrderItemEntity)
+          OrderProductQuantityGroupWidget(callback, quickOrderItemEntity, setting)
         ],
       ),
     );
@@ -369,9 +371,10 @@ Widget _buildInventorySection(BuildContext context,
 class OrderProductQuantityGroupWidget extends StatelessWidget {
   final Function(BuildContext context, QuickOrderItemEntity,
       OrderCallBackType orderCallBackType) callback;
-  final QuickOrderItemEntity cartLineEntity;
+  final QuickOrderItemEntity quickOrderItemEntity;
+  final ProductSettings setting;
 
-  OrderProductQuantityGroupWidget(this.callback, this.cartLineEntity);
+  OrderProductQuantityGroupWidget(this.callback, this.quickOrderItemEntity, this.setting);
 
   @override
   Widget build(BuildContext context) {
@@ -382,15 +385,16 @@ class OrderProductQuantityGroupWidget extends StatelessWidget {
           Expanded(
             flex: 1,
             child: NumberTextField(
-                initialtText: cartLineEntity.quantityOrdered.toString(),
+                initialtText: quickOrderItemEntity.quantityOrdered.toString(),
                 shouldShowIncrementDecermentIcon: false,
                 onChanged: (int? quantity) {
                   if ((quantity ?? 0) == 0) {
-                    cartLineEntity.previousQty = cartLineEntity.quantityOrdered;
+                    quickOrderItemEntity.previousQty = quickOrderItemEntity.quantityOrdered;
                   }
-                  cartLineEntity.quantityOrdered = quantity ?? 0;
-                  callback(context, cartLineEntity,
-                      OrderCallBackType.quantityChange);
+                  quickOrderItemEntity.quantityOrdered = quantity ?? 0;
+                  context.read<OrderItemPricingInventoryCubit>().getPricingAndInventory(quickOrderItemEntity, setting);
+                  // callback(context, cartLineEntity,
+                  //     OrderCallBackType.quantityChange);
                 }),
           ),
           // CartContentTitleSubTitleColumn('U/M', 'E/A'),
@@ -416,7 +420,7 @@ class OrderProductQuantityGroupWidget extends StatelessWidget {
                 case OrderItemPricingInventoryLoaded:
                   return OrderProductSubTitleColumn(
                       LocalizationConstants.subtotal,
-                      cartLineEntity.extendedPriceValueText ?? '');
+                      quickOrderItemEntity.extendedPriceValueText ?? '');
                 case OrderItemPricingInventoryFailed:
                 default:
                   return Container();

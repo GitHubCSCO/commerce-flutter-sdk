@@ -5,13 +5,13 @@ abstract class OrderListState extends Equatable {}
 class OrderListInitialState extends OrderListState {
   @override
   // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }
 
 class OrderListLoadingState extends OrderListState {
   @override
   // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }
 
 class OrderListLoadedState extends OrderListState {

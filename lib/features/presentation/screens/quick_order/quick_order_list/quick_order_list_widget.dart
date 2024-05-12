@@ -49,6 +49,7 @@ class QuickOrderListWidget extends StatelessWidget {
                     child: QuickOrderItemWidget(
                       callback: callback,
                       quickOrderItemEntity: entity,
+                      setting: setting,
                     ),
                   );
                 },

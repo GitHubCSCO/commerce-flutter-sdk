@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/auto_complete/quick_order_auto_complete_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/quick_order_bloc.dart';
@@ -33,6 +34,7 @@ class QuickOrderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
+      BlocProvider<BarcodeScanBloc>(create: (context) => sl<BarcodeScanBloc>()),
       BlocProvider<QuickOrderBloc>(create: (context) => sl<QuickOrderBloc>()),
       BlocProvider<OrderListBloc>(
           create: (context) => sl<OrderListBloc>()..add(OrderListLoadEvent())),
@@ -48,6 +50,8 @@ class QuickOrderPage extends StatefulWidget {
 }
 
 class _QuickOrderPageState extends State<QuickOrderPage> {
+
+  late void Function(bool) callBack;
 
   bool cameraFlash = false;
   bool canProcess = false;
@@ -66,6 +70,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                 setState(() {
                   cameraFlash = !cameraFlash;
                 });
+                context.read<BarcodeScanBloc>().add(ScannerFlashOnOffEvent(cameraFlash));
               },
               icon: Icon(
                 cameraFlash ? Icons.flash_on : Icons.flash_off,
@@ -87,8 +92,6 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                     color: Colors.black,
                     child: BarcodeScannerView(
                         callback: _handleBarcodeValue,
-                        cameraFlash: cameraFlash,
-                        canProcess: canProcess,
                         barcodeFullView: false),
                   ),
                   Positioned.fill(
@@ -283,8 +286,18 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                           ),
                                           const SizedBox(height: 4),
                                           PrimaryButton(
-                                            onPressed: () {},
-                                            text: LocalizationConstants.tapToScan,
+                                            onPressed: () {
+                                              setState(() {
+                                                canProcess = !canProcess;
+                                              });
+                                              context.read<BarcodeScanBloc>().add(ScannerScanEvent(canProcess));
+                                            },
+                                            backgroundColor: canProcess
+                                                ? OptiAppColors.buttonDarkRedBackgroudColor
+                                                : AppStyle.primary500,
+                                            text: canProcess
+                                                ? LocalizationConstants.cancel
+                                                : LocalizationConstants.tapToScan,
                                           ),
                                         ],
                                       ),
@@ -336,6 +349,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                           context
                               .read<QuickOrderAutoCompleteBloc>()
                               .add(QuickOrderUnFocusEvent());
+                          context.read<QuickOrderBloc>().add(QuickOrderEndSearchEvent());
                         }
                       },
                       onChanged: (String searchQuery) {
@@ -520,6 +534,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
 
   void _handleAutoCompleteCallback(
       BuildContext context, AutocompleteProduct product) {
+    context.closeKeyboard();
+    textEditingController.clear();
     context.read<QuickOrderBloc>().add(QuickOrderEndSearchEvent());
     context.read<OrderListBloc>().add(OrderListItemAddEvent(product));
   }
@@ -540,7 +556,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   }
 
   _handleBarcodeValue(BuildContext context, String? rawValue) {
-    //need to change canProcess value
+    cameraFlash = false;
+    canProcess = false;
+    context.read<BarcodeScanBloc>().add(ScannerFlashOnOffEvent(cameraFlash));
+    context.read<BarcodeScanBloc>().add(ScannerScanEvent(canProcess));
     context.read<OrderListBloc>().add(OrderListItemScanAddEvent(rawValue!));
   }
 

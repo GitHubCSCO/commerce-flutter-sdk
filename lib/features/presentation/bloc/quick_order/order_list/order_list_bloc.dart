@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
@@ -61,6 +62,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     switch (result) {
       case Success(value: final product):
         if (product == null) {
+          emit(OrderListAddFailedState('No Product found'));
+          emit(OrderListLoadedState(quickOrderItemList, productSettings));
           return;
         }
 
@@ -70,10 +73,10 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
           emit(OrderListStyleProductAddState(product));
         } else if (product.isConfigured! || (product.isConfigured! && !product.isFixedConfiguration!)) {
           // this.coreServiceProvider.GetPlatformService().DisplayNoResultAlert(string.Empty, this.cannotOrderConfigurableProductMessage, LocalizationConstants.Keyword.OK.Localized());
-          emit(OrderListAddFailedState('cannotOrderConfigurableProductMessage'));
+          emit(OrderListAddFailedState('can not add product'));
         } else if (!product.canAddToCart!) {
           // this.coreServiceProvider.GetPlatformService().DisplayNoResultAlert(string.Empty, this.cannotOrderUnavailableMessage, LocalizationConstants.Keyword.OK.Localized());
-          emit(OrderListAddFailedState('cannotOrderUnavailableMessage'));
+          emit(OrderListAddFailedState('product unavailable'));
         } else {
           var newItem = _convertProductToQuickOrderItemEntity(product, quantity!);
           _insertItemIntoQuickOrderList(newItem);
@@ -93,19 +96,21 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     switch (result) {
       case Success(value: final product):
         if (product == null) {
+          emit(OrderListAddFailedState('No Product found'));
+          emit(OrderListLoadedState(quickOrderItemList, productSettings));
           return;
         }
 
         var quantity = (product.minimumOrderQty! > 0) ? product.minimumOrderQty : 1;
 
         if (product.isStyleProductParent!) {
-          // need to implement style product logic
+          emit(OrderListStyleProductAddState(product));
         } else if (product.isConfigured! || (product.isConfigured! && !product.isFixedConfiguration!)) {
           // this.coreServiceProvider.GetPlatformService().DisplayNoResultAlert(string.Empty, this.cannotOrderConfigurableProductMessage, LocalizationConstants.Keyword.OK.Localized());
-          emit(OrderListAddFailedState('cannotOrderConfigurableProductMessage'));
+          emit(OrderListAddFailedState('can not add product'));
         } else if (!product.canAddToCart!) {
           // this.coreServiceProvider.GetPlatformService().DisplayNoResultAlert(string.Empty, this.cannotOrderUnavailableMessage, LocalizationConstants.Keyword.OK.Localized());
-          emit(OrderListAddFailedState('cannotOrderUnavailableMessage'));
+          emit(OrderListAddFailedState('product unavailable'));
         } else {
           var newItem = _convertProductToQuickOrderItemEntity(product, quantity!);
           _insertItemIntoQuickOrderList(newItem);
@@ -294,15 +299,15 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
     if (canSeeAllPrices != null && canSeeAllPrices) {
       double subtotalDecimal = quickOrderItemList.fold(0, (subtotal, x) {
-        var unitPrice = 0.0;
+        double? unitPrice = 0.0;
 
         if (x.pricing != null) {
           unitPrice = x.pricing!.unitNetPrice!.toDouble();
         } else if (x.productEntity.pricing != null) {
-          unitPrice = x.productEntity.pricing!.unitNetPrice!.toDouble();
+          unitPrice = x.productEntity.pricing?.unitNetPrice?.toDouble();
         }
 
-        return subtotal + (unitPrice * x.quantityOrdered);
+        return subtotal + ((unitPrice ?? 0) * x.quantityOrdered);
       });
 
       return "${CoreConstants.currencySymbol}${subtotalDecimal.toStringAsFixed(2)}";

@@ -10,7 +10,6 @@ class DetectorView extends StatefulWidget {
     required this.onImage,
     this.customPaint,
     this.text,
-    required this.cameraFlash,
     required this.barcodeFullView,
     this.initialCameraLensDirection = CameraLensDirection.back,
     this.onCameraFeedReady,
@@ -20,7 +19,6 @@ class DetectorView extends StatefulWidget {
   final String title;
   final CustomPaint? customPaint;
   final String? text;
-  final bool cameraFlash;
   final bool barcodeFullView;
   final Function(InputImage inputImage) onImage;
   final Function()? onCameraFeedReady;
@@ -37,7 +35,6 @@ class _DetectorViewState extends State<DetectorView> {
     return CameraView(
       customPaint: widget.customPaint,
       onImage: widget.onImage,
-      cameraFlash: widget.cameraFlash,
       barcodeFullView: widget.barcodeFullView,
       onCameraFeedReady: widget.onCameraFeedReady,
       initialCameraLensDirection: widget.initialCameraLensDirection,
