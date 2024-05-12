@@ -19,18 +19,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class QuickOrderItemWidget extends StatelessWidget {
-
-  final Function(BuildContext context, QuickOrderItemEntity, OrderCallBackType orderCallBackType) callback;
+  final Function(BuildContext context, QuickOrderItemEntity,
+      OrderCallBackType orderCallBackType) callback;
   final QuickOrderItemEntity quickOrderItemEntity;
 
-  QuickOrderItemWidget({required this.callback, required this.quickOrderItemEntity});
+  QuickOrderItemWidget(
+      {required this.callback, required this.quickOrderItemEntity});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => {
-
-      },
+      onTap: () => {},
       child: Container(
         color: Colors.white,
         child: Row(
@@ -67,7 +66,18 @@ class QuickOrderItemWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           OrderProductTitleWidget(orderItemEntity: quickOrderItemEntity),
-          BlocBuilder<OrderItemPricingInventoryCubit, OrderItemPricingInventoryState>(
+          BlocConsumer<OrderItemPricingInventoryCubit,
+              OrderItemPricingInventoryState>(
+            listener: (context, state) {
+              if (state is OrderItemSubTotalChange) {
+                callback(context, quickOrderItemEntity, OrderCallBackType.calculateSubtotal);
+              }
+            },
+            buildWhen: (previous, current) =>
+                current is OrderItemPricingInventoryInitial ||
+                current is OrderItemPricingInventoryLoading ||
+                current is OrderItemPricingInventoryLoaded ||
+                current is OrderItemPricingInventoryFailed,
             builder: (context, state) {
               switch (state.runtimeType) {
                 case OrderItemPricingInventoryInitial:
@@ -117,6 +127,7 @@ class QuickOrderItemWidget extends StatelessWidget {
 
 class OrderProductImageWidget extends StatelessWidget {
   final String imagePath;
+
   const OrderProductImageWidget({
     super.key,
     required this.imagePath,
@@ -178,7 +189,8 @@ class OrderProductTitleWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Visibility(
-              visible: orderItemEntity.productEntity.brand?.name?.isNotEmpty ?? false,
+              visible: orderItemEntity.productEntity.brand?.name?.isNotEmpty ??
+                  false,
               child: Text(
                 orderItemEntity.productEntity.brand?.name ?? '',
                 style: OptiTextStyles.bodySmall,
@@ -186,7 +198,9 @@ class OrderProductTitleWidget extends StatelessWidget {
               ),
             ),
             Visibility(
-              visible: orderItemEntity.productEntity.shortDescription?.isNotEmpty ?? false,
+              visible:
+              orderItemEntity.productEntity.shortDescription?.isNotEmpty ??
+                  false,
               child: Text(
                 orderItemEntity.productEntity.shortDescription ?? '',
                 style: OptiTextStyles.body,
@@ -194,7 +208,10 @@ class OrderProductTitleWidget extends StatelessWidget {
               ),
             ),
             Visibility(
-              visible: orderItemEntity.productEntity.getProductNumber().isNotEmpty,
+              visible:
+              orderItemEntity.productEntity
+                  .getProductNumber()
+                  .isNotEmpty,
               child: Text(
                 orderItemEntity.productEntity.getProductNumber() ?? '',
                 style: OptiTextStyles.bodySmall,
@@ -202,7 +219,8 @@ class OrderProductTitleWidget extends StatelessWidget {
               ),
             ),
             Visibility(
-              visible: orderItemEntity.productEntity.customerName?.isNotEmpty ?? false,
+              visible: orderItemEntity.productEntity.customerName?.isNotEmpty ??
+                  false,
               child: Row(children: [
                 Text(
                   LocalizationConstants.myPartNumberSign,
@@ -220,7 +238,9 @@ class OrderProductTitleWidget extends StatelessWidget {
               ]),
             ),
             Visibility(
-              visible: orderItemEntity.productEntity.manufacturerItem?.isNotEmpty ?? false,
+              visible:
+              orderItemEntity.productEntity.manufacturerItem?.isNotEmpty ??
+                  false,
               child: Row(children: [
                 Text(
                   LocalizationConstants.mFGNumberSign,
@@ -301,9 +321,10 @@ class OrderProductPricingWidget extends StatelessWidget {
   }
 }
 
-Widget _buildDiscountMessageSection(
-    BuildContext context, QuickOrderItemEntity cartLineEntity) {
-  var discountMessage = cartLineEntity.productEntity.pricing?.getDiscountValue();
+Widget _buildDiscountMessageSection(BuildContext context,
+    QuickOrderItemEntity cartLineEntity) {
+  var discountMessage =
+  cartLineEntity.productEntity.pricing?.getDiscountValue();
   if (discountMessage != null &&
       discountMessage.isNotEmpty &&
       discountMessage != "null") {
@@ -319,8 +340,8 @@ Widget _buildDiscountMessageSection(
   return Container();
 }
 
-Widget _buildPricingSection(
-    BuildContext context, QuickOrderItemEntity cartLineEntity) {
+Widget _buildPricingSection(BuildContext context,
+    QuickOrderItemEntity cartLineEntity) {
   return Container(
     child: Row(
       children: [
@@ -335,8 +356,8 @@ Widget _buildPricingSection(
   );
 }
 
-Widget _buildInventorySection(
-    BuildContext context, QuickOrderItemEntity cartLineEntity) {
+Widget _buildInventorySection(BuildContext context,
+    QuickOrderItemEntity cartLineEntity) {
   return Container(
     child: Text(
       cartLineEntity.productEntity.availability?.message ?? '',
@@ -345,10 +366,9 @@ Widget _buildInventorySection(
   );
 }
 
-
 class OrderProductQuantityGroupWidget extends StatelessWidget {
-
-  final Function(BuildContext context, QuickOrderItemEntity, OrderCallBackType orderCallBackType) callback;
+  final Function(BuildContext context, QuickOrderItemEntity,
+      OrderCallBackType orderCallBackType) callback;
   final QuickOrderItemEntity cartLineEntity;
 
   OrderProductQuantityGroupWidget(this.callback, this.cartLineEntity);
@@ -365,12 +385,22 @@ class OrderProductQuantityGroupWidget extends StatelessWidget {
                 initialtText: cartLineEntity.quantityOrdered.toString(),
                 shouldShowIncrementDecermentIcon: false,
                 onChanged: (int? quantity) {
-                  cartLineEntity.quantityOrdered = quantity!;
-                  callback(context, cartLineEntity, OrderCallBackType.quantityChange);
+                  if ((quantity ?? 0) == 0) {
+                    cartLineEntity.previousQty = cartLineEntity.quantityOrdered;
+                  }
+                  cartLineEntity.quantityOrdered = quantity ?? 0;
+                  callback(context, cartLineEntity,
+                      OrderCallBackType.quantityChange);
                 }),
           ),
           // CartContentTitleSubTitleColumn('U/M', 'E/A'),
-          BlocBuilder<OrderItemPricingInventoryCubit, OrderItemPricingInventoryState>(
+          BlocBuilder<OrderItemPricingInventoryCubit,
+              OrderItemPricingInventoryState>(
+            buildWhen: (previous, current) =>
+            current is OrderItemPricingInventoryInitial ||
+                current is OrderItemPricingInventoryLoading ||
+                current is OrderItemPricingInventoryLoaded ||
+                current is OrderItemPricingInventoryFailed,
             builder: (context, state) {
               switch (state.runtimeType) {
                 case OrderItemPricingInventoryInitial:
@@ -385,7 +415,8 @@ class OrderProductQuantityGroupWidget extends StatelessWidget {
                   );
                 case OrderItemPricingInventoryLoaded:
                   return OrderProductSubTitleColumn(
-                      LocalizationConstants.subtotal, cartLineEntity.extendedPriceValueText ?? '');
+                      LocalizationConstants.subtotal,
+                      cartLineEntity.extendedPriceValueText ?? '');
                 case OrderItemPricingInventoryFailed:
                 default:
                   return Container();
@@ -423,5 +454,3 @@ class OrderProductSubTitleColumn extends StatelessWidget {
     );
   }
 }
-
-

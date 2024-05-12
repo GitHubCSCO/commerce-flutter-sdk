@@ -44,9 +44,11 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
           : null;
     }
 
-    final subtotal = calculateSubtotal();
-
-    emit(OrderListLoadedState(quickOrderItemList, productSettings, subtotal));
+    if (quickOrderItemList.isNotEmpty) {
+      emit(OrderListLoadedState(quickOrderItemList, productSettings));
+    } else {
+      emit(OrderListInitialState());
+    }
   }
 
   Future<void> _onOrderLisItemAddEvent(OrderListItemAddEvent event, Emitter<OrderListState> emit) async {
@@ -75,8 +77,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
           _insertItemIntoQuickOrderList(newItem);
         }
 
-        final subtotal = calculateSubtotal();
-        emit(OrderListLoadedState(quickOrderItemList, productSettings, subtotal));
+        emit(OrderListLoadedState(quickOrderItemList, productSettings));
       case Failure(errorResponse: final errorResponse):
         emit(OrderListFailedState());
     }
@@ -108,8 +109,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
           _insertItemIntoQuickOrderList(newItem);
         }
 
-        final subtotal = calculateSubtotal();
-        emit(OrderListLoadedState(quickOrderItemList, productSettings, subtotal));
+        emit(OrderListLoadedState(quickOrderItemList, productSettings));
       case Failure(errorResponse: final errorResponse):
         emit(OrderListFailedState());
     }
@@ -125,23 +125,16 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
           : null;
     }
 
-    final subtotal = calculateSubtotal();
-
-    emit(OrderListLoadedState(quickOrderItemList, productSettings, subtotal));
+    if (quickOrderItemList.isNotEmpty) {
+      emit(OrderListLoadedState(quickOrderItemList, productSettings));
+    } else {
+      emit(OrderListInitialState());
+    }
   }
 
   Future<void> _onOrderListRemoveEvent(OrderListRemoveEvent event, Emitter<OrderListState> emit) async {
     quickOrderItemList.clear();
-    if (productSettings == null) {
-      var result = await _quickOrderUseCase.getProductSetting();
-      productSettings = result is Success
-          ? (result as Success).value
-          : null;
-    }
-
-    final subtotal = calculateSubtotal();
-
-    emit(OrderListLoadedState(quickOrderItemList, productSettings, subtotal));
+    emit(OrderListInitialState());
   }
 
   Future<void> _onOrderListAddToListEvent(OrderListAddToListEvent event, Emitter<OrderListState> emit) async {
@@ -197,7 +190,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         return AddCartLine(
           productId: x.productEntity.id,
           qtyOrdered: x.quantityOrdered,
-          unitOfMeasure: x.productEntity.selectedUnitOfMeasure,
+          unitOfMeasure: x.selectedUnitOfMeasure?.unitOfMeasure,
           // properties: Properties(),
         );
       }
@@ -229,7 +222,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     if (scanningMode == ScanningMode.count || scanningMode == ScanningMode.create) {
       //Navigate to VMI
     } else {
-      //Navigate to cart
+      emit(OrderListNavigateToCartState());
     }
   }
 
@@ -279,13 +272,18 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   }
 
   String calculateSubtotal() {
+    if (productSettings == null) {
+      return '';
+    }
     var canSeeAllPrices = productSettings!.canSeePrices;
 
     if (canSeeAllPrices != null && canSeeAllPrices) {
       double subtotalDecimal = quickOrderItemList.fold(0, (subtotal, x) {
         var unitPrice = 0.0;
 
-        if (x.productEntity.pricing != null) {
+        if (x.pricing != null) {
+          unitPrice = x.pricing!.unitNetPrice!.toDouble();
+        } else if (x.productEntity.pricing != null) {
           unitPrice = x.productEntity.pricing!.unitNetPrice!.toDouble();
         }
 

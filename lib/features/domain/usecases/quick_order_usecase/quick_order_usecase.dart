@@ -63,8 +63,8 @@ class QuickOrderUseCase extends BaseUseCase {
     return commerceAPIServiceProvider.getCartService().deleteCartLine(oldCartLine);
   }
 
-  Future<Future<Result<List<CartLine>, ErrorResponse>>> addCartLineCollection(List<AddCartLine> addCartLines) async {
-    return commerceAPIServiceProvider.getCartService().addCartLineCollection(addCartLines);
+  Future<Result<List<CartLine>, ErrorResponse>> addCartLineCollection(List<AddCartLine> addCartLines) async {
+    return await commerceAPIServiceProvider.getCartService().addCartLineCollection(addCartLines);
   }
 
   Future<List<CartLine>> getCartLineCollection() async {

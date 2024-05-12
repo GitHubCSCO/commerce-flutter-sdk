@@ -18,12 +18,11 @@ class OrderListLoadedState extends OrderListState {
 
   final List<QuickOrderItemEntity> quickOrderItemList;
   final ProductSettings? productSettings;
-  final String subTotal;
 
-  OrderListLoadedState(this.quickOrderItemList, this.productSettings, this.subTotal);
+  OrderListLoadedState(this.quickOrderItemList, this.productSettings);
 
   @override
-  List<Object?> get props => [quickOrderItemList, productSettings, subTotal];
+  List<Object?> get props => [quickOrderItemList, productSettings];
 
 }
 

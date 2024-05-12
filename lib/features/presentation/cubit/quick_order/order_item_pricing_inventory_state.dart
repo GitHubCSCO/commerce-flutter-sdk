@@ -9,3 +9,5 @@ class OrderItemPricingInventoryLoading extends OrderItemPricingInventoryState {}
 class OrderItemPricingInventoryLoaded extends OrderItemPricingInventoryState {}
 
 class OrderItemPricingInventoryFailed extends OrderItemPricingInventoryState {}
+
+class OrderItemSubTotalChange extends OrderItemPricingInventoryState {}

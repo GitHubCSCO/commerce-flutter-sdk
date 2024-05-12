@@ -50,6 +50,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
 
   bool cameraFlash = false;
   bool canProcess = false;
+  String subTotal = '';
   final textEditingController = TextEditingController();
 
   @override
@@ -159,6 +160,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                 current is OrderListLoadedState ||
                                 current is OrderListFailedState,
                             builder: (context, state) {
+                              subTotal = context.read<OrderListBloc>().calculateSubtotal();
                               return Expanded(
                                 child: Column(
                                   children: [
@@ -258,11 +260,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                 ),
                                               ),
                                               Text(
-                                                (state is OrderListLoadedState &&
-                                                    state.quickOrderItemList
-                                                        .isNotEmpty)
-                                                    ? state.subTotal
-                                                    : '',
+                                                subTotal,
                                                 textAlign: TextAlign.start,
                                                 style: OptiTextStyles.subtitle,
                                               )
@@ -420,14 +418,13 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
             ),
             DialogPlainButton(
               onPressed: () {
-                for (var quickOrderProductLine
+                for (var quickOrderItemEntity
                     in context.read<OrderListBloc>().quickOrderItemList) {
-                  if (quickOrderProductLine.quantityOrdered == 0) {
-                    // quickOrderProductLine.quantityOrdered = quickOrderProductLine.previousQty;
+                  if (quickOrderItemEntity.quantityOrdered == 0) {
+                    quickOrderItemEntity.quantityOrdered = quickOrderItemEntity.previousQty;
                   }
                 }
                 Navigator.of(context).pop();
-                return;
               },
               child: const Text(LocalizationConstants.cancel),
             ),
@@ -450,12 +447,11 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
         CustomSnackBar.showSnackBarMessage(
             context, SiteMessageConstants.defaultValueProductOutOfStock);
       }
+      context.read<OrderListBloc>().add(OrderListAddToCartEvent());
     } else {
       CustomSnackBar.showSnackBarMessage(
           context, SiteMessageConstants.defaultValueAddToCartFail);
     }
-
-    context.read<OrderListBloc>().add(OrderListAddToCartEvent());
   }
 
   void _showAlert(BuildContext context, String title, String message) {
@@ -513,7 +509,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
           .read<OrderListBloc>()
           .add(OrderListItemRemoveEvent(quickOrderItemEntity.productEntity));
     } else if (orderCallBackType == OrderCallBackType.calculateSubtotal) {
-
+      setState(() {
+        subTotal = context.read<OrderListBloc>().calculateSubtotal();
+      });
     }
   }
 

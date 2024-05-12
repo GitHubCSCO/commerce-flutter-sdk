@@ -4,7 +4,6 @@ import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart'
 import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/product_unit_of_measure_mapper.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuickOrderItemEntity {
@@ -14,6 +13,7 @@ class QuickOrderItemEntity {
   ProductPriceEntity? pricing;
   ProductUnitOfMeasureEntity? selectedUnitOfMeasure;
   int quantityOrdered = 1;
+  int previousQty = 1;
   String? priceValueText;
   String? extendedPriceValueText;
   bool? showInventoryAvailability;

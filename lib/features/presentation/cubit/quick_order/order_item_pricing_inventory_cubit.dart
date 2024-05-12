@@ -28,7 +28,7 @@ class OrderItemPricingInventoryCubit extends Cubit<OrderItemPricingInventoryStat
 
     if (quickOrderItemEntity.quantityOrdered < 1) {
       quickOrderItemEntity.extendedPriceValueText = '${CoreConstants.currencySymbol}${0.00.toStringAsFixed(2)}';
-      // this.RecalculateSubtotalValue(); will call and pass the state to quickorderScreen
+      emit(OrderItemSubTotalChange());
       emit(OrderItemPricingInventoryLoaded());
       return;
     }
@@ -67,7 +67,7 @@ class OrderItemPricingInventoryCubit extends Cubit<OrderItemPricingInventoryStat
         quickOrderItemEntity.updatePricing(ProductPriceEntityMapper().toEntity(pricing), productSettings.canSeePrices!);
       }
     }
-    // this.RecalculateSubtotalValue(); will call and pass the state to quickorderScreen
+    emit(OrderItemSubTotalChange());
 
     var productAvailabilityEnabled = productSettings.showInventoryAvailability!;
     var showInventoryAvailability = false;

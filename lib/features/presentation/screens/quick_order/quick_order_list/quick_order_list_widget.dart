@@ -32,7 +32,7 @@ class QuickOrderListWidget extends StatelessWidget {
                   const SizedBox(height: 20),
                   Text(
                     'To add an item to your quick order form, search by keyword or item # then click on the item',
-                    style: OptiTextStyles.body,
+                    style: OptiTextStyles.bodySmall,
                   )
                 ],
               );
