@@ -97,6 +97,96 @@ class WishListUsecase extends BaseUseCase {
     }
   }
 
+  Future<WishListStatus> createWishList({
+    required String name,
+    String? description,
+  }) async {
+    final wishList = WishList(
+      name: name,
+      description: description,
+    );
+
+    final parameter = CreateWishListQueryParameters(
+      wishListObj: wishList,
+    );
+
+    final result = await commerceAPIServiceProvider
+        .getWishListService()
+        .createWishList(parameter);
+
+    switch (result) {
+      case Success(value: final value):
+        return value != null
+            ? WishListStatus.listCreateSuccess
+            : WishListStatus.listCreateFailure;
+      case Failure():
+        return WishListStatus.listCreateFailure;
+    }
+  }
+
+  Future<WishListStatus> addToWishList({
+    required String? wishListId,
+    required WishListAddToCartCollection addToCartCollection,
+  }) async {
+    if (wishListId.isNullOrEmpty) {
+      return WishListStatus.listAddToCartFailure;
+    }
+
+    final result = await commerceAPIServiceProvider
+        .getWishListService()
+        .addWishListLinesToWishList(
+          wishListId!,
+          addToCartCollection,
+        );
+
+    switch (result) {
+      case Success(value: final value):
+        return value != null
+            ? WishListStatus.listAddToCartSuccess
+            : WishListStatus.listAddToCartFailure;
+      case Failure():
+        return WishListStatus.listAddToCartFailure;
+    }
+  }
+
+  Future<WishListStatus> createWishListAndAddToList({
+    required String name,
+    String? description,
+    required WishListAddToCartCollection addToCartCollection,
+  }) async {
+    final wishList = WishList(
+      name: name,
+      description: description,
+    );
+
+    final parameter = CreateWishListQueryParameters(
+      wishListObj: wishList,
+    );
+
+    final result = await commerceAPIServiceProvider
+        .getWishListService()
+        .createWishList(parameter);
+
+    switch (result) {
+      case Success(value: final value):
+        if (value == null) {
+          return WishListStatus.listCreateFailure;
+        }
+
+        final addToListResult = await addToWishList(
+          wishListId: value.id,
+          addToCartCollection: addToCartCollection,
+        );
+        if (addToListResult == WishListStatus.listAddToCartSuccess) {
+          return WishListStatus.listCreateSuccess;
+        } else {
+          return WishListStatus.listAddToCartFailure;
+        }
+      case Failure():
+        return WishListStatus.listCreateFailure;
+    }
+  }
+
   List<WishListSortOrder> get availableSortOrders => WishListSortOrder.values;
 
   bool canDeleteWishList({

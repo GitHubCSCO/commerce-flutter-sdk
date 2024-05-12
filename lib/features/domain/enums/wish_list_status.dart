@@ -8,6 +8,10 @@ enum WishListStatus {
   errorModification,
   moreLoadingFailure,
 
+  listCreateLoading,
+  listCreateSuccess,
+  listCreateFailure,
+
   listUpdateSuccess,
   listUpdateFailure,
   listRenameLoading,
@@ -25,6 +29,10 @@ enum WishListStatus {
   listLineAddToCartSuccess,
   listLineAddToCartFailure,
   listLineAddToCartLoading,
+
+  listItemAddToListSuccess,
+  listItemAddToListFailure,
+  listItemAddToListLoading,
 
   listLineDeleteSuccess,
   listLineDeleteFailure,
