@@ -179,12 +179,15 @@ class ListInformationBottomSubmitWidget extends StatelessWidget {
         horizontal: 31.5,
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: actions
             .map(
               (widget) => Expanded(
                 child: widget,
               ),
             )
+            .expand((element) => [element, const SizedBox(width: 16)])
+            .take(actions.length * 2 - 1)
             .toList(),
       ),
     );

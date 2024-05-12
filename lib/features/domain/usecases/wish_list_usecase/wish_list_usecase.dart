@@ -180,7 +180,7 @@ class WishListUsecase extends BaseUseCase {
         if (addToListResult == WishListStatus.listAddToCartSuccess) {
           return WishListStatus.listCreateSuccess;
         } else {
-          return WishListStatus.listAddToCartFailure;
+          return WishListStatus.listCreateFailure;
         }
       case Failure():
         return WishListStatus.listCreateFailure;

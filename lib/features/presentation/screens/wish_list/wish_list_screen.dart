@@ -14,9 +14,12 @@ import 'package:commerce_flutter_app/features/presentation/components/dialog.dar
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_create_screen_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_screen_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_delete_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -62,10 +65,11 @@ class _WishListsPageState extends State<WishListsPage> {
         title: const Text(LocalizationConstants.lists),
         centerTitle: false,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () => CustomSnackBar.showComingSoonSnackBar(context),
-          )
+          _OptionsMenu(
+            onWishListCreated: () {
+              context.read<WishListCubit>().loadWishLists();
+            },
+          ),
         ],
       ),
       body: Column(
@@ -379,6 +383,40 @@ class _WishListItem extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _OptionsMenu extends StatelessWidget {
+  const _OptionsMenu({
+    this.onWishListCreated,
+  });
+  final void Function()? onWishListCreated;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<WishListCubit, WishListState>(
+      builder: (context, state) {
+        return BottomMenuWidget(
+          websitePath: WebsitePaths.listsWebsitePath,
+          toolMenuList: [
+            if (state.settings.allowMultipleWishLists == true ||
+                (state.settings.allowMultipleWishLists == false &&
+                    (state.wishLists.pagination?.totalItemCount ?? 0) == 0))
+              ToolMenu(
+                title: LocalizationConstants.createNewList,
+                action: () {
+                  AppRoute.wishListCreate.navigateBackStack(
+                    context,
+                    extra: WishListCreateScreenCallbackHelper(
+                      onWishListCreated: onWishListCreated,
+                    ),
+                  );
+                },
+              )
+          ],
+        );
+      },
     );
   }
 }
