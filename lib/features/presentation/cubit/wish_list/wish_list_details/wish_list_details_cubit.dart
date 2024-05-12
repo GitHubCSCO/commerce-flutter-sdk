@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/features/domain/entity/settings/wish_list_settings_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_collection_entity.dart';
@@ -259,6 +261,15 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     final result = await _wishListDetailsUsecase.copyWishList(
       copyFromWishList: state.wishList,
       name: name,
+    );
+
+    emit(state.copyWith(status: result));
+  }
+
+  Future<void> leaveWishList() async {
+    emit(state.copyWith(status: WishListStatus.listLeaveLoading));
+    final result = await _wishListDetailsUsecase.leaveWishList(
+      wishListId: state.wishList.id,
     );
 
     emit(state.copyWith(status: result));

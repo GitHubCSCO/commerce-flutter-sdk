@@ -246,6 +246,31 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                   message: LocalizationConstants.copyFailed,
                 );
               }
+
+              if (state.status == WishListStatus.listLeaveSuccess) {
+                if (widget.onWishListUpdated != null) {
+                  widget.onWishListUpdated!();
+                }
+
+                Navigator.of(context).pop();
+              }
+
+              if (state.status == WishListStatus.listLeaveFailure) {
+                displayDialogWidget(
+                  context: context,
+                  title: LocalizationConstants.error,
+                  message: SiteMessageConstants
+                      .defaultMobileAppAlertCommunicationError,
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text(LocalizationConstants.oK),
+                    )
+                  ],
+                );
+              }
             },
             builder: (context, state) {
               if (state.status == WishListStatus.loading ||
@@ -491,7 +516,28 @@ class _OptionsMenu extends StatelessWidget {
               ToolMenu(
                 title: LocalizationConstants.leave,
                 action: () {
-                  CustomSnackBar.showComingSoonSnackBar(context);
+                  displayDialogWidget(
+                    context: context,
+                    title: LocalizationConstants.leaveList,
+                    message: LocalizationConstants.leaveSpecificList.format(
+                      [state.wishList.name ?? ''],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text(LocalizationConstants.cancel),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          context.read<WishListDetailsCubit>().leaveWishList();
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text(LocalizationConstants.leave),
+                      ),
+                    ],
+                  );
                 },
               ),
             if (context

@@ -221,6 +221,27 @@ class WishListUsecase extends BaseUseCase {
     }
   }
 
+  Future<WishListStatus> leaveWishList({
+    required String? wishListId,
+  }) async {
+    if (wishListId.isNullOrEmpty) {
+      return WishListStatus.listLeaveFailure;
+    }
+
+    final result = await commerceAPIServiceProvider
+        .getWishListService()
+        .leaveWishList(wishListId!);
+
+    switch (result) {
+      case Success(value: final value):
+        return value != null
+            ? WishListStatus.listLeaveSuccess
+            : WishListStatus.listLeaveFailure;
+      case Failure():
+        return WishListStatus.listLeaveFailure;
+    }
+  }
+
   List<WishListSortOrder> get availableSortOrders => WishListSortOrder.values;
 
   bool canDeleteWishList({

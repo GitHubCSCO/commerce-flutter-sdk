@@ -130,7 +130,7 @@ class LocalizationConstants {
   static const deleteList = "Delete List";
   static const deleteSpecificList = "Delete %s?";
   static const leaveList = "Leave List";
-  static const leaveSpecificList = "Leave {0}?";
+  static const leaveSpecificList = "Leave %s?";
   static const productsOutOfStock = "Product(s) Out of Stock";
   static const productsOutOfStockMessage =
       "There are product(s) out of stock. Add available products to cart?";
