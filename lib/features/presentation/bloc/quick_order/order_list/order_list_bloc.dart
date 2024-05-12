@@ -116,6 +116,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   }
 
   Future<void> _onOrderListItemRemoveEvent(OrderListItemRemoveEvent event, Emitter<OrderListState> emit) async {
+    emit(OrderListLoadingState());
     quickOrderItemList.removeWhere((e) => e.productEntity == event.productEntity);
     if (productSettings == null) {
       var result = await _quickOrderUseCase.getProductSetting();
@@ -232,8 +233,24 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     }
   }
 
-  QuickOrderItemEntity _convertProductToQuickOrderItemEntity(ProductEntity productEntity, int quantity) {
-    return QuickOrderItemEntity(productEntity, quantity);
+  QuickOrderItemEntity _convertProductToQuickOrderItemEntity(ProductEntity productEntity, int quantityOrdered) {
+    QuickOrderItemEntity orderItemEntity = QuickOrderItemEntity(productEntity, quantityOrdered);
+
+    if (orderItemEntity.productEntity.productUnitOfMeasures != null) {
+      if (orderItemEntity.productEntity.selectedUnitOfMeasure != null) {
+        for (var unitOfMeasure in orderItemEntity.productEntity.productUnitOfMeasures!) {
+          if (unitOfMeasure.unitOfMeasure == orderItemEntity.productEntity.selectedUnitOfMeasure) {
+            orderItemEntity.updateSelectedUnitOfMeasure(unitOfMeasure);
+            break;
+          } else {
+            orderItemEntity.selectedUnitOfMeasure = null;
+          }
+        }
+      } else {
+        orderItemEntity.selectedUnitOfMeasure = null;
+      }
+    }
+    return orderItemEntity;
   }
 
   void _insertItemIntoQuickOrderList(QuickOrderItemEntity item, {bool scanned = true}) {

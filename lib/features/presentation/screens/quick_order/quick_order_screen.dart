@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
@@ -22,9 +23,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_list/quick_order_list_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -48,6 +47,9 @@ class QuickOrderPage extends StatefulWidget {
 }
 
 class _QuickOrderPageState extends State<QuickOrderPage> {
+
+  bool cameraFlash = false;
+  bool canProcess = false;
   final textEditingController = TextEditingController();
 
   @override
@@ -59,10 +61,12 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
         actions: <Widget>[
           IconButton(
               onPressed: () {
-
+                setState(() {
+                  cameraFlash = !cameraFlash;
+                });
               },
-              icon: const Icon(
-                Icons.flash_off,
+              icon: Icon(
+                cameraFlash ? Icons.flash_on : Icons.flash_off,
                 color: Colors.black,
               )),
           BottomMenuWidget(
@@ -74,21 +78,19 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
         builder: (context, state) {
           switch (state.runtimeType) {
             case QuickOrderInitialState:
-
               return Stack(
                 fit: StackFit.expand,
                 children: [
                   Container(
-                    height: 200,
                     color: Colors.black,
                     child: BarcodeScannerView(
                         callback: _handleBarcodeValue,
-                        cameraFlash: false,
-                        canProcess: false,
+                        cameraFlash: cameraFlash,
+                        canProcess: canProcess,
                         barcodeFullView: false),
                   ),
                   Positioned.fill(
-                    top: 200,
+                    top: CoreConstants.barcodeRectangleSize,
                     child: ColoredBox(
                       color: OptiAppColors.backgroundGray,
                       child: Column(
@@ -162,7 +164,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                   children: [
                                     Expanded(
                                       child: Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 16),
+                                        padding: const EdgeInsets.symmetric(horizontal: 16),
                                         child: Column(
                                           children: [
                                             Row(
@@ -510,6 +512,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
       context
           .read<OrderListBloc>()
           .add(OrderListItemRemoveEvent(quickOrderItemEntity.productEntity));
+    } else if (orderCallBackType == OrderCallBackType.calculateSubtotal) {
+
     }
   }
 
@@ -541,4 +545,4 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
 
 }
 
-enum OrderCallBackType { quantityChange, itemDelete }
+enum OrderCallBackType { quantityChange, itemDelete, calculateSubtotal }

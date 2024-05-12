@@ -42,7 +42,7 @@ class _DetectorViewState extends State<DetectorView> {
       onCameraFeedReady: widget.onCameraFeedReady,
       initialCameraLensDirection: widget.initialCameraLensDirection,
       onCameraLensDirectionChanged: widget.onCameraLensDirectionChanged,
-      resolutionPreset: ResolutionPreset.high,
+      resolutionPreset: ResolutionPreset.medium,
     );
   }
 }

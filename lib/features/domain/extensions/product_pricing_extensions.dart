@@ -44,6 +44,6 @@ extension ProductPriceExtensions on ProductPriceEntity? {
       return '';
     }
 
-    return DiscountValueConverter().convert(this).toString();
+    return (DiscountValueConverter().convert(this) ?? '').toString();
   }
 }

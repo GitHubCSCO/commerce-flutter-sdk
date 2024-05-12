@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
@@ -80,11 +81,9 @@ class _CameraViewState extends State<CameraView> {
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          Center(
-            child: CameraPreview(
-              _controller!,
-              child: widget.customPaint,
-            ),
+          CameraPreview(
+            _controller!,
+            child: widget.customPaint,
           ),
           _rectangleScanArea(),
           _switchFlashToggle(),
@@ -118,7 +117,7 @@ class _CameraViewState extends State<CameraView> {
   );
 
   Widget _switchFlashToggle() => Visibility(
-    visible: !widget.barcodeFullView,
+    visible: widget.barcodeFullView,
     child: Positioned(
           top: 40,
           left: 24,
@@ -144,11 +143,23 @@ class _CameraViewState extends State<CameraView> {
         ),
   );
 
-  Widget _rectangleScanArea() => Positioned.fill(
+  Widget _rectangleScanArea() {
+    double rectangleHeight = CoreConstants.barcodeRectangleSize;
+    Size screenSize = MediaQuery.of(context).size;
+    final topMargin = (screenSize.height - 180) / 2;
+
+    return Positioned(
+      top: widget.barcodeFullView ? topMargin : 0,
+      left: 0,
+      right: 0,
+      child: SizedBox(
+        height: rectangleHeight,
         child: CustomPaint(
           painter: RectanglePainter(),
         ),
-      );
+      ),
+    );
+  }
 
   Future _startLiveFeed() async {
     final camera = _cameras[_cameraIndex];
@@ -263,12 +274,18 @@ class RectanglePainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4.0;
 
+    // final rect = Rect.fromLTWH(
+    //   size.width *
+    //       0.10, // Adjust these values as needed to position the rectangle
+    //   size.height * 0.4,
+    //   size.width * 0.80,
+    //   size.height * 0.20,
+    // );
     final rect = Rect.fromLTWH(
-      size.width *
-          0.10, // Adjust these values as needed to position the rectangle
-      size.height * 0.4,
+      size.width * 0.10,
+      size.height * 0.15,
       size.width * 0.80,
-      size.height * 0.20,
+      size.height * 0.70,
     );
 
     canvas.drawRect(rect, paint);

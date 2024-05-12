@@ -76,7 +76,7 @@ class QuickOrderUseCase extends BaseUseCase {
   }
 
   Future<bool> isAuthenticated() async {
-    var result = commerceAPIServiceProvider.getAuthenticationService().isAuthenticatedAsync();
+    var result = await commerceAPIServiceProvider.getAuthenticationService().isAuthenticatedAsync();
     return result is Success ? (result as Success).value : false;
   }
 
