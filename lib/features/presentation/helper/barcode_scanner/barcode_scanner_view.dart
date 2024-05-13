@@ -13,7 +13,7 @@ import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart
 
 class BarcodeScannerView extends StatefulWidget {
 
-  final Function(BuildContext, String?) callback;
+  final Function(BuildContext, String) callback;
   final bool barcodeFullView;
 
   BarcodeScannerView({required this.callback, required this.barcodeFullView, super.key});
@@ -25,6 +25,7 @@ class BarcodeScannerView extends StatefulWidget {
 class _BarcodeScannerViewState extends State<BarcodeScannerView> {
   final BarcodeScanner _barcodeScanner = BarcodeScanner();
   bool _isBusy = false;
+  bool isDialogShowing = false;
   CustomPaint? _customPaint;
   String? _text;
   bool canProcess = false;
@@ -102,12 +103,12 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
     final size = rotateSize(
         inputImage.metadata!.size, inputImage.metadata?.rotation.rawValue ?? 0);
     double areaHeight = calculateNewHeight(screenSize.height, size.height, 200);
-    
+
     const left = 20.00;
     final right = size.width - left;
     double top;
     double bottom;
-    
+
     if (widget.barcodeFullView) {
       top = (size.height + areaHeight) / 2 - areaHeight;
       bottom = (size.height + areaHeight) / 2;
@@ -119,10 +120,14 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
     Rect mainRect = Rect.fromLTRB(left, top, right, bottom);
     final barCodesWithIn = barcodesWithinMainRect(mainRect, barcodes);
 
+    await Future.delayed(const Duration(milliseconds: 100));
+
     if (barCodesWithIn.isNotEmpty) {
       if (barCodesWithIn.length == 1) {
-        widget.callback(context, barCodesWithIn[0].rawValue);
-      } else {
+        widget.callback(context, barCodesWithIn[0].rawValue!);
+        _busyUpdate();
+      } else if (!isDialogShowing) {
+        isDialogShowing = true;
         displayDialogWidget(
             context: context,
             title: LocalizationConstants.multipleBarcodeWarningTitle,
@@ -130,14 +135,20 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
             actions: [
               DialogPlainButton(
                 onPressed: () {
+                  _busyUpdate();
+                  isDialogShowing = false;
                   Navigator.of(context).pop();
                 },
                 child: const Text(LocalizationConstants.oK),
               ),
             ]);
       }
+    } else {
+      _busyUpdate();
     }
+  }
 
+  void _busyUpdate() {
     _isBusy = false;
     if (mounted) {
       setState(() {});
