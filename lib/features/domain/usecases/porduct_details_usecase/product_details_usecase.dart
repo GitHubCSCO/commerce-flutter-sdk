@@ -229,7 +229,10 @@ class ProductDetailsUseCase extends BaseUseCase {
 
     var quantity = getQuantity(product);
     items.add(makeGeneralInfoEntity(product, styledProduct));
-    items.add(makeProductDetailsPriceEntity());
+
+    if (productPricingEnabled) {
+      items.add(makeProductDetailsPriceEntity());
+    }
 
     if (shouldAddConfigSection(product)) {
       items.add(addConfigSection(product));

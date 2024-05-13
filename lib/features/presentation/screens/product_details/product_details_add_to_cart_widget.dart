@@ -34,7 +34,9 @@ class ProductDetailsAddToCartWidget extends StatelessWidget {
           child: (context.read<ProductDetailsBloc>().addToCartEnabled &&
                   context.read<ProductDetailsBloc>().productPricingEnabled)
               ? AddToCartSignInWidget()
-              : AddToCartNotSignedInWidget(),
+              : AddToCartNotSignedInWidget(
+                  productPricingEnabled:
+                      context.read<ProductDetailsBloc>().productPricingEnabled),
         ),
       ),
     );
@@ -215,10 +217,17 @@ class ProductDetailsAddCartTtitleSubTitleColumn extends StatelessWidget {
 }
 
 class AddToCartNotSignedInWidget extends StatelessWidget {
+  final bool productPricingEnabled;
+
+  const AddToCartNotSignedInWidget(
+      {super.key, required this.productPricingEnabled});
+
   @override
   Widget build(BuildContext context) {
     return PrimaryButton(
-      text: LocalizationConstants.signInForAddToCart,
+      text: productPricingEnabled
+          ? LocalizationConstants.signInForAddToCart
+          : LocalizationConstants.signInForPricing,
       onPressed: () {
         AppRoute.login.navigateBackStack(context);
       },
