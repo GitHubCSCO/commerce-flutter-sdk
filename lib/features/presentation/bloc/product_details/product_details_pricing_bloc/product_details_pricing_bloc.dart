@@ -182,9 +182,9 @@ class ProductDetailsPricingBloc
 
     productDetailsPricingEntity = productDetailsPricingEntity.copyWith(
         viewQuantityPricingButtonShown: product.canShowPrice! &&
-            !product.quoteRequired! &&
+            !(product.quoteRequired == true) &&
             productPricing != null &&
-            productPricing.unitRegularBreakPrices!.length > 1);
+            (productPricing.unitRegularBreakPrices?.length ?? 0) > 1);
     return productDetailsPricingEntity;
   }
 
