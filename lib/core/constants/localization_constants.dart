@@ -136,7 +136,7 @@ class LocalizationConstants {
       "There are product(s) out of stock. Add available products to cart?";
   static const addListToCart = "Add List to Cart";
   static const listTotal = "List Total";
-  static const listTotalProducts = "List Total ({0} products)";
+  static const listTotalProducts = "List Total (%s products)";
   static const productDeleted = "Product Deleted";
   static const errorDeletingProduct = "Error Deleting Product";
   static const listInformation = "List Information";

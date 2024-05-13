@@ -19,7 +19,8 @@ class RouteNames {
   static const String settings = 'settings';
   static const String biometricLogin = 'biometricLogin';
   static const String orderHistory = 'orderHistory';
-  static const String barcodeScanner = 'barcodeScanner';
+  static const String quickOrder = 'quickOrder';
+  static const String barcodeSearch = 'barcodeSearch';
   static const String lists = 'lists';
 }
 
@@ -43,7 +44,8 @@ class RoutePaths {
   static const String biometricLogin = '/${RouteNames.biometricLogin}';
   static const String orderHistory =
       '/${RoutePaths.account}/${RouteNames.orderHistory}';
-  static const String barcodeScanner = '/${RouteNames.barcodeScanner}';
+  static const String quickOrder = '/${RouteNames.quickOrder}';
+  static const String barcodeSearch = '/${RouteNames.barcodeSearch}';
   static const String lists = '${RoutePaths.account}/${RouteNames.lists}';
 }
 
@@ -67,8 +69,10 @@ enum AppRoute {
       name: RouteNames.biometricLogin, fullPath: RoutePaths.biometricLogin),
   orderHistory(
       name: RouteNames.orderHistory, fullPath: RoutePaths.orderHistory),
-  barcodeScanner(
-      name: RouteNames.barcodeScanner, fullPath: RoutePaths.barcodeScanner),
+  quickOrder(
+      name: RouteNames.quickOrder, fullPath: RoutePaths.quickOrder),
+  barcodeSearch(
+      name: RouteNames.barcodeSearch, fullPath: RoutePaths.barcodeSearch),
   wishlist(name: RouteNames.lists, fullPath: RoutePaths.lists);
 
   const AppRoute({

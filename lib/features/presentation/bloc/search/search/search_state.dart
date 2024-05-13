@@ -3,14 +3,6 @@ part of 'search_bloc.dart';
 @immutable
 abstract class SearchState {}
 
-class SearchInitialState extends SearchState {}
-
-class SearchFocusState extends SearchState {}
-
-class SearchTypingState extends SearchState {}
-
-class SearchUnFocusState extends SearchState {}
-
 class SearchLoadingState extends SearchState {}
 
 class SearchCmsInitialState extends SearchState {}
@@ -32,8 +24,6 @@ class SearchAutoCompleteFailureState extends SearchState {
   SearchAutoCompleteFailureState(this.error);
 
 }
-
-class SearchProductsInitialState extends SearchState {}
 
 class SearchProductsLoadedState extends SearchState {
 
