@@ -6,7 +6,9 @@ import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_state.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/view_pricing_quantity_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/view_warehouse_availability_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -20,9 +22,22 @@ class ProductDetailsPricingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var event = context.read<ProductDetailsPricingBloc>();
+    var productDetailsBloc = context.read<ProductDetailsBloc>();
 
     event.add(LoadProductDetailsPricing(
-        productDetailsPriceEntity: productDetailsPricingEntity));
+        productDetailsPricingEntity: productDetailsPricingEntity,
+        product: productDetailsBloc.product,
+        styledProduct: productDetailsBloc.styledProduct,
+        productPricingEnabled: productDetailsBloc.productPricingEnabled,
+        quantity: 1,
+        chosenUnitOfMeasure: productDetailsBloc.chosenUnitOfMeasure,
+        realtimeProductAvailabilityEnabled:
+            productDetailsBloc.realtimeProductAvailabilityEnabled,
+        realtimeProductPricingEnabled:
+            productDetailsBloc.realtimeProductPricingEnabled,
+        productSettings: productDetailsBloc.productSettings,
+        selectedConfigurations: productDetailsBloc.selectedConfigurations,
+        selectedStyleValues: productDetailsBloc.selectedStyleValues));
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
@@ -35,35 +50,67 @@ class ProductDetailsPricingWidget extends StatelessWidget {
             children: [
               _buildDiscountMessageSection(context),
               _buildPricingSection(context),
-              GestureDetector(
-                onTap: () {
-                  // TODO: Implement the logic for "View Quantity Pricing"
-                  CustomSnackBar.showComingSoonSnackBar(context);
-                },
-                child: Text(
-                  "View Quantity Pricing",
-                  style: OptiTextStyles.link,
-                ),
-              ),
-              productDetailsPricingEntity.availability?.message != null
-                  ? _buildInventorySection(context)
-                  : Container(),
+              _buildQuantityPricingSection(context),
+              _buildInventorySection(context),
               // _buildInventorySection(context),
               // For "View Availability by Warehouse"
-              GestureDetector(
-                onTap: () {
-                  // TODO: Implement the logic for "View Quantity Pricing"
-                  CustomSnackBar.showComingSoonSnackBar(context);
-                },
-                child: Text(
-                  "View Availability by Warehouse",
-                  style: OptiTextStyles.link,
-                ),
-              ),
+              _buildInventoryAvailabilitySection(context)
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildQuantityPricingSection(BuildContext context) {
+    return BlocBuilder<ProductDetailsPricingBloc, ProductDetailsPricingState>(
+      builder: (context, state) {
+        if (state is ProductDetailsPricingLoaded &&
+            state.productDetailsPriceEntity.viewQuantityPricingButtonShown !=
+                null &&
+            state.productDetailsPriceEntity.viewQuantityPricingButtonShown!) {
+          return GestureDetector(
+            onTap: () {
+              // TODO: Implement the logic for "View Quantity Pricing"
+              viewPricingQuantityWidget(
+                  context,
+                  state.productDetailsPriceEntity.product?.pricing
+                          ?.unitRegularBreakPrices ??
+                      []);
+            },
+            child: Text(
+              "View Quantity Pricing",
+              style: OptiTextStyles.link,
+            ),
+          );
+        }
+        return Container();
+      },
+    );
+  }
+
+  Widget _buildInventoryAvailabilitySection(BuildContext context) {
+    return BlocBuilder<ProductDetailsPricingBloc, ProductDetailsPricingState>(
+      builder: (_, state) {
+        if (state is ProductDetailsPricingLoaded &&
+            state.productDetailsPriceEntity.showInventoryAvailability != null &&
+            state.productDetailsPriceEntity.showInventoryAvailability!) {
+          return GestureDetector(
+            onTap: () {
+              viewWarehouseWidget(
+                  context,
+                  state.productDetailsPriceEntity.product?.id,
+                  state.productDetailsPriceEntity.product.getProductNumber(),
+                  state.productDetailsPriceEntity.product?.unitOfMeasure ?? "");
+            },
+            child: Text(
+              "View Availability by Warehouse",
+              style: OptiTextStyles.link,
+            ),
+          );
+        }
+        return Container();
+      },
     );
   }
 
@@ -83,7 +130,8 @@ class ProductDetailsPricingWidget extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is ProductDetailsPricingLoaded) {
-          var discountMessage = state.productDetailsPriceEntity.product?.pricing?.getDiscountValue();
+          var discountMessage = state.productDetailsPriceEntity.product?.pricing
+              ?.getDiscountValue();
           if (discountMessage != null &&
               discountMessage.isNotEmpty &&
               discountMessage != "null") {

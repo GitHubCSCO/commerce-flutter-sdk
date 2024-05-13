@@ -1,10 +1,10 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/list_picker/list_picker_cubit.dart';
+import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ListPickerWidget extends StatelessWidget {
@@ -12,83 +12,125 @@ class ListPickerWidget extends StatelessWidget {
   final List<Object> items;
   final int? selectedIndex;
 
-  const ListPickerWidget(
-      {super.key, required this.items, this.selectedIndex, required this.callback});
+  const ListPickerWidget({
+    super.key,
+    required this.items,
+    this.selectedIndex,
+    required this.callback,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ListPickerCubit>(
-      create: (context) => sl<ListPickerCubit>()..onInitialSelection(selectedIndex),
-      child: ListPicker(items: items, callback: callback),
+    return ListPicker(
+      items: items,
+      selectedIndex: selectedIndex,
+      callback: callback,
     );
   }
 }
 
-class ListPicker extends StatelessWidget {
+class ListPicker extends StatefulWidget {
   final void Function(BuildContext context, Object item)? callback;
   final List<Object> items;
+  final int? selectedIndex;
 
-  const ListPicker({super.key, required this.items, required this.callback});
+  const ListPicker({
+    super.key,
+    required this.items,
+    this.selectedIndex,
+    required this.callback,
+  });
+
+  @override
+  _ListPickerState createState() => _ListPickerState();
+}
+
+class _ListPickerState extends State<ListPicker> {
+  late int selectedIndex;
+  late bool isButtonEnabled;
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = widget.selectedIndex ?? 0;
+    isButtonEnabled = _isOptionAvailable(widget.items[selectedIndex]);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ListPickerCubit, ListPickerState>(
-      listener: (context, state) {
-        if (callback != null) {
-          callback!(context, items[state.index]);
-        }
-      },
-      builder: (_, state) {
-        int pickerIndex = state.index;
-        return Container(
-          alignment: AlignmentDirectional.centerStart,
-          child: TextButton(onPressed: () {
-            _selectItem(context, items, pickerIndex);
-          }, child: Text(
-            _getDescriptions(items[pickerIndex]),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
-          )),
+    return Container(
+      alignment: AlignmentDirectional.centerStart,
+      child: TextButton(
+        onPressed: () {
+          _selectItem(context);
+        },
+        child: Text(
+          _getDescriptions(widget.items[selectedIndex]),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.start,
+          style:
+              OptiTextStyles.body, // Assuming you have OptiTextStyles defined
+        ),
+      ),
+    );
+  }
+
+  void _selectItem(BuildContext context) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext innerContext) {
+        return StatefulBuilder(
+          builder: (BuildContext _, StateSetter setState) {
+            return Container(
+              height: 200,
+              color: Colors.white,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed:
+                        isButtonEnabled // Enable/disable button based on isButtonEnabled state
+                            ? () {
+                                Navigator.pop(innerContext);
+                                if (widget.callback != null) {
+                                  widget.callback!(
+                                      context, widget.items[selectedIndex]);
+                                }
+                              }
+                            : null,
+                    child: const Text("Done"),
+                  ),
+                  Expanded(
+                    child: CupertinoPicker(
+                      itemExtent: 40,
+                      onSelectedItemChanged: (int index) {
+                        setState(() {
+                          selectedIndex = index;
+                          isButtonEnabled =
+                              _isOptionAvailable(widget.items[index]);
+                        });
+                      },
+                      children: widget.items.map((Object option) {
+                        return Center(child: Text(_getDescriptions(option)));
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     );
   }
 
-  void _selectItem(BuildContext context, List<Object> items, int index) {
-    int selectedIndex = index;
-    showCupertinoModalPopup(
-      context: context,
-      builder: (BuildContext _) {
-        return Container(
-          height: 200,
-          color: Colors.white,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    context.read<ListPickerCubit>().onPick(selectedIndex);
-                  },
-                  child: const Text(LocalizationConstants.done)),
-              Expanded(
-                child: CupertinoPicker(
-                  itemExtent: 40,
-                  onSelectedItemChanged: (int index) {
-                    selectedIndex = index;
-                  },
-                  children: items.map((Object option) {
-                    return Center(child: Text(_getDescriptions(option)));
-                  }).toList(),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+  bool _isOptionAvailable(Object option) {
+    // Assuming isAvailable is a property of the option object
+    if (option is ProductDetailStyleValue) {
+      return option.isAvailable!;
+    } else {
+      return true; // Return true by default if isAvailable property is not found
+    }
   }
 
   String _getDescriptions(Object item) {
@@ -96,11 +138,13 @@ class ListPicker extends StatelessWidget {
       return item.description!;
     } else if (item is ShipViaDto) {
       return item.description!;
-    } else if (item is PaymentMethodDto){
+    } else if (item is PaymentMethodDto) {
       return item.description!;
-    }
-    
-    else {
+    } else if (item is ConfigSectionOptionEntity) {
+      return item.description!;
+    } else if (item is ProductDetailStyleValue) {
+      return item.displayName!;
+    } else {
       return '';
     }
   }

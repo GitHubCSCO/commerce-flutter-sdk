@@ -10,6 +10,11 @@ class StyleValueEntity extends Equatable {
   final int? sortOrder;
   final bool? isDefault;
   final String? id;
+  final String? swatchColorValue;
+  final String? swatchImageValue;
+  final String? swatchType;
+  final bool? isAvailable;
+
 
   const StyleValueEntity({
     this.styleTraitName,
@@ -20,6 +25,10 @@ class StyleValueEntity extends Equatable {
     this.sortOrder,
     this.isDefault,
     this.id,
+    this.swatchColorValue,
+    this.swatchImageValue,
+    this.swatchType,
+    this.isAvailable,
   });
 
   StyleValueEntity copyWith({
@@ -31,6 +40,10 @@ class StyleValueEntity extends Equatable {
     int? sortOrder,
     bool? isDefault,
     String? id,
+    String? swatchColorValue,
+    String? swatchImageValue,
+    String? swatchType,
+     bool? isAvailable,
   }) {
     return StyleValueEntity(
       styleTraitName: styleTraitName ?? this.styleTraitName,
@@ -41,10 +54,27 @@ class StyleValueEntity extends Equatable {
       sortOrder: sortOrder ?? this.sortOrder,
       isDefault: isDefault ?? this.isDefault,
       id: id ?? this.id,
+      swatchColorValue: swatchColorValue ?? this.swatchColorValue,
+      swatchImageValue: swatchImageValue ?? this.swatchImageValue,
+      swatchType: swatchType ?? this.swatchType,
+      isAvailable: isAvailable ?? this.isAvailable,
     );
   }
 
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props {
+    return [
+      styleTraitName,
+      styleTraitId,
+      styleTraitValueId,
+      value,
+      valueDisplay,
+      sortOrder,
+      isDefault,
+      id,
+      swatchColorValue,
+      swatchImageValue,
+      swatchType,
+    ];
+  }
 }

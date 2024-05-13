@@ -26,7 +26,9 @@ import 'package:commerce_flutter_app/features/domain/usecases/order_usecase/orde
 import 'package:commerce_flutter_app/features/domain/usecases/platform_usecase/platform_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/warehouse_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/order_pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/quick_order_usecase.dart';
@@ -69,7 +71,6 @@ import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.d
 import 'package:commerce_flutter_app/features/presentation/cubit/date_selection/date_selection_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/list_picker/list_picker_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
@@ -78,6 +79,8 @@ import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/ord
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/style_trait_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:commerce_flutter_app/services/secure_storage_service.dart';
 import 'package:get_it/get_it.dart';
@@ -189,9 +192,6 @@ Future<void> initInjectionContainer() async {
     //date selection
     ..registerFactory(() => DateSelectionCubit())
 
-    //list picker
-    ..registerFactory(() => ListPickerCubit())
-
     //settings domain
     ..registerFactory(() => SettingsDomainCubit(domainUsecase: sl()))
 
@@ -216,6 +216,17 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(
         () => ProductDetailsAddToCartBloc(productDetailsAddToCartUseCase: sl()))
     ..registerFactory(() => ProductDetailsAddToCartUseCase())
+
+    //product style trait
+
+    ..registerFactory(() => ProductDetailsStyleTraitsUseCase())
+    ..registerFactory(() => StyleTraitCubit(styleTraitsUseCase: sl()))
+
+    // warehouse inventory
+
+    ..registerFactory(
+        () => WarehouseInventoryCubit(warehouseInventoryUsecase: sl()))
+    ..registerFactory(() => WarehouseInventoryUsecase())
 
     //carousel
     ..registerFactory(() => CarouselIndicatorCubit())

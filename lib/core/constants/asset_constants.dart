@@ -36,4 +36,6 @@ class AssetConstants {
 
   static const String sortIcon = "assets/images/icon_sort.svg";
   static const String filterIcon = "assets/images/icon_filter.svg";
+
+  static const String iconArrowDown = "assets/images/icon_arrow_down.svg";
 }

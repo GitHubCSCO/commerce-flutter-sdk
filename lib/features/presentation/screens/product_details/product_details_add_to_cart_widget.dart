@@ -3,14 +3,13 @@ import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_state.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
@@ -32,14 +31,10 @@ class ProductDetailsAddToCartWidget extends StatelessWidget {
         width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: BlocConsumer<AuthCubit, AuthState>(
-            listener: (context, state) {},
-            builder: (context, state) {
-              return state.status == AuthStatus.authenticated
-                  ? AddToCartSignInWidget()
-                  : AddToCartNotSignedInWidget();
-            },
-          ),
+          child: (context.read<ProductDetailsBloc>().addToCartEnabled &&
+                  context.read<ProductDetailsBloc>().productPricingEnabled)
+              ? AddToCartSignInWidget()
+              : AddToCartNotSignedInWidget(),
         ),
       ),
     );
@@ -150,12 +145,30 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                   if (pricingState is ProductDetailsPricingLoaded) {
                     var productDetailsPricingEntity =
                         pricingState.productDetailsPriceEntity;
-                    productDetailsPricingEntity = productDetailsPricingEntity
-                        .copyWith(quantity: quantity);
+                    var productDetailsBloc = context.read<ProductDetailsBloc>();
+                    productDetailsBloc.updateQuantity(quantity!);
+
                     context.read<ProductDetailsPricingBloc>().add(
                         LoadProductDetailsPricing(
-                            productDetailsPriceEntity:
-                                productDetailsPricingEntity));
+                            productDetailsPricingEntity:
+                                productDetailsPricingEntity,
+                            product: productDetailsBloc.product,
+                            styledProduct: productDetailsBloc.styledProduct,
+                            productPricingEnabled: productDetailsBloc
+                                .productPricingEnabled,
+                            quantity: quantity,
+                            chosenUnitOfMeasure: productDetailsBloc
+                                .chosenUnitOfMeasure,
+                            realtimeProductAvailabilityEnabled:
+                                productDetailsBloc
+                                    .realtimeProductAvailabilityEnabled,
+                            realtimeProductPricingEnabled: productDetailsBloc
+                                .realtimeProductPricingEnabled,
+                            productSettings: productDetailsBloc.productSettings,
+                            selectedConfigurations:
+                                productDetailsBloc.selectedConfigurations,
+                            selectedStyleValues:
+                                productDetailsBloc.selectedStyleValues));
                   }
                 }),
           ),
