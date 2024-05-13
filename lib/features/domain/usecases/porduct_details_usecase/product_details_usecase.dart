@@ -40,6 +40,10 @@ class ProductDetailsUseCase extends BaseUseCase {
       ProductDetailsStyleTraitsUseCase();
   ProductDetailsUseCase() : super();
 
+  Future<bool> isOnline() async {
+    return await commerceAPIServiceProvider.getNetworkService().isOnline();
+  }
+
   Future<bool> hasCheckout() {
     return coreServiceProvider.getAppConfigurationService().hasCheckout();
   }
@@ -210,12 +214,17 @@ class ProductDetailsUseCase extends BaseUseCase {
     return genralInfoEntity;
   }
 
-  List<ProductDetailsBaseEntity> makeAllDetailsItems(
-      ProductEntity product,
-      StyledProductEntity? styledProduct,
-      bool productPricingEnabled,
-      Map<String, List<StyleValueEntity>?> availableStyleValues,
-      Map<String, StyleValueEntity?>? selectedStyleValues) {
+  Future<List<ProductDetailsBaseEntity>> makeAllDetailsItems(
+    ProductEntity product,
+    StyledProductEntity? styledProduct,
+    bool productPricingEnabled,
+    Map<String, List<StyleValueEntity>?> availableStyleValues,
+    Map<String, StyleValueEntity?>? selectedStyleValues,
+    bool isProductConfigurable,
+    bool isProductConfigurationCompleted,
+    bool hasCheckout,
+    bool addToCartEnabled,
+  ) async {
     List<ProductDetailsBaseEntity> items = [];
 
     var quantity = getQuantity(product);
@@ -230,7 +239,17 @@ class ProductDetailsUseCase extends BaseUseCase {
       items.add(makeProductDetailsStyleTraitsEntity(
           product, availableStyleValues, selectedStyleValues));
     }
-    items.add(makeProductDetailsAddToCartEntity(quantity));
+
+    var addToCartEntity = await makeProductDetailsAddToCartEntity(
+        quantity,
+        hasCheckout,
+        addToCartEnabled,
+        product,
+        styledProduct,
+        selectedStyleValues,
+        isProductConfigurable,
+        isProductConfigurationCompleted);
+    items.add(addToCartEntity);
 
     if (product.htmlContent != null) {
       items.add(makeProductDetailsDescriptionEntity(product));
@@ -278,11 +297,52 @@ class ProductDetailsUseCase extends BaseUseCase {
         !product.isFixedConfiguration!;
   }
 
-  ProductDetailsAddtoCartEntity makeProductDetailsAddToCartEntity(
-      int quantity) {
-    return ProductDetailsAddtoCartEntity(
-        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart,
-        quantityText: quantity.toString());
+  Future<ProductDetailsAddtoCartEntity> makeProductDetailsAddToCartEntity(
+      int quantity,
+      bool hasCheckout,
+      bool addToCartEnabled,
+      ProductEntity productEntity,
+      StyledProductEntity? styledProduct,
+      Map<String, StyleValueEntity?>? selectedStyleValues,
+      bool isProductConfigurable,
+      bool isProductConfigurationCompleted) async {
+    var isOnlineNow = await isOnline();
+    var isAddToCartButtonAvailable = isOnlineNow && hasCheckout;
+    isAddToCartButtonAvailable &= addToCartEnabled;
+    isAddToCartButtonAvailable &= !productEntity.cantBuy!;
+    isAddToCartButtonAvailable &=
+        productEntity.allowedAddToCart! && !productEntity.canConfigure!;
+
+    if (isAddToCartButtonAvailable) {
+      var isAddToCartButtonEnabled = true;
+
+      if (_productDetailsStyleTraitsUseCase
+          .isProductStyleable(selectedStyleValues)) {
+        isAddToCartButtonEnabled = _productDetailsStyleTraitsUseCase
+            .isProductStyleSelectionCompleted(selectedStyleValues);
+      }
+
+      if (isProductConfigurable) {
+        isAddToCartButtonEnabled = isProductConfigurationCompleted;
+      }
+
+      isAddToCartButtonEnabled &= quantity > 0;
+      isAddToCartButtonEnabled &= (styledProduct == null
+              ? productEntity.availability?.messageType != 2
+              : styledProduct.availability?.messageType != 2) ||
+          productEntity.canBackOrder!;
+
+      return ProductDetailsAddtoCartEntity(
+          detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart,
+          quantityText: quantity.toString(),
+          isAddToCartAllowed: isAddToCartButtonAvailable,
+          addToCartButtonEnabled: isAddToCartButtonEnabled);
+    } else {
+      return ProductDetailsAddtoCartEntity(
+          detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart,
+          quantityText: quantity.toString(),
+          isAddToCartAllowed: isAddToCartButtonAvailable);
+    }
   }
 
   ProductDetailsDescriptionEntity makeProductDetailsDescriptionEntity(

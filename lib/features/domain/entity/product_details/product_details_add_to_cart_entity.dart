@@ -33,7 +33,7 @@ class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
     this.subtotalTitleText,
     this.isLoadingPrice,
     this.subtotalValueText,
-     this.productDetailsPriceEntity,
+    this.productDetailsPriceEntity,
     required super.detailsSectionType,
   });
 
@@ -75,7 +75,8 @@ class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
       isLoadingPrice: isLoadingPrice ?? this.isLoadingPrice,
       subtotalValueText: subtotalValueText ?? this.subtotalValueText,
       detailsSectionType: detailsSectionType ?? this.detailsSectionType,
-      productDetailsPriceEntity: productDetailsPriceEntity ?? this.productDetailsPriceEntity,
+      productDetailsPriceEntity:
+          productDetailsPriceEntity ?? this.productDetailsPriceEntity,
     );
   }
 }

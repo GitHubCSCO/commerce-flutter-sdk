@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/constants/site_message_constants.dart'
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
@@ -9,6 +10,7 @@ import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.d
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +19,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class ProductDetailsPricingBloc
     extends Bloc<ProductDetailsPricingEvent, ProductDetailsPricingState> {
   final ProductDetailsPricingUseCase _productDetailsPricingUseCase;
+  final ProductDetailsStyleTraitsUseCase _productDetailsStyleTraitUseCase = ProductDetailsStyleTraitsUseCase();
   late ProductDetailsPriceEntity productDetailsPricingEntity;
   ProductDetailsPricingBloc(
       {required ProductDetailsPricingUseCase productDetailsPricingUseCase})
@@ -142,10 +145,10 @@ class ProductDetailsPricingBloc
       var showAvailabilityMessage = true;
       var showAvailabilityPerWarehouseLink = true;
 
-      if (_isProductStyleable(selectedStyleValues)) {
+      if (_productDetailsStyleTraitUseCase.isProductStyleable(selectedStyleValues)) {
         var isStyleSelectionComplete =
-            _isProductStyleSelectionCompleted(selectedStyleValues);
-        showAvailabilityMessage = isStyleSelectionComplete;
+            _productDetailsStyleTraitUseCase.isProductStyleSelectionCompleted(selectedStyleValues);
+        showAvailabilityMessage = isStyleSelectionComplete!;
         showAvailabilityPerWarehouseLink = isStyleSelectionComplete;
       } else if (_isProductConfigurable(selectedConfigurations)) {
         var configurationCompleted =
@@ -185,24 +188,9 @@ class ProductDetailsPricingBloc
     return productDetailsPricingEntity;
   }
 
-  bool _isProductStyleable(
-      Map<String, StyleValueEntity?>? selectedStyleValues) {
-    return selectedStyleValues!.keys.isNotEmpty;
-  }
-
   bool _isProductConfigurable(
       Map<String, ConfigSectionOptionEntity?> selectedConfigurations) {
     return selectedConfigurations.keys.isNotEmpty;
-  }
-
-  bool _isProductStyleSelectionCompleted(
-      Map<String, StyleValueEntity?>? selectedStyleValues) {
-    if (selectedStyleValues!.isEmpty) {
-      return false;
-    }
-
-    return selectedStyleValues.keys
-        .every((k) => selectedStyleValues[k] != null);
   }
 
   bool _isProductConfigurationCompleted(

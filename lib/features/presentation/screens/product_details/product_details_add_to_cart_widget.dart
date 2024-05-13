@@ -103,18 +103,25 @@ class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
               quantity = value;
             });
           }),
-          PrimaryButton(
-              leadingIcon: SvgPicture.asset(
-                AssetConstants.productDeatilsAddToCartIcon,
-                fit: BoxFit.fitWidth,
-                color: Colors.white,
-              ),
-              text: LocalizationConstants.addToCart,
-              onPressed: () {
-                context.read<ProductDetailsAddToCartBloc>().add(AddToCartEvent(
-                    productDetailsAddToCartEntity: widget.detailsAddToCartEntity
-                        .copyWith(quantityText: quantity.toString())));
-              })
+          if (widget.detailsAddToCartEntity.isAddToCartAllowed!)
+            PrimaryButton(
+                isEnabled:
+                    widget.detailsAddToCartEntity.addToCartButtonEnabled!,
+                leadingIcon: SvgPicture.asset(
+                  AssetConstants.productDeatilsAddToCartIcon,
+                  fit: BoxFit.fitWidth,
+                  color: Colors.white,
+                ),
+                text: LocalizationConstants.addToCart,
+                onPressed: widget.detailsAddToCartEntity.addToCartButtonEnabled!
+                    ? () {
+                        context.read<ProductDetailsAddToCartBloc>().add(
+                            AddToCartEvent(
+                                productDetailsAddToCartEntity:
+                                    widget.detailsAddToCartEntity.copyWith(
+                                        quantityText: quantity.toString())));
+                      }
+                    : null)
         ],
       ),
     );
