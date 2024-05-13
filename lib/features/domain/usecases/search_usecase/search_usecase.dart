@@ -19,10 +19,10 @@ class SearchUseCase extends BaseUseCase {
     }
   }
 
-  Future<Result<GetProductCollectionResult, ErrorResponse>?> loadSearchProductsResults(String searchQuery) async {
+  Future<Result<GetProductCollectionResult, ErrorResponse>?> loadSearchProductsResults(String searchQuery, int currentPage) async {
     var parameters = ProductsQueryParameters(
       query: searchQuery,
-      // page: this.CurrentPage,
+      page: currentPage,
       // Sort = this.sortViewModel?.CurrentlySelectedSortOption?.SortType,
       // AttributeValueIds = this.SelectedAttributeValueIds,
       // BrandIds = this.SelectedBrandIds,

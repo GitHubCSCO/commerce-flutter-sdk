@@ -79,7 +79,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   Future<void> _onSearchSearchEvent(SearchSearchEvent event, Emitter<SearchState> emit) async {
     if (searchQuery.isNotEmpty) {
       emit(SearchLoadingState());
-      final result = await _searchUseCase.loadSearchProductsResults(searchQuery);
+      final result = await _searchUseCase.loadSearchProductsResults(searchQuery, 1);
       switch (result) {
         case Success(value: final data):
           emit(SearchProductsLoadedState(result: data));

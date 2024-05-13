@@ -2,8 +2,8 @@ import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart'
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class SearchProductsusecase extends BaseUseCase {
-  SearchProductsusecase() : super();
+class AddToCartUsecase extends BaseUseCase {
+  AddToCartUsecase() : super();
 
   Future<Result<CartLine, ErrorResponse>> addToCart(
       AddCartLine addcartLine) async {
