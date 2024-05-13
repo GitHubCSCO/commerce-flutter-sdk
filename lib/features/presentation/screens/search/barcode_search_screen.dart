@@ -17,7 +17,7 @@ class BarcodeSearchScreen extends StatelessWidget {
     );
   }
 
-  _handleBarcodeValue(BuildContext context, String? rawValue) {
+  _handleBarcodeValue(BuildContext context, String rawValue) {
     Navigator.of(context).pop(rawValue);
   }
 
