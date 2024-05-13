@@ -2,6 +2,10 @@ part of 'quick_order_auto_complete_bloc.dart';
 
 abstract class QuickOrderAutoCompleteState {}
 
+class QuickOrderInitialState extends QuickOrderAutoCompleteState {}
+
+// class AutoCompleteInitialState extends QuickOrderAutoCompleteState {}
+
 class QuickOrderAutoCompleteLoadingState extends QuickOrderAutoCompleteState {}
 
 class QuickOrderAutoCompleteInitialState extends QuickOrderAutoCompleteState {}

@@ -32,8 +32,7 @@ class AutoCompleteWidget extends StatelessWidget {
           onTap: () {
             callback(context, autoCompleteProduct);
           },
-          child: AutoCompleteProductWidget(
-              callback: callback, autocompleteProduct: autoCompleteProduct),
+          child: AutoCompleteProductWidget(autocompleteProduct: autoCompleteProduct),
         );
       },
     );
@@ -42,11 +41,11 @@ class AutoCompleteWidget extends StatelessWidget {
 
 class AutoCompleteProductWidget extends StatelessWidget {
 
-  final Function(BuildContext, AutocompleteProduct) callback;
+  // final Function(BuildContext, AutocompleteProduct) callback;
   final AutocompleteProduct autocompleteProduct;
 
   const AutoCompleteProductWidget(
-      {super.key, required this.callback, required this.autocompleteProduct});
+      {super.key, required this.autocompleteProduct});
 
   @override
   Widget build(BuildContext context) {

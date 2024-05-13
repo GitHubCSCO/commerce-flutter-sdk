@@ -22,7 +22,7 @@ class OrderListLoadedState extends OrderListState {
   OrderListLoadedState(this.quickOrderItemList, this.productSettings);
 
   @override
-  List<Object?> get props => [quickOrderItemList, productSettings];
+  List<Object?> get props => [];
 
 }
 

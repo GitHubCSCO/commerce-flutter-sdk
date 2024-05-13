@@ -14,7 +14,6 @@ import 'package:commerce_flutter_app/features/domain/entity/styled_product_entit
 import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/auto_complete/quick_order_auto_complete_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/quick_order_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
@@ -41,7 +40,6 @@ class QuickOrderScreen extends StatelessWidget {
       BlocProvider<StyleTraitCubit>(
         create: (context) => sl<StyleTraitCubit>(),
       ),
-      BlocProvider<QuickOrderBloc>(create: (context) => sl<QuickOrderBloc>()),
       BlocProvider<OrderListBloc>(
           create: (context) => sl<OrderListBloc>()..add(OrderListLoadEvent())),
       BlocProvider<QuickOrderAutoCompleteBloc>(
@@ -83,10 +81,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                 color: Colors.black,
               )),
           BottomMenuWidget(
-              toolMenuList: _buildToolMenu(context), websitePath: 'websitePath')
+              toolMenuList: _buildToolMenu(context), websitePath: 'websitePath', isViewOnWebsiteEnable: false)
         ],
       ),
-      body: BlocConsumer<QuickOrderBloc, QuickOrderState>(
+      body: BlocConsumer<QuickOrderAutoCompleteBloc, QuickOrderAutoCompleteState>(
         listener: (context, state) {},
         builder: (context, state) {
           switch (state.runtimeType) {
@@ -119,7 +117,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                 child: TextButton(
                                   onPressed: () {
                                     context
-                                        .read<QuickOrderBloc>()
+                                        .read<QuickOrderAutoCompleteBloc>()
                                         .add(QuickOrderStartSearchEvent());
                                   },
                                   child: Row(
@@ -319,12 +317,97 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                   )
                 ],
               );
-            case AutoCompleteInitialState:
+            // case AutoCompleteInitialState:
+            //   return Column(
+            //     children: [
+            //       Container(
+            //         padding: const EdgeInsets.symmetric(
+            //             vertical: 16, horizontal: 24),
+            //         child: Input(
+            //           hintText: LocalizationConstants.search,
+            //           suffixIcon: IconButton(
+            //             icon: SvgPicture.asset(
+            //               AssetConstants.iconClear,
+            //               semanticsLabel: 'search query clear icon',
+            //               fit: BoxFit.fitWidth,
+            //             ),
+            //             onPressed: () {
+            //               context
+            //                   .read<QuickOrderBloc>()
+            //                   .add(QuickOrderEndSearchEvent());
+            //               textEditingController.clear();
+            //               context
+            //                   .read<QuickOrderAutoCompleteBloc>()
+            //                   .add(QuickOrderTypingEvent(''));
+            //               context.closeKeyboard();
+            //             },
+            //           ),
+            //           onTapOutside: (p0) => context.closeKeyboard(),
+            //           textInputAction: TextInputAction.search,
+            //           focusListener: (bool hasFocus) {
+            //             if (hasFocus) {
+            //               context
+            //                   .read<QuickOrderAutoCompleteBloc>()
+            //                   .add(QuickOrderFocusEvent());
+            //             } else {
+            //               context
+            //                   .read<QuickOrderAutoCompleteBloc>()
+            //                   .add(QuickOrderUnFocusEvent());
+            //               context.read<QuickOrderBloc>().add(QuickOrderEndSearchEvent());
+            //             }
+            //           },
+            //           onChanged: (String searchQuery) {
+            //             context
+            //                 .read<QuickOrderAutoCompleteBloc>()
+            //                 .add(QuickOrderTypingEvent(searchQuery));
+            //           },
+            //           // onSubmitted: (String query) {
+            //           //   context.read<QuickOrderAutoCompleteBloc>().add(SearchSearchEvent());
+            //           // },
+            //           controller: textEditingController,
+            //         ),
+            //       ),
+            //       Expanded(child: BlocBuilder<QuickOrderAutoCompleteBloc,
+            //           QuickOrderAutoCompleteState>(
+            //         builder: (context, state) {
+            //           switch (state.runtimeType) {
+            //             case QuickOrderAutoCompleteInitialState:
+            //               return Center(
+            //                 child: Text(
+            //                   LocalizationConstants.searchPrompt,
+            //                   style: OptiTextStyles.body,
+            //                 ),
+            //               );
+            //             case QuickOrderAutoCompleteLoadingState:
+            //               return const Center(
+            //                   child: CircularProgressIndicator());
+            //             case QuickOrderAutoCompleteLoadedState:
+            //               final autoCompleteResult =
+            //                   (state as QuickOrderAutoCompleteLoadedState)
+            //                       .result!;
+            //               return AutoCompleteWidget(
+            //                   callback: _handleAutoCompleteCallback,
+            //                   autocompleteResult: autoCompleteResult);
+            //             //click to add product in quick order list
+            //             case QuickOrderAutoCompleteFailureState:
+            //               return Center(
+            //                   child: Text(
+            //                 (state as QuickOrderAutoCompleteFailureState).error,
+            //                 style: OptiTextStyles.body,
+            //               ));
+            //             default:
+            //               return Container();
+            //           }
+            //         },
+            //       ))
+            //     ],
+            //   );
+            default:
               return Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 24),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                     child: Input(
                       hintText: LocalizationConstants.search,
                       suffixIcon: IconButton(
@@ -335,7 +418,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                         ),
                         onPressed: () {
                           context
-                              .read<QuickOrderBloc>()
+                              .read<QuickOrderAutoCompleteBloc>()
                               .add(QuickOrderEndSearchEvent());
                           textEditingController.clear();
                           context
@@ -355,7 +438,6 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                           context
                               .read<QuickOrderAutoCompleteBloc>()
                               .add(QuickOrderUnFocusEvent());
-                          context.read<QuickOrderBloc>().add(QuickOrderEndSearchEvent());
                         }
                       },
                       onChanged: (String searchQuery) {
@@ -369,44 +451,33 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                       controller: textEditingController,
                     ),
                   ),
-                  Expanded(child: BlocBuilder<QuickOrderAutoCompleteBloc,
-                      QuickOrderAutoCompleteState>(
-                    builder: (context, state) {
-                      switch (state.runtimeType) {
-                        case QuickOrderAutoCompleteInitialState:
-                          return Center(
-                            child: Text(
-                              LocalizationConstants.searchPrompt,
-                              style: OptiTextStyles.body,
-                            ),
-                          );
-                        case QuickOrderAutoCompleteLoadingState:
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        case QuickOrderAutoCompleteLoadedState:
-                          final autoCompleteResult =
-                              (state as QuickOrderAutoCompleteLoadedState)
-                                  .result!;
-                          return AutoCompleteWidget(
-                              callback: _handleAutoCompleteCallback,
-                              autocompleteResult: autoCompleteResult);
-                        //click to add product in quick order list
-                        case QuickOrderAutoCompleteFailureState:
-                          return Center(
-                              child: Text(
-                            (state as QuickOrderAutoCompleteFailureState).error,
-                            style: OptiTextStyles.body,
-                          ));
-                        default:
-                          return Container();
-                      }
-                    },
-                  ))
+                  if (state is QuickOrderAutoCompleteInitialState)
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          LocalizationConstants.searchPrompt,
+                          style: OptiTextStyles.body,
+                        ),
+                      ),
+                    )
+                  else if (state is QuickOrderAutoCompleteLoadingState)
+                    const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  else if (state is QuickOrderAutoCompleteLoadedState)
+                    AutoCompleteWidget(
+                      callback: _handleAutoCompleteCallback,
+                      autocompleteResult: (state as QuickOrderAutoCompleteLoadedState).result!,
+                    )
+                  else if (state is QuickOrderAutoCompleteFailureState)
+                    Center(
+                      child: Text(
+                        (state as QuickOrderAutoCompleteFailureState).error,
+                        style: OptiTextStyles.body,
+                      ),
+                    ),
                 ],
               );
-            default:
-              return const Center(
-                  child: Text(LocalizationConstants.errorLoadingSearchLanding));
           }
         },
       ),
@@ -542,7 +613,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
       BuildContext context, AutocompleteProduct product) {
     context.closeKeyboard();
     textEditingController.clear();
-    context.read<QuickOrderBloc>().add(QuickOrderEndSearchEvent());
+    context.read<QuickOrderAutoCompleteBloc>().add(QuickOrderEndSearchEvent());
     context.read<OrderListBloc>().add(OrderListItemAddEvent(product));
   }
 
@@ -551,7 +622,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     list.add(ToolMenu(
         title: LocalizationConstants.addToList,
         action: () {
-          _addToList(context);
+          // _addToList(context);
         }));
     list.add(ToolMenu(
         title: LocalizationConstants.removeAllProducts,

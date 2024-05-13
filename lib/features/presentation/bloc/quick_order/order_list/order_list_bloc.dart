@@ -1,5 +1,4 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';

@@ -14,10 +14,22 @@ class QuickOrderAutoCompleteBloc extends Bloc<QuickOrderAutoCompleteEvent, Quick
 
   QuickOrderAutoCompleteBloc({required SearchUseCase searchUseCase})
       : _searchUseCase = searchUseCase,
-        super(QuickOrderAutoCompleteInitialState()) {
+        super(QuickOrderInitialState()) {
+    on<QuickOrderStartSearchEvent>((event, emit) => _onStartSearchEvent(event, emit));
+    on<QuickOrderEndSearchEvent>((event, emit) => _onEndSearchEvent(event, emit));
     on<QuickOrderFocusEvent>(_onSearchFocusEvent);
     on<QuickOrderTypingEvent>(_onSearchTypingEvent);
     on<QuickOrderUnFocusEvent>(_onSearchUnFocusEvent);
+  }
+
+  Future<void> _onStartSearchEvent(
+      QuickOrderStartSearchEvent event, Emitter<QuickOrderAutoCompleteState> emit) async {
+    emit(QuickOrderAutoCompleteInitialState());
+  }
+
+  Future<void> _onEndSearchEvent(
+      QuickOrderEndSearchEvent event, Emitter<QuickOrderAutoCompleteState> emit) async {
+    emit(QuickOrderInitialState());
   }
 
   Future<void> _onSearchFocusEvent(QuickOrderFocusEvent event, Emitter<QuickOrderAutoCompleteState> emit) async {
@@ -55,7 +67,7 @@ class QuickOrderAutoCompleteBloc extends Bloc<QuickOrderAutoCompleteEvent, Quick
 
   Future<void> _onSearchUnFocusEvent(QuickOrderUnFocusEvent event, Emitter<QuickOrderAutoCompleteState> emit) async {
     if (searchQuery.isEmpty) {
-      emit(QuickOrderAutoCompleteInitialState());
+      emit(QuickOrderInitialState());
     }
   }
 
