@@ -70,7 +70,7 @@ class OrderListStyleProductAddState extends OrderListState {
   OrderListStyleProductAddState(this.productEntity);
 
   @override
-  List<Object?> get props => [productEntity];
+  List<Object?> get props => [];
 
 
 }

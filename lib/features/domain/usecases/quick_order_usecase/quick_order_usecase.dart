@@ -8,7 +8,8 @@ class QuickOrderUseCase extends BaseUseCase {
 
   Future<Result<ProductEntity, ErrorResponse>> getProduct(String productId, AutocompleteProduct product) async {
     var parameters = ProductQueryParameters(
-      expand: "pricing,brand",
+      // expand: "pricing,brand,styledproducts",
+      expand: "documents,specifications,styledproducts,htmlcontent,attributes,crosssells,pricing,brand",
     );
 
     var resultResponse = await commerceAPIServiceProvider
@@ -58,10 +59,23 @@ class QuickOrderUseCase extends BaseUseCase {
     }
   }
 
-  Future<Result<GetProductResult, ErrorResponse>> getStyleProduct(String productId) async {
+  Future<Result<ProductEntity, ErrorResponse>> getStyleProduct(String productId) async {
     var parameters = ProductQueryParameters();
     var result = await commerceAPIServiceProvider.getProductService().getProduct(productId, parameters: parameters);
-    return result;
+
+    switch (result) {
+      case Success(value: final data):
+        final productEntity = ProductEntityMapper().toEntity(data?.product ?? Product());
+        // if (productEntity.styledProducts != null) {
+        //   if (productEntity.styleParentId != null) {
+        //     styledProduct = productEntity.styledProducts
+        //         ?.firstWhere((o) => o.productId == productEntity.id);
+        //   }
+        // }
+        return Success(productEntity);
+      case Failure(errorResponse: final errorResponse):
+        return Failure(errorResponse);
+    }
   }
 
   Future<Result<ProductSettings, ErrorResponse>> getProductSetting() async {

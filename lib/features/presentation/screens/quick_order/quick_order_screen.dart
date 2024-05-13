@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/auto_complete/quick_order_auto_complete_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
@@ -20,11 +21,13 @@ import 'package:commerce_flutter_app/features/presentation/components/input.dart
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/style_trait_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/barcode_scanner_view.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_list/quick_order_list_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/style_trait_select_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -35,6 +38,9 @@ class QuickOrderScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
       BlocProvider<BarcodeScanBloc>(create: (context) => sl<BarcodeScanBloc>()),
+      BlocProvider<StyleTraitCubit>(
+        create: (context) => sl<StyleTraitCubit>(),
+      ),
       BlocProvider<QuickOrderBloc>(create: (context) => sl<QuickOrderBloc>()),
       BlocProvider<OrderListBloc>(
           create: (context) => sl<OrderListBloc>()..add(OrderListLoadEvent())),
@@ -564,7 +570,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   }
 
   void handleStyleProductAdd(ProductEntity productEntity) {
-    // context.read<OrderListBloc>().add(OrderListAddStyleProductEvent());
+    showStyleTraitFilter(productEntity, context, ongetProduct: (StyledProductEntity? styleProduct) {
+      context.read<OrderListBloc>().add(OrderListAddStyleProductEvent(styleProduct!));
+    });
   }
 
 }

@@ -168,9 +168,15 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   }
 
   Future<void> _onOrderListAddStyleProductEvent(OrderListAddStyleProductEvent event, Emitter<OrderListState> emit) async {
-    final result = _quickOrderUseCase.getStyleProduct(event.styledProductEntity.productId!);
+    emit(OrderListLoadingState());
+    final result = await _quickOrderUseCase.getStyleProduct(event.styledProductEntity.productId!);
     switch (result) {
       case Success(value: final product):
+        if (product == null) {
+          emit(OrderListAddFailedState('No Product found'));
+          emit(OrderListLoadedState(quickOrderItemList, productSettings));
+          return;
+        }
         var quantity = (product.minimumOrderQty! > 0) ? product.minimumOrderQty : 1;
         var newItem = _convertProductToQuickOrderItemEntity(product, quantity!);
         _insertItemIntoQuickOrderList(newItem);
@@ -178,7 +184,6 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
       case Failure():
         emit(OrderListLoadedState(quickOrderItemList, productSettings));
     }
-
   }
 
   List<QuickOrderItemEntity> getReversedQuickOrderItemEntityList() {
