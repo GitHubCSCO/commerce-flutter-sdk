@@ -221,3 +221,22 @@ class _InputDialogState extends State<_InputDialog> {
     );
   }
 }
+
+void showPleaseWait(BuildContext context) {
+  showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (context) => const AlertDialog(
+      content: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Row(
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(width: 30),
+            Text('Please wait...'),
+          ],
+        ),
+      ),
+    ),
+  );
+}

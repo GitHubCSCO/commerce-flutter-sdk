@@ -27,6 +27,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
+final GlobalKey _wishListDetailsPageScaffoldKey = GlobalKey();
+
 class WishListDetailsScreen extends StatelessWidget {
   final String wishListId;
   final void Function()? onWishListUpdated;
@@ -198,7 +200,12 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                 CustomSnackBar.showRenameFailed(context);
               }
 
+              if (state.status == WishListStatus.listDeleteLoading) {
+                showPleaseWait(context);
+              }
+
               if (state.status == WishListStatus.listDeleteSuccess) {
+                Navigator.of(context, rootNavigator: true).pop();
                 CustomSnackBar.showListDeleted(context);
                 if (widget.onWishListDeleted != null) {
                   widget.onWishListDeleted!();
@@ -208,6 +215,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
               }
 
               if (state.status == WishListStatus.listDeleteFailure) {
+                Navigator.of(context, rootNavigator: true).pop();
                 displayDialogWidget(
                   context: context,
                   title: LocalizationConstants.error,
@@ -223,6 +231,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
               }
 
               if (state.status == WishListStatus.listCopySuccess) {
+                Navigator.of(context, rootNavigator: true).pop();
                 CustomSnackBar.showCustomSnackBar(
                   context,
                   message: LocalizationConstants.listCopied,
@@ -234,13 +243,11 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
               }
 
               if (state.status == WishListStatus.listCopyLoading) {
-                CustomSnackBar.showCustomSnackBar(
-                  context,
-                  message: 'Copying list...',
-                );
+                showPleaseWait(context);
               }
 
               if (state.status == WishListStatus.listCopyFailure) {
+                Navigator.of(context, rootNavigator: true).pop();
                 CustomSnackBar.showCustomSnackBar(
                   context,
                   message: LocalizationConstants.copyFailed,
@@ -483,7 +490,9 @@ class _OptionsMenu extends StatelessWidget {
                   extra: WishListInfoScreenCallbackHelper(
                     wishList: state.wishList,
                     onWishListUpdated: () {
-                      context.read<WishListDetailsCubit>().loadWishListDetails(
+                      _wishListDetailsPageScaffoldKey.currentContext
+                          ?.read<WishListDetailsCubit>()
+                          .loadWishListDetails(
                             state.wishList.id ?? '',
                           );
                       if (onWishListUpdated != null) {
@@ -565,7 +574,7 @@ class _OptionsMenu extends StatelessWidget {
                   onSubmit: (name) async {
                     await context
                         .read<WishListDetailsCubit>()
-                        .copyWishList(name: name);
+                        .copyWishList(name: name.trim());
                   },
                 );
               },

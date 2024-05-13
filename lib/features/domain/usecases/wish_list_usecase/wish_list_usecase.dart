@@ -209,13 +209,29 @@ class WishListUsecase extends BaseUseCase {
 
     switch (result) {
       case Success(value: final value):
-        if (value == null) {
+        if (value == null || value.id.isNullOrEmpty) {
           return WishListStatus.listCopyFailure;
         }
 
-        /// TODO - get copy result
+        final copyResult = await commerceAPIServiceProvider
+            .getWishListService()
+            .copyWishListLines(
+              value.id!,
+              WishListLineCollectionModel(
+                wishListLines: [],
+              ),
+              copyFromWishList.id!,
+            );
 
-        return WishListStatus.listCopySuccess;
+        switch (copyResult) {
+          case Success(value: final value):
+            return value != null
+                ? WishListStatus.listCopySuccess
+                : WishListStatus.listCopyFailure;
+          case Failure():
+            return WishListStatus.listCopyFailure;
+        }
+
       case Failure():
         return WishListStatus.listCopyFailure;
     }

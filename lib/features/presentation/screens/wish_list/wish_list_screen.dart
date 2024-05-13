@@ -26,6 +26,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
+final GlobalKey _wishListPageScaffoldKey = GlobalKey();
+
 class WishListsScreen extends StatelessWidget {
   const WishListsScreen({super.key});
 
@@ -59,6 +61,7 @@ class _WishListsPageState extends State<WishListsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _wishListPageScaffoldKey,
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         backgroundColor: OptiAppColors.backgroundWhite,
@@ -67,7 +70,9 @@ class _WishListsPageState extends State<WishListsPage> {
         actions: [
           _OptionsMenu(
             onWishListCreated: () {
-              context.read<WishListCubit>().loadWishLists();
+              _wishListPageScaffoldKey.currentContext
+                  ?.read<WishListCubit>()
+                  .loadWishLists();
             },
           ),
         ],
@@ -107,12 +112,18 @@ class _WishListsPageState extends State<WishListsPage> {
           ),
           BlocConsumer<WishListCubit, WishListState>(
             listener: (context, state) {
+              if (state.status == WishListStatus.listDeleteLoading) {
+                showPleaseWait(context);
+              }
+
               if (state.status == WishListStatus.listDeleteSuccess) {
+                Navigator.of(context, rootNavigator: true).pop();
                 CustomSnackBar.showListDeleted(context);
                 context.read<WishListCubit>().loadWishLists();
               }
 
               if (state.status == WishListStatus.listDeleteFailure) {
+                Navigator.of(context, rootNavigator: true).pop();
                 displayDialogWidget(
                   context: context,
                   title: LocalizationConstants.error,
@@ -309,10 +320,14 @@ class _WishListItem extends StatelessWidget {
           },
           extra: WishListScreenCallbackHelper(
             onWishListUpdated: () {
-              context.read<WishListCubit>().loadWishLists();
+              _wishListPageScaffoldKey.currentContext
+                  ?.read<WishListCubit>()
+                  .loadWishLists();
             },
             onWishListDeleted: () {
-              context.read<WishListCubit>().loadWishLists();
+              _wishListPageScaffoldKey.currentContext
+                  ?.read<WishListCubit>()
+                  .loadWishLists();
             },
           ),
         ),
