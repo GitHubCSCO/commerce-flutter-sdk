@@ -30,8 +30,7 @@ class LocalizationConstants {
   static const orderApproval = "Order Approval";
   static const lists = "Lists";
   static const changeCustomer = "Change Customer";
-  static const changeCustomerWillCall =
-      "Change Customer/Delivery Method";
+  static const changeCustomerWillCall = "Change Customer/Delivery Method";
   static const version = "Version";
   static const savedOrders = "Saved Orders";
   static const saveOrder = "Save Order";
@@ -64,13 +63,11 @@ class LocalizationConstants {
   static const faceID = "Face ID";
   static const fingerprint = "Fingerprint";
   static const dismiss = "Dismiss";
-  static const incorrectUsernameOrPassword =
-      "Incorrect username or password.";
+  static const incorrectUsernameOrPassword = "Incorrect username or password.";
   static const errorCommunicatingWithTheServer =
       "There was an error communicating with the server.";
   static const incorrectLoginOrPassword = "Incorrect Login or Password.";
-  static const unableToGetCurrentSession =
-      "Unable to get current session.";
+  static const unableToGetCurrentSession = "Unable to get current session.";
   static const authenticationFailed = "Authentication failed.";
   static const invalidUsernameAndPasswordCombination =
       "Invalid Username/Password combination";
@@ -139,7 +136,7 @@ class LocalizationConstants {
       "There are product(s) out of stock. Add available products to cart?";
   static const addListToCart = "Add List to Cart";
   static const listTotal = "List Total";
-  static const listTotalProducts = "List Total ({0} products)";
+  static const listTotalProducts = "List Total (%s products)";
   static const productDeleted = "Product Deleted";
   static const errorDeletingProduct = "Error Deleting Product";
   static const listInformation = "List Information";
@@ -161,8 +158,8 @@ class LocalizationConstants {
   static const updateFailed = "Update Failed";
   static const copyFailed = "Copy Failed";
   static const renameFailed = "Rename Failed";
-  static const sharedWith = "Shared with {0} others";
-  static const sharedBy = "Shared by {0}";
+  static const sharedWith = "Shared with %s others";
+  static const sharedBy = "Shared by %s";
   static const items = "{0} Items";
   static const itemNumber = "Item # %s";
   static const removeItem = "Remove Item";
@@ -173,7 +170,7 @@ class LocalizationConstants {
   static const createNewListInfoMessage =
       "Creates a new list and adds the product to it.";
   static const updateOnBy = "{0} by {1}";
-  static const updateBy = "Updated {0} by {1}";
+  static const updateBy = "Updated %s by %s";
   static const deleteIsDiscontinued =
       "The product '{0}' have been discontinued. Would you like to remove this item from the list?";
   static const deleteItemsIsDiscontinued =
@@ -249,8 +246,7 @@ class LocalizationConstants {
   static const tapToScan = "Tap to Scan";
   static const takePhoto = "Take Photo";
   static const cancelScan = "Cancel Scan";
-  static const multipleBarcodeWarningTitle =
-      "More than one barcode found";
+  static const multipleBarcodeWarningTitle = "More than one barcode found";
   static const multipleBarcodeWarningMessage =
       "Please put only one barcode inside the scanning box.";
   static const updateQuantity = "Update quantity";
@@ -261,11 +257,10 @@ class LocalizationConstants {
   static const myPartNumberSign = "My Part #";
   static const mFGNumberSign = "MFG #";
   static const packDescription = "Pack";
-  static const selectSomething = "Select {0}";
+  static const selectSomething = "Select";
   static const documents = "Documents";
   static const recommendedProducts = "Recommended Products";
-  static const unableToRetrieveInventory =
-      "Unable to retrieve inventory";
+  static const unableToRetrieveInventory = "Unable to retrieve inventory";
   static const addToCart = "Add to cart";
   static const pleaseSignInBeforeAddingToList =
       "Please sign in before adding to list.";
@@ -274,6 +269,7 @@ class LocalizationConstants {
   static const productLine = "Product Line";
   static const categories = "Categories";
   static const warehouseInventory = "Warehouse Inventory";
+  static const quantityPricing = "Quantity Pricing";
   static const previouslyPurchased = "Previously Purchased";
   static const stockedItems = "Stocked Items";
   static const stockedItemsOnly = "Stocked Items Only";
@@ -339,8 +335,7 @@ class LocalizationConstants {
   static const qTYTitle = "QTY";
   static const lineNotes = "Line Notes";
   static const inventory = "Inventory";
-  static const viewAvailabilityWarehouse =
-      "View Availability by Warehouse";
+  static const viewAvailabilityWarehouse = "View Availability by Warehouse";
   static const cartDeleted = "Cart Deleted";
   static const savedOrderDetails = "Saved Order Details";
   static const productsAddToCartSuccess = "Products added to Cart";
@@ -379,12 +374,9 @@ class LocalizationConstants {
   static const selectDate = "Select Date";
   static const carrier = "Carrier";
   static const service = "Service";
-  static const requestDeliveryDateOptional =
-      "Request Delivery Date (optional)";
-  static const requestPickUpDateOptional =
-      "Request Pick Up Date (optional)";
-  static const requestPickUpDateRequired =
-      "Request Pick Up Date (required)";
+  static const requestDeliveryDateOptional = "Request Delivery Date (optional)";
+  static const requestPickUpDateOptional = "Request Pick Up Date (optional)";
+  static const requestPickUpDateRequired = "Request Pick Up Date (required)";
   static const paymentMethod = "Payment Method";
   static const pONumberOptional = "PO Number (Optional)";
   static const pONumberRequired = "PO Number (Required)";
@@ -415,8 +407,7 @@ class LocalizationConstants {
   static const lastName = "Last Name";
   static const companyName = "Company Name";
   static const expDate = "Exp. Date";
-  static const useDifferentBillingAddress =
-      "Use Different Billing Address";
+  static const useDifferentBillingAddress = "Use Different Billing Address";
   static const useBillingAddress = "Use billing address";
   static const errorLoadingPage = "Error Loading Page";
   static const creditCard = "Credit Card";
@@ -448,8 +439,7 @@ class LocalizationConstants {
   static const searchThisArea = "Search This Area";
   static const resultsUpdated = "Results Updated";
   static const noLocationsFound = "No Locations Found";
-  static const noResultFoundMessage =
-      "No results found, please search again.";
+  static const noResultFoundMessage = "No results found, please search again.";
   static const defaultHintTextOnSearchField =
       "Zip/Postal Code or City, State/Province or Country:";
   static const locationNotFoundMessage =
@@ -656,8 +646,7 @@ class LocalizationConstants {
   static const priceInvalid = "Price is not valid";
   static const noMessageItem = "There are no message item.";
   static const removeItemFromTheList = "Remove item from the list?";
-  static const quantityIsRequired =
-      "Quantity is required or greater than 0.";
+  static const quantityIsRequired = "Quantity is required or greater than 0.";
 
   // Notification
   static const notification = "Notification";

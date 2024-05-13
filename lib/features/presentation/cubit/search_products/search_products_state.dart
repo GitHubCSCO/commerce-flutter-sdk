@@ -1,19 +1,26 @@
-abstract class SearchProductsState {}
+part of 'search_products_cubit.dart';
 
-class SearchProductsInitial extends SearchProductsState {}
+class SearchProductsState extends Equatable {
 
-class SearchProductsAddToCartSuccess extends SearchProductsState {}
+  final GetProductCollectionResult? productEntities;
+  final SearchProductStatus searchProductStatus;
 
-class SearchProductsAddToCartFailure extends SearchProductsState {
-  final String errorResponse;
-  SearchProductsAddToCartFailure({required this.errorResponse});
-}
+  const SearchProductsState({
+    required this.productEntities,
+    required this.searchProductStatus,
+  });
 
-class SearchProductsAddToCartEnable extends SearchProductsState {
-  final bool canAddToCart;
-  SearchProductsAddToCartEnable({required this.canAddToCart});
-}
+  @override
+  List<Object> get props => [searchProductStatus];
 
-class SearchProductsAddToCartButtonLoading extends SearchProductsState {
+  SearchProductsState copyWith({
+    GetProductCollectionResult? productEntities,
+    SearchProductStatus? searchProductStatus,
+  }) {
+    return SearchProductsState(
+      productEntities: productEntities ?? this.productEntities,
+      searchProductStatus: searchProductStatus ?? this.searchProductStatus,
+    );
+  }
 
 }

@@ -6,13 +6,11 @@ abstract class IAppConfigurationService {
 
   String? get sandboxDomain;
 
+  bool get hasCheckoutConfiguration;
+
   bool? get shouldUseStaticDomain;
 
-  String? get appCenterSecretiOS;
-
   String? get tokenExIFrameUrl;
-
-  String? get appCenterSecretAndroid;
 
   bool? get hasOrderHistory;
 
@@ -23,6 +21,28 @@ abstract class IAppConfigurationService {
   String? get privacyPolicyUrl;
 
   String? get termsOfUseUrl;
+
+  String? get firebaseAndroidApiKey;
+
+  String? get firebaseAndroidAppId;
+
+  String? get firebaseAndroidMessagingSenderId;
+
+  String? get firebaseAndroidProjectId;
+
+  String? get firebaseAndroidStorageBucket;
+
+  String? get firebaseIOSApiKey;
+
+  String? get firebaseIOSAppId;
+
+  String? get firebaseIOSMessagingSenderId;
+
+  String? get firebaseIOSProjectId;
+
+  String? get firebaseIOSStorageBucket;
+
+  String? get firebaseIOSBundleId;
 
   Future loadRemoteSettings();
 
@@ -37,9 +57,9 @@ abstract class IAppConfigurationService {
   Future<Result<TokenExDto, ErrorResponse>> getTokenExConfiguration(
       String token);
 
-  Future<bool> productPricingEnabled();
+  Future<bool?> productPricingEnabled();
 
-  Future<bool> addToCartEnabled();
+  Future<bool?> addToCartEnabled();
 
   Future<RealTimeSupport?> getRealtimeSupportType();
 

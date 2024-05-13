@@ -11,15 +11,11 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class Configuration {
   bool? ShouldUseStaticDomain;
 
-  String? AppCenterSecretiOS;
-
-  String? AppCenterSecretAndroid;
-
   String? Domain;
 
   String? SandboxDomain;
 
-  bool? HasCheckout;
+  bool? HasCheckoutConfiguration;
 
   String? CheckoutUrl;
 
@@ -29,31 +25,62 @@ class Configuration {
 
   bool? CustomHideCheckoutOrderNotes;
 
+  String? FirebaseAndroidApiKey;
+  String? FirebaseAndroidAppId;
+  String? FirebaseAndroidMessagingSenderId;
+  String? FirebaseAndroidProjectId;
+  String? FirebaseAndroidStorageBucket;
+
+  String? FirebaseIOSApiKey;
+  String? FirebaseIOSAppId;
+  String? FirebaseIOSMessagingSenderId;
+  String? FirebaseIOSProjectId;
+  String? FirebaseIOSStorageBucket;
+  String? FirebaseIOSBundleId;
+
   Configuration({
     this.ShouldUseStaticDomain,
-    this.AppCenterSecretiOS,
-    this.AppCenterSecretAndroid,
     this.Domain,
     this.SandboxDomain,
-    this.HasCheckout,
+    this.HasCheckoutConfiguration,
     this.CheckoutUrl,
     this.ViewOnWebsiteEnabled,
     this.StartingCategoryForBrowsing,
     this.CustomHideCheckoutOrderNotes,
+    this.FirebaseAndroidApiKey,
+    this.FirebaseAndroidAppId,
+    this.FirebaseAndroidMessagingSenderId,
+    this.FirebaseAndroidProjectId,
+    this.FirebaseAndroidStorageBucket,
+    this.FirebaseIOSApiKey,
+    this.FirebaseIOSAppId,
+    this.FirebaseIOSMessagingSenderId,
+    this.FirebaseIOSProjectId,
+    this.FirebaseIOSStorageBucket,
+    this.FirebaseIOSBundleId,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'ShouldUseStaticDomain': ShouldUseStaticDomain,
-      'AppCenterSecretiOS': AppCenterSecretiOS,
-      'AppCenterSecretAndroid': AppCenterSecretAndroid,
       'Domain': Domain,
       'SandboxDomain': SandboxDomain,
-      'HasCheckout': HasCheckout,
+      'HasCheckout': HasCheckoutConfiguration,
       'CheckoutUrl': CheckoutUrl,
       'ViewOnWebsiteEnabled': ViewOnWebsiteEnabled,
       'StartingCategoryForBrowsing': StartingCategoryForBrowsing,
       'CustomHideCheckoutOrderNotes': CustomHideCheckoutOrderNotes,
+      'FirebaseAndroidApiKey': FirebaseAndroidApiKey,
+      'FirebaseAndroidAppId': FirebaseAndroidAppId,
+      'FirebaseAndroidMessagingSenderId': FirebaseAndroidMessagingSenderId,
+      'FirebaseAndroidProjectId': FirebaseAndroidProjectId,
+      'FirebaseAndroidStorageBucket': FirebaseAndroidStorageBucket,
+      'FirebaseIOSApiKey': FirebaseIOSApiKey,
+      'FirebaseIOSAppId': FirebaseIOSAppId,
+      'FirebaseIOSMessagingSenderId': FirebaseIOSMessagingSenderId,
+      'FirebaseIOSProjectId': FirebaseIOSProjectId,
+      'FirebaseIOSStorageBucket': FirebaseIOSStorageBucket,
+      'FirebaseIOSBundleId': FirebaseIOSBundleId,
     };
   }
 
@@ -62,16 +89,10 @@ class Configuration {
       ShouldUseStaticDomain: map['ShouldUseStaticDomain'] != null
           ? map['ShouldUseStaticDomain'] as bool
           : null,
-      AppCenterSecretiOS: map['AppCenterSecretiOS'] != null
-          ? map['AppCenterSecretiOS'] as String
-          : null,
-      AppCenterSecretAndroid: map['AppCenterSecretAndroid'] != null
-          ? map['AppCenterSecretAndroid'] as String
-          : null,
       Domain: map['Domain'] != null ? map['Domain'] as String : null,
       SandboxDomain:
           map['SandboxDomain'] != null ? map['SandboxDomain'] as String : null,
-      HasCheckout:
+      HasCheckoutConfiguration:
           map['HasCheckout'] != null ? map['HasCheckout'] as bool : null,
       CheckoutUrl:
           map['CheckoutUrl'] != null ? map['CheckoutUrl'] as String : null,
@@ -83,6 +104,40 @@ class Configuration {
           : null,
       CustomHideCheckoutOrderNotes: map['CustomHideCheckoutOrderNotes'] != null
           ? map['CustomHideCheckoutOrderNotes'] as bool
+          : null,
+      FirebaseAndroidApiKey: map['FirebaseAndroidApiKey'] != null
+          ? map['FirebaseAndroidApiKey'] as String
+          : null,
+      FirebaseAndroidAppId: map['FirebaseAndroidAppId'] != null
+          ? map['FirebaseAndroidAppId'] as String
+          : null,
+      FirebaseAndroidMessagingSenderId:
+          map['FirebaseAndroidMessagingSenderId'] != null
+              ? map['FirebaseAndroidMessagingSenderId'] as String
+              : null,
+      FirebaseAndroidProjectId: map['FirebaseAndroidProjectId'] != null
+          ? map['FirebaseAndroidProjectId'] as String
+          : null,
+      FirebaseAndroidStorageBucket: map['FirebaseAndroidStorageBucket'] != null
+          ? map['FirebaseAndroidStorageBucket'] as String
+          : null,
+      FirebaseIOSApiKey: map['FirebaseIOSApiKey'] != null
+          ? map['FirebaseIOSApiKey'] as String
+          : null,
+      FirebaseIOSAppId: map['FirebaseIOSAppId'] != null
+          ? map['FirebaseIOSAppId'] as String
+          : null,
+      FirebaseIOSMessagingSenderId: map['FirebaseIOSMessagingSenderId'] != null
+          ? map['FirebaseIOSMessagingSenderId'] as String
+          : null,
+      FirebaseIOSProjectId: map['FirebaseIOSProjectId'] != null
+          ? map['FirebaseIOSProjectId'] as String
+          : null,
+      FirebaseIOSStorageBucket: map['FirebaseIOSStorageBucket'] != null
+          ? map['FirebaseIOSStorageBucket'] as String
+          : null,
+      FirebaseIOSBundleId: map['FirebaseIOSBundleId'] != null
+          ? map['FirebaseIOSBundleId'] as String
           : null,
     );
   }
@@ -98,12 +153,6 @@ class AppConfigurationService extends ServiceBase
   final ICommerceAPIServiceProvider _commerceAPIServiceProvider;
   @override
   String? termsOfUseUrl;
-
-  @override
-  String? appCenterSecretAndroid;
-
-  @override
-  String? appCenterSecretiOS;
 
   @override
   bool? customHideCheckoutOrderNotes;
@@ -126,6 +175,39 @@ class AppConfigurationService extends ServiceBase
   @override
   bool? viewOnWebsiteEnabled;
 
+  @override
+  String? firebaseAndroidApiKey;
+
+  @override
+  String? firebaseAndroidAppId;
+
+  @override
+  String? firebaseAndroidMessagingSenderId;
+
+  @override
+  String? firebaseAndroidProjectId;
+
+  @override
+  String? firebaseAndroidStorageBucket;
+
+  @override
+  String? firebaseIOSApiKey;
+
+  @override
+  String? firebaseIOSAppId;
+
+  @override
+  String? firebaseIOSMessagingSenderId;
+
+  @override
+  String? firebaseIOSProjectId;
+
+  @override
+  String? firebaseIOSStorageBucket;
+
+  @override
+  String? firebaseIOSBundleId;
+
   AppConfigurationService({
     required ICommerceAPIServiceProvider commerceAPIServiceProvider,
     required super.clientService,
@@ -139,8 +221,6 @@ class AppConfigurationService extends ServiceBase
 
     final configuration = Configuration.fromJson(configurationString);
 
-    appCenterSecretAndroid = configuration.AppCenterSecretAndroid;
-    appCenterSecretiOS = configuration.AppCenterSecretiOS;
     domain = configuration.Domain;
     sandboxDomain = configuration.SandboxDomain;
     shouldUseStaticDomain = configuration.ShouldUseStaticDomain;
@@ -148,6 +228,20 @@ class AppConfigurationService extends ServiceBase
     termsOfUseUrl = configuration.CheckoutUrl;
     privacyPolicyUrl = configuration.CheckoutUrl;
     customHideCheckoutOrderNotes = configuration.CustomHideCheckoutOrderNotes;
+
+    firebaseAndroidApiKey = configuration.FirebaseAndroidApiKey;
+    firebaseAndroidAppId = configuration.FirebaseAndroidAppId;
+    firebaseAndroidMessagingSenderId =
+        configuration.FirebaseAndroidMessagingSenderId;
+    firebaseAndroidProjectId = configuration.FirebaseAndroidProjectId;
+    firebaseAndroidStorageBucket = configuration.FirebaseAndroidStorageBucket;
+
+    firebaseIOSApiKey = configuration.FirebaseIOSApiKey;
+    firebaseIOSAppId = configuration.FirebaseIOSAppId;
+    firebaseIOSMessagingSenderId = configuration.FirebaseIOSMessagingSenderId;
+    firebaseIOSProjectId = configuration.FirebaseIOSProjectId;
+    firebaseIOSStorageBucket = configuration.FirebaseIOSStorageBucket;
+    firebaseIOSBundleId = configuration.FirebaseIOSBundleId;
   }
 
   static const String _tokenExConfigurationUrl = "/api/v1/tokenexconfig";
@@ -160,8 +254,24 @@ class AppConfigurationService extends ServiceBase
   }
 
   @override
-  Future<bool> addToCartEnabled() {
-    return Future.value(true);
+  Future<bool?> addToCartEnabled() async {
+    var productSettings = await getProductSettings();
+
+    if (productSettings != null) {
+      var isUserSignedInResponse = await _commerceAPIServiceProvider
+          .getAuthenticationService()
+          .isAuthenticatedAsync();
+      var isUserSignedIn = (isUserSignedInResponse is Success)
+          ? (isUserSignedInResponse as Success).value
+          : false;
+      var isSignInRequiredForAddToCart = productSettings.storefrontAccess ==
+              StorefrontAccessConstants.signInRequiredToAddToCart ||
+          productSettings.storefrontAccess ==
+              StorefrontAccessConstants.signInRequiredToAddToCartOrSeePrices;
+      var result = !isSignInRequiredForAddToCart || isUserSignedIn;
+      return result;
+    }
+    return null;
   }
 
   @override
@@ -240,9 +350,18 @@ class AppConfigurationService extends ServiceBase
   }
 
   @override
-  Future<bool> hasCheckout() {
-    // TODO: implement hasCheckout
-    throw UnimplementedError();
+  Future<bool> hasCheckout() async {
+    var mobileSettingsResponse = await _commerceAPIServiceProvider
+        .getSettingsService()
+        .getMobileAppSettingAsync();
+    MobileAppSettings? mobileSettings = mobileSettingsResponse is Success
+        ? (mobileSettingsResponse as Success).value
+        : null;
+    if (mobileSettings != null) {
+      return mobileSettings.hasCheckout ?? true;
+    }
+
+    return hasCheckoutConfiguration;
   }
 
   @override
@@ -264,9 +383,25 @@ class AppConfigurationService extends ServiceBase
   }
 
   @override
-  Future<bool> productPricingEnabled() {
-    // TODO: implement productPricingEnabled
-    throw UnimplementedError();
+  Future<bool?> productPricingEnabled() async {
+    var productSettings = await getProductSettings();
+    if (productSettings != null) {
+      var result = productSettings.canSeePrices ?? true;
+      var isUserSignedInResponse = await _commerceAPIServiceProvider
+          .getAuthenticationService()
+          .isAuthenticatedAsync();
+      var isUserSignedIn = (isUserSignedInResponse is Success)
+          ? (isUserSignedInResponse as Success).value
+          : false;
+
+      result = result &
+          (productSettings.storefrontAccess !=
+                  StorefrontAccessConstants
+                      .signInRequiredToAddToCartOrSeePrices ||
+              isUserSignedIn);
+      return result;
+    }
+    return null;
   }
 
   @override
@@ -274,4 +409,8 @@ class AppConfigurationService extends ServiceBase
     // TODO: implement startingCategoryForBrowsing
     throw UnimplementedError();
   }
+
+  @override
+  // TODO: implement hasCheckoutConfiguration
+  bool get hasCheckoutConfiguration => throw UnimplementedError();
 }

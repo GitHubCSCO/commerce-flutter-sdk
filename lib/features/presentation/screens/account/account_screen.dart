@@ -18,6 +18,21 @@ import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_c
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+Future<void> _reloadAccountPageWithAuthStatus(BuildContext context) async {
+  final currentState = context.read<AuthCubit>().state;
+  await context.read<AuthCubit>().loadAuthenticationState();
+  if (context.mounted) {
+    final nextState = context.read<AuthCubit>().state;
+
+    if (authCubitChangeTrigger(currentState, nextState)) {
+      // redundant reload, already checked in listenWhen
+      return;
+    }
+
+    _reloadAccountPage(context);
+  }
+}
+
 void _reloadAccountPage(BuildContext context) {
   context.read<AccountPageBloc>().add(AccountPageLoadEvent());
 }
@@ -46,9 +61,9 @@ class AccountPage extends BaseDynamicContentScreen {
     return MultiBlocListener(
       listeners: [
         BlocListener<PullToRefreshBloc, PullToRefreshState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is PullToRefreshLoadState) {
-              _reloadAccountPage(context);
+              await _reloadAccountPageWithAuthStatus(context);
             }
           },
         ),
@@ -141,14 +156,14 @@ class _AccountHeader extends StatelessWidget {
         child: BlocConsumer<AuthCubit, AuthState>(
           listenWhen: (previous, current) =>
               authCubitChangeTrigger(previous, current),
-          listener: (context, state) {
-            _reloadAccountPage(context);
+          listener: (context, state)  {
+             _reloadAccountPage(context);
           },
           builder: (context, state) {
             return BlocListener<DomainCubit, DomainState>(
-              listener: (context, state) {
+              listener: (context, state) async {
                 if (state is DomainLoaded) {
-                  _reloadAccountPage(context);
+                  await _reloadAccountPageWithAuthStatus(context);
                 }
               },
               child: state.status == AuthStatus.authenticated

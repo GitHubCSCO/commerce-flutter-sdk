@@ -1,5 +1,6 @@
-import 'dart:math';
-
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
@@ -12,7 +13,8 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class ProductDetailsAddToCartBloc
     extends Bloc<ProductDetailsAddToCartEvent, ProductDetailsAddtoCartState> {
   final ProductDetailsAddToCartUseCase _productDetailsAddToCartUseCase;
-
+  final ProductDetailsStyleTraitsUseCase _productDetailsStyleTraitUseCase =
+      ProductDetailsStyleTraitsUseCase();
   ProductDetailsAddToCartBloc(
       {required ProductDetailsAddToCartUseCase productDetailsAddToCartUseCase})
       : _productDetailsAddToCartUseCase = productDetailsAddToCartUseCase,
@@ -27,8 +29,6 @@ class ProductDetailsAddToCartBloc
       Emitter<ProductDetailsAddtoCartState> emit) async {
     emit(ProductDetailsAddtoCartLoading());
     var productDetailsAddToCartEntity = event.productDetailsAddToCartEntity;
-    var productDetailsPriceEntity =
-        event.productDetailsAddToCartEntity.productDetailsPriceEntity;
 
     productDetailsAddToCartEntity =
         updateAddToCartViewModel(productDetailsAddToCartEntity);
@@ -45,6 +45,7 @@ class ProductDetailsAddToCartBloc
 
     var productDetailsPriceEntity =
         productDetailsAddtoCartEntity.productDetailsPriceEntity;
+
     var quantity = int.parse(productDetailsAddtoCartEntity.quantityText!);
     var styledProduct = productDetailsPriceEntity?.styledProduct;
     var product = productDetailsPriceEntity?.product;

@@ -57,6 +57,10 @@ class _InputState extends State<Input> {
     }
   }
 
+  void requestFocus() {
+    _focusNode.requestFocus();
+  }
+
   @override
   void initState() {
     _focusNode = FocusNode();

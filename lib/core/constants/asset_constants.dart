@@ -1,5 +1,5 @@
 class AssetConstants {
-  static const String logo = 'assets/images/optimizely-logo.png';
+  static const String logo = 'assets/images/logo.png';
   static const String iconChangeDomain = 'assets/images/icon_change_domain.svg';
   static const String shopIcon = 'assets/images/bar_icons/shop.svg';
   static const String shopSelectedIcon =
@@ -17,6 +17,7 @@ class AssetConstants {
       'assets/images/product_detail_add_to_cart.svg';
 
   static const String iconClear = "assets/images/icon_clear.svg";
+  static const String iconBarcodeScan = "assets/images/icon_barcode_scan.svg";
   static const String addToCart = "assets/images/add_to_cart.svg";
   static const String cartClearIcon = "assets/images/cart_page_icons/trash.svg";
   static const String cartItemRemoveIcon =
@@ -35,4 +36,6 @@ class AssetConstants {
 
   static const String sortIcon = "assets/images/icon_sort.svg";
   static const String filterIcon = "assets/images/icon_filter.svg";
+
+  static const String iconArrowDown = "assets/images/icon_arrow_down.svg";
 }

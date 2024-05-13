@@ -2,6 +2,7 @@ class CoreConstants {
       static const int productQuantityTextMaxLength = 6;
       static const int cloudflareGatewayTimeoutHTTPStatusCode = 524;
       static const int vmiLocationSearchRadius = 200;
+      static const int defaultPageSize = 16;
       static const String wishListsShouldReloadKey = "WishListShouldReloadKey";
       static const String bundleResetStackKey = "ResetStack";
       static const String bundlePresenterKey = "Presenter";
@@ -30,4 +31,6 @@ class CoreConstants {
       static const String removeAlternateCartCookieKey = "RemoveAlternateCartCookieKey";
       static const String navigateToVmiHomeKey = "NavigateToVMIHomeKey";
       static const String orderApprovalShouldReloadKey = "OrderApprovalShouldReloadKey";
+
+      static const double barcodeRectangleSize = 180;
 }
