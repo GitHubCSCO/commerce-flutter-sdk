@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/domain/service/interfaces/biometri
 import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/device_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/network_service.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
@@ -287,7 +288,7 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<IClientService>(() =>
         ClientService(localStorageService: sl(), secureStorageService: sl()))
     ..registerLazySingleton<ICacheService>(() => FakeCacheService())
-    ..registerLazySingleton<INetworkService>(() => FakeNetworkService(true))
+    ..registerLazySingleton<INetworkService>(() => NetworkService())
     ..registerLazySingleton<ISecureStorageService>(() => SecureStorageService())
     ..registerLazySingleton<ILocalStorageService>(() => LocalStorageService())
     ..registerLazySingleton<ISettingsService>(() => SettingsService(

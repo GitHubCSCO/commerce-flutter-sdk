@@ -192,13 +192,19 @@ class ProductDetailsPricingWidget extends StatelessWidget {
             ),
           );
         }
-        return Container(
-          alignment: Alignment.bottomLeft,
-          child: LoadingAnimationWidget.prograssiveDots(
-            color: OptiAppColors.iconPrimary,
-            size: 30,
-          ),
-        );
+        else if(state is ProductDetailsPricingLoading){
+          return Container(
+            alignment: Alignment.bottomLeft,
+            child: LoadingAnimationWidget.prograssiveDots(
+              color: OptiAppColors.iconPrimary,
+              size: 30,
+            ),
+          );
+        }else{
+          return Container();
+        
+        }
+     
       },
     );
   }

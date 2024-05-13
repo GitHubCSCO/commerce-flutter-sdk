@@ -34,7 +34,9 @@ class ProductDetailsAddToCartWidget extends StatelessWidget {
           child: (context.read<ProductDetailsBloc>().addToCartEnabled &&
                   context.read<ProductDetailsBloc>().productPricingEnabled)
               ? AddToCartSignInWidget()
-              : AddToCartNotSignedInWidget(),
+              : AddToCartNotSignedInWidget(
+                  productPricingEnabled:
+                      context.read<ProductDetailsBloc>().productPricingEnabled),
         ),
       ),
     );
@@ -103,18 +105,25 @@ class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
               quantity = value;
             });
           }),
-          PrimaryButton(
-              leadingIcon: SvgPicture.asset(
-                AssetConstants.productDeatilsAddToCartIcon,
-                fit: BoxFit.fitWidth,
-                color: Colors.white,
-              ),
-              text: LocalizationConstants.addToCart,
-              onPressed: () {
-                context.read<ProductDetailsAddToCartBloc>().add(AddToCartEvent(
-                    productDetailsAddToCartEntity: widget.detailsAddToCartEntity
-                        .copyWith(quantityText: quantity.toString())));
-              })
+          if (widget.detailsAddToCartEntity.isAddToCartAllowed!)
+            PrimaryButton(
+                isEnabled:
+                    widget.detailsAddToCartEntity.addToCartButtonEnabled!,
+                leadingIcon: SvgPicture.asset(
+                  AssetConstants.productDeatilsAddToCartIcon,
+                  fit: BoxFit.fitWidth,
+                  color: Colors.white,
+                ),
+                text: LocalizationConstants.addToCart,
+                onPressed: widget.detailsAddToCartEntity.addToCartButtonEnabled!
+                    ? () {
+                        context.read<ProductDetailsAddToCartBloc>().add(
+                            AddToCartEvent(
+                                productDetailsAddToCartEntity:
+                                    widget.detailsAddToCartEntity.copyWith(
+                                        quantityText: quantity.toString())));
+                      }
+                    : null)
         ],
       ),
     );
@@ -208,10 +217,17 @@ class ProductDetailsAddCartTtitleSubTitleColumn extends StatelessWidget {
 }
 
 class AddToCartNotSignedInWidget extends StatelessWidget {
+  final bool productPricingEnabled;
+
+  const AddToCartNotSignedInWidget(
+      {super.key, required this.productPricingEnabled});
+
   @override
   Widget build(BuildContext context) {
     return PrimaryButton(
-      text: LocalizationConstants.signInForAddToCart,
+      text: productPricingEnabled
+          ? LocalizationConstants.signInForAddToCart
+          : LocalizationConstants.signInForPricing,
       onPressed: () {
         AppRoute.login.navigateBackStack(context);
       },

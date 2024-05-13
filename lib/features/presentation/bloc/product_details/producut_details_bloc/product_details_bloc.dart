@@ -33,6 +33,9 @@ class ProductDetailsBloc
   Map<String, List<StyleValueEntity>?> availableStyleValues = {};
   Map<String, StyleValueEntity?>? selectedStyleValues = {};
 
+  late bool isProductConfigurable;
+  late bool isProductConfigurationCompleted;
+
   int quantity = 1;
 
   ProductDetailsBloc({required ProductDetailsUseCase productDetailsUseCase})
@@ -104,7 +107,7 @@ class ProductDetailsBloc
     switch (result) {
       case Success(value: final data):
         _extractValuesFromData(data!);
-        _makeAllDetailsItems(product, emit);
+        await _makeAllDetailsItems(product, emit);
       case Failure(errorResponse: final errorResponse):
         emit(ProductDetailsErrorState(errorResponse.errorDescription ?? ''));
     }
@@ -149,16 +152,28 @@ class ProductDetailsBloc
         .getSelectedStyleValues(product, styledProduct);
     availableStyleValues =
         _productDetailsStyleTraitsUseCase.getAvailableStyleValues(product);
+
+    isProductConfigurable = _isProductConfigurable(selectedConfigurations);
+    isProductConfigurationCompleted =
+        _isProductConfigurationCompleted(selectedConfigurations);
   }
 
   Future<void> _makeAllDetailsItems(
       ProductEntity productData, Emitter<ProductDetailsState> emit) async {
-    final productDetailsEntotities = _productDetailsUseCase.makeAllDetailsItems(
-        productData,
-        styledProduct,
-        productPricingEnabled,
-        availableStyleValues,
-        selectedStyleValues);
+    emit(ProductDetailsLoading());
+    final productDetailsEntotities =
+        await _productDetailsUseCase.makeAllDetailsItems(
+      productData,
+      styledProduct,
+      productPricingEnabled,
+      availableStyleValues,
+      selectedStyleValues,
+      isProductConfigurable,
+      isProductConfigurationCompleted,
+      hasCheckout,
+      addToCartEnabled,
+    );
+
     emit(
         ProductDetailsLoaded(productDetailsEntities: productDetailsEntotities));
   }
@@ -191,10 +206,25 @@ class ProductDetailsBloc
       }
     }
 
-    _makeAllDetailsItems(product, emit);
+    await _makeAllDetailsItems(product, emit);
   }
 
   void updateQuantity(int quantity) {
     this.quantity = quantity;
+  }
+
+  bool _isProductConfigurable(
+      Map<String, ConfigSectionOptionEntity?> selectedConfigurations) {
+    return selectedConfigurations.keys.isNotEmpty;
+  }
+
+  bool _isProductConfigurationCompleted(
+      Map<String, ConfigSectionOptionEntity?> selectedConfigurations) {
+    if (selectedConfigurations.isEmpty) {
+      return false;
+    }
+
+    return selectedConfigurations.keys
+        .every((k) => selectedConfigurations[k] != null);
   }
 }

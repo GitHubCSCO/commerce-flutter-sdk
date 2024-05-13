@@ -9,6 +9,20 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class ProductDetailsStyleTraitsUseCase {
   ProductDetailsStyleTraitsUseCase();
 
+  bool isProductStyleable(Map<String, StyleValueEntity?>? selectedStyleValues) {
+    return selectedStyleValues!.keys.isNotEmpty;
+  }
+
+  bool isProductStyleSelectionCompleted(
+      Map<String, StyleValueEntity?>? selectedStyleValues) {
+    if (selectedStyleValues!.isEmpty) {
+      return false;
+    }
+
+    return selectedStyleValues.keys
+        .every((k) => selectedStyleValues[k] != null);
+  }
+
   Map<String, List<StyleValueEntity>?> getAvailableStyleValues(
       ProductEntity product) {
     Map<String, List<StyleValueEntity>?> availableStyleValues = {};
@@ -37,16 +51,6 @@ class ProductDetailsStyleTraitsUseCase {
     }
 
     return selectedStyleValues;
-  }
-
-  bool? isProductStyleSelectionCompleted(
-      Map<String, StyleValueEntity?>? selectedStyleValues) {
-    if (selectedStyleValues!.isEmpty) {
-      return false;
-    }
-
-    return selectedStyleValues.keys
-        .every((k) => selectedStyleValues[k] != null);
   }
 
   StyledProductEntity? getStyledProductBasedOnSelection(
