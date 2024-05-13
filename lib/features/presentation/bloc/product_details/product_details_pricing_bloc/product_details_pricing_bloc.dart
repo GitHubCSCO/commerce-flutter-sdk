@@ -181,7 +181,7 @@ class ProductDetailsPricingBloc
     }
 
     productDetailsPricingEntity = productDetailsPricingEntity.copyWith(
-        viewQuantityPricingButtonShown: product.canShowPrice! &&
+        viewQuantityPricingButtonShown: (product.canShowPrice == true) &&
             !(product.quoteRequired == true) &&
             productPricing != null &&
             (productPricing.unitRegularBreakPrices?.length ?? 0) > 1);
