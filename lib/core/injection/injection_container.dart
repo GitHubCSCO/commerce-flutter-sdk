@@ -30,7 +30,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_us
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_cms_usecase.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_products_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_details_usecase.dart';
@@ -51,6 +51,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/searc
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/biometric_auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_controller/biometric_controller_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
@@ -68,7 +69,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cub
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/search_products/seardh_products_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_create/wish_list_create_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
@@ -78,6 +79,9 @@ import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:commerce_flutter_app/services/secure_storage_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, TargetPlatform;
 
 final sl = GetIt.instance;
 
@@ -137,8 +141,9 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => SearchPageCmsBloc(searchUseCase: sl()))
     ..registerFactory(() => SearchCmsUseCase())
     ..registerFactory(() => SearchUseCase())
-    ..registerFactory(() => SearchProductsCubit(searchProductsusecase: sl()))
-    ..registerFactory(() => SearchProductsusecase())
+    ..registerFactory(() => AddToCartCubit(addToCartUsecase: sl()))
+    ..registerFactory(() => AddToCartUsecase())
+    ..registerFactory(() => SearchProductsCubit(searchUseCase: sl()))
 
     //account
     ..registerFactory(() => AccountPageBloc(accountUseCase: sl()))
@@ -305,15 +310,50 @@ Future<void> initInjectionContainer() async {
       await service.init();
       return service;
     })
-    ..registerSingletonAsync<IAppConfigurationService>(
-      () async {
-        final service = AppConfigurationService(
-            commerceAPIServiceProvider: sl(),
-            clientService: sl(),
-            cacheService: sl(),
-            networkService: sl());
-        await service.init();
-        return service;
+    ..registerSingletonAsync<IAppConfigurationService>(() async {
+      final service = AppConfigurationService(
+          commerceAPIServiceProvider: sl(),
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl());
+      await service.init();
+      return service;
+    })
+    ..registerLazySingleton<FirebaseOptions>(
+      () {
+        switch (defaultTargetPlatform) {
+          case TargetPlatform.android:
+            return FirebaseOptions(
+              apiKey:
+                  sl<IAppConfigurationService>().firebaseAndroidApiKey ?? "",
+              appId: sl<IAppConfigurationService>().firebaseAndroidAppId ?? "",
+              messagingSenderId: sl<IAppConfigurationService>()
+                      .firebaseAndroidMessagingSenderId ??
+                  "",
+              projectId:
+                  sl<IAppConfigurationService>().firebaseAndroidProjectId ?? "",
+              storageBucket:
+                  sl<IAppConfigurationService>().firebaseAndroidStorageBucket ??
+                      "",
+            );
+          case TargetPlatform.iOS:
+            return FirebaseOptions(
+              apiKey: sl<IAppConfigurationService>().firebaseIOSApiKey ?? "",
+              appId: sl<IAppConfigurationService>().firebaseIOSAppId ?? "",
+              messagingSenderId:
+                  sl<IAppConfigurationService>().firebaseIOSMessagingSenderId ??
+                      "",
+              projectId:
+                  sl<IAppConfigurationService>().firebaseIOSProjectId ?? "",
+              storageBucket:
+                  sl<IAppConfigurationService>().firebaseIOSStorageBucket ?? "",
+              iosBundleId:
+                  sl<IAppConfigurationService>().firebaseIOSBundleId ?? "",
+            );
+          default:
+            return const FirebaseOptions(
+                apiKey: "", appId: "", messagingSenderId: "", projectId: "");
+        }
       },
     )
     ..registerLazySingleton<IWishListService>(() => WishListService(

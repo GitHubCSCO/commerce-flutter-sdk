@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/barcode_scanner_view.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_create_screen_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_info_screen_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_screen_callback_helper.dart';
@@ -172,6 +173,14 @@ List<NavigationNode> _getNavigationRoot() {
     parent: account,
   );
 
+  // path: /barcodeScanner
+  final barcodeScanner = createNode(
+    name: AppRoute.barcodeScanner.name,
+    path: AppRoute.barcodeScanner.suffix,
+    builder: (context, state) => const BarcodeScannerView(),
+    parent: null,
+  );
+
   // path: /account/wishlist
   final wishlists = createNode(
     name: AppRoute.wishlist.name,
@@ -237,6 +246,7 @@ List<NavigationNode> _getNavigationRoot() {
     biometricLogin,
     checkout,
     checkoutSuccess,
+    barcodeScanner,
     wishListInfo,
     wishListCreate,
   ];

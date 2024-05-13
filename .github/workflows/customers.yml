@@ -1,16 +1,29 @@
-name: Dev Build
+name: Customer Build
 on:
   workflow_dispatch:
     inputs:
-      release:
-        description: 'Release for'
+      release_env:
+        description: 'Environment'
         required: true
         default: 'qa'
         type: choice
         options:
           - qa
+          - beta
+      test_group:
+        description: 'Tester group'
+        required: false
+        default: 'none'
+        type: choice
+        options:
+          - all
+          - none
+          - qa
           - customers
-          - test
+          - dummy
+      custom_test_group:
+        description: 'Custom Test Group (optional)'
+        required: false
 
 jobs:
   ios:
@@ -23,6 +36,7 @@ jobs:
           ls -l
 
       - name: Install Flutter
+        id: flutter-action
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
@@ -38,45 +52,32 @@ jobs:
           name: id_rsa
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
-      - name: Cloning build scripts
-        uses: actions/checkout@master
-        with:
-          repository: InsiteSoftware/commerce-mobile-build-scripts
-          ref: refs/heads/flutter
-          token: ${{ secrets.my_pat }}
-          path: build-scripts
-      - name: List out everything
-        run: |
-          mv build-scripts/* ./
-          ls -l
-          ls -l fastlane
-      - name: Extract branch name
-        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-        id: extract_branch
-
       - name: Fastlane
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "Running in PR. Using default value."
-            RELEASE_GROUP='qa'
+          RELEASE_ENV='${{ github.event.inputs.release_env }}'
+          
+          if [ -n "${{ github.event.inputs.custom_test_group }}" ]; then
+              TEST_GROUP="${{ github.event.inputs.custom_test_group }}"
           else
-            echo "Not running in PR."
-            RELEASE_GROUP='${{ github.event.inputs.release }}'
+              TEST_GROUP="${{ github.event.inputs.test_group }}"
           fi
 
-          echo "Using RELEASE_GROUP: $RELEASE_GROUP"
+          echo "Using RELEASE_ENV: $RELEASE_ENV"
+          echo "Using TEST_GROUP: $TEST_GROUP"
           
-          fastlane ios qa release:$RELEASE_GROUP
+          if [ -z "$TEST_GROUP" ] || [ "$TEST_GROUP" == "none" ]; then
+              fastlane ios "$RELEASE_ENV"
+          else
+              fastlane ios "$RELEASE_ENV" release:"$TEST_GROUP"
+          fi
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
-          APPCENTER_API_TOKEN: ${{ secrets.APPCENTER_API_TOKEN }}
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
-          BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
-  android:
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+  android:    
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -92,7 +93,9 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
+
       - name: Install Flutter
+        id: flutter-action
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
@@ -108,39 +111,27 @@ jobs:
           name: id_rsa
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
-      - name: Cloning build scripts
-        uses: actions/checkout@master
-        with:
-          repository: InsiteSoftware/commerce-mobile-build-scripts
-          ref: refs/heads/flutter
-          token: ${{ secrets.my_pat }}
-          path: build-scripts
-      - name: List out everything
-        run: |
-          mv build-scripts/* ./
-          ls -l
-          ls -l fastlane
-      - name: Extract branch name
-        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-        id: extract_branch
-
       - name: Fastlane
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "Running in PR. Using default value."
-            RELEASE_GROUP='qa'
+          RELEASE_ENV='${{ github.event.inputs.release_env }}'
+          
+          if [ -n "${{ github.event.inputs.custom_test_group }}" ]; then
+              TEST_GROUP="${{ github.event.inputs.custom_test_group }}"
           else
-            echo "Not running in PR."
-            RELEASE_GROUP='${{ github.event.inputs.release }}'
+              TEST_GROUP="${{ github.event.inputs.test_group }}"
           fi
 
-          echo "Using RELEASE_GROUP: $RELEASE_GROUP"
+          echo "Using RELEASE_ENV: $RELEASE_ENV"
+          echo "Using TEST_GROUP: $TEST_GROUP"
           
-          fastlane android qa release:$RELEASE_GROUP
+          if [ -z "$TEST_GROUP" ] || [ "$TEST_GROUP" == "none" ]; then
+              fastlane android "$RELEASE_ENV"
+          else
+              fastlane android "$RELEASE_ENV" release:"$TEST_GROUP"
+          fi
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
           APPCENTER_API_TOKEN: ${{ secrets.APPCENTER_API_TOKEN }}
           ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
           ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
@@ -149,4 +140,4 @@ jobs:
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
-          BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}

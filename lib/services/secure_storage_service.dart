@@ -23,7 +23,11 @@ class SecureStorageService implements ISecureStorageService {
 
   @override
   Future<String?> load(String key) async {
-    return await storage.read(key: key);
+    try {
+      return await storage.read(key: key);
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
