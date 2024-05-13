@@ -1,12 +1,17 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_detail_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_base_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_cross_sell_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_description_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_standard_configuration_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
@@ -17,12 +22,21 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/produc_details_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_event.dart';
+import 'package:commerce_flutter_app/features/presentation/components/style.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/style_trait_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_add_to_cart_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_general_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_pricing_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_spefication_expansion_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_standart_configuration_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_style_traits_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/product_carousel_section_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:commerce_flutter_app/core/extensions/html_string_extension.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -47,6 +61,9 @@ class ProductDetailsScreen extends StatelessWidget {
         BlocProvider<ProductDetailsAddToCartBloc>(
           create: (context) => sl<ProductDetailsAddToCartBloc>(),
         ),
+        BlocProvider<StyleTraitCubit>(
+          create: (context) => sl<StyleTraitCubit>(),
+        ),
       ],
       child: const ProductDetailsPage(),
     );
@@ -59,7 +76,7 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
-      builder: (context, state) {
+      builder: (_, state) {
         switch (state) {
           case ProductDetailsInitial():
           case ProductDetailsLoading():
@@ -70,6 +87,8 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
                 appBar: AppBar(),
                 body: SingleChildScrollView(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: _buildProductDetailsWidgets(
                         state.productDetailsEntities, context),
                   ),
@@ -101,6 +120,13 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
           final generalInfoEntity = item as ProductDetailsGeneralInfoEntity;
           widgets.add(buildGeneralInfoWidget(generalInfoEntity));
           break;
+        case ProdcutDeatilsPageWidgets
+              .productDeatilsStanddardConfigurationSection:
+          final productDetailsStandardConfigurationEntity =
+              item as ProductDetailsStandardConfigurationEntity;
+          widgets.add(buildStandanrConfigurationWidget(
+              productDetailsStandardConfigurationEntity));
+          break;
         case ProdcutDeatilsPageWidgets.productDetailsAddtoCart:
           final detailsAddToCartEntity = item as ProductDetailsAddtoCartEntity;
           widgets
@@ -110,6 +136,17 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
           widgets.add(buildPricingWidget(productDetailsPriceEntity));
           break;
 
+        case ProdcutDeatilsPageWidgets.productDetailsCrossSellSection:
+          final crossSellEntity = item as ProductDetailsCrossSellEntity;
+          widgets.add(buildProductCarouselWidget(
+              productCarouselWidgetEntity:
+                  crossSellEntity.productCarouselWidgetEntity!));
+        case ProdcutDeatilsPageWidgets.productDetailsStyleTraits:
+          final productDetailsStyletraitsEntity =
+              item as ProductDetailsStyletraitsEntity;
+          widgets.add(buildProductDetailsStyleTraitWidget(
+              productDetailsStyletraitsEntity:
+                  productDetailsStyletraitsEntity));
         default:
           break;
       }
@@ -156,11 +193,11 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
       listener: (context, state) {
         if (state is ProductDetailsPricingLoaded) {
           final priceEntity = state.productDetailsPriceEntity;
-          detailsAddToCartEntity = detailsAddToCartEntity.copyWith(productDetailsPriceEntity:  priceEntity);
+          detailsAddToCartEntity = detailsAddToCartEntity.copyWith(
+              productDetailsPriceEntity: priceEntity);
           buildContext.read<ProductDetailsAddToCartBloc>().add(
                 LoadProductDetailsAddToCartEvent(
-                  productDetailsAddToCartEntity: detailsAddToCartEntity
-                ),
+                    productDetailsAddToCartEntity: detailsAddToCartEntity),
               );
         }
       },
@@ -172,5 +209,30 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
       ProductDetailsPriceEntity productDetailsPriceEntity) {
     return ProductDetailsPricingWidget(
         productDetailsPricingEntity: productDetailsPriceEntity);
+  }
+
+  Widget buildStandanrConfigurationWidget(
+      ProductDetailsStandardConfigurationEntity
+          productDetailsStandardConfigurationEntity) {
+    return ProductDetailsStandardConfigurationWidget(
+        productDetailsStandardConfigurationEntity:
+            productDetailsStandardConfigurationEntity);
+  }
+
+  Widget buildProductCarouselWidget(
+      {required ProductCarouselWidgetEntity productCarouselWidgetEntity}) {
+    return BlocProvider(
+      create: (context) => sl<ProductCarouselCubit>()
+        ..getCarouselProducts(productCarouselWidgetEntity),
+      child: ProductCarouselSectionWidget(
+          productCarouselWidgetEntity: productCarouselWidgetEntity),
+    );
+  }
+
+  Widget buildProductDetailsStyleTraitWidget(
+      {required ProductDetailsStyletraitsEntity
+          productDetailsStyletraitsEntity}) {
+    return ProductDetailsStyleTraitWidget(
+        productDetailsStyletraitsEntity: productDetailsStyletraitsEntity);
   }
 }

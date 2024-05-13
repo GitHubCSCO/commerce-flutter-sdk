@@ -11,6 +11,9 @@ class StyleValueEntityMapper {
         sortOrder: model.sortOrder,
         isDefault: model.isDefault,
         id: model.id,
+        swatchColorValue: model.swatchColorValue,
+        swatchImageValue: model.swatchImageValue,
+        swatchType: model.swatchType,
       );
 
   StyleValue toModel(StyleValueEntity entity) => StyleValue(
@@ -22,5 +25,8 @@ class StyleValueEntityMapper {
         sortOrder: entity.sortOrder,
         isDefault: entity.isDefault,
         id: entity.id,
+        // swatchColorValue: entity.swatchColorValue,
+        // swatchImageValue: entity.swatchImageValue,
+        // swatchType: entity.swatchType,
       );
 }

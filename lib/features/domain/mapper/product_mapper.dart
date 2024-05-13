@@ -1,7 +1,6 @@
 import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_content_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_detail_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';

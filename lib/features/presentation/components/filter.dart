@@ -43,7 +43,7 @@ enum FacetType {
 void showFilterModalSheet(
   BuildContext context, {
   required void Function() onApply,
-  required void Function() onReset,
+  required void Function()? onReset,
   required Widget child,
 }) {
   showModalBottomSheet(
@@ -107,15 +107,16 @@ void showFilterModalSheet(
               ),
               child: Row(
                 children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 48,
-                      child: SecondaryButton(
-                        onPressed: onReset,
-                        child: const Text(LocalizationConstants.reset),
+                  if (onReset != null)
+                    Expanded(
+                      child: SizedBox(
+                        height: 48,
+                        child: SecondaryButton(
+                          onPressed: onReset,
+                          child: const Text(LocalizationConstants.reset),
+                        ),
                       ),
                     ),
-                  ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: SizedBox(
