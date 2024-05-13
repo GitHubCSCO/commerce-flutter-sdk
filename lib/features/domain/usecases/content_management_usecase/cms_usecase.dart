@@ -118,12 +118,16 @@ class CmsUseCase extends BaseUseCase {
       Session? currentSession) async {
     var actionsWidget = const ActionsWidgetEntity();
     var actionList = <ActionLinkEntity>[];
-    for (final item in pageClassicWidget.childWidgets ?? []) {
+    var childWidgets = pageClassicWidget.childWidgets;
+    childWidgets?.forEach((element) {
       final action = ActionLinkEntity(
-          type: ActionTypeConverter.convert(item?.type ?? ''),
-          icon: item?.icon);
+        type: ActionTypeConverter.convert(element.type ?? ''),
+        icon: element.icon,
+        text: element.text,
+        url: element.url,
+      );
       actionList.add(action);
-    }
+    });
     actionsWidget = actionsWidget.copyWith(
       type: pageClassicWidget.type,
       actions: actionList,
