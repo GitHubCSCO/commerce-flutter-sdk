@@ -632,12 +632,12 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     return list;
   }
 
-  _handleBarcodeValue(BuildContext context, String? rawValue) {
+  _handleBarcodeValue(BuildContext context, String rawValue) {
     cameraFlash = false;
     canProcess = false;
     context.read<BarcodeScanBloc>().add(ScannerFlashOnOffEvent(cameraFlash));
     context.read<BarcodeScanBloc>().add(ScannerScanEvent(canProcess));
-    context.read<OrderListBloc>().add(OrderListItemScanAddEvent(rawValue!));
+    context.read<OrderListBloc>().add(OrderListItemScanAddEvent(rawValue));
   }
 
   void handleStyleProductAdd(ProductEntity productEntity) {
