@@ -73,9 +73,9 @@ class _WishListCreatePageState extends State<WishListCreatePage> {
       body: BlocConsumer<WishListCreateCubit, WishListCreateState>(
         listener: (context, state) {
           if (state.status == WishListStatus.listCreateSuccess) {
-            CustomSnackBar.showCustomSnackBar(
+            CustomSnackBar.showSnackBarMessage(
               context,
-              message: LocalizationConstants.listCreated,
+              LocalizationConstants.listCreated,
             );
             if (widget.onWishListCreated != null) {
               widget.onWishListCreated!();

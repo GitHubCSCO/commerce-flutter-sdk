@@ -190,14 +190,20 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
               }
 
               if (state.status == WishListStatus.listUpdateSuccess) {
-                CustomSnackBar.showListSaved(context);
+                CustomSnackBar.showSnackBarMessage(
+                  context,
+                  LocalizationConstants.listSaved,
+                );
                 if (widget.onWishListUpdated != null) {
                   widget.onWishListUpdated!();
                 }
               }
 
               if (state.status == WishListStatus.listUpdateFailure) {
-                CustomSnackBar.showRenameFailed(context);
+                CustomSnackBar.showSnackBarMessage(
+                  context,
+                  LocalizationConstants.renameFailed,
+                );
               }
 
               if (state.status == WishListStatus.listDeleteLoading) {
@@ -206,7 +212,10 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
 
               if (state.status == WishListStatus.listDeleteSuccess) {
                 Navigator.of(context, rootNavigator: true).pop();
-                CustomSnackBar.showListDeleted(context);
+                CustomSnackBar.showSnackBarMessage(
+                  context,
+                  LocalizationConstants.listDeleted,
+                );
                 if (widget.onWishListDeleted != null) {
                   widget.onWishListDeleted!();
                 }
@@ -232,9 +241,9 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
 
               if (state.status == WishListStatus.listCopySuccess) {
                 Navigator.of(context, rootNavigator: true).pop();
-                CustomSnackBar.showCustomSnackBar(
+                CustomSnackBar.showSnackBarMessage(
                   context,
-                  message: LocalizationConstants.listCopied,
+                  LocalizationConstants.listCopied,
                 );
 
                 if (widget.onWishListUpdated != null) {
@@ -248,9 +257,9 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
 
               if (state.status == WishListStatus.listCopyFailure) {
                 Navigator.of(context, rootNavigator: true).pop();
-                CustomSnackBar.showCustomSnackBar(
+                CustomSnackBar.showSnackBarMessage(
                   context,
-                  message: LocalizationConstants.copyFailed,
+                  LocalizationConstants.copyFailed,
                 );
               }
 

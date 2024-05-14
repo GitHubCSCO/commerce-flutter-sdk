@@ -82,7 +82,10 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
       body: BlocConsumer<WishListInformationCubit, WishListInformationState>(
         listener: (context, state) {
           if (state.status == WishListStatus.listUpdateSuccess) {
-            CustomSnackBar.showListUpdated(context);
+            CustomSnackBar.showSnackBarMessage(
+              context,
+              LocalizationConstants.listUpdated,
+            );
             if (widget.onWishListUpdated != null) {
               widget.onWishListUpdated!();
             }
@@ -90,7 +93,10 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
           }
 
           if (state.status == WishListStatus.listUpdateFailure) {
-            CustomSnackBar.showUpdateFailed(context);
+            CustomSnackBar.showSnackBarMessage(
+              context,
+              LocalizationConstants.updateFailed,
+            );
           }
         },
         builder: (context, state) => Column(

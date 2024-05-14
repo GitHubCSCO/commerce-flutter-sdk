@@ -117,7 +117,10 @@ class _WishListsPageState extends State<WishListsPage> {
 
               if (state.status == WishListStatus.listDeleteSuccess) {
                 Navigator.of(context, rootNavigator: true).pop();
-                CustomSnackBar.showListDeleted(context);
+                CustomSnackBar.showSnackBarMessage(
+                  context,
+                  LocalizationConstants.listDeleted,
+                );
                 context.read<WishListCubit>().loadWishLists();
               }
 

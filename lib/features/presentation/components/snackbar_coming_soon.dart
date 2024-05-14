@@ -57,7 +57,6 @@ class CustomSnackBar {
     );
   }
 
-
   static void showWishListAddToCart(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -91,63 +90,6 @@ class CustomSnackBar {
       const SnackBar(
         content: Text(LocalizationConstants.errorDeletingProduct),
         duration: Duration(seconds: 1),
-      ),
-    );
-  }
-
-  static void showListSaved(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(LocalizationConstants.listSaved),
-        duration: Duration(seconds: 1),
-      ),
-    );
-  }
-
-  static void showRenameFailed(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(LocalizationConstants.renameFailed),
-        duration: Duration(seconds: 1),
-      ),
-    );
-  }
-
-  static void showListDeleted(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(LocalizationConstants.listDeleted),
-        duration: Duration(seconds: 1),
-      ),
-    );
-  }
-
-  static void showListUpdated(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(LocalizationConstants.listUpdated),
-        duration: Duration(seconds: 1),
-      ),
-    );
-  }
-
-  static void showUpdateFailed(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(LocalizationConstants.update),
-        duration: Duration(seconds: 1),
-      ),
-    );
-  }
-
-  static void showCustomSnackBar(
-    BuildContext context, {
-    required String message,
-  }) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 1),
       ),
     );
   }
