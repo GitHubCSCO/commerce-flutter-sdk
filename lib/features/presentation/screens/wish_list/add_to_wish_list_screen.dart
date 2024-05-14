@@ -11,6 +11,7 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
+import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
@@ -19,6 +20,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,7 +47,12 @@ class AddToWishListScreen extends StatelessWidget {
       create: (context) => sl<WishListAddToCubit>()..loadSettings(),
       child: Builder(
         builder: (context) {
-          return BlocBuilder<WishListAddToCubit, WishListState>(
+          return BlocConsumer<WishListAddToCubit, WishListState>(
+            listener: (context, state) {
+              if (state.status == WishListStatus.allowMultipleListsSuccess) {
+                context.read<WishListAddToCubit>().loadWishLists();
+              }
+            },
             builder: (context, state) {
               if (state.status == WishListStatus.allowMultipleListsLoading) {
                 return const Scaffold(
@@ -203,10 +210,6 @@ class _AddToWishListPageState extends State<AddToWishListPage> {
           ),
           BlocConsumer<WishListAddToCubit, WishListState>(
             listener: (context, state) {
-              if (state.status == WishListStatus.allowMultipleListsFailure) {
-                context.read<WishListAddToCubit>().loadWishLists();
-              }
-
               if (state.status == WishListStatus.listItemAddToListLoading) {
                 showPleaseWait(context);
               }
@@ -290,7 +293,23 @@ class _AddToWishListPageState extends State<AddToWishListPage> {
                 ),
               );
             },
-          )
+          ),
+          ListInformationBottomSubmitWidget(
+            actions: [
+              PrimaryButton(
+                text: LocalizationConstants.createNewList,
+                onPressed: () {
+                  AppRoute.wishListCreate.navigateBackStack(
+                    context,
+                    extra: WishListCreateScreenCallbackHelper(
+                      onWishListCreated: widget.onWishListUpdated,
+                      addToCartCollection: widget.addToCartCollection,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ],
       ),
     );

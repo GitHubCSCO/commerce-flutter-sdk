@@ -129,7 +129,7 @@ class WishListUsecase extends BaseUseCase {
     required WishListAddToCartCollection addToCartCollection,
   }) async {
     if (wishListId.isNullOrEmpty) {
-      return WishListStatus.listAddToCartFailure;
+      return WishListStatus.listItemAddToListFailure;
     }
 
     final result = await commerceAPIServiceProvider
@@ -140,12 +140,10 @@ class WishListUsecase extends BaseUseCase {
         );
 
     switch (result) {
-      case Success(value: final value):
-        return value != null
-            ? WishListStatus.listAddToCartSuccess
-            : WishListStatus.listAddToCartFailure;
+      case Success():
+        return WishListStatus.listItemAddToListSuccess;
       case Failure():
-        return WishListStatus.listAddToCartFailure;
+        return WishListStatus.listItemAddToListFailure;
     }
   }
 
@@ -180,7 +178,7 @@ class WishListUsecase extends BaseUseCase {
           wishListId: value.id,
           addToCartCollection: addToCartCollection,
         );
-        if (addToListResult == WishListStatus.listAddToCartSuccess) {
+        if (addToListResult == WishListStatus.listItemAddToListSuccess) {
           return WishListStatus.listCreateSuccess;
         } else {
           return WishListStatus.listCreateFailure;
