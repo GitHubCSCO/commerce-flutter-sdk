@@ -141,4 +141,6 @@ class CustomSnackBar {
       ),
     );
   }
+
+  static showComingSoon(BuildContext context) {}
 }

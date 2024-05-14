@@ -14,8 +14,7 @@ import 'package:commerce_flutter_app/features/presentation/components/dialog.dar
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_create_screen_callback_helper.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_screen_callback_helper.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_delete_widget.dart';
