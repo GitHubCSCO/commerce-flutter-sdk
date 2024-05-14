@@ -10,6 +10,10 @@ on:
         options:
           - sync
           - nuke
+      read_only:
+        description: 'Read only'
+        required: true
+        default: 'false'
       release_env:
         description: 'Environment'
         required: true
@@ -46,7 +50,7 @@ jobs:
       - name: Fastlane
         run: |
           if [ "${{ github.event.inputs.match_purpose }}" = "sync" ]; then
-            fastlane ios sync_certificates readonly:false type:${{ github.event.inputs.match_type }} --env ${{ github.event.inputs.release_env }}
+            fastlane ios sync_certificates readonly:"${{ github.event.inputs.read_only }}" type:${{ github.event.inputs.match_type }} --env ${{ github.event.inputs.release_env }}
           else
             fastlane ios nuke_certificates type:${{ github.event.inputs.match_type }} --env ${{ github.event.inputs.release_env }}
           fi
