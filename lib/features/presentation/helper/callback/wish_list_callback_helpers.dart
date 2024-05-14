@@ -44,7 +44,7 @@ class WishListScreenCallbackHelper {
 }
 
 class WishListCallbackHelper {
-  static void _navigateToWishListAddToScreen(
+  static void addItemsToWishList(
     BuildContext context, {
     required WishListAddToCartCollection addToCartCollection,
     void Function()? onAddedToCart,
@@ -56,19 +56,5 @@ class WishListCallbackHelper {
         onWishListUpdated: onAddedToCart,
       ),
     );
-  }
-
-  static void addItemsToWishList(
-    BuildContext context, {
-    required Object addToCartCollection,
-    void Function()? onAddedToCart,
-  }) {
-    if (addToCartCollection is WishListAddToCartCollection) {
-      WishListCallbackHelper._navigateToWishListAddToScreen(
-        context,
-        addToCartCollection: addToCartCollection,
-        onAddedToCart: onAddedToCart,
-      );
-    }
   }
 }

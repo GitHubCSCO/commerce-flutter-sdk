@@ -22,6 +22,7 @@ import 'package:commerce_flutter_app/features/presentation/components/style.dart
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/style_trait_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/barcode_scanner_view.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_list/quick_order_list_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
@@ -145,13 +146,20 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                 context.read<CartCountCubit>().onCartItemChange();
                                 AppRoute.cart.navigate(context);
                               } else if (state is OrderListAddToListSuccessState) {
+                                WishListCallbackHelper.addItemsToWishList(
+                                  context, 
+                                  addToCartCollection: state.wishListLines,
+                                  onAddedToCart: () {
+                                    context
+                                    .read<OrderListBloc>()
+                                    .add(OrderListRemoveEvent());
+                                  }
+                                );
                                 CustomSnackBar.showSnackBarMessage(
                                     context,
                                     SiteMessageConstants
                                         .defaultValueQuickOrderInstructions);
-                                context
-                                    .read<OrderListBloc>()
-                                    .add(OrderListRemoveEvent());
+                                
                               } else if (state is OrderListAddToListFailedState) {
                                 _showAlert(
                                     context,
@@ -589,7 +597,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     if (context.read<OrderListBloc>().quickOrderItemList.isEmpty) {
       CustomSnackBar.showSnackBarMessage(context,
           SiteMessageConstants.defaultValueAddToCartAllProductsFromList);
-    } else {}
+    } else {
+      context.read<OrderListBloc>().add(OrderListAddToListEvent());
+    }
   }
 
   void _handleQuickOrderListCallback(
@@ -622,7 +632,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     list.add(ToolMenu(
         title: LocalizationConstants.addToList,
         action: () {
-          // _addToList(context);
+          _addToList(context);
         }));
     list.add(ToolMenu(
         title: LocalizationConstants.removeAllProducts,

@@ -19,9 +19,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -302,7 +300,12 @@ class _AddToWishListPageState extends State<AddToWishListPage> {
                   AppRoute.wishListCreate.navigateBackStack(
                     context,
                     extra: WishListCreateScreenCallbackHelper(
-                      onWishListCreated: widget.onWishListUpdated,
+                      onWishListCreated: () {
+                        if (widget.onWishListUpdated != null) {
+                          widget.onWishListUpdated!();
+                        }
+                        context.pop();
+                      },
                       addToCartCollection: widget.addToCartCollection,
                     ),
                   );
@@ -481,40 +484,6 @@ class _WishListItem extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _OptionsMenu extends StatelessWidget {
-  const _OptionsMenu({
-    this.onWishListCreated,
-  });
-  final void Function()? onWishListCreated;
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<WishListAddToCubit, WishListState>(
-      builder: (context, state) {
-        return BottomMenuWidget(
-          websitePath: WebsitePaths.listsWebsitePath,
-          toolMenuList: [
-            if (state.settings.allowMultipleWishLists == true ||
-                (state.settings.allowMultipleWishLists == false &&
-                    (state.wishLists.pagination?.totalItemCount ?? 0) == 0))
-              ToolMenu(
-                title: LocalizationConstants.createNewList,
-                action: () {
-                  AppRoute.wishListCreate.navigateBackStack(
-                    context,
-                    extra: WishListCreateScreenCallbackHelper(
-                      onWishListCreated: onWishListCreated,
-                    ),
-                  );
-                },
-              )
-          ],
-        );
-      },
     );
   }
 }
