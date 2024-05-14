@@ -14,6 +14,10 @@ on:
         description: 'Read only'
         required: true
         default: 'false'
+        type: choice
+        options:
+          - true
+          - false
       release_env:
         description: 'Environment'
         required: true
