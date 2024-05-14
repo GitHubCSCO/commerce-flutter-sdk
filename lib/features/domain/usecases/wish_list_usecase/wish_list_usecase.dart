@@ -150,18 +150,21 @@ class WishListUsecase extends BaseUseCase {
   }
 
   Future<WishListStatus> createWishListAndAddToList({
-    required String name,
+    String? name,
     String? description,
     required WishListAddToCartCollection addToCartCollection,
+    bool emptyWishList = false,
   }) async {
     final wishList = WishList(
       name: name,
       description: description,
     );
 
-    final parameter = CreateWishListQueryParameters(
-      wishListObj: wishList,
-    );
+    final parameter = emptyWishList
+        ? CreateWishListQueryParameters()
+        : CreateWishListQueryParameters(
+            wishListObj: wishList,
+          );
 
     final result = await commerceAPIServiceProvider
         .getWishListService()

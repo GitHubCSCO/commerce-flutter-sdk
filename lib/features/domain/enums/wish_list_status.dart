@@ -8,6 +8,10 @@ enum WishListStatus {
   errorModification,
   moreLoadingFailure,
 
+  allowMultipleListsLoading,
+  allowMultipleListsSuccess,
+  allowMultipleListsFailure,
+
   listCreateLoading,
   listCreateSuccess,
   listCreateFailure,

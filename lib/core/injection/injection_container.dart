@@ -79,6 +79,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/product_carouse
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_add_to/wish_list_add_to_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_create/wish_list_create_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/style_trait_cubit.dart';
@@ -195,6 +196,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => WishListDetailsUsecase())
     ..registerFactory(() => WishListInformationCubit(wishListUsecase: sl()))
     ..registerFactory(() => WishListCreateCubit(wishListUsecase: sl()))
+    ..registerFactory(() => WishListAddToCubit(wishListUsecase: sl()))
 
     //date selection
     ..registerFactory(() => DateSelectionCubit())

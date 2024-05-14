@@ -25,6 +25,7 @@ class RouteNames {
   static const String wishlistsDetails = 'wishlistsDetails';
   static const String wishListInfo = 'wishListInfo';
   static const String wishListCreate = 'wishListCreate';
+  static const String addToWishList = 'addToWishList';
 }
 
 class RoutePaths {
@@ -54,6 +55,7 @@ class RoutePaths {
   static const String wishlistsDetails = '$wishlists/:id';
   static const String wishListInfo = '/${RouteNames.wishListInfo}';
   static const String wishListCreate = '/${RouteNames.wishListCreate}';
+  static const String addToWishList = '/${RouteNames.addToWishList}';
 }
 
 enum AppRoute {
@@ -86,7 +88,8 @@ enum AppRoute {
       name: RouteNames.wishlistsDetails, fullPath: RoutePaths.wishlistsDetails),
   wishListInfo(
       name: RouteNames.wishListInfo, fullPath: RoutePaths.wishListInfo),
-  wishListCreate(name: RouteNames.wishListCreate, fullPath: RoutePaths.wishListCreate);
+  wishListCreate(name: RouteNames.wishListCreate, fullPath: RoutePaths.wishListCreate),
+  addToWishList(name: RouteNames.addToWishList, fullPath: RoutePaths.addToWishList);
 
   const AppRoute({
     required this.name,

@@ -9,10 +9,9 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 part 'wish_list_state.dart';
 
 class WishListCubit extends Cubit<WishListState> {
-  final WishListUsecase _wishListUsecase;
-  WishListCubit({required WishListUsecase wishListUsecase})
-      : _wishListUsecase = wishListUsecase,
-        super(
+  final WishListUsecase wishListUsecase;
+  WishListCubit({required this.wishListUsecase})
+      : super(
           const WishListState(
             sortOrder: WishListSortOrder.modifiedOnDescending,
             status: WishListStatus.initial,
@@ -27,7 +26,7 @@ class WishListCubit extends Cubit<WishListState> {
       state.wishLists.wishListCollection?.isEmpty == true;
 
   List<WishListSortOrder> get availableSortOrders =>
-      _wishListUsecase.availableSortOrders;
+      wishListUsecase.availableSortOrders;
 
   Future<void> changeSortOrder(WishListSortOrder sortOrder) async {
     emit(
@@ -42,9 +41,9 @@ class WishListCubit extends Cubit<WishListState> {
   Future<void> loadWishLists() async {
     emit(state.copyWith(status: WishListStatus.loading));
 
-    final settings = await _wishListUsecase.loadWishListSettings();
+    final settings = await wishListUsecase.loadWishListSettings();
 
-    final result = await _wishListUsecase.getWishLists(
+    final result = await wishListUsecase.getWishLists(
       sortOrder: state.sortOrder,
       page: 1,
       searchText: state.searchQuery,
@@ -77,7 +76,7 @@ class WishListCubit extends Cubit<WishListState> {
     }
 
     emit(state.copyWith(status: WishListStatus.moreLoading));
-    final result = await _wishListUsecase.getWishLists(
+    final result = await wishListUsecase.getWishLists(
       page: state.wishLists.pagination!.page! + 1,
       sortOrder: state.sortOrder,
       searchText: state.searchQuery,
@@ -104,7 +103,7 @@ class WishListCubit extends Cubit<WishListState> {
 
   Future<void> deleteWishList({required String? wishListId}) async {
     emit(state.copyWith(status: WishListStatus.listDeleteLoading));
-    final result = await _wishListUsecase.deleteWishList(
+    final result = await wishListUsecase.deleteWishList(
       wishListId: wishListId,
     );
 
@@ -112,7 +111,7 @@ class WishListCubit extends Cubit<WishListState> {
   }
 
   bool canDeleteWishList({required WishListEntity wishList}) {
-    return _wishListUsecase.canDeleteWishList(
+    return wishListUsecase.canDeleteWishList(
       settings: state.settings,
       wishList: wishList,
     );
