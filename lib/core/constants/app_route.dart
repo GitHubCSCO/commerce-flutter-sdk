@@ -21,7 +21,10 @@ class RouteNames {
   static const String orderHistory = 'orderHistory';
   static const String quickOrder = 'quickOrder';
   static const String barcodeSearch = 'barcodeSearch';
-  static const String lists = 'lists';
+  static const String wishlists = 'wishlists';
+  static const String wishlistsDetails = 'wishlistsDetails';
+  static const String wishListInfo = 'wishListInfo';
+  static const String wishListCreate = 'wishListCreate';
 }
 
 class RoutePaths {
@@ -46,7 +49,11 @@ class RoutePaths {
       '/${RoutePaths.account}/${RouteNames.orderHistory}';
   static const String quickOrder = '/${RouteNames.quickOrder}';
   static const String barcodeSearch = '/${RouteNames.barcodeSearch}';
-  static const String lists = '${RoutePaths.account}/${RouteNames.lists}';
+  static const String wishlists =
+      '${RoutePaths.account}/${RouteNames.wishlists}';
+  static const String wishlistsDetails = '$wishlists/:id';
+  static const String wishListInfo = '/${RouteNames.wishListInfo}';
+  static const String wishListCreate = '/${RouteNames.wishListCreate}';
 }
 
 enum AppRoute {
@@ -63,7 +70,8 @@ enum AppRoute {
   productDetails(
       name: RouteNames.productDetails, fullPath: RoutePaths.productDetails),
   checkout(name: RouteNames.checkout, fullPath: RoutePaths.checkout),
-  checkoutSuccess(name: RouteNames.checkoutSuccess, fullPath: RoutePaths.checkoutSuccess),
+  checkoutSuccess(
+      name: RouteNames.checkoutSuccess, fullPath: RoutePaths.checkoutSuccess),
   settings(name: RouteNames.settings, fullPath: RoutePaths.settings),
   biometricLogin(
       name: RouteNames.biometricLogin, fullPath: RoutePaths.biometricLogin),
@@ -73,7 +81,12 @@ enum AppRoute {
       name: RouteNames.quickOrder, fullPath: RoutePaths.quickOrder),
   barcodeSearch(
       name: RouteNames.barcodeSearch, fullPath: RoutePaths.barcodeSearch),
-  wishlist(name: RouteNames.lists, fullPath: RoutePaths.lists);
+  wishlist(name: RouteNames.wishlists, fullPath: RoutePaths.wishlists),
+  wishlistsDetails(
+      name: RouteNames.wishlistsDetails, fullPath: RoutePaths.wishlistsDetails),
+  wishListInfo(
+      name: RouteNames.wishListInfo, fullPath: RoutePaths.wishListInfo),
+  wishListCreate(name: RouteNames.wishListCreate, fullPath: RoutePaths.wishListCreate);
 
   const AppRoute({
     required this.name,

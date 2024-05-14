@@ -1,0 +1,42 @@
+import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+
+class WishListCreateScreenCallbackHelper {
+  final void Function()? onWishListCreated;
+  final WishListAddToCartCollection? addToCartCollection;
+
+  WishListCreateScreenCallbackHelper({
+    this.onWishListCreated,
+    this.addToCartCollection,
+  });
+}
+
+class WishListAddToListCallbackHelper {
+  final WishListAddToCartCollection addToCartCollection;
+  final void Function()? onWishListUpdated;
+
+  const WishListAddToListCallbackHelper({
+    required this.addToCartCollection,
+    this.onWishListUpdated,
+  });
+}
+
+class WishListInfoScreenCallbackHelper {
+  final WishListEntity wishList;
+  final void Function()? onWishListUpdated;
+
+  const WishListInfoScreenCallbackHelper({
+    required this.wishList,
+    this.onWishListUpdated,
+  });
+}
+
+class WishListScreenCallbackHelper {
+  final void Function()? onWishListUpdated;
+  final void Function()? onWishListDeleted;
+
+  const WishListScreenCallbackHelper({
+    this.onWishListUpdated,
+    this.onWishListDeleted,
+  });
+}
