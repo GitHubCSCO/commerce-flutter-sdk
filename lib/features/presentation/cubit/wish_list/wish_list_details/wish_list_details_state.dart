@@ -1,14 +1,16 @@
-part of 'wish_list_cubit.dart';
+part of 'wish_list_details_cubit.dart';
 
-class WishListState extends Equatable {
-  final WishListCollectionEntity wishLists;
+class WishListDetailsState extends Equatable {
+  final WishListEntity wishList;
+  final WishListLineCollectionEntity wishListLines;
   final WishListStatus status;
-  final WishListSortOrder sortOrder;
+  final WishListLineSortOrder sortOrder;
   final String searchQuery;
   final WishListSettingsEntity settings;
 
-  const WishListState({
-    required this.wishLists,
+  const WishListDetailsState({
+    required this.wishList,
+    required this.wishListLines,
     required this.status,
     required this.sortOrder,
     required this.searchQuery,
@@ -17,22 +19,25 @@ class WishListState extends Equatable {
 
   @override
   List<Object> get props => [
-        wishLists,
+        wishList,
+        wishListLines,
         status,
         sortOrder,
         searchQuery,
         settings,
       ];
 
-  WishListState copyWith({
-    WishListCollectionEntity? wishLists,
+  WishListDetailsState copyWith({
+    WishListEntity? wishList,
+    WishListLineCollectionEntity? wishListLines,
     WishListStatus? status,
-    WishListSortOrder? sortOrder,
+    WishListLineSortOrder? sortOrder,
     String? searchQuery,
     WishListSettingsEntity? settings,
   }) {
-    return WishListState(
-      wishLists: wishLists ?? this.wishLists,
+    return WishListDetailsState(
+      wishList: wishList ?? this.wishList,
+      wishListLines: wishListLines ?? this.wishListLines,
       status: status ?? this.status,
       sortOrder: sortOrder ?? this.sortOrder,
       searchQuery: searchQuery ?? this.searchQuery,

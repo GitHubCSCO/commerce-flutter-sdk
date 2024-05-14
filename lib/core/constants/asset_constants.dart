@@ -24,6 +24,8 @@ class AssetConstants {
       "assets/images/cart_page_icons/delete_cart_icon.svg";
   static const String cartErrorIcon =
       "assets/images/cart_page_icons/cart_error_icon.svg";
+  static const String wishListLineAddToCartIcon =
+      'assets/images/wish_list_icons/wish_list_line_add_to_cart_icon.svg';
 
   static const String faceID =
       "assets/images/biometric_icons/icon_faceID_{0}.svg";

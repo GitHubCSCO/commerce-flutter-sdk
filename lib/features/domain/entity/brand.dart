@@ -67,8 +67,21 @@ class BrandEntity extends Equatable {
   }
 
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [
+        id,
+        name,
+        manufacturer,
+        externalUrl,
+        detailPagePath,
+        productListPagePage,
+        logoSmallImagePath,
+        logoLargeImagePath,
+        logoAltText,
+        featuredImagePath,
+        featuredImageAltText,
+        htmlContent,
+        topSellerProducts,
+      ];
 }
 
 class BrandAlphabetEntity extends Equatable {
@@ -78,8 +91,10 @@ class BrandAlphabetEntity extends Equatable {
   const BrandAlphabetEntity({this.letter, this.count});
 
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [
+        letter,
+        count,
+      ];
 
   BrandAlphabetEntity copyWith({
     String? letter,

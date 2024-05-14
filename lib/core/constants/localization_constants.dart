@@ -128,9 +128,9 @@ class LocalizationConstants {
   static const createNewList = "Create New List";
   static const listDeleted = "List Deleted";
   static const deleteList = "Delete List";
-  static const deleteSpecificList = "Delete {0}?";
+  static const deleteSpecificList = "Delete %s?";
   static const leaveList = "Leave List";
-  static const leaveSpecificList = "Leave {0}?";
+  static const leaveSpecificList = "Leave %s?";
   static const productsOutOfStock = "Product(s) Out of Stock";
   static const productsOutOfStockMessage =
       "There are product(s) out of stock. Add available products to cart?";
@@ -160,7 +160,7 @@ class LocalizationConstants {
   static const renameFailed = "Rename Failed";
   static const sharedWith = "Shared with %s others";
   static const sharedBy = "Shared by %s";
-  static const items = "{0} Items";
+  static const items = "%s Items";
   static const itemNumber = "Item # %s";
   static const removeItem = "Remove Item";
   static const removeItemInfoMessage =
@@ -169,7 +169,7 @@ class LocalizationConstants {
   static const selectList = "Select List";
   static const createNewListInfoMessage =
       "Creates a new list and adds the product to it.";
-  static const updateOnBy = "{0} by {1}";
+  static const updateOnBy = "%s by %s";
   static const updateBy = "Updated %s by %s";
   static const deleteIsDiscontinued =
       "The product '{0}' have been discontinued. Would you like to remove this item from the list?";

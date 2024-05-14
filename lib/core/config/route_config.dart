@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/barcode_scanner_view.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
@@ -10,6 +11,8 @@ import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_scr
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_create_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/nav_bar/nav_bar_screen.dart';
@@ -22,6 +25,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/settings/sett
 import 'package:commerce_flutter_app/features/presentation/screens/shop/shop_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/domain_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_details/wish_list_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -185,14 +189,74 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
-  // path: /account/list
-  final lists = createNode(
+  // path: /account/wishlist
+  final wishlists = createNode(
     name: AppRoute.wishlist.name,
     path: AppRoute.wishlist.suffix,
-    builder: (context, state) => const ListsScreen(),
+    builder: (context, state) => const WishListsScreen(),
     parent: account,
   );
 
-  return [root, navbarRoot, welcome, domainSelection, login, biometricLogin, checkout, checkoutSuccess, quickOrder, barcodeSearch];
+  // path: /account/wishlist/:id
+  final wishlistsDetails = createNode(
+    name: AppRoute.wishlistsDetails.name,
+    path: AppRoute.wishlistsDetails.suffix,
+    builder: (context, state) {
+      final wishListId = state.pathParameters['id'] ?? '';
+      final callbackHelper = state.extra as WishListScreenCallbackHelper;
 
+      return WishListDetailsScreen(
+        wishListId: wishListId,
+        onWishListUpdated: callbackHelper.onWishListUpdated,
+        onWishListDeleted: callbackHelper.onWishListDeleted,
+      );
+    },
+    parent: wishlists,
+  );
+
+  final wishListInfo = createNode(
+    name: AppRoute.wishListInfo.name,
+    path: AppRoute.wishListInfo.suffix,
+    builder: (context, state) {
+      final callbackHelper = state.extra as WishListInfoScreenCallbackHelper;
+
+      final wishList = callbackHelper.wishList;
+      final onWishListUpdated = callbackHelper.onWishListUpdated;
+
+      return WishListInformationScreen(
+        wishList: wishList,
+        onWishListUpdated: onWishListUpdated,
+      );
+    },
+    parent: null,
+  );
+
+  final wishListCreate = createNode(
+    name: AppRoute.wishListCreate.name,
+    path: AppRoute.wishListCreate.suffix,
+    builder: (context, state) {
+      final callbackHelper = state.extra as WishListCreateScreenCallbackHelper;
+
+      return WishListCreateScreen(
+        onWishListCreated: callbackHelper.onWishListCreated,
+        addToCartCollection: callbackHelper.addToCartCollection,
+      );
+    },
+    parent: null,
+  );
+
+  return [
+    root,
+    navbarRoot,
+    welcome,
+    domainSelection,
+    login,
+    biometricLogin,
+    checkout,
+    checkoutSuccess,
+    quickOrder,
+    barcodeSearch,
+    wishListInfo,
+    wishListCreate,
+  ];
 }
