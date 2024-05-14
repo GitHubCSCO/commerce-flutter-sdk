@@ -1,19 +1,27 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_carousel/product_carousel_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_detail_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_base_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_cross_sell_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_description_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_standard_configuration_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_image_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/specification_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 enum ProdcutDeatilsPageWidgets {
@@ -22,33 +30,62 @@ enum ProdcutDeatilsPageWidgets {
   productDetailsGeneralInfo,
   productDetailsAddtoCart,
   productDetailsPrice,
+  productDeatilsStanddardConfigurationSection,
+  productDetailsCrossSellSection,
+  productDetailsStyleTraits
 }
 
 class ProductDetailsUseCase extends BaseUseCase {
-  late Session? session;
-  late AccountSettings? accountSettings;
-  late ProductSettings? productSettings;
-  late ProductUnitOfMeasure? chosenUnitOfMeasure;
-  late StyledProductEntity? styledProduct;
-  late int? quantity;
+  final ProductDetailsStyleTraitsUseCase _productDetailsStyleTraitsUseCase =
+      ProductDetailsStyleTraitsUseCase();
+  ProductDetailsUseCase() : super();
 
-  late ProductPriceEntity? productPricing;
+  Future<bool> isOnline() async {
+    return await commerceAPIServiceProvider.getNetworkService().isOnline();
+  }
 
-  ProductDetailsUseCase(
-      {this.session,
-      this.accountSettings,
-      this.productSettings,
-      this.chosenUnitOfMeasure,
-      this.quantity,
-      this.productPricing,
-      this.styledProduct})
-      : super();
+  Future<bool> hasCheckout() {
+    return coreServiceProvider.getAppConfigurationService().hasCheckout();
+  }
+
+  Future<RealTimeSupport?> getRealtimeSupportType() async {
+    return coreServiceProvider
+        .getAppConfigurationService()
+        .getRealtimeSupportType();
+  }
+
+  Future<bool?> productPricingEnabled() async {
+    return coreServiceProvider
+        .getAppConfigurationService()
+        .productPricingEnabled();
+  }
+
+  Future<Result<AccountSettings, ErrorResponse>>
+      getCurrentAccountSettings() async {
+    return commerceAPIServiceProvider
+        .getSettingsService()
+        .getAccountSettingsAsync();
+  }
+
+  Future<bool?> addToCartEnabled() async {
+    return coreServiceProvider.getAppConfigurationService().addToCartEnabled();
+  }
+
+  Future<Result<Session, ErrorResponse>> getCurrentSession() async {
+    return commerceAPIServiceProvider.getSessionService().getCurrentSession();
+  }
+
+  Future<Result<ProductSettings, ErrorResponse>> loadSetting() async {
+    return commerceAPIServiceProvider
+        .getSettingsService()
+        .getProductSettingsAsync();
+  }
 
   Future<Result<ProductEntity, ErrorResponse>> getProductDetails(
-      String productId, ProductEntity? product) async {
-    // (await this.commerceAPIServiceProvider.getCatalogpagesService()
-    //     .getProductCatalogInformation(this.productParameter.urlSegment));
-
+      String productId,
+      ProductEntity? product,
+      AccountSettings accountSettings,
+      Session session) async {
     if (productId.isNullOrEmpty) {
       var urlSegment = product?.urlSegment ?? '';
       var response = await commerceAPIServiceProvider
@@ -67,17 +104,15 @@ class ProductDetailsUseCase extends BaseUseCase {
       }
     }
 
-    // var includeAlternateInventory =
-    //     !this.accountSettings.EnableWarehousePickup ||
-    //         this.session.FulfillmentMethod != "PickUp";
-
-    var includeAlternateInventory = true;
+    var includeAlternateInventory = !accountSettings.enableWarehousePickup! ||
+        session.fulfillmentMethod != "PickUp";
 
     var parameters = ProductQueryParameters(
       addToRecentlyViewed: true,
       applyPersonalization: true,
       includeAttributes: "IncludeOnProduct",
       includeAlternateInventory: includeAlternateInventory,
+      productId: productId,
       expand:
           "documents,specifications,styledproducts,htmlcontent,attributes,crosssells,pricing,brand",
     );
@@ -90,23 +125,18 @@ class ProductDetailsUseCase extends BaseUseCase {
       case Success(value: final data):
         final productEntity =
             ProductEntityMapper().toEntity(data?.product ?? Product());
-        if (productEntity.styledProducts != null) {
-          if (productEntity.styleParentId != null) {
-            styledProduct = productEntity.styledProducts
-                ?.firstWhere((o) => o.productId == productEntity.id);
-          }
-        }
+
         return Success(productEntity);
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
     }
   }
 
-  List<ProductImageEntity> makeProductImages(ProductEntity product) {
+  List<ProductImageEntity> makeProductImages(
+      ProductEntity product, StyledProductEntity? styledProduct) {
     List<ProductImageEntity> result;
-    var correctProductImages = styledProduct?.productImages != null
-        ? styledProduct?.productImages
-        : product.productImages;
+    var correctProductImages =
+        styledProduct?.productImages ?? product.productImages;
 
     if (correctProductImages != null && correctProductImages.isNotEmpty) {
       correctProductImages
@@ -120,13 +150,13 @@ class ProductDetailsUseCase extends BaseUseCase {
     } else {
       var imageNotFoundImage = ProductImageEntity(
         smallImagePath: (styledProduct != null
-            ? styledProduct?.smallImagePath
+            ? styledProduct.smallImagePath
             : product.smallImagePath),
         mediumImagePath: (styledProduct != null
-            ? styledProduct?.mediumImagePath
+            ? styledProduct.mediumImagePath
             : product.mediumImagePath),
         largeImagePath: (styledProduct != null
-            ? styledProduct?.largeImagePath
+            ? styledProduct.largeImagePath
             : product.largeImagePath),
       );
       imageNotFoundImage.smallImagePath.makeImageUrl();
@@ -138,7 +168,8 @@ class ProductDetailsUseCase extends BaseUseCase {
     return result;
   }
 
-  ProductDetailsGeneralInfoEntity makeGeneralInfoEntity(ProductEntity product) {
+  ProductDetailsGeneralInfoEntity makeGeneralInfoEntity(
+      ProductEntity product, StyledProductEntity? styledProduct) {
     var genralInfoEntity = ProductDetailsGeneralInfoEntity(
         detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsGeneralInfo,
         productNumber: product.getProductNumber(),
@@ -149,22 +180,25 @@ class ProductDetailsUseCase extends BaseUseCase {
             ? product.brand?.name
             : product.brand?.logoSmallImagePath.makeImageUrl());
 
-    genralInfoEntity = updateGeneralInfoViewModel(product, genralInfoEntity);
+    genralInfoEntity =
+        updateGeneralInfoViewModel(product, styledProduct, genralInfoEntity);
     return genralInfoEntity;
   }
 
   ProductDetailsGeneralInfoEntity updateGeneralInfoViewModel(
-      ProductEntity product, ProductDetailsGeneralInfoEntity genralInfoEntity) {
+      ProductEntity product,
+      StyledProductEntity? styledProduct,
+      ProductDetailsGeneralInfoEntity genralInfoEntity) {
     genralInfoEntity = genralInfoEntity.copyWith(
         productName: styledProduct == null
             ? product.shortDescription
-            : styledProduct?.shortDescription);
+            : styledProduct.shortDescription);
     genralInfoEntity = genralInfoEntity.copyWith(
         originalPartNumberValue: styledProduct == null
             ? product.getProductNumber()
             : styledProduct.getProductNumber());
-    genralInfoEntity =
-        genralInfoEntity.copyWith(thumbnails: makeProductImages(product));
+    genralInfoEntity = genralInfoEntity.copyWith(
+        thumbnails: makeProductImages(product, styledProduct));
     genralInfoEntity = genralInfoEntity.copyWith(
         hasMultipleImages: (product.productImages?.length ?? 0) > 1);
     genralInfoEntity =
@@ -180,49 +214,212 @@ class ProductDetailsUseCase extends BaseUseCase {
     return genralInfoEntity;
   }
 
-  List<ProductDetailsBaseEntity> makeAllDetailsItems(ProductEntity product) {
+  Future<List<ProductDetailsBaseEntity>> makeAllDetailsItems(
+    ProductEntity product,
+    StyledProductEntity? styledProduct,
+    bool productPricingEnabled,
+    Map<String, List<StyleValueEntity>?> availableStyleValues,
+    Map<String, StyleValueEntity?>? selectedStyleValues,
+    bool isProductConfigurable,
+    bool isProductConfigurationCompleted,
+    bool hasCheckout,
+    bool addToCartEnabled,
+  ) async {
     List<ProductDetailsBaseEntity> items = [];
 
-    var quantity = (product.minimumOrderQty! > 0) ? product.minimumOrderQty : 1;
+    var quantity = getQuantity(product);
+    items.add(makeGeneralInfoEntity(product, styledProduct));
 
-    items.add(makeGeneralInfoEntity(product));
-    items.add(ProductDetailsPriceEntity(
-        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsPrice,
-        product: product,
-        styledProduct: styledProduct,
-        productPricingEnabled: true,
-        quantity: quantity));
+    if (productPricingEnabled) {
+      items.add(makeProductDetailsPriceEntity());
+    }
 
-    items.add(ProductDetailsAddtoCartEntity(
-        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart,
-        quantityText: quantity.toString()));
+    if (shouldAddConfigSection(product)) {
+      items.add(addConfigSection(product));
+    }
+
+    if (product.styleTraits != null && product.styleTraits!.isNotEmpty) {
+      items.add(makeProductDetailsStyleTraitsEntity(
+          product, availableStyleValues, selectedStyleValues));
+    }
+
+    var addToCartEntity = await makeProductDetailsAddToCartEntity(
+        quantity,
+        hasCheckout,
+        addToCartEnabled,
+        product,
+        styledProduct,
+        selectedStyleValues,
+        isProductConfigurable,
+        isProductConfigurationCompleted);
+    items.add(addToCartEntity);
 
     if (product.htmlContent != null) {
-      items.add(ProductDetailsDescriptionEntity(
-          htmlContent: product.htmlContent ?? '',
-          detailsSectionType:
-              ProdcutDeatilsPageWidgets.productDetailsDescription));
+      items.add(makeProductDetailsDescriptionEntity(product));
     }
 
     if (product.specifications != null) {
-      List<SpecificationEntity> specifications = product.specifications!;
-      specifications
-          .sort((a, b) => (a.sortOrder ?? 0).compareTo(b.sortOrder ?? 0));
+      items.addAll(addSpecifications(product));
+    }
 
-      List<ProductDetailItemEntity> specificationItems = specifications
-          .map((specification) => ProductDetailItemEntity(
-                id: specification.specificationId ?? '',
-                title: specification.nameDisplay ?? '',
-                htmlContent: specification.htmlContent ?? '',
-                position: specification.sortOrder ??
-                    0, // You need to provide a list here
-                detailsSectionType: ProdcutDeatilsPageWidgets
-                    .productDetailsSpecification, // You need to provide a type here
-              ))
-          .toList();
+    if (product.crossSells != null && product.crossSells!.isNotEmpty) {
+      var porductCarouselWidget = ProductCarouselWidgetEntity(
+          carouselType: ProductCarouselType.webCrossSells,
+          title: LocalizationConstants.recommendedProducts);
 
-      items.addAll(specificationItems);
+      final List<ProductCarouselEntity> productCarouselList = [];
+      for (var crosSell in product.crossSells!) {
+        productCarouselList.add(ProductCarouselEntity(
+            product: crosSell, productPricingEnabled: productPricingEnabled));
+      }
+
+      porductCarouselWidget = porductCarouselWidget.copyWith(
+          productCarouselList: productCarouselList);
+      items.add(ProductDetailsCrossSellEntity(
+          detailsSectionType:
+              ProdcutDeatilsPageWidgets.productDetailsCrossSellSection,
+          productCarouselWidgetEntity: porductCarouselWidget));
     }
     return items;
+  }
+
+  int getQuantity(ProductEntity product) {
+    return (product.minimumOrderQty! > 0) ? product.minimumOrderQty! : 1;
+  }
+
+  ProductDetailsPriceEntity makeProductDetailsPriceEntity() {
+    return const ProductDetailsPriceEntity(
+        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsPrice);
+  }
+
+  bool shouldAddConfigSection(ProductEntity product) {
+    return !(product.styleTraits != null && product.styleTraits!.isNotEmpty) &&
+        product.configurationDto != null &&
+        product.configurationDto!.sections != null &&
+        product.configurationDto!.sections!.isNotEmpty &&
+        !product.isFixedConfiguration!;
+  }
+
+  Future<ProductDetailsAddtoCartEntity> makeProductDetailsAddToCartEntity(
+      int quantity,
+      bool hasCheckout,
+      bool addToCartEnabled,
+      ProductEntity productEntity,
+      StyledProductEntity? styledProduct,
+      Map<String, StyleValueEntity?>? selectedStyleValues,
+      bool isProductConfigurable,
+      bool isProductConfigurationCompleted) async {
+    var isOnlineNow = await isOnline();
+    var isAddToCartButtonAvailable = isOnlineNow && hasCheckout;
+    isAddToCartButtonAvailable &= addToCartEnabled;
+    isAddToCartButtonAvailable &= !productEntity.cantBuy!;
+    isAddToCartButtonAvailable &=
+        productEntity.allowedAddToCart! && !productEntity.canConfigure!;
+
+    if (isAddToCartButtonAvailable) {
+      var isAddToCartButtonEnabled = true;
+
+      if (_productDetailsStyleTraitsUseCase
+          .isProductStyleable(selectedStyleValues)) {
+        isAddToCartButtonEnabled = _productDetailsStyleTraitsUseCase
+            .isProductStyleSelectionCompleted(selectedStyleValues);
+      }
+
+      if (isProductConfigurable) {
+        isAddToCartButtonEnabled = isProductConfigurationCompleted;
+      }
+
+      isAddToCartButtonEnabled &= quantity > 0;
+      isAddToCartButtonEnabled &= (styledProduct == null
+              ? productEntity.availability?.messageType != 2
+              : styledProduct.availability?.messageType != 2) ||
+          productEntity.canBackOrder!;
+
+      return ProductDetailsAddtoCartEntity(
+          detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart,
+          quantityText: quantity.toString(),
+          isAddToCartAllowed: isAddToCartButtonAvailable,
+          addToCartButtonEnabled: isAddToCartButtonEnabled);
+    } else {
+      return ProductDetailsAddtoCartEntity(
+          detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart,
+          quantityText: quantity.toString(),
+          isAddToCartAllowed: isAddToCartButtonAvailable);
+    }
+  }
+
+  ProductDetailsDescriptionEntity makeProductDetailsDescriptionEntity(
+      ProductEntity product) {
+    return ProductDetailsDescriptionEntity(
+        htmlContent: product.htmlContent ?? '',
+        detailsSectionType:
+            ProdcutDeatilsPageWidgets.productDetailsDescription);
+  }
+
+  ProductDetailsStandardConfigurationEntity addConfigSection(
+      ProductEntity product) {
+    for (var index = 0;
+        index < product.configurationDto!.sections!.length;
+        index++) {
+      var configSection = product.configurationDto!.sections![index];
+      var option = ConfigSectionOptionEntity(
+          sectionName: configSection.sectionName,
+          description:
+              "${LocalizationConstants.selectSomething} ${configSection.sectionName!}");
+      product.configurationDto!.sections![index].options!.insert(0, option);
+    }
+    return ProductDetailsStandardConfigurationEntity(
+        detailsSectionType: ProdcutDeatilsPageWidgets
+            .productDeatilsStanddardConfigurationSection,
+        configSectionOptions: product.configurationDto!.sections);
+  }
+
+  List<ProductDetailItemEntity> addSpecifications(ProductEntity product) {
+    List<SpecificationEntity> specifications = product.specifications!;
+    specifications
+        .sort((a, b) => (a.sortOrder ?? 0).compareTo(b.sortOrder ?? 0));
+
+    return specifications
+        .map((specification) => ProductDetailItemEntity(
+              id: specification.specificationId ?? '',
+              title: specification.nameDisplay ?? '',
+              htmlContent: specification.htmlContent ?? '',
+              position: specification.sortOrder ?? 0,
+              detailsSectionType:
+                  ProdcutDeatilsPageWidgets.productDetailsSpecification,
+            ))
+        .toList();
+  }
+
+  ProductDetailsStyletraitsEntity makeProductDetailsStyleTraitsEntity(
+      ProductEntity product,
+      Map<String, List<StyleValueEntity>?> availableStyleValues,
+      Map<String, StyleValueEntity?>? selectedStyleValues) {
+    final List<ProductDetailStyleTrait> styleTraitsEntity = [];
+
+    for (var styleTrait in product.styleTraits!) {
+      var styleTraitNullValue = _productDetailsStyleTraitsUseCase
+          .createStyleTraitNullValue(styleTrait);
+      List<ProductDetailStyleValue> styleValues = [styleTraitNullValue];
+
+      for (var styleValue in styleTrait.styleValues!) {
+        styleValue = _productDetailsStyleTraitsUseCase
+            .updateStyleValueAvailability(styleValue, availableStyleValues);
+        var styleValueEntity = _productDetailsStyleTraitsUseCase
+            .createStyleValueEntity(styleValue, availableStyleValues);
+        styleValues.add(styleValueEntity);
+      }
+
+      var selectedStyle = _productDetailsStyleTraitsUseCase.getSelectedStyle(
+          styleValues, styleTrait, selectedStyleValues, styleTraitNullValue);
+      var styleTraitEntity = _productDetailsStyleTraitsUseCase
+          .createStyleTraitEntity(styleTrait, styleValues, selectedStyle);
+
+      styleTraitsEntity.add(styleTraitEntity);
+    }
+
+    return ProductDetailsStyletraitsEntity(
+        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsStyleTraits,
+        styleTraits: styleTraitsEntity);
   }
 }

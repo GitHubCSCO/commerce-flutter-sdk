@@ -136,7 +136,7 @@ class LocalizationConstants {
       "There are product(s) out of stock. Add available products to cart?";
   static const addListToCart = "Add List to Cart";
   static const listTotal = "List Total";
-  static const listTotalProducts = "List Total ({0} products)";
+  static const listTotalProducts = "List Total (%s products)";
   static const productDeleted = "Product Deleted";
   static const errorDeletingProduct = "Error Deleting Product";
   static const listInformation = "List Information";
@@ -257,7 +257,7 @@ class LocalizationConstants {
   static const myPartNumberSign = "My Part #";
   static const mFGNumberSign = "MFG #";
   static const packDescription = "Pack";
-  static const selectSomething = "Select {0}";
+  static const selectSomething = "Select";
   static const documents = "Documents";
   static const recommendedProducts = "Recommended Products";
   static const unableToRetrieveInventory = "Unable to retrieve inventory";
@@ -269,6 +269,7 @@ class LocalizationConstants {
   static const productLine = "Product Line";
   static const categories = "Categories";
   static const warehouseInventory = "Warehouse Inventory";
+  static const quantityPricing = "Quantity Pricing";
   static const previouslyPurchased = "Previously Purchased";
   static const stockedItems = "Stocked Items";
   static const stockedItemsOnly = "Stocked Items Only";

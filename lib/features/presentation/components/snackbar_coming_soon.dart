@@ -48,6 +48,16 @@ class CustomSnackBar {
     );
   }
 
+  static void showSnackBarMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 1),
+      ),
+    );
+  }
+
+
   static void showWishListAddToCart(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

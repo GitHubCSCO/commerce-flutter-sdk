@@ -9,6 +9,9 @@ class StyleTraitEntityMapper {
         nameDisplay: model.nameDisplay,
         unselectedValue: model.unselectedValue,
         sortOrder: model.sortOrder,
+        displayType: model.displayType,
+        numberOfSwatchesVisible: model.numberOfSwatchesVisible,
+        displayTextWithSwatch: model.displayTextWithSwatch,
         styleValues: model.styleValues
             ?.map((styleValue) => StyleValueEntityMapper().toEntity(styleValue))
             .toList(),

@@ -11,6 +11,9 @@ class StyleTraitEntity extends Equatable {
   final List<StyleValueEntity>? styleValues;
   final String? id;
   final List<StyleValueEntity>? traitValues;
+  final String? displayType;
+  final int? numberOfSwatchesVisible;
+  final bool? displayTextWithSwatch;
 
   const StyleTraitEntity({
     this.styleTraitId,
@@ -21,6 +24,9 @@ class StyleTraitEntity extends Equatable {
     this.styleValues,
     this.id,
     this.traitValues,
+    this.displayType,
+    this.numberOfSwatchesVisible,
+    this.displayTextWithSwatch,
   });
 
   StyleTraitEntity copyWith({
@@ -32,6 +38,9 @@ class StyleTraitEntity extends Equatable {
     List<StyleValueEntity>? styleValues,
     String? id,
     List<StyleValueEntity>? traitValues,
+    String? displayType,
+    int? numberOfSwatchesVisible,
+    bool? displayTextWithSwatch,
   }) {
     return StyleTraitEntity(
       styleTraitId: styleTraitId ?? this.styleTraitId,
@@ -42,6 +51,11 @@ class StyleTraitEntity extends Equatable {
       styleValues: styleValues ?? this.styleValues,
       id: id ?? this.id,
       traitValues: traitValues ?? this.traitValues,
+      displayType: displayType ?? this.displayType,
+      numberOfSwatchesVisible:
+          numberOfSwatchesVisible ?? this.numberOfSwatchesVisible,
+      displayTextWithSwatch:
+          displayTextWithSwatch ?? this.displayTextWithSwatch,
     );
   }
 

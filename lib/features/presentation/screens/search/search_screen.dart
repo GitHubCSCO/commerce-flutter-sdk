@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
@@ -105,7 +106,7 @@ class SearchPage extends BaseDynamicContentScreen {
                 ),
                 onPressed: () async {
                   final result = await GoRouter.of(context).pushNamed(
-                    AppRoute.barcodeScanner.name
+                    AppRoute.barcodeSearch.name
                   ) as String;
                   if (!result.isNullOrEmpty) {
                     context.read<SearchBloc>().searchQuery = result;
@@ -221,6 +222,7 @@ class SearchPage extends BaseDynamicContentScreen {
                   final autoCompleteResult =
                   (state as SearchAutoCompleteLoadedState).result!;
                   return AutoCompleteWidget(
+                      callback: handleAutoCompleteCallback,
                       autocompleteResult: autoCompleteResult);
                 case SearchAutoCompleteFailureState:
                   return Center(
@@ -259,4 +261,11 @@ class SearchPage extends BaseDynamicContentScreen {
       ],
     );
   }
+
+  void handleAutoCompleteCallback(BuildContext context, AutocompleteProduct product) {
+    AppRoute.productDetails.navigateBackStack(context,
+        pathParameters: {"productId": product.id.toString()},
+        extra: ProductEntity());
+  }
+
 }

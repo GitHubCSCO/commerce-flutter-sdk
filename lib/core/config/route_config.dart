@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/biometric/bio
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_create_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_screen.dart';
@@ -17,6 +18,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/login/login_s
 import 'package:commerce_flutter_app/features/presentation/screens/nav_bar/nav_bar_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_history/order_history_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/root/root_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/search_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/settings/settings_screen.dart';
@@ -171,11 +173,19 @@ List<NavigationNode> _getNavigationRoot() {
     parent: account,
   );
 
-  // path: /barcodeScanner
-  final barcodeScanner = createNode(
-    name: AppRoute.barcodeScanner.name,
-    path: AppRoute.barcodeScanner.suffix,
-    builder: (context, state) => const BarcodeScannerView(),
+  // path: /quickOrder
+  final quickOrder = createNode(
+    name: AppRoute.quickOrder.name,
+    path: AppRoute.quickOrder.suffix,
+    builder: (context, state) => QuickOrderScreen(),
+    parent: null,
+  );
+
+  // path: /barcodeSearch
+  final barcodeSearch = createNode(
+    name: AppRoute.barcodeSearch.name,
+    path: AppRoute.barcodeSearch.suffix,
+    builder: (context, state) => const BarcodeSearchScreen(),
     parent: null,
   );
 
@@ -244,7 +254,8 @@ List<NavigationNode> _getNavigationRoot() {
     biometricLogin,
     checkout,
     checkoutSuccess,
-    barcodeScanner,
+    quickOrder,
+    barcodeSearch,
     wishListInfo,
     wishListCreate,
   ];
