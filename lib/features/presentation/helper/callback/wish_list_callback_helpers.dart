@@ -1,4 +1,6 @@
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
+import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WishListCreateScreenCallbackHelper {
@@ -39,4 +41,20 @@ class WishListScreenCallbackHelper {
     this.onWishListUpdated,
     this.onWishListDeleted,
   });
+}
+
+class WishListCallbackHelper {
+  static void addItemsToWishList(
+    BuildContext context, {
+    required WishListAddToCartCollection addToCartCollection,
+    void Function()? onAddedToCart,
+  }) {
+    AppRoute.addToWishList.navigateBackStack(
+      context,
+      extra: WishListAddToListCallbackHelper(
+        addToCartCollection: addToCartCollection,
+        onWishListUpdated: onAddedToCart,
+      ),
+    );
+  }
 }

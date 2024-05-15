@@ -1,7 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/barcode_scanner_view.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
@@ -11,6 +10,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_scr
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/wish_list/add_to_wish_list_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_create_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_screen.dart';
@@ -245,6 +245,20 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
+  final addToWishList = createNode(
+    name: AppRoute.addToWishList.name,
+    path: AppRoute.addToWishList.suffix,
+    builder: (context, state) {
+      final callbackHelper = state.extra as WishListAddToListCallbackHelper;
+
+      return AddToWishListScreen(
+        onWishListUpdated: callbackHelper.onWishListUpdated,
+        addToCartCollection: callbackHelper.addToCartCollection,
+      );
+    },
+    parent: null,
+  );
+
   return [
     root,
     navbarRoot,
@@ -258,5 +272,6 @@ List<NavigationNode> _getNavigationRoot() {
     barcodeSearch,
     wishListInfo,
     wishListCreate,
+    addToWishList,
   ];
 }
