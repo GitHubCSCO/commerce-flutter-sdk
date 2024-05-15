@@ -20,4 +20,6 @@ class ProductDetailsDescriptionEntity extends ProductDetailsBaseEntity {
         htmlContent: htmlContent ?? this.htmlContent,
         detailsSectionType: detailsSectionType!);
   }
+
+  
 }

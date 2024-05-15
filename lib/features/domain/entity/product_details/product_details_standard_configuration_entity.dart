@@ -23,4 +23,7 @@ class ProductDetailsStandardConfigurationEntity
         selectedOption: selectedOption,
         detailsSectionType: detailsSectionType!);
   }
+
+  @override
+  List<Object?> get props => [configSectionOptions, selectedOption];
 }
