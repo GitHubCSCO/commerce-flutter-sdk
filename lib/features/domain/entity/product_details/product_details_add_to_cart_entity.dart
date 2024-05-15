@@ -79,4 +79,22 @@ class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
           productDetailsPriceEntity ?? this.productDetailsPriceEntity,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        showHidePricing,
+        shouldAddTopPadding,
+        isAddToCartAllowed,
+        addToCartButtonEnabled,
+        addToCartButtonText,
+        quantityText,
+        unitOfMeasurePickerTitle,
+        selectedUnitOfMeasure,
+        selectedUnitOfMeasureValueText,
+        isUnitOfMeasuresVisible,
+        subtotalTitleText,
+        isLoadingPrice,
+        subtotalValueText,
+        productDetailsPriceEntity
+      ];
 }
