@@ -187,7 +187,8 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => OrderListBloc(quickOrderUseCase: sl()))
     ..registerFactory(() => QuickOrderUseCase())
     ..registerFactory(() => QuickOrderAutoCompleteBloc(searchUseCase: sl()))
-    ..registerFactory(() => OrderItemPricingInventoryCubit(pricingInventoryUseCase: sl()))
+    ..registerFactory(
+        () => OrderItemPricingInventoryCubit(pricingInventoryUseCase: sl()))
     ..registerFactory(() => OrderPricingInventoryUseCase())
 
     //barcode
@@ -221,13 +222,15 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ProductDetailsUseCase())
 
     // product details pricing
-    ..registerFactory(
-        () => ProductDetailsPricingBloc(productDetailsPricingUseCase: sl()))
+    ..registerFactory(() => ProductDetailsPricingBloc(
+        productDetailsPricingUseCase: sl(),
+        productDetailsStyleTraitUseCase: sl()))
     ..registerFactory(() => ProductDetailsPricingUseCase())
 
     // product details Add to cart
-    ..registerFactory(
-        () => ProductDetailsAddToCartBloc(productDetailsAddToCartUseCase: sl()))
+    ..registerFactory(() => ProductDetailsAddToCartBloc(
+        productDetailsAddToCartUseCase: sl(),
+        productDetailsStyleTraitUseCase: sl()))
     ..registerFactory(() => ProductDetailsAddToCartUseCase())
 
     //product style trait

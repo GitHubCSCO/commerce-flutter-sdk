@@ -31,12 +31,20 @@ class ProductDetailsAddToCartWidget extends StatelessWidget {
         width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: (context.read<ProductDetailsBloc>().addToCartEnabled &&
-                  context.read<ProductDetailsBloc>().productPricingEnabled)
+          child: (context
+                      .read<ProductDetailsBloc>()
+                      .productDetailDataEntity
+                      .addToCartEnabled! &&
+                  context
+                      .read<ProductDetailsBloc>()
+                      .productDetailDataEntity
+                      .productPricingEnabled!)
               ? AddToCartSignInWidget()
               : AddToCartNotSignedInWidget(
-                  productPricingEnabled:
-                      context.read<ProductDetailsBloc>().productPricingEnabled),
+                  productPricingEnabled: context
+                      .read<ProductDetailsBloc>()
+                      .productDetailDataEntity
+                      .productPricingEnabled!),
         ),
       ),
     );
@@ -157,27 +165,15 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                     var productDetailsBloc = context.read<ProductDetailsBloc>();
                     productDetailsBloc.updateQuantity(quantity!);
 
-                    context.read<ProductDetailsPricingBloc>().add(
-                        LoadProductDetailsPricing(
-                            productDetailsPricingEntity:
-                                productDetailsPricingEntity,
-                            product: productDetailsBloc.product,
-                            styledProduct: productDetailsBloc.styledProduct,
-                            productPricingEnabled: productDetailsBloc
-                                .productPricingEnabled,
-                            quantity: quantity,
-                            chosenUnitOfMeasure: productDetailsBloc
-                                .chosenUnitOfMeasure,
-                            realtimeProductAvailabilityEnabled:
-                                productDetailsBloc
-                                    .realtimeProductAvailabilityEnabled,
-                            realtimeProductPricingEnabled: productDetailsBloc
-                                .realtimeProductPricingEnabled,
-                            productSettings: productDetailsBloc.productSettings,
-                            selectedConfigurations:
-                                productDetailsBloc.selectedConfigurations,
-                            selectedStyleValues:
-                                productDetailsBloc.selectedStyleValues));
+                    context
+                        .read<ProductDetailsPricingBloc>()
+                        .add(LoadProductDetailsPricing(
+                          productDetailsPricingEntity:
+                              productDetailsPricingEntity,
+                          productDetailsDataEntity:
+                              productDetailsBloc.productDetailDataEntity,
+                          quantity: quantity,
+                        ));
                   }
                 }),
           ),

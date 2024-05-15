@@ -2,13 +2,13 @@ import 'package:commerce_flutter_app/core/constants/site_message_constants.dart'
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_event.dart';
@@ -18,12 +18,17 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductDetailsPricingBloc
     extends Bloc<ProductDetailsPricingEvent, ProductDetailsPricingState> {
+  final ProductDetailsAddToCartUseCase _addToCartUseCase =
+      ProductDetailsAddToCartUseCase();
   final ProductDetailsPricingUseCase _productDetailsPricingUseCase;
-  final ProductDetailsStyleTraitsUseCase _productDetailsStyleTraitUseCase = ProductDetailsStyleTraitsUseCase();
+  final ProductDetailsStyleTraitsUseCase _productDetailsStyleTraitUseCase;
   late ProductDetailsPriceEntity productDetailsPricingEntity;
   ProductDetailsPricingBloc(
-      {required ProductDetailsPricingUseCase productDetailsPricingUseCase})
+      {required ProductDetailsPricingUseCase productDetailsPricingUseCase,
+      required ProductDetailsStyleTraitsUseCase
+          productDetailsStyleTraitUseCase})
       : _productDetailsPricingUseCase = productDetailsPricingUseCase,
+        _productDetailsStyleTraitUseCase = productDetailsStyleTraitUseCase,
         super(ProductDetailsPricingInitial()) {
     on<LoadProductDetailsPricing>(_fetchProductDetailsPricing);
   }
@@ -33,17 +38,24 @@ class ProductDetailsPricingBloc
     emit(ProductDetailsPricingLoading());
 
     var productDetailsPricingEntity = event.productDetailsPricingEntity;
-    var product = event.product!;
-    final styledProduct = event.styledProduct;
+    var product = event.productDetailsDataEntity.product!;
+    final styledProduct = event.productDetailsDataEntity.styledProduct;
     final quantity = event.quantity;
-    final productPricingEnabled = event.productPricingEnabled;
-    final chosenUnitOfMeasure = event.chosenUnitOfMeasure;
+    final productPricingEnabled =
+        event.productDetailsDataEntity.productPricingEnabled;
+    final chosenUnitOfMeasure =
+        event.productDetailsDataEntity.chosenUnitOfMeasure;
     final realtimeProductAvailabilityEnabled =
-        event.realtimeProductAvailabilityEnabled;
-    final realtimeProductPricingEnabled = event.realtimeProductPricingEnabled;
-    final productSettings = event.productSettings;
-    final selectedConfigurations = event.selectedConfigurations;
-    final selectedStyleValues = event.selectedStyleValues;
+        event.productDetailsDataEntity.realtimeProductAvailabilityEnabled!;
+    final realtimeProductPricingEnabled =
+        event.productDetailsDataEntity.realtimeProductPricingEnabled!;
+    final productSettings = event.productDetailsDataEntity.productSettings!;
+    final selectedConfigurations =
+        event.productDetailsDataEntity.selectedConfigurations!;
+    final selectedStyleValues =
+        event.productDetailsDataEntity.selectedStyleValues;
+    final hasCheckout = event.productDetailsDataEntity.hasCheckout!;
+    final addToCartEnabled = event.productDetailsDataEntity.addToCartEnabled!;
 
     final result = await _productDetailsPricingUseCase.loadProductPricing(
         product,
@@ -96,7 +108,10 @@ class ProductDetailsPricingBloc
             productDetailsPricingEntity.product!,
             data,
             selectedConfigurations,
-            selectedStyleValues);
+            selectedStyleValues,
+            hasCheckout,
+            addToCartEnabled,
+            quantity);
     this.productDetailsPricingEntity = productDetailsPricingEntity;
     emit(ProductDetailsPricingLoaded(
         productDetailsPriceEntity: productDetailsPricingEntity));
@@ -133,26 +148,54 @@ class ProductDetailsPricingBloc
       ProductEntity product,
       ProductPriceEntity? productPricing,
       Map<String, ConfigSectionOptionEntity?> selectedConfigurations,
-      Map<String, StyleValueEntity?>? selectedStyleValues) async {
+      Map<String, StyleValueEntity?>? selectedStyleValues,
+      bool hasCheckout,
+      bool addToCartEnabled,
+      int quantity) async {
     var availability = styledProduct == null
         ? product.availability
         : styledProduct.availability;
 
-    productDetailsPricingEntity =
-        productDetailsPricingEntity.copyWith(availability: availability);
+    var isProductConfigurable = _isProductConfigurable(selectedConfigurations);
+    var isProductConfigurationCompleted =
+        _isProductConfigurationCompleted(selectedConfigurations);
+    var isAddToCartAllowed = await _addToCartUseCase.getAddToCartVisibility(
+        quantity,
+        hasCheckout,
+        addToCartEnabled,
+        product,
+        styledProduct,
+        selectedStyleValues,
+        isProductConfigurable,
+        isProductConfigurationCompleted);
+
+    var isAddToCartEnable = await _addToCartUseCase.getAddToCartEnableState(
+        quantity,
+        hasCheckout,
+        addToCartEnabled,
+        product,
+        styledProduct,
+        selectedStyleValues,
+        isProductConfigurable,
+        isProductConfigurationCompleted);
+
+    productDetailsPricingEntity = productDetailsPricingEntity.copyWith(
+        availability: availability,
+        addToCartEnabled: isAddToCartEnable,
+        addToCartVisible: isAddToCartAllowed);
 
     if (productSettings.showInventoryAvailability!) {
       var showAvailabilityMessage = true;
       var showAvailabilityPerWarehouseLink = true;
 
-      if (_productDetailsStyleTraitUseCase.isProductStyleable(selectedStyleValues)) {
-        var isStyleSelectionComplete =
-            _productDetailsStyleTraitUseCase.isProductStyleSelectionCompleted(selectedStyleValues);
+      if (_productDetailsStyleTraitUseCase
+          .isProductStyleable(selectedStyleValues)) {
+        var isStyleSelectionComplete = _productDetailsStyleTraitUseCase
+            .isProductStyleSelectionCompleted(selectedStyleValues);
         showAvailabilityMessage = isStyleSelectionComplete!;
         showAvailabilityPerWarehouseLink = isStyleSelectionComplete;
-      } else if (_isProductConfigurable(selectedConfigurations)) {
-        var configurationCompleted =
-            _isProductConfigurationCompleted(selectedConfigurations);
+      } else if (isProductConfigurable) {
+        var configurationCompleted = isProductConfigurationCompleted;
 
         showAvailabilityMessage = configurationCompleted;
         showAvailabilityPerWarehouseLink = configurationCompleted;

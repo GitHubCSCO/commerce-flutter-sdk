@@ -61,7 +61,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     switch (result) {
       case Success(value: final product):
         if (product == null) {
-          emit(OrderListAddFailedState('No Product found'));
+          emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
           emit(OrderListLoadedState(quickOrderItemList, productSettings));
           return;
         }
@@ -71,11 +71,9 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         if (product.isStyleProductParent!) {
           emit(OrderListStyleProductAddState(product));
         } else if (product.isConfigured! || (product.isConfigured! && !product.isFixedConfiguration!)) {
-          // this.coreServiceProvider.GetPlatformService().DisplayNoResultAlert(string.Empty, this.cannotOrderConfigurableProductMessage, LocalizationConstants.Keyword.OK.Localized());
-          emit(OrderListAddFailedState('can not add product'));
+          emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderConfigurable));
         } else if (!product.canAddToCart!) {
-          // this.coreServiceProvider.GetPlatformService().DisplayNoResultAlert(string.Empty, this.cannotOrderUnavailableMessage, LocalizationConstants.Keyword.OK.Localized());
-          emit(OrderListAddFailedState('product unavailable'));
+          emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
         } else {
           var newItem = _convertProductToQuickOrderItemEntity(product, quantity!);
           _insertItemIntoQuickOrderList(newItem);
@@ -95,7 +93,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     switch (result) {
       case Success(value: final product):
         if (product == null) {
-          emit(OrderListAddFailedState('No Product found'));
+          emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
           emit(OrderListLoadedState(quickOrderItemList, productSettings));
           return;
         }
@@ -105,11 +103,9 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         if (product.isStyleProductParent!) {
           emit(OrderListStyleProductAddState(product));
         } else if (product.isConfigured! || (product.isConfigured! && !product.isFixedConfiguration!)) {
-          // this.coreServiceProvider.GetPlatformService().DisplayNoResultAlert(string.Empty, this.cannotOrderConfigurableProductMessage, LocalizationConstants.Keyword.OK.Localized());
-          emit(OrderListAddFailedState('can not add product'));
+          emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderConfigurable));
         } else if (!product.canAddToCart!) {
-          // this.coreServiceProvider.GetPlatformService().DisplayNoResultAlert(string.Empty, this.cannotOrderUnavailableMessage, LocalizationConstants.Keyword.OK.Localized());
-          emit(OrderListAddFailedState('product unavailable'));
+          emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
         } else {
           var newItem = _convertProductToQuickOrderItemEntity(product, quantity!);
           _insertItemIntoQuickOrderList(newItem);
@@ -173,7 +169,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     switch (result) {
       case Success(value: final product):
         if (product == null) {
-          emit(OrderListAddFailedState('No Product found'));
+          emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
           emit(OrderListLoadedState(quickOrderItemList, productSettings));
           return;
         }
