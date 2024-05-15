@@ -108,6 +108,8 @@ class ProductDetailsStandardConfigurationWidget extends StatelessWidget {
             productDetailsBloc.realtimeProductPricingEnabled,
         productSettings: productDetailsBloc.productSettings,
         selectedConfigurations: productDetailsBloc.selectedConfigurations,
-        selectedStyleValues: productDetailsBloc.selectedStyleValues));
+        selectedStyleValues: productDetailsBloc.selectedStyleValues,
+        hasCheckout: productDetailsBloc.hasCheckout,
+        addToCartEnabled: productDetailsBloc.addToCartEnabled));
   }
 }

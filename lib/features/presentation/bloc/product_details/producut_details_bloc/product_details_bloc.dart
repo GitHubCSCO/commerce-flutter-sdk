@@ -160,7 +160,6 @@ class ProductDetailsBloc
 
   Future<void> _makeAllDetailsItems(
       ProductEntity productData, Emitter<ProductDetailsState> emit) async {
-    emit(ProductDetailsLoading());
     final productDetailsEntotities =
         await _productDetailsUseCase.makeAllDetailsItems(
       productData,

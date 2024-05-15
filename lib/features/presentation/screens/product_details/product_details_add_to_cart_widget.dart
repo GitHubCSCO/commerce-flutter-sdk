@@ -177,7 +177,10 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                             selectedConfigurations:
                                 productDetailsBloc.selectedConfigurations,
                             selectedStyleValues:
-                                productDetailsBloc.selectedStyleValues));
+                                productDetailsBloc.selectedStyleValues,
+                            addToCartEnabled: productDetailsBloc.addToCartEnabled,
+                            hasCheckout: productDetailsBloc.hasCheckout,));
+
                   }
                 }),
           ),

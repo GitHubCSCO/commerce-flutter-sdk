@@ -20,6 +20,7 @@ import 'package:commerce_flutter_app/features/domain/extensions/product_extensio
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -38,11 +39,9 @@ enum ProdcutDeatilsPageWidgets {
 class ProductDetailsUseCase extends BaseUseCase {
   final ProductDetailsStyleTraitsUseCase _productDetailsStyleTraitsUseCase =
       ProductDetailsStyleTraitsUseCase();
+  final ProductDetailsAddToCartUseCase _addToCartUseCase =
+      ProductDetailsAddToCartUseCase();
   ProductDetailsUseCase() : super();
-
-  Future<bool> isOnline() async {
-    return await commerceAPIServiceProvider.getNetworkService().isOnline();
-  }
 
   Future<bool> hasCheckout() {
     return coreServiceProvider.getAppConfigurationService().hasCheckout();
@@ -309,43 +308,30 @@ class ProductDetailsUseCase extends BaseUseCase {
       Map<String, StyleValueEntity?>? selectedStyleValues,
       bool isProductConfigurable,
       bool isProductConfigurationCompleted) async {
-    var isOnlineNow = await isOnline();
-    var isAddToCartButtonAvailable = isOnlineNow && hasCheckout;
-    isAddToCartButtonAvailable &= addToCartEnabled;
-    isAddToCartButtonAvailable &= !productEntity.cantBuy!;
-    isAddToCartButtonAvailable &=
-        productEntity.allowedAddToCart! && !productEntity.canConfigure!;
+    var isAddToCartVisible = await _addToCartUseCase.getAddToCartVisibility(
+        quantity,
+        hasCheckout,
+        addToCartEnabled,
+        productEntity,
+        styledProduct,
+        selectedStyleValues,
+        isProductConfigurable,
+        isProductConfigurationCompleted);
 
-    if (isAddToCartButtonAvailable) {
-      var isAddToCartButtonEnabled = true;
-
-      if (_productDetailsStyleTraitsUseCase
-          .isProductStyleable(selectedStyleValues)) {
-        isAddToCartButtonEnabled = _productDetailsStyleTraitsUseCase
-            .isProductStyleSelectionCompleted(selectedStyleValues);
-      }
-
-      if (isProductConfigurable) {
-        isAddToCartButtonEnabled = isProductConfigurationCompleted;
-      }
-
-      isAddToCartButtonEnabled &= quantity > 0;
-      isAddToCartButtonEnabled &= (styledProduct == null
-              ? productEntity.availability?.messageType != 2
-              : styledProduct.availability?.messageType != 2) ||
-          productEntity.canBackOrder!;
-
-      return ProductDetailsAddtoCartEntity(
-          detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart,
-          quantityText: quantity.toString(),
-          isAddToCartAllowed: isAddToCartButtonAvailable,
-          addToCartButtonEnabled: isAddToCartButtonEnabled);
-    } else {
-      return ProductDetailsAddtoCartEntity(
-          detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart,
-          quantityText: quantity.toString(),
-          isAddToCartAllowed: isAddToCartButtonAvailable);
-    }
+    var isAddToCartEnable = await _addToCartUseCase.getAddToCartEnableState(
+        quantity,
+        hasCheckout,
+        addToCartEnabled,
+        productEntity,
+        styledProduct,
+        selectedStyleValues,
+        isProductConfigurable,
+        isProductConfigurationCompleted);
+    return ProductDetailsAddtoCartEntity(
+        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAddtoCart,
+        quantityText: quantity.toString(),
+        isAddToCartAllowed: isAddToCartVisible,
+        addToCartButtonEnabled: isAddToCartEnable);
   }
 
   ProductDetailsDescriptionEntity makeProductDetailsDescriptionEntity(

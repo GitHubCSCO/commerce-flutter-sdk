@@ -31,4 +31,7 @@ class ProductDetailItemEntity extends ProductDetailsBaseEntity {
         position: position ?? this.position,
         detailsSectionType: detailsSectionType!);
   }
+
+  @override
+  List<Object?> get props => [id, title, htmlContent, position];
 }

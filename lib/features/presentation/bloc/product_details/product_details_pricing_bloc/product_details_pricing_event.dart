@@ -22,6 +22,8 @@ class LoadProductDetailsPricing extends ProductDetailsPricingEvent {
   final ProductSettings productSettings;
   final Map<String, ConfigSectionOptionEntity?> selectedConfigurations;
   final Map<String, StyleValueEntity?>? selectedStyleValues;
+  final bool hasCheckout;
+  final bool addToCartEnabled;
 
   LoadProductDetailsPricing(
       {required this.productDetailsPricingEntity,
@@ -34,5 +36,7 @@ class LoadProductDetailsPricing extends ProductDetailsPricingEvent {
       required this.realtimeProductPricingEnabled,
       required this.productSettings,
       required this.selectedConfigurations,
+      required this.hasCheckout,
+      required this.addToCartEnabled,
       required this.selectedStyleValues});
 }
