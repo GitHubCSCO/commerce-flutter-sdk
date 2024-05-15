@@ -334,51 +334,6 @@ class OrderProductPricingWidget extends StatelessWidget {
   }
 }
 
-Widget _buildDiscountMessageSection(BuildContext context,
-    QuickOrderItemEntity cartLineEntity) {
-  var discountMessage =
-  cartLineEntity.productEntity.pricing?.getDiscountValue();
-  if (discountMessage != null &&
-      discountMessage.isNotEmpty &&
-      discountMessage != "null") {
-    return Text(
-      discountMessage,
-      style: const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.normal,
-          fontStyle: FontStyle.italic,
-          color: OptiAppColors.textSecondary),
-    );
-  }
-  return Container();
-}
-
-Widget _buildPricingSection(BuildContext context,
-    QuickOrderItemEntity cartLineEntity) {
-  return Container(
-    child: Row(
-      children: [
-        Text(cartLineEntity.productEntity.updatePriceValueText(false),
-            style: OptiTextStyles.bodySmallHighlight),
-        Text(
-          cartLineEntity.productEntity.updateUnitOfMeasure(true),
-          style: OptiTextStyles.bodySmall,
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _buildInventorySection(BuildContext context,
-    QuickOrderItemEntity cartLineEntity) {
-  return Container(
-    child: Text(
-      cartLineEntity.productEntity.availability?.message ?? '',
-      style: OptiTextStyles.body,
-    ),
-  );
-}
-
 class OrderProductQuantityGroupWidget extends StatelessWidget {
   final Function(BuildContext context, QuickOrderItemEntity,
       OrderCallBackType orderCallBackType) callback;
@@ -404,8 +359,6 @@ class OrderProductQuantityGroupWidget extends StatelessWidget {
                   }
                   quickOrderItemEntity.quantityOrdered = quantity ?? 0;
                   context.read<OrderItemPricingInventoryCubit>().getPricingAndInventory(quickOrderItemEntity, setting);
-                  // callback(context, cartLineEntity,
-                  //     OrderCallBackType.quantityChange);
                 }),
           ),
           // CartContentTitleSubTitleColumn('U/M', 'E/A'),
