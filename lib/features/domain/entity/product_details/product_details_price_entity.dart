@@ -19,6 +19,9 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
   final bool? viewQuantityPricingButtonShown;
   final bool? viewInventoryByWarehouseShown;
 
+  final bool? addToCartVisible;
+  final bool? addToCartEnabled;
+
   const ProductDetailsPriceEntity(
       {this.productPricingEnabled,
       this.showHidePricing,
@@ -32,6 +35,8 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
       this.selectedUnitOfMeasureValueText,
       this.viewQuantityPricingButtonShown,
       this.viewInventoryByWarehouseShown,
+      this.addToCartVisible,
+      this.addToCartEnabled,
       this.quantity,
       required super.detailsSectionType});
 
@@ -50,6 +55,9 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
       int? quantity,
       bool? viewQuantityPricingButtonShown,
       bool? viewInventoryByWarehouseShown,
+      bool? hasCheckout,
+      bool? addToCartEnabled,
+      bool? addToCartVisible,
       ProdcutDeatilsPageWidgets? detailsSectionType}) {
     return ProductDetailsPriceEntity(
       productPricingEnabled:
@@ -71,6 +79,27 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
           viewQuantityPricingButtonShown ?? this.viewQuantityPricingButtonShown,
       viewInventoryByWarehouseShown:
           viewInventoryByWarehouseShown ?? this.viewInventoryByWarehouseShown,
+      addToCartVisible: addToCartVisible ?? this.addToCartVisible,
+      addToCartEnabled: addToCartEnabled ?? this.addToCartEnabled,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        productPricingEnabled,
+        showHidePricing,
+        showHideInventory,
+        showInventoryAvailability,
+        discountMessage,
+        availability,
+        priceValueText,
+        product,
+        styledProduct,
+        selectedUnitOfMeasureValueText,
+        quantity,
+        viewQuantityPricingButtonShown,
+        viewInventoryByWarehouseShown,
+        addToCartVisible,
+        addToCartEnabled
+      ];
 }

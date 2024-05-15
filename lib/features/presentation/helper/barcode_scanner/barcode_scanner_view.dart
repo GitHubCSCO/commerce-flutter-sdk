@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'dart:math';
 import 'package:camera/camera.dart';
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
@@ -30,6 +31,10 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
   String? _text;
   bool canProcess = false;
   var _cameraLensDirection = CameraLensDirection.back;
+
+  double sideMargin = 20.0;
+  double bottomViewHeight = 80.0;
+  double scanAreaHeight = 200.0;
 
   @override
   void dispose() {
@@ -65,7 +70,7 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
           Visibility(
             visible: widget.barcodeFullView,
             child: Container(
-              height: 80,
+              height: bottomViewHeight,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               clipBehavior: Clip.antiAlias,
               decoration: const BoxDecoration(color: Colors.white),
@@ -102,9 +107,9 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
 
     final size = rotateSize(
         inputImage.metadata!.size, inputImage.metadata?.rotation.rawValue ?? 0);
-    double areaHeight = calculateNewHeight(screenSize.height, size.height, 200);
+    double areaHeight = calculateNewHeight(screenSize.height - bottomViewHeight, size.height, scanAreaHeight);
 
-    const left = 20.00;
+    final left = sideMargin;
     final right = size.width - left;
     double top;
     double bottom;
@@ -124,7 +129,7 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
 
     if (barCodesWithIn.isNotEmpty) {
       if (barCodesWithIn.length == 1) {
-        widget.callback(context, barCodesWithIn[0].rawValue!);
+        await widget.callback(context, barCodesWithIn[0].rawValue!);
         _busyUpdate();
       } else if (!isDialogShowing) {
         isDialogShowing = true;
@@ -170,7 +175,9 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
     return barcodesWithin;
   }
 
-  Size rotateSize(Size size, int rotation) {
+  Size rotateSize(Size size, int rawRotation) {
+    final rotation = (Platform.isIOS) ? 0 : rawRotation;
+
     // Convert rotation to radians
     double rotationRad = rotation * pi / 180;
 

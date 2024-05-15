@@ -129,7 +129,7 @@ class WishListUsecase extends BaseUseCase {
     required WishListAddToCartCollection addToCartCollection,
   }) async {
     if (wishListId.isNullOrEmpty) {
-      return WishListStatus.listAddToCartFailure;
+      return WishListStatus.listItemAddToListFailure;
     }
 
     final result = await commerceAPIServiceProvider
@@ -140,28 +140,29 @@ class WishListUsecase extends BaseUseCase {
         );
 
     switch (result) {
-      case Success(value: final value):
-        return value != null
-            ? WishListStatus.listAddToCartSuccess
-            : WishListStatus.listAddToCartFailure;
+      case Success():
+        return WishListStatus.listItemAddToListSuccess;
       case Failure():
-        return WishListStatus.listAddToCartFailure;
+        return WishListStatus.listItemAddToListFailure;
     }
   }
 
   Future<WishListStatus> createWishListAndAddToList({
-    required String name,
+    String? name,
     String? description,
     required WishListAddToCartCollection addToCartCollection,
+    bool emptyWishList = false,
   }) async {
     final wishList = WishList(
       name: name,
       description: description,
     );
 
-    final parameter = CreateWishListQueryParameters(
-      wishListObj: wishList,
-    );
+    final parameter = emptyWishList
+        ? CreateWishListQueryParameters()
+        : CreateWishListQueryParameters(
+            wishListObj: wishList,
+          );
 
     final result = await commerceAPIServiceProvider
         .getWishListService()
@@ -177,7 +178,7 @@ class WishListUsecase extends BaseUseCase {
           wishListId: value.id,
           addToCartCollection: addToCartCollection,
         );
-        if (addToListResult == WishListStatus.listAddToCartSuccess) {
+        if (addToListResult == WishListStatus.listItemAddToListSuccess) {
           return WishListStatus.listCreateSuccess;
         } else {
           return WishListStatus.listCreateFailure;
