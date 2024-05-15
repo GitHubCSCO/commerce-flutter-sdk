@@ -144,6 +144,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                             listener: (context, state) {
                               if (state is OrderListNavigateToCartState) {
                                 context.read<CartCountCubit>().onCartItemChange();
+                                context.read<CartCountCubit>().onSelectCartTab();
                                 AppRoute.cart.navigate(context);
                               } else if (state is OrderListAddToListSuccessState) {
                                 WishListCallbackHelper.addItemsToWishList(
