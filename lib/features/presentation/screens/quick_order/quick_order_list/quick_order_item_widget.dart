@@ -14,6 +14,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/ord
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -41,7 +42,6 @@ class QuickOrderItemWidget extends StatelessWidget {
           children: [
             _buildProductImage(),
             _buildProductDetails(),
-            _buildRemoveButton(context),
           ],
         ),
       ),
@@ -67,7 +67,7 @@ class QuickOrderItemWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          OrderProductTitleWidget(orderItemEntity: quickOrderItemEntity),
+          OrderProductTitleWidget(callback: callback, orderItemEntity: quickOrderItemEntity),
           BlocConsumer<OrderItemPricingInventoryCubit,
               OrderItemPricingInventoryState>(
             listener: (context, state) {
@@ -107,24 +107,6 @@ class QuickOrderItemWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildRemoveButton(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        callback(context, quickOrderItemEntity, OrderCallBackType.itemDelete);
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Container(
-          width: 30,
-          height: 30,
-          child: SvgPicture.asset(
-            AssetConstants.cartItemRemoveIcon,
-            fit: BoxFit.fitWidth,
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 class OrderProductImageWidget extends StatelessWidget {
@@ -176,94 +158,123 @@ class OrderProductImageWidget extends StatelessWidget {
 }
 
 class OrderProductTitleWidget extends StatelessWidget {
+
+  final Function(BuildContext context, QuickOrderItemEntity,
+      OrderCallBackType orderCallBackType) callback;
   final QuickOrderItemEntity orderItemEntity;
 
-  const OrderProductTitleWidget({Key? key, required this.orderItemEntity})
+  const OrderProductTitleWidget({Key? key, required this.callback, required this.orderItemEntity})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
+      padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Visibility(
+                  visible: orderItemEntity.productEntity.brand?.name?.isNotEmpty ??
+                      false,
+                  child: Text(
+                    orderItemEntity.productEntity.brand?.name ?? '',
+                    style: OptiTextStyles.bodySmall,
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                Visibility(
+                  visible:
+                  orderItemEntity.productEntity.shortDescription?.isNotEmpty ??
+                      false,
+                  child: Text(
+                    orderItemEntity.productEntity.shortDescription ?? '',
+                    style: OptiTextStyles.body,
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                Visibility(
+                  visible:
+                  orderItemEntity.productEntity
+                      .getProductNumber()
+                      .isNotEmpty,
+                  child: Text(
+                    orderItemEntity.productEntity.getProductNumber() ?? '',
+                    style: OptiTextStyles.bodySmall,
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                Visibility(
+                  visible: orderItemEntity.productEntity.customerName?.isNotEmpty ??
+                      false,
+                  child: Row(children: [
+                    Text(
+                      LocalizationConstants.myPartNumberSign,
+                      style: OptiTextStyles.bodySmallHighlight,
+                      textAlign: TextAlign.left,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        orderItemEntity.productEntity.customerName ?? '',
+                        style: OptiTextStyles.bodySmall,
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ]),
+                ),
+                Visibility(
+                  visible:
+                  orderItemEntity.productEntity.manufacturerItem?.isNotEmpty ??
+                      false,
+                  child: Row(children: [
+                    Text(
+                      LocalizationConstants.mFGNumberSign,
+                      style: OptiTextStyles.bodySmallHighlight,
+                      textAlign: TextAlign.left,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        orderItemEntity.productEntity.manufacturerItem ?? '',
+                        style: OptiTextStyles.bodySmall,
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ]),
+                ),
+              ],
+            ),
+          ),
+          _buildRemoveButton(context)
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRemoveButton(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        callback(context, orderItemEntity, OrderCallBackType.itemDelete);
+      },
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Visibility(
-              visible: orderItemEntity.productEntity.brand?.name?.isNotEmpty ??
-                  false,
-              child: Text(
-                orderItemEntity.productEntity.brand?.name ?? '',
-                style: OptiTextStyles.bodySmall,
-                textAlign: TextAlign.left,
-              ),
-            ),
-            Visibility(
-              visible:
-              orderItemEntity.productEntity.shortDescription?.isNotEmpty ??
-                  false,
-              child: Text(
-                orderItemEntity.productEntity.shortDescription ?? '',
-                style: OptiTextStyles.body,
-                textAlign: TextAlign.left,
-              ),
-            ),
-            Visibility(
-              visible:
-              orderItemEntity.productEntity
-                  .getProductNumber()
-                  .isNotEmpty,
-              child: Text(
-                orderItemEntity.productEntity.getProductNumber() ?? '',
-                style: OptiTextStyles.bodySmall,
-                textAlign: TextAlign.left,
-              ),
-            ),
-            Visibility(
-              visible: orderItemEntity.productEntity.customerName?.isNotEmpty ??
-                  false,
-              child: Row(children: [
-                Text(
-                  LocalizationConstants.myPartNumberSign,
-                  style: OptiTextStyles.bodySmallHighlight,
-                  textAlign: TextAlign.left,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(
-                    orderItemEntity.productEntity.customerName ?? '',
-                    style: OptiTextStyles.bodySmall,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-              ]),
-            ),
-            Visibility(
-              visible:
-              orderItemEntity.productEntity.manufacturerItem?.isNotEmpty ??
-                  false,
-              child: Row(children: [
-                Text(
-                  LocalizationConstants.mFGNumberSign,
-                  style: OptiTextStyles.bodySmallHighlight,
-                  textAlign: TextAlign.left,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(
-                    orderItemEntity.productEntity.manufacturerItem ?? '',
-                    style: OptiTextStyles.bodySmall,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-              ]),
-            ),
-          ],
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child: SizedBox(
+          width: 30,
+          height: 30,
+          child: SvgPicture.asset(
+            AssetConstants.cartItemRemoveIcon,
+            fit: BoxFit.fitWidth,
+          ),
         ),
       ),
     );
   }
+
 }
 
 class OrderProductPricingWidget extends StatelessWidget {
@@ -409,12 +420,15 @@ class OrderProductQuantityGroupWidget extends StatelessWidget {
               switch (state.runtimeType) {
                 case OrderItemPricingInventoryInitial:
                 case OrderItemPricingInventoryLoading:
-                  return Container(
-                    padding: const EdgeInsets.only(left: 20, top: 12),
-                    alignment: Alignment.bottomLeft,
-                    child: LoadingAnimationWidget.prograssiveDots(
-                      color: OptiAppColors.iconPrimary,
-                      size: 30,
+                  return Expanded(
+                    flex: 2,
+                    child: Container(
+                      padding: const EdgeInsets.only(left: 20, top: 12),
+                      alignment: Alignment.center,
+                      child: LoadingAnimationWidget.prograssiveDots(
+                        color: OptiAppColors.iconPrimary,
+                        size: 30,
+                      ),
                     ),
                   );
                 case OrderItemPricingInventoryLoaded:
@@ -443,17 +457,20 @@ class OrderProductSubTitleColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       flex: 2,
-      child: Column(
-        children: [
-          Text(
-            title,
-            style: OptiTextStyles.bodySmall,
-          ),
-          Text(
-            value,
-            style: OptiTextStyles.titleLarge,
-          )
-        ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        child: Column(
+          children: [
+            Text(
+              title,
+              style: OptiTextStyles.bodySmall,
+            ),
+            Text(
+              value,
+              style: OptiTextStyles.titleSmall,
+            )
+          ],
+        ),
       ),
     );
   }
