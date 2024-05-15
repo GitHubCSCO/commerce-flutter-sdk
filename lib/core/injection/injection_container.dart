@@ -38,6 +38,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/sea
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
@@ -78,9 +79,13 @@ import 'package:commerce_flutter_app/features/presentation/cubit/product_carouse
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_add_to/wish_list_add_to_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_create/wish_list_create_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/style_trait_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_details/wish_list_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_information/wish_list_information_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:commerce_flutter_app/services/secure_storage_service.dart';
 import 'package:get_it/get_it.dart';
@@ -178,7 +183,8 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => OrderListBloc(quickOrderUseCase: sl()))
     ..registerFactory(() => QuickOrderUseCase())
     ..registerFactory(() => QuickOrderAutoCompleteBloc(searchUseCase: sl()))
-    ..registerFactory(() => OrderItemPricingInventoryCubit(pricingInventoryUseCase: sl()))
+    ..registerFactory(
+        () => OrderItemPricingInventoryCubit(pricingInventoryUseCase: sl()))
     ..registerFactory(() => OrderPricingInventoryUseCase())
 
     //barcode
@@ -187,6 +193,11 @@ Future<void> initInjectionContainer() async {
     //wishlist
     ..registerFactory(() => WishListCubit(wishListUsecase: sl()))
     ..registerFactory(() => WishListUsecase())
+    ..registerFactory(() => WishListDetailsCubit(wishListDetailsUsecase: sl()))
+    ..registerFactory(() => WishListDetailsUsecase())
+    ..registerFactory(() => WishListInformationCubit(wishListUsecase: sl()))
+    ..registerFactory(() => WishListCreateCubit(wishListUsecase: sl()))
+    ..registerFactory(() => WishListAddToCubit(wishListUsecase: sl()))
 
     //date selection
     ..registerFactory(() => DateSelectionCubit())
@@ -207,13 +218,15 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ProductDetailsUseCase())
 
     // product details pricing
-    ..registerFactory(
-        () => ProductDetailsPricingBloc(productDetailsPricingUseCase: sl()))
+    ..registerFactory(() => ProductDetailsPricingBloc(
+        productDetailsPricingUseCase: sl(),
+        productDetailsStyleTraitUseCase: sl()))
     ..registerFactory(() => ProductDetailsPricingUseCase())
 
     // product details Add to cart
-    ..registerFactory(
-        () => ProductDetailsAddToCartBloc(productDetailsAddToCartUseCase: sl()))
+    ..registerFactory(() => ProductDetailsAddToCartBloc(
+        productDetailsAddToCartUseCase: sl(),
+        productDetailsStyleTraitUseCase: sl()))
     ..registerFactory(() => ProductDetailsAddToCartUseCase())
 
     //product style trait

@@ -26,18 +26,8 @@ class ProductDetailsPricingWidget extends StatelessWidget {
 
     event.add(LoadProductDetailsPricing(
         productDetailsPricingEntity: productDetailsPricingEntity,
-        product: productDetailsBloc.product,
-        styledProduct: productDetailsBloc.styledProduct,
-        productPricingEnabled: productDetailsBloc.productPricingEnabled,
         quantity: 1,
-        chosenUnitOfMeasure: productDetailsBloc.chosenUnitOfMeasure,
-        realtimeProductAvailabilityEnabled:
-            productDetailsBloc.realtimeProductAvailabilityEnabled,
-        realtimeProductPricingEnabled:
-            productDetailsBloc.realtimeProductPricingEnabled,
-        productSettings: productDetailsBloc.productSettings,
-        selectedConfigurations: productDetailsBloc.selectedConfigurations,
-        selectedStyleValues: productDetailsBloc.selectedStyleValues));
+        productDetailsDataEntity: productDetailsBloc.productDetailDataEntity));
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
@@ -159,10 +149,12 @@ class ProductDetailsPricingWidget extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                    productDetailsPriceEntity.product.updatePriceValueText(productDetailsPriceEntity.productPricingEnabled),
+                    productDetailsPriceEntity.product.updatePriceValueText(
+                        productDetailsPriceEntity.productPricingEnabled),
                     style: OptiTextStyles.subtitle),
                 Text(
-                  productDetailsPriceEntity.product.updateUnitOfMeasure(productDetailsPriceEntity.productPricingEnabled),
+                  productDetailsPriceEntity.product.updateUnitOfMeasure(
+                      productDetailsPriceEntity.productPricingEnabled),
                   style: OptiTextStyles.body,
                 ),
               ],
@@ -191,8 +183,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
               style: OptiTextStyles.body,
             ),
           );
-        }
-        else if(state is ProductDetailsPricingLoading){
+        } else if (state is ProductDetailsPricingLoading) {
           return Container(
             alignment: Alignment.bottomLeft,
             child: LoadingAnimationWidget.prograssiveDots(
@@ -200,11 +191,9 @@ class ProductDetailsPricingWidget extends StatelessWidget {
               size: 30,
             ),
           );
-        }else{
+        } else {
           return Container();
-        
         }
-     
       },
     );
   }

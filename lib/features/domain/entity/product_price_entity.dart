@@ -163,6 +163,41 @@ class ProductPriceEntity extends Equatable {
   }
 
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [
+        productId,
+        isOnSale,
+        requiresRealTimePrice,
+        quoteRequired,
+        additionalResults,
+        unitCost,
+        unitCostDisplay,
+        unitListPrice,
+        unitListPriceDisplay,
+        extendedUnitListPrice,
+        extendedUnitListPriceDisplay,
+        unitRegularPrice,
+        unitRegularPriceDisplay,
+        extendedUnitRegularPrice,
+        extendedUnitRegularPriceDisplay,
+        unitNetPrice,
+        unitNetPriceDisplay,
+        extendedUnitNetPrice,
+        extendedUnitNetPriceDisplay,
+        unitOfMeasure,
+        vatRate,
+        vatAmount,
+        vatAmountDisplay,
+        unitListBreakPrices,
+        unitRegularBreakPrices,
+        regularPrice,
+        regularPriceDisplay,
+        extendedRegularPrice,
+        extendedRegularPriceDisplay,
+        actualPrice,
+        actualPriceDisplay,
+        extendedActualPrice,
+        extendedActualPriceDisplay,
+        regularBreakPrices,
+        actualBreakPrices,
+      ];
 }

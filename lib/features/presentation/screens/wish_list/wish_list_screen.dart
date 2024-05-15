@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
@@ -9,36 +10,43 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_delete_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class ListsScreen extends StatelessWidget {
-  const ListsScreen({super.key});
+final GlobalKey _wishListPageScaffoldKey = GlobalKey();
+
+class WishListsScreen extends StatelessWidget {
+  const WishListsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<WishListCubit>()..loadWishLists(),
-      child: const ListsPage(),
+      child: const WishListsPage(),
     );
   }
 }
 
-class ListsPage extends StatefulWidget {
-  const ListsPage({super.key});
+class WishListsPage extends StatefulWidget {
+  const WishListsPage({super.key});
 
   @override
-  State<ListsPage> createState() => _ListsPageState();
+  State<WishListsPage> createState() => _WishListsPageState();
 }
 
-class _ListsPageState extends State<ListsPage> {
+class _WishListsPageState extends State<WishListsPage> {
   final websitePath = WebsitePaths.listsWebsitePath;
 
   final _textEditingController = TextEditingController();
@@ -52,16 +60,20 @@ class _ListsPageState extends State<ListsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _wishListPageScaffoldKey,
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         backgroundColor: OptiAppColors.backgroundWhite,
         title: const Text(LocalizationConstants.lists),
         centerTitle: false,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () => CustomSnackBar.showComingSoonSnackBar(context),
-          )
+          _OptionsMenu(
+            onWishListCreated: () {
+              _wishListPageScaffoldKey.currentContext
+                  ?.read<WishListCubit>()
+                  .loadWishLists();
+            },
+          ),
         ],
       ),
       body: Column(
@@ -97,7 +109,37 @@ class _ListsPageState extends State<ListsPage> {
               },
             ),
           ),
-          BlocBuilder<WishListCubit, WishListState>(
+          BlocConsumer<WishListCubit, WishListState>(
+            listener: (context, state) {
+              if (state.status == WishListStatus.listDeleteLoading) {
+                showPleaseWait(context);
+              }
+
+              if (state.status == WishListStatus.listDeleteSuccess) {
+                Navigator.of(context, rootNavigator: true).pop();
+                CustomSnackBar.showSnackBarMessage(
+                  context,
+                  LocalizationConstants.listDeleted,
+                );
+                context.read<WishListCubit>().loadWishLists();
+              }
+
+              if (state.status == WishListStatus.listDeleteFailure) {
+                Navigator.of(context, rootNavigator: true).pop();
+                displayDialogWidget(
+                  context: context,
+                  title: LocalizationConstants.error,
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text(LocalizationConstants.oK),
+                    )
+                  ],
+                );
+              }
+            },
             builder: (context, state) {
               if (state.status == WishListStatus.loading) {
                 return const Expanded(
@@ -272,41 +314,126 @@ class _WishListItem extends StatelessWidget {
         vertical: 20,
       ),
       color: OptiAppColors.backgroundWhite,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(wishList.name ?? '', style: OptiTextStyles.body),
-          Text(
-            wishList.description ?? '',
-            style: OptiTextStyles.bodySmall.copyWith(
-              color: OptiAppColors.textSecondary,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+      child: InkWell(
+        onTap: () => AppRoute.wishlistsDetails.navigateBackStack(
+          context,
+          pathParameters: {
+            'id': wishList.id ?? '',
+          },
+          extra: WishListScreenCallbackHelper(
+            onWishListUpdated: () {
+              _wishListPageScaffoldKey.currentContext
+                  ?.read<WishListCubit>()
+                  .loadWishLists();
+            },
+            onWishListDeleted: () {
+              _wishListPageScaffoldKey.currentContext
+                  ?.read<WishListCubit>()
+                  .loadWishLists();
+            },
           ),
-          Text(
-            _constructListSharingDisplay(),
-            style: OptiTextStyles.bodySmall.copyWith(
-              color: OptiAppColors.textSecondary,
-            ),
-          ),
-          Text(
-            LocalizationConstants.updateBy.format(
-              [
-                wishList.updatedOn != null
-                    ? DateFormat(CoreConstants.dateFormatString)
-                        .format(wishList.updatedOn!)
-                    : '',
-                wishList.updatedByDisplayName ?? '',
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(wishList.name ?? '', style: OptiTextStyles.body),
+                Text(
+                  wishList.description ?? '',
+                  style: OptiTextStyles.bodySmall.copyWith(
+                    color: OptiAppColors.textSecondary,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  _constructListSharingDisplay(),
+                  style: OptiTextStyles.bodySmall.copyWith(
+                    color: OptiAppColors.textSecondary,
+                  ),
+                ),
+                Text(
+                  LocalizationConstants.updateBy.format(
+                    [
+                      wishList.updatedOn != null
+                          ? DateFormat(CoreConstants.dateFormatString)
+                              .format(wishList.updatedOn!)
+                          : '',
+                      wishList.updatedByDisplayName ?? '',
+                    ],
+                  ),
+                  style: OptiTextStyles.bodySmall.copyWith(
+                    color: OptiAppColors.textSecondary,
+                  ),
+                )
               ],
             ),
-            style: OptiTextStyles.bodySmall.copyWith(
-              color: OptiAppColors.textSecondary,
-            ),
-          )
-        ],
+            if (context
+                .read<WishListCubit>()
+                .canDeleteWishList(wishList: wishList))
+              InkWell(
+                onTap: () async {
+                  displayWishListDeleteWidget(
+                    wishList: wishList,
+                    context: context,
+                    onDelete: () {
+                      context.read<WishListCubit>().deleteWishList(
+                            wishListId: wishList.id,
+                          );
+                    },
+                  );
+                },
+                child: SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: SvgPicture.asset(
+                    AssetConstants.cartItemRemoveIcon,
+                    fit: BoxFit.fitWidth,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class _OptionsMenu extends StatelessWidget {
+  const _OptionsMenu({
+    this.onWishListCreated,
+  });
+  final void Function()? onWishListCreated;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<WishListCubit, WishListState>(
+      builder: (context, state) {
+        return BottomMenuWidget(
+          websitePath: WebsitePaths.listsWebsitePath,
+          toolMenuList: [
+            if (state.settings.allowMultipleWishLists == true ||
+                (state.settings.allowMultipleWishLists == false &&
+                    (state.wishLists.pagination?.totalItemCount ?? 0) == 0))
+              ToolMenu(
+                title: LocalizationConstants.createNewList,
+                action: () {
+                  AppRoute.wishListCreate.navigateBackStack(
+                    context,
+                    extra: WishListCreateScreenCallbackHelper(
+                      onWishListCreated: onWishListCreated,
+                    ),
+                  );
+                },
+              )
+          ],
+        );
+      },
     );
   }
 }

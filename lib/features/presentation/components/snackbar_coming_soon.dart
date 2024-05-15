@@ -1,3 +1,5 @@
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:flutter/material.dart';
 
 class CustomSnackBar {
@@ -19,7 +21,16 @@ class CustomSnackBar {
     );
   }
 
-    static void showInvalidCVV(BuildContext context) {
+  static void showAddToCartFailed(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(SiteMessageConstants.defaultValueAddToCartFail),
+        duration: const Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showInvalidCVV(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text("Invalid CVV"),
@@ -46,4 +57,42 @@ class CustomSnackBar {
     );
   }
 
+  static void showWishListAddToCart(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content:
+            Text(SiteMessageConstants.defaultValueAddToCartAllProductsFromList),
+        duration: const Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showWishListAddToCartError(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(SiteMessageConstants.defaultValueAddToCartFail),
+        duration: const Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showProductDeleted(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(LocalizationConstants.productDeleted),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showProductDeleteFailed(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(LocalizationConstants.errorDeletingProduct),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static showComingSoon(BuildContext context) {}
 }

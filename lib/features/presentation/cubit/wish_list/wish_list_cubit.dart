@@ -1,4 +1,6 @@
+import 'package:commerce_flutter_app/features/domain/entity/settings/wish_list_settings_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_collection_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,15 +9,15 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 part 'wish_list_state.dart';
 
 class WishListCubit extends Cubit<WishListState> {
-  final WishListUsecase _wishListUsecase;
-  WishListCubit({required WishListUsecase wishListUsecase})
-      : _wishListUsecase = wishListUsecase,
-        super(
+  final WishListUsecase wishListUsecase;
+  WishListCubit({required this.wishListUsecase})
+      : super(
           const WishListState(
             sortOrder: WishListSortOrder.modifiedOnDescending,
             status: WishListStatus.initial,
             wishLists: WishListCollectionEntity(),
             searchQuery: '',
+            settings: WishListSettingsEntity(),
           ),
         );
 
@@ -24,7 +26,7 @@ class WishListCubit extends Cubit<WishListState> {
       state.wishLists.wishListCollection?.isEmpty == true;
 
   List<WishListSortOrder> get availableSortOrders =>
-      _wishListUsecase.availableSortOrders;
+      wishListUsecase.availableSortOrders;
 
   Future<void> changeSortOrder(WishListSortOrder sortOrder) async {
     emit(
@@ -39,19 +41,22 @@ class WishListCubit extends Cubit<WishListState> {
   Future<void> loadWishLists() async {
     emit(state.copyWith(status: WishListStatus.loading));
 
-    final result = await _wishListUsecase.getWishLists(
+    final settings = await wishListUsecase.loadWishListSettings();
+
+    final result = await wishListUsecase.getWishLists(
       sortOrder: state.sortOrder,
       page: 1,
       searchText: state.searchQuery,
     );
 
-    result != null
+    result != null && settings != null
         ? emit(
             WishListState(
               wishLists: result,
               status: WishListStatus.success,
               sortOrder: state.sortOrder,
               searchQuery: state.searchQuery,
+              settings: settings,
             ),
           )
         : emit(state.copyWith(status: WishListStatus.failure));
@@ -71,7 +76,7 @@ class WishListCubit extends Cubit<WishListState> {
     }
 
     emit(state.copyWith(status: WishListStatus.moreLoading));
-    final result = await _wishListUsecase.getWishLists(
+    final result = await wishListUsecase.getWishLists(
       page: state.wishLists.pagination!.page! + 1,
       sortOrder: state.sortOrder,
       searchText: state.searchQuery,
@@ -93,6 +98,22 @@ class WishListCubit extends Cubit<WishListState> {
         ),
         status: WishListStatus.success,
       ),
+    );
+  }
+
+  Future<void> deleteWishList({required String? wishListId}) async {
+    emit(state.copyWith(status: WishListStatus.listDeleteLoading));
+    final result = await wishListUsecase.deleteWishList(
+      wishListId: wishListId,
+    );
+
+    emit(state.copyWith(status: result));
+  }
+
+  bool canDeleteWishList({required WishListEntity wishList}) {
+    return wishListUsecase.canDeleteWishList(
+      settings: state.settings,
+      wishList: wishList,
     );
   }
 }

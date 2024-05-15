@@ -49,6 +49,14 @@ class ProductUnitOfMeasureEntity extends Equatable {
   }
 
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [
+        productUnitOfMeasureId,
+        unitOfMeasure,
+        unitOfMeasureDisplay,
+        description,
+        qtyPerBaseUnitOfMeasure,
+        roundingRule,
+        isDefault,
+        availability,
+      ];
 }

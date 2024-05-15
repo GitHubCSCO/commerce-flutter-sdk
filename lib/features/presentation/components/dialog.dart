@@ -1,4 +1,7 @@
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:flutter/material.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class DialogHighlightButton extends StatelessWidget {
   const DialogHighlightButton({
@@ -89,18 +92,15 @@ void displayDialogWidget({
     useRootNavigator: false,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              title ?? '',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
+        title: title != null
+            ? Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            : null,
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -128,5 +128,115 @@ void displayDialogWidget({
         elevation: elevation,
       );
     },
+  );
+}
+
+void displayInputDialog({
+  required BuildContext context,
+  required String title,
+  String? hintText,
+  required void Function(String) onSubmit,
+  bool obscureText = false,
+  String confirmText = LocalizationConstants.oK,
+  String existingValue = '',
+}) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return _InputDialog(
+        title: title,
+        hintText: hintText,
+        onSubmit: onSubmit,
+        obscureText: obscureText,
+        confirmText: confirmText,
+        existingValue: existingValue,
+      );
+    },
+  );
+}
+
+class _InputDialog extends StatefulWidget {
+  const _InputDialog({
+    required this.title,
+    required this.hintText,
+    required this.onSubmit,
+    required this.obscureText,
+    required this.confirmText,
+    this.existingValue = '',
+  });
+
+  final String title;
+  final String? hintText;
+  final bool obscureText;
+  final String confirmText;
+  final String existingValue;
+  final void Function(String) onSubmit;
+
+  @override
+  State<_InputDialog> createState() => _InputDialogState();
+}
+
+class _InputDialogState extends State<_InputDialog> {
+  late final TextEditingController _textEditingController;
+
+  @override
+  void initState() {
+    super.initState();
+    _textEditingController = TextEditingController(
+      text: widget.existingValue.isNullOrEmpty ? null : widget.existingValue,
+    );
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(widget.title),
+      content: TextField(
+        obscureText: widget.obscureText,
+        onSubmitted: (text) => context.closeKeyboard(),
+        controller: _textEditingController,
+        decoration: InputDecoration(
+          hintText: widget.hintText,
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text(LocalizationConstants.cancel),
+        ),
+        TextButton(
+          onPressed: () {
+            widget.onSubmit(_textEditingController.text);
+            Navigator.of(context).pop();
+          },
+          child: Text(widget.confirmText),
+        )
+      ],
+    );
+  }
+}
+
+void showPleaseWait(BuildContext context) {
+  showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (context) => const AlertDialog(
+      content: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Row(
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(width: 30),
+            Text('Please wait...'),
+          ],
+        ),
+      ),
+    ),
   );
 }
