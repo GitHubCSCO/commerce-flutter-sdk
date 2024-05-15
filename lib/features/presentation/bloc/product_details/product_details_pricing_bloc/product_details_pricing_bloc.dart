@@ -38,19 +38,24 @@ class ProductDetailsPricingBloc
     emit(ProductDetailsPricingLoading());
 
     var productDetailsPricingEntity = event.productDetailsPricingEntity;
-    var product = event.product!;
-    final styledProduct = event.styledProduct;
+    var product = event.productDetailsDataEntity.product!;
+    final styledProduct = event.productDetailsDataEntity.styledProduct;
     final quantity = event.quantity;
-    final productPricingEnabled = event.productPricingEnabled;
-    final chosenUnitOfMeasure = event.chosenUnitOfMeasure;
+    final productPricingEnabled =
+        event.productDetailsDataEntity.productPricingEnabled;
+    final chosenUnitOfMeasure =
+        event.productDetailsDataEntity.chosenUnitOfMeasure;
     final realtimeProductAvailabilityEnabled =
-        event.realtimeProductAvailabilityEnabled;
-    final realtimeProductPricingEnabled = event.realtimeProductPricingEnabled;
-    final productSettings = event.productSettings;
-    final selectedConfigurations = event.selectedConfigurations;
-    final selectedStyleValues = event.selectedStyleValues;
-    final hasCheckout = event.hasCheckout;
-    final addToCartEnabled = event.addToCartEnabled;
+        event.productDetailsDataEntity.realtimeProductAvailabilityEnabled!;
+    final realtimeProductPricingEnabled =
+        event.productDetailsDataEntity.realtimeProductPricingEnabled!;
+    final productSettings = event.productDetailsDataEntity.productSettings!;
+    final selectedConfigurations =
+        event.productDetailsDataEntity.selectedConfigurations!;
+    final selectedStyleValues =
+        event.productDetailsDataEntity.selectedStyleValues;
+    final hasCheckout = event.productDetailsDataEntity.hasCheckout!;
+    final addToCartEnabled = event.productDetailsDataEntity.addToCartEnabled!;
 
     final result = await _productDetailsPricingUseCase.loadProductPricing(
         product,

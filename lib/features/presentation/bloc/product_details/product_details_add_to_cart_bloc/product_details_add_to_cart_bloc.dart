@@ -11,13 +11,11 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class ProductDetailsAddToCartBloc
     extends Bloc<ProductDetailsAddToCartEvent, ProductDetailsAddtoCartState> {
   final ProductDetailsAddToCartUseCase _productDetailsAddToCartUseCase;
-  final ProductDetailsStyleTraitsUseCase _productDetailsStyleTraitUseCase;
   ProductDetailsAddToCartBloc(
       {required ProductDetailsAddToCartUseCase productDetailsAddToCartUseCase,
       required ProductDetailsStyleTraitsUseCase
           productDetailsStyleTraitUseCase})
       : _productDetailsAddToCartUseCase = productDetailsAddToCartUseCase,
-        _productDetailsStyleTraitUseCase = productDetailsStyleTraitUseCase,
         super(ProductDetailsAddtoCartInitial()) {
     on<LoadProductDetailsAddToCartEvent>(
         (event, emit) => _fetchProductDetailsAddToCartData(event, emit));
@@ -104,7 +102,6 @@ class ProductDetailsAddToCartBloc
 
   Future<void> _onAddToCartEvent(
       AddToCartEvent event, Emitter<ProductDetailsAddtoCartState> emit) async {
-    // emit(ProductDetailsAddtoCartLoading());
     var product =
         event.productDetailsAddToCartEntity.productDetailsPriceEntity?.product;
     var styledProduct = event
@@ -120,7 +117,7 @@ class ProductDetailsAddToCartBloc
         await _productDetailsAddToCartUseCase.addToCart(addCartLine);
 
     switch (response) {
-      case Success(value: final data):
+      case Success(value: _):
         emit(ProductDetailsProdctAddedToCartSuccess());
         break;
       case Failure(errorResponse: final errorResponse):
