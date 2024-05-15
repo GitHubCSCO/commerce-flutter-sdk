@@ -161,7 +161,8 @@ class _CameraViewState extends State<CameraView> {
     Size screenSize = MediaQuery
         .of(context)
         .size;
-    final topMargin = (screenSize.height - 180) / 2;
+
+    final topMargin = (screenSize.height - 180 - 80) / 2;
 
     return Positioned(
       top: widget.barcodeFullView ? topMargin : 0,
