@@ -73,4 +73,22 @@ class ProductDetailsGeneralInfoEntity extends ProductDetailsBaseEntity {
         myPartNumberTitle: myPartNumberTitle ?? this.myPartNumberTitle,
         detailsSectionType: detailsSectionType ?? this.detailsSectionType);
   }
+
+  @override
+  List<Object?> get props => [
+        productNumber,
+        thumbnails,
+        productName,
+        originalPartNumberValue,
+        myPartNumberValue,
+        mFGNumberValue,
+        packDescriptionValue,
+        hasMultipleImages,
+        productInformationWasUpdated,
+        brandName,
+        brandImage,
+        packDescriptionTitle,
+        mFGNumberTitle,
+        myPartNumberTitle
+      ];
 }

@@ -1,5 +1,3 @@
-import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
@@ -13,10 +11,10 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class ProductDetailsAddToCartBloc
     extends Bloc<ProductDetailsAddToCartEvent, ProductDetailsAddtoCartState> {
   final ProductDetailsAddToCartUseCase _productDetailsAddToCartUseCase;
-  final ProductDetailsStyleTraitsUseCase _productDetailsStyleTraitUseCase =
-      ProductDetailsStyleTraitsUseCase();
   ProductDetailsAddToCartBloc(
-      {required ProductDetailsAddToCartUseCase productDetailsAddToCartUseCase})
+      {required ProductDetailsAddToCartUseCase productDetailsAddToCartUseCase,
+      required ProductDetailsStyleTraitsUseCase
+          productDetailsStyleTraitUseCase})
       : _productDetailsAddToCartUseCase = productDetailsAddToCartUseCase,
         super(ProductDetailsAddtoCartInitial()) {
     on<LoadProductDetailsAddToCartEvent>(
@@ -104,7 +102,6 @@ class ProductDetailsAddToCartBloc
 
   Future<void> _onAddToCartEvent(
       AddToCartEvent event, Emitter<ProductDetailsAddtoCartState> emit) async {
-    // emit(ProductDetailsAddtoCartLoading());
     var product =
         event.productDetailsAddToCartEntity.productDetailsPriceEntity?.product;
     var styledProduct = event
@@ -120,7 +117,7 @@ class ProductDetailsAddToCartBloc
         await _productDetailsAddToCartUseCase.addToCart(addCartLine);
 
     switch (response) {
-      case Success(value: final data):
+      case Success(value: _):
         emit(ProductDetailsProdctAddedToCartSuccess());
         break;
       case Failure(errorResponse: final errorResponse):

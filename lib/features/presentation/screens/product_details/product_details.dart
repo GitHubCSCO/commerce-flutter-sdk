@@ -13,8 +13,10 @@ import 'package:commerce_flutter_app/features/domain/entity/product_details/prod
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_standard_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
@@ -22,21 +24,17 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/produc_details_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_event.dart';
-import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/style_trait_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_add_to_cart_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_general_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_pricing_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_spefication_expansion_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_standart_configuration_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_style_traits_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/product_carousel_section_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:commerce_flutter_app/core/extensions/html_string_extension.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -65,17 +63,25 @@ class ProductDetailsScreen extends StatelessWidget {
           create: (context) => sl<StyleTraitCubit>(),
         ),
       ],
-      child: const ProductDetailsPage(),
+      child: ProductDetailsPage(productId, product),
     );
   }
 }
 
 class ProductDetailsPage extends BaseDynamicContentScreen {
-  const ProductDetailsPage({super.key});
+  final String productId;
+  final ProductEntity? product;
+  const ProductDetailsPage(this.productId, this.product, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
+    return BlocListener<AuthCubit, AuthState>(listener: (context, state) {
+      if (state.status == AuthStatus.authenticated) {
+        context
+            .read<ProductDetailsBloc>()
+            .add(FetchProductDetailsEvent(productId, product));
+      }
+    }, child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
       builder: (_, state) {
         switch (state) {
           case ProductDetailsInitial():
@@ -99,7 +105,7 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
             return const Center(child: Text("failure"));
         }
       },
-    );
+    ));
   }
 
   List<Widget> _buildProductDetailsWidgets(
@@ -194,10 +200,14 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
         if (state is ProductDetailsPricingLoaded) {
           final priceEntity = state.productDetailsPriceEntity;
           detailsAddToCartEntity = detailsAddToCartEntity.copyWith(
-              productDetailsPriceEntity: priceEntity);
+              productDetailsPriceEntity: priceEntity,
+              isAddToCartAllowed: priceEntity.addToCartVisible,
+              addToCartButtonEnabled: priceEntity.addToCartEnabled);
+
           buildContext.read<ProductDetailsAddToCartBloc>().add(
                 LoadProductDetailsAddToCartEvent(
-                    productDetailsAddToCartEntity: detailsAddToCartEntity),
+                  productDetailsAddToCartEntity: detailsAddToCartEntity,
+                ),
               );
         }
       },

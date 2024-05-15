@@ -6,9 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
-
-
 class ProductDetailsStyleTraitWidget extends StatelessWidget {
   final ProductDetailsStyletraitsEntity productDetailsStyletraitsEntity;
 
@@ -36,7 +33,10 @@ class ProductDetailsStyleTraitWidget extends StatelessWidget {
                     styleTrait,
                     context,
                     styleTrait.styleTraitName,
-                    context.read<ProductDetailsBloc>().selectedStyleValues,
+                    context
+                        .read<ProductDetailsBloc>()
+                        .productDetailDataEntity
+                        .selectedStyleValues,
                     onSelectItemCallback: (BuildContext context, Object item) {
                       _onSelectStyle(context, item);
                     },
@@ -61,4 +61,3 @@ class ProductDetailsStyleTraitWidget extends StatelessWidget {
     productDetailsBloc.add(StyleTraitSelectedEvent(selectedValue));
   }
 }
-

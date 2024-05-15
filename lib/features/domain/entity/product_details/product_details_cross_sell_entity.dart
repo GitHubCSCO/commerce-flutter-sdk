@@ -19,4 +19,7 @@ class ProductDetailsCrossSellEntity extends ProductDetailsBaseEntity {
         productCarouselWidgetEntity: productCarouselWidgetEntity,
         detailsSectionType: detailsSectionType!);
   }
+
+  @override
+  List<Object?> get props => [productCarouselWidgetEntity];
 }

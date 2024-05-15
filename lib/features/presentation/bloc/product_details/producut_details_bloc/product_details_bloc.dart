@@ -1,7 +1,7 @@
 import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_data_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
@@ -16,26 +16,10 @@ class ProductDetailsBloc
   final ProductDetailsUseCase _productDetailsUseCase;
   final ProductDetailsStyleTraitsUseCase _productDetailsStyleTraitsUseCase =
       ProductDetailsStyleTraitsUseCase();
-  late AccountSettings accountSettings;
-  late ProductSettings productSettings;
-  late bool addToCartEnabled;
-  late bool productPricingEnabled;
-  late RealTimeSupport realtimeSupport;
-  late bool realtimeProductPricingEnabled;
-  late bool realtimeProductAvailabilityEnabled;
-  late bool alternateUnitsOfMeasureEnabled;
+
+  ProductDetailsDataEntity productDetailDataEntity = ProductDetailsDataEntity();
   late Session session;
-  late bool hasCheckout;
-  late ProductEntity product;
-  StyledProductEntity? styledProduct;
-  ProductUnitOfMeasureEntity? chosenUnitOfMeasure;
-  Map<String, ConfigSectionOptionEntity?> selectedConfigurations = {};
-  Map<String, List<StyleValueEntity>?> availableStyleValues = {};
-  Map<String, StyleValueEntity?>? selectedStyleValues = {};
-
-  late bool isProductConfigurable;
-  late bool isProductConfigurationCompleted;
-
+  late AccountSettings accountSettings;
   int quantity = 1;
 
   ProductDetailsBloc({required ProductDetailsUseCase productDetailsUseCase})
@@ -75,24 +59,28 @@ class ProductDetailsBloc
     RealTimeSupport? realtimeSupport = currentRealtimeSupportResult;
     Session? session = (sessionResult is Success) ? sessionResult.value : null;
 
-    this.session = session!;
-    this.productSettings = productSettings!;
-    this.accountSettings = accountSettings!;
-    this.addToCartEnabled = addToCartEnabled;
-    this.productPricingEnabled = productPricingEnabled;
-    this.realtimeSupport = realtimeSupport!;
-
-    realtimeProductPricingEnabled = this.realtimeSupport ==
+    var realtimeProductPricingEnabled = realtimeSupport ==
             RealTimeSupport.RealTimePricingOnly ||
         realtimeSupport == RealTimeSupport.RealTimePricingAndInventory ||
         realtimeSupport == RealTimeSupport.RealTimePricingWithInventoryIncluded;
 
-    realtimeProductAvailabilityEnabled = realtimeSupport ==
+    var realtimeProductAvailabilityEnabled = realtimeSupport ==
             RealTimeSupport.RealTimeInventory ||
         realtimeSupport == RealTimeSupport.RealTimePricingAndInventory ||
         realtimeSupport == RealTimeSupport.RealTimePricingWithInventoryIncluded;
 
-    this.hasCheckout = hasCheckout;
+    this.accountSettings = accountSettings!;
+    this.session = session!;
+    productDetailDataEntity = productDetailDataEntity.copyWith(
+        session: session,
+        productSettings: productSettings!,
+        accountSettings: accountSettings,
+        addToCartEnabled: addToCartEnabled,
+        productPricingEnabled: productPricingEnabled,
+        realtimeSupport: realtimeSupport,
+        realtimeProductPricingEnabled: realtimeProductPricingEnabled,
+        realtimeProductAvailabilityEnabled: realtimeProductAvailabilityEnabled,
+        hasCheckout: hasCheckout);
   }
 
   Future<void> _fetchProductDetails(
@@ -107,24 +95,25 @@ class ProductDetailsBloc
     switch (result) {
       case Success(value: final data):
         _extractValuesFromData(data!);
-        await _makeAllDetailsItems(product, emit);
+        await _makeAllDetailsItems(data, emit);
       case Failure(errorResponse: final errorResponse):
         emit(ProductDetailsErrorState(errorResponse.errorDescription ?? ''));
     }
   }
 
   void _extractValuesFromData(ProductEntity productEntity) {
-    product = productEntity;
+    var product = productEntity;
+    StyledProductEntity? styledProduct;
     if (product.styledProducts != null) {
       if (product.styleParentId != null) {
         styledProduct = product.styledProducts
             ?.firstWhere((o) => o.productId == product.id);
       }
     }
-    chosenUnitOfMeasure = styledProduct != null &&
-            styledProduct?.productUnitOfMeasures != null &&
-            styledProduct!.productUnitOfMeasures!.isNotEmpty
-        ? styledProduct?.productUnitOfMeasures?.first
+    var chosenUnitOfMeasure = styledProduct != null &&
+            styledProduct.productUnitOfMeasures != null &&
+            styledProduct.productUnitOfMeasures!.isNotEmpty
+        ? styledProduct.productUnitOfMeasures?.first
         : product.productUnitOfMeasures != null &&
                 product.productUnitOfMeasures!.isNotEmpty &&
                 product.productUnitOfMeasures!.firstWhere(
@@ -133,7 +122,7 @@ class ProductDetailsBloc
             ? product.productUnitOfMeasures
                 ?.firstWhere((p) => p.unitOfMeasure == product.unitOfMeasure)
             : null;
-
+    Map<String, ConfigSectionOptionEntity?> selectedConfigurations = {};
     if (!(product.styleTraits != null && product.styleTraits!.isNotEmpty) &&
         product.configurationDto != null &&
         product.configurationDto!.sections != null &&
@@ -148,30 +137,39 @@ class ProductDetailsBloc
       }
     }
 
-    selectedStyleValues = _productDetailsStyleTraitsUseCase
+    var selectedStyleValues = _productDetailsStyleTraitsUseCase
         .getSelectedStyleValues(product, styledProduct);
-    availableStyleValues =
+    var availableStyleValues =
         _productDetailsStyleTraitsUseCase.getAvailableStyleValues(product);
 
-    isProductConfigurable = _isProductConfigurable(selectedConfigurations);
-    isProductConfigurationCompleted =
+    var isProductConfigurable = _isProductConfigurable(selectedConfigurations);
+    var isProductConfigurationCompleted =
         _isProductConfigurationCompleted(selectedConfigurations);
+
+    productDetailDataEntity = productDetailDataEntity.copyWith(
+        product: productEntity,
+        styledProduct: styledProduct,
+        chosenUnitOfMeasure: chosenUnitOfMeasure,
+        selectedConfigurations: selectedConfigurations,
+        selectedStyleValues: selectedStyleValues,
+        availableStyleValues: availableStyleValues,
+        isProductConfigurable: isProductConfigurable,
+        isProductConfigurationCompleted: isProductConfigurationCompleted);
   }
 
   Future<void> _makeAllDetailsItems(
       ProductEntity productData, Emitter<ProductDetailsState> emit) async {
-    emit(ProductDetailsLoading());
     final productDetailsEntotities =
         await _productDetailsUseCase.makeAllDetailsItems(
       productData,
-      styledProduct,
-      productPricingEnabled,
-      availableStyleValues,
-      selectedStyleValues,
-      isProductConfigurable,
-      isProductConfigurationCompleted,
-      hasCheckout,
-      addToCartEnabled,
+      productDetailDataEntity.styledProduct,
+      productDetailDataEntity.productPricingEnabled!,
+      productDetailDataEntity.availableStyleValues!,
+      productDetailDataEntity.selectedStyleValues!,
+      productDetailDataEntity.isProductConfigurable!,
+      productDetailDataEntity.isProductConfigurationCompleted!,
+      productDetailDataEntity.hasCheckout!,
+      productDetailDataEntity.addToCartEnabled!,
     );
 
     emit(
@@ -180,31 +178,36 @@ class ProductDetailsBloc
 
   void onSelectedConfiguration(ConfigSectionOptionEntity option) {
     if (option.sectionOptionId!.isEmpty) {
-      selectedConfigurations[option.sectionName!] = null;
+      productDetailDataEntity.selectedConfigurations?[option.sectionName!] =
+          null;
     } else {
-      selectedConfigurations[option.sectionName!] = option;
+      productDetailDataEntity.selectedConfigurations?[option.sectionName!] =
+          option;
     }
   }
 
   void _onStyleTraitSelected(
       StyleTraitSelectedEvent event, Emitter<ProductDetailsState> emit) async {
     var selectedStyleValue = event.selectedStyleValue;
-    styledProduct =
+    var product = productDetailDataEntity.product!;
+    var styledProduct =
         _productDetailsStyleTraitsUseCase.getStyledProductBasedOnSelection(
             selectedStyleValue,
-            product,
-            availableStyleValues,
-            selectedStyleValues);
-
+            productDetailDataEntity.product!,
+            productDetailDataEntity.availableStyleValues!,
+            productDetailDataEntity.selectedStyleValues);
+    ProductUnitOfMeasureEntity? chosenUnitOfMeasure;
     if (styledProduct != null) {
       chosenUnitOfMeasure =
-          styledProduct?.productUnitOfMeasures?.firstWhere((element) => true);
+          styledProduct.productUnitOfMeasures?.firstWhere((element) => true);
     } else {
       if (product.productUnitOfMeasures!.isNotEmpty) {
         chosenUnitOfMeasure = product.productUnitOfMeasures
             ?.firstWhere((p) => p.unitOfMeasure == product.unitOfMeasure);
       }
     }
+    productDetailDataEntity = productDetailDataEntity.copyWith(
+        styledProduct: styledProduct, chosenUnitOfMeasure: chosenUnitOfMeasure);
 
     await _makeAllDetailsItems(product, emit);
   }

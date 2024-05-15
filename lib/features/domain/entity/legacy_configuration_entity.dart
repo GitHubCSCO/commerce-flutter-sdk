@@ -57,8 +57,7 @@ class ConfigSectionEntity extends Equatable {
   }
 
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [sectionName, options, id, sortOrder];
 }
 
 class ConfigSectionOptionEntity extends Equatable {
@@ -121,6 +120,20 @@ class ConfigSectionOptionEntity extends Equatable {
   }
 
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props {
+    return [
+      sectionOptionId,
+      sectionName,
+      productName,
+      productId,
+      description,
+      price,
+      userProductPrice,
+      selected,
+      sortOrder,
+      id,
+      name,
+      quantity,
+    ];
+  }
 }
