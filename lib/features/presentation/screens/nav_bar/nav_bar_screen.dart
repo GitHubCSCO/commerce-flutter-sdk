@@ -20,7 +20,7 @@ class NavBarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CartCountCubit, CartCountState>(
+    return BlocBuilder<CartCountCubit, CountState>(
         builder: (context, state) {
       return NavBarPage(
         navigationShell: navigationShell,
