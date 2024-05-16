@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_scr
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/add_to_wish_list_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_create_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_screen.dart';
@@ -179,6 +180,14 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.quickOrder.suffix,
     builder: (context, state) => QuickOrderScreen(),
     parent: null,
+  );
+
+  // path: /account/vmi
+  final vmi = createNode(
+    name: AppRoute.vmi.name,
+    path: AppRoute.vmi.suffix,
+    builder: (context, state) => const VMIScreen(),
+    parent: account,
   );
 
   // path: /barcodeSearch
