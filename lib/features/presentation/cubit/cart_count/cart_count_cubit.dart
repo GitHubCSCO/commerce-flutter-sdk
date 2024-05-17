@@ -3,7 +3,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class CartCountCubit extends Cubit<CartCountState> {
+class CartCountCubit extends Cubit<CountState> {
 
   final CartUseCase _cartUseCase;
   int cartItemCount = 0;
@@ -11,7 +11,7 @@ class CartCountCubit extends Cubit<CartCountState> {
 
   CartCountCubit({required CartUseCase cartUseCase})
       : _cartUseCase = cartUseCase,
-        super(const CartCountState(cartItemCount: 0));
+        super(const CountInitialState(cartItemCount: 0));
 
   Future<void> loadCurrentCartCount() async {
     var result = await _cartUseCase.loadCurrentCart();
@@ -33,7 +33,7 @@ class CartCountCubit extends Cubit<CartCountState> {
 
   Future<void> emitCartCount(int count) async {
     cartItemCount = count;
-    emit(CartCountState(cartItemCount: count));
+    emit(CartCountState(cartItemCount: cartItemCount, timestamp: DateTime.now()));
   }
 
   Future<void> onCartItemChange() async {
@@ -46,7 +46,7 @@ class CartCountCubit extends Cubit<CartCountState> {
   }
 
   Future<void> onSelectCartTab() async {
-    emit(CartTabReloadState(cartItemCount: cartItemCount));
+    emit(CartTabReloadState(timestamp: DateTime.now(), cartItemCount: cartItemCount));
   }
 
   bool cartItemChanged() => _isCartItemsChanged;
