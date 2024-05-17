@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
@@ -250,6 +251,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 16.0),
                 PlainButton(
+                  onPressed: () => AppRoute.forgotPassword
+                      .navigateBackStack(context, extra: AccountType.standard),
                   child: Text(
                     LocalizationConstants.forgotPassword,
                     style: OptiTextStyles.subtitle.copyWith(
