@@ -10,7 +10,9 @@ import 'package:commerce_flutter_app/features/domain/service/interfaces/biometri
 import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/device_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/vmi_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/network_service.dart';
+import 'package:commerce_flutter_app/features/domain/service/vmi_service.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
@@ -346,6 +348,17 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
+    ..registerLazySingleton<IVmiLocationsService>(() => VMILocationService(
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
+    ..registerLazySingleton<IVmiService>(() => VMIService(
+        commerceAPIServiceProvider: sl(),
+        coreServiceProvider: sl(),
+        clientService: sl(),
+        cacheService: sl(),
+        networkService: sl()))
     ..registerLazySingleton<IOrderService>(() => OrderService(
           clientService: sl(),
           cacheService: sl(),

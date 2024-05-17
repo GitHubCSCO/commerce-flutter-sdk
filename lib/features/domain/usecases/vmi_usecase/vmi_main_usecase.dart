@@ -19,4 +19,12 @@ class VMIMainUseCase extends CmsUseCase {
         return Failure(errorResponse);
     }
   }
+
+  Future<void> getClosestVmiLocation() async {
+    VmiLocationModel? vmiLocation =
+        await coreServiceProvider.getVmiService().getClosestVmiLocation();
+    if (vmiLocation != null) {
+      coreServiceProvider.getVmiService().saveCurrentVmiLocation(vmiLocation);
+    }
+  }
 }

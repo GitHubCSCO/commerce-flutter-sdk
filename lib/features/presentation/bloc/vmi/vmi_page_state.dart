@@ -45,3 +45,5 @@ class VMIPageFailureState extends VMIPageState {
   @override
   int get hashCode => error.hashCode;
 }
+
+class VMILoacationLoadedState extends VMIPageState {}

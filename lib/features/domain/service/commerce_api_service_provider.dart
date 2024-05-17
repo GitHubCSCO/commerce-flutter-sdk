@@ -85,8 +85,8 @@ class CommerceAPIServiceProvider implements ICommerceAPIServiceProvider {
   // ITrackingService getTrackingService() => sl<ITrackingService>();
   @override
   ITranslationService getTranslationService() => sl<ITranslationService>();
-  // @override
-  // IVmiLocationsService getVmiLocationsService() => sl<IVmiLocationsService>();
+  @override
+  IVmiLocationsService getVmiLocationsService() => sl<IVmiLocationsService>();
   @override
   IWarehouseService getWarehouseService() => sl<IWarehouseService>();
   @override

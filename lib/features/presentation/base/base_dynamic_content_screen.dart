@@ -136,10 +136,7 @@ class BaseDynamicContentScreen extends StatelessWidget {
 
   Widget buildCurrentLocationSectionWidget(
       {required CurrentLocationWidgetEntity currentLocationWidgetEntity}) {
-    return BlocProvider(
-      create: (context) => sl<CurrentLocationCubit>(),
-      child: CurrentLocationWidget(
-          currentLocationWidgetEntity: currentLocationWidgetEntity),
-    );
+    return CurrentLocationWidget(
+        currentLocationWidgetEntity: currentLocationWidgetEntity);
   }
 }

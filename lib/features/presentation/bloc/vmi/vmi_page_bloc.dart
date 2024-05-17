@@ -11,6 +11,7 @@ class VMIPageBloc extends Bloc<VMIPageEvent, VMIPageState> {
       : _vmiMainUseCase = vmiMainUseCase,
         super(VMIPageInitialState()) {
     on<VMIPageLoadEvent>(_onVMIPageLoadEvent);
+    on<VMILoacationLoadEvent>(_onVMILocationLoadEvent);
   }
 
   Future<void> _onVMIPageLoadEvent(
@@ -23,5 +24,11 @@ class VMIPageBloc extends Bloc<VMIPageEvent, VMIPageState> {
       case Failure(errorResponse: final errorResponse):
         emit(VMIPageFailureState(errorResponse.errorDescription ?? ''));
     }
+  }
+
+  Future<void> _onVMILocationLoadEvent(
+      VMILoacationLoadEvent event, Emitter<VMIPageState> emit) async {
+    await _vmiMainUseCase.getClosestVmiLocation();
+    emit(VMILoacationLoadedState());
   }
 }

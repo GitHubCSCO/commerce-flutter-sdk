@@ -6,6 +6,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_page_blo
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_page_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_page_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,9 +17,12 @@ class VMIScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
       BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
-      BlocProvider<VMIPageBloc>(
-        create: (context) => sl<VMIPageBloc>()..add(const VMIPageLoadEvent()),
+      BlocProvider(
+        create: (context) => sl<CurrentLocationCubit>(),
       ),
+      BlocProvider<VMIPageBloc>(
+          create: (context) =>
+              sl<VMIPageBloc>()..add(const VMIPageLoadEvent())),
     ], child: const VMIPage());
   }
 }
@@ -42,6 +46,11 @@ class VMIPage extends BaseDynamicContentScreen {
                   context.read<CmsCubit>().loading();
                 case VMIPageLoadedState():
                   context.read<CmsCubit>().buildCMSWidgets(state.pageWidgets);
+                  context
+                      .read<VMIPageBloc>()
+                      .add(const VMILoacationLoadEvent());
+                case VMILoacationLoadedState():
+                  context.read<CurrentLocationCubit>().onLoadLocationData();
                 case VMIPageFailureState():
                   context.read<CmsCubit>().failedLoading();
               }
