@@ -44,7 +44,7 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
         var priceProducts = <ProductPriceQueryParameter>[
           ProductPriceQueryParameter(
             productId: productId,
-            unitOfMeasure: chosenUnitOfMeasure?.unitOfMeasure,
+            unitOfMeasure: chosenUnitOfMeasure?.unitOfMeasure ?? "",
             qtyOrdered: quantity,
             configuration: configurations,
           ),
