@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
@@ -9,6 +10,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/biometric/bio
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/login/forgot_password_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/add_to_wish_list_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_create_screen.dart';
@@ -259,6 +261,16 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
+  final forgotPassword = createNode(
+    name: AppRoute.forgotPassword.name,
+    path: AppRoute.forgotPassword.suffix,
+    builder: (context, state) {
+      final accountType = state.extra as AccountType;
+      return ForgotPasswordScreen(accountType: accountType);
+    },
+    parent: null,
+  );
+
   return [
     root,
     navbarRoot,
@@ -273,5 +285,6 @@ List<NavigationNode> _getNavigationRoot() {
     wishListInfo,
     wishListCreate,
     addToWishList,
+    forgotPassword,
   ];
 }
