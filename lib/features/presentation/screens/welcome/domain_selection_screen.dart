@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/config/test_config_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
@@ -7,6 +8,7 @@ import 'package:commerce_flutter_app/features/presentation/components/input.dart
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_components.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_style.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -53,6 +55,10 @@ class _DomainPageState extends State<DomainPage> {
     _textEditingController.addListener(() {
       setState(() {});
     });
+
+    if (kDebugMode) {
+      _textEditingController.text = TestConfigConstants.url;
+    }
   }
 
   @override
