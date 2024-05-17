@@ -11,6 +11,12 @@ on:
           - qa
           - customers
           - test
+      release_tag1:
+        description: 'Tag1: add all tickets from Tag1-Tag2 or Tag1-Head with release notes (optional)'
+        required: false
+      release_tag2:
+        description: 'Tag2: add all tickets from Tag1-Tag2 or Tag2-Head with release notes (optional)'
+        required: false
 
 jobs:
   ios:
@@ -76,6 +82,8 @@ jobs:
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
           BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
+          RELEASE_TAG1: ${{ github.event.inputs.release_tag1 }}
+          RELEASE_TAG2: ${{ github.event.inputs.release_tag2 }}
   android:
     runs-on: macos-latest
     steps:
@@ -150,3 +158,5 @@ jobs:
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
           BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
+          RELEASE_TAG1: ${{ github.event.inputs.release_tag1 }}
+          RELEASE_TAG2: ${{ github.event.inputs.release_tag2 }}
