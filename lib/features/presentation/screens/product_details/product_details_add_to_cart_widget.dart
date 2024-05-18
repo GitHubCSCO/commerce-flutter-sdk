@@ -127,6 +127,9 @@ class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
                     ? () {
                         context.read<ProductDetailsAddToCartBloc>().add(
                             AddToCartEvent(
+                                productDetailsDataEntity: context
+                                    .read<ProductDetailsBloc>()
+                                    .productDetailDataEntity,
                                 productDetailsAddToCartEntity:
                                     widget.detailsAddToCartEntity.copyWith(
                                         quantityText: quantity.toString())));
