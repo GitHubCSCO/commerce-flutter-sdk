@@ -11,7 +11,7 @@ import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dar
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_image_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_image_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_quantity_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_title_widget.dart';
@@ -52,8 +52,7 @@ class CartLineWidget extends StatelessWidget {
   }
 
   Widget _buildProductImage() {
-    return CartContentProductImageWidget(
-        imagePath: cartLineEntity.smallImagePath ?? "");
+    return LineItemImageWidget(imagePath: cartLineEntity.smallImagePath ?? "");
   }
 
   Widget _buildProductDetails(BuildContext context) {
