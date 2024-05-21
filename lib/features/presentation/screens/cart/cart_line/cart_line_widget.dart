@@ -103,7 +103,7 @@ class CartLineWidget extends StatelessWidget {
       },
       child: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: Container(
+        child: SizedBox(
           width: 30,
           height: 30,
           child: SvgPicture.asset(
@@ -175,25 +175,26 @@ class CartContentHeaderWidget extends StatelessWidget {
             onTap: () {
               _onClickClearAllCart(context);
             },
-            child: Container(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 16,
-                    height: 16,
-                    child: SvgPicture.asset(
-                      AssetConstants.cartClearIcon,
-                      fit: BoxFit.fitWidth,
-                    ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: SvgPicture.asset(
+                    AssetConstants.cartClearIcon,
+                    fit: BoxFit.fitWidth,
                   ),
-                  const SizedBox(width: 11),
-                  Text('Clear Cart',
-                      textAlign: TextAlign.center, style: OptiTextStyles.body),
-                ],
-              ),
+                ),
+                const SizedBox(width: 11),
+                Text(
+                  'Clear Cart',
+                  textAlign: TextAlign.center,
+                  style: OptiTextStyles.body,
+                ),
+              ],
             ),
           ),
         ],
