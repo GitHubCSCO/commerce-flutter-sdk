@@ -13,7 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_conten
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_image_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_quantity_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_quantity_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +36,7 @@ class CartLineWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildProductImage(),
-            _buildProductDetails(),
+            _buildProductDetails(context),
             _buildRemoveButton(context),
           ],
         ),
@@ -56,7 +56,7 @@ class CartLineWidget extends StatelessWidget {
         imagePath: cartLineEntity.smallImagePath ?? "");
   }
 
-  Widget _buildProductDetails() {
+  Widget _buildProductDetails(BuildContext context) {
     return Expanded(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -75,7 +75,21 @@ class CartLineWidget extends StatelessWidget {
                 cartLineEntity.updateUnitOfMeasureValueText(),
             availabilityText: cartLineEntity.availability?.message,
           ),
-          CartContentQuantityGroupWidget(cartLineEntity)
+          LineItemQuantityGroupWidget(
+            qtyOrdered: cartLineEntity.qtyOrdered?.toInt().toString(),
+            onQtyChanged: (int? qty) {
+              if (qty == null) {
+                return;
+              }
+
+              context.read<CartContentBloc>().add(
+                    CartContentQuantityChangedEvent(
+                      cartLineEntity: cartLineEntity.copyWith(qtyOrdered: qty),
+                    ),
+                  );
+            },
+            subtotalPriceText: cartLineEntity.updateSubtotalPriceValueText(),
+          ),
         ],
       ),
     );
