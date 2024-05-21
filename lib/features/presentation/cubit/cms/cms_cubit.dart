@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/current_location_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/previous_orders_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
@@ -118,6 +119,12 @@ class CmsCubit extends Cubit<CmsState> {
           final CurrentLocationWidgetEntity currentLocationWidgetEntity =
               widgetEntity as CurrentLocationWidgetEntity;
           return currentLocationWidgetEntity;
+        }
+        case PreviousOrdersWidgetEntity:
+        {
+          final PreviousOrdersWidgetEntity previousOrdersWidgetEntity =
+              widgetEntity as PreviousOrdersWidgetEntity;
+          return previousOrdersWidgetEntity;
         }
     }
     return null;

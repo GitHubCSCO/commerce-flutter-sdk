@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/features/domain/entity/content_management/w
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/cart_buttons_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/current_location_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/order_summary_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/previous_orders_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/shipping_method_widget_entity.dart';
@@ -108,6 +109,10 @@ class CmsUseCase extends BaseUseCase {
             final currentLocationWidget =
                 CurrentLocationWidgetEntity(title: pageClassicWidget.title);
             widgetEntities.add(currentLocationWidget);
+          case WidgetType.mobilePreviousOrders:
+            final previousOrdersWidget =
+                PreviousOrdersWidgetEntity(title: pageClassicWidget.title);
+            widgetEntities.add(previousOrdersWidget);
           case WidgetType.unknown:
           default:
             break;

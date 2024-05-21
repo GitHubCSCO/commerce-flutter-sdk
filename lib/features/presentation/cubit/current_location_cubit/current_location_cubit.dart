@@ -16,13 +16,15 @@ class CurrentLocationCubit extends Cubit<CurrentLocationState> {
     VmiLocationModel? vmiLocation =
         _currentLocationUseCase.getCurrentLocation();
     LatLong? latLong;
-    // if (vmiLocation != null) {
-    //   latLong = await _currentLocationUseCase
-    //       .getPlaceFromAddresss(vmiLocation.customer);
-    // }
+    if (vmiLocation != null) {
+      latLong = await _currentLocationUseCase
+          .getPlaceFromAddresss(vmiLocation.customer);
+    }
 
     var currentLocationDataEntity =
         CurrentLocationDataEntity.fromVmiLocation(vmiLocation);
+    currentLocationDataEntity =
+        currentLocationDataEntity.copyWith(latLong: latLong);
 
     emit(CurrentLocationLoadedState(
         currentLocationDataEntity: currentLocationDataEntity));

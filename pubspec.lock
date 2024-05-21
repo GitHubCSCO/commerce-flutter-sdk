@@ -796,26 +796,26 @@ packages:
     dependency: transitive
     description:
       name: just_audio
-      sha256: b7cb6bbf3750caa924d03f432ba401ec300fd90936b3f73a9b33d58b1e96286b
+      sha256: "5abfab1d199e01ab5beffa61b3e782350df5dad036cb8c83b79fa45fc656614e"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.37"
+    version: "0.9.38"
   just_audio_platform_interface:
     dependency: transitive
     description:
       name: just_audio_platform_interface
-      sha256: c3dee0014248c97c91fe6299edb73dc4d6c6930a2f4f713579cd692d9e47f4a1
+      sha256: "0243828cce503c8366cc2090cefb2b3c871aa8ed2f520670d76fd47aa1ab2790"
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.2"
+    version: "4.3.0"
   just_audio_web:
     dependency: transitive
     description:
       name: just_audio_web
-      sha256: "134356b0fe3d898293102b33b5fd618831ffdc72bb7a1b726140abdf22772b70"
+      sha256: "0edb481ad4aa1ff38f8c40f1a3576013c3420bf6669b686fe661627d49bc606c"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.9"
+    version: "0.4.11"
   leak_tracker:
     dependency: transitive
     description:
@@ -997,7 +997,7 @@ packages:
     description:
       path: "."
       ref: "task/ICM-4406-dart"
-      resolved-ref: f57da58a7bf263aba9d0e73eb012c6677134c545
+      resolved-ref: a321229e9c0c87785159dc73d6f5d90cbbba5f04
       url: "git@github.com:InsiteSoftware/commerce-dart-sdk.git"
     source: git
     version: "0.1.1"

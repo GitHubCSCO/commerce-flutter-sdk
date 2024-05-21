@@ -101,7 +101,6 @@ class VMIService extends ServiceBase implements IVmiService {
         print('Error decoding JSON: $e');
         // handle the error as needed
       }
-    
     }
 
     return null;

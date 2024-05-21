@@ -7,6 +7,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_page_eve
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_page_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders_cubit/previous_orders_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,6 +20,9 @@ class VMIScreen extends StatelessWidget {
       BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
       BlocProvider(
         create: (context) => sl<CurrentLocationCubit>(),
+      ),
+      BlocProvider(
+        create: (context) => sl<PreviousOrdersCubit>(),
       ),
       BlocProvider<VMIPageBloc>(
           create: (context) =>
@@ -49,6 +53,7 @@ class VMIPage extends BaseDynamicContentScreen {
                   context
                       .read<VMIPageBloc>()
                       .add(const VMILoacationLoadEvent());
+                  context.read<PreviousOrdersCubit>().loadPreviousOrders();
                 case VMILoacationLoadedState():
                   context.read<CurrentLocationCubit>().onLoadLocationData();
                 case VMIPageFailureState():

@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+
 
 class SearchProductsWidget extends StatefulWidget {
   // final GetProductCollectionResult productCollectionResult;

@@ -33,6 +33,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_us
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/warehouse_inventory_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/previous_orders_usecase/previous_orders_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/order_pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/quick_order_usecase.dart';
@@ -81,6 +82,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders_cubit/previous_orders_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
@@ -136,6 +138,11 @@ Future<void> initInjectionContainer() async {
 
     ..registerFactory(() => CurrentLocationCubit(currentLocationUseCase: sl()))
     ..registerFactory(() => CurrentLocationUseCase())
+
+    // previous orders
+
+    ..registerFactory(() => PreviousOrdersCubit(previousOrdersUseCse: sl()))
+    ..registerFactory(() => PreviousOrdersUseCse())
 
     //login
     ..registerFactory(() => LoginCubit(loginUsecase: sl()))
