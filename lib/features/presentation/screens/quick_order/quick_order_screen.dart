@@ -44,7 +44,13 @@ class QuickOrderScreen extends StatelessWidget {
       BlocProvider<OrderListBloc>(
           create: (context) => sl<OrderListBloc>()..add(OrderListLoadEvent())),
       BlocProvider<QuickOrderAutoCompleteBloc>(
-          create: (context) => sl<QuickOrderAutoCompleteBloc>()),
+        create: (context) {
+          return QuickOrderAutoCompleteBloc(
+            searchUseCase: sl(),
+            scanningMode: ScanningMode.quick,
+          );
+        },
+      )
     ], child: QuickOrderPage());
   }
 }
@@ -171,6 +177,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                 _showAlert(context, '', state.message);
                               } else if (state is OrderListStyleProductAddState) {
                                 handleStyleProductAdd(state.productEntity);
+                              } else if (state is OrderListVmiProductAddState) {
+                                handleVmiBinAdd(state.vmiBin);
                               }
                             },
                             buildWhen: (previous, current) =>
@@ -326,91 +334,6 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                   )
                 ],
               );
-            // case AutoCompleteInitialState:
-            //   return Column(
-            //     children: [
-            //       Container(
-            //         padding: const EdgeInsets.symmetric(
-            //             vertical: 16, horizontal: 24),
-            //         child: Input(
-            //           hintText: LocalizationConstants.search,
-            //           suffixIcon: IconButton(
-            //             icon: SvgPicture.asset(
-            //               AssetConstants.iconClear,
-            //               semanticsLabel: 'search query clear icon',
-            //               fit: BoxFit.fitWidth,
-            //             ),
-            //             onPressed: () {
-            //               context
-            //                   .read<QuickOrderBloc>()
-            //                   .add(QuickOrderEndSearchEvent());
-            //               textEditingController.clear();
-            //               context
-            //                   .read<QuickOrderAutoCompleteBloc>()
-            //                   .add(QuickOrderTypingEvent(''));
-            //               context.closeKeyboard();
-            //             },
-            //           ),
-            //           onTapOutside: (p0) => context.closeKeyboard(),
-            //           textInputAction: TextInputAction.search,
-            //           focusListener: (bool hasFocus) {
-            //             if (hasFocus) {
-            //               context
-            //                   .read<QuickOrderAutoCompleteBloc>()
-            //                   .add(QuickOrderFocusEvent());
-            //             } else {
-            //               context
-            //                   .read<QuickOrderAutoCompleteBloc>()
-            //                   .add(QuickOrderUnFocusEvent());
-            //               context.read<QuickOrderBloc>().add(QuickOrderEndSearchEvent());
-            //             }
-            //           },
-            //           onChanged: (String searchQuery) {
-            //             context
-            //                 .read<QuickOrderAutoCompleteBloc>()
-            //                 .add(QuickOrderTypingEvent(searchQuery));
-            //           },
-            //           // onSubmitted: (String query) {
-            //           //   context.read<QuickOrderAutoCompleteBloc>().add(SearchSearchEvent());
-            //           // },
-            //           controller: textEditingController,
-            //         ),
-            //       ),
-            //       Expanded(child: BlocBuilder<QuickOrderAutoCompleteBloc,
-            //           QuickOrderAutoCompleteState>(
-            //         builder: (context, state) {
-            //           switch (state.runtimeType) {
-            //             case QuickOrderAutoCompleteInitialState:
-            //               return Center(
-            //                 child: Text(
-            //                   LocalizationConstants.searchPrompt,
-            //                   style: OptiTextStyles.body,
-            //                 ),
-            //               );
-            //             case QuickOrderAutoCompleteLoadingState:
-            //               return const Center(
-            //                   child: CircularProgressIndicator());
-            //             case QuickOrderAutoCompleteLoadedState:
-            //               final autoCompleteResult =
-            //                   (state as QuickOrderAutoCompleteLoadedState)
-            //                       .result!;
-            //               return AutoCompleteWidget(
-            //                   callback: _handleAutoCompleteCallback,
-            //                   autocompleteResult: autoCompleteResult);
-            //             //click to add product in quick order list
-            //             case QuickOrderAutoCompleteFailureState:
-            //               return Center(
-            //                   child: Text(
-            //                 (state as QuickOrderAutoCompleteFailureState).error,
-            //                 style: OptiTextStyles.body,
-            //               ));
-            //             default:
-            //               return Container();
-            //           }
-            //         },
-            //       ))
-            //     ],
-            //   );
             default:
               return Column(
                 children: [
@@ -656,6 +579,12 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
       context.read<OrderListBloc>().add(OrderListAddStyleProductEvent(styleProduct!));
     });
   }
+
+  void handleVmiBinAdd(VmiBinModel vmiBin) { {
+    //Navigate to count page
+
+    context.read<OrderListBloc>().add(OrderListAddVmiBinEvent(vmiBin, 0));
+  }}
 
 }
 

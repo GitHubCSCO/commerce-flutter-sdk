@@ -31,6 +31,32 @@ class QuickOrderUseCase extends BaseUseCase {
     }
   }
 
+  Future<Result<ProductEntity, ErrorResponse>> getVmiBin(String productId, AutocompleteProduct product) async {
+    var parameters = VmiBinQueryParameters(
+      vmiLocationId = '',
+      filter = searchQuery,
+      expand = 'product',
+    );
+
+    var resultResponse = await commerceAPIServiceProvider
+        .getProductService()
+        .getProduct(productId, parameters: parameters);
+
+    switch (resultResponse) {
+      case Success(value: final data):
+        final productEntity = ProductEntityMapper().toEntity(data?.product ?? Product());
+        // if (productEntity.styledProducts != null) {
+        //   if (productEntity.styleParentId != null) {
+        //     styledProduct = productEntity.styledProducts
+        //         ?.firstWhere((o) => o.productId == productEntity.id);
+        //   }
+        // }
+        return Success(productEntity);
+      case Failure(errorResponse: final errorResponse):
+        return Failure(errorResponse);
+    }
+  }
+
   Future<Result<ProductEntity, ErrorResponse>> getScanProduct(String name) async {
     var parameters = ProductsQueryParameters(
       extendedNames: [name],

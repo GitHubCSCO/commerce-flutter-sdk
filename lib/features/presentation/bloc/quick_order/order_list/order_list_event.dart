@@ -41,3 +41,12 @@ class OrderListAddStyleProductEvent extends OrderListEvent {
   OrderListAddStyleProductEvent(this.styledProductEntity);
 
 }
+
+class OrderListAddVmiBinEvent extends OrderListEvent {
+
+  final VmiBinModel vmiBin;
+  final int quantity;
+
+  OrderListAddVmiBinEvent(this.vmiBin, this.quantity);
+
+}

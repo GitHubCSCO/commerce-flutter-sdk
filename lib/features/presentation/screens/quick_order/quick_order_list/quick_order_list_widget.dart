@@ -5,7 +5,6 @@ import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/orde
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_list/quick_order_item_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,7 +12,7 @@ class QuickOrderListWidget extends StatelessWidget {
 
   final Function(BuildContext context, QuickOrderItemEntity, OrderCallBackType orderCallBackType) callback;
 
-  QuickOrderListWidget({required this.callback});
+  const QuickOrderListWidget({super.key, required this.callback});
 
   @override
   Widget build(BuildContext context) {

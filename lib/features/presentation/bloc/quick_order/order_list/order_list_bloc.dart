@@ -36,6 +36,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     on<OrderListRemoveEvent>(_onOrderListRemoveEvent);
     on<OrderListAddToListEvent>(_onOrderListAddToListEvent);
     on<OrderListAddStyleProductEvent>(_onOrderListAddStyleProductEvent);
+    on<OrderListAddVmiBinEvent>(_onOrderListAddVmiBinEvent);
   }
 
   Future<void> _onOrderListLoadEvent(OrderListLoadEvent event, Emitter<OrderListState> emit) async {
@@ -55,65 +56,43 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
   Future<void> _onOrderLisItemAddEvent(OrderListItemAddEvent event, Emitter<OrderListState> emit) async {
     emit(OrderListLoadingState());
-    final result = await _quickOrderUseCase.getProduct(
-        event.autocompleteProduct.id!, event.autocompleteProduct);
 
-    switch (result) {
-      case Success(value: final product):
-        if (product == null) {
-          emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
-          emit(OrderListLoadedState(quickOrderItemList, productSettings));
-          return;
-        }
+    if (scanningMode == ScanningMode.count) {
+      final result = await _quickOrderUseCase.getVmiBin(
+          event.autocompleteProduct.id!, event.autocompleteProduct);
 
-        var quantity = (product.minimumOrderQty! > 0) ? product.minimumOrderQty : 1;
+      _addVmiOrderItem(result, emit);
+    } else if (scanningMode == ScanningMode.create) {
+      final result = await _quickOrderUseCase.getProduct(
+          event.autocompleteProduct.id!, event.autocompleteProduct);
 
-        if (product.isStyleProductParent!) {
-          emit(OrderListStyleProductAddState(product));
-        } else if (product.isConfigured! || (product.isConfigured! && !product.isFixedConfiguration!)) {
-          emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderConfigurable));
-        } else if (!product.canAddToCart!) {
-          emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
-        } else {
-          var newItem = _convertProductToQuickOrderItemEntity(product, quantity!);
-          _insertItemIntoQuickOrderList(newItem);
-        }
+      _addOrderItem(result, emit);
+    } else {
+      final result = await _quickOrderUseCase.getProduct(
+          event.autocompleteProduct.id!, event.autocompleteProduct);
 
-        emit(OrderListLoadedState(quickOrderItemList, productSettings));
-      case Failure(errorResponse: final errorResponse):
-        emit(OrderListLoadedState(quickOrderItemList, productSettings));
+      _addOrderItem(result, emit);
     }
   }
 
   Future<void> _onOrderLisScanItemAddEvent(OrderListItemScanAddEvent event, Emitter<OrderListState> emit) async {
     emit(OrderListLoadingState());
-    final result = await _quickOrderUseCase.getScanProduct(
-        event.name!);
 
-    switch (result) {
-      case Success(value: final product):
-        if (product == null) {
-          emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
-          emit(OrderListLoadedState(quickOrderItemList, productSettings));
-          return;
-        }
+    if (scanningMode == ScanningMode.count) {
+      final result = await _quickOrderUseCase.getVmiBin(
+          event.autocompleteProduct.id!, event.autocompleteProduct);
 
-        var quantity = (product.minimumOrderQty! > 0) ? product.minimumOrderQty : 1;
+      _addVmiOrderItem(result, emit);
+    } else if (scanningMode == ScanningMode.create) {
+      final result = await _quickOrderUseCase.getScanProduct(
+          event.name!);
 
-        if (product.isStyleProductParent!) {
-          emit(OrderListStyleProductAddState(product));
-        } else if (product.isConfigured! || (product.isConfigured! && !product.isFixedConfiguration!)) {
-          emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderConfigurable));
-        } else if (!product.canAddToCart!) {
-          emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
-        } else {
-          var newItem = _convertProductToQuickOrderItemEntity(product, quantity!);
-          _insertItemIntoQuickOrderList(newItem);
-        }
+      _addOrderItem(result, emit);
+    } else {
+      final result = await _quickOrderUseCase.getScanProduct(
+          event.name!);
 
-        emit(OrderListLoadedState(quickOrderItemList, productSettings));
-      case Failure(errorResponse: final errorResponse):
-        emit(OrderListLoadedState(quickOrderItemList, productSettings));
+      _addOrderItem(result, emit);
     }
   }
 
@@ -178,6 +157,57 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         _insertItemIntoQuickOrderList(newItem);
         emit(OrderListLoadedState(quickOrderItemList, productSettings));
       case Failure():
+        emit(OrderListLoadedState(quickOrderItemList, productSettings));
+    }
+  }
+
+  Future<void> _onOrderListAddVmiBinEvent(OrderListAddVmiBinEvent event, Emitter<OrderListState> emit) async {
+    emit(OrderListLoadingState());
+
+    var newItem = _convertVmiBinProductToQuickScannerItem(event.vmiBin, event.quantity);
+    _insertItemIntoQuickOrderList(newItem);
+
+    emit(OrderListLoadedState(quickOrderItemList, productSettings));
+  }
+
+  Future<void> _addOrderItem(Result<ProductEntity, ErrorResponse> result, Emitter<OrderListState> emit) async {
+    switch (result) {
+      case Success(value: final product):
+        if (product == null) {
+          emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
+          emit(OrderListLoadedState(quickOrderItemList, productSettings));
+          return;
+        }
+
+        var quantity = (product.minimumOrderQty! > 0) ? product.minimumOrderQty : 1;
+
+        if (product.isStyleProductParent!) {
+          emit(OrderListStyleProductAddState(product));
+        } else if (product.isConfigured! || (product.isConfigured! && !product.isFixedConfiguration!)) {
+          emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderConfigurable));
+        } else if (!product.canAddToCart!) {
+          emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
+        } else {
+          var newItem = _convertProductToQuickOrderItemEntity(product, quantity!);
+          _insertItemIntoQuickOrderList(newItem);
+        }
+
+        emit(OrderListLoadedState(quickOrderItemList, productSettings));
+      case Failure(errorResponse: final errorResponse):
+        emit(OrderListLoadedState(quickOrderItemList, productSettings));
+    }
+  }
+
+  Future<void> _addVmiOrderItem(Result<ProductEntity, ErrorResponse> result, Emitter<OrderListState> emit) async {
+    switch (result) {
+      case Success(value: final vmiBin):
+        if (vmiBin == null) {
+          emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
+          emit(OrderListLoadedState(quickOrderItemList, productSettings));
+          return;
+        }
+        emit(OrderListVmiProductAddState(vmiBin));
+      case Failure(errorResponse: final errorResponse):
         emit(OrderListLoadedState(quickOrderItemList, productSettings));
     }
   }
@@ -247,9 +277,20 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     }
   }
 
+  QuickOrderItemEntity _convertVmiBinProductToQuickScannerItem(VmiBinModel vmiBin, int quantityOrdered) {
+    QuickOrderItemEntity orderItemEntity = QuickOrderItemEntity(vmiBin.productEntity, quantityOrdered);
+    orderItemEntity.vmiBin = vmiBin;
+
+    return _convertToQuickOrderItemEntity(orderItemEntity);
+  }
+
   QuickOrderItemEntity _convertProductToQuickOrderItemEntity(ProductEntity productEntity, int quantityOrdered) {
     QuickOrderItemEntity orderItemEntity = QuickOrderItemEntity(productEntity, quantityOrdered);
 
+    return _convertToQuickOrderItemEntity(orderItemEntity);
+  }
+
+  QuickOrderItemEntity _convertToQuickOrderItemEntity(QuickOrderItemEntity orderItemEntity) {
     if (orderItemEntity.productEntity.productUnitOfMeasures != null) {
       if (orderItemEntity.productEntity.selectedUnitOfMeasure != null) {
         for (var unitOfMeasure in orderItemEntity.productEntity.productUnitOfMeasures!) {

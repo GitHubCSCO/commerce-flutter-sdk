@@ -9,6 +9,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class QuickOrderItemEntity {
 
   ProductEntity productEntity;
+  VmiBinModel vmiBin;
   Availability? availability;
   ProductPriceEntity? pricing;
   ProductUnitOfMeasureEntity? selectedUnitOfMeasure;
