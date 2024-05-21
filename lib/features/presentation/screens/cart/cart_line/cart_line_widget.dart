@@ -22,7 +22,7 @@ import 'package:flutter_svg/svg.dart';
 class CartLineWidget extends StatelessWidget {
   final CartLineEntity cartLineEntity;
 
-  CartLineWidget({required this.cartLineEntity});
+  const CartLineWidget({super.key, required this.cartLineEntity});
 
   @override
   Widget build(BuildContext context) {
