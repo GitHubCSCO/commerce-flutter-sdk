@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/features/domain/service/interfaces/app_conf
 import 'package:commerce_flutter_app/features/domain/service/interfaces/biometric_authentication_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/device_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/vmi_service_interface.dart';
 
 abstract class ICoreServiceProvider {
   IAppConfigurationService getAppConfigurationService();
@@ -20,7 +21,7 @@ abstract class ICoreServiceProvider {
   // IPhoneDialerService getPhoneDialerService();
   // IPlatformService getPlatformService();
   // ISearchHistoryService getSearchHistoryService();
-  // IVmiService getVmiService();
+  IVmiService getVmiService();
   // INavigationState getNavigationState();
   // IOptiLogger getOptiLogger();
 }

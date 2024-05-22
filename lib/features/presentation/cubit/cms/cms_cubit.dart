@@ -1,5 +1,7 @@
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/current_location_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/previous_orders_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
@@ -13,12 +15,12 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 part 'cms_state.dart';
 
 class CmsCubit extends Cubit<CmsState> {
-
   final ActionLinkUseCase _actionLinkUseCase;
   final ProductCarouselUseCase _productCarouselUseCase;
   final SearchHistoryUseCase _searchHistoryUseCase;
 
-  CmsCubit({required ActionLinkUseCase actionLinkUseCase,
+  CmsCubit(
+      {required ActionLinkUseCase actionLinkUseCase,
       required ProductCarouselUseCase productCarouselUseCase,
       required SearchHistoryUseCase searchHistoryUseCase})
       : _actionLinkUseCase = actionLinkUseCase,
@@ -55,14 +57,15 @@ class CmsCubit extends Cubit<CmsState> {
       case CarouselWidgetEntity:
         {
           final CarouselWidgetEntity carouselWidgetEntity =
-          widgetEntity as CarouselWidgetEntity;
+              widgetEntity as CarouselWidgetEntity;
           return carouselWidgetEntity;
         }
       case ActionsWidgetEntity:
         {
           final ActionsWidgetEntity actionsWidgetEntity =
-          widgetEntity as ActionsWidgetEntity;
-          final list = await _actionLinkUseCase.getViewableActions(actionsWidgetEntity.actions);
+              widgetEntity as ActionsWidgetEntity;
+          final list = await _actionLinkUseCase
+              .getViewableActions(actionsWidgetEntity.actions);
           if (list.isEmpty) {
             return null;
           } else {
@@ -74,18 +77,23 @@ class CmsCubit extends Cubit<CmsState> {
       case ProductCarouselWidgetEntity:
         {
           final ProductCarouselWidgetEntity productCarouselWidgetEntity =
-          widgetEntity as ProductCarouselWidgetEntity;
-          final result = await _productCarouselUseCase.getProducts(widgetEntity);
-          switch(result) {
+              widgetEntity as ProductCarouselWidgetEntity;
+          final result =
+              await _productCarouselUseCase.getProducts(widgetEntity);
+          switch (result) {
             case Success():
-              final productPricingEnabled = await _productCarouselUseCase.getProductPricingEnable();
+              final productPricingEnabled =
+                  await _productCarouselUseCase.getProductPricingEnable();
               final productList = result.value ?? [];
               if (productList.isEmpty) {
                 return null;
               } else {
                 productCarouselWidgetEntity.productCarouselList?.clear();
-                final list = productList.map((productEntity) =>
-                    ProductCarouselEntity(product: productEntity, productPricingEnabled: productPricingEnabled)).toList();
+                final list = productList
+                    .map((productEntity) => ProductCarouselEntity(
+                        product: productEntity,
+                        productPricingEnabled: productPricingEnabled))
+                    .toList();
                 productCarouselWidgetEntity.productCarouselList?.addAll(list);
               }
               return productCarouselWidgetEntity;
@@ -96,7 +104,7 @@ class CmsCubit extends Cubit<CmsState> {
       case SearchHistoryWidgetEntity:
         {
           final SearchHistoryWidgetEntity searchHistoryWidgetEntity =
-          widgetEntity as SearchHistoryWidgetEntity;
+              widgetEntity as SearchHistoryWidgetEntity;
           var result = await _searchHistoryUseCase.getSearchHistory();
           if (result.isEmpty) {
             return null;
@@ -106,8 +114,19 @@ class CmsCubit extends Cubit<CmsState> {
             return searchHistoryWidgetEntity;
           }
         }
+      case CurrentLocationWidgetEntity:
+        {
+          final CurrentLocationWidgetEntity currentLocationWidgetEntity =
+              widgetEntity as CurrentLocationWidgetEntity;
+          return currentLocationWidgetEntity;
+        }
+        case PreviousOrdersWidgetEntity:
+        {
+          final PreviousOrdersWidgetEntity previousOrdersWidgetEntity =
+              widgetEntity as PreviousOrdersWidgetEntity;
+          return previousOrdersWidgetEntity;
+        }
     }
     return null;
   }
-
 }

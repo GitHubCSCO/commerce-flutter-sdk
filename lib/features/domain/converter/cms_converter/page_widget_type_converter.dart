@@ -20,6 +20,10 @@ class PageWidgetTypeConverter {
       case "mobile/cart":
       case "mobilecart":
         return WidgetType.mobileCartButtonsWidget;
+      case "mobilecurrentlocation":
+        return WidgetType.mobileCurrentLocation;
+      case "mobilepreviousorders":
+        return WidgetType.mobilePreviousOrders;
       default:
         return WidgetType.unknown;
     }

@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/mixins/map_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/shipping_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
@@ -10,7 +11,7 @@ import 'package:map_launcher/map_launcher.dart';
 
 enum ShippingOption { ship, pickUp }
 
-class CartShippingWidget extends StatelessWidget {
+class CartShippingWidget extends StatelessWidget with MapDirection {
   final ShippingEntity shippingEntity;
 
   const CartShippingWidget({super.key, required this.shippingEntity});
@@ -207,9 +208,6 @@ class CartShippingWidget extends StatelessWidget {
     double latitudeDouble = latitude.toDouble();
     double longitudeDouble = longitude.toDouble();
 
-    final availableMaps = await MapLauncher.installedMaps;
-
-    await availableMaps.first
-        .showDirections(destination: Coords(latitudeDouble, longitudeDouble));
+    await launchMap(latitudeDouble, longitudeDouble);
   }
 }

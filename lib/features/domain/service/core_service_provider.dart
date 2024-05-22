@@ -4,6 +4,8 @@ import 'package:commerce_flutter_app/features/domain/service/interfaces/biometri
 import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/device_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/vmi_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/vmi_service.dart';
 
 class CoreServiceProvider implements ICoreServiceProvider {
   @override
@@ -20,4 +22,7 @@ class CoreServiceProvider implements ICoreServiceProvider {
 
   @override
   IDeviceService getDeviceService() => sl<IDeviceService>();
+
+  @override
+  IVmiService getVmiService() => sl<IVmiService>();
 }
