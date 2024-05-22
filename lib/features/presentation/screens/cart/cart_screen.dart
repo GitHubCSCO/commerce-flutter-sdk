@@ -84,7 +84,7 @@ class CartPage extends StatelessWidget {
               }
             },
           ),
-          BlocListener<CartCountCubit, CartCountState>(
+          BlocListener<CartCountCubit, CountState>(
             listener: (context, state) {
               if (state is CartTabReloadState) {
                 bool isCartItemChanged =

@@ -108,10 +108,20 @@ class ProductDetailsAddToCartBloc
         .productDetailsAddToCartEntity.productDetailsPriceEntity?.styledProduct;
     var productId = styledProduct?.productId ?? product?.id;
     var quantity = int.parse(event.productDetailsAddToCartEntity.quantityText!);
+    List<SectionOptionDto> sectionOptions =
+        event.productDetailsDataEntity.selectedConfigurations?.values.map((s) {
+              return SectionOptionDto(
+                sectionOptionId: s == null ? '' : s.sectionOptionId,
+              );
+            }).toList() ??
+            [];
+    String unitOfMeasure =
+        event.productDetailsDataEntity.chosenUnitOfMeasure?.unitOfMeasure ?? '';
     var addCartLine = AddCartLine(
         productId: productId,
-        unitOfMeasure: product?.unitOfMeasure,
-        qtyOrdered: quantity);
+        unitOfMeasure: unitOfMeasure,
+        qtyOrdered: quantity,
+        sectionOptions: sectionOptions);
 
     final response =
         await _productDetailsAddToCartUseCase.addToCart(addCartLine);

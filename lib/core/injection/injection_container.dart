@@ -24,6 +24,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/c
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/payment_details/payment_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/curent_location_usecase/current_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/forgot_password_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/order_usecase/order_usecase.dart';
@@ -79,6 +80,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/current_locatio
 import 'package:commerce_flutter_app/features/presentation/cubit/date_selection/date_selection_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/login/forgot_password/forgot_password_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
@@ -147,6 +149,8 @@ Future<void> initInjectionContainer() async {
     //login
     ..registerFactory(() => LoginCubit(loginUsecase: sl()))
     ..registerFactory(() => LoginUsecase())
+    ..registerFactory(() => ForgotPasswordCubit(forgotPasswordUseCase: sl()))
+    ..registerFactory(() => ForgotPasswordUseCase())
 
     //logout
     ..registerFactory(() => LogoutCubit(logoutUsecase: sl()))
