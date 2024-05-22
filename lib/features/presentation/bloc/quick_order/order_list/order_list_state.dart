@@ -74,6 +74,17 @@ class OrderListStyleProductAddState extends OrderListState {
 
 }
 
+class OrderListVmiStyleProductAddState extends OrderListState {
+
+  final VmiBinModelEntity vmiBinEntity;
+
+  OrderListVmiStyleProductAddState(this.vmiBinEntity);
+
+  @override
+  List<Object?> get props => [];
+
+}
+
 class OrderListVmiProductAddState extends OrderListState {
 
   final VmiBinModelEntity vmiBinEntity;

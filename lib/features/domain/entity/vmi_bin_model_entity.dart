@@ -16,9 +16,9 @@ class VmiBinModelEntity extends Equatable {
   final double? previousCountQty;
   final String? previousCountUserName;
   final DateTime? lastOrderDate;
-  final ProductEntity? product;
+  ProductEntity? product;
 
-  const VmiBinModelEntity({
+  VmiBinModelEntity({
     required this.id,
     required this.vmiLocationId,
     this.binNumber = '',

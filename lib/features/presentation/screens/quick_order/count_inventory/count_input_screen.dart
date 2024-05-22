@@ -25,7 +25,11 @@ class CountInputPage extends StatelessWidget {
         ],
       ),
       body: Container(
+        child: Column(
+          children: [
 
+          ],
+        ),
       ),
     );
   }

@@ -1,10 +1,6 @@
 part of 'quick_order_auto_complete_bloc.dart';
 
-abstract class QuickOrderAutoCompleteEvent {
-
-  ScanningMode scanningMode = ScanningMode.quick;
-
-}
+abstract class QuickOrderAutoCompleteEvent {}
 
 class QuickOrderStartSearchEvent extends QuickOrderAutoCompleteEvent {}
 

@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
+import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
@@ -180,7 +181,23 @@ List<NavigationNode> _getNavigationRoot() {
   final quickOrder = createNode(
     name: AppRoute.quickOrder.name,
     path: AppRoute.quickOrder.suffix,
-    builder: (context, state) => QuickOrderScreen(),
+    builder: (context, state) => const QuickOrderScreen(scanningMode: ScanningMode.quick),
+    parent: null,
+  );
+
+  // path: /createOrder
+  final createOrder = createNode(
+    name: AppRoute.createOrder.name,
+    path: AppRoute.createOrder.suffix,
+    builder: (context, state) => const QuickOrderScreen(scanningMode: ScanningMode.create),
+    parent: null,
+  );
+
+  // path: /countOrder
+  final countOrder = createNode(
+    name: AppRoute.countOrder.name,
+    path: AppRoute.countOrder.suffix,
+    builder: (context, state) => const QuickOrderScreen(scanningMode: ScanningMode.count),
     parent: null,
   );
 
@@ -290,6 +307,8 @@ List<NavigationNode> _getNavigationRoot() {
     checkout,
     checkoutSuccess,
     quickOrder,
+    createOrder,
+    countOrder,
     barcodeSearch,
     wishListInfo,
     wishListCreate,

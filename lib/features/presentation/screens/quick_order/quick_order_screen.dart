@@ -12,6 +12,7 @@ import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart'
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/auto_complete/quick_order_auto_complete_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
@@ -35,6 +36,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuickOrderScreen extends StatelessWidget {
+
+  final ScanningMode _scanningMode;
+
+  const QuickOrderScreen({super.key, required ScanningMode scanningMode})
+      : _scanningMode = scanningMode;
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
@@ -43,20 +50,31 @@ class QuickOrderScreen extends StatelessWidget {
         create: (context) => sl<StyleTraitCubit>(),
       ),
       BlocProvider<OrderListBloc>(
-          create: (context) => sl<OrderListBloc>()..add(OrderListLoadEvent())),
+          create: (context) {
+            return OrderListBloc(
+              quickOrderUseCase: sl(),
+              scanningMode: _scanningMode,
+            )..add(OrderListLoadEvent());
+          },
+      ),
       BlocProvider<QuickOrderAutoCompleteBloc>(
         create: (context) {
           return QuickOrderAutoCompleteBloc(
             searchUseCase: sl(),
-            scanningMode: ScanningMode.quick,
+            scanningMode: _scanningMode,
           );
         },
       )
-    ], child: QuickOrderPage());
+    ], child: QuickOrderPage(scanningMode: _scanningMode));
   }
 }
 
 class QuickOrderPage extends StatefulWidget {
+
+  final ScanningMode scanningMode;
+
+  const QuickOrderPage({super.key, required this.scanningMode});
+
   @override
   State<QuickOrderPage> createState() => _QuickOrderPageState();
 }
@@ -178,6 +196,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                 _showAlert(context, '', state.message);
                               } else if (state is OrderListStyleProductAddState) {
                                 handleStyleProductAdd(state.productEntity);
+                              } else if (state is OrderListVmiStyleProductAddState) {
+                                handleVmiStyleProductAdd(state.vmiBinEntity);
                               } else if (state is OrderListVmiProductAddState) {
                                 handleVmiBinAdd(state.vmiBinEntity);
                               }
@@ -246,6 +266,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                             ),
                                             Expanded(
                                               child: QuickOrderListWidget(
+                                                scanningMode: widget.scanningMode,
                                                   callback:
                                                   _handleQuickOrderListCallback),
                                             ),
@@ -578,6 +599,12 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   void handleStyleProductAdd(ProductEntity productEntity) {
     showStyleTraitFilter(productEntity, context, ongetProduct: (StyledProductEntity? styleProduct) {
       context.read<OrderListBloc>().add(OrderListAddStyleProductEvent(styleProduct!));
+    });
+  }
+
+  void handleVmiStyleProductAdd(VmiBinModelEntity vmiBinEntity) {
+    showStyleTraitFilter(vmiBinEntity.product!, context, ongetProduct: (StyledProductEntity? styleProduct) {
+      context.read<OrderListBloc>().add(OrderListAddVmiStyleProductEvent(vmiBinEntity, styleProduct!));
     });
   }
 

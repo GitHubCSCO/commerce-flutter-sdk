@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/config/route_config.dart';
+import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/domain/service/app_configuration_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/biometric_authentication_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/commerce_api_service_provider.dart';
@@ -206,7 +207,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ReviewOrderCubit())
 
     //quickOrder
-    ..registerFactory(() => OrderListBloc(quickOrderUseCase: sl()))
+    ..registerFactory(() => OrderListBloc(quickOrderUseCase: sl(), scanningMode: ScanningMode.quick))
     ..registerFactory(() => QuickOrderUseCase())
     ..registerFactory(() => QuickOrderAutoCompleteBloc(searchUseCase: sl(), scanningMode: ScanningMode.quick))
     ..registerFactory(
