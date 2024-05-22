@@ -1,5 +1,7 @@
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/vmi_bin_model_entity_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -31,27 +33,25 @@ class QuickOrderUseCase extends BaseUseCase {
     }
   }
 
-  Future<Result<ProductEntity, ErrorResponse>> getVmiBin(String productId, AutocompleteProduct product) async {
+  Future<Result<VmiBinModelEntity, ErrorResponse>> getVmiBin(String binNumber) async {
     var parameters = VmiBinQueryParameters(
-      vmiLocationId = '',
-      filter = searchQuery,
-      expand = 'product',
+      vmiLocationId : coreServiceProvider.getVmiService().currentVmiLocation?.id ?? '',
+      filter : binNumber,
+      expand : 'product',
     );
 
     var resultResponse = await commerceAPIServiceProvider
-        .getProductService()
-        .getProduct(productId, parameters: parameters);
+        .getVmiLocationsService()
+        .getVmiBins(parameters: parameters);
 
     switch (resultResponse) {
       case Success(value: final data):
-        final productEntity = ProductEntityMapper().toEntity(data?.product ?? Product());
-        // if (productEntity.styledProducts != null) {
-        //   if (productEntity.styleParentId != null) {
-        //     styledProduct = productEntity.styledProducts
-        //         ?.firstWhere((o) => o.productId == productEntity.id);
-        //   }
-        // }
-        return Success(productEntity);
+        if ((data?.vmiBins ?? []).isNotEmpty && (data?.vmiBins ?? []).length == 1) {
+          final vmiBin = VmiBinModelEntityMapper().toEntity(data!.vmiBins[0]);
+          return Success(vmiBin);
+        } else {
+          return const Success(null);
+        }
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
     }

@@ -11,6 +11,7 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/auto_complete/quick_order_auto_complete_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
@@ -178,7 +179,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                               } else if (state is OrderListStyleProductAddState) {
                                 handleStyleProductAdd(state.productEntity);
                               } else if (state is OrderListVmiProductAddState) {
-                                handleVmiBinAdd(state.vmiBin);
+                                handleVmiBinAdd(state.vmiBinEntity);
                               }
                             },
                             buildWhen: (previous, current) =>
@@ -580,10 +581,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     });
   }
 
-  void handleVmiBinAdd(VmiBinModel vmiBin) { {
+  void handleVmiBinAdd(VmiBinModelEntity vmiBinEntity) { {
     //Navigate to count page
 
-    context.read<OrderListBloc>().add(OrderListAddVmiBinEvent(vmiBin, 0));
+    context.read<OrderListBloc>().add(OrderListAddVmiBinEvent(vmiBinEntity, 0));
   }}
 
 }

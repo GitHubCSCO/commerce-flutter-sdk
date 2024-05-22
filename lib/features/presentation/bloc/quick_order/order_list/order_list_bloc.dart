@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/constants/site_message_constants.dart'
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/quick_order_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,7 +60,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
     if (scanningMode == ScanningMode.count) {
       final result = await _quickOrderUseCase.getVmiBin(
-          event.autocompleteProduct.id!, event.autocompleteProduct);
+          event.autocompleteProduct.binNumber!);
 
       _addVmiOrderItem(result, emit);
     } else if (scanningMode == ScanningMode.create) {
@@ -80,7 +81,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
     if (scanningMode == ScanningMode.count) {
       final result = await _quickOrderUseCase.getVmiBin(
-          event.autocompleteProduct.id!, event.autocompleteProduct);
+          event.name!);
 
       _addVmiOrderItem(result, emit);
     } else if (scanningMode == ScanningMode.create) {
@@ -164,7 +165,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   Future<void> _onOrderListAddVmiBinEvent(OrderListAddVmiBinEvent event, Emitter<OrderListState> emit) async {
     emit(OrderListLoadingState());
 
-    var newItem = _convertVmiBinProductToQuickScannerItem(event.vmiBin, event.quantity);
+    var newItem = _convertVmiBinProductToQuickScannerItem(event.vmiBinEntity, event.quantity);
     _insertItemIntoQuickOrderList(newItem);
 
     emit(OrderListLoadedState(quickOrderItemList, productSettings));
@@ -198,7 +199,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     }
   }
 
-  Future<void> _addVmiOrderItem(Result<ProductEntity, ErrorResponse> result, Emitter<OrderListState> emit) async {
+  Future<void> _addVmiOrderItem(Result<VmiBinModelEntity, ErrorResponse> result, Emitter<OrderListState> emit) async {
     switch (result) {
       case Success(value: final vmiBin):
         if (vmiBin == null) {
@@ -277,9 +278,9 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     }
   }
 
-  QuickOrderItemEntity _convertVmiBinProductToQuickScannerItem(VmiBinModel vmiBin, int quantityOrdered) {
-    QuickOrderItemEntity orderItemEntity = QuickOrderItemEntity(vmiBin.productEntity, quantityOrdered);
-    orderItemEntity.vmiBin = vmiBin;
+  QuickOrderItemEntity _convertVmiBinProductToQuickScannerItem(VmiBinModelEntity vmiBinEntity, int quantityOrdered) {
+    QuickOrderItemEntity orderItemEntity = QuickOrderItemEntity(vmiBinEntity.product!, quantityOrdered);
+    orderItemEntity.vmiBinEntity = vmiBinEntity;
 
     return _convertToQuickOrderItemEntity(orderItemEntity);
   }
