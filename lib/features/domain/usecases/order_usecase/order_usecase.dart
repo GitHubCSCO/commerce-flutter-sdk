@@ -1,6 +1,9 @@
 import 'package:commerce_flutter_app/features/domain/entity/order/get_order_collection_result_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/settings/order_settings_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/order_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/pagination_entity_mapper.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/settings_entity_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -62,8 +65,34 @@ class OrderUsecase extends BaseUseCase {
                       title: e.displayName ?? '',
                     ))
                 .toList()
-                ..sort((a, b) => a.title.compareTo(b.title));
+              ..sort((a, b) => a.title.compareTo(b.title));
         return filterValues;
+      case Failure():
+        return null;
+    }
+  }
+
+  Future<OrderSettingsEntity?> loadOrderSettings() async {
+    final result = await commerceAPIServiceProvider
+        .getSettingsService()
+        .getSettingsAsync();
+    switch (result) {
+      case Success(value: final value):
+        final orderSettings = value?.settingsCollection?.orderSettings;
+        return orderSettings != null
+            ? OrderSettingsEntityMapper.toEntity(orderSettings)
+            : null;
+      case Failure():
+        return null;
+    }
+  }
+
+  Future<OrderEntity?> loadOrder(String orderId) async {
+    final result =
+        await commerceAPIServiceProvider.getOrderService().getOrder(orderId);
+    switch (result) {
+      case Success(value: final value):
+        return value != null ? OrderEntityMapper.toEntity(value) : null;
       case Failure():
         return null;
     }
