@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/biometric/bio
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/location_seach/location_serach_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/forgot_password_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_screen.dart';
@@ -208,6 +209,13 @@ List<NavigationNode> _getNavigationRoot() {
     parent: account,
   );
 
+  // path: /account/wishlist
+  final locationSearch = createNode(
+    name: AppRoute.locationSearch.name,
+    path: AppRoute.locationSearch.suffix,
+    builder: (context, state) => const LocationSearchScreen(),
+    parent: account,
+  );
   // path: /account/wishlist/:id
   final wishlistsDetails = createNode(
     name: AppRoute.wishlistsDetails.name,

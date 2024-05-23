@@ -28,6 +28,7 @@ class RouteNames {
   static const String wishListCreate = 'wishListCreate';
   static const String addToWishList = 'addToWishList';
   static const String forgotPassword = 'forgotPassword';
+  static const String locationSearch = 'locationSearch';
 }
 
 class RoutePaths {
@@ -39,7 +40,7 @@ class RoutePaths {
   static const String search = '/${RouteNames.search}';
   static const String account = '/${RouteNames.account}';
   static const String cart = '/${RouteNames.cart}';
-  static const String vmi =    '/${RoutePaths.account}/${RouteNames.vmi}';
+  static const String vmi = '/${RoutePaths.account}/${RouteNames.vmi}';
   static const String productDetails =
       '/${RouteNames.productDetails}/:productId';
   static const String checkout = '/${RouteNames.checkout}';
@@ -55,6 +56,8 @@ class RoutePaths {
   static const String barcodeSearch = '/${RouteNames.barcodeSearch}';
   static const String wishlists =
       '${RoutePaths.account}/${RouteNames.wishlists}';
+  static const String locationSearch =
+      '${RoutePaths.account}/${RouteNames.locationSearch}';
   static const String wishlistsDetails = '$wishlists/:id';
   static const String wishListInfo = '/${RouteNames.wishListInfo}';
   static const String wishListCreate = '/${RouteNames.wishListCreate}';
@@ -96,7 +99,10 @@ enum AppRoute {
       name: RouteNames.wishListCreate, fullPath: RoutePaths.wishListCreate),
   addToWishList(
       name: RouteNames.addToWishList, fullPath: RoutePaths.addToWishList),
-  forgotPassword(name: RouteNames.forgotPassword, fullPath: RoutePaths.forgotPassword);
+  forgotPassword(
+      name: RouteNames.forgotPassword, fullPath: RoutePaths.forgotPassword),
+  locationSearch(
+      name: RouteNames.locationSearch, fullPath: RoutePaths.locationSearch);
 
   const AppRoute({
     required this.name,

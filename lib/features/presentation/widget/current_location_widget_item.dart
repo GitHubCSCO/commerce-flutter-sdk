@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/mixins/map_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
@@ -60,7 +61,7 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                       style: OptiTextStyles.link,
                     ),
                     onTap: () {
-                      // _onDirectionsClick();
+                      _onChangeLocationClick(context);
                     },
                   )
                 ],
@@ -74,5 +75,9 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
 
   Future<void> _onDirectionsClick(double longitude, double latitude) async {
     await launchMap(latitude, longitude);
+  }
+
+  Future<void> _onChangeLocationClick(BuildContext context) async {
+    AppRoute.locationSearch.navigateBackStack(context);
   }
 }

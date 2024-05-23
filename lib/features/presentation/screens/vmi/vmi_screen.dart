@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_page_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_page_state.dart';
@@ -24,6 +25,9 @@ class VMIScreen extends StatelessWidget {
       BlocProvider(
         create: (context) => sl<PreviousOrdersCubit>(),
       ),
+      BlocProvider(
+        create: (context) => sl<LocationSearchBloc>(),
+      ),
       BlocProvider<VMIPageBloc>(
           create: (context) =>
               sl<VMIPageBloc>()..add(const VMIPageLoadEvent())),
@@ -38,9 +42,11 @@ class VMIPage extends BaseDynamicContentScreen {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: OptiAppColors.backgroundGray,
-      // appBar: AppBar(actions: <Widget>[
-      //   BottomMenuWidget(websitePath: websitePath),
-      // ], backgroundColor: Theme.of(context).colorScheme.surface),
+      appBar: AppBar(
+        backgroundColor: OptiAppColors.backgroundWhite,
+        title: const Text('VMI'),
+        centerTitle: false,
+      ),
       body: MultiBlocListener(
         listeners: [
           BlocListener<VMIPageBloc, VMIPageState>(

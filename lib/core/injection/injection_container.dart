@@ -24,6 +24,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/c
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/payment_details/payment_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/curent_location_usecase/current_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/location_search_usecase/location_search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/forgot_password_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
@@ -55,6 +56,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shippi
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
@@ -137,9 +139,13 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => VMIMainUseCase())
 
     // current location
-
     ..registerFactory(() => CurrentLocationCubit(currentLocationUseCase: sl()))
     ..registerFactory(() => CurrentLocationUseCase())
+
+    // locatio  search
+
+    ..registerFactory(() => LocationSearchBloc(locationSearchUseCase: sl()))
+    ..registerFactory(() => LocationSearchUseCase())
 
     // previous orders
 
