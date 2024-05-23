@@ -1,11 +1,10 @@
-import 'package:commerce_flutter_app/core/constants/core_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_details/order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/order_details_body_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 class OrderDetailsScreen extends StatelessWidget {
   final String orderNumber;
@@ -33,20 +32,8 @@ class OrderDetailsPage extends StatelessWidget {
       appBar: AppBar(
           title: context.watch<OrderDetailsCubit>().state.orderStatus ==
                   OrderStatus.success
-              ? Text(
-                  context
-                          .watch<OrderDetailsCubit>()
-                          .state
-                          .order
-                          .orderNumberLabel ??
-                      context
-                          .watch<OrderDetailsCubit>()
-                          .state
-                          .order
-                          .orderNumber ??
-                      '',
-                )
-              : const Text('Order Details')),
+              ? Text(context.watch<OrderDetailsCubit>().orderNumber ?? '')
+              : const Text(LocalizationConstants.orderDetails)),
       body: BlocBuilder<OrderDetailsCubit, OrderDetailsState>(
         builder: (context, state) {
           if (state.orderStatus == OrderStatus.loading) {
@@ -61,17 +48,20 @@ class OrderDetailsPage extends StatelessWidget {
             return Expanded(
               child: SingleChildScrollView(
                 child: OrderDetailsBodyWidget(
-                  orderNumber: state.order.orderNumber,
-                  orderDate: state.order.orderDate != null
-                      ? DateFormat(CoreConstants.dateFormatShortString)
-                          .format(state.order.orderDate!)
-                      : null,
-                  orderStatus: state.order.statusDisplay,
+                  orderNumber: context.watch<OrderDetailsCubit>().orderNumber,
+                  orderDate: context.watch<OrderDetailsCubit>().orderDate,
+                  poNumber: context.watch<OrderDetailsCubit>().poNumber,
+                  orderStatus: context.watch<OrderDetailsCubit>().orderStatus,
                   shippingMethod:
-                      state.order.shipViaDescription ?? state.order.shipCode,
-                  terms: state.orderSettings.showTermsCode == true
-                      ? state.order.terms
-                      : null,
+                      context.watch<OrderDetailsCubit>().shippingMethod,
+                  terms: context.watch<OrderDetailsCubit>().terms,
+                  requestedDeliveryDate:
+                      context.watch<OrderDetailsCubit>().requestedDeliveryDate,
+                  requestedDeliveryDateTitle: context
+                      .watch<OrderDetailsCubit>()
+                      .requestedDeliveryDateTitle,
+                  webOrderNumber:
+                      context.watch<OrderDetailsCubit>().webOrderNumber,
                 ),
               ),
             );

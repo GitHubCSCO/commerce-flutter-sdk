@@ -6,18 +6,26 @@ import 'package:flutter/material.dart';
 
 class OrderDetailsBodyWidget extends StatelessWidget {
   final String? orderNumber;
+  final String? webOrderNumber;
   final String? orderDate;
   final String? orderStatus;
+  final String? poNumber;
   final String? shippingMethod;
   final String? terms;
+  final String? requestedDeliveryDateTitle;
+  final String? requestedDeliveryDate;
 
   const OrderDetailsBodyWidget({
     super.key,
     this.orderNumber,
+    this.webOrderNumber,
     this.orderDate,
     this.orderStatus,
+    this.poNumber,
     this.shippingMethod,
     this.terms,
+    this.requestedDeliveryDateTitle,
+    this.requestedDeliveryDate,
   });
 
   @override
@@ -28,24 +36,33 @@ class OrderDetailsBodyWidget extends StatelessWidget {
       orderStatus: orderStatus,
       shippingMethod: shippingMethod,
       terms: terms,
+      poNumber: poNumber,
     );
   }
 }
 
 class OrderInformationWidget extends StatelessWidget {
   final String? orderNumber;
+  final String? webOrderNumber;
   final String? orderDate;
   final String? orderStatus;
+  final String? poNumber;
   final String? shippingMethod;
   final String? terms;
+  final String? requestedDeliveryDateTitle;
+  final String? requestedDeliveryDate;
 
   const OrderInformationWidget({
     super.key,
     this.orderNumber,
+    this.webOrderNumber,
     this.orderDate,
     this.orderStatus,
+    this.poNumber,
     this.shippingMethod,
     this.terms,
+    this.requestedDeliveryDateTitle,
+    this.requestedDeliveryDate,
   });
 
   @override
@@ -64,6 +81,12 @@ class OrderInformationWidget extends StatelessWidget {
                 value: orderNumber!,
                 textStyle: OptiTextStyles.subtitle,
               ),
+            if (webOrderNumber != null)
+              TwoTextsRow(
+                label: LocalizationConstants.webOrderNumberSign,
+                value: webOrderNumber!,
+                textStyle: OptiTextStyles.body,
+              ),
             if (orderDate != null)
               TwoTextsRow(
                 label: LocalizationConstants.orderDate,
@@ -76,6 +99,12 @@ class OrderInformationWidget extends StatelessWidget {
                 value: orderStatus!,
                 textStyle: OptiTextStyles.body,
               ),
+            if (poNumber != null)
+              TwoTextsRow(
+                label: LocalizationConstants.pONumberSign,
+                value: poNumber!,
+                textStyle: OptiTextStyles.body,
+              ),
             if (shippingMethod != null)
               TwoTextsRow(
                 label: LocalizationConstants.shippingMethod,
@@ -86,6 +115,12 @@ class OrderInformationWidget extends StatelessWidget {
               TwoTextsRow(
                 label: LocalizationConstants.terms,
                 value: terms!,
+                textStyle: OptiTextStyles.body,
+              ),
+            if (requestedDeliveryDateTitle != null)
+              TwoTextsRow(
+                label: requestedDeliveryDateTitle!,
+                value: requestedDeliveryDate!,
                 textStyle: OptiTextStyles.body,
               ),
           ],
