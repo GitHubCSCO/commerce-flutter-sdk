@@ -87,9 +87,9 @@ class OrderUsecase extends BaseUseCase {
     }
   }
 
-  Future<OrderEntity?> loadOrder(String orderId) async {
+  Future<OrderEntity?> loadOrder(String orderNumber) async {
     final result =
-        await commerceAPIServiceProvider.getOrderService().getOrder(orderId);
+        await commerceAPIServiceProvider.getOrderService().getOrder(orderNumber);
     switch (result) {
       case Success(value: final value):
         return value != null ? OrderEntityMapper.toEntity(value) : null;

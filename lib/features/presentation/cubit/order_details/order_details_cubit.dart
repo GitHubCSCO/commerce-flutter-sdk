@@ -20,11 +20,11 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
           ),
         );
 
-  Future<void> loadOrderDetails(String orderId) async {
+  Future<void> loadOrderDetails(String orderNumber) async {
     emit(state.copyWith(orderStatus: OrderStatus.loading));
 
     final futureResults = await Future.wait([
-      _orderUsecase.loadOrder(orderId),
+      _orderUsecase.loadOrder(orderNumber),
       _orderUsecase.loadOrderSettings(),
     ]);
 
