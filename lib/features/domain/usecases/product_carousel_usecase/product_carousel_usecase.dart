@@ -117,7 +117,7 @@ class ProductCarouselUseCase extends BaseUseCase {
   ProductsQueryParameters _featuredCategoryParameters(
       ProductCarouselWidgetEntity productCarouselWidgetEntity) {
     return ProductsQueryParameters(
-      categoryId: productCarouselWidgetEntity.selectedCategoryIds!.first,
+      categoryId: productCarouselWidgetEntity.selectedCategoryIds?.first,
       pageSize: productCarouselWidgetEntity.numberOfProductsToDisplay,
       expand: ["pricing"],
     );
