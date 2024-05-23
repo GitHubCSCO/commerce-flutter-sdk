@@ -76,6 +76,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect
 import 'package:commerce_flutter_app/features/presentation/cubit/login/forgot_password/forgot_password_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/order_details/order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
@@ -137,6 +138,9 @@ Future<void> initInjectionContainer() async {
     //order history
     ..registerFactory(() => OrderHistoryCubit(orderUsecase: sl()))
     ..registerFactory(() => OrderUsecase())
+
+    //order details
+    ..registerFactory(() => OrderDetailsCubit(orderUsercase: sl()))
 
     //Pull to refresh
     ..registerFactory(() => PullToRefreshBloc())
