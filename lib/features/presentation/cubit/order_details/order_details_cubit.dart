@@ -95,9 +95,9 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       state.order.fulfillmentMethod == 'Ship' ||
       state.order.fulfillmentMethod.isNullOrEmpty;
 
-  String? get companyName => state.order.stCompanyName;
+  String? get shippingCompanyName => state.order.stCompanyName;
 
-  String? get fullAddress =>
+  String? get shippingFullAddress =>
       (!state.order.stAddress1.isNullOrEmpty
           ? '${state.order.stAddress1!}\n'
           : '') +
@@ -106,5 +106,5 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
           : '') +
       ('${state.order.shipToCity}, ${state.order.shipToState} ${state.order.shipToPostalCode}');
 
-  String? get countryName => state.order.stCountry;
+  String? get shippingCountryName => state.order.stCountry;
 }

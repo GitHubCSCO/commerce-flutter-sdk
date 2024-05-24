@@ -16,9 +16,9 @@ class OrderDetailsBodyWidget extends StatelessWidget {
   final String? requestedDeliveryDateTitle;
   final String? requestedDeliveryDate;
   final bool isShippingAddressVisible;
-  final String? companyName;
-  final String? fullAddress;
-  final String? countryName;
+  final String? shippingCompanyName;
+  final String? shippingFullAddress;
+  final String? shippingCountryName;
 
   const OrderDetailsBodyWidget({
     super.key,
@@ -32,9 +32,9 @@ class OrderDetailsBodyWidget extends StatelessWidget {
     this.requestedDeliveryDateTitle,
     this.requestedDeliveryDate,
     this.isShippingAddressVisible = false,
-    this.companyName,
-    this.fullAddress,
-    this.countryName,
+    this.shippingCompanyName,
+    this.shippingFullAddress,
+    this.shippingCountryName,
   });
 
   @override
@@ -56,9 +56,9 @@ class OrderDetailsBodyWidget extends StatelessWidget {
         if (isShippingAddressVisible)
           OrderShippingAddressWidget(
             visible: isShippingAddressVisible,
-            companyName: companyName,
-            fullAddress: fullAddress,
-            countryName: countryName,
+            companyName: shippingCompanyName,
+            fullAddress: shippingFullAddress,
+            countryName: shippingCountryName,
           ),
       ],
     );

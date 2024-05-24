@@ -61,9 +61,12 @@ class OrderDetailsPage extends StatelessWidget {
                     .requestedDeliveryDateTitle,
                 webOrderNumber:
                     context.watch<OrderDetailsCubit>().webOrderNumber,
-                companyName: context.watch<OrderDetailsCubit>().companyName,
-                fullAddress: context.watch<OrderDetailsCubit>().fullAddress,
-                countryName: context.watch<OrderDetailsCubit>().countryName,
+                shippingCompanyName:
+                    context.watch<OrderDetailsCubit>().shippingCompanyName,
+                shippingFullAddress:
+                    context.watch<OrderDetailsCubit>().shippingFullAddress,
+                shippingCountryName:
+                    context.watch<OrderDetailsCubit>().shippingCountryName,
                 isShippingAddressVisible:
                     context.watch<OrderDetailsCubit>().isShippingAddressVisible,
               ),
