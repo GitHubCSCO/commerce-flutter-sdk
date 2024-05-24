@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
@@ -12,6 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_scr
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/forgot_password_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/add_to_wish_list_screen.dart';
@@ -201,6 +203,17 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
+  // path: /countInventory
+  final countInventory = createNode(
+    name: AppRoute.countInventory.name,
+    path: AppRoute.countInventory.suffix,
+    builder: (context, state) {
+      final countInventoryEntity = state.extra as CountInventoryEntity;
+      return CountInventoryScreen(countInventoryEntity: countInventoryEntity);
+    },
+    parent: null,
+  );
+
   // path: /account/vmi
   final vmi = createNode(
     name: AppRoute.vmi.name,
@@ -309,6 +322,7 @@ List<NavigationNode> _getNavigationRoot() {
     quickOrder,
     createOrder,
     countOrder,
+    countInventory,
     barcodeSearch,
     wishListInfo,
     wishListCreate,

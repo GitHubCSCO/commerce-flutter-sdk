@@ -16,7 +16,7 @@ class VmiBinModelEntity extends Equatable {
   final double? previousCountQty;
   final String? previousCountUserName;
   final DateTime? lastOrderDate;
-  ProductEntity? product;
+  ProductEntity? productEntity;
 
   VmiBinModelEntity({
     required this.id,
@@ -32,7 +32,7 @@ class VmiBinModelEntity extends Equatable {
     this.previousCountQty,
     this.previousCountUserName,
     this.lastOrderDate,
-    this.product,
+    this.productEntity,
   });
 
   @override

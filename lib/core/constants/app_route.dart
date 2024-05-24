@@ -23,6 +23,7 @@ class RouteNames {
   static const String quickOrder = 'quickOrder';
   static const String createOrder = 'createOrder';
   static const String countOrder = 'countOrder';
+  static const String countInventory = 'countInventory';
   static const String barcodeSearch = 'barcodeSearch';
   static const String wishlists = 'wishlists';
   static const String wishlistsDetails = 'wishlistsDetails';
@@ -56,6 +57,7 @@ class RoutePaths {
   static const String quickOrder = '/${RouteNames.quickOrder}';
   static const String createOrder = '/${RouteNames.createOrder}';
   static const String countOrder = '/${RouteNames.countOrder}';
+  static const String countInventory = '/${RouteNames.countInventory}';
   static const String barcodeSearch = '/${RouteNames.barcodeSearch}';
   static const String wishlists =
       '${RoutePaths.account}/${RouteNames.wishlists}';
@@ -91,6 +93,7 @@ enum AppRoute {
   quickOrder(name: RouteNames.quickOrder, fullPath: RoutePaths.quickOrder),
   createOrder(name: RouteNames.createOrder, fullPath: RoutePaths.createOrder),
   countOrder(name: RouteNames.countOrder, fullPath: RoutePaths.countOrder),
+  countInventory(name: RouteNames.countInventory, fullPath: RoutePaths.countInventory),
   barcodeSearch(
       name: RouteNames.barcodeSearch, fullPath: RoutePaths.barcodeSearch),
   wishlist(name: RouteNames.wishlists, fullPath: RoutePaths.wishlists),

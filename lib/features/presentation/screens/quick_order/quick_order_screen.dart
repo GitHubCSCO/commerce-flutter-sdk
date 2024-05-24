@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
@@ -33,6 +34,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/style_trait_se
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuickOrderScreen extends StatelessWidget {
@@ -91,7 +93,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: OptiAppColors.backgroundWhite,
       appBar: AppBar(
         title: const Text(LocalizationConstants.quickOrder),
         actions: <Widget>[
@@ -199,7 +201,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                               } else if (state is OrderListVmiStyleProductAddState) {
                                 handleVmiStyleProductAdd(state.vmiBinEntity);
                               } else if (state is OrderListVmiProductAddState) {
-                                handleVmiBinAdd(state.vmiBinEntity);
+                                handleVmiBinAdd(state.vmiBinEntity, state.previousOrderEntity);
                               }
                             },
                             buildWhen: (previous, current) =>
@@ -603,16 +605,21 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   }
 
   void handleVmiStyleProductAdd(VmiBinModelEntity vmiBinEntity) {
-    showStyleTraitFilter(vmiBinEntity.product!, context, ongetProduct: (StyledProductEntity? styleProduct) {
+    showStyleTraitFilter(vmiBinEntity.productEntity!, context, ongetProduct: (StyledProductEntity? styleProduct) {
       context.read<OrderListBloc>().add(OrderListAddVmiStyleProductEvent(vmiBinEntity, styleProduct!));
     });
   }
 
-  void handleVmiBinAdd(VmiBinModelEntity vmiBinEntity) { {
-    //Navigate to count page
+  void handleVmiBinAdd(VmiBinModelEntity vmiBinEntity, OrderEntity previousOrder) async {
+    final result = await context.pushNamed<VmiBinModelEntity>(
+      AppRoute.countInventory.name,
+      extra: vmiBinEntity,
+    );
 
-    context.read<OrderListBloc>().add(OrderListAddVmiBinEvent(vmiBinEntity, 0));
-  }}
+    if (result != null) {
+      context.read<OrderListBloc>().add(OrderListAddVmiBinEvent(result, 0));
+    }
+  }
 
 }
 

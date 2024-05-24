@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
@@ -159,7 +160,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
           return;
         }
 
-        event.vmiBinEntity.product = product;
+        event.vmiBinEntity.productEntity = product;
         var quantity = (product.minimumOrderQty! > 0) ? product.minimumOrderQty : 1;
         var newItem = _convertVmiBinProductToQuickOrderItemEntity(event.vmiBinEntity, quantity!);
         _insertItemIntoQuickOrderList(newItem);
@@ -209,22 +210,30 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   Future<void> _addVmiOrderItem(Result<VmiBinModelEntity, ErrorResponse> result, Emitter<OrderListState> emit) async {
     switch (result) {
       case Success(value: final vmiBin):
-        if (vmiBin!.product == null) {
+        if (vmiBin!.productEntity == null) {
           emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
           emit(OrderListLoadedState(quickOrderItemList, productSettings));
           return;
         }
 
         if (scanningMode == ScanningMode.count) {
-          emit(OrderListVmiProductAddState(vmiBin));
-        } else {
-          var quantity = (vmiBin.product!.minimumOrderQty! > 0) ? vmiBin.product!.minimumOrderQty : 1;
+          final result = await _quickOrderUseCase.getPreviousOrder(vmiBin.id);
+          final previousOrder = (result is Success)
+              ? (result as Success).value : null;
 
-          if (vmiBin.product!.isStyleProductParent!) {
+          if (previousOrder != null) {
+            emit(OrderListVmiProductAddState(vmiBin, previousOrder));
+          } else {
+            emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
+          }
+        } else {
+          var quantity = (vmiBin.productEntity!.minimumOrderQty! > 0) ? vmiBin.productEntity!.minimumOrderQty : 1;
+
+          if (vmiBin.productEntity!.isStyleProductParent!) {
             emit(OrderListVmiStyleProductAddState(vmiBin));
-          } else if (vmiBin.product!.isConfigured! || (vmiBin.product!.isConfigured! && !vmiBin.product!.isFixedConfiguration!)) {
+          } else if (vmiBin.productEntity!.isConfigured! || (vmiBin.productEntity!.isConfigured! && !vmiBin.productEntity!.isFixedConfiguration!)) {
             emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderConfigurable));
-          } else if (!vmiBin.product!.canAddToCart!) {
+          } else if (!vmiBin.productEntity!.canAddToCart!) {
             emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
           } else {
             var newItem = _convertVmiBinProductToQuickOrderItemEntity(vmiBin, quantity!);
@@ -304,7 +313,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   }
 
   QuickOrderItemEntity _convertVmiBinProductToQuickOrderItemEntity(VmiBinModelEntity vmiBinEntity, int quantityOrdered) {
-    QuickOrderItemEntity orderItemEntity = QuickOrderItemEntity(vmiBinEntity.product!, quantityOrdered);
+    QuickOrderItemEntity orderItemEntity = QuickOrderItemEntity(vmiBinEntity.productEntity!, quantityOrdered);
     orderItemEntity.vmiBinEntity = vmiBinEntity;
 
     return _convertToQuickOrderItemEntity(orderItemEntity);

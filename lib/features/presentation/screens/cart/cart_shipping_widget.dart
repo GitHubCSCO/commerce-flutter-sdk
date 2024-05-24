@@ -7,7 +7,6 @@ import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shippi
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:map_launcher/map_launcher.dart';
 
 enum ShippingOption { ship, pickUp }
 

@@ -17,7 +17,7 @@ class VmiBinModelEntityMapper {
         previousCountQty: model.previousCountQty,
         previousCountUserName: model.previousCountUserName,
         lastOrderDate: model.lastOrderDate,
-        product: model.product != null
+        productEntity: model.product != null
             ? ProductEntityMapper().toEntity(model.product!)
             : null,
       );
@@ -36,8 +36,8 @@ class VmiBinModelEntityMapper {
         previousCountQty: entity.previousCountQty,
         previousCountUserName: entity.previousCountUserName,
         lastOrderDate: entity.lastOrderDate,
-        product: entity.product != null
-            ? ProductEntityMapper().toModel(entity.product!)
+        product: entity.productEntity != null
+            ? ProductEntityMapper().toModel(entity.productEntity!)
             : null,
       );
 }

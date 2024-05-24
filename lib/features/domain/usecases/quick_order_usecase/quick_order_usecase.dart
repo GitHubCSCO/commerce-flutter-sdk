@@ -1,5 +1,7 @@
+import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/order_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/vmi_bin_model_entity_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
@@ -87,6 +89,29 @@ class QuickOrderUseCase extends BaseUseCase {
       case Success(value: final data):
         final productEntity = ProductEntityMapper().toEntity(data?.product ?? Product());
         return Success(productEntity);
+      case Failure(errorResponse: final errorResponse):
+        return Failure(errorResponse);
+    }
+  }
+
+  Future<Result<OrderEntity, ErrorResponse>> getPreviousOrder(String vmiBinId) async {
+    String vmiLocationId = coreServiceProvider.getVmiService().currentVmiLocation!.id;
+
+    var parameters = OrdersQueryParameters(
+      vmiLocationId: vmiLocationId,
+      vmiBinId: vmiBinId,
+      expand: ['orderlines'],
+    );
+    var result = await commerceAPIServiceProvider.getOrderService().getOrders(parameters);
+
+    switch (result) {
+      case Success(value: final data):
+        if ((data?.orders ?? []).isNotEmpty && (data?.orders ?? []).length == 1) {
+          final orderEntity = OrderEntityMapper.toEntity(data?.orders![0] ?? Order());
+          return Success(orderEntity);
+        } else {
+          return const Success(null);
+        }
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
     }
