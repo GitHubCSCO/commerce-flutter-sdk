@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/two_texts_row.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
 import 'package:flutter/material.dart';
 
 class OrderDetailsBodyWidget extends StatelessWidget {
@@ -14,6 +15,10 @@ class OrderDetailsBodyWidget extends StatelessWidget {
   final String? terms;
   final String? requestedDeliveryDateTitle;
   final String? requestedDeliveryDate;
+  final bool isShippingAddressVisible;
+  final String? companyName;
+  final String? fullAddress;
+  final String? countryName;
 
   const OrderDetailsBodyWidget({
     super.key,
@@ -26,17 +31,33 @@ class OrderDetailsBodyWidget extends StatelessWidget {
     this.terms,
     this.requestedDeliveryDateTitle,
     this.requestedDeliveryDate,
+    this.isShippingAddressVisible = false,
+    this.companyName,
+    this.fullAddress,
+    this.countryName,
   });
 
   @override
   Widget build(BuildContext context) {
-    return OrderInformationWidget(
-      orderNumber: orderNumber,
-      orderDate: orderDate,
-      orderStatus: orderStatus,
-      shippingMethod: shippingMethod,
-      terms: terms,
-      poNumber: poNumber,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        OrderInformationWidget(
+          orderNumber: orderNumber,
+          orderDate: orderDate,
+          orderStatus: orderStatus,
+          shippingMethod: shippingMethod,
+          terms: terms,
+          poNumber: poNumber,
+        ),
+        if (isShippingAddressVisible)
+          OrderShippingAddressWidget(
+            visible: isShippingAddressVisible,
+            companyName: companyName,
+            fullAddress: fullAddress,
+            countryName: countryName,
+          ),
+      ],
     );
   }
 }
@@ -124,6 +145,36 @@ class OrderInformationWidget extends StatelessWidget {
                 textStyle: OptiTextStyles.body,
               ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class OrderShippingAddressWidget extends StatelessWidget {
+  final bool visible;
+  final String? companyName;
+  final String? fullAddress;
+  final String? countryName;
+  const OrderShippingAddressWidget({
+    super.key,
+    required this.visible,
+    this.companyName,
+    this.fullAddress,
+    this.countryName,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: OptiAppColors.backgroundWhite,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        child: ShippingAddressWidget(
+          companyName: companyName,
+          countryName: countryName,
+          fullAddress: fullAddress,
+          visible: visible,
         ),
       ),
     );
