@@ -48,6 +48,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     }
   }
 
+  // Order Information
   String? get orderNumber => state.order.orderNumber;
 
   String? get webOrderNumber => (!state.order.erpOrderNumber.isNullOrEmpty &&
@@ -95,6 +96,19 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       state.order.fulfillmentMethod == 'Ship' ||
       state.order.fulfillmentMethod.isNullOrEmpty;
 
+  // Billing Address
+  String? get billingCompanyName => state.order.btCompanyName;
+
+  String? get billingFullAddress =>
+      (!state.order.btAddress1.isNullOrEmpty
+          ? '${state.order.btAddress1!}\n'
+          : '') +
+      (!state.order.btAddress2.isNullOrEmpty
+          ? '${state.order.btAddress2!}\n'
+          : '') +
+      ('${state.order.billToCity}, ${state.order.billToState} ${state.order.billToPostalCode}');
+
+  // Shipping Address
   String? get shippingCompanyName => state.order.stCompanyName;
 
   String? get shippingFullAddress =>

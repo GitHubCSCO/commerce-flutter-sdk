@@ -69,6 +69,10 @@ class OrderDetailsPage extends StatelessWidget {
                     context.watch<OrderDetailsCubit>().shippingCountryName,
                 isShippingAddressVisible:
                     context.watch<OrderDetailsCubit>().isShippingAddressVisible,
+                billingCompanyName:
+                    context.watch<OrderDetailsCubit>().billingCompanyName,
+                billingFullAddress:
+                    context.watch<OrderDetailsCubit>().billingFullAddress,
               ),
             );
           }

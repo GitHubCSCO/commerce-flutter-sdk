@@ -15,10 +15,14 @@ class OrderDetailsBodyWidget extends StatelessWidget {
   final String? terms;
   final String? requestedDeliveryDateTitle;
   final String? requestedDeliveryDate;
+
   final bool isShippingAddressVisible;
   final String? shippingCompanyName;
   final String? shippingFullAddress;
   final String? shippingCountryName;
+
+  final String? billingCompanyName;
+  final String? billingFullAddress;
 
   const OrderDetailsBodyWidget({
     super.key,
@@ -35,6 +39,8 @@ class OrderDetailsBodyWidget extends StatelessWidget {
     this.shippingCompanyName,
     this.shippingFullAddress,
     this.shippingCountryName,
+    this.billingCompanyName,
+    this.billingFullAddress,
   });
 
   @override
@@ -52,6 +58,10 @@ class OrderDetailsBodyWidget extends StatelessWidget {
           requestedDeliveryDate: requestedDeliveryDate,
           requestedDeliveryDateTitle: requestedDeliveryDateTitle,
           webOrderNumber: webOrderNumber,
+        ),
+        OrderBillingAddressWidget(
+          companyName: billingCompanyName,
+          fullAddress: billingFullAddress,
         ),
         if (isShippingAddressVisible)
           OrderShippingAddressWidget(
@@ -178,6 +188,30 @@ class OrderShippingAddressWidget extends StatelessWidget {
           countryName: countryName,
           fullAddress: fullAddress,
           visible: visible,
+        ),
+      ),
+    );
+  }
+}
+
+class OrderBillingAddressWidget extends StatelessWidget {
+  final String? companyName;
+  final String? fullAddress;
+  const OrderBillingAddressWidget({
+    super.key,
+    this.companyName,
+    this.fullAddress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: OptiAppColors.backgroundWhite,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        child: BillingAddressWidget(
+          companyName: companyName,
+          fullAddress: fullAddress,
         ),
       ),
     );
