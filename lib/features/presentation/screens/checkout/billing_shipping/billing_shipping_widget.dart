@@ -453,7 +453,6 @@ class PickupLocationWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 12),
         Text(
           LocalizationConstants.pickUpLocation,
           textAlign: TextAlign.start,
