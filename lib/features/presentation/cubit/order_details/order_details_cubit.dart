@@ -68,9 +68,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       : null;
 
   String? get shippingMethod =>
-      ((!state.order.fulfillmentMethod.isNullOrEmpty ||
-                  state.order.fulfillmentMethod == 'Ship') &&
-              state.order.shipCode != null)
+      (isShippingAddressVisible && state.order.shipCode != null)
           ? state.order.shipViaDescription ?? state.order.shipCode
           : null;
 
@@ -92,4 +90,21 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       ? DateFormat(CoreConstants.dateFormatShortString)
           .format(state.order.requestedDeliveryDateDisplay!)
       : null;
+
+  bool get isShippingAddressVisible =>
+      state.order.fulfillmentMethod == 'Ship' ||
+      state.order.fulfillmentMethod.isNullOrEmpty;
+
+  String? get companyName => state.order.stCompanyName;
+
+  String? get fullAddress =>
+      (!state.order.stAddress1.isNullOrEmpty
+          ? '${state.order.stAddress1!}\n'
+          : '') +
+      (!state.order.stAddress2.isNullOrEmpty
+          ? '${state.order.stAddress2!}\n'
+          : '') +
+      ('${state.order.shipToCity}, ${state.order.shipToState} ${state.order.shipToPostalCode}');
+
+  String? get countryName => state.order.stCountry;
 }
