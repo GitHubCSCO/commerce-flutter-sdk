@@ -374,8 +374,10 @@ class ShippingAddressWidget extends StatelessWidget {
             textAlign: TextAlign.start,
             style: OptiTextStyles.body,
           ),
-          const SizedBox(height: 12),
-          if (buildSeperator) _buildSeparator(),
+          if (buildSeperator) ...[
+            const SizedBox(height: 12),
+            _buildSeparator(),
+          ],
         ],
       ),
     );
@@ -440,8 +442,10 @@ class BillingAddressWidget extends StatelessWidget {
           textAlign: TextAlign.start,
           style: OptiTextStyles.body,
         ),
-        const SizedBox(height: 12),
-        if (buildSeperator) _buildSeparator()
+        if (buildSeperator) ...[
+          const SizedBox(height: 12),
+          _buildSeparator(),
+        ],
       ],
     );
   }
