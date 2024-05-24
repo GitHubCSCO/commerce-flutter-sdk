@@ -7,7 +7,6 @@ import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/date_picker_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -86,13 +85,6 @@ class BillingShippingWidget extends StatelessWidget {
     return list;
   }
 
-  Widget _buildSeparator() {
-    return const Divider(
-      thickness: 1,
-      color: Colors.grey,
-    );
-  }
-
   Widget _buildBillingAddress() {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -139,39 +131,12 @@ class BillingShippingWidget extends StatelessWidget {
   }
 
   Widget _buildShippingAddress() {
-    return Visibility(
+    return ShippingAddressWidget(
       visible: billingShippingEntity.shippingMethod == ShippingOption.ship,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 12),
-          Text(
-            LocalizationConstants.shippingAddress,
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.subtitle,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            billingShippingEntity.shipTo?.companyName ?? '',
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
-          ),
-          Text(
-            billingShippingEntity.shipTo?.fullAddress ?? '',
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
-          ),
-          Text(
-            billingShippingEntity.shipTo?.country?.name ?? '',
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
-          ),
-          const SizedBox(height: 12),
-          _buildSeparator()
-        ],
-      ),
+      companyName: billingShippingEntity.shipTo?.companyName,
+      fullAddress: billingShippingEntity.shipTo?.fullAddress,
+      countryName: billingShippingEntity.shipTo?.country?.name,
+      buildSeperator: true,
     );
   }
 
@@ -365,5 +330,66 @@ class BillingShippingWidget extends StatelessWidget {
     context.read<CheckoutBloc>().add(RequestDeliveryDateEvent(dateTime));
     context.read<ReviewOrderCubit>().onOrderConfigChange();
   }
+}
 
+Widget _buildSeparator() {
+  return const Divider(
+    thickness: 1,
+    color: Colors.grey,
+  );
+}
+
+class ShippingAddressWidget extends StatelessWidget {
+  final bool visible;
+  final bool buildSeperator;
+  final String? companyName;
+  final String? fullAddress;
+  final String? countryName;
+
+  const ShippingAddressWidget({
+    super.key,
+    this.visible = true,
+    this.buildSeperator = false,
+    this.companyName,
+    this.fullAddress,
+    this.countryName,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      visible: visible,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 12),
+          Text(
+            LocalizationConstants.shippingAddress,
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.subtitle,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            companyName ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
+          Text(
+            fullAddress ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
+          Text(
+            countryName ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
+          const SizedBox(height: 12),
+          if (buildSeperator) _buildSeparator(),
+        ],
+      ),
+    );
+  }
 }
