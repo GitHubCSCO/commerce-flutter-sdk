@@ -6,12 +6,14 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
   final String? qtyOrdered;
   final void Function(int?)? onQtyChanged;
   final String? subtotalPriceText;
+  final bool canEdit;
 
   const LineItemQuantityGroupWidget({
     super.key,
     this.qtyOrdered,
     this.onQtyChanged,
     this.subtotalPriceText,
+    this.canEdit = true,
   });
 
   @override
@@ -22,11 +24,16 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
         children: [
           Expanded(
             flex: 1,
-            child: NumberTextField(
-              initialtText: qtyOrdered,
-              shouldShowIncrementDecermentIcon: false,
-              onChanged: onQtyChanged,
-            ),
+            child: canEdit
+                ? NumberTextField(
+                    initialtText: qtyOrdered,
+                    shouldShowIncrementDecermentIcon: false,
+                    onChanged: onQtyChanged,
+                  )
+                : Text(
+                    qtyOrdered ?? '',
+                    style: OptiTextStyles.titleLarge,
+                  ),
           ),
           // LineItemSubtotalColumnWidget(title: 'U/M', value: 'E/A'),
           LineItemSubtotalColumnWidget(
