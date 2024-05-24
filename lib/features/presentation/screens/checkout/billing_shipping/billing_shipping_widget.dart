@@ -357,21 +357,24 @@ class ShippingAddressWidget extends StatelessWidget {
             style: OptiTextStyles.subtitle,
           ),
           const SizedBox(height: 8),
-          Text(
-            companyName ?? '',
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
-          ),
-          Text(
-            fullAddress ?? '',
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
-          ),
-          Text(
-            countryName ?? '',
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
-          ),
+          if (!companyName.isNullOrEmpty)
+            Text(
+              companyName ?? '',
+              textAlign: TextAlign.start,
+              style: OptiTextStyles.body,
+            ),
+          if (!fullAddress.isNullOrEmpty)
+            Text(
+              fullAddress ?? '',
+              textAlign: TextAlign.start,
+              style: OptiTextStyles.body,
+            ),
+          if (!countryName.isNullOrEmpty)
+            Text(
+              countryName ?? '',
+              textAlign: TextAlign.start,
+              style: OptiTextStyles.body,
+            ),
           if (buildSeperator) ...[
             const SizedBox(height: 12),
             _buildSeparator(),
@@ -414,33 +417,38 @@ class BillingAddressWidget extends StatelessWidget {
           style: OptiTextStyles.subtitle,
         ),
         const SizedBox(height: 8),
-        Text(
-          companyName ?? '',
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
-        ),
-        Text(
-          fullAddress ?? '',
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
-        ),
-        Text(
-          countryName ?? '',
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
-        ),
+        if (!companyName.isNullOrEmpty)
+          Text(
+            companyName ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
+        if (!fullAddress.isNullOrEmpty)
+          Text(
+            fullAddress ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
+        if (!countryName.isNullOrEmpty)
+          Text(
+            countryName ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
         if (!email.isNullOrEmpty || !phone.isNullOrEmpty) ...[
           const SizedBox(height: 16),
-          Text(
-            email ?? '',
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
-          ),
-          Text(
-            phone ?? '',
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
-          ),
+          if (!email.isNullOrEmpty)
+            Text(
+              email ?? '',
+              textAlign: TextAlign.start,
+              style: OptiTextStyles.body,
+            ),
+          if (!phone.isNullOrEmpty)
+            Text(
+              phone ?? '',
+              textAlign: TextAlign.start,
+              style: OptiTextStyles.body,
+            ),
         ],
         if (buildSeperator) ...[
           const SizedBox(height: 12),
