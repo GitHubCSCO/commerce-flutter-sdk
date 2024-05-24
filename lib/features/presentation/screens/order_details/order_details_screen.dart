@@ -45,24 +45,27 @@ class OrderDetailsPage extends StatelessWidget {
               child: Text('Failed to load order details'),
             );
           } else {
-            return Expanded(
-              child: SingleChildScrollView(
-                child: OrderDetailsBodyWidget(
-                  orderNumber: context.watch<OrderDetailsCubit>().orderNumber,
-                  orderDate: context.watch<OrderDetailsCubit>().orderDate,
-                  poNumber: context.watch<OrderDetailsCubit>().poNumber,
-                  orderStatus: context.watch<OrderDetailsCubit>().orderStatus,
-                  shippingMethod:
-                      context.watch<OrderDetailsCubit>().shippingMethod,
-                  terms: context.watch<OrderDetailsCubit>().terms,
-                  requestedDeliveryDate:
-                      context.watch<OrderDetailsCubit>().requestedDeliveryDate,
-                  requestedDeliveryDateTitle: context
-                      .watch<OrderDetailsCubit>()
-                      .requestedDeliveryDateTitle,
-                  webOrderNumber:
-                      context.watch<OrderDetailsCubit>().webOrderNumber,
-                ),
+            return SingleChildScrollView(
+              child: OrderDetailsBodyWidget(
+                orderNumber: context.watch<OrderDetailsCubit>().orderNumber,
+                orderDate: context.watch<OrderDetailsCubit>().orderDate,
+                poNumber: context.watch<OrderDetailsCubit>().poNumber,
+                orderStatus: context.watch<OrderDetailsCubit>().orderStatus,
+                shippingMethod:
+                    context.watch<OrderDetailsCubit>().shippingMethod,
+                terms: context.watch<OrderDetailsCubit>().terms,
+                requestedDeliveryDate:
+                    context.watch<OrderDetailsCubit>().requestedDeliveryDate,
+                requestedDeliveryDateTitle: context
+                    .watch<OrderDetailsCubit>()
+                    .requestedDeliveryDateTitle,
+                webOrderNumber:
+                    context.watch<OrderDetailsCubit>().webOrderNumber,
+                companyName: context.watch<OrderDetailsCubit>().companyName,
+                fullAddress: context.watch<OrderDetailsCubit>().fullAddress,
+                countryName: context.watch<OrderDetailsCubit>().countryName,
+                isShippingAddressVisible:
+                    context.watch<OrderDetailsCubit>().isShippingAddressVisible,
               ),
             );
           }
