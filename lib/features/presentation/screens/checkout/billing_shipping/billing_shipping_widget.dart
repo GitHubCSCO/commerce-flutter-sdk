@@ -43,7 +43,9 @@ class BillingShippingWidget extends StatelessWidget {
         int selectedCarrierIndex = 0;
         int selectedServiceIndex = 0;
 
-        for(int i = 0; i < (billingShippingEntity.carriers?.length ?? 0); i++) {
+        for (int i = 0;
+            i < (billingShippingEntity.carriers?.length ?? 0);
+            i++) {
           if (billingShippingEntity.selectedCarrier != null &&
               billingShippingEntity.selectedCarrier!.id! ==
                   billingShippingEntity.carriers![i].id!) {
@@ -51,10 +53,16 @@ class BillingShippingWidget extends StatelessWidget {
           }
         }
 
-        for(int i = 0; i < (billingShippingEntity.carriers?[selectedCarrierIndex].shipVias?.length ?? 0); i++) {
+        for (int i = 0;
+            i <
+                (billingShippingEntity
+                        .carriers?[selectedCarrierIndex].shipVias?.length ??
+                    0);
+            i++) {
           if (billingShippingEntity.selectedService != null &&
               billingShippingEntity.selectedService!.id! ==
-                  billingShippingEntity.carriers?[selectedCarrierIndex].shipVias?[i].id!) {
+                  billingShippingEntity
+                      .carriers?[selectedCarrierIndex].shipVias?[i].id!) {
             selectedServiceIndex = i;
           }
         }
@@ -75,11 +83,13 @@ class BillingShippingWidget extends StatelessWidget {
               days: billingShippingEntity.cartSettings!.maximumDeliveryPeriod!);
           maximumDate = DateTime.now().add(duration);
         }
-        list.add(_buildRequestDeliveryDate(maximumDate, billingShippingEntity.requestDeliveryDate));
+        list.add(_buildRequestDeliveryDate(
+            maximumDate, billingShippingEntity.requestDeliveryDate));
       }
     } else {
       list.add(_buildPickUpAddress());
-      list.add(_buildRequestDeliveryDate(null, billingShippingEntity.requestDeliveryDate));
+      list.add(_buildRequestDeliveryDate(
+          null, billingShippingEntity.requestDeliveryDate));
     }
 
     return list;
@@ -224,16 +234,20 @@ class BillingShippingWidget extends StatelessWidget {
             ),
             Expanded(
               flex: 2,
-                child: Row(
-                  children: [
-                    Expanded(child: ListPickerWidget(items: carriers, selectedIndex: selectedCarrierIndex, callback: _onCarrierSelect)),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.grey,
-                      size: 16,
-                    ),
-                  ],
-                )
+              child: Row(
+                children: [
+                  Expanded(
+                      child: ListPickerWidget(
+                          items: carriers,
+                          selectedIndex: selectedCarrierIndex,
+                          callback: _onCarrierSelect)),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.grey,
+                    size: 16,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -249,17 +263,21 @@ class BillingShippingWidget extends StatelessWidget {
               ),
             ),
             Expanded(
-                flex: 2,
-                child: Row(
-                  children: [
-                    Expanded(child: ListPickerWidget(items: services, selectedIndex: selectedServiceIndex, callback: _onServiceSelect)),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.grey,
-                      size: 16,
-                    ),
-                  ],
-                )
+              flex: 2,
+              child: Row(
+                children: [
+                  Expanded(
+                      child: ListPickerWidget(
+                          items: services,
+                          selectedIndex: selectedServiceIndex,
+                          callback: _onServiceSelect)),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.grey,
+                    size: 16,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -292,17 +310,21 @@ class BillingShippingWidget extends StatelessWidget {
               ),
             ),
             Expanded(
-                flex: 2,
-                child: Row(
-                  children: [
-                    Expanded(child: DatePickerWidget(maxDate: maxDate, selectedDateTime: selectedDate, callback: _onSelectDate)),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.grey,
-                      size: 16,
-                    ),
-                  ],
-                )
+              flex: 2,
+              child: Row(
+                children: [
+                  Expanded(
+                      child: DatePickerWidget(
+                          maxDate: maxDate,
+                          selectedDateTime: selectedDate,
+                          callback: _onSelectDate)),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.grey,
+                    size: 16,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
