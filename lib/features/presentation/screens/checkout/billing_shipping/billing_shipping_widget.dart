@@ -124,41 +124,12 @@ class BillingShippingWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 12),
-              Text(
-                LocalizationConstants.pickUpLocation,
-                textAlign: TextAlign.start,
-                style: OptiTextStyles.subtitle,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                billingShippingEntity.warehouse?.description ?? '',
-                textAlign: TextAlign.start,
-                style: OptiTextStyles.subtitle,
-              ),
-              Text(
-                billingShippingEntity.warehouse?.wareHouseAddress() ?? '',
-                textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
-              ),
-              Text(
-                billingShippingEntity.warehouse?.wareHouseCity() ?? '',
-                textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
-              ),
-              Text(
-                billingShippingEntity.warehouse?.phone ?? '',
-                textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
-              ),
-              const SizedBox(height: 12),
-              _buildSeparator()
-            ],
+          PickupLocationWidget(
+            description: billingShippingEntity.warehouse?.description,
+            address: billingShippingEntity.warehouse?.wareHouseAddress(),
+            city: billingShippingEntity.warehouse?.wareHouseCity(),
+            phone: billingShippingEntity.warehouse?.phone,
+            buildSeperator: true,
           ),
           const Icon(
             Icons.arrow_forward_ios,
@@ -450,6 +421,69 @@ class BillingAddressWidget extends StatelessWidget {
               style: OptiTextStyles.body,
             ),
         ],
+        if (buildSeperator) ...[
+          const SizedBox(height: 12),
+          _buildSeparator(),
+          const SizedBox(height: 12),
+        ],
+      ],
+    );
+  }
+}
+
+class PickupLocationWidget extends StatelessWidget {
+  final bool buildSeperator;
+  final String? description;
+  final String? address;
+  final String? city;
+  final String? phone;
+  const PickupLocationWidget({
+    super.key,
+    this.buildSeperator = false,
+    this.description,
+    this.address,
+    this.city,
+    this.phone,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 12),
+        Text(
+          LocalizationConstants.pickUpLocation,
+          textAlign: TextAlign.start,
+          style: OptiTextStyles.subtitle,
+        ),
+        const SizedBox(height: 8),
+        if (!description.isNullOrEmpty)
+          Text(
+            description ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.subtitle,
+          ),
+        if (!address.isNullOrEmpty)
+          Text(
+            address ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
+        if (!city.isNullOrEmpty)
+          Text(
+            city ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
+        if (!phone.isNullOrEmpty)
+          Text(
+            phone ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
         if (buildSeperator) ...[
           const SizedBox(height: 12),
           _buildSeparator(),

@@ -24,6 +24,10 @@ class OrderDetailsBodyWidget extends StatelessWidget {
   final String? billingCompanyName;
   final String? billingFullAddress;
 
+  final bool isPickupLocationVisible;
+  final String? pickupLocationCityStatePostalCode;
+  final String? pickupLocationAddress;
+
   const OrderDetailsBodyWidget({
     super.key,
     this.orderNumber,
@@ -41,6 +45,9 @@ class OrderDetailsBodyWidget extends StatelessWidget {
     this.shippingCountryName,
     this.billingCompanyName,
     this.billingFullAddress,
+    this.pickupLocationCityStatePostalCode,
+    this.pickupLocationAddress,
+    this.isPickupLocationVisible = false,
   });
 
   @override
@@ -69,6 +76,11 @@ class OrderDetailsBodyWidget extends StatelessWidget {
             companyName: shippingCompanyName,
             fullAddress: shippingFullAddress,
             countryName: shippingCountryName,
+          ),
+        if (isPickupLocationVisible)
+          OrderPickupLocationWidget(
+            cityStatePostalCode: pickupLocationCityStatePostalCode,
+            address: pickupLocationAddress,
           ),
       ],
     );
@@ -180,6 +192,7 @@ class OrderShippingAddressWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       color: OptiAppColors.backgroundWhite,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
@@ -206,12 +219,38 @@ class OrderBillingAddressWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       color: OptiAppColors.backgroundWhite,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         child: BillingAddressWidget(
           companyName: companyName,
           fullAddress: fullAddress,
+        ),
+      ),
+    );
+  }
+}
+
+class OrderPickupLocationWidget extends StatelessWidget {
+  final String? cityStatePostalCode;
+  final String? address;
+  const OrderPickupLocationWidget({
+    super.key,
+    this.cityStatePostalCode,
+    this.address,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      color: OptiAppColors.backgroundWhite,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        child: PickupLocationWidget(
+          address: address,
+          city: cityStatePostalCode,
         ),
       ),
     );

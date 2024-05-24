@@ -121,4 +121,18 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       ('${state.order.shipToCity}, ${state.order.shipToState} ${state.order.shipToPostalCode}');
 
   String? get shippingCountryName => state.order.stCountry;
+
+  // Pickup Location
+  bool get isPickupLocationVisible => state.order.fulfillmentMethod == 'PickUp';
+
+  String? get pickupLocationCityStatePostalCode =>
+      '${state.order.shipToCity}, ${state.order.shipToState} ${state.order.shipToPostalCode}';
+
+  String? get pickupLocationAddress =>
+      (!state.order.stAddress1.isNullOrEmpty
+          ? '${state.order.stAddress1!}\n'
+          : '') +
+      (!state.order.stAddress2.isNullOrEmpty
+          ? '${state.order.stAddress2!}\n'
+          : '');
 }
