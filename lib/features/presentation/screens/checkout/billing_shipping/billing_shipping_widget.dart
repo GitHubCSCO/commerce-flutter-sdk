@@ -180,7 +180,6 @@ class BillingShippingWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 12),
         Text(
           LocalizationConstants.shippingMethod,
           textAlign: TextAlign.center,
@@ -352,7 +351,6 @@ class ShippingAddressWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 12),
           Text(
             LocalizationConstants.shippingAddress,
             textAlign: TextAlign.start,
@@ -377,6 +375,7 @@ class ShippingAddressWidget extends StatelessWidget {
           if (buildSeperator) ...[
             const SizedBox(height: 12),
             _buildSeparator(),
+            const SizedBox(height: 12),
           ],
         ],
       ),
@@ -409,7 +408,6 @@ class BillingAddressWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 12),
         Text(
           LocalizationConstants.billingAddress,
           textAlign: TextAlign.start,
@@ -431,20 +429,23 @@ class BillingAddressWidget extends StatelessWidget {
           textAlign: TextAlign.start,
           style: OptiTextStyles.body,
         ),
-        const SizedBox(height: 16),
-        Text(
-          email ?? '',
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
-        ),
-        Text(
-          phone ?? '',
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
-        ),
+        if (!email.isNullOrEmpty || !phone.isNullOrEmpty) ...[
+          const SizedBox(height: 16),
+          Text(
+            email ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
+          Text(
+            phone ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
+        ],
         if (buildSeperator) ...[
           const SizedBox(height: 12),
           _buildSeparator(),
+          const SizedBox(height: 12),
         ],
       ],
     );
