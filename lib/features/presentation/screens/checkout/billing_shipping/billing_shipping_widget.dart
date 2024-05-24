@@ -96,47 +96,13 @@ class BillingShippingWidget extends StatelessWidget {
   }
 
   Widget _buildBillingAddress() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 12),
-        Text(
-          LocalizationConstants.billingAddress,
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.subtitle,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          billingShippingEntity.billTo?.companyName ?? '',
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
-        ),
-        Text(
-          billingShippingEntity.billTo?.fullAddress ?? '',
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
-        ),
-        Text(
-          billingShippingEntity.billTo?.country?.name ?? '',
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
-        ),
-        const SizedBox(height: 16),
-        Text(
-          billingShippingEntity.billTo?.email ?? '',
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
-        ),
-        Text(
-          billingShippingEntity.billTo?.phone ?? '',
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
-        ),
-        const SizedBox(height: 12),
-        _buildSeparator()
-      ],
+    return BillingAddressWidget(
+      companyName: billingShippingEntity.billTo?.companyName,
+      fullAddress: billingShippingEntity.billTo?.fullAddress,
+      countryName: billingShippingEntity.billTo?.country?.name,
+      email: billingShippingEntity.billTo?.email,
+      phone: billingShippingEntity.billTo?.phone,
+      buildSeperator: true,
     );
   }
 
@@ -412,6 +378,71 @@ class ShippingAddressWidget extends StatelessWidget {
           if (buildSeperator) _buildSeparator(),
         ],
       ),
+    );
+  }
+}
+
+class BillingAddressWidget extends StatelessWidget {
+  final String? companyName;
+  final String? fullAddress;
+  final String? countryName;
+  final String? email;
+  final String? phone;
+  final bool buildSeperator;
+
+  const BillingAddressWidget({
+    super.key,
+    this.companyName,
+    this.fullAddress,
+    this.countryName,
+    this.email,
+    this.phone,
+    this.buildSeperator = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 12),
+        Text(
+          LocalizationConstants.billingAddress,
+          textAlign: TextAlign.start,
+          style: OptiTextStyles.subtitle,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          companyName ?? '',
+          textAlign: TextAlign.start,
+          style: OptiTextStyles.body,
+        ),
+        Text(
+          fullAddress ?? '',
+          textAlign: TextAlign.start,
+          style: OptiTextStyles.body,
+        ),
+        Text(
+          countryName ?? '',
+          textAlign: TextAlign.start,
+          style: OptiTextStyles.body,
+        ),
+        const SizedBox(height: 16),
+        Text(
+          email ?? '',
+          textAlign: TextAlign.start,
+          style: OptiTextStyles.body,
+        ),
+        Text(
+          phone ?? '',
+          textAlign: TextAlign.start,
+          style: OptiTextStyles.body,
+        ),
+        const SizedBox(height: 12),
+        if (buildSeperator) _buildSeparator()
+      ],
     );
   }
 }
