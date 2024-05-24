@@ -16,6 +16,7 @@ on:
     paths:
       - 'pubspec.yaml'
       - '.github/workflows/license_check.yaml'
+  workflow_dispatch:
 
 jobs:
   license_check:
