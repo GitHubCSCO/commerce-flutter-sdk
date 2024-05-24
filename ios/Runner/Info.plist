@@ -30,6 +30,10 @@
 	<string>Why is my app authenticating using face id?</string>
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to your camera to scan barcodes.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>We need your location for the map to work</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>We need your location for the map to work</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
