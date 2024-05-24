@@ -88,7 +88,7 @@ class OrderListVmiStyleProductAddState extends OrderListState {
 class OrderListVmiProductAddState extends OrderListState {
 
   final VmiBinModelEntity vmiBinEntity;
-  final OrderEntity previousOrderEntity;
+  final OrderEntity? previousOrderEntity;
 
   OrderListVmiProductAddState(this.vmiBinEntity, this.previousOrderEntity);
 

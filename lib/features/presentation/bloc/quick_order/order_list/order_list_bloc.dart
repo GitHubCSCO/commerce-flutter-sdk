@@ -59,12 +59,12 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
       final result = await _quickOrderUseCase.getVmiBin(
           event.autocompleteProduct.binNumber!);
 
-      _addVmiOrderItem(result, emit);
+      await _addVmiOrderItem(result, emit);
     } else {
       final result = await _quickOrderUseCase.getProduct(
           event.autocompleteProduct.id!, event.autocompleteProduct);
 
-      _addOrderItem(result, emit);
+      await _addOrderItem(result, emit);
     }
   }
 
@@ -75,12 +75,12 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
       final result = await _quickOrderUseCase.getVmiBin(
           event.name!);
 
-      _addVmiOrderItem(result, emit);
+      await _addVmiOrderItem(result, emit);
     } else {
       final result = await _quickOrderUseCase.getScanProduct(
           event.name!);
 
-      _addOrderItem(result, emit);
+      await _addOrderItem(result, emit);
     }
   }
 
@@ -221,11 +221,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
           final previousOrder = (result is Success)
               ? (result as Success).value : null;
 
-          if (previousOrder != null) {
-            emit(OrderListVmiProductAddState(vmiBin, previousOrder));
-          } else {
-            emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
-          }
+          emit(OrderListVmiProductAddState(vmiBin, previousOrder));
+          return;
         } else {
           var quantity = (vmiBin.productEntity!.minimumOrderQty! > 0) ? vmiBin.productEntity!.minimumOrderQty : 1;
 

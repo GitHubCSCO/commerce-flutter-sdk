@@ -27,10 +27,12 @@ import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/sty
 import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/barcode_scanner_view.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_list/quick_order_list_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/style_trait_select_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -95,7 +97,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     return Scaffold(
       backgroundColor: OptiAppColors.backgroundWhite,
       appBar: AppBar(
-        title: const Text(LocalizationConstants.quickOrder),
+        title: Text(_getTitle(widget.scanningMode)),
         actions: <Widget>[
           IconButton(
               onPressed: () {
@@ -229,8 +231,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                     padding:
                                                     const EdgeInsets.only(right: 8),
                                                     child: Text(
-                                                      LocalizationConstants
-                                                          .quickOrderContents,
+                                                      _getContentTitle(widget.scanningMode),
                                                       textAlign: TextAlign.start,
                                                       style: OptiTextStyles.titleSmall,
                                                     ),
@@ -284,38 +285,41 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                       const BoxDecoration(color: Colors.white),
                                       child: Column(
                                         children: [
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Expanded(
-                                                child: Container(
-                                                  padding:
-                                                  const EdgeInsets.only(right: 8),
-                                                  child: Text(
-                                                    (state is OrderListLoadedState &&
+                                          Visibility(
+                                            visible: widget.scanningMode != ScanningMode.count,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  child: Container(
+                                                    padding:
+                                                    const EdgeInsets.only(right: 8),
+                                                    child: Text(
+                                                      (state is OrderListLoadedState &&
+                                                          state.quickOrderItemList
+                                                              .isNotEmpty)
+                                                          ? LocalizationConstants
+                                                          .listTotalProducts
+                                                          .format([
                                                         state.quickOrderItemList
-                                                            .isNotEmpty)
-                                                        ? LocalizationConstants
-                                                        .listTotalProducts
-                                                        .format([
-                                                      state.quickOrderItemList
-                                                          .length
-                                                    ])
-                                                        : LocalizationConstants
-                                                        .listTotal,
-                                                    textAlign: TextAlign.start,
-                                                    style: OptiTextStyles.subtitle,
+                                                            .length
+                                                      ])
+                                                          : LocalizationConstants
+                                                          .listTotal,
+                                                      textAlign: TextAlign.start,
+                                                      style: OptiTextStyles.subtitle,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              Text(
-                                                subTotal,
-                                                textAlign: TextAlign.start,
-                                                style: OptiTextStyles.subtitle,
-                                              )
-                                            ],
+                                                Text(
+                                                  subTotal,
+                                                  textAlign: TextAlign.start,
+                                                  style: OptiTextStyles.subtitle,
+                                                )
+                                              ],
+                                            ),
                                           ),
                                           const SizedBox(height: 20),
                                           PrimaryButton(
@@ -326,8 +330,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                             onPressed: () {
                                               _addToCart(context);
                                             },
-                                            text: LocalizationConstants
-                                                .addToCartAndCheckout,
+                                            text: _getCheckoutButtonTitle(widget.scanningMode),
                                           ),
                                           const SizedBox(height: 4),
                                           PrimaryButton(
@@ -610,14 +613,50 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     });
   }
 
-  void handleVmiBinAdd(VmiBinModelEntity vmiBinEntity, OrderEntity previousOrder) async {
-    final result = await context.pushNamed<VmiBinModelEntity>(
+  void handleVmiBinAdd(VmiBinModelEntity vmiBinEntity, OrderEntity? previousOrder) async {
+    final result = await context.pushNamed<CountInventoryEntity>(
       AppRoute.countInventory.name,
-      extra: vmiBinEntity,
+      extra: CountInventoryEntity(vmiBinEntity: vmiBinEntity, previousOrder: previousOrder),
     );
 
+    if (!context.mounted) {
+      return;
+    }
+
     if (result != null) {
-      context.read<OrderListBloc>().add(OrderListAddVmiBinEvent(result, 0));
+      context.read<OrderListBloc>().add(OrderListAddVmiBinEvent(result.vmiBinEntity, result.qty ?? 0));
+    } else {
+      context.read<OrderListBloc>().add(OrderListLoadEvent());
+    }
+  }
+
+  String _getTitle(ScanningMode scanningMode) {
+    if (scanningMode == ScanningMode.count) {
+      return LocalizationConstants.countInventory;
+    } else if (scanningMode == ScanningMode.create) {
+      return LocalizationConstants.createOrder;
+    } else {
+      return LocalizationConstants.quickOrder;
+    }
+  }
+
+  String _getContentTitle(ScanningMode scanningMode) {
+    if (scanningMode == ScanningMode.count) {
+      return LocalizationConstants.countHistory;
+    } else if (scanningMode == ScanningMode.create) {
+      return LocalizationConstants.orderContents;
+    } else {
+      return LocalizationConstants.quickOrderContents;
+    }
+  }
+
+  String _getCheckoutButtonTitle(ScanningMode scanningMode) {
+    if (scanningMode == ScanningMode.count) {
+      return LocalizationConstants.checkout;
+    } else if (scanningMode == ScanningMode.create) {
+      return LocalizationConstants.checkout;
+    } else {
+      return LocalizationConstants.addToCartAndCheckout;
     }
   }
 

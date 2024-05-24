@@ -20,7 +20,9 @@ class BarcodeSearchScreen extends StatelessWidget {
   _handleBarcodeValue(BuildContext context, String rawValue) async {
     await Future.delayed(const Duration(seconds: 1));
 
-    if (!context.mounted) return;
+    if (!context.mounted) {
+      return;
+    }
     Navigator.of(context).pop(rawValue);
   }
 

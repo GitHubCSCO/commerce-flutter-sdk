@@ -106,7 +106,7 @@ class QuickOrderUseCase extends BaseUseCase {
 
     switch (result) {
       case Success(value: final data):
-        if ((data?.orders ?? []).isNotEmpty && (data?.orders ?? []).length == 1) {
+        if ((data?.orders ?? []).isNotEmpty) {
           final orderEntity = OrderEntityMapper.toEntity(data?.orders![0] ?? Order());
           return Success(orderEntity);
         } else {

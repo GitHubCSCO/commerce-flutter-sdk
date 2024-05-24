@@ -2,10 +2,7 @@ import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/order_widgets/order_product_image_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -42,12 +39,36 @@ class CountInventoryItemWidget extends StatelessWidget {
   Widget _buildVmiBinDetails() {
     List<Widget> list = [];
 
-    final part = _buildRow(LocalizationConstants.partNumberSign, OptiTextStyles.subtitle, quickOrderItemEntity.productEntity.productNumber ?? '', OptiTextStyles.body);
-    final myPart = _buildRow(LocalizationConstants.myPartNumberSign, OptiTextStyles.subtitle, quickOrderItemEntity.productEntity.customerName ?? '', OptiTextStyles.body);
-    final mfg = _buildRow(LocalizationConstants.mFGNumberSign, OptiTextStyles.subtitle, quickOrderItemEntity.productEntity.manufacturerItem ?? '', OptiTextStyles.body);
-    final bin = _buildRow(LocalizationConstants.binSign, OptiTextStyles.subtitle, quickOrderItemEntity.vmiBinEntity?.binNumber ?? '', OptiTextStyles.body);
-    final maxCount = _buildRow(LocalizationConstants.maxSign, OptiTextStyles.subtitle, quickOrderItemEntity.vmiBinEntity?.maximumQty.toString() ?? '', OptiTextStyles.body);
-    final minCount = _buildRow(LocalizationConstants.minSign, OptiTextStyles.subtitle, quickOrderItemEntity.vmiBinEntity?.minimumQty.toString() ?? '', OptiTextStyles.body);
+    final part = _buildRow(
+        LocalizationConstants.partNumberSign,
+        OptiTextStyles.subtitle,
+        quickOrderItemEntity.productEntity.productNumber ?? '',
+        OptiTextStyles.body);
+    final myPart = _buildRow(
+        LocalizationConstants.myPartNumberSign,
+        OptiTextStyles.subtitle,
+        quickOrderItemEntity.productEntity.customerName ?? '',
+        OptiTextStyles.body);
+    final mfg = _buildRow(
+        LocalizationConstants.mFGNumberSign,
+        OptiTextStyles.subtitle,
+        quickOrderItemEntity.productEntity.manufacturerItem ?? '',
+        OptiTextStyles.body);
+    final bin = _buildRow(
+        LocalizationConstants.binSign,
+        OptiTextStyles.subtitle,
+        quickOrderItemEntity.vmiBinEntity?.binNumber ?? '',
+        OptiTextStyles.body);
+    final maxCount = _buildRow(
+        LocalizationConstants.maxSign,
+        OptiTextStyles.subtitle,
+        quickOrderItemEntity.vmiBinEntity?.maximumQty?.toInt().toString() ?? '',
+        OptiTextStyles.body);
+    final minCount = _buildRow(
+        LocalizationConstants.minSign,
+        OptiTextStyles.subtitle,
+        quickOrderItemEntity.vmiBinEntity?.minimumQty?.toInt().toString() ?? '',
+        OptiTextStyles.body);
 
     if (part != null) {
       list.add(part);
@@ -159,26 +180,26 @@ class OrderVmiProductTitleWidget extends StatelessWidget {
               ],
             ),
           ),
-          _buildRemoveButton(context)
+          _buildMenuButton(context)
         ],
       ),
     );
   }
 
-  Widget _buildRemoveButton(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        // callback(context, orderItemEntity, OrderCallBackType.itemDelete);
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        child: SizedBox(
-          width: 30,
-          height: 30,
-          child: SvgPicture.asset(
-            AssetConstants.cartItemRemoveIcon,
-            fit: BoxFit.fitWidth,
-          ),
+  Widget _buildMenuButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      child: SizedBox(
+        width: 30,
+        height: 30,
+        child: IconButton(
+            onPressed: () {
+
+            },
+            icon: const Icon(
+              Icons.more_vert,
+              color: Colors.black,
+            )
         ),
       ),
     );
