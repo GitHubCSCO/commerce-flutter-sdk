@@ -44,6 +44,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/sea
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_main_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_usecase.dart';
@@ -66,7 +67,8 @@ import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_page_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_main/vmi_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/biometric_auth_cubit.dart';
@@ -137,6 +139,11 @@ Future<void> initInjectionContainer() async {
     // vmi
     ..registerFactory(() => VMIPageBloc(vmiMainUseCase: sl()))
     ..registerFactory(() => VMIMainUseCase())
+
+    // vmi locations
+
+    ..registerFactory(() => VMILocationBloc(vmiLocationUseCase: sl()))
+    ..registerFactory(() => VMILocationUseCase())
 
     // current location
     ..registerFactory(() => CurrentLocationCubit(currentLocationUseCase: sl()))

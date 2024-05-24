@@ -6,7 +6,10 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_state.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_location_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -19,6 +22,9 @@ class LocationSearchScreen extends StatelessWidget {
     return MultiBlocProvider(providers: [
       BlocProvider<LocationSearchBloc>(
           create: (context) => sl<LocationSearchBloc>()),
+      BlocProvider<VMILocationBloc>(
+          create: (context) =>
+              sl<VMILocationBloc>()..add(LoadVMILocationsEvent())),
     ], child: LocationSearchPage());
   }
 }
@@ -91,7 +97,7 @@ class LocationSearchPage extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   );
                 } else if (state is LocationSearchInitialState) {
-                  return Container(child: Text('LocationSearchInitialState'));
+                  return Container(child: VMILocationScreen());
                 } else if (state is LocationSearchLoadedState) {
                   return Container(child: Text('LocationSearchLoadedState'));
                 } else if (state is LocationSearchFocusState) {

@@ -3,9 +3,9 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_page_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_page_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_page_state.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_main/vmi_page_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_main/vmi_page_event.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_main/vmi_page_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders_cubit/previous_orders_cubit.dart';
