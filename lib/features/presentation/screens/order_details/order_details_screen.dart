@@ -77,9 +77,6 @@ class OrderDetailsPage extends StatelessWidget {
                     context.watch<OrderDetailsCubit>().isPickupLocationVisible,
                 pickupLocationAddress:
                     context.watch<OrderDetailsCubit>().pickupLocationAddress,
-                pickupLocationCityStatePostalCode: context
-                    .watch<OrderDetailsCubit>()
-                    .pickupLocationCityStatePostalCode,
               ),
             );
           }

@@ -100,13 +100,16 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
   String? get billingCompanyName => state.order.btCompanyName;
 
   String? get billingFullAddress =>
-      (!state.order.btAddress1.isNullOrEmpty
-          ? '${state.order.btAddress1!}\n'
-          : '') +
+      (!state.order.btAddress1.isNullOrEmpty ? '${state.order.btAddress1!}\n' : '') +
       (!state.order.btAddress2.isNullOrEmpty
           ? '${state.order.btAddress2!}\n'
           : '') +
-      ('${state.order.billToCity}, ${state.order.billToState} ${state.order.billToPostalCode}');
+      ('${state.order.billToCity}, ${state.order.billToState} ${state.order.billToPostalCode}') +
+      (!state.order.btCountry.isNullOrEmpty
+          ? '\n${state.order.btCountry}'
+          : '');
+
+  String? get billingCountryName => state.order.btCountry;
 
   // Shipping Address
   String? get shippingCompanyName => state.order.stCompanyName;
@@ -129,10 +132,17 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       '${state.order.shipToCity}, ${state.order.shipToState} ${state.order.shipToPostalCode}';
 
   String? get pickupLocationAddress =>
+      (!state.order.stCompanyName.isNullOrEmpty
+          ? '${state.order.stCompanyName!}\n'
+          : '') +
       (!state.order.stAddress1.isNullOrEmpty
           ? '${state.order.stAddress1!}\n'
           : '') +
       (!state.order.stAddress2.isNullOrEmpty
           ? '${state.order.stAddress2!}\n'
-          : '');
+          : '') +
+      (!pickupLocationCityStatePostalCode.isNullOrEmpty
+          ? '$pickupLocationCityStatePostalCode\n'
+          : '') +
+      (!state.order.stCountry.isNullOrEmpty ? '${state.order.stCountry}' : '');
 }

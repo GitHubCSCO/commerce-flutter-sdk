@@ -25,7 +25,6 @@ class OrderDetailsBodyWidget extends StatelessWidget {
   final String? billingFullAddress;
 
   final bool isPickupLocationVisible;
-  final String? pickupLocationCityStatePostalCode;
   final String? pickupLocationAddress;
 
   const OrderDetailsBodyWidget({
@@ -45,7 +44,6 @@ class OrderDetailsBodyWidget extends StatelessWidget {
     this.shippingCountryName,
     this.billingCompanyName,
     this.billingFullAddress,
-    this.pickupLocationCityStatePostalCode,
     this.pickupLocationAddress,
     this.isPickupLocationVisible = false,
   });
@@ -79,7 +77,6 @@ class OrderDetailsBodyWidget extends StatelessWidget {
           ),
         if (isPickupLocationVisible)
           OrderPickupLocationWidget(
-            cityStatePostalCode: pickupLocationCityStatePostalCode,
             address: pickupLocationAddress,
           ),
       ],
@@ -233,11 +230,9 @@ class OrderBillingAddressWidget extends StatelessWidget {
 }
 
 class OrderPickupLocationWidget extends StatelessWidget {
-  final String? cityStatePostalCode;
   final String? address;
   const OrderPickupLocationWidget({
     super.key,
-    this.cityStatePostalCode,
     this.address,
   });
 
@@ -250,7 +245,6 @@ class OrderPickupLocationWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         child: PickupLocationWidget(
           address: address,
-          city: cityStatePostalCode,
         ),
       ),
     );
