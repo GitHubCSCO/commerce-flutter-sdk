@@ -87,7 +87,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       : null;
 
   String? get requestedDeliveryDate => _requestedDeliveryDateVisible
-      ? DateFormat(CoreConstants.dateFormatShortString)
+      ? DateFormat(CoreConstants.dateFormatString)
           .format(state.order.requestedDeliveryDateDisplay!)
       : null;
 

@@ -49,6 +49,9 @@ class OrderDetailsBodyWidget extends StatelessWidget {
           shippingMethod: shippingMethod,
           terms: terms,
           poNumber: poNumber,
+          requestedDeliveryDate: requestedDeliveryDate,
+          requestedDeliveryDateTitle: requestedDeliveryDateTitle,
+          webOrderNumber: webOrderNumber,
         ),
         if (isShippingAddressVisible)
           OrderShippingAddressWidget(
