@@ -46,37 +46,48 @@ class OrderDetailsPage extends StatelessWidget {
             );
           } else {
             return SingleChildScrollView(
-              child: OrderDetailsBodyWidget(
-                orderNumber: context.watch<OrderDetailsCubit>().orderNumber,
-                orderDate: context.watch<OrderDetailsCubit>().orderDate,
-                poNumber: context.watch<OrderDetailsCubit>().poNumber,
-                orderStatus: context.watch<OrderDetailsCubit>().orderStatus,
-                shippingMethod:
-                    context.watch<OrderDetailsCubit>().shippingMethod,
-                terms: context.watch<OrderDetailsCubit>().terms,
-                requestedDeliveryDate:
-                    context.watch<OrderDetailsCubit>().requestedDeliveryDate,
-                requestedDeliveryDateTitle: context
-                    .watch<OrderDetailsCubit>()
-                    .requestedDeliveryDateTitle,
-                webOrderNumber:
-                    context.watch<OrderDetailsCubit>().webOrderNumber,
-                shippingCompanyName:
-                    context.watch<OrderDetailsCubit>().shippingCompanyName,
-                shippingFullAddress:
-                    context.watch<OrderDetailsCubit>().shippingFullAddress,
-                shippingCountryName:
-                    context.watch<OrderDetailsCubit>().shippingCountryName,
-                isShippingAddressVisible:
-                    context.watch<OrderDetailsCubit>().isShippingAddressVisible,
-                billingCompanyName:
-                    context.watch<OrderDetailsCubit>().billingCompanyName,
-                billingFullAddress:
-                    context.watch<OrderDetailsCubit>().billingFullAddress,
-                isPickupLocationVisible:
-                    context.watch<OrderDetailsCubit>().isPickupLocationVisible,
-                pickupLocationAddress:
-                    context.watch<OrderDetailsCubit>().pickupLocationAddress,
+              child: Column(
+                children: [
+                  OrderDetailsBodyWidget(
+                    orderNumber: context.watch<OrderDetailsCubit>().orderNumber,
+                    orderDate: context.watch<OrderDetailsCubit>().orderDate,
+                    poNumber: context.watch<OrderDetailsCubit>().poNumber,
+                    orderStatus: context.watch<OrderDetailsCubit>().orderStatus,
+                    shippingMethod:
+                        context.watch<OrderDetailsCubit>().shippingMethod,
+                    terms: context.watch<OrderDetailsCubit>().terms,
+                    requestedDeliveryDate: context
+                        .watch<OrderDetailsCubit>()
+                        .requestedDeliveryDate,
+                    requestedDeliveryDateTitle: context
+                        .watch<OrderDetailsCubit>()
+                        .requestedDeliveryDateTitle,
+                    webOrderNumber:
+                        context.watch<OrderDetailsCubit>().webOrderNumber,
+                    shippingCompanyName:
+                        context.watch<OrderDetailsCubit>().shippingCompanyName,
+                    shippingFullAddress:
+                        context.watch<OrderDetailsCubit>().shippingFullAddress,
+                    shippingCountryName:
+                        context.watch<OrderDetailsCubit>().shippingCountryName,
+                    isShippingAddressVisible: context
+                        .watch<OrderDetailsCubit>()
+                        .isShippingAddressVisible,
+                    billingCompanyName:
+                        context.watch<OrderDetailsCubit>().billingCompanyName,
+                    billingFullAddress:
+                        context.watch<OrderDetailsCubit>().billingFullAddress,
+                    isPickupLocationVisible: context
+                        .watch<OrderDetailsCubit>()
+                        .isPickupLocationVisible,
+                    pickupLocationAddress: context
+                        .watch<OrderDetailsCubit>()
+                        .pickupLocationAddress,
+                  ),
+                  OrderProductsSectionWidget(
+                    orderLines: state.order.orderLines ?? [],
+                  ),
+                ],
               ),
             );
           }

@@ -1,8 +1,11 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/converter/discount_value_convertert.dart';
+import 'package:commerce_flutter_app/features/domain/entity/order/order_line_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/components/two_texts_row.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_widget.dart';
 import 'package:flutter/material.dart';
 
 class OrderDetailsBodyWidget extends StatelessWidget {
@@ -247,6 +250,72 @@ class OrderPickupLocationWidget extends StatelessWidget {
           address: address,
         ),
       ),
+    );
+  }
+}
+
+class OrderProductsSectionWidget extends StatelessWidget {
+  final List<OrderLineEntity> orderLines;
+
+  const OrderProductsSectionWidget({
+    super.key,
+    required this.orderLines,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                LocalizationConstants.products,
+                style: OptiTextStyles.titleLarge,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '(${orderLines.length} item)',
+                style: OptiTextStyles.body,
+              ),
+            ],
+          ),
+        ),
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            final orderLine = orderLines[index];
+            return LineItemWidget(
+              productId: orderLine.productId,
+              imagePath: orderLine.mediumImagePath,
+              shortDescription: orderLine.shortDescription,
+              manufacturerItem: orderLine.manufacturerItem,
+              productNumber: orderLine.productErpNumber,
+              discountMessage: (orderLine.unitNetPrice == 0)
+                  ? ''
+                  : (DiscountValueConverter().convert(orderLine) ?? '')
+                      .toString(),
+              priceValueText: orderLine.unitNetPriceDisplay,
+              unitOfMeasureValueText: orderLine.unitOfMeasureDisplay != null
+                  ? ' / ${orderLine.unitOfMeasureDisplay}'
+                  : null,
+              qtyOrdered: orderLine.qtyOrdered?.round().toString(),
+              subtotalPriceText: orderLine.extendedUnitNetPriceDisplay,
+              canEditQty: false,
+              showViewAvailabilityByWarehouse: false,
+              showViewQuantityPricing: false,
+            );
+          },
+          separatorBuilder: (context, index) => const Divider(height: 1),
+          itemCount: orderLines.length,
+        )
+      ],
     );
   }
 }
