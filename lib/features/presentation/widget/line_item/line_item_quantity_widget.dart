@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
 import 'package:flutter/material.dart';
@@ -30,9 +31,17 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
                     shouldShowIncrementDecermentIcon: false,
                     onChanged: onQtyChanged,
                   )
-                : Text(
-                    qtyOrdered ?? '',
-                    style: OptiTextStyles.titleLarge,
+                : Column(
+                    children: [
+                      Text(
+                        LocalizationConstants.qTY,
+                        style: OptiTextStyles.bodySmall,
+                      ),
+                      Text(
+                        qtyOrdered ?? '',
+                        style: OptiTextStyles.titleLarge,
+                      ),
+                    ],
                   ),
           ),
           // LineItemSubtotalColumnWidget(title: 'U/M', value: 'E/A'),

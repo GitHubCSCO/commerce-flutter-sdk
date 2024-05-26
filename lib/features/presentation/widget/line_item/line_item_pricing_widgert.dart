@@ -8,6 +8,8 @@ class LineItemPricingWidget extends StatelessWidget {
   final String? priceValueText;
   final String? unitOfMeasureValueText;
   final String? availabilityText;
+  final bool showViewQuantityPricing;
+  final bool showViewAvailabilityByWarehouse;
 
   const LineItemPricingWidget({
     super.key,
@@ -15,6 +17,8 @@ class LineItemPricingWidget extends StatelessWidget {
     this.priceValueText,
     this.unitOfMeasureValueText,
     this.availabilityText,
+    this.showViewQuantityPricing = true,
+    this.showViewAvailabilityByWarehouse = true,
   });
 
   @override
@@ -37,16 +41,17 @@ class LineItemPricingWidget extends StatelessWidget {
                 priceValueText: priceValueText,
                 unitOfMeasureValueText: unitOfMeasureValueText,
               ),
-              GestureDetector(
-                onTap: () {
-                  // TODO: Implement the logic for "View Quantity Pricing"
-                  CustomSnackBar.showComingSoonSnackBar(context);
-                },
-                child: Text(
-                  "View Quantity Pricing",
-                  style: OptiTextStyles.link,
+              if (showViewQuantityPricing)
+                GestureDetector(
+                  onTap: () {
+                    // TODO: Implement the logic for "View Quantity Pricing"
+                    CustomSnackBar.showComingSoonSnackBar(context);
+                  },
+                  child: Text(
+                    "View Quantity Pricing",
+                    style: OptiTextStyles.link,
+                  ),
                 ),
-              ),
               availabilityText != null
                   ? _buildInventorySection(
                       context,
@@ -55,16 +60,17 @@ class LineItemPricingWidget extends StatelessWidget {
                   : Container(),
               // _buildInventorySection(context),
               // For "View Availability by Warehouse"
-              GestureDetector(
-                onTap: () {
-                  // TODO: Implement the logic for "View Quantity Pricing"
-                  CustomSnackBar.showComingSoonSnackBar(context);
-                },
-                child: Text(
-                  "View Availability by Warehouse",
-                  style: OptiTextStyles.link,
+              if (showViewAvailabilityByWarehouse)
+                GestureDetector(
+                  onTap: () {
+                    // TODO: Implement the logic for "View Quantity Pricing"
+                    CustomSnackBar.showComingSoonSnackBar(context);
+                  },
+                  child: Text(
+                    "View Availability by Warehouse",
+                    style: OptiTextStyles.link,
+                  ),
                 ),
-              ),
             ],
           ),
         ),

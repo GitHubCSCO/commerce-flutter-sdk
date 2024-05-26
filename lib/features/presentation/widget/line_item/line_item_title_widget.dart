@@ -28,6 +28,8 @@ class LineItemTitleWidget extends StatelessWidget {
               children: [
                 Text(
                   shortDescription ?? '',
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
                   style: OptiTextStyles.body,
                   textAlign: TextAlign.left,
                 ),
