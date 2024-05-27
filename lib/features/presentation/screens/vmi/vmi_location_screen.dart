@@ -1,6 +1,8 @@
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_state.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_location_widget_item.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/current_location_widget_item.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/map_widget.dart';
 
@@ -13,32 +15,54 @@ class VMILocationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<VMILocationBloc, VMILocationState>(
-        builder: (context, state) {
-      if (state is VMILocationInitialState) {
-        return Container(
-          child: Text('VMILocationInitialState'),
-        );
-      } else if (state is VMILocationLoadingState) {
-        return Container(
-          child: CircularProgressIndicator(),
-        );
-      } else if (state is VMILocationLoadedState) {
-        return Column(
-          children: [
-            MapWidget(),
-            Expanded(
-              child: ListView(
-                children: state.currentLocationDataEntityList
-                    .map((e) => CurrentLocationWidgetItem(locationData: e))
-                    .toList(),
-              ),
-            ),
-          ],
-        );
-      } else {
-        return Container();
-      }
-    });
+    final ScrollController _scrollController = ScrollController();
+
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<VMILocationBloc, VMILocationState>(
+          listener: (_, state) {
+            if (state is VMILocationLoadedState) {
+              context
+                  .read<GMapCubit>()
+                  .updateMarkersFromVMI(state.currentLocationDataEntityList);
+              _scrollController.jumpTo(0); // Scroll to the top when new data is loaded
+            }
+          },
+        ),
+      ],
+      child: BlocBuilder<VMILocationBloc, VMILocationState>(
+        builder: (_, state) {
+          if (state is VMILocationInitialState) {
+            return Center(
+              child: Text('VMILocationInitialState'),
+            );
+          } else if (state is VMILocationLoadingState) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is VMILocationLoadedState) {
+            return Column(
+              children: [
+                MapWidget(),
+                Expanded(
+                  child: ListView(
+                    controller: _scrollController, // Attach the ScrollController here
+                    children: state.currentLocationDataEntityList
+                        .map((e) => VMICurrentLocationWidgetItem(
+                              locationData: e,
+                              selectedLocation: state.selectedLocation,
+                              isSelectionOn: true,
+                            ))
+                        .toList(),
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return Center(child: Text('Error loading location data'));
+          }
+        },
+      ),
+    );
   }
 }

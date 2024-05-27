@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/location_search/
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_location_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,6 +26,7 @@ class LocationSearchScreen extends StatelessWidget {
       BlocProvider<VMILocationBloc>(
           create: (context) =>
               sl<VMILocationBloc>()..add(LoadVMILocationsEvent())),
+      BlocProvider<GMapCubit>(create: (context) => sl<GMapCubit>())
     ], child: LocationSearchPage());
   }
 }
@@ -91,7 +93,7 @@ class LocationSearchPage extends StatelessWidget {
               ),
             ],
             child: BlocBuilder<LocationSearchBloc, LoactionSearchState>(
-              builder: (context, state) {
+              builder: (_, state) {
                 if (state is LocationSearchLoadingState) {
                   return const Center(
                     child: CircularProgressIndicator(),

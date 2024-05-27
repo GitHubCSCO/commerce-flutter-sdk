@@ -32,7 +32,8 @@ class CurrentLocationWidget extends StatelessWidget {
               ),
             ),
             CurrentLocationWidgetItem(
-                locationData: state.currentLocationDataEntity),
+              locationData: state.currentLocationDataEntity,
+            ),
           ],
         );
       } else {

@@ -4,12 +4,14 @@ import 'package:commerce_flutter_app/features/domain/service/biometric_authentic
 import 'package:commerce_flutter_app/features/domain/service/commerce_api_service_provider.dart';
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/core_service_provider.dart';
+import 'package:commerce_flutter_app/features/domain/service/geo_location_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/app_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/device_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/biometric_authentication_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/device_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/geo_location_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/vmi_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/network_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/vmi_service.dart';
@@ -87,6 +89,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect
 import 'package:commerce_flutter_app/features/presentation/cubit/login/forgot_password/forgot_password_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders_cubit/previous_orders_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
@@ -149,11 +152,13 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => CurrentLocationCubit(currentLocationUseCase: sl()))
     ..registerFactory(() => CurrentLocationUseCase())
 
-    // locatio  search
-
+    // location  search
     ..registerFactory(() => LocationSearchBloc(locationSearchUseCase: sl()))
     ..registerFactory(() => LocationSearchUseCase())
 
+    // gmap cubit
+
+    ..registerFactory(() => GMapCubit())
     // previous orders
 
     ..registerFactory(() => PreviousOrdersCubit(previousOrdersUseCse: sl()))
@@ -343,6 +348,7 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<INetworkService>(() => NetworkService())
     ..registerLazySingleton<ISecureStorageService>(() => SecureStorageService())
     ..registerLazySingleton<ILocalStorageService>(() => LocalStorageService())
+     ..registerLazySingleton<IGeoLocationService>(() => GeoLocationService())
     ..registerLazySingleton<ISettingsService>(() => SettingsService(
           cacheService: sl(),
           clientService: sl(),

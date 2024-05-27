@@ -15,59 +15,75 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
     return Container(
       color: Colors.white,
       child: Padding(
-        padding: const EdgeInsets.all(30.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(locationData.locationName ?? "",
-                style: OptiTextStyles.subtitle),
-            Text(locationData.firestLineValue ?? "",
-                style: OptiTextStyles.body),
-            Text(locationData.secondLineValue ?? "",
-                style: OptiTextStyles.body),
-            Text(locationData.thridLineValue ?? "", style: OptiTextStyles.body),
-            const SizedBox(height: 16),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    child: Text(
-                      LocalizationConstants.call,
-                      textAlign: TextAlign.center,
-                      style: OptiTextStyles.link,
-                    ),
-                    onTap: () {
-                      // _onHoursClick(context);
-                    },
-                  ),
-                  const SizedBox(width: 16),
-                  InkWell(
-                    child: Text(
-                      LocalizationConstants.directions,
-                      textAlign: TextAlign.center,
-                      style: OptiTextStyles.link,
-                    ),
-                    onTap: () {
-                      _onDirectionsClick(locationData.latLong?.latitude ?? 0.0,
-                          locationData.latLong?.longitude ?? 0.0);
-                    },
-                  ),
-                  const SizedBox(width: 16),
-                  InkWell(
-                    child: Text(
-                      LocalizationConstants.changeLocation,
-                      textAlign: TextAlign.center,
-                      style: OptiTextStyles.link,
-                    ),
-                    onTap: () {
-                      _onChangeLocationClick(context);
-                    },
-                  )
-                ],
+        padding: const EdgeInsets.all(10.0),
+        child: Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                locationData.locationName ?? "",
+                style: OptiTextStyles.subtitle,
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
-          ],
+              Text(
+                locationData.firestLineValue ?? "",
+                style: OptiTextStyles.body,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                locationData.secondLineValue ?? "",
+                style: OptiTextStyles.body,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                locationData.thridLineValue ?? "",
+                style: OptiTextStyles.body,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 16),
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      child: Text(
+                        LocalizationConstants.call,
+                        textAlign: TextAlign.center,
+                        style: OptiTextStyles.link,
+                      ),
+                      onTap: () {
+                        // _onHoursClick(context);
+                      },
+                    ),
+                    const SizedBox(width: 16),
+                    InkWell(
+                      child: Text(
+                        LocalizationConstants.directions,
+                        textAlign: TextAlign.center,
+                        style: OptiTextStyles.link,
+                      ),
+                      onTap: () {
+                        _onDirectionsClick(
+                            locationData.latLong?.latitude ?? 0.0,
+                            locationData.latLong?.longitude ?? 0.0);
+                      },
+                    ),
+                    const SizedBox(width: 16),
+                    InkWell(
+                      child: Text(
+                        LocalizationConstants.changeLocation,
+                        textAlign: TextAlign.center,
+                        style: OptiTextStyles.link,
+                      ),
+                      onTap: () {
+                        _onChangeLocationClick(context);
+                      },
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

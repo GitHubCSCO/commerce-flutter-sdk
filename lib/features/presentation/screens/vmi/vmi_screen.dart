@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_main/vmi
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_main/vmi_page_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders_cubit/previous_orders_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,6 +29,7 @@ class VMIScreen extends StatelessWidget {
       BlocProvider(
         create: (context) => sl<LocationSearchBloc>(),
       ),
+     
       BlocProvider<VMIPageBloc>(
           create: (context) =>
               sl<VMIPageBloc>()..add(const VMIPageLoadEvent())),
