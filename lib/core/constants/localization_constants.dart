@@ -426,7 +426,7 @@ class LocalizationConstants {
   static const emailAddress = "Email Address";
   static const promoName = "Promo {0}";
   static const creditCardAddress = "Credit Card Address";
-  static const orderSummaryItems = "Order Summary ({0} Items)";
+  static const orderSummaryItems = "Order Summary (%s Items)";
   static const cardNumber = "Card Number";
   static const uPS = "UPS";
   static const nextDayAir = "Next Day Air";
