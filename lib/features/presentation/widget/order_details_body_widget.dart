@@ -316,7 +316,8 @@ class OrderProductsSectionWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)
+              .copyWith(bottom: 8),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -428,7 +429,8 @@ class OrderPaymentSectionWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)
+              .copyWith(bottom: 8),
           child: Text(
             LocalizationConstants.orderSummaryItems.format([itemCount]),
             style: OptiTextStyles.titleLarge,
@@ -466,12 +468,15 @@ class OrderPaymentSectionWidget extends StatelessWidget {
                     value: tax ?? '',
                     textStyle: OptiTextStyles.body,
                   ),
-                if (!total.isNullOrEmpty)
+                if (!total.isNullOrEmpty) ...[
+                  const SizedBox(height: 10),
                   TwoTextsRow(
                     label: totalTitle ?? '',
                     value: total ?? '',
                     textStyle: OptiTextStyles.subtitle,
                   ),
+                ],
+                if (!discount.isNullOrEmpty) const SizedBox(height: 10),
                 if (promotions != null || promotions!.isNotEmpty)
                   ...promotions!.map((promotion) {
                     if (promotion.promotionLabel.isNullOrEmpty ||
