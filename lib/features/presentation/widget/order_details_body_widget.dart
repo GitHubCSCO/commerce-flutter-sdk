@@ -506,3 +506,42 @@ class OrderPaymentSectionWidget extends StatelessWidget {
     );
   }
 }
+
+class OrderBottomSectionWidget extends StatelessWidget {
+  final List<Widget> actions;
+
+  const OrderBottomSectionWidget({
+    super.key,
+    required this.actions,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: OptiAppColors.backgroundWhite,
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.05),
+            blurRadius: 5,
+            offset: Offset(0, -4),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(
+        vertical: 13.5,
+        horizontal: 31.5,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: actions
+            .map(
+              (widget) => widget,
+            )
+            .expand((element) => [element, const SizedBox(height: 5)])
+            .take(actions.length * 2 - 1)
+            .toList(),
+      ),
+    );
+  }
+}
