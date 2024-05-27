@@ -1,7 +1,9 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
+import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
@@ -11,8 +13,10 @@ import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_scr
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/forgot_password_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_details/order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/add_to_wish_list_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_create_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_screen.dart';
@@ -180,8 +184,43 @@ List<NavigationNode> _getNavigationRoot() {
   final quickOrder = createNode(
     name: AppRoute.quickOrder.name,
     path: AppRoute.quickOrder.suffix,
-    builder: (context, state) => QuickOrderScreen(),
+    builder: (context, state) => const QuickOrderScreen(scanningMode: ScanningMode.quick),
     parent: null,
+  );
+
+  // path: /createOrder
+  final createOrder = createNode(
+    name: AppRoute.createOrder.name,
+    path: AppRoute.createOrder.suffix,
+    builder: (context, state) => const QuickOrderScreen(scanningMode: ScanningMode.create),
+    parent: null,
+  );
+
+  // path: /countOrder
+  final countOrder = createNode(
+    name: AppRoute.countOrder.name,
+    path: AppRoute.countOrder.suffix,
+    builder: (context, state) => const QuickOrderScreen(scanningMode: ScanningMode.count),
+    parent: null,
+  );
+
+  // path: /countInventory
+  final countInventory = createNode(
+    name: AppRoute.countInventory.name,
+    path: AppRoute.countInventory.suffix,
+    builder: (context, state) {
+      final countInventoryEntity = state.extra as CountInventoryEntity;
+      return CountInventoryScreen(countInventoryEntity: countInventoryEntity);
+    },
+    parent: null,
+  );
+
+  // path: /account/vmi
+  final vmi = createNode(
+    name: AppRoute.vmi.name,
+    path: AppRoute.vmi.suffix,
+    builder: (context, state) => const VMIScreen(),
+    parent: account,
   );
 
   // path: /barcodeSearch
@@ -293,6 +332,9 @@ List<NavigationNode> _getNavigationRoot() {
     checkout,
     checkoutSuccess,
     quickOrder,
+    createOrder,
+    countOrder,
+    countInventory,
     barcodeSearch,
     wishListInfo,
     wishListCreate,

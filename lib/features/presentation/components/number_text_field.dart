@@ -17,6 +17,7 @@ class NumberTextField extends StatefulWidget {
   final ValueChanged<int?>? onChanged;
   final String? initialtText;
   final bool shouldShowIncrementDecermentIcon;
+  final void Function(bool hasFocus)? focusListener;
 
   const NumberTextField({
     Key? key,
@@ -32,6 +33,7 @@ class NumberTextField extends StatefulWidget {
     this.contentPadding = const EdgeInsets.symmetric(horizontal: 8),
     this.borderWidth = 2,
     this.onChanged,
+    this.focusListener,
   }) : super(key: key);
 
   @override
@@ -54,6 +56,12 @@ class _NumberTextFieldState extends State<NumberTextField> {
     _shouldShowIncrementDecermentIcon =
         widget.shouldShowIncrementDecermentIcon!;
     _updateArrows(int.tryParse(_controller.text));
+
+    if (widget.focusListener != null) {
+      _focusNode.addListener(() {
+        widget.focusListener!(_focusNode.hasFocus);
+      });
+    }
   }
 
   @override

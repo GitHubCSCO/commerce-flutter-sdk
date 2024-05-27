@@ -15,6 +15,7 @@ import 'package:commerce_flutter_app/features/presentation/components/input.dart
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/order_history_list_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -207,7 +208,7 @@ class __OrderHistoryListWidgetState extends State<_OrderHistoryListWidget> {
                 );
               }
 
-              return _OrderHistoryListItem(
+              return OrderHistoryListItem(
                 orderEntity: widget.orderEntities[index],
               );
             },

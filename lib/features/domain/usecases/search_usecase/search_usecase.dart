@@ -19,6 +19,40 @@ class SearchUseCase extends BaseUseCase {
     }
   }
 
+  Future<Result<AutocompleteResult, ErrorResponse>?> loadVmiAutocompleteResults(String searchQuery) async {
+    var parameters = VmiBinQueryParameters(
+      vmiLocationId : coreServiceProvider.getVmiService().currentVmiLocation?.id ?? '',
+      filter : searchQuery,
+      expand : 'product',
+    );
+    var result = await commerceAPIServiceProvider.getVmiLocationsService().getVmiBins(parameters: parameters);
+    switch (result) {
+      case Success(value: final data):
+        List<AutocompleteProduct> result = [];
+
+        if (data?.vmiBins != null) {
+          for (var item in data!.vmiBins) {
+            if (item.product != null) {
+              result.add(AutocompleteProduct(
+                id: item.product?.id,
+                title: item.product?.shortDescription,
+                subtitle: item.product?.pageTitle,
+                image: item.product?.mediumImagePath,
+                name: item.product?.name,
+                erpNumber: item.product?.erpNumber,
+                brandName: item.product?.brand?.name,
+                brandDetailPagePath: item.product?.brand?.logoSmallImagePath,
+                binNumber: item.binNumber,
+              ));
+            }
+          }
+        }
+        return Success(AutocompleteResult(products: result));
+      case Failure(errorResponse: final errorResponse):
+        return Failure(errorResponse);
+    }
+  }
+
   Future<Result<GetProductCollectionResult, ErrorResponse>?> loadSearchProductsResults(String searchQuery, int currentPage) async {
     var parameters = ProductsQueryParameters(
       query: searchQuery,

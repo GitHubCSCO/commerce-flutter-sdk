@@ -6,15 +6,11 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quick_order/order_widgets/order_product_image_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -107,54 +103,6 @@ class QuickOrderItemWidget extends StatelessWidget {
     );
   }
 
-}
-
-class OrderProductImageWidget extends StatelessWidget {
-  final String imagePath;
-
-  const OrderProductImageWidget({
-    super.key,
-    required this.imagePath,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(26.0, 22.0, 0.0, 0.0),
-      child: Container(
-        width: 65,
-        height: 65,
-        clipBehavior: Clip.antiAlias,
-        decoration: ShapeDecoration(
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(width: 1, color: Color(0xFFD6D6D6)),
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Image.network(
-            imagePath.makeImageUrl(),
-            fit: BoxFit.cover,
-            errorBuilder:
-                (BuildContext context, Object error, StackTrace? stackTrace) {
-              // This function is called when the image fails to load
-              return Container(
-                color: OptiAppColors.backgroundGray, // Placeholder color
-                alignment: Alignment.center,
-                child: const Icon(
-                  Icons.image, // Icon to display
-                  color: Colors.grey, // Icon color
-                  size: 30, // Icon size
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 class OrderProductTitleWidget extends StatelessWidget {

@@ -2,6 +2,8 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_layout_type_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/current_location_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/previous_orders_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
@@ -10,7 +12,9 @@ import 'package:commerce_flutter_app/features/presentation/cubit/product_carouse
 import 'package:commerce_flutter_app/features/presentation/widget/action_grid_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/action_list_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/carousel_section_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/current_location_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/listview_divider_item.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/previous_orders_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/product_carousel_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_history_section_widget.dart';
 import 'package:flutter/material.dart';
@@ -78,6 +82,22 @@ class BaseDynamicContentScreen extends StatelessWidget {
           return buildSearchHistorySectionWidget(
               searchHistoryWidgetEntity: searchHistoryWidgetEntity);
         }
+
+      case CurrentLocationWidgetEntity:
+        {
+          final CurrentLocationWidgetEntity currentLocationWidgetEntity =
+              widgetEntity as CurrentLocationWidgetEntity;
+          return buildCurrentLocationSectionWidget(
+              currentLocationWidgetEntity: currentLocationWidgetEntity);
+        }
+
+      case PreviousOrdersWidgetEntity:
+        {
+          final PreviousOrdersWidgetEntity previousOrdersWidgetEntity =
+              widgetEntity as PreviousOrdersWidgetEntity;
+          return buildPreviousOrdersSectionWidget(
+              previousOrdersWidgetEntity: previousOrdersWidgetEntity);
+        }
     }
     return null;
   }
@@ -111,7 +131,6 @@ class BaseDynamicContentScreen extends StatelessWidget {
         BlocProvider<ProductCarouselCubit>(
             create: (context) => sl<ProductCarouselCubit>()
               ..getCarouselProducts(productCarouselWidgetEntity)),
-
       ],
       child: ProductCarouselSectionWidget(
           productCarouselWidgetEntity: productCarouselWidgetEntity),
@@ -122,5 +141,17 @@ class BaseDynamicContentScreen extends StatelessWidget {
       {required SearchHistoryWidgetEntity searchHistoryWidgetEntity}) {
     return SearchHistorySectionWidget(
         searchHistoryWidgetEntity: searchHistoryWidgetEntity);
+  }
+
+  Widget buildCurrentLocationSectionWidget(
+      {required CurrentLocationWidgetEntity currentLocationWidgetEntity}) {
+    return CurrentLocationWidget(
+        currentLocationWidgetEntity: currentLocationWidgetEntity);
+  }
+
+  Widget buildPreviousOrdersSectionWidget(
+      {required PreviousOrdersWidgetEntity previousOrdersWidgetEntity}) {
+    return PreviousOrdersWidget(
+        previousOrdersWidgetEntity: previousOrdersWidgetEntity);
   }
 }
