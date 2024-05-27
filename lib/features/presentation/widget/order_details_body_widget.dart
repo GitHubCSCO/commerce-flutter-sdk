@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_line_entity.dart';
@@ -7,6 +8,7 @@ import 'package:commerce_flutter_app/features/presentation/components/two_texts_
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class OrderDetailsBodyWidget extends StatelessWidget {
   final String? orderNumber;
@@ -30,6 +32,21 @@ class OrderDetailsBodyWidget extends StatelessWidget {
   final bool isPickupLocationVisible;
   final String? pickupLocationAddress;
 
+  final String? subtotal;
+  final String? discount;
+  final String? shippingHandling;
+  final String? otherCharges;
+  final String? tax;
+  final String? total;
+  final String? subtotalTitle;
+  final String? discountTitle;
+  final String? shippingHandlingTitle;
+  final String? otherChargesTitle;
+  final String? taxTitle;
+  final String? totalTitle;
+  final List<PromotionItem>? promotions;
+  final int? itemCount;
+
   const OrderDetailsBodyWidget({
     super.key,
     this.orderNumber,
@@ -49,6 +66,20 @@ class OrderDetailsBodyWidget extends StatelessWidget {
     this.billingFullAddress,
     this.pickupLocationAddress,
     this.isPickupLocationVisible = false,
+    this.subtotal,
+    this.discount,
+    this.shippingHandling,
+    this.otherCharges,
+    this.tax,
+    this.total,
+    this.subtotalTitle,
+    this.discountTitle,
+    this.shippingHandlingTitle,
+    this.otherChargesTitle,
+    this.taxTitle,
+    this.totalTitle,
+    this.promotions,
+    this.itemCount,
   });
 
   @override
@@ -78,6 +109,22 @@ class OrderDetailsBodyWidget extends StatelessWidget {
             fullAddress: shippingFullAddress,
             countryName: shippingCountryName,
           ),
+        OrderPaymentSectionWidget(
+          discount: discount,
+          discountTitle: discountTitle,
+          otherCharges: otherCharges,
+          otherChargesTitle: otherChargesTitle,
+          promotions: promotions,
+          shippingHandling: shippingHandling,
+          shippingHandlingTitle: shippingHandlingTitle,
+          subtotal: subtotal,
+          subtotalTitle: subtotalTitle,
+          tax: tax,
+          taxTitle: taxTitle,
+          total: total,
+          totalTitle: totalTitle,
+          itemCount: itemCount,
+        ),
         if (isPickupLocationVisible)
           OrderPickupLocationWidget(
             address: pickupLocationAddress,
@@ -314,6 +361,141 @@ class OrderProductsSectionWidget extends StatelessWidget {
           },
           separatorBuilder: (context, index) => const Divider(height: 1),
           itemCount: orderLines.length,
+        )
+      ],
+    );
+  }
+}
+
+class PromotionItem {
+  final String promotionLabel;
+  final String promotionValue;
+
+  PromotionItem({
+    required this.promotionLabel,
+    required this.promotionValue,
+  });
+
+  PromotionItem copyWith({
+    String? promotionLabel,
+    String? promotionValue,
+  }) {
+    return PromotionItem(
+      promotionLabel: promotionLabel ?? this.promotionLabel,
+      promotionValue: promotionValue ?? this.promotionValue,
+    );
+  }
+}
+
+class OrderPaymentSectionWidget extends StatelessWidget {
+  final String? subtotal;
+  final String? discount;
+  final String? shippingHandling;
+  final String? otherCharges;
+  final String? tax;
+  final String? total;
+  final String? subtotalTitle;
+  final String? discountTitle;
+  final String? shippingHandlingTitle;
+  final String? otherChargesTitle;
+  final String? taxTitle;
+  final String? totalTitle;
+  final int? itemCount;
+  final List<PromotionItem>? promotions;
+
+  const OrderPaymentSectionWidget({
+    super.key,
+    this.subtotal,
+    this.discount,
+    this.shippingHandling,
+    this.otherCharges,
+    this.tax,
+    this.total,
+    this.subtotalTitle,
+    this.discountTitle,
+    this.shippingHandlingTitle,
+    this.otherChargesTitle,
+    this.taxTitle,
+    this.totalTitle,
+    this.promotions,
+    this.itemCount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          child: Text(
+            LocalizationConstants.orderSummaryItems.format([itemCount]),
+            style: OptiTextStyles.titleLarge,
+          ),
+        ),
+        Container(
+          width: double.infinity,
+          color: OptiAppColors.backgroundWhite,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TwoTextsRow(
+                  label: subtotalTitle ?? '',
+                  value: subtotal ?? '',
+                  textStyle: OptiTextStyles.subtitle,
+                ),
+                if (!shippingHandling.isNullOrEmpty)
+                  TwoTextsRow(
+                    label: shippingHandlingTitle ?? '',
+                    value: shippingHandling ?? '',
+                    textStyle: OptiTextStyles.body,
+                  ),
+                if (!otherCharges.isNullOrEmpty)
+                  TwoTextsRow(
+                    label: otherChargesTitle ?? '',
+                    value: otherCharges ?? '',
+                    textStyle: OptiTextStyles.body,
+                  ),
+                if (!tax.isNullOrEmpty)
+                  TwoTextsRow(
+                    label: taxTitle ?? '',
+                    value: tax ?? '',
+                    textStyle: OptiTextStyles.body,
+                  ),
+                if (!total.isNullOrEmpty)
+                  TwoTextsRow(
+                    label: totalTitle ?? '',
+                    value: total ?? '',
+                    textStyle: OptiTextStyles.subtitle,
+                  ),
+                if (promotions != null || promotions!.isNotEmpty)
+                  ...promotions!.map((promotion) {
+                    if (promotion.promotionLabel.isNullOrEmpty ||
+                        promotion.promotionValue.isNullOrEmpty) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return TwoTextsRow(
+                      label: promotion.promotionLabel,
+                      value: promotion.promotionValue,
+                      textStyle: OptiTextStyles.body.copyWith(
+                        color: OptiAppColors.textSecondary,
+                      ),
+                    );
+                  }),
+                if (!discount.isNullOrEmpty)
+                  TwoTextsRow(
+                    label: discountTitle ?? '',
+                    value: discount ?? '',
+                    textStyle: OptiTextStyles.body,
+                  ),
+              ],
+            ),
+          ),
         )
       ],
     );

@@ -83,6 +83,36 @@ class OrderDetailsPage extends StatelessWidget {
                     pickupLocationAddress: context
                         .watch<OrderDetailsCubit>()
                         .pickupLocationAddress,
+                    discount: context.watch<OrderDetailsCubit>().discountValue,
+                    discountTitle:
+                        context.watch<OrderDetailsCubit>().discountTitle,
+                    otherCharges:
+                        context.watch<OrderDetailsCubit>().otherChargesValue,
+                    otherChargesTitle:
+                        context.watch<OrderDetailsCubit>().otherChargesTitle,
+                    promotions: state.order.orderPromotions
+                            ?.map(
+                              (e) => PromotionItem(
+                                promotionLabel: e.name ?? '',
+                                promotionValue: e.amountDisplay ?? '',
+                              ),
+                            )
+                            .toList() ??
+                        [],
+                    shippingHandling: context
+                        .watch<OrderDetailsCubit>()
+                        .shippingHandlingValue,
+                    shippingHandlingTitle: context
+                        .watch<OrderDetailsCubit>()
+                        .shippingHandlingTitle,
+                    subtotal: context.watch<OrderDetailsCubit>().subTotalValue,
+                    subtotalTitle:
+                        context.watch<OrderDetailsCubit>().subTotalTitle,
+                    tax: context.watch<OrderDetailsCubit>().taxValue,
+                    taxTitle: context.watch<OrderDetailsCubit>().taxTitle,
+                    total: context.watch<OrderDetailsCubit>().totalValue,
+                    totalTitle: context.watch<OrderDetailsCubit>().totalTitle,
+                    itemCount: state.order.orderLines?.length,
                   ),
                   OrderProductsSectionWidget(
                     orderLines: state.order.orderLines ?? [],

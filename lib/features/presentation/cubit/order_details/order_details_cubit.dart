@@ -38,6 +38,31 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     if (order == null || orderSettings == null) {
       emit(state.copyWith(orderStatus: OrderStatus.failure));
     } else {
+      if (order.orderPromotions != null || order.orderPromotions!.isNotEmpty) {
+        final promotionAdjustedOrder = order.copyWith(
+          orderPromotions: order.orderPromotions!.map((promotion) {
+            return promotion.copyWith(
+              amountDisplay: (promotion.amountDisplay != null)
+                  ? ('- ${promotion.amountDisplay!}')
+                  : null,
+              name: promotion.name != null
+                  ? '${LocalizationConstants.promotion} : ${promotion.name}'
+                  : null,
+            );
+          }).toList(),
+        );
+
+        emit(
+          state.copyWith(
+            order: promotionAdjustedOrder,
+            orderSettings: orderSettings,
+            orderStatus: OrderStatus.success,
+          ),
+        );
+
+        return;
+      }
+
       emit(
         state.copyWith(
           order: order,
@@ -145,4 +170,39 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
           ? '$pickupLocationCityStatePostalCode\n'
           : '') +
       (!state.order.stCountry.isNullOrEmpty ? '${state.order.stCountry}' : '');
+
+  // Subtotal
+  String? get subTotalTitle => LocalizationConstants.subtotal;
+
+  String? get subTotalValue => state.order.orderSubTotalDisplay;
+
+  String? get discountTitle => LocalizationConstants.discounts;
+
+  String? get discountValue => (state.order.orderDiscountAmount == null ||
+          state.order.orderDiscountAmount! == 0)
+      ? ''
+      : '-${state.order.orderDiscountAmountDisplay}';
+
+  String? get shippingHandlingTitle => LocalizationConstants.shippingHandling;
+
+  num get _shippingHandlingValue =>
+      (state.order.shippingCharges ?? 0) + (state.order.handlingCharges ?? 0);
+  String? get shippingHandlingValue => _shippingHandlingValue == 0
+      ? ''
+      : '${CoreConstants.currencySymbol}${_shippingHandlingValue.toStringAsFixed(2)}';
+
+  String? get otherChargesTitle => LocalizationConstants.otherCharges;
+
+  String? get otherChargesValue =>
+      (state.order.otherCharges == null || state.order.otherCharges! == 0)
+          ? ''
+          : state.order.otherChargesDisplay;
+
+  String? get taxTitle => LocalizationConstants.tax;
+
+  String? get taxValue => state.order.totalTaxDisplay;
+
+  String? get totalTitle => LocalizationConstants.total;
+
+  String? get totalValue => state.order.orderGrandTotalDisplay;
 }
