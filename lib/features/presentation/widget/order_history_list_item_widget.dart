@@ -6,70 +6,78 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class OrderHistoryListItem extends StatelessWidget {
-  const OrderHistoryListItem({required this.orderEntity});
+  const OrderHistoryListItem({
+    super.key,
+    required this.orderEntity,
+    this.onTap,
+  });
 
   final OrderEntity orderEntity;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 10,
-      ),
-      color: OptiAppColors.backgroundWhite,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                orderEntity.orderNumberLabel ?? orderEntity.orderNumber ?? '',
-                style: OptiTextStyles.body,
-              ),
-              Text(
-                orderEntity.orderDate != null
-                    ? DateFormat(CoreConstants.dateFormatShortString)
-                        .format(orderEntity.orderDate!)
-                    : '',
-                style: OptiTextStyles.body,
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Visibility(
-            visible: orderEntity.showPoNumber ?? false,
-            child: Text(
-              (orderEntity.poNumberLabel ?? 'PO #') +
-                  (orderEntity.customerPO ?? ''),
-              style: OptiTextStyles.bodySmall,
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 10,
+        ),
+        color: OptiAppColors.backgroundWhite,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  orderEntity.orderNumberLabel ?? orderEntity.orderNumber ?? '',
+                  style: OptiTextStyles.body,
+                ),
+                Text(
+                  orderEntity.orderDate != null
+                      ? DateFormat(CoreConstants.dateFormatShortString)
+                          .format(orderEntity.orderDate!)
+                      : '',
+                  style: OptiTextStyles.body,
+                ),
+              ],
             ),
-          ),
-          ...(orderEntity.stCompanyName != null
-              ? [
-                  const SizedBox(height: 4),
-                  Text(
-                    orderEntity.stCompanyName ?? '',
-                    style: OptiTextStyles.bodySmall,
-                  ),
-                ]
-              : []),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                orderEntity.orderGrandTotalDisplay ?? '',
-                style: OptiTextStyles.bodySmallHighlight,
+            const SizedBox(height: 4),
+            Visibility(
+              visible: orderEntity.showPoNumber ?? false,
+              child: Text(
+                (orderEntity.poNumberLabel ?? 'PO #') +
+                    (orderEntity.customerPO ?? ''),
+                style: OptiTextStyles.bodySmall,
               ),
-              Text(
-                orderEntity.statusDisplay ?? '',
-                style: OptiTextStyles.bodySmallHighlight,
-              ),
-            ],
-          ),
-        ],
+            ),
+            ...(orderEntity.stCompanyName != null
+                ? [
+                    const SizedBox(height: 4),
+                    Text(
+                      orderEntity.stCompanyName ?? '',
+                      style: OptiTextStyles.bodySmall,
+                    ),
+                  ]
+                : []),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  orderEntity.orderGrandTotalDisplay ?? '',
+                  style: OptiTextStyles.bodySmallHighlight,
+                ),
+                Text(
+                  orderEntity.statusDisplay ?? '',
+                  style: OptiTextStyles.bodySmallHighlight,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
