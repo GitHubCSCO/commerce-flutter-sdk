@@ -1,0 +1,91 @@
+{
+    "uri": "",
+    "page": {
+        "Title": "Vendor Managed Inventory"
+    },
+    "widgets": [
+        {
+            "contentKey": 4110,
+            "class": "MobileSpacer",
+            "height": 8,
+            "backgroundColor": ""
+        },
+        {
+            "contentKey": 4111,
+            "class": "MobileHeader",
+            "title": "CURRENT LOCATION"
+        },
+        {
+            "contentKey": 4112,
+            "title": "CURRENT LOCATION",
+            "class": "MobileCurrentLocation"
+        },
+        {
+            "contentKey": 4110,
+            "class": "MobileSpacer",
+            "height": 8,
+            "backgroundColor": "FF77BC1F"
+        },
+        {
+            "contentKey": 4113,
+            "class": "MobileLinkList",
+            "childWidgets": [
+                {
+                    "contentKey": 4114,
+                    "class": "MobileLinkListAction",
+                    "childWidgets": [],
+                    "type": "CountInventory",
+                    "text": "",
+                    "icon": "",
+                    "url": ""
+                },
+                {
+                    "contentKey": 4115,
+                    "class": "MobileLinkListAction",
+                    "childWidgets": [],
+                    "type": "CreateOrder",
+                    "text": "",
+                    "icon": "",
+                    "url": ""
+                }
+            ],
+            "layout": "Grid",
+            "pages": [
+                "CountInventory",
+                "CreateOrder"
+            ]
+        },
+        {
+            "contentKey": 4110,
+            "class": "MobileSpacer",
+            "height": 8,
+            "backgroundColor": ""
+        },
+        {
+            "contentKey": 4116,
+            "class": "MobileHeader",
+            "title": "LOCATION NOTE"
+        },
+        {
+            "contentKey": 4117,
+            "class": "MobileLocationNote"
+        },
+        {
+            "contentKey": 4110,
+            "class": "MobileSpacer",
+            "height": 8,
+            "backgroundColor": ""
+        },
+        {
+            "contentKey": 4120,
+            "class": "MobileHeader",
+            "title": "PREVIOUS ORDERS"
+        },
+        {
+            "contentKey": 4121,
+            "title": "PREVIOUS ORDERS",
+            "class": "MobilePreviousOrders"
+        }
+    ],
+    "properties": {}
+}

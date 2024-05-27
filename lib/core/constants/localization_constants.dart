@@ -678,6 +678,11 @@ class LocalizationConstants {
   static const manufactureSign = "Manufacture #";
   static const binNote = "Bin Note";
   static const binSign = "Bin #";
+  static const maxSign = "Max #";
+  static const minSign = "Min #";
+  static const dateSign = "Date #";
+  static const countQTYSign = "Count QTY:";
+  static const orderQTYSign = "Order QTY:";
   static const enterBinNote = "Enter Bin Note";
   static const qTY = "QTY";
   static const addToOrder = "Add To Order";

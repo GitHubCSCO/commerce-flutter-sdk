@@ -12,6 +12,7 @@ class RouteNames {
   static const String search = 'search';
   static const String account = 'account';
   static const String cart = 'cart';
+  static const String vmi = 'vmi';
   static const String productDetails = 'productDetails';
   static const String checkout = 'checkout';
   static const String checkoutSuccess = 'checkoutSuccess';
@@ -20,6 +21,9 @@ class RouteNames {
   static const String biometricLogin = 'biometricLogin';
   static const String orderHistory = 'orderHistory';
   static const String quickOrder = 'quickOrder';
+  static const String createOrder = 'createOrder';
+  static const String countOrder = 'countOrder';
+  static const String countInventory = 'countInventory';
   static const String barcodeSearch = 'barcodeSearch';
   static const String wishlists = 'wishlists';
   static const String wishlistsDetails = 'wishlistsDetails';
@@ -38,6 +42,7 @@ class RoutePaths {
   static const String search = '/${RouteNames.search}';
   static const String account = '/${RouteNames.account}';
   static const String cart = '/${RouteNames.cart}';
+  static const String vmi =    '/${RoutePaths.account}/${RouteNames.vmi}';
   static const String productDetails =
       '/${RouteNames.productDetails}/:productId';
   static const String checkout = '/${RouteNames.checkout}';
@@ -50,6 +55,9 @@ class RoutePaths {
   static const String orderHistory =
       '/${RoutePaths.account}/${RouteNames.orderHistory}';
   static const String quickOrder = '/${RouteNames.quickOrder}';
+  static const String createOrder = '/${RouteNames.createOrder}';
+  static const String countOrder = '/${RouteNames.countOrder}';
+  static const String countInventory = '/${RouteNames.countInventory}';
   static const String barcodeSearch = '/${RouteNames.barcodeSearch}';
   static const String wishlists =
       '${RoutePaths.account}/${RouteNames.wishlists}';
@@ -70,6 +78,7 @@ enum AppRoute {
   search(name: RouteNames.search, fullPath: RoutePaths.search),
   account(name: RouteNames.account, fullPath: RoutePaths.account),
   cart(name: RouteNames.cart, fullPath: RoutePaths.cart),
+  vmi(name: RouteNames.vmi, fullPath: RoutePaths.vmi),
   productList(name: RouteNames.productList, fullPath: RoutePaths.shopProdlist),
   productDetails(
       name: RouteNames.productDetails, fullPath: RoutePaths.productDetails),
@@ -81,8 +90,10 @@ enum AppRoute {
       name: RouteNames.biometricLogin, fullPath: RoutePaths.biometricLogin),
   orderHistory(
       name: RouteNames.orderHistory, fullPath: RoutePaths.orderHistory),
-  quickOrder(
-      name: RouteNames.quickOrder, fullPath: RoutePaths.quickOrder),
+  quickOrder(name: RouteNames.quickOrder, fullPath: RoutePaths.quickOrder),
+  createOrder(name: RouteNames.createOrder, fullPath: RoutePaths.createOrder),
+  countOrder(name: RouteNames.countOrder, fullPath: RoutePaths.countOrder),
+  countInventory(name: RouteNames.countInventory, fullPath: RoutePaths.countInventory),
   barcodeSearch(
       name: RouteNames.barcodeSearch, fullPath: RoutePaths.barcodeSearch),
   wishlist(name: RouteNames.wishlists, fullPath: RoutePaths.wishlists),
@@ -90,8 +101,10 @@ enum AppRoute {
       name: RouteNames.wishlistsDetails, fullPath: RoutePaths.wishlistsDetails),
   wishListInfo(
       name: RouteNames.wishListInfo, fullPath: RoutePaths.wishListInfo),
-  wishListCreate(name: RouteNames.wishListCreate, fullPath: RoutePaths.wishListCreate),
-  addToWishList(name: RouteNames.addToWishList, fullPath: RoutePaths.addToWishList),
+  wishListCreate(
+      name: RouteNames.wishListCreate, fullPath: RoutePaths.wishListCreate),
+  addToWishList(
+      name: RouteNames.addToWishList, fullPath: RoutePaths.addToWishList),
   forgotPassword(name: RouteNames.forgotPassword, fullPath: RoutePaths.forgotPassword);
 
   const AppRoute({

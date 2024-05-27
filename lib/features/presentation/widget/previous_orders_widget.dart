@@ -1,0 +1,63 @@
+import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/previous_orders_widget_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders_cubit/previous_order_state.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders_cubit/previous_orders_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/order_history_list_item_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class PreviousOrdersWidget extends StatelessWidget {
+  final PreviousOrdersWidgetEntity previousOrdersWidgetEntity;
+
+  const PreviousOrdersWidget({key, required this.previousOrdersWidgetEntity})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<PreviousOrdersCubit, PreviousOrdersState>(
+        builder: (context, state) {
+      if (state is PreviousOrdersInitialState) {
+        return Container();
+      } else if (state is PreviousOrdersLoadingState) {
+        return Container(
+          child: CircularProgressIndicator(),
+        );
+      } else if (state is PreviousOrdersLoadedState) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+              child: Text(
+                previousOrdersWidgetEntity.title ?? "",
+                style: OptiTextStyles.titleSmall,
+              ),
+            ),
+            Container(
+              height: state.previousOrdersDataEntity.orders.length * 100,
+              child: ListView.separated(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+                itemCount: state.previousOrdersDataEntity.orders.length,
+                itemBuilder: (context, index) {
+                  return OrderHistoryListItem(
+                    orderEntity: state.previousOrdersDataEntity.orders[index],
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return const Divider(
+                    height: 0,
+                    thickness: 1,
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      } else {
+        return Container();
+      }
+    });
+  }
+}
