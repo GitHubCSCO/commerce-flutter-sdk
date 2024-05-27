@@ -432,7 +432,7 @@ class OrderPaymentSectionWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)
               .copyWith(bottom: 8),
           child: Text(
-            LocalizationConstants.orderSummaryItems.format([itemCount]),
+            LocalizationConstants.orderSummary,
             style: OptiTextStyles.titleLarge,
           ),
         ),
@@ -446,7 +446,7 @@ class OrderPaymentSectionWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TwoTextsRow(
-                  label: subtotalTitle ?? '',
+                  label: subtotalTitle?.format([itemCount]) ?? '',
                   value: subtotal ?? '',
                   textStyle: OptiTextStyles.subtitle,
                 ),

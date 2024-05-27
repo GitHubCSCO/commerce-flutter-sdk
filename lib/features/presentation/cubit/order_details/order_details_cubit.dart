@@ -172,7 +172,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       (!state.order.stCountry.isNullOrEmpty ? '${state.order.stCountry}' : '');
 
   // Subtotal
-  String? get subTotalTitle => LocalizationConstants.subtotal;
+  String? get subTotalTitle => LocalizationConstants.subtotalItems;
 
   String? get subTotalValue => state.order.orderSubTotalDisplay;
 
