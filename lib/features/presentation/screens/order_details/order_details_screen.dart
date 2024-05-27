@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_details/order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/order_details_body_widget.dart';
 import 'package:flutter/material.dart';
@@ -143,7 +144,15 @@ class OrderDetailsPage extends StatelessWidget {
                     actions: [
                       PrimaryButton(
                         text: LocalizationConstants.reorder,
-                        onPressed: () {},
+                        onPressed: () {
+                          confirmDialog(
+                            context: context,
+                            onConfirm: () {},
+                            message:
+                                LocalizationConstants.addOrderContentToCart,
+                            confirmText: LocalizationConstants.reorder,
+                          );
+                        },
                       ),
                     ],
                   ),
