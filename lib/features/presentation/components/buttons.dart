@@ -31,18 +31,18 @@ class PrimaryButton extends StatelessWidget {
       onPressed: isEnabled ? onPressed : null,
       style: ButtonStyle(
         alignment: Alignment.center,
-        elevation: const MaterialStatePropertyAll(0),
-        backgroundColor: MaterialStatePropertyAll(
+        elevation: const WidgetStatePropertyAll(0),
+        backgroundColor: WidgetStatePropertyAll(
           isEnabled
               ? backgroundColor
               : backgroundColor.withOpacity(AppStyle.disabledButtonOpacity),
         ),
-        foregroundColor: MaterialStatePropertyAll(
+        foregroundColor: WidgetStatePropertyAll(
           isEnabled
               ? foregroundColor
               : foregroundColor.withOpacity(AppStyle.disabledButtonOpacity),
         ),
-        shape: MaterialStateProperty.all(
+        shape: WidgetStateProperty.all(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
               borderRadius,
@@ -97,18 +97,18 @@ class SecondaryButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: isEnabled ? onPressed : null,
       style: ButtonStyle(
-        elevation: const MaterialStatePropertyAll(0),
-        shape: MaterialStatePropertyAll(
+        elevation: const WidgetStatePropertyAll(0),
+        shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
           ),
         ),
-        foregroundColor: MaterialStatePropertyAll(
+        foregroundColor: WidgetStatePropertyAll(
           isEnabled
               ? foregroundColor
               : foregroundColor.withOpacity(AppStyle.disabledButtonOpacity),
         ),
-        backgroundColor: MaterialStatePropertyAll(
+        backgroundColor: WidgetStatePropertyAll(
           isEnabled
               ? backgroundColor
               : backgroundColor.withOpacity(AppStyle.disabledButtonOpacity),
@@ -149,8 +149,8 @@ class TertiaryButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: isEnabled ? onPressed : null,
       style: ButtonStyle(
-        elevation: const MaterialStatePropertyAll(0),
-        shape: MaterialStatePropertyAll(
+        elevation: const WidgetStatePropertyAll(0),
+        shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
             side: BorderSide(
@@ -160,10 +160,10 @@ class TertiaryButton extends StatelessWidget {
             ),
           ),
         ),
-        foregroundColor: MaterialStatePropertyAll(isEnabled
+        foregroundColor: WidgetStatePropertyAll(isEnabled
             ? foregroundColor
             : foregroundColor.withOpacity(AppStyle.disabledButtonOpacity)),
-        backgroundColor: MaterialStatePropertyAll(isEnabled
+        backgroundColor: WidgetStatePropertyAll(isEnabled
             ? backgroundColor
             : backgroundColor.withOpacity(AppStyle.disabledButtonOpacity)),
       ),
@@ -196,8 +196,8 @@ class PlainButton extends StatelessWidget {
     return TextButton(
       onPressed: isEnabled ? onPressed : null,
       style: ButtonStyle(
-        elevation: const MaterialStatePropertyAll(0),
-        foregroundColor: MaterialStatePropertyAll(
+        elevation: const WidgetStatePropertyAll(0),
+        foregroundColor: WidgetStatePropertyAll(
           isEnabled
               ? foregroundColor
               : foregroundColor.withOpacity(AppStyle.disabledButtonOpacity),

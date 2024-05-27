@@ -22,11 +22,11 @@ class DialogHighlightButton extends StatelessWidget {
       style: style ??
           ButtonStyle(
             backgroundColor:
-                MaterialStateProperty.all(const Color.fromRGBO(0, 55, 255, 1)),
-            padding: MaterialStateProperty.all(
+                WidgetStateProperty.all(const Color.fromRGBO(0, 55, 255, 1)),
+            padding: WidgetStateProperty.all(
               const EdgeInsets.symmetric(horizontal: 16),
             ),
-            shape: MaterialStateProperty.all(
+            shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4),
               ),
@@ -56,11 +56,11 @@ class DialogPlainButton extends StatelessWidget {
       onPressed: onPressed,
       style: style ??
           ButtonStyle(
-            padding: MaterialStateProperty.all(
+            padding: WidgetStateProperty.all(
               const EdgeInsets.symmetric(horizontal: 16),
             ),
-            foregroundColor: const MaterialStatePropertyAll(Colors.black),
-            shape: MaterialStateProperty.all(
+            foregroundColor: const WidgetStatePropertyAll(Colors.black),
+            shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4),
               ),
