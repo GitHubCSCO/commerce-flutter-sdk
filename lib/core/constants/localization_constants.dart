@@ -195,7 +195,7 @@ class LocalizationConstants {
   static const reorder = "Reorder";
   static const promo = "Promo {0}";
   static const shipments = "SHIPMENTS";
-  static const orderSummary = "ORDER SUMMARY";
+  static const orderSummary = "Order Summary";
   static const productItems = "PRODUCTS ({0} ITEMS)";
   static const trackShipment = "Track Shipment";
   static const requestPickUpDate = "Requested Pick Up Date";
