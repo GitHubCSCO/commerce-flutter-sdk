@@ -80,6 +80,19 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     }
   }
 
+  Future<void> reorderAllProducts() async {
+    emit(state.copyWith(orderStatus: OrderStatus.reorderLoading));
+    final result = await _orderUsecase.reorderAllProducts(
+      orderLines: state.order.orderLines ?? [],
+    );
+
+    if (result == OrderStatus.success) {
+      emit(state.copyWith(orderStatus: OrderStatus.reorderSuccess));
+    } else {
+      emit(state.copyWith(orderStatus: OrderStatus.reorderFailure));
+    }
+  }
+
   // Order Information
   String? get orderNumber => state.order.orderNumber;
 

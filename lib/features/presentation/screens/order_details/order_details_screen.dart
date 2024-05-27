@@ -1,8 +1,11 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_details/order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/order_details_body_widget.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +39,29 @@ class OrderDetailsPage extends StatelessWidget {
                   OrderStatus.success
               ? Text(context.watch<OrderDetailsCubit>().orderNumber ?? '')
               : const Text(LocalizationConstants.orderDetails)),
-      body: BlocBuilder<OrderDetailsCubit, OrderDetailsState>(
+      body: BlocConsumer<OrderDetailsCubit, OrderDetailsState>(
+        listener: (context, state) {
+          if (state.orderStatus == OrderStatus.reorderLoading) {
+            showPleaseWait(context);
+          }
+
+          if (state.orderStatus == OrderStatus.reorderSuccess) {
+            Navigator.of(context, rootNavigator: true).pop();
+            context.read<CartCountCubit>().onCartItemChange();
+            CustomSnackBar.showSnackBarMessage(
+              context,
+              SiteMessageConstants.defaultValueAddToCartSuccess,
+            );
+          }
+
+          if (state.orderStatus == OrderStatus.reorderFailure) {
+            Navigator.of(context, rootNavigator: true).pop();
+            CustomSnackBar.showSnackBarMessage(
+              context,
+              SiteMessageConstants.defaultValueAddToCartFail,
+            );
+          }
+        },
         builder: (context, state) {
           if (state.orderStatus == OrderStatus.loading) {
             return const Center(
@@ -147,7 +172,11 @@ class OrderDetailsPage extends StatelessWidget {
                         onPressed: () {
                           confirmDialog(
                             context: context,
-                            onConfirm: () {},
+                            onConfirm: () {
+                              context
+                                  .read<OrderDetailsCubit>()
+                                  .reorderAllProducts();
+                            },
                             message:
                                 LocalizationConstants.addOrderContentToCart,
                             confirmText: LocalizationConstants.reorder,

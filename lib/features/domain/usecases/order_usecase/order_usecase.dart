@@ -1,6 +1,8 @@
 import 'package:commerce_flutter_app/features/domain/entity/order/get_order_collection_result_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/order/order_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/settings/order_settings_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/order_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/pagination_entity_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/settings_entity_mapper.dart';
@@ -119,5 +121,38 @@ class OrderUsecase extends BaseUseCase {
     // }
 
     return hasReorder;
+  }
+
+  /// Refresh the Cart after calling this method
+  Future<OrderStatus> reorderAllProducts({
+    required List<OrderLineEntity> orderLines,}
+  ) async {
+    if (orderLines.isEmpty) {
+      return OrderStatus.failure;
+    }
+    final addCartLines = orderLines
+        .map(
+          (orderLine) => AddCartLine(
+            productId: orderLine.productId,
+            qtyOrdered: orderLine.qtyOrdered,
+            unitOfMeasure: orderLine.unitOfMeasure,
+          ),
+        )
+        .toList();
+
+    final result = await commerceAPIServiceProvider
+        .getCartService()
+        .addCartLineCollection(addCartLines);
+
+    switch (result) {
+      case Success(value: final value):
+        if (value == null || value.isEmpty) {
+          return OrderStatus.failure;
+        } else {
+          return OrderStatus.success;
+        }
+      case Failure():
+        return OrderStatus.failure;
+    }
   }
 }
