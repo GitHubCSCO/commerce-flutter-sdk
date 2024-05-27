@@ -55,6 +55,7 @@ class QuickOrderListWidget extends StatelessWidget {
                         ..getPricingAndInventory(entity, setting),
                       child: scanningMode == ScanningMode.count
                           ? CountInventoryItemWidget(
+                              callback: callback,
                               quickOrderItemEntity: entity,
                             )
                           : QuickOrderItemWidget(

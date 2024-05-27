@@ -33,8 +33,7 @@ class CountInventoryCubit extends Cubit<CountInventoryState> {
           }
         case Failure(errorResponse: final errorResponse):
           {
-            emit(CountInventorySuccess(qty));
-            // emit(CountInventoryAlert(errorResponse.message ?? LocalizationConstants.failed));
+            emit(CountInventoryAlert(errorResponse.message ?? LocalizationConstants.failed));
           }
       }
     }

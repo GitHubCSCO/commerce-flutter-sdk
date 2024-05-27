@@ -210,7 +210,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   Future<void> _addVmiOrderItem(Result<VmiBinModelEntity, ErrorResponse> result, Emitter<OrderListState> emit) async {
     switch (result) {
       case Success(value: final vmiBin):
-        if (vmiBin!.productEntity == null) {
+        if (vmiBin == null || vmiBin.productEntity == null) {
           emit(OrderListAddFailedState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
           emit(OrderListLoadedState(quickOrderItemList, productSettings));
           return;

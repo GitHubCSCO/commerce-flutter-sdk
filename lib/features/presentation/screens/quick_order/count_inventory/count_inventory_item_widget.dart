@@ -1,16 +1,19 @@
-import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/order_widgets/order_product_image_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class CountInventoryItemWidget extends StatelessWidget {
 
+  final Function(BuildContext context, QuickOrderItemEntity,
+      OrderCallBackType orderCallBackType) callback;
   final QuickOrderItemEntity quickOrderItemEntity;
 
-  const CountInventoryItemWidget({super.key, required this.quickOrderItemEntity});
+  const CountInventoryItemWidget({super.key, required this.callback, required this.quickOrderItemEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +95,7 @@ class CountInventoryItemWidget extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          OrderVmiProductTitleWidget(orderItemEntity: quickOrderItemEntity),
+          OrderVmiProductTitleWidget(callback: callback, orderItemEntity: quickOrderItemEntity),
           Container(
             color: Colors.white,
             padding: const EdgeInsets.all(20.0),
@@ -139,12 +142,11 @@ class CountInventoryItemWidget extends StatelessWidget {
 
 class OrderVmiProductTitleWidget extends StatelessWidget {
 
-  // final Function(BuildContext context, QuickOrderItemEntity,
-  //     OrderCallBackType orderCallBackType) callback;
+  final Function(BuildContext context, QuickOrderItemEntity,
+      OrderCallBackType orderCallBackType) callback;
   final QuickOrderItemEntity orderItemEntity;
 
-  const OrderVmiProductTitleWidget({Key? key, required this.orderItemEntity})
-      : super(key: key);
+  const OrderVmiProductTitleWidget({super.key, required this.callback, required this.orderItemEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -192,17 +194,24 @@ class OrderVmiProductTitleWidget extends StatelessWidget {
       child: SizedBox(
         width: 30,
         height: 30,
-        child: IconButton(
-            onPressed: () {
-
-            },
-            icon: const Icon(
-              Icons.more_vert,
-              color: Colors.black,
-            )
-        ),
+        child: BottomMenuWidget(isViewOnWebsiteEnable: false, toolMenuList: _buildToolMenu(context)),
       ),
     );
+  }
+
+  List<ToolMenu> _buildToolMenu(BuildContext context) {
+    List<ToolMenu> list = [];
+    list.add(ToolMenu(
+        title: LocalizationConstants.newCount,
+        action: () {
+          callback(context, orderItemEntity, OrderCallBackType.newCount);
+        }));
+    list.add(ToolMenu(
+        title: LocalizationConstants.remove,
+        action: () {
+          callback(context, orderItemEntity, OrderCallBackType.itemDelete);
+        }));
+    return list;
   }
 
 }

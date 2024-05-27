@@ -6,7 +6,7 @@ class CountInventoryUseCase extends BaseUseCase {
 
   Future<Result<VmiCountModel, ErrorResponse>> saveBinCount(VmiBinModelEntity vmiBinEntity, int qty) async {
     final vmiLocationId = coreServiceProvider.getVmiService().currentVmiLocation?.id ?? '';
-    final countModel = VmiCountModel(vmiBinId: vmiBinEntity.id, productId: vmiBinEntity.productId, count: qty);
+    final countModel = VmiCountModel(vmiBinId: vmiBinEntity.id, productId: vmiBinEntity.productId, count: qty.toDouble());
 
     final result = await commerceAPIServiceProvider.getVmiLocationsService().saveBinCount(vmiLocationId, vmiBinEntity.id, countModel);
     return result;

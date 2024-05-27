@@ -32,7 +32,6 @@ import 'package:commerce_flutter_app/features/presentation/screens/quick_order/q
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/style_trait_select_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -110,8 +109,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                 cameraFlash ? Icons.flash_on : Icons.flash_off,
                 color: Colors.black,
               )),
-          BottomMenuWidget(
-              toolMenuList: _buildToolMenu(context), websitePath: 'websitePath', isViewOnWebsiteEnable: false)
+          _buildAppBarMenu(),
         ],
       ),
       body: BlocConsumer<QuickOrderAutoCompleteBloc, QuickOrderAutoCompleteState>(
@@ -559,6 +557,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
       OrderCallBackType orderCallBackType) {
     if (orderCallBackType == OrderCallBackType.quantityChange) {
       context.read<OrderListBloc>().add(OrderListLoadEvent());
+    } else if (orderCallBackType == OrderCallBackType.newCount) {
+      context.read<OrderListBloc>().add(OrderListItemScanAddEvent(quickOrderItemEntity.vmiBinEntity?.binNumber ?? ''));
     } else if (orderCallBackType == OrderCallBackType.itemDelete) {
       context
           .read<OrderListBloc>()
@@ -578,18 +578,36 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     context.read<OrderListBloc>().add(OrderListItemAddEvent(product));
   }
 
+  Widget _buildAppBarMenu() {
+    return Visibility(
+      visible: widget.scanningMode != ScanningMode.create,
+      child: BottomMenuWidget(
+          toolMenuList: _buildToolMenu(context), isViewOnWebsiteEnable: false),
+    );
+  }
+
   List<ToolMenu> _buildToolMenu(BuildContext context) {
     List<ToolMenu> list = [];
-    list.add(ToolMenu(
-        title: LocalizationConstants.addToList,
-        action: () {
-          _addToList(context);
-        }));
-    list.add(ToolMenu(
-        title: LocalizationConstants.removeAllProducts,
-        action: () {
-          _clearAllCart(context);
-        }));
+
+    if (widget.scanningMode == ScanningMode.count) {
+      list.add(ToolMenu(
+          title: LocalizationConstants.clearHistory,
+          action: () {
+            _clearAllCart(context);
+          }));
+    } else if (widget.scanningMode == ScanningMode.quick) {
+      list.add(ToolMenu(
+          title: LocalizationConstants.addToList,
+          action: () {
+            _addToList(context);
+          }));
+      list.add(ToolMenu(
+          title: LocalizationConstants.removeAllProducts,
+          action: () {
+            _clearAllCart(context);
+          }));
+    }
+
     return list;
   }
 
@@ -662,4 +680,4 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
 
 }
 
-enum OrderCallBackType { quantityChange, itemDelete, calculateSubtotal }
+enum OrderCallBackType { quantityChange, newCount, itemDelete, calculateSubtotal }
