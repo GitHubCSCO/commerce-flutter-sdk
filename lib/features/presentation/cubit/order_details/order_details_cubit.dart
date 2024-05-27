@@ -212,7 +212,4 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
   String? get totalTitle => LocalizationConstants.total;
 
   String? get totalValue => state.order.orderGrandTotalDisplay;
-
-  // Reorder Button
-  String get reorderButtonText => LocalizationConstants.reorder;
 }
