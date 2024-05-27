@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
@@ -7,9 +8,11 @@ import 'package:commerce_flutter_app/features/presentation/components/dialog.dar
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_details/order_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/order_details_body_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class OrderDetailsScreen extends StatelessWidget {
   final String orderNumber;
@@ -34,11 +37,18 @@ class OrderDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
-          title: context.watch<OrderDetailsCubit>().state.orderStatus ==
-                  OrderStatus.success
-              ? Text(context.watch<OrderDetailsCubit>().orderNumber ?? '')
-              : const Text(LocalizationConstants.orderDetails)),
+        backgroundColor: OptiAppColors.backgroundWhite,
+        centerTitle: false,
+        actions: const [
+          _OptionsMenu(),
+        ],
+        title: context.watch<OrderDetailsCubit>().state.orderStatus ==
+                OrderStatus.success
+            ? Text(context.watch<OrderDetailsCubit>().orderNumber ?? '')
+            : const Text(LocalizationConstants.orderDetails),
+      ),
       body: BlocConsumer<OrderDetailsCubit, OrderDetailsState>(
         listener: (context, state) {
           if (state.orderStatus == OrderStatus.reorderLoading) {
@@ -190,6 +200,30 @@ class OrderDetailsPage extends StatelessWidget {
           }
         },
       ),
+    );
+  }
+}
+
+class _OptionsMenu extends StatelessWidget {
+  const _OptionsMenu();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<OrderDetailsCubit, OrderDetailsState>(
+      builder: (context, state) {
+        String? websitePathOrderNumber =
+            state.order.webOrderNumber.isNullOrEmpty
+                ? state.order.erpOrderNumber
+                : state.order.webOrderNumber;
+        String? websitePath = websitePathOrderNumber.isNullOrEmpty
+            ? ''
+            : 'redirectto/OrderDetailPage?ordernumber=${websitePathOrderNumber ?? ''}';
+        return BottomMenuWidget(
+          websitePath: websitePath,
+
+          /// TODO - Add print menu
+        );
+      },
     );
   }
 }
