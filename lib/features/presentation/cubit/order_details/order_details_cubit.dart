@@ -38,6 +38,11 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     if (order == null || orderSettings == null) {
       emit(state.copyWith(orderStatus: OrderStatus.failure));
     } else {
+      final isReorderVisible = await _orderUsecase.checkReorder(
+        order: order,
+        orderSettings: orderSettings,
+      );
+
       if (order.orderPromotions != null || order.orderPromotions!.isNotEmpty) {
         final promotionAdjustedOrder = order.copyWith(
           orderPromotions: order.orderPromotions!.map((promotion) {
@@ -57,6 +62,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
             order: promotionAdjustedOrder,
             orderSettings: orderSettings,
             orderStatus: OrderStatus.success,
+            isReorderViewVisible: isReorderVisible,
           ),
         );
 
@@ -68,6 +74,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
           order: order,
           orderSettings: orderSettings,
           orderStatus: OrderStatus.success,
+          isReorderViewVisible: isReorderVisible,
         ),
       );
     }
@@ -205,4 +212,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
   String? get totalTitle => LocalizationConstants.total;
 
   String? get totalValue => state.order.orderGrandTotalDisplay;
+
+  // Reorder Button
+  String get reorderButtonText => LocalizationConstants.reorder;
 }

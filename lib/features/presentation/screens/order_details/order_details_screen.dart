@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
+import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_details/order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/order_details_body_widget.dart';
 import 'package:flutter/material.dart';
@@ -45,80 +46,108 @@ class OrderDetailsPage extends StatelessWidget {
               child: Text('Failed to load order details'),
             );
           } else {
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  OrderDetailsBodyWidget(
-                    orderNumber: context.watch<OrderDetailsCubit>().orderNumber,
-                    orderDate: context.watch<OrderDetailsCubit>().orderDate,
-                    poNumber: context.watch<OrderDetailsCubit>().poNumber,
-                    orderStatus: context.watch<OrderDetailsCubit>().orderStatus,
-                    shippingMethod:
-                        context.watch<OrderDetailsCubit>().shippingMethod,
-                    terms: context.watch<OrderDetailsCubit>().terms,
-                    requestedDeliveryDate: context
-                        .watch<OrderDetailsCubit>()
-                        .requestedDeliveryDate,
-                    requestedDeliveryDateTitle: context
-                        .watch<OrderDetailsCubit>()
-                        .requestedDeliveryDateTitle,
-                    webOrderNumber:
-                        context.watch<OrderDetailsCubit>().webOrderNumber,
-                    shippingCompanyName:
-                        context.watch<OrderDetailsCubit>().shippingCompanyName,
-                    shippingFullAddress:
-                        context.watch<OrderDetailsCubit>().shippingFullAddress,
-                    shippingCountryName:
-                        context.watch<OrderDetailsCubit>().shippingCountryName,
-                    isShippingAddressVisible: context
-                        .watch<OrderDetailsCubit>()
-                        .isShippingAddressVisible,
-                    billingCompanyName:
-                        context.watch<OrderDetailsCubit>().billingCompanyName,
-                    billingFullAddress:
-                        context.watch<OrderDetailsCubit>().billingFullAddress,
-                    isPickupLocationVisible: context
-                        .watch<OrderDetailsCubit>()
-                        .isPickupLocationVisible,
-                    pickupLocationAddress: context
-                        .watch<OrderDetailsCubit>()
-                        .pickupLocationAddress,
-                    discount: context.watch<OrderDetailsCubit>().discountValue,
-                    discountTitle:
-                        context.watch<OrderDetailsCubit>().discountTitle,
-                    otherCharges:
-                        context.watch<OrderDetailsCubit>().otherChargesValue,
-                    otherChargesTitle:
-                        context.watch<OrderDetailsCubit>().otherChargesTitle,
-                    promotions: state.order.orderPromotions
-                            ?.map(
-                              (e) => PromotionItem(
-                                promotionLabel: e.name ?? '',
-                                promotionValue: e.amountDisplay ?? '',
-                              ),
-                            )
-                            .toList() ??
-                        [],
-                    shippingHandling: context
-                        .watch<OrderDetailsCubit>()
-                        .shippingHandlingValue,
-                    shippingHandlingTitle: context
-                        .watch<OrderDetailsCubit>()
-                        .shippingHandlingTitle,
-                    subtotal: context.watch<OrderDetailsCubit>().subTotalValue,
-                    subtotalTitle:
-                        context.watch<OrderDetailsCubit>().subTotalTitle,
-                    tax: context.watch<OrderDetailsCubit>().taxValue,
-                    taxTitle: context.watch<OrderDetailsCubit>().taxTitle,
-                    total: context.watch<OrderDetailsCubit>().totalValue,
-                    totalTitle: context.watch<OrderDetailsCubit>().totalTitle,
-                    itemCount: state.order.orderLines?.length,
+            return Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        OrderDetailsBodyWidget(
+                          orderNumber:
+                              context.watch<OrderDetailsCubit>().orderNumber,
+                          orderDate:
+                              context.watch<OrderDetailsCubit>().orderDate,
+                          poNumber: context.watch<OrderDetailsCubit>().poNumber,
+                          orderStatus:
+                              context.watch<OrderDetailsCubit>().orderStatus,
+                          shippingMethod:
+                              context.watch<OrderDetailsCubit>().shippingMethod,
+                          terms: context.watch<OrderDetailsCubit>().terms,
+                          requestedDeliveryDate: context
+                              .watch<OrderDetailsCubit>()
+                              .requestedDeliveryDate,
+                          requestedDeliveryDateTitle: context
+                              .watch<OrderDetailsCubit>()
+                              .requestedDeliveryDateTitle,
+                          webOrderNumber:
+                              context.watch<OrderDetailsCubit>().webOrderNumber,
+                          shippingCompanyName: context
+                              .watch<OrderDetailsCubit>()
+                              .shippingCompanyName,
+                          shippingFullAddress: context
+                              .watch<OrderDetailsCubit>()
+                              .shippingFullAddress,
+                          shippingCountryName: context
+                              .watch<OrderDetailsCubit>()
+                              .shippingCountryName,
+                          isShippingAddressVisible: context
+                              .watch<OrderDetailsCubit>()
+                              .isShippingAddressVisible,
+                          billingCompanyName: context
+                              .watch<OrderDetailsCubit>()
+                              .billingCompanyName,
+                          billingFullAddress: context
+                              .watch<OrderDetailsCubit>()
+                              .billingFullAddress,
+                          isPickupLocationVisible: context
+                              .watch<OrderDetailsCubit>()
+                              .isPickupLocationVisible,
+                          pickupLocationAddress: context
+                              .watch<OrderDetailsCubit>()
+                              .pickupLocationAddress,
+                          discount:
+                              context.watch<OrderDetailsCubit>().discountValue,
+                          discountTitle:
+                              context.watch<OrderDetailsCubit>().discountTitle,
+                          otherCharges: context
+                              .watch<OrderDetailsCubit>()
+                              .otherChargesValue,
+                          otherChargesTitle: context
+                              .watch<OrderDetailsCubit>()
+                              .otherChargesTitle,
+                          promotions: state.order.orderPromotions
+                                  ?.map(
+                                    (e) => PromotionItem(
+                                      promotionLabel: e.name ?? '',
+                                      promotionValue: e.amountDisplay ?? '',
+                                    ),
+                                  )
+                                  .toList() ??
+                              [],
+                          shippingHandling: context
+                              .watch<OrderDetailsCubit>()
+                              .shippingHandlingValue,
+                          shippingHandlingTitle: context
+                              .watch<OrderDetailsCubit>()
+                              .shippingHandlingTitle,
+                          subtotal:
+                              context.watch<OrderDetailsCubit>().subTotalValue,
+                          subtotalTitle:
+                              context.watch<OrderDetailsCubit>().subTotalTitle,
+                          tax: context.watch<OrderDetailsCubit>().taxValue,
+                          taxTitle: context.watch<OrderDetailsCubit>().taxTitle,
+                          total: context.watch<OrderDetailsCubit>().totalValue,
+                          totalTitle:
+                              context.watch<OrderDetailsCubit>().totalTitle,
+                          itemCount: state.order.orderLines?.length,
+                        ),
+                        OrderProductsSectionWidget(
+                          orderLines: state.order.orderLines ?? [],
+                        ),
+                      ],
+                    ),
                   ),
-                  OrderProductsSectionWidget(
-                    orderLines: state.order.orderLines ?? [],
+                ),
+                if (state.isReorderViewVisible)
+                  OrderBottomSectionWidget(
+                    actions: [
+                      PrimaryButton(
+                        text: LocalizationConstants.reorder,
+                        onPressed: () {},
+                      ),
+                    ],
                   ),
-                ],
-              ),
+              ],
             );
           }
         },

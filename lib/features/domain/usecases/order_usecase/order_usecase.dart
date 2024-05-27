@@ -88,13 +88,36 @@ class OrderUsecase extends BaseUseCase {
   }
 
   Future<OrderEntity?> loadOrder(String orderNumber) async {
-    final result =
-        await commerceAPIServiceProvider.getOrderService().getOrder(orderNumber);
+    final result = await commerceAPIServiceProvider
+        .getOrderService()
+        .getOrder(orderNumber);
     switch (result) {
       case Success(value: final value):
         return value != null ? OrderEntityMapper.toEntity(value) : null;
       case Failure():
         return null;
     }
+  }
+
+  Future<bool> checkReorder({
+    OrderSettingsEntity? orderSettings,
+    OrderEntity? order,
+  }) async {
+    var hasReorder =
+        await coreServiceProvider.getAppConfigurationService().hasCheckout();
+
+    if (orderSettings != null) {
+      hasReorder &= (orderSettings.canReorderItems == true) &&
+          (order?.canAddToCart == true);
+    } else {
+      hasReorder &= (order?.canAddToCart == true);
+    }
+
+    /// TODO - check VMI location as well
+    // if (vmiLocation != null) {
+    //   hasReorder = false;
+    // }
+
+    return hasReorder;
   }
 }
