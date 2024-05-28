@@ -10,6 +10,19 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class QuickOrderUseCase extends BaseUseCase {
   QuickOrderUseCase() : super();
 
+  Future<void> createAlternateCart() async {
+    final vmiLocationId = coreServiceProvider.getVmiService().currentVmiLocation?.id ?? '';
+    final addCartModel = AddCartModel(
+      vmiLocationId: vmiLocationId,
+    );
+
+    await commerceAPIServiceProvider.getCartService().createAlternateCart(addCartModel);
+  }
+
+  Future<void> removeAlternateCart() async {
+    await commerceAPIServiceProvider.getClientService().removeAlternateCartCookie();
+  }
+
   Future<Result<ProductEntity, ErrorResponse>> getProduct(String productId, AutocompleteProduct product) async {
     var parameters = ProductQueryParameters(
       // expand: "pricing,brand,styledproducts",
