@@ -122,6 +122,14 @@ class BaseActionItemWidget extends StatelessWidget {
         return () {
           AppRoute.quickOrder.navigateBackStack(context);
         };
+      case ActionType.createOrder:
+        return () {
+          AppRoute.createOrder.navigateBackStack(context);
+        };
+      case ActionType.countInventory:
+        return () {
+          AppRoute.countOrder.navigateBackStack(context);
+        };
       case ActionType.lists:
         return () {
           AppRoute.wishlist.navigateBackStack(context);

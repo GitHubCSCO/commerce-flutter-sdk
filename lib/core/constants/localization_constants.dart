@@ -195,7 +195,7 @@ class LocalizationConstants {
   static const reorder = "Reorder";
   static const promo = "Promo {0}";
   static const shipments = "SHIPMENTS";
-  static const orderSummary = "ORDER SUMMARY";
+  static const orderSummary = "Order Summary";
   static const productItems = "PRODUCTS ({0} ITEMS)";
   static const trackShipment = "Track Shipment";
   static const requestPickUpDate = "Requested Pick Up Date";
@@ -426,7 +426,7 @@ class LocalizationConstants {
   static const emailAddress = "Email Address";
   static const promoName = "Promo {0}";
   static const creditCardAddress = "Credit Card Address";
-  static const orderSummaryItems = "Order Summary ({0} Items)";
+  static const orderSummaryItems = "Order Summary (%s Items)";
   static const cardNumber = "Card Number";
   static const uPS = "UPS";
   static const nextDayAir = "Next Day Air";
@@ -678,6 +678,11 @@ class LocalizationConstants {
   static const manufactureSign = "Manufacture #";
   static const binNote = "Bin Note";
   static const binSign = "Bin #";
+  static const maxSign = "Max #";
+  static const minSign = "Min #";
+  static const dateSign = "Date #";
+  static const countQTYSign = "Count QTY:";
+  static const orderQTYSign = "Order QTY:";
   static const enterBinNote = "Enter Bin Note";
   static const qTY = "QTY";
   static const addToOrder = "Add To Order";

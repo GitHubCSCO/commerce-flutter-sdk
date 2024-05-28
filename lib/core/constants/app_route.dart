@@ -21,6 +21,9 @@ class RouteNames {
   static const String biometricLogin = 'biometricLogin';
   static const String orderHistory = 'orderHistory';
   static const String quickOrder = 'quickOrder';
+  static const String createOrder = 'createOrder';
+  static const String countOrder = 'countOrder';
+  static const String countInventory = 'countInventory';
   static const String barcodeSearch = 'barcodeSearch';
   static const String wishlists = 'wishlists';
   static const String wishlistsDetails = 'wishlistsDetails';
@@ -28,6 +31,7 @@ class RouteNames {
   static const String wishListCreate = 'wishListCreate';
   static const String addToWishList = 'addToWishList';
   static const String forgotPassword = 'forgotPassword';
+  static const String orderDetails = 'orderDetails';
   static const String locationSearch = 'locationSearch';
 }
 
@@ -53,6 +57,9 @@ class RoutePaths {
   static const String orderHistory =
       '/${RoutePaths.account}/${RouteNames.orderHistory}';
   static const String quickOrder = '/${RouteNames.quickOrder}';
+  static const String createOrder = '/${RouteNames.createOrder}';
+  static const String countOrder = '/${RouteNames.countOrder}';
+  static const String countInventory = '/${RouteNames.countInventory}';
   static const String barcodeSearch = '/${RouteNames.barcodeSearch}';
   static const String wishlists =
       '${RoutePaths.account}/${RouteNames.wishlists}';
@@ -63,6 +70,7 @@ class RoutePaths {
   static const String wishListCreate = '/${RouteNames.wishListCreate}';
   static const String addToWishList = '/${RouteNames.addToWishList}';
   static const String forgotPassword = '/${RouteNames.forgotPassword}';
+  static const String orderDetails = '${RoutePaths.orderHistory}/:orderNumber';
 }
 
 enum AppRoute {
@@ -88,6 +96,9 @@ enum AppRoute {
   orderHistory(
       name: RouteNames.orderHistory, fullPath: RoutePaths.orderHistory),
   quickOrder(name: RouteNames.quickOrder, fullPath: RoutePaths.quickOrder),
+  createOrder(name: RouteNames.createOrder, fullPath: RoutePaths.createOrder),
+  countOrder(name: RouteNames.countOrder, fullPath: RoutePaths.countOrder),
+  countInventory(name: RouteNames.countInventory, fullPath: RoutePaths.countInventory),
   barcodeSearch(
       name: RouteNames.barcodeSearch, fullPath: RoutePaths.barcodeSearch),
   wishlist(name: RouteNames.wishlists, fullPath: RoutePaths.wishlists),
@@ -99,8 +110,8 @@ enum AppRoute {
       name: RouteNames.wishListCreate, fullPath: RoutePaths.wishListCreate),
   addToWishList(
       name: RouteNames.addToWishList, fullPath: RoutePaths.addToWishList),
-  forgotPassword(
-      name: RouteNames.forgotPassword, fullPath: RoutePaths.forgotPassword),
+  forgotPassword(name: RouteNames.forgotPassword, fullPath: RoutePaths.forgotPassword),
+  orderDetails(name: RouteNames.orderDetails, fullPath: RoutePaths.orderDetails),
   locationSearch(
       name: RouteNames.locationSearch, fullPath: RoutePaths.locationSearch);
 

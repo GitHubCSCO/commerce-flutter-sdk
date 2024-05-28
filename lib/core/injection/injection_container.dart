@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/config/route_config.dart';
+import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/domain/service/app_configuration_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/biometric_authentication_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/commerce_api_service_provider.dart';
@@ -43,8 +44,10 @@ import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_us
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/warehouse_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/previous_orders_usecase/previous_orders_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/count_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/order_pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/quick_order_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/remote_config/remote_config_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_cms_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/add_to_cart_usecase.dart';
@@ -70,6 +73,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/auto_complete/quick_order_auto_complete_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/remote_config/remote_config_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
@@ -86,6 +90,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/expansion_panel/expansion_panel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/count_inventory/count_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/date_selection/date_selection_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
@@ -94,6 +99,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/login/forgot_pa
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/order_details/order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders_cubit/previous_orders_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
@@ -182,6 +188,9 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => OrderHistoryCubit(orderUsecase: sl()))
     ..registerFactory(() => OrderUsecase())
 
+    //order details
+    ..registerFactory(() => OrderDetailsCubit(orderUsercase: sl()))
+
     //Pull to refresh
     ..registerFactory(() => PullToRefreshBloc())
 
@@ -209,6 +218,10 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => AccountUseCase())
     ..registerFactory(() => AccountHeaderCubit(accountUseCase: sl()))
 
+    //account
+    ..registerFactory(() => RemoteConfigCubit(remoteConfigUsecase: sl()))
+    ..registerFactory(() => RemoteConfigUsecase())
+
     //cart
     ..registerFactory(() => CartPageBloc(cartUseCase: sl()))
     ..registerFactory(() => CartUseCase())
@@ -228,12 +241,16 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ReviewOrderCubit())
 
     //quickOrder
-    ..registerFactory(() => OrderListBloc(quickOrderUseCase: sl()))
+    ..registerFactory(() => OrderListBloc(quickOrderUseCase: sl(), scanningMode: ScanningMode.quick))
     ..registerFactory(() => QuickOrderUseCase())
-    ..registerFactory(() => QuickOrderAutoCompleteBloc(searchUseCase: sl()))
+    ..registerFactory(() => QuickOrderAutoCompleteBloc(searchUseCase: sl(), scanningMode: ScanningMode.quick))
     ..registerFactory(
         () => OrderItemPricingInventoryCubit(pricingInventoryUseCase: sl()))
     ..registerFactory(() => OrderPricingInventoryUseCase())
+
+    //countInventory
+    ..registerFactory(() => CountInventoryCubit(countInventoryUseCase: sl()))
+    ..registerFactory(() => CountInventoryUseCase())
 
     //barcode
     ..registerFactory(() => BarcodeScanBloc())

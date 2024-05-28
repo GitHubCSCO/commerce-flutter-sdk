@@ -2,9 +2,10 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:flutter/material.dart';
 
-class CartContentProductImageWidget extends StatelessWidget {
+class OrderProductImageWidget extends StatelessWidget {
   final String imagePath;
-  const CartContentProductImageWidget({
+
+  const OrderProductImageWidget({
     super.key,
     required this.imagePath,
   });

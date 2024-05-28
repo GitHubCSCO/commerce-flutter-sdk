@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:commerce_flutter_app/core/config/test_config_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
@@ -11,6 +10,7 @@ import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entit
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/remote_config/remote_config_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
@@ -18,7 +18,7 @@ import 'package:commerce_flutter_app/features/presentation/components/style.dart
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/biometric_auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
-import 'package:flutter/foundation.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -32,6 +32,12 @@ class LoginScreen extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => sl<LoginCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => sl<SettingsDomainCubit>()..fetchDomain(),
+        ),
+        BlocProvider(
+          create: (context) => sl<RemoteConfigCubit>(),
         ),
         BlocProvider(
           create: (context) =>
@@ -67,10 +73,13 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    if (kDebugMode) {
-      _usernameController.text = TestConfigConstants.userName;
-      _passwordController.text = TestConfigConstants.password;
-    }
+  }
+
+  void _fillCredentials(String? username, String? password) {
+    setState(() {
+      _usernameController.text = username ?? "";
+      _passwordController.text = password ?? "";
+    });
   }
 
   @override
@@ -121,6 +130,37 @@ class _LoginPageState extends State<LoginPage> {
                   height: 100,
                 ),
                 const SizedBox(height: 50),
+                BlocListener<SettingsDomainCubit, SettingsDomainState>(
+                  listener: (context, state) {
+                    if(state is SettingsDomainLoaded){
+                      final remoteConfigCubit = context.read<RemoteConfigCubit>();
+                      remoteConfigCubit.fetchDebugCredential(state.domain);
+                    }
+                  },
+                child: BlocBuilder<RemoteConfigCubit, RemoteConfigState>(
+                  builder: (context, state) {
+                    if (state is RemoteConfigDebugCredentialsLoaded) {
+                      if (state.creds?.isNotEmpty == true) {
+                        return DropdownButton<Map<String, String>>(
+                          hint: const Text('Select an item'),
+                          items: state.creds?.map((item) {
+                            return DropdownMenuItem<Map<String, String>>(
+                              value: item,
+                              child: Text(item['username']!),
+                            );
+                          }).toList(),
+                          onChanged: (newValue) {
+                            setState(() {
+                              _fillCredentials(newValue?['username'], newValue?['password']);
+                            });
+                          },
+                        );
+                      }
+                    }
+                    return Container();
+                  },
+                 ),
+                ),  
                 Input(
                   label: LocalizationConstants.username,
                   hintText: LocalizationConstants.enterUsername,

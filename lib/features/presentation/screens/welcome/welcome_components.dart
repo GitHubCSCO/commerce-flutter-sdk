@@ -52,24 +52,19 @@ class WelcomeCard extends StatelessWidget {
   const WelcomeCard({
     super.key,
     this.child,
-    this.constraints = WelcomeStyle.welcomeFirstPageCardConstraints,
   });
 
   final Widget? child;
-  final BoxConstraints constraints;
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: constraints,
-      child: Card(
-        shape: WelcomeStyle.welcomeCardShape,
-        elevation: 0,
-        color: WelcomeStyle.welcomeCardColor,
-        child: Padding(
-          padding: WelcomeStyle.welcomeCardPadding,
-          child: child,
-        ),
+    return Card(
+      shape: WelcomeStyle.welcomeCardShape,
+      elevation: 0,
+      color: WelcomeStyle.welcomeCardColor,
+      child: Padding(
+        padding: WelcomeStyle.welcomeCardPadding,
+        child: child,
       ),
     );
   }

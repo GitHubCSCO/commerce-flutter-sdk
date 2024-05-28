@@ -7,7 +7,6 @@ import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/date_picker_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -44,7 +43,9 @@ class BillingShippingWidget extends StatelessWidget {
         int selectedCarrierIndex = 0;
         int selectedServiceIndex = 0;
 
-        for(int i = 0; i < (billingShippingEntity.carriers?.length ?? 0); i++) {
+        for (int i = 0;
+            i < (billingShippingEntity.carriers?.length ?? 0);
+            i++) {
           if (billingShippingEntity.selectedCarrier != null &&
               billingShippingEntity.selectedCarrier!.id! ==
                   billingShippingEntity.carriers![i].id!) {
@@ -52,10 +53,16 @@ class BillingShippingWidget extends StatelessWidget {
           }
         }
 
-        for(int i = 0; i < (billingShippingEntity.carriers?[selectedCarrierIndex].shipVias?.length ?? 0); i++) {
+        for (int i = 0;
+            i <
+                (billingShippingEntity
+                        .carriers?[selectedCarrierIndex].shipVias?.length ??
+                    0);
+            i++) {
           if (billingShippingEntity.selectedService != null &&
               billingShippingEntity.selectedService!.id! ==
-                  billingShippingEntity.carriers?[selectedCarrierIndex].shipVias?[i].id!) {
+                  billingShippingEntity
+                      .carriers?[selectedCarrierIndex].shipVias?[i].id!) {
             selectedServiceIndex = i;
           }
         }
@@ -76,102 +83,36 @@ class BillingShippingWidget extends StatelessWidget {
               days: billingShippingEntity.cartSettings!.maximumDeliveryPeriod!);
           maximumDate = DateTime.now().add(duration);
         }
-        list.add(_buildRequestDeliveryDate(maximumDate, billingShippingEntity.requestDeliveryDate));
+        list.add(_buildRequestDeliveryDate(
+            maximumDate, billingShippingEntity.requestDeliveryDate));
       }
     } else {
       list.add(_buildPickUpAddress());
-      list.add(_buildRequestDeliveryDate(null, billingShippingEntity.requestDeliveryDate));
+      list.add(_buildRequestDeliveryDate(
+          null, billingShippingEntity.requestDeliveryDate));
     }
 
     return list;
   }
 
-  Widget _buildSeparator() {
-    return const Divider(
-      thickness: 1,
-      color: Colors.grey,
-    );
-  }
-
   Widget _buildBillingAddress() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 12),
-        Text(
-          LocalizationConstants.billingAddress,
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.subtitle,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          billingShippingEntity.billTo?.companyName ?? '',
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
-        ),
-        Text(
-          billingShippingEntity.billTo?.fullAddress ?? '',
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
-        ),
-        Text(
-          billingShippingEntity.billTo?.country?.name ?? '',
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
-        ),
-        const SizedBox(height: 16),
-        Text(
-          billingShippingEntity.billTo?.email ?? '',
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
-        ),
-        Text(
-          billingShippingEntity.billTo?.phone ?? '',
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
-        ),
-        const SizedBox(height: 12),
-        _buildSeparator()
-      ],
+    return BillingAddressWidget(
+      companyName: billingShippingEntity.billTo?.companyName,
+      fullAddress: billingShippingEntity.billTo?.fullAddress,
+      countryName: billingShippingEntity.billTo?.country?.name,
+      email: billingShippingEntity.billTo?.email,
+      phone: billingShippingEntity.billTo?.phone,
+      buildSeperator: true,
     );
   }
 
   Widget _buildShippingAddress() {
-    return Visibility(
+    return ShippingAddressWidget(
       visible: billingShippingEntity.shippingMethod == ShippingOption.ship,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 12),
-          Text(
-            LocalizationConstants.shippingAddress,
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.subtitle,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            billingShippingEntity.shipTo?.companyName ?? '',
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
-          ),
-          Text(
-            billingShippingEntity.shipTo?.fullAddress ?? '',
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
-          ),
-          Text(
-            billingShippingEntity.shipTo?.country?.name ?? '',
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
-          ),
-          const SizedBox(height: 12),
-          _buildSeparator()
-        ],
-      ),
+      companyName: billingShippingEntity.shipTo?.companyName,
+      fullAddress: billingShippingEntity.shipTo?.fullAddress,
+      countryName: billingShippingEntity.shipTo?.country?.name,
+      buildSeperator: true,
     );
   }
 
@@ -183,41 +124,12 @@ class BillingShippingWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 12),
-              Text(
-                LocalizationConstants.pickUpLocation,
-                textAlign: TextAlign.start,
-                style: OptiTextStyles.subtitle,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                billingShippingEntity.warehouse?.description ?? '',
-                textAlign: TextAlign.start,
-                style: OptiTextStyles.subtitle,
-              ),
-              Text(
-                billingShippingEntity.warehouse?.wareHouseAddress() ?? '',
-                textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
-              ),
-              Text(
-                billingShippingEntity.warehouse?.wareHouseCity() ?? '',
-                textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
-              ),
-              Text(
-                billingShippingEntity.warehouse?.phone ?? '',
-                textAlign: TextAlign.start,
-                style: OptiTextStyles.body,
-              ),
-              const SizedBox(height: 12),
-              _buildSeparator()
-            ],
+          PickupLocationWidget(
+            description: billingShippingEntity.warehouse?.description,
+            address: billingShippingEntity.warehouse?.wareHouseAddress(),
+            city: billingShippingEntity.warehouse?.wareHouseCity(),
+            phone: billingShippingEntity.warehouse?.phone,
+            buildSeperator: true,
           ),
           const Icon(
             Icons.arrow_forward_ios,
@@ -239,7 +151,6 @@ class BillingShippingWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 12),
         Text(
           LocalizationConstants.shippingMethod,
           textAlign: TextAlign.center,
@@ -259,16 +170,20 @@ class BillingShippingWidget extends StatelessWidget {
             ),
             Expanded(
               flex: 2,
-                child: Row(
-                  children: [
-                    Expanded(child: ListPickerWidget(items: carriers, selectedIndex: selectedCarrierIndex, callback: _onCarrierSelect)),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.grey,
-                      size: 16,
-                    ),
-                  ],
-                )
+              child: Row(
+                children: [
+                  Expanded(
+                      child: ListPickerWidget(
+                          items: carriers,
+                          selectedIndex: selectedCarrierIndex,
+                          callback: _onCarrierSelect)),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.grey,
+                    size: 16,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -284,17 +199,21 @@ class BillingShippingWidget extends StatelessWidget {
               ),
             ),
             Expanded(
-                flex: 2,
-                child: Row(
-                  children: [
-                    Expanded(child: ListPickerWidget(items: services, selectedIndex: selectedServiceIndex, callback: _onServiceSelect)),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.grey,
-                      size: 16,
-                    ),
-                  ],
-                )
+              flex: 2,
+              child: Row(
+                children: [
+                  Expanded(
+                      child: ListPickerWidget(
+                          items: services,
+                          selectedIndex: selectedServiceIndex,
+                          callback: _onServiceSelect)),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.grey,
+                    size: 16,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -327,17 +246,21 @@ class BillingShippingWidget extends StatelessWidget {
               ),
             ),
             Expanded(
-                flex: 2,
-                child: Row(
-                  children: [
-                    Expanded(child: DatePickerWidget(maxDate: maxDate, selectedDateTime: selectedDate, callback: _onSelectDate)),
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.grey,
-                      size: 16,
-                    ),
-                  ],
-                )
+              flex: 2,
+              child: Row(
+                children: [
+                  Expanded(
+                      child: DatePickerWidget(
+                          maxDate: maxDate,
+                          selectedDateTime: selectedDate,
+                          callback: _onSelectDate)),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.grey,
+                    size: 16,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -365,5 +288,207 @@ class BillingShippingWidget extends StatelessWidget {
     context.read<CheckoutBloc>().add(RequestDeliveryDateEvent(dateTime));
     context.read<ReviewOrderCubit>().onOrderConfigChange();
   }
+}
 
+Widget _buildSeparator() {
+  return const Divider(
+    thickness: 1,
+    color: Colors.grey,
+  );
+}
+
+class ShippingAddressWidget extends StatelessWidget {
+  final bool visible;
+  final bool buildSeperator;
+  final String? companyName;
+  final String? fullAddress;
+  final String? countryName;
+
+  const ShippingAddressWidget({
+    super.key,
+    this.visible = true,
+    this.buildSeperator = false,
+    this.companyName,
+    this.fullAddress,
+    this.countryName,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      visible: visible,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            LocalizationConstants.shippingAddress,
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.subtitle,
+          ),
+          const SizedBox(height: 8),
+          if (!companyName.isNullOrEmpty)
+            Text(
+              companyName ?? '',
+              textAlign: TextAlign.start,
+              style: OptiTextStyles.body,
+            ),
+          if (!fullAddress.isNullOrEmpty)
+            Text(
+              fullAddress ?? '',
+              textAlign: TextAlign.start,
+              style: OptiTextStyles.body,
+            ),
+          if (!countryName.isNullOrEmpty)
+            Text(
+              countryName ?? '',
+              textAlign: TextAlign.start,
+              style: OptiTextStyles.body,
+            ),
+          if (buildSeperator) ...[
+            const SizedBox(height: 12),
+            _buildSeparator(),
+            const SizedBox(height: 12),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class BillingAddressWidget extends StatelessWidget {
+  final String? companyName;
+  final String? fullAddress;
+  final String? countryName;
+  final String? email;
+  final String? phone;
+  final bool buildSeperator;
+
+  const BillingAddressWidget({
+    super.key,
+    this.companyName,
+    this.fullAddress,
+    this.countryName,
+    this.email,
+    this.phone,
+    this.buildSeperator = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          LocalizationConstants.billingAddress,
+          textAlign: TextAlign.start,
+          style: OptiTextStyles.subtitle,
+        ),
+        const SizedBox(height: 8),
+        if (!companyName.isNullOrEmpty)
+          Text(
+            companyName ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
+        if (!fullAddress.isNullOrEmpty)
+          Text(
+            fullAddress ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
+        if (!countryName.isNullOrEmpty)
+          Text(
+            countryName ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
+        if (!email.isNullOrEmpty || !phone.isNullOrEmpty) ...[
+          const SizedBox(height: 16),
+          if (!email.isNullOrEmpty)
+            Text(
+              email ?? '',
+              textAlign: TextAlign.start,
+              style: OptiTextStyles.body,
+            ),
+          if (!phone.isNullOrEmpty)
+            Text(
+              phone ?? '',
+              textAlign: TextAlign.start,
+              style: OptiTextStyles.body,
+            ),
+        ],
+        if (buildSeperator) ...[
+          const SizedBox(height: 12),
+          _buildSeparator(),
+          const SizedBox(height: 12),
+        ],
+      ],
+    );
+  }
+}
+
+class PickupLocationWidget extends StatelessWidget {
+  final bool buildSeperator;
+  final String? description;
+  final String? address;
+  final String? city;
+  final String? phone;
+  const PickupLocationWidget({
+    super.key,
+    this.buildSeperator = false,
+    this.description,
+    this.address,
+    this.city,
+    this.phone,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          LocalizationConstants.pickUpLocation,
+          textAlign: TextAlign.start,
+          style: OptiTextStyles.subtitle,
+        ),
+        const SizedBox(height: 8),
+        if (!description.isNullOrEmpty)
+          Text(
+            description ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.subtitle,
+          ),
+        if (!address.isNullOrEmpty)
+          Text(
+            address ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
+        if (!city.isNullOrEmpty)
+          Text(
+            city ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
+        if (!phone.isNullOrEmpty)
+          Text(
+            phone ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
+        if (buildSeperator) ...[
+          const SizedBox(height: 12),
+          _buildSeparator(),
+          const SizedBox(height: 12),
+        ],
+      ],
+    );
+  }
 }
