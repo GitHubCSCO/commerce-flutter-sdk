@@ -240,3 +240,40 @@ void showPleaseWait(BuildContext context) {
     ),
   );
 }
+
+void confirmDialog({
+  required BuildContext context,
+  String? title,
+  String? message,
+  required void Function() onConfirm,
+  String confirmText = LocalizationConstants.oK,
+  String cancelText = LocalizationConstants.cancel,
+  bool highlightConfirm = false,
+}) {
+  displayDialogWidget(
+    context: context,
+    title: title,
+    message: message,
+    actions: [
+      DialogPlainButton(
+        onPressed: () => Navigator.of(context).pop(),
+        child: Text(cancelText),
+      ),
+      highlightConfirm
+          ? DialogHighlightButton(
+              onPressed: () {
+                onConfirm();
+                Navigator.of(context).pop();
+              },
+              child: Text(confirmText),
+            )
+          : DialogPlainButton(
+              onPressed: () {
+                onConfirm();
+                Navigator.of(context).pop();
+              },
+              child: Text(confirmText),
+            ),
+    ],
+  );
+}
