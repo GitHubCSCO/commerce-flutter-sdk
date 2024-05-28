@@ -52,20 +52,13 @@ class VMICurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                                   selectedLocation: locationData.latLong!));
                         },
                         child: CurrentLocationWidgetItem(
-                            locationData: locationData)))
+                            locationData: locationData,
+                            isVMILocaitonfinder: false)))
               ],
             ),
           ),
         );
       },
     );
-  }
-
-  Future<void> _onDirectionsClick(double longitude, double latitude) async {
-    await launchMap(latitude, longitude);
-  }
-
-  Future<void> _onChangeLocationClick(BuildContext context) async {
-    AppRoute.locationSearch.navigateBackStack(context);
   }
 }

@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/location_search/
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_event.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_state.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_location_screen.dart';
@@ -62,6 +63,9 @@ class LocationSearchPage extends StatelessWidget {
                       onPressed: () {
                         textEditingController.clear();
                         context.closeKeyboard();
+                        context
+                            .read<LocationSearchBloc>()
+                            .add(LocationSearchInitialEvent());
                       },
                     ),
                     onTapOutside: (p0) => context.closeKeyboard(),
@@ -71,10 +75,18 @@ class LocationSearchPage extends StatelessWidget {
                         context
                             .read<LocationSearchBloc>()
                             .add(LocationSearchFocusEvent());
-                      } else {}
+                      } else {
+                        context
+                            .read<LocationSearchBloc>()
+                            .add(LocationSearchInitialEvent());
+                      }
                     },
                     onChanged: (String searchQuery) {},
-                    onSubmitted: (String query) {},
+                    onSubmitted: (String query) {
+                      context.read<LocationSearchBloc>().add(
+                          LocationSearchLoadEvent(
+                              searchQuery: query, pageType: ""));
+                    },
                     controller: textEditingController,
                   ),
                 ),
@@ -86,11 +98,17 @@ class LocationSearchPage extends StatelessWidget {
             listeners: [
               BlocListener<LocationSearchBloc, LoactionSearchState>(
                 listener: (context, state) {
-                  if (state is LocationSearchFocusState) {
-                    // _showSearchResults = true;
+                  if (state is LocationSearchLoadedState) {
+                    textEditingController.text = state.searchedLocation?.formattedName ?? "";
+                    context.read<VMILocationBloc>().add(UpdateSearchPlaceEvent(
+                        seachPlace: state.searchedLocation));
+                    context
+                        .read<VMILocationBloc>()
+                        .add(LoadVMILocationsEvent());
                   }
                 },
               ),
+            
             ],
             child: BlocBuilder<LocationSearchBloc, LoactionSearchState>(
               builder: (_, state) {
@@ -99,11 +117,13 @@ class LocationSearchPage extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   );
                 } else if (state is LocationSearchInitialState) {
-                  return Container(child: VMILocationScreen());
+                  return VMILocationScreen();
                 } else if (state is LocationSearchLoadedState) {
-                  return Container(child: Text('LocationSearchLoadedState'));
+                  return VMILocationScreen();
                 } else if (state is LocationSearchFocusState) {
                   return Container(child: Text('LocationSearchFocusState'));
+                } else if (state is LocationSearchFailureState) {
+                  return Container(child: Text('LocationSearchFailureState'));
                 } else {
                   return Container();
                 }

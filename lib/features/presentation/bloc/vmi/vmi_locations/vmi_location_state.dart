@@ -18,3 +18,5 @@ class VMILocationLoadedState extends VMILocationState {
 }
 
 class VMILocationFailureState extends VMILocationState {}
+
+class VMISeachPlaceLocationUpdatedState extends VMILocationState {}

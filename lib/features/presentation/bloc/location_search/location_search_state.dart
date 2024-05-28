@@ -1,11 +1,19 @@
-abstract class LoactionSearchState{}
-class LocationSearchInitialState extends LoactionSearchState{}
+import 'package:commerce_flutter_app/core/models/gogole_place.dart';
+import 'package:commerce_flutter_app/core/models/lat_long.dart';
 
-class LocationSearchLoadingState extends LoactionSearchState{}
-class LocationSearchFocusState extends LoactionSearchState{}
+abstract class LoactionSearchState {}
 
+class LocationSearchInitialState extends LoactionSearchState {}
 
-class LocationSearchLoadedState extends LoactionSearchState{
+class LocationSearchLoadingState extends LoactionSearchState {}
+
+class LocationSearchFocusState extends LoactionSearchState {}
+
+class LocationSearchLoadedState extends LoactionSearchState {
   final String pageType;
-  LocationSearchLoadedState(this.pageType);
+  final GooglePlace? searchedLocation;
+  LocationSearchLoadedState(
+      {required this.searchedLocation, required this.pageType});
 }
+
+class LocationSearchFailureState extends LoactionSearchState {}

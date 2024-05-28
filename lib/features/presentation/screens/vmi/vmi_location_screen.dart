@@ -21,11 +21,17 @@ class VMILocationScreen extends StatelessWidget {
       listeners: [
         BlocListener<VMILocationBloc, VMILocationState>(
           listener: (_, state) {
+            var searchedLocation = context.read<VMILocationBloc>().seachPlace;
             if (state is VMILocationLoadedState) {
-              context
-                  .read<GMapCubit>()
-                  .updateMarkersFromVMI(state.currentLocationDataEntityList);
-              _scrollController.jumpTo(0); // Scroll to the top when new data is loaded
+              if (searchedLocation == null) {
+                context
+                    .read<GMapCubit>()
+                    .updateMarkersFromVMI(state.currentLocationDataEntityList);
+                _scrollController
+                    .jumpTo(0); // Scroll to the top when new data is loaded
+              } else {
+                context.read<GMapCubit>().onSeachPlaceMarked(searchedLocation);
+              }
             }
           },
         ),
@@ -46,7 +52,8 @@ class VMILocationScreen extends StatelessWidget {
                 MapWidget(),
                 Expanded(
                   child: ListView(
-                    controller: _scrollController, // Attach the ScrollController here
+                    controller:
+                        _scrollController, // Attach the ScrollController here
                     children: state.currentLocationDataEntityList
                         .map((e) => VMICurrentLocationWidgetItem(
                               locationData: e,

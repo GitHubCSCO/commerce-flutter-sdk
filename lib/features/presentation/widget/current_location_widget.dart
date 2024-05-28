@@ -33,6 +33,7 @@ class CurrentLocationWidget extends StatelessWidget {
             ),
             CurrentLocationWidgetItem(
               locationData: state.currentLocationDataEntity,
+              isVMILocaitonfinder: true,
             ),
           ],
         );

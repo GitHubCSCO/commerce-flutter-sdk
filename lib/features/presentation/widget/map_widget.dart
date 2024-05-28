@@ -20,15 +20,16 @@ class _MapWidgetState extends State<MapWidget> {
 
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
-  CameraPosition? _pendingCameraPosition;
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<GMapCubit, GMapState>(
       listener: (context, state) async {
-        if (state is GMapMarkesUpdated && state.markers.isNotEmpty) {
+
+
+        if (state is GMapMarkesUpdated) {
           final GoogleMapController controller = await _controller.future;
-          final firstMarker = state.markers.first;
+          final firstMarker = state.focusMarker;
           final CameraPosition newPosition = CameraPosition(
             target: firstMarker.position,
             zoom: 14.4746,
@@ -50,11 +51,18 @@ class _MapWidgetState extends State<MapWidget> {
               onMapCreated: (GoogleMapController controller) async {
                 _controller.complete(controller);
                 controller.setMapStyle('[]');
-                if (_pendingCameraPosition != null) {
-                  await controller.animateCamera(
-                    CameraUpdate.newCameraPosition(_pendingCameraPosition!),
+                if (state is GMapMarkesUpdated) {
+                  final firstMarker = state.focusMarker;
+                  final CameraPosition newPosition = CameraPosition(
+                    target: firstMarker.position,
+                    zoom: 14.4746,
                   );
-                  _pendingCameraPosition = null;
+
+                  if (newPosition != null) {
+                    await controller.animateCamera(
+                      CameraUpdate.newCameraPosition(newPosition),
+                    );
+                  }
                 }
               },
               markers: (state is GMapMarkesUpdated) ? state.markers : {},

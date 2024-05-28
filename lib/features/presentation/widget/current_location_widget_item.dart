@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 
 class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
   final CurrentLocationDataEntity locationData;
+  final bool isVMILocaitonfinder;
 
-  CurrentLocationWidgetItem({required this.locationData});
+  CurrentLocationWidgetItem(
+      {required this.locationData, required this.isVMILocaitonfinder});
 
   @override
   Widget build(BuildContext context) {
@@ -69,16 +71,18 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                       },
                     ),
                     const SizedBox(width: 16),
-                    InkWell(
-                      child: Text(
-                        LocalizationConstants.changeLocation,
-                        textAlign: TextAlign.center,
-                        style: OptiTextStyles.link,
-                      ),
-                      onTap: () {
-                        _onChangeLocationClick(context);
-                      },
-                    )
+                    Visibility(
+                        child: InkWell(
+                          child: Text(
+                            LocalizationConstants.changeLocation,
+                            textAlign: TextAlign.center,
+                            style: OptiTextStyles.link,
+                          ),
+                          onTap: () {
+                            _onChangeLocationClick(context);
+                          },
+                        ),
+                        visible: isVMILocaitonfinder)
                   ],
                 ),
               ),
