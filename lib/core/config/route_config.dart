@@ -14,6 +14,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/checkout/chec
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/forgot_password_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/order_details/order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/add_to_wish_list_screen.dart';
@@ -308,6 +309,17 @@ List<NavigationNode> _getNavigationRoot() {
       return ForgotPasswordScreen(accountType: accountType);
     },
     parent: null,
+  );
+
+  // path: /account/orderHistory/:orderNumber
+  final orderDetails = createNode(
+    name: AppRoute.orderDetails.name,
+    path: AppRoute.orderDetails.suffix,
+    builder: (context, state) {
+      final orderNumber = state.pathParameters['orderNumber'] ?? '';
+      return OrderDetailsScreen(orderNumber: orderNumber);
+    },
+    parent: orderHistory,
   );
 
   return [
