@@ -6,7 +6,10 @@ import 'package:commerce_flutter_app/features/domain/service/interfaces/content_
 import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/device_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/geo_location_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/location_search_history_service.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/search_history_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/vmi_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/search_history_service.dart';
 
 class CoreServiceProvider implements ICoreServiceProvider {
   @override
@@ -29,4 +32,11 @@ class CoreServiceProvider implements ICoreServiceProvider {
 
   @override
   getGeoLocationService() => sl<IGeoLocationService>();
+
+  @override
+  ILocationSearchHistoryService getLocationSearchHistoryService() =>
+      sl<ILocationSearchHistoryService>();
+
+  @override
+  ISearchHistoryService getSearchHistoryService() => sl<SearchHistoryService>();
 }

@@ -11,3 +11,5 @@ class LocationSearchLoadEvent extends LocationSearchEvent {
   final String searchQuery;
   LocationSearchLoadEvent({required this.pageType, required this.searchQuery});
 }
+
+class LocationSeachHistoryLoadEvent extends LocationSearchEvent {}

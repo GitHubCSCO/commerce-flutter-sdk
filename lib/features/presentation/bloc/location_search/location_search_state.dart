@@ -17,3 +17,8 @@ class LocationSearchLoadedState extends LoactionSearchState {
 }
 
 class LocationSearchFailureState extends LoactionSearchState {}
+
+class LocationSearchHistoryLoadedState extends LoactionSearchState {
+  final List<String> searchHistory;
+  LocationSearchHistoryLoadedState({required this.searchHistory});
+}

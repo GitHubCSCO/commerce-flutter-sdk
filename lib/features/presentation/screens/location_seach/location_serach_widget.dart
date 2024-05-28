@@ -8,7 +8,6 @@ import 'package:commerce_flutter_app/features/presentation/bloc/location_search/
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_state.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_location_screen.dart';
@@ -74,11 +73,11 @@ class LocationSearchPage extends StatelessWidget {
                       if (hasFocus) {
                         context
                             .read<LocationSearchBloc>()
-                            .add(LocationSearchFocusEvent());
+                            .add(LocationSeachHistoryLoadEvent());
                       } else {
-                        context
-                            .read<LocationSearchBloc>()
-                            .add(LocationSearchInitialEvent());
+                        // context
+                        //     .read<LocationSearchBloc>()
+                        //     .add(LocationSearchInitialEvent());
                       }
                     },
                     onChanged: (String searchQuery) {},
@@ -99,7 +98,8 @@ class LocationSearchPage extends StatelessWidget {
               BlocListener<LocationSearchBloc, LoactionSearchState>(
                 listener: (context, state) {
                   if (state is LocationSearchLoadedState) {
-                    textEditingController.text = state.searchedLocation?.formattedName ?? "";
+                    textEditingController.text =
+                        state.searchedLocation?.formattedName ?? "";
                     context.read<VMILocationBloc>().add(UpdateSearchPlaceEvent(
                         seachPlace: state.searchedLocation));
                     context
@@ -108,7 +108,6 @@ class LocationSearchPage extends StatelessWidget {
                   }
                 },
               ),
-            
             ],
             child: BlocBuilder<LocationSearchBloc, LoactionSearchState>(
               builder: (_, state) {
@@ -124,6 +123,26 @@ class LocationSearchPage extends StatelessWidget {
                   return Container(child: Text('LocationSearchFocusState'));
                 } else if (state is LocationSearchFailureState) {
                   return Container(child: Text('LocationSearchFailureState'));
+                } else if (state is LocationSearchHistoryLoadedState) {
+                  return (state.searchHistory.length == 0)
+                      ? Container(child: Text("No History Found"))
+                      : Container(
+                          child: ListView.builder(
+                          itemCount: state.searchHistory.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(state.searchHistory[index]),
+                              onTap: () {
+                                textEditingController.text =
+                                    state.searchHistory[index];
+                                context.read<LocationSearchBloc>().add(
+                                    LocationSearchLoadEvent(
+                                        searchQuery: state.searchHistory[index],
+                                        pageType: ""));
+                              },
+                            );
+                          },
+                        ));
                 } else {
                   return Container();
                 }

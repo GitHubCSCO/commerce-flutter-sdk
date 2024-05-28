@@ -18,6 +18,7 @@ class LocationSearchBloc
     on<LocationSearchFocusEvent>(_onLocationSearchFocusEvent);
     on<LocationSearchLoadEvent>(_onLocationSearchLoadEvent);
     on<LocationSearchInitialEvent>(_onLocationSearchInitialEvent);
+    on<LocationSeachHistoryLoadEvent>(_onLoadLocationSearchHistory);
   }
 
   Future<void> _onLocationSearchFocusEvent(
@@ -30,6 +31,7 @@ class LocationSearchBloc
     emit(LocationSearchLoadingState());
     var response =
         await _locationSearchUseCase.getSearchedLocation(event.searchQuery);
+    await _locationSearchUseCase.persistSearchQuery(event.searchQuery);
     if (response == null) {
       emit(LocationSearchFailureState());
       return;
@@ -44,5 +46,12 @@ class LocationSearchBloc
   Future<void> _onLocationSearchInitialEvent(LocationSearchInitialEvent event,
       Emitter<LoactionSearchState> emit) async {
     emit(LocationSearchInitialState());
+  }
+
+  Future<void> _onLoadLocationSearchHistory(LocationSeachHistoryLoadEvent event,
+      Emitter<LoactionSearchState> emit) async {
+    var response = await _locationSearchUseCase.loadSearchQueryHistory();
+
+    emit(LocationSearchHistoryLoadedState(searchHistory: response));
   }
 }

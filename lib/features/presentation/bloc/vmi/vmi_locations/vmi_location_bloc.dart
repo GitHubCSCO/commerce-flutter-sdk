@@ -82,6 +82,7 @@ class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
 
   Future<void> _onLocationSelectEvent(
       LocationSelectEvent event, Emitter<VMILocationState> emit) async {
+    seachPlace = null;
     var selectedItem = currentLocationDataEntityList.firstWhere(
       (location) => location.latLong == event.selectedLocation,
     );

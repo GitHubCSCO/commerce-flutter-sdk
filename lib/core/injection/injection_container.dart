@@ -12,8 +12,12 @@ import 'package:commerce_flutter_app/features/domain/service/interfaces/content_
 import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/device_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/geo_location_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/location_search_history_service.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/search_history_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/vmi_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/location_search_history_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/network_service.dart';
+import 'package:commerce_flutter_app/features/domain/service/search_history_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/vmi_service.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
@@ -342,13 +346,17 @@ Future<void> initInjectionContainer() async {
               cacheService: sl(),
               networkService: sl(),
             ))
+    ..registerLazySingleton<ISearchHistoryService>(
+        () => SearchHistoryService(commerceAPIServiceProvider: sl()))
+    ..registerLazySingleton<ILocationSearchHistoryService>(
+        () => LocationSearchHistoryService(commerceAPIServiceProvider: sl()))
     ..registerLazySingleton<IClientService>(() =>
         ClientService(localStorageService: sl(), secureStorageService: sl()))
     ..registerLazySingleton<ICacheService>(() => FakeCacheService())
     ..registerLazySingleton<INetworkService>(() => NetworkService())
     ..registerLazySingleton<ISecureStorageService>(() => SecureStorageService())
     ..registerLazySingleton<ILocalStorageService>(() => LocalStorageService())
-     ..registerLazySingleton<IGeoLocationService>(() => GeoLocationService())
+    ..registerLazySingleton<IGeoLocationService>(() => GeoLocationService())
     ..registerLazySingleton<ISettingsService>(() => SettingsService(
           cacheService: sl(),
           clientService: sl(),
