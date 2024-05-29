@@ -3,10 +3,12 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/mixins/map_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/current_location_data_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/location_search_type.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:location/location.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -114,12 +116,16 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
 
   Future<void> _onChangeLocationClick(BuildContext context) async {
     AppRoute.locationSearch.navigateBackStack(context,
-        extra: VMILocationSelectCallbackHelper(onSelectVMILocation: (location) {
-          context.read<CurrentLocationCubit>().onLocationSelectEvent(location);
-            context.read<CurrentLocationCubit>().onLoadLocationData();
+        extra: VMILocationSelectCallbackHelper(
+            onSelectVMILocation: (location) {
+              context
+                  .read<CurrentLocationCubit>()
+                  .onLocationSelectEvent(location);
+              context.read<CurrentLocationCubit>().onLoadLocationData();
 
-      // ignore: avoid_print
-      print("Location Selected: $location");
-    }));
+              // ignore: avoid_print
+              print("Location Selected: $location");
+            },
+            locationSearchType: LocationSearchType.vmi));
   }
 }

@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/current_location_data_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/location_search_type.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_state.dart';
@@ -17,9 +18,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class LocationSearchScreen extends StatelessWidget {
-  const LocationSearchScreen({super.key, this.onVMILocationUpdated});
-
+  final LocationSearchType locationSearchType;
   final void Function(CurrentLocationDataEntity)? onVMILocationUpdated;
+
+  const LocationSearchScreen(
+      {super.key, this.onVMILocationUpdated, required this.locationSearchType});
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +37,16 @@ class LocationSearchScreen extends StatelessWidget {
         ],
         child: LocationSearchPage(
           onVMILocationUpdated: onVMILocationUpdated,
+          locationSearchType: locationSearchType,
         ));
   }
 }
 
 class LocationSearchPage extends StatelessWidget {
   final void Function(CurrentLocationDataEntity)? onVMILocationUpdated;
-
-  LocationSearchPage({super.key, this.onVMILocationUpdated});
+  final LocationSearchType locationSearchType;
+  LocationSearchPage(
+      {super.key, this.onVMILocationUpdated, required this.locationSearchType});
   final textEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -49,7 +54,9 @@ class LocationSearchPage extends StatelessWidget {
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         backgroundColor: OptiAppColors.backgroundWhite,
-        title: const Text('VMI'),
+        title: (locationSearchType == LocationSearchType.locationFinder)
+            ? const Text('Location Finder')
+            : const Text('VMI'),
         centerTitle: false,
       ),
       body: Column(
@@ -125,19 +132,41 @@ class LocationSearchPage extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   );
                 } else if (state is LocationSearchInitialState) {
-                  return VMILocationScreen(
-                    onLocationSelected:
-                        (CurrentLocationDataEntity locationData) {
-                      onVMILocationUpdated!(locationData);
-                    },
-                  );
+                  switch (locationSearchType) {
+                    case LocationSearchType.vmi:
+                      {
+                        return VMILocationScreen(
+                          onLocationSelected:
+                              (CurrentLocationDataEntity locationData) {
+                            onVMILocationUpdated!(locationData);
+                          },
+                        );
+                      }
+                    case LocationSearchType.locationFinder:
+                      {
+                        return Container(
+                          child: Text('LocationSearchInitialState'),
+                        );
+                      }
+                  }
                 } else if (state is LocationSearchLoadedState) {
-                  return VMILocationScreen(
-                    onLocationSelected:
-                        (CurrentLocationDataEntity locationData) {
-                      onVMILocationUpdated!(locationData);
-                    },
-                  );
+                  switch (locationSearchType) {
+                    case LocationSearchType.vmi:
+                      {
+                        return VMILocationScreen(
+                          onLocationSelected:
+                              (CurrentLocationDataEntity locationData) {
+                            onVMILocationUpdated!(locationData);
+                          },
+                        );
+                      }
+                    case LocationSearchType.locationFinder:
+                      {
+                        return Container(
+                          child: Text('LocationSearchLoadedState'),
+                        );
+                      }
+                  }
                 } else if (state is LocationSearchFocusState) {
                   return Container(child: Text('LocationSearchFocusState'));
                 } else if (state is LocationSearchFailureState) {
@@ -145,23 +174,7 @@ class LocationSearchPage extends StatelessWidget {
                 } else if (state is LocationSearchHistoryLoadedState) {
                   return (state.searchHistory.length == 0)
                       ? Container(child: Text("No History Found"))
-                      : Container(
-                          child: ListView.builder(
-                          itemCount: state.searchHistory.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(state.searchHistory[index]),
-                              onTap: () {
-                                textEditingController.text =
-                                    state.searchHistory[index];
-                                context.read<LocationSearchBloc>().add(
-                                    LocationSearchLoadEvent(
-                                        searchQuery: state.searchHistory[index],
-                                        pageType: ""));
-                              },
-                            );
-                          },
-                        ));
+                      : buildSearchHistoryList(state);
                 } else {
                   return Container();
                 }
@@ -171,5 +184,22 @@ class LocationSearchPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Container buildSearchHistoryList(LocationSearchHistoryLoadedState state) {
+    return Container(
+        child: ListView.builder(
+      itemCount: state.searchHistory.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(state.searchHistory[index]),
+          onTap: () {
+            textEditingController.text = state.searchHistory[index];
+            context.read<LocationSearchBloc>().add(LocationSearchLoadEvent(
+                searchQuery: state.searchHistory[index], pageType: ""));
+          },
+        );
+      },
+    ));
   }
 }

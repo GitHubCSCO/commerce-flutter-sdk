@@ -274,6 +274,7 @@ List<NavigationNode> _getNavigationRoot() {
 
       return LocationSearchScreen(
         onVMILocationUpdated: onVMILocationUpdated,
+        locationSearchType: callbackHelper.locationSearchType,
       );
     },
     parent: account,
