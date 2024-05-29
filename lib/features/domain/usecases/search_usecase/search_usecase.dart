@@ -54,7 +54,12 @@ class SearchUseCase extends BaseUseCase {
     }
   }
 
-  Future<Result<GetProductCollectionResult, ErrorResponse>?> loadSearchProductsResults(String searchQuery, int currentPage) async {
+  Future<Result<GetProductCollectionResult, ErrorResponse>?>
+      loadSearchProductsResults(
+    String searchQuery,
+    int currentPage, {
+    SortOrderAttribute? selectedSortOrder,
+  }) async {
     var parameters = ProductsQueryParameters(
       query: searchQuery,
       page: currentPage,
@@ -66,8 +71,11 @@ class SearchUseCase extends BaseUseCase {
       // PreviouslyPurchasedProducts = this.PreviouslyPurchased,
       // StockedItemsOnly = this.SelectedStockedItems,
       expand: ["pricing", "facets", "brand"],
+      sort: selectedSortOrder?.value,
     );
-    var result = await commerceAPIServiceProvider.getProductService().getProducts(parameters);
+    var result = await commerceAPIServiceProvider
+        .getProductService()
+        .getProducts(parameters);
     switch (result) {
       case Success(value: final data):
         return Success(data);
