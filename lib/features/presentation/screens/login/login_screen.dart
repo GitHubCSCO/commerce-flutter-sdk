@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
+import 'package:commerce_flutter_app/core/extensions/firebase_options_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
@@ -19,6 +20,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -130,6 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 100,
                 ),
                 const SizedBox(height: 50),
+                if(sl<FirebaseOptions>().isValid())
                 BlocListener<SettingsDomainCubit, SettingsDomainState>(
                   listener: (context, state) {
                     if(state is SettingsDomainLoaded){
