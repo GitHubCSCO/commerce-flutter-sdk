@@ -3,15 +3,17 @@ import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class SearchUseCase extends BaseUseCase {
-
-  Future<Result<AutocompleteResult, ErrorResponse>?> loadAutocompleteResults(String searchQuery) async {
+  Future<Result<AutocompleteResult, ErrorResponse>?> loadAutocompleteResults(
+      String searchQuery) async {
     var parameters = AutocompleteQueryParameters(
-        query: searchQuery,
-        categoryEnabled: true,
-        brandEnabled: true,
-        productEnabled: true,
+      query: searchQuery,
+      categoryEnabled: true,
+      brandEnabled: true,
+      productEnabled: true,
     );
-    var result = await commerceAPIServiceProvider.getAutocompleteService().getAutocompleteResults(parameters);
+    var result = await commerceAPIServiceProvider
+        .getAutocompleteService()
+        .getAutocompleteResults(parameters);
     switch (result) {
       case Success(value: final data):
         return Success(data);
@@ -20,13 +22,17 @@ class SearchUseCase extends BaseUseCase {
     }
   }
 
-  Future<Result<AutocompleteResult, ErrorResponse>?> loadVmiAutocompleteResults(String searchQuery) async {
+  Future<Result<AutocompleteResult, ErrorResponse>?> loadVmiAutocompleteResults(
+      String searchQuery) async {
     var parameters = VmiBinQueryParameters(
-      vmiLocationId : coreServiceProvider.getVmiService().currentVmiLocation?.id ?? '',
-      filter : searchQuery,
-      expand : 'product',
+      vmiLocationId:
+          coreServiceProvider.getVmiService().currentVmiLocation?.id ?? '',
+      filter: searchQuery,
+      expand: 'product',
     );
-    var result = await commerceAPIServiceProvider.getVmiLocationsService().getVmiBins(parameters: parameters);
+    var result = await commerceAPIServiceProvider
+        .getVmiLocationsService()
+        .getVmiBins(parameters: parameters);
     switch (result) {
       case Success(value: final data):
         List<AutocompleteProduct> result = [];
