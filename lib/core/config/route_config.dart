@@ -4,6 +4,8 @@ import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart'
 import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_note_callback_helper.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
@@ -17,6 +19,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/login/forgot_
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_details/order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_location_note.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/add_to_wish_list_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_create_screen.dart';
@@ -185,7 +188,8 @@ List<NavigationNode> _getNavigationRoot() {
   final quickOrder = createNode(
     name: AppRoute.quickOrder.name,
     path: AppRoute.quickOrder.suffix,
-    builder: (context, state) => const QuickOrderScreen(scanningMode: ScanningMode.quick),
+    builder: (context, state) =>
+        const QuickOrderScreen(scanningMode: ScanningMode.quick),
     parent: null,
   );
 
@@ -193,7 +197,8 @@ List<NavigationNode> _getNavigationRoot() {
   final createOrder = createNode(
     name: AppRoute.createOrder.name,
     path: AppRoute.createOrder.suffix,
-    builder: (context, state) => const QuickOrderScreen(scanningMode: ScanningMode.create),
+    builder: (context, state) =>
+        const QuickOrderScreen(scanningMode: ScanningMode.create),
     parent: null,
   );
 
@@ -201,7 +206,8 @@ List<NavigationNode> _getNavigationRoot() {
   final countOrder = createNode(
     name: AppRoute.countOrder.name,
     path: AppRoute.countOrder.suffix,
-    builder: (context, state) => const QuickOrderScreen(scanningMode: ScanningMode.count),
+    builder: (context, state) =>
+        const QuickOrderScreen(scanningMode: ScanningMode.count),
     parent: null,
   );
 
@@ -224,6 +230,23 @@ List<NavigationNode> _getNavigationRoot() {
     parent: account,
   );
 
+  // path: /login
+  final vmiLocationNote = createSeparateRoute(
+    name: AppRoute.vmilocaitonote.name,
+    path: AppRoute.vmilocaitonote.suffix,
+    builder: (context, state) {
+      final callbackHelper = state.extra as VMILocationNoteCallbackHelper;
+
+      final onVMILocationNoteUpdated = callbackHelper.onUpdateVMILocationNote;
+
+      return VmiLocationNoteScreen(
+        onVMILocationNoteUpdated: onVMILocationNoteUpdated,
+      );
+    },
+    navigatorKey: _rootNavigator,
+    parent: null,
+  );
+
   // path: /barcodeSearch
   final barcodeSearch = createNode(
     name: AppRoute.barcodeSearch.name,
@@ -244,7 +267,15 @@ List<NavigationNode> _getNavigationRoot() {
   final locationSearch = createNode(
     name: AppRoute.locationSearch.name,
     path: AppRoute.locationSearch.suffix,
-    builder: (context, state) => const LocationSearchScreen(),
+    builder: (context, state) {
+      final callbackHelper = state.extra as VMILocationSelectCallbackHelper;
+
+      final onVMILocationUpdated = callbackHelper.onSelectVMILocation;
+
+      return LocationSearchScreen(
+        onVMILocationUpdated: onVMILocationUpdated,
+      );
+    },
     parent: account,
   );
   // path: /account/wishlist/:id
@@ -348,5 +379,6 @@ List<NavigationNode> _getNavigationRoot() {
     wishListCreate,
     addToWishList,
     forgotPassword,
+    vmiLocationNote
   ];
 }

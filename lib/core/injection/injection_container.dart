@@ -31,6 +31,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/c
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/payment_details/payment_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/curent_location_usecase/current_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/location_note_usecase/location_note_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/location_search_usecase/location_search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/forgot_password_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
@@ -53,6 +54,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/sea
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_location_note_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_main_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_details_usecase.dart';
@@ -95,6 +97,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/current_locatio
 import 'package:commerce_flutter_app/features/presentation/cubit/date_selection/date_selection_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/location_note/location_note_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/forgot_password/forgot_password_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
@@ -106,6 +109,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/product_carouse
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/vmi_location_note/vmi_location_note_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_add_to/wish_list_add_to_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_create/wish_list_create_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
@@ -154,9 +158,16 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => VMIMainUseCase())
 
     // vmi locations
-
     ..registerFactory(() => VMILocationBloc(vmiLocationUseCase: sl()))
     ..registerFactory(() => VMILocationUseCase())
+
+    //location note
+    ..registerFactory(() => LocationNoteCubit(locationNoteUsecase: sl()))
+    ..registerFactory(() => LocationNoteUsecase())
+
+    // vmi location note
+    ..registerFactory(() => VMILocationNoteCubit(vmilocationNoteUsecase: sl()))
+    ..registerFactory(() => VmiLocationNoteUsecase())
 
     // current location
     ..registerFactory(() => CurrentLocationCubit(currentLocationUseCase: sl()))
@@ -241,9 +252,11 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ReviewOrderCubit())
 
     //quickOrder
-    ..registerFactory(() => OrderListBloc(quickOrderUseCase: sl(), scanningMode: ScanningMode.quick))
+    ..registerFactory(() => OrderListBloc(
+        quickOrderUseCase: sl(), scanningMode: ScanningMode.quick))
     ..registerFactory(() => QuickOrderUseCase())
-    ..registerFactory(() => QuickOrderAutoCompleteBloc(searchUseCase: sl(), scanningMode: ScanningMode.quick))
+    ..registerFactory(() => QuickOrderAutoCompleteBloc(
+        searchUseCase: sl(), scanningMode: ScanningMode.quick))
     ..registerFactory(
         () => OrderItemPricingInventoryCubit(pricingInventoryUseCase: sl()))
     ..registerFactory(() => OrderPricingInventoryUseCase())

@@ -33,6 +33,7 @@ class RouteNames {
   static const String forgotPassword = 'forgotPassword';
   static const String orderDetails = 'orderDetails';
   static const String locationSearch = 'locationSearch';
+  static const String vmiLocationNote = 'vmiLocationNote';
 }
 
 class RoutePaths {
@@ -66,6 +67,7 @@ class RoutePaths {
   static const String locationSearch =
       '${RoutePaths.account}/${RouteNames.locationSearch}';
   static const String wishlistsDetails = '$wishlists/:id';
+  static const String vmiLocationNote = '/${RouteNames.vmiLocationNote}';
   static const String wishListInfo = '/${RouteNames.wishListInfo}';
   static const String wishListCreate = '/${RouteNames.wishListCreate}';
   static const String addToWishList = '/${RouteNames.addToWishList}';
@@ -98,7 +100,8 @@ enum AppRoute {
   quickOrder(name: RouteNames.quickOrder, fullPath: RoutePaths.quickOrder),
   createOrder(name: RouteNames.createOrder, fullPath: RoutePaths.createOrder),
   countOrder(name: RouteNames.countOrder, fullPath: RoutePaths.countOrder),
-  countInventory(name: RouteNames.countInventory, fullPath: RoutePaths.countInventory),
+  countInventory(
+      name: RouteNames.countInventory, fullPath: RoutePaths.countInventory),
   barcodeSearch(
       name: RouteNames.barcodeSearch, fullPath: RoutePaths.barcodeSearch),
   wishlist(name: RouteNames.wishlists, fullPath: RoutePaths.wishlists),
@@ -110,10 +113,14 @@ enum AppRoute {
       name: RouteNames.wishListCreate, fullPath: RoutePaths.wishListCreate),
   addToWishList(
       name: RouteNames.addToWishList, fullPath: RoutePaths.addToWishList),
-  forgotPassword(name: RouteNames.forgotPassword, fullPath: RoutePaths.forgotPassword),
-  orderDetails(name: RouteNames.orderDetails, fullPath: RoutePaths.orderDetails),
+  forgotPassword(
+      name: RouteNames.forgotPassword, fullPath: RoutePaths.forgotPassword),
+  orderDetails(
+      name: RouteNames.orderDetails, fullPath: RoutePaths.orderDetails),
   locationSearch(
-      name: RouteNames.locationSearch, fullPath: RoutePaths.locationSearch);
+      name: RouteNames.locationSearch, fullPath: RoutePaths.locationSearch),
+  vmilocaitonote(
+      name: RouteNames.vmiLocationNote, fullPath: RoutePaths.vmiLocationNote);
 
   const AppRoute({
     required this.name,

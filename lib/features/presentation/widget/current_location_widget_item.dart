@@ -3,7 +3,12 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/mixins/map_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/current_location_data_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
   final CurrentLocationDataEntity locationData;
@@ -54,7 +59,7 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                         style: OptiTextStyles.link,
                       ),
                       onTap: () {
-                        // _onHoursClick(context);
+                        _onmakeCall(locationData.thridLineValue ?? "");
                       },
                     ),
                     const SizedBox(width: 16),
@@ -93,11 +98,28 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
     );
   }
 
+  void _onmakeCall(String phoneNumber) async {
+    final Uri call = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    if (await canLaunchUrl(call)) {
+      await launchUrl(call);
+    }
+  }
+
   Future<void> _onDirectionsClick(double longitude, double latitude) async {
     await launchMap(latitude, longitude);
   }
 
   Future<void> _onChangeLocationClick(BuildContext context) async {
-    AppRoute.locationSearch.navigateBackStack(context);
+    AppRoute.locationSearch.navigateBackStack(context,
+        extra: VMILocationSelectCallbackHelper(onSelectVMILocation: (location) {
+          context.read<CurrentLocationCubit>().onLocationSelectEvent(location);
+            context.read<CurrentLocationCubit>().onLoadLocationData();
+
+      // ignore: avoid_print
+      print("Location Selected: $location");
+    }));
   }
 }

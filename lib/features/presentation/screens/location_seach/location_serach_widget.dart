@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/features/domain/entity/current_location_data_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_state.dart';
@@ -16,23 +17,31 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class LocationSearchScreen extends StatelessWidget {
-  const LocationSearchScreen({super.key});
+  const LocationSearchScreen({super.key, this.onVMILocationUpdated});
+
+  final void Function(CurrentLocationDataEntity)? onVMILocationUpdated;
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(providers: [
-      BlocProvider<LocationSearchBloc>(
-          create: (context) => sl<LocationSearchBloc>()),
-      BlocProvider<VMILocationBloc>(
-          create: (context) =>
-              sl<VMILocationBloc>()..add(LoadVMILocationsEvent())),
-      BlocProvider<GMapCubit>(create: (context) => sl<GMapCubit>())
-    ], child: LocationSearchPage());
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<LocationSearchBloc>(
+              create: (context) => sl<LocationSearchBloc>()),
+          BlocProvider<VMILocationBloc>(
+              create: (context) =>
+                  sl<VMILocationBloc>()..add(LoadVMILocationsEvent())),
+          BlocProvider<GMapCubit>(create: (context) => sl<GMapCubit>())
+        ],
+        child: LocationSearchPage(
+          onVMILocationUpdated: onVMILocationUpdated,
+        ));
   }
 }
 
 class LocationSearchPage extends StatelessWidget {
-  LocationSearchPage({super.key});
+  final void Function(CurrentLocationDataEntity)? onVMILocationUpdated;
+
+  LocationSearchPage({super.key, this.onVMILocationUpdated});
   final textEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -116,9 +125,19 @@ class LocationSearchPage extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   );
                 } else if (state is LocationSearchInitialState) {
-                  return VMILocationScreen();
+                  return VMILocationScreen(
+                    onLocationSelected:
+                        (CurrentLocationDataEntity locationData) {
+                      onVMILocationUpdated!(locationData);
+                    },
+                  );
                 } else if (state is LocationSearchLoadedState) {
-                  return VMILocationScreen();
+                  return VMILocationScreen(
+                    onLocationSelected:
+                        (CurrentLocationDataEntity locationData) {
+                      onVMILocationUpdated!(locationData);
+                    },
+                  );
                 } else if (state is LocationSearchFocusState) {
                   return Container(child: Text('LocationSearchFocusState'));
                 } else if (state is LocationSearchFailureState) {

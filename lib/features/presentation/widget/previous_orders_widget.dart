@@ -1,5 +1,9 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/previous_orders_widget_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders_cubit/previous_order_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders_cubit/previous_orders_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/order_history_list_item_widget.dart';
@@ -23,37 +27,53 @@ class PreviousOrdersWidget extends StatelessWidget {
           child: CircularProgressIndicator(),
         );
       } else if (state is PreviousOrdersLoadedState) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-              child: Text(
-                previousOrdersWidgetEntity.title ?? "",
-                style: OptiTextStyles.titleSmall,
+        return Container(
+          color: Colors.white,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                child: Text(
+                  previousOrdersWidgetEntity.title ?? "",
+                  style: OptiTextStyles.titleSmall,
+                ),
               ),
-            ),
-            Container(
-              height: state.previousOrdersDataEntity.orders.length * 100,
-              child: ListView.separated(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                physics: const ClampingScrollPhysics(),
-                itemCount: state.previousOrdersDataEntity.orders.length,
-                itemBuilder: (context, index) {
-                  return OrderHistoryListItem(
-                    orderEntity: state.previousOrdersDataEntity.orders[index],
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return const Divider(
-                    height: 0,
-                    thickness: 1,
-                  );
-                },
+              Container(
+                height: state.previousOrdersDataEntity.orders.length * 80,
+                child: ListView.separated(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  itemCount: state.previousOrdersDataEntity.orders.length,
+                  itemBuilder: (context, index) {
+                    return OrderHistoryListItem(
+                      orderEntity: state.previousOrdersDataEntity.orders[index],
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return const Divider(
+                      height: 0,
+                      thickness: 1,
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: TertiaryButton(
+                    borderColor: OptiAppColors.grayBackgroundColor,
+                    backgroundColor: OptiAppColors.grayBackgroundColor,
+                    child: Text(
+                      LocalizationConstants.viewAllOrders,
+                    ),
+                    onPressed: () {
+                      AppRoute.orderHistory.navigateBackStack(context);
+                    }),
+              ),
+            ],
+          ),
         );
       } else {
         return Container();

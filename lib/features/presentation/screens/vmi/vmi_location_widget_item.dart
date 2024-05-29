@@ -34,9 +34,8 @@ class VMICurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                     value: locationData.latLong,
                     groupValue: selectedLocation,
                     onChanged: (LatLong? value) {
-                      context
-                          .read<VMILocationBloc>()
-                          .add(LocationSelectEvent(selectedLocation: value!));
+                      context.read<VMILocationBloc>().add(
+                          LocationSelectEvent(selectedLocation: locationData));
                     },
                   ),
                 ),
@@ -45,7 +44,7 @@ class VMICurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                         onTap: () {
                           context.read<VMILocationBloc>().add(
                               LocationSelectEvent(
-                                  selectedLocation: locationData.latLong!));
+                                  selectedLocation: locationData));
                         },
                         child: CurrentLocationWidgetItem(
                             locationData: locationData,

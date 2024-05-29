@@ -10,6 +10,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
   final VMILocationUseCase _vmiLocationUseCase;
+  CurrentLocationDataEntity? selectedLocation;
   LatLng? currentLocation;
   GooglePlace? seachPlace;
   List<CurrentLocationDataEntity> currentLocationDataEntityList = [];
@@ -83,16 +84,18 @@ class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
   Future<void> _onLocationSelectEvent(
       LocationSelectEvent event, Emitter<VMILocationState> emit) async {
     seachPlace = null;
+    selectedLocation = event.selectedLocation;
+    LatLong selectedLocationLatlng = event.selectedLocation.latLong!;
     var selectedItem = currentLocationDataEntityList.firstWhere(
-      (location) => location.latLong == event.selectedLocation,
+      (location) => location.latLong == selectedLocationLatlng,
     );
     currentLocationDataEntityList
-        .removeWhere((location) => location.latLong == event.selectedLocation);
-    selectedItem = selectedItem.copyWith(latLong: event.selectedLocation);
+        .removeWhere((location) => location.latLong == selectedLocationLatlng);
+    selectedItem = selectedItem.copyWith(latLong: selectedLocationLatlng);
     currentLocationDataEntityList.insert(0, selectedItem);
     emit(VMILocationLoadedState(
         currentLocationDataEntityList: currentLocationDataEntityList,
-        selectedLocation: event.selectedLocation));
+        selectedLocation: selectedLocationLatlng));
   }
 
   Future<void> _updateSeachPlace(
