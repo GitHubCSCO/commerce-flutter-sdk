@@ -32,6 +32,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/product_detai
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_spefication_expansion_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_standart_configuration_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_style_traits_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/product_carousel_section_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -90,7 +91,9 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
           case ProductDetailsLoaded():
             return Scaffold(
                 backgroundColor: OptiAppColors.backgroundGray,
-                appBar: AppBar(),
+                appBar: AppBar(actions: <Widget>[
+                  BottomMenuWidget(websitePath: product?.productDetailUrl),
+                ], backgroundColor: Theme.of(context).colorScheme.surface),
                 body: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
