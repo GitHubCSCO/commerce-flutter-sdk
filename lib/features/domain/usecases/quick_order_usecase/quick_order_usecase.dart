@@ -130,6 +130,21 @@ class QuickOrderUseCase extends BaseUseCase {
     }
   }
 
+  Future<Result<Cart, ErrorResponse>> getCart() async {
+    // cart get for IsAcceptQuote is different,, need to implement it later
+    var cartParameters = CartQueryParameters(expand: [
+      'cartlines',
+      'costcodes',
+      'shipping',
+      'tax',
+      'carriers',
+      'paymentoptions'
+    ]);
+    return await commerceAPIServiceProvider
+        .getCartService()
+        .getCurrentCart(cartParameters);
+  }
+
   Future<Result<ProductSettings, ErrorResponse>> getProductSetting() async {
     var productSettingsResponse = await commerceAPIServiceProvider.getSettingsService().getProductSettingsAsync();
     return productSettingsResponse;

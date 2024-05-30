@@ -47,13 +47,44 @@ class CheckoutScreen extends StatelessWidget {
             ..add(LoadPaymentDetailsEvent(cart: cart)),
         ),
       ],
-      child: CheckoutPage(),
+      child: CheckoutPage(cart: cart),
     );
   }
 }
 
 class CheckoutPage extends StatelessWidget with BaseCheckout {
-  CheckoutPage({super.key});
+  final Cart cart;
+
+  CheckoutPage({super.key, required this.cart});
+
+  bool get hasOnlyQuoteRequiredProducts {
+    return (cart.cartLines != null && (cart.cartLines ?? []).isNotEmpty) &&
+        (cart.cartLines ?? []).every((x) => x.quoteRequired ?? false);
+  }
+
+  bool get hasQuoteRequiredProducts {
+    return cart.cartLines != null &&
+        (cart.cartLines ?? []).any((x) => x.quoteRequired ?? false);
+  }
+
+  bool get isCartCheckoutDisabled {
+    return (!(cart.canCheckOut ?? true) && !(cart.canRequisition ?? true)) ||
+        isCartEmpty ||
+        hasRestrictedCartLines;
+  }
+
+  bool get isCartEmpty {
+    return cart.cartLines == null || (cart.cartLines ?? []).isEmpty;
+  }
+
+  bool get hasRestrictedCartLines {
+    return cart.cartLines != null &&
+        (cart.cartLines ?? []).any((x) => x.isRestricted ?? false);
+  }
+
+  bool get isCheckoutButtonEnabled {
+    return !isCartCheckoutDisabled || !hasOnlyQuoteRequiredProducts;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -191,9 +222,14 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                 },
                               ),
                               ProductListWithBasicInfo(
-                                totalItemsTitle: LocalizationConstants.cartContentsItems,
+                                totalItemsTitle:
+                                    LocalizationConstants.cartContentsItems,
                                 list: CartLineListMapper()
-                                    .toEntity(CartLineList(cartLines: state.cart.cartLines ?? [])).cartLines ?? [],
+                                        .toEntity(CartLineList(
+                                            cartLines:
+                                                state.cart.cartLines ?? []))
+                                        .cartLines ??
+                                    [],
                               ),
                               const SizedBox(height: 8),
                             ],
@@ -213,12 +249,11 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                           initialData: LocalizationConstants.continueText,
                           builder: (context, snapshot) {
                             String buttonText = snapshot.data!;
-
+                            var index = context
+                                .read<ExpansionPanelCubit>()
+                                .expansionIndex;
                             return PrimaryButton(
                               onPressed: () {
-                                var index = context
-                                    .read<ExpansionPanelCubit>()
-                                    .expansionIndex;
                                 switch (index) {
                                   case 0:
                                     final carrier = context
@@ -281,6 +316,9 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                 }
                               },
                               text: buttonText,
+                              isEnabled: (index == 2 && isCheckoutButtonEnabled == false)
+                                  ? false
+                                  : true,
                             );
                           },
                         ),
@@ -296,5 +334,4 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
       ),
     );
   }
-
 }

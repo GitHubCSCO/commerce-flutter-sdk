@@ -12,6 +12,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/biometric/bio
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/vmi_checkout/vmi_checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/forgot_password_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
@@ -124,6 +125,17 @@ List<NavigationNode> _getNavigationRoot() {
     builder: (context, state) {
       final cart = state.extra as Cart;
       return CheckoutScreen(cart: cart);
+    },
+    parent: null,
+  );
+
+  // path: /vmiCheckout
+  final vmiCheckout = createNode(
+    name: AppRoute.vmiCheckout.name,
+    path: AppRoute.vmiCheckout.suffix,
+    builder: (context, state) {
+      final vmiCheckoutEntity = state.extra as VmiCheckoutEntity;
+      return VmiCheckoutScreen(vmiCheckoutEntity: vmiCheckoutEntity);
     },
     parent: null,
   );
@@ -318,6 +330,7 @@ List<NavigationNode> _getNavigationRoot() {
     login,
     biometricLogin,
     checkout,
+    vmiCheckout,
     checkoutSuccess,
     quickOrder,
     createOrder,

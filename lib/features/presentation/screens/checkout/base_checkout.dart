@@ -94,7 +94,7 @@ mixin BaseCheckout {
 
   Widget buildOrderNote() {
     return Container(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Input(
         label: LocalizationConstants.orderNotes,
         controller: _notesController,

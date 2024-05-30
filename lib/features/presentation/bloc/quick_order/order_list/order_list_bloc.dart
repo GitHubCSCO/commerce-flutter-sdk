@@ -319,8 +319,16 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   }
 
   Future<void> _onOrderListAddToCartEvent(OrderListAddToCartEvent event, Emitter<OrderListState> emit) async {
+    emit(OrderListLoadingState());
     if (scanningMode == ScanningMode.count || scanningMode == ScanningMode.create) {
-      //Navigate to VMI
+      final result = await _quickOrderUseCase.getCart();
+      switch (result) {
+        case Success(value: final data):
+          quickOrderItemList.clear();
+          emit(OrderListNavigateToVmiCheckoutState(data!));
+        case Failure(errorResponse: final errorResponse):
+          emit(OrderListFailedState());
+      }
     } else {
       emit(OrderListNavigateToCartState());
     }

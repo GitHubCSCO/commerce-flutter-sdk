@@ -15,6 +15,7 @@ class RouteNames {
   static const String vmi = 'vmi';
   static const String productDetails = 'productDetails';
   static const String checkout = 'checkout';
+  static const String vmiCheckout = 'vmiCheckout';
   static const String checkoutSuccess = 'checkoutSuccess';
   static const String productList = 'productList';
   static const String settings = 'settings';
@@ -46,6 +47,7 @@ class RoutePaths {
   static const String productDetails =
       '/${RouteNames.productDetails}/:productId';
   static const String checkout = '/${RouteNames.checkout}';
+  static const String vmiCheckout = '/${RouteNames.vmiCheckout}';
   static const String checkoutSuccess = '/${RouteNames.checkoutSuccess}';
   static const String shopProdlist =
       '/${RouteNames.shop}/${RouteNames.productList}';
@@ -83,6 +85,7 @@ enum AppRoute {
   productDetails(
       name: RouteNames.productDetails, fullPath: RoutePaths.productDetails),
   checkout(name: RouteNames.checkout, fullPath: RoutePaths.checkout),
+  vmiCheckout(name: RouteNames.vmiCheckout, fullPath: RoutePaths.vmiCheckout),
   checkoutSuccess(
       name: RouteNames.checkoutSuccess, fullPath: RoutePaths.checkoutSuccess),
   settings(name: RouteNames.settings, fullPath: RoutePaths.settings),
