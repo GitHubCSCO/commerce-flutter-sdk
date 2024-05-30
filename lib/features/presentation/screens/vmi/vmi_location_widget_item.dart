@@ -14,7 +14,8 @@ class VMICurrentLocationWidgetItem extends StatelessWidget with MapDirection {
   final bool isSelectionOn;
 
   VMICurrentLocationWidgetItem(
-      {required this.locationData,
+      {super.key,
+      required this.locationData,
       this.selectedLocation,
       required this.isSelectionOn});
 

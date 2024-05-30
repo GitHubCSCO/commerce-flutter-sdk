@@ -1,11 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_state.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
@@ -16,9 +14,9 @@ import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wis
 class VmiLocationNoteScreen extends StatelessWidget {
   final void Function() onVMILocationNoteUpdated;
   const VmiLocationNoteScreen({
-    Key? key,
+    super.key,
     required this.onVMILocationNoteUpdated,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -32,16 +30,16 @@ class VmiLocationNoteScreen extends StatelessWidget {
 class VmiLocationNotePage extends StatelessWidget {
   final void Function() onVMILocationNoteUpdated;
   VmiLocationNotePage({
-    Key? key,
+    super.key,
     required this.onVMILocationNoteUpdated,
-  }) : super(key: key);
+  });
   final TextEditingController noteDescriptionController =
       TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Edit Location Note'),
+          title: const Text('Edit Location Note'),
         ),
         body: BlocListener<VMILocationNoteCubit, VmiLocationNoteState>(
           listener: (context, state) {
@@ -57,9 +55,7 @@ class VmiLocationNotePage extends StatelessWidget {
           child: BlocBuilder<VMILocationNoteCubit, VmiLocationNoteState>(
               builder: (context, state) {
             if (state is VmiLocationNoteLoadingState) {
-              return Container(
-                child: CircularProgressIndicator(),
-              );
+              return const CircularProgressIndicator();
             } else if (state is VmiLocationNoteInitialState) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -94,6 +90,7 @@ class VmiLocationNotePage extends StatelessWidget {
                 ],
               );
             } else
+              // ignore: curly_braces_in_flow_control_structures
               return Container();
           }),
         ));

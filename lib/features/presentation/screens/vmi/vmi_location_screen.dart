@@ -1,10 +1,8 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/current_location_data_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_state.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_location_widget_item.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_widget.dart';
@@ -15,12 +13,11 @@ import 'package:go_router/go_router.dart';
 
 class VMILocationScreen extends StatelessWidget {
   final Function(CurrentLocationDataEntity) onLocationSelected;
-  const VMILocationScreen({Key? key, required this.onLocationSelected})
-      : super(key: key);
+  const VMILocationScreen({super.key, required this.onLocationSelected});
 
   @override
   Widget build(BuildContext context) {
-    final ScrollController _scrollController = ScrollController();
+    final ScrollController scrollController = ScrollController();
 
     return MultiBlocListener(
       listeners: [
@@ -32,8 +29,8 @@ class VMILocationScreen extends StatelessWidget {
                 context
                     .read<GMapCubit>()
                     .updateMarkersFromVMI(state.currentLocationDataEntityList);
-                if (_scrollController.hasClients) {
-                  _scrollController.jumpTo(0);
+                if (scrollController.hasClients) {
+                  scrollController.jumpTo(0);
                 } // Scroll to the top when new data is loaded
               } else {
                 context.read<GMapCubit>().onSeachPlaceMarked(searchedLocation);
@@ -59,7 +56,7 @@ class VMILocationScreen extends StatelessWidget {
                 Expanded(
                   child: ListView(
                     controller:
-                        _scrollController, // Attach the ScrollController here
+                        scrollController, // Attach the ScrollController here
                     children: state.currentLocationDataEntityList
                         .map((e) => VMICurrentLocationWidgetItem(
                               locationData: e,
@@ -88,7 +85,7 @@ class VMILocationScreen extends StatelessWidget {
               ],
             );
           } else {
-            return Center(child: Text('Error loading location data'));
+            return const Center(child: Text('Error loading location data'));
           }
         },
       ),

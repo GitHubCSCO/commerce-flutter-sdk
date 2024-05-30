@@ -8,8 +8,6 @@ import 'package:commerce_flutter_app/features/presentation/cubit/current_locatio
 import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:location/location.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
@@ -79,6 +77,7 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                     ),
                     const SizedBox(width: 16),
                     Visibility(
+                        visible: isVMILocaitonfinder,
                         child: InkWell(
                           child: Text(
                             LocalizationConstants.changeLocation,
@@ -88,8 +87,7 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                           onTap: () {
                             _onChangeLocationClick(context);
                           },
-                        ),
-                        visible: isVMILocaitonfinder)
+                        ))
                   ],
                 ),
               ),

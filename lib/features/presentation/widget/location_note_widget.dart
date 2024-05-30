@@ -49,7 +49,7 @@ class LocationNoteWidget extends StatelessWidget {
                       child: TertiaryButton(
                           borderColor: OptiAppColors.grayBackgroundColor,
                           backgroundColor: OptiAppColors.grayBackgroundColor,
-                          child: Text(
+                          child: const Text(
                             LocalizationConstants.editLocationNote,
                           ),
                           onPressed: () {
