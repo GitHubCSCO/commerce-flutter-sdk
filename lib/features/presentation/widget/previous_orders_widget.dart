@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders
 import 'package:commerce_flutter_app/features/presentation/widget/order_history_list_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class PreviousOrdersWidget extends StatelessWidget {
   final PreviousOrdersWidgetEntity previousOrdersWidgetEntity;
@@ -23,9 +24,7 @@ class PreviousOrdersWidget extends StatelessWidget {
       if (state is PreviousOrdersInitialState) {
         return Container();
       } else if (state is PreviousOrdersLoadingState) {
-        return Container(
-          child: CircularProgressIndicator(),
-        );
+        return const CircularProgressIndicator();
       } else if (state is PreviousOrdersLoadedState) {
         return Container(
           color: Colors.white,
@@ -50,6 +49,19 @@ class PreviousOrdersWidget extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return OrderHistoryListItem(
                       orderEntity: state.previousOrdersDataEntity.orders[index],
+                      onTap: () {
+                        var orderEntity =
+                            state.previousOrdersDataEntity.orders[index];
+                        AppRoute.orderDetails.navigateBackStack(
+                          context,
+                          pathParameters: {
+                            'orderNumber':
+                                (orderEntity.webOrderNumber.isNullOrEmpty)
+                                    ? (orderEntity.erpOrderNumber ?? '')
+                                    : orderEntity.webOrderNumber!,
+                          },
+                        );
+                      },
                     );
                   },
                   separatorBuilder: (context, index) {
