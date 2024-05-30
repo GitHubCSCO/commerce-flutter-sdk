@@ -64,8 +64,7 @@ class RoutePaths {
   static const String barcodeSearch = '/${RouteNames.barcodeSearch}';
   static const String wishlists =
       '${RoutePaths.account}/${RouteNames.wishlists}';
-  static const String locationSearch =
-      '${RoutePaths.account}/${RouteNames.locationSearch}';
+  static const String locationSearch = '/${RouteNames.locationSearch}';
   static const String wishlistsDetails = '$wishlists/:id';
   static const String vmiLocationNote = '/${RouteNames.vmiLocationNote}';
   static const String wishListInfo = '/${RouteNames.wishListInfo}';

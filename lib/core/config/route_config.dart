@@ -263,7 +263,7 @@ List<NavigationNode> _getNavigationRoot() {
     parent: account,
   );
 
-  // path: /account/wishlist
+  // path: /locationsearch
   final locationSearch = createNode(
     name: AppRoute.locationSearch.name,
     path: AppRoute.locationSearch.suffix,
@@ -277,7 +277,7 @@ List<NavigationNode> _getNavigationRoot() {
         locationSearchType: callbackHelper.locationSearchType,
       );
     },
-    parent: account,
+    parent: null,
   );
   // path: /account/wishlist/:id
   final wishlistsDetails = createNode(
@@ -380,6 +380,7 @@ List<NavigationNode> _getNavigationRoot() {
     wishListCreate,
     addToWishList,
     forgotPassword,
-    vmiLocationNote
+    vmiLocationNote,
+    locationSearch
   ];
 }
