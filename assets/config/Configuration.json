@@ -8,16 +8,5 @@
   "CheckoutUrl": null,
   "StartingCategoryForBrowsing": null,
   "ViewOnWebsiteEnabled": true,
-  "CustomHideCheckoutOrderNotes": false,
-  "FirebaseIOSApiKey": "AIzaSyCviUf5bDcE_KRo-uhMuc2YEF3ezlb1vds",
-  "FirebaseIOSAppId": "1:146470320058:ios:41fd94eb610ed564be0f83",
-  "FirebaseIOSMessagingSenderId": "146470320058",
-  "FirebaseIOSProjectId": "opti-b2b-mobile-test",
-  "FirebaseIOSStorageBucket": "opti-b2b-mobile-test.appspot.com",
-  "FirebaseIOSBundleId": "com.dxp.commerce",
-  "FirebaseAndroidApiKey": "AIzaSyDjMP5LagMOj8333HUEVe5eos0IESGLWAk",
-  "FirebaseAndroidAppId": "1:146470320058:android:e4150c69840575d3be0f83",
-  "FirebaseAndroidMessagingSenderId": "146470320058",
-  "FirebaseAndroidProjectId": "opti-b2b-mobile-test",
-  "FirebaseAndroidStorageBucket": "opti-b2b-mobile-test.appspot.com"
+  "CustomHideCheckoutOrderNotes": false
 }
