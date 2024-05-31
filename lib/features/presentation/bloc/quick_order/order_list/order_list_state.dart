@@ -47,6 +47,16 @@ class OrderListNavigateToCartState extends OrderListState {
   List<Object?> get props => [];
 }
 
+class OrderListNavigateToVmiCheckoutState extends OrderListState {
+
+  final Cart cart;
+
+  OrderListNavigateToVmiCheckoutState(this.cart);
+
+  @override
+  List<Object?> get props => [];
+}
+
 class OrderListAddToListFailedState extends OrderListState {
   @override
   List<Object?> get props => [];

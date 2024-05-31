@@ -10,6 +10,19 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class QuickOrderUseCase extends BaseUseCase {
   QuickOrderUseCase() : super();
 
+  Future<void> createAlternateCart() async {
+    final vmiLocationId = coreServiceProvider.getVmiService().currentVmiLocation?.id ?? '';
+    final addCartModel = AddCartModel(
+      vmiLocationId: vmiLocationId,
+    );
+
+    await commerceAPIServiceProvider.getCartService().createAlternateCart(addCartModel);
+  }
+
+  Future<void> removeAlternateCart() async {
+    await commerceAPIServiceProvider.getClientService().removeAlternateCartCookie();
+  }
+
   Future<Result<ProductEntity, ErrorResponse>> getProduct(String productId, AutocompleteProduct product) async {
     var parameters = ProductQueryParameters(
       // expand: "pricing,brand,styledproducts",
@@ -115,6 +128,21 @@ class QuickOrderUseCase extends BaseUseCase {
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
     }
+  }
+
+  Future<Result<Cart, ErrorResponse>> getCart() async {
+    // cart get for IsAcceptQuote is different,, need to implement it later
+    var cartParameters = CartQueryParameters(expand: [
+      'cartlines',
+      'costcodes',
+      'shipping',
+      'tax',
+      'carriers',
+      'paymentoptions'
+    ]);
+    return await commerceAPIServiceProvider
+        .getCartService()
+        .getCurrentCart(cartParameters);
   }
 
   Future<Result<ProductSettings, ErrorResponse>> getProductSetting() async {

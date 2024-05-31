@@ -25,6 +25,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   OrderListBloc({required QuickOrderUseCase quickOrderUseCase, required this.scanningMode})
       : _quickOrderUseCase = quickOrderUseCase,
         super(OrderListInitialState()) {
+    _createAlternateCart();
     on<OrderListLoadEvent>(_onOrderListLoadEvent);
     on<OrderListItemAddEvent>(_onOrderLisItemAddEvent);
     on<OrderListItemScanAddEvent>(_onOrderLisScanItemAddEvent);
@@ -35,6 +36,20 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     on<OrderListAddStyleProductEvent>(_onOrderListAddStyleProductEvent);
     on<OrderListAddVmiStyleProductEvent>(_onOrderListAddVmiStyleProductEvent);
     on<OrderListAddVmiBinEvent>(_onOrderListAddVmiBinEvent);
+  }
+
+  void _createAlternateCart() {
+    if (scanningMode == ScanningMode.count || scanningMode == ScanningMode.create) {
+      _quickOrderUseCase.createAlternateCart();
+    }
+  }
+
+  @override
+  Future<void> close() async {
+    if (scanningMode == ScanningMode.count || scanningMode == ScanningMode.create) {
+      _quickOrderUseCase.removeAlternateCart();
+    }
+    super.close();
   }
 
   Future<void> _onOrderListLoadEvent(OrderListLoadEvent event, Emitter<OrderListState> emit) async {
@@ -302,8 +317,16 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   }
 
   Future<void> _onOrderListAddToCartEvent(OrderListAddToCartEvent event, Emitter<OrderListState> emit) async {
+    emit(OrderListLoadingState());
     if (scanningMode == ScanningMode.count || scanningMode == ScanningMode.create) {
-      //Navigate to VMI
+      final result = await _quickOrderUseCase.getCart();
+      switch (result) {
+        case Success(value: final data):
+          quickOrderItemList.clear();
+          emit(OrderListNavigateToVmiCheckoutState(data!));
+        case Failure(errorResponse: final errorResponse):
+          emit(OrderListFailedState());
+      }
     } else {
       emit(OrderListNavigateToCartState());
     }

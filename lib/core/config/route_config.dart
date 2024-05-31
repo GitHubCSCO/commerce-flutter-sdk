@@ -14,6 +14,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/biometric/bio
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/vmi_checkout/vmi_checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/location_seach/location_serach_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/forgot_password_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
@@ -133,13 +134,24 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
+  // path: /vmiCheckout
+  final vmiCheckout = createNode(
+    name: AppRoute.vmiCheckout.name,
+    path: AppRoute.vmiCheckout.suffix,
+    builder: (context, state) {
+      final vmiCheckoutEntity = state.extra as VmiCheckoutEntity;
+      return VmiCheckoutScreen(vmiCheckoutEntity: vmiCheckoutEntity);
+    },
+    parent: null,
+  );
+
   // path: /checkoutSuccess
   final checkoutSuccess = createNode(
     name: AppRoute.checkoutSuccess.name,
     path: AppRoute.checkoutSuccess.suffix,
     builder: (context, state) {
-      final orderNumber = state.extra as String;
-      return CheckoutSuccessScreen(orderNumber: orderNumber);
+      final checkoutSuccessEntity = state.extra as CheckoutSuccessEntity;
+      return CheckoutSuccessScreen(checkoutSuccessEntity: checkoutSuccessEntity);
     },
     parent: null,
   );
@@ -370,6 +382,7 @@ List<NavigationNode> _getNavigationRoot() {
     login,
     biometricLogin,
     checkout,
+    vmiCheckout,
     checkoutSuccess,
     quickOrder,
     createOrder,

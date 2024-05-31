@@ -41,7 +41,7 @@ extension UrlStringExtensions on String? {
   }
 
   String makeImageUrl({bool useNotImageImage = true}) {
-    String imagePath = this!;
+    String imagePath = this ?? '';
     if (imagePath.isEmpty) {
       if (useNotImageImage) {
         return '';
