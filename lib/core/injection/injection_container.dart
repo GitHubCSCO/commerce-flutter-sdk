@@ -5,14 +5,20 @@ import 'package:commerce_flutter_app/features/domain/service/biometric_authentic
 import 'package:commerce_flutter_app/features/domain/service/commerce_api_service_provider.dart';
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/core_service_provider.dart';
+import 'package:commerce_flutter_app/features/domain/service/geo_location_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/app_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/device_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/biometric_authentication_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/device_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/geo_location_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/location_search_history_service.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/search_history_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/vmi_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/location_search_history_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/network_service.dart';
+import 'package:commerce_flutter_app/features/domain/service/search_history_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/vmi_service.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
@@ -25,6 +31,8 @@ import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/c
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/payment_details/payment_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/curent_location_usecase/current_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/location_note_usecase/location_note_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/location_search_usecase/location_search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/forgot_password_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
@@ -46,6 +54,8 @@ import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/sea
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_location_note_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_main_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_usecase.dart';
@@ -58,6 +68,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shippi
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
@@ -68,7 +79,8 @@ import 'package:commerce_flutter_app/features/presentation/bloc/remote_config/re
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_page_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_main/vmi_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/biometric_auth_cubit.dart';
@@ -85,9 +97,11 @@ import 'package:commerce_flutter_app/features/presentation/cubit/current_locatio
 import 'package:commerce_flutter_app/features/presentation/cubit/date_selection/date_selection_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/location_note/location_note_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/forgot_password/forgot_password_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_details/order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders_cubit/previous_orders_cubit.dart';
@@ -95,6 +109,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/product_carouse
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/vmi_location_note/vmi_location_note_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_add_to/wish_list_add_to_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_create/wish_list_create_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
@@ -142,11 +157,29 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => VMIPageBloc(vmiMainUseCase: sl()))
     ..registerFactory(() => VMIMainUseCase())
 
-    // current location
+    // vmi locations
+    ..registerFactory(() => VMILocationBloc(vmiLocationUseCase: sl()))
+    ..registerFactory(() => VMILocationUseCase())
 
+    //location note
+    ..registerFactory(() => LocationNoteCubit(locationNoteUsecase: sl()))
+    ..registerFactory(() => LocationNoteUsecase())
+
+    // vmi location note
+    ..registerFactory(() => VMILocationNoteCubit(vmilocationNoteUsecase: sl()))
+    ..registerFactory(() => VmiLocationNoteUsecase())
+
+    // current location
     ..registerFactory(() => CurrentLocationCubit(currentLocationUseCase: sl()))
     ..registerFactory(() => CurrentLocationUseCase())
 
+    // location  search
+    ..registerFactory(() => LocationSearchBloc(locationSearchUseCase: sl()))
+    ..registerFactory(() => LocationSearchUseCase())
+
+    // gmap cubit
+
+    ..registerFactory(() => GMapCubit())
     // previous orders
 
     ..registerFactory(() => PreviousOrdersCubit(previousOrdersUseCse: sl()))
@@ -219,9 +252,11 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ReviewOrderCubit())
 
     //quickOrder
-    ..registerFactory(() => OrderListBloc(quickOrderUseCase: sl(), scanningMode: ScanningMode.quick))
+    ..registerFactory(() => OrderListBloc(
+        quickOrderUseCase: sl(), scanningMode: ScanningMode.quick))
     ..registerFactory(() => QuickOrderUseCase())
-    ..registerFactory(() => QuickOrderAutoCompleteBloc(searchUseCase: sl(), scanningMode: ScanningMode.quick))
+    ..registerFactory(() => QuickOrderAutoCompleteBloc(
+        searchUseCase: sl(), scanningMode: ScanningMode.quick))
     ..registerFactory(
         () => OrderItemPricingInventoryCubit(pricingInventoryUseCase: sl()))
     ..registerFactory(() => OrderPricingInventoryUseCase())
@@ -341,12 +376,17 @@ Future<void> initInjectionContainer() async {
               cacheService: sl(),
               networkService: sl(),
             ))
+    ..registerLazySingleton<ISearchHistoryService>(
+        () => SearchHistoryService(commerceAPIServiceProvider: sl()))
+    ..registerLazySingleton<ILocationSearchHistoryService>(
+        () => LocationSearchHistoryService(commerceAPIServiceProvider: sl()))
     ..registerLazySingleton<IClientService>(() =>
         ClientService(localStorageService: sl(), secureStorageService: sl()))
     ..registerLazySingleton<ICacheService>(() => FakeCacheService())
     ..registerLazySingleton<INetworkService>(() => NetworkService())
     ..registerLazySingleton<ISecureStorageService>(() => SecureStorageService())
     ..registerLazySingleton<ILocalStorageService>(() => LocalStorageService())
+    ..registerLazySingleton<IGeoLocationService>(() => GeoLocationService())
     ..registerLazySingleton<ISettingsService>(() => SettingsService(
           cacheService: sl(),
           clientService: sl(),

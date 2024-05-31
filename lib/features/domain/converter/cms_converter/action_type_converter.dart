@@ -57,6 +57,7 @@ class ActionTypeConverter {
       case "signout":
         return ActionType.signOut;
       case "locationfinder":
+      case "locations":
         return ActionType.locationFinder;
       case "orderapproval":
         return ActionType.orderApproval;

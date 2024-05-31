@@ -3,17 +3,20 @@ import 'package:commerce_flutter_app/features/domain/converter/cms_converter/act
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/current_location_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/location_note_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/previous_orders_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/action_grid_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/action_list_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/carousel_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/current_location_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/listview_divider_item.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/location_note_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/previous_orders_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/product_carousel_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_history_section_widget.dart';
@@ -98,6 +101,14 @@ class BaseDynamicContentScreen extends StatelessWidget {
           return buildPreviousOrdersSectionWidget(
               previousOrdersWidgetEntity: previousOrdersWidgetEntity);
         }
+
+      case LocationNoteWidgetEntity:
+        {
+          final LocationNoteWidgetEntity locationNoteWidgetEntity =
+              widgetEntity as LocationNoteWidgetEntity;
+          return buildLocationNoteSectionWidget(
+              locationNoteWidgetEntity: locationNoteWidgetEntity);
+        }
     }
     return null;
   }
@@ -146,12 +157,18 @@ class BaseDynamicContentScreen extends StatelessWidget {
   Widget buildCurrentLocationSectionWidget(
       {required CurrentLocationWidgetEntity currentLocationWidgetEntity}) {
     return CurrentLocationWidget(
-        currentLocationWidgetEntity: currentLocationWidgetEntity);
+            currentLocationWidgetEntity: currentLocationWidgetEntity);
   }
 
   Widget buildPreviousOrdersSectionWidget(
       {required PreviousOrdersWidgetEntity previousOrdersWidgetEntity}) {
     return PreviousOrdersWidget(
         previousOrdersWidgetEntity: previousOrdersWidgetEntity);
+  }
+
+  Widget buildLocationNoteSectionWidget(
+      {required LocationNoteWidgetEntity locationNoteWidgetEntity}) {
+    return LocationNoteWidget(
+        locationNoteWidgetEntity: locationNoteWidgetEntity);
   }
 }

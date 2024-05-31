@@ -68,7 +68,8 @@
         },
         {
             "contentKey": 4117,
-            "class": "MobileLocationNote"
+            "class": "MobileLocationNote",
+            "title": "LOCATION NOTE"
         },
         {
             "contentKey": 4110,
