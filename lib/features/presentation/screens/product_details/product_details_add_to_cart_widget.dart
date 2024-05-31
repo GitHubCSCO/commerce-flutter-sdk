@@ -33,19 +33,22 @@ class ProductDetailsAddToCartWidget extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: (context
-                      .read<ProductDetailsBloc>()
-                      .productDetailDataEntity
-                      .addToCartEnabled! &&
+                          .read<ProductDetailsBloc>()
+                          .productDetailDataEntity
+                          .addToCartEnabled ==
+                      true &&
                   context
-                      .read<ProductDetailsBloc>()
-                      .productDetailDataEntity
-                      .productPricingEnabled!)
+                          .read<ProductDetailsBloc>()
+                          .productDetailDataEntity
+                          .productPricingEnabled ==
+                      true)
               ? AddToCartSignInWidget()
               : AddToCartNotSignedInWidget(
                   productPricingEnabled: context
-                      .read<ProductDetailsBloc>()
-                      .productDetailDataEntity
-                      .productPricingEnabled!),
+                          .read<ProductDetailsBloc>()
+                          .productDetailDataEntity
+                          .productPricingEnabled ==
+                      true),
         ),
       ),
     );
@@ -113,27 +116,29 @@ class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
             quantity = value;
           });
         }),
-        if (widget.detailsAddToCartEntity.isAddToCartAllowed!)
+        if (widget.detailsAddToCartEntity.isAddToCartAllowed == true)
           PrimaryButton(
-              isEnabled: widget.detailsAddToCartEntity.addToCartButtonEnabled!,
+              isEnabled:
+                  widget.detailsAddToCartEntity.addToCartButtonEnabled == true,
               leadingIcon: SvgPicture.asset(
                 AssetConstants.productDeatilsAddToCartIcon,
                 fit: BoxFit.fitWidth,
                 color: Colors.white,
               ),
               text: LocalizationConstants.addToCart,
-              onPressed: widget.detailsAddToCartEntity.addToCartButtonEnabled!
-                  ? () {
-                      context.read<ProductDetailsAddToCartBloc>().add(
-                          AddToCartEvent(
-                              productDetailsDataEntity: context
-                                  .read<ProductDetailsBloc>()
-                                  .productDetailDataEntity,
-                              productDetailsAddToCartEntity:
-                                  widget.detailsAddToCartEntity.copyWith(
-                                      quantityText: quantity.toString())));
-                    }
-                  : null)
+              onPressed:
+                  widget.detailsAddToCartEntity.addToCartButtonEnabled == true
+                      ? () {
+                          context.read<ProductDetailsAddToCartBloc>().add(
+                              AddToCartEvent(
+                                  productDetailsDataEntity: context
+                                      .read<ProductDetailsBloc>()
+                                      .productDetailDataEntity,
+                                  productDetailsAddToCartEntity:
+                                      widget.detailsAddToCartEntity.copyWith(
+                                          quantityText: quantity.toString())));
+                        }
+                      : null)
       ],
     );
   }
@@ -187,7 +192,7 @@ class ProductDetailsAddCartRow extends StatelessWidget {
           Expanded(
             flex: 3,
             child: ProductDetailsAddCartTtitleSubTitleColumn(
-                'Subtotal', detailsAddToCartEntity?.subtotalValueText ?? ''),
+                'Subtotal', detailsAddToCartEntity.subtotalValueText ?? ''),
           ),
         ],
       ),
