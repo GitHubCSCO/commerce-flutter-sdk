@@ -15,6 +15,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/expansion_panel/expansion_panel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/base_checkout.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
@@ -94,8 +95,9 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
         listener: (_, state) {
           if (state is CheckoutPlaceOrder) {
             context.read<CartCountCubit>().onCartItemChange();
-            AppRoute.checkoutSuccess
-                .navigate(context, extra: state.orderNumber);
+            AppRoute.checkoutSuccess.navigate(context,
+                extra: CheckoutSuccessEntity(
+                    orderNumber: state.orderNumber, isVmiCheckout: false));
           }
         },
         builder: (_, state) {

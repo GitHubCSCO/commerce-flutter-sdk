@@ -145,8 +145,8 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.checkoutSuccess.name,
     path: AppRoute.checkoutSuccess.suffix,
     builder: (context, state) {
-      final orderNumber = state.extra as String;
-      return CheckoutSuccessScreen(orderNumber: orderNumber);
+      final checkoutSuccessEntity = state.extra as CheckoutSuccessEntity;
+      return CheckoutSuccessScreen(checkoutSuccessEntity: checkoutSuccessEntity);
     },
     parent: null,
   );

@@ -7,11 +7,20 @@ import 'package:commerce_flutter_app/features/presentation/components/buttons.da
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class CheckoutSuccessScreen extends StatelessWidget {
+class CheckoutSuccessEntity {
 
   final String orderNumber;
+  final bool isVmiCheckout;
 
-  const CheckoutSuccessScreen({super.key, required this.orderNumber});
+  const CheckoutSuccessEntity({required this.orderNumber, required this.isVmiCheckout});
+
+}
+
+class CheckoutSuccessScreen extends StatelessWidget {
+
+  final CheckoutSuccessEntity checkoutSuccessEntity;
+
+  const CheckoutSuccessScreen({super.key, required this.checkoutSuccessEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +41,7 @@ class CheckoutSuccessScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               child: Text(
-                LocalizationConstants.orderPlacedSuccessfully.format([orderNumber]),
+                LocalizationConstants.orderPlacedSuccessfully.format([checkoutSuccessEntity.orderNumber]),
                 textAlign: TextAlign.center,
                 style: OptiTextStyles.body,
               ),
@@ -42,9 +51,13 @@ class CheckoutSuccessScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: PrimaryButton(
                 onPressed: () {
-                  AppRoute.shop.navigate(context);
+                  if (checkoutSuccessEntity.isVmiCheckout) {
+                    AppRoute.vmi.navigate(context);
+                  } else {
+                    AppRoute.shop.navigate(context);
+                  }
                 },
-                text: LocalizationConstants.continueShopping,
+                text: checkoutSuccessEntity.isVmiCheckout ? LocalizationConstants.backToVmiHome : LocalizationConstants.continueShopping,
               ),
             )
           ],

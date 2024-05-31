@@ -15,6 +15,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/base_checkout.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/product_list_with_basicInfo.dart';
 import 'package:flutter/material.dart';
@@ -70,8 +71,9 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
       body: BlocConsumer<CheckoutBloc, CheckoutState>(
         listener: (_, state) {
           if (state is CheckoutPlaceOrder) {
-            AppRoute.checkoutSuccess
-                .navigate(context, extra: state.orderNumber);
+            AppRoute.checkoutSuccess.navigate(context,
+                extra: CheckoutSuccessEntity(
+                    orderNumber: state.orderNumber, isVmiCheckout: true));
           }
         },
         builder: (_, state) {
