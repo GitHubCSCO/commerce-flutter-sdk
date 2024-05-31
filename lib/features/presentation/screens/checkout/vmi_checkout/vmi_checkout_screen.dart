@@ -8,7 +8,9 @@ import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkou
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/base_checkout.dart';
@@ -150,9 +152,7 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                             const SizedBox(height: 4.0),
                             PrimaryButton(
                               onPressed: () {
-                                context
-                                    .read<CheckoutBloc>()
-                                    .add(PlaceOrderEvent());
+                                _handleSubmitOrderClick(context);
                               },
                               text: LocalizationConstants.submitOrder,
                             ),
@@ -169,6 +169,44 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
         },
       ),
     );
+  }
+
+  void _handleSubmitOrderClick(BuildContext context) {
+    var isPaymentCardType = context
+        .read<PaymentDetailsBloc>()
+        .selectedPaymentMethod
+        ?.cardType !=
+        null;
+    var isCreditCardSectionCompleted = context
+        .read<PaymentDetailsBloc>()
+        .isCreditCardSectionCompleted;
+
+    if (isPaymentCardType &&
+        !isCreditCardSectionCompleted) {
+      context
+          .read<TokenExBloc>()
+          .add(TokenExValidateEvent());
+    } else {
+      var poNumber = context
+          .read<PaymentDetailsBloc>()
+          .getPONumber();
+      var cart = context
+          .read<PaymentDetailsBloc>()
+          .cart;
+
+      if (cart!.requiresPoNumber! &&
+          poNumber.isNullOrEmpty) {
+        CustomSnackBar.showPoNumberRequired(
+            context);
+      } else {
+        context
+            .read<CheckoutBloc>()
+            .add(UpdatePONumberEvent(poNumber));
+        context
+            .read<CheckoutBloc>()
+            .add(PlaceOrderEvent());
+      }
+    }
   }
 
 }
