@@ -153,7 +153,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
           // Plus button
           if (_shouldShowIncrementDecermentIcon)
             Padding(
-              padding: const EdgeInsets.only(right: 8.0),
+              padding: const EdgeInsets.all(8.0),
               child: SizedBox(
                 width: 40,
                 height: 40,
