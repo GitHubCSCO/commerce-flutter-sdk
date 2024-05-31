@@ -5,4 +5,8 @@ enum OrderStatus {
   success,
   failure,
   moreLoadingFailure,
+
+  reorderLoading,
+  reorderSuccess,
+  reorderFailure,
 }

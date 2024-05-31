@@ -1,0 +1,37 @@
+part of 'order_details_cubit.dart';
+
+class OrderDetailsState extends Equatable {
+  final OrderEntity order;
+  final OrderStatus orderStatus;
+  final bool isReorderViewVisible;
+  final OrderSettingsEntity orderSettings;
+
+  const OrderDetailsState({
+    required this.order,
+    required this.isReorderViewVisible,
+    required this.orderStatus,
+    required this.orderSettings,
+  });
+
+  @override
+  List<Object> get props => [
+        order,
+        orderStatus,
+        isReorderViewVisible,
+        orderSettings,
+      ];
+
+  OrderDetailsState copyWith({
+    OrderEntity? order,
+    OrderStatus? orderStatus,
+    bool? isReorderViewVisible,
+    OrderSettingsEntity? orderSettings,
+  }) {
+    return OrderDetailsState(
+      order: order ?? this.order,
+      orderStatus: orderStatus ?? this.orderStatus,
+      isReorderViewVisible: isReorderViewVisible ?? this.isReorderViewVisible,
+      orderSettings: orderSettings ?? this.orderSettings,
+    );
+  }
+}

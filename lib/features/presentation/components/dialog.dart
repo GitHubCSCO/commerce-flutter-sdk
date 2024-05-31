@@ -22,11 +22,11 @@ class DialogHighlightButton extends StatelessWidget {
       style: style ??
           ButtonStyle(
             backgroundColor:
-                MaterialStateProperty.all(const Color.fromRGBO(0, 55, 255, 1)),
-            padding: MaterialStateProperty.all(
+                WidgetStateProperty.all(const Color.fromRGBO(0, 55, 255, 1)),
+            padding: WidgetStateProperty.all(
               const EdgeInsets.symmetric(horizontal: 16),
             ),
-            shape: MaterialStateProperty.all(
+            shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4),
               ),
@@ -56,11 +56,11 @@ class DialogPlainButton extends StatelessWidget {
       onPressed: onPressed,
       style: style ??
           ButtonStyle(
-            padding: MaterialStateProperty.all(
+            padding: WidgetStateProperty.all(
               const EdgeInsets.symmetric(horizontal: 16),
             ),
-            foregroundColor: const MaterialStatePropertyAll(Colors.black),
-            shape: MaterialStateProperty.all(
+            foregroundColor: const WidgetStatePropertyAll(Colors.black),
+            shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4),
               ),
@@ -238,5 +238,42 @@ void showPleaseWait(BuildContext context) {
         ),
       ),
     ),
+  );
+}
+
+void confirmDialog({
+  required BuildContext context,
+  String? title,
+  String? message,
+  required void Function() onConfirm,
+  String confirmText = LocalizationConstants.oK,
+  String cancelText = LocalizationConstants.cancel,
+  bool highlightConfirm = false,
+}) {
+  displayDialogWidget(
+    context: context,
+    title: title,
+    message: message,
+    actions: [
+      DialogPlainButton(
+        onPressed: () => Navigator.of(context).pop(),
+        child: Text(cancelText),
+      ),
+      highlightConfirm
+          ? DialogHighlightButton(
+              onPressed: () {
+                onConfirm();
+                Navigator.of(context).pop();
+              },
+              child: Text(confirmText),
+            )
+          : DialogPlainButton(
+              onPressed: () {
+                onConfirm();
+                Navigator.of(context).pop();
+              },
+              child: Text(confirmText),
+            ),
+    ],
   );
 }

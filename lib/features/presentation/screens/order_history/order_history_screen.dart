@@ -1,6 +1,6 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
-import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
@@ -18,7 +18,6 @@ import 'package:commerce_flutter_app/features/presentation/widget/order_history_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -207,8 +206,20 @@ class __OrderHistoryListWidgetState extends State<_OrderHistoryListWidget> {
                 );
               }
 
+              final orderEntity = widget.orderEntities[index];
+
               return OrderHistoryListItem(
-                orderEntity: widget.orderEntities[index],
+                orderEntity: orderEntity,
+                onTap: () {
+                  AppRoute.orderDetails.navigate(
+                    context,
+                    pathParameters: {
+                      'orderNumber': (orderEntity.webOrderNumber.isNullOrEmpty)
+                          ? (orderEntity.erpOrderNumber ?? '')
+                          : orderEntity.webOrderNumber!,
+                    },
+                  );
+                },
               );
             },
             separatorBuilder: (context, index) {

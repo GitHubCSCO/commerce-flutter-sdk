@@ -48,19 +48,18 @@ extension CartLineExtensions on CartLineEntity? {
     if (this == null) {
       return "";
     }
-    var uomText = "";
-    if ((this!.isPromotionItem != null && this!.isPromotionItem!) ||
-        (this!.isDiscounted != null && this!.isDiscounted!) ||
-        (this!.pricing != null && this!.pricing!.isOnSale!)) {
-      if (!this!.unitOfMeasureDescription.isNullorWhitespace) {
-        uomText = this!.unitOfMeasureDescription ?? "";
-      } else {
-        uomText = this!.unitOfMeasureDisplay ?? "";
-      }
+    var uomText = ((!this!.unitOfMeasureDescription.isNullorWhitespace)
+            ? this!.unitOfMeasureDescription
+            : this!.unitOfMeasureDisplay) ??
+        '';
+    if ((this!.isPromotionItem == true) ||
+        (this!.isDiscounted == true) ||
+        (this!.pricing != null && this!.pricing!.isOnSale == true)) {
+      return uomText.isEmpty ? '' : ' / $uomText';
     } else {
-      uomText = this!.pricing.getUnitOfMeasure(uomText) ?? "";
+      uomText = this!.pricing.getUnitOfMeasure(uomText) ?? '';
     }
 
-    return uomText;
+    return uomText.isEmpty ? '' : ' / $uomText';
   }
 }

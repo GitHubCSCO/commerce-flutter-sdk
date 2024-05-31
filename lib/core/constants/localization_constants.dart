@@ -195,7 +195,7 @@ class LocalizationConstants {
   static const reorder = "Reorder";
   static const promo = "Promo {0}";
   static const shipments = "SHIPMENTS";
-  static const orderSummary = "ORDER SUMMARY";
+  static const orderSummary = "Order Summary";
   static const productItems = "PRODUCTS ({0} ITEMS)";
   static const trackShipment = "Track Shipment";
   static const requestPickUpDate = "Requested Pick Up Date";
@@ -426,7 +426,7 @@ class LocalizationConstants {
   static const emailAddress = "Email Address";
   static const promoName = "Promo {0}";
   static const creditCardAddress = "Credit Card Address";
-  static const orderSummaryItems = "Order Summary ({0} Items)";
+  static const orderSummaryItems = "Order Summary (%s Items)";
   static const cardNumber = "Card Number";
   static const uPS = "UPS";
   static const nextDayAir = "Next Day Air";

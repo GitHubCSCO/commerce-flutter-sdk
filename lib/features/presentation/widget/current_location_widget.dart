@@ -15,7 +15,7 @@ class CurrentLocationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CurrentLocationCubit, CurrentLocationState>(
-        builder: (context, state) {
+        builder: (_, state) {
       if (state is CurrentLocationLoadingState) {
         return const Center(
           child: CircularProgressIndicator(),
@@ -32,7 +32,9 @@ class CurrentLocationWidget extends StatelessWidget {
               ),
             ),
             CurrentLocationWidgetItem(
-                locationData: state.currentLocationDataEntity),
+              locationData: state.currentLocationDataEntity,
+              isVMILocaitonfinder: true,
+            ),
           ],
         );
       } else {

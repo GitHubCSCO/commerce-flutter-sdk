@@ -19,7 +19,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-
 class SearchProductsWidget extends StatefulWidget {
   // final GetProductCollectionResult productCollectionResult;
   final Function(int) onPageChanged; // Callback to handle page changes
@@ -219,61 +218,60 @@ class SearchProductWidget extends StatelessWidget {
                 ],
               ),
             ),
-            BlocProvider(
-              create: (context) =>
-                  sl<AddToCartCubit>()..updateAddToCartButton(product),
-              child: BlocConsumer<AddToCartCubit, AddToCartState>(
-                  builder: (context, state) {
-                switch (state) {
-                  case AddToCartInitial():
-                    return Container();
-                  case AddToCartButtonLoading():
-                    return Container(
-                      alignment: Alignment.bottomLeft,
-                      child: LoadingAnimationWidget.prograssiveDots(
-                        color: OptiAppColors.iconPrimary,
-                        size: 30,
-                      ),
-                    );
-                  case AddToCartEnable():
-                    if (state.canAddToCart) {
-                      return InkWell(
-                        onTap: () {
-                          var productId = product.styleParentId ?? product.id;
-                          context
-                              .read<AddToCartCubit>()
-                              .searchPorductAddToCard(productId!);
-                        },
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF5F5F5),
-                            borderRadius: BorderRadius.circular(32),
-                          ),
-                          child: SvgPicture.asset(
-                            AssetConstants.addToCart,
-                            fit: BoxFit.fitWidth,
-                          ),
-                        ),
-                      );
-                    }
-                    return Container();
-                  default:
-                    return Container();
-                }
-              }, listener: (context, state) {
-                switch (state) {
-                  case AddToCartSuccess():
-                    context.read<CartCountCubit>().onCartItemChange();
-                    CustomSnackBar.showProductAddedToCart(context);
-                    break;
-                  case AddToCartFailure(errorResponse: final errorResponse):
-                    break;
-                }
-              }),
-            )
+            BlocProvider<AddToCartCubit>(
+                create: (context) =>
+                    sl<AddToCartCubit>()..updateAddToCartButton(product),
+                child: BlocListener<AddToCartCubit, AddToCartState>(
+                    listener: (context, state) {
+                      if (state is AddToCartSuccess) {
+                        context.read<CartCountCubit>().onCartItemChange();
+                        CustomSnackBar.showProductAddedToCart(context);
+                      }
+                    },
+                    child: BlocBuilder<AddToCartCubit, AddToCartState>(
+                      buildWhen: (previous, current) =>
+                          current is AddToCartEnable &&
+                          previous is AddToCartButtonLoading,
+                      builder: (context, state) {
+                        if (state is AddToCartInitial) {
+                          return Container();
+                        } else if (state is AddToCartButtonLoading) {
+                          return Container(
+                            alignment: Alignment.bottomLeft,
+                            child: LoadingAnimationWidget.prograssiveDots(
+                              color: OptiAppColors.iconPrimary,
+                              size: 30,
+                            ),
+                          );
+                        } else if (state is AddToCartEnable) {
+                          if (state.canAddToCart) {
+                            return InkWell(
+                              onTap: () {
+                                var productId =
+                                    product.styleParentId ?? product.id;
+                                context
+                                    .read<AddToCartCubit>()
+                                    .searchPorductAddToCard(productId!);
+                              },
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF5F5F5),
+                                  borderRadius: BorderRadius.circular(32),
+                                ),
+                                child: SvgPicture.asset(
+                                  AssetConstants.addToCart,
+                                  fit: BoxFit.fitWidth,
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                        return Container();
+                      },
+                    )))
           ],
         ),
       ),
