@@ -26,7 +26,7 @@ class NumberTextField extends StatefulWidget {
     this.controller,
     this.focusNode,
     this.min = 1,
-    this.max = 999,
+    this.max = 100000,
     this.step = 1,
     this.arrowsWidth = 24,
     this.arrowsHeight = kMinInteractiveDimension,
@@ -77,21 +77,28 @@ class _NumberTextFieldState extends State<NumberTextField> {
         children: [
           // Minus button
           if (_shouldShowIncrementDecermentIcon)
-            TextButton(
-              onPressed: () {
-                if (_canGoDown) {
-                  _update(false);
-                }
-              },
-              style: TextButton.styleFrom(
-                backgroundColor: OptiAppColors.backgroundGray,
-                padding: EdgeInsets.all(16),
-                shape: CircleBorder(),
-              ),
-              child: Icon(
-                Icons.remove,
-                color: Colors.black,
-                size: 24,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: 40,
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_canGoDown) {
+                      _update(false);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: OptiAppColors.backgroundGray,
+                    padding: EdgeInsets.zero,
+                    shape: CircleBorder(),
+                  ),
+                  child: Icon(
+                    Icons.remove,
+                    color: Colors.black,
+                    size: 24,
+                  ),
+                ),
               ),
             ),
           // TextField
@@ -107,18 +114,18 @@ class _NumberTextFieldState extends State<NumberTextField> {
                 decoration: InputDecoration(
                   counterText: '',
                   contentPadding: const EdgeInsets.symmetric(
-                    horizontal: AppStyle.defaultHorizontalPadding,
+                    horizontal: AppStyle.textFieldDefaultHorizontalPadding,
                     vertical: AppStyle.defaultVerticalPadding,
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(
-                      AppStyle.borderRadius,
+                      AppStyle.textFieldborderRadius,
                     ),
                     borderSide: BorderSide.none,
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(
-                      AppStyle.borderRadius,
+                      AppStyle.textFieldborderRadius,
                     ),
                     borderSide: const BorderSide(
                       color: AppStyle.neutral500,
@@ -145,21 +152,28 @@ class _NumberTextFieldState extends State<NumberTextField> {
           ),
           // Plus button
           if (_shouldShowIncrementDecermentIcon)
-            TextButton(
-              onPressed: () {
-                if (_canGoUp) {
-                  _update(true);
-                }
-              },
-              style: TextButton.styleFrom(
-                backgroundColor: OptiAppColors.backgroundGray,
-                padding: EdgeInsets.all(16),
-                shape: CircleBorder(),
-              ),
-              child: Icon(
-                Icons.add,
-                color: Colors.black,
-                size: 24,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: 40,
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_canGoUp) {
+                      _update(true);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: OptiAppColors.backgroundGray,
+                    padding: EdgeInsets.zero,
+                    shape: CircleBorder(),
+                  ),
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.black,
+                    size: 24,
+                  ),
+                ),
               ),
             )
         ],

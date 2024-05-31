@@ -105,38 +105,37 @@ class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          ProductDetailsAddCartRow(widget.detailsAddToCartEntity, (int? value) {
-            setState(() {
-              quantity = value;
-            });
-          }),
-          if (widget.detailsAddToCartEntity.isAddToCartAllowed!)
-            PrimaryButton(
-                isEnabled:
-                    widget.detailsAddToCartEntity.addToCartButtonEnabled!,
-                leadingIcon: SvgPicture.asset(
-                  AssetConstants.productDeatilsAddToCartIcon,
-                  fit: BoxFit.fitWidth,
-                  color: Colors.white,
-                ),
-                text: LocalizationConstants.addToCart,
-                onPressed: widget.detailsAddToCartEntity.addToCartButtonEnabled!
-                    ? () {
-                        context.read<ProductDetailsAddToCartBloc>().add(
-                            AddToCartEvent(
-                                productDetailsDataEntity: context
-                                    .read<ProductDetailsBloc>()
-                                    .productDetailDataEntity,
-                                productDetailsAddToCartEntity:
-                                    widget.detailsAddToCartEntity.copyWith(
-                                        quantityText: quantity.toString())));
-                      }
-                    : null)
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ProductDetailsAddCartRow(widget.detailsAddToCartEntity, (int? value) {
+          setState(() {
+            quantity = value;
+          });
+        }),
+        if (widget.detailsAddToCartEntity.isAddToCartAllowed!)
+          PrimaryButton(
+              isEnabled: widget.detailsAddToCartEntity.addToCartButtonEnabled!,
+              leadingIcon: SvgPicture.asset(
+                AssetConstants.productDeatilsAddToCartIcon,
+                fit: BoxFit.fitWidth,
+                color: Colors.white,
+              ),
+              text: LocalizationConstants.addToCart,
+              onPressed: widget.detailsAddToCartEntity.addToCartButtonEnabled!
+                  ? () {
+                      context.read<ProductDetailsAddToCartBloc>().add(
+                          AddToCartEvent(
+                              productDetailsDataEntity: context
+                                  .read<ProductDetailsBloc>()
+                                  .productDetailDataEntity,
+                              productDetailsAddToCartEntity:
+                                  widget.detailsAddToCartEntity.copyWith(
+                                      quantityText: quantity.toString())));
+                    }
+                  : null)
+      ],
     );
   }
 }
@@ -154,7 +153,7 @@ class ProductDetailsAddCartRow extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            flex: 5,
+            flex: 4,
             child: NumberTextField(
                 initialtText: detailsAddToCartEntity.quantityText,
                 shouldShowIncrementDecermentIcon: true,
@@ -180,9 +179,14 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                   }
                 }),
           ),
-          ProductDetailsAddCartTtitleSubTitleColumn('U/M', 'E/A'),
-          ProductDetailsAddCartTtitleSubTitleColumn(
-              'Subtotal', detailsAddToCartEntity?.subtotalValueText ?? ''),
+          Expanded(
+              flex: 1,
+              child: ProductDetailsAddCartTtitleSubTitleColumn('U/M', 'E/A')),
+          Expanded(
+            flex: 4,
+            child: ProductDetailsAddCartTtitleSubTitleColumn(
+                'Subtotal', detailsAddToCartEntity?.subtotalValueText ?? ''),
+          ),
         ],
       ),
     );
@@ -201,14 +205,20 @@ class ProductDetailsAddCartTtitleSubTitleColumn extends StatelessWidget {
       flex: 2,
       child: Column(
         children: [
-          Text(
-            title,
-            style: OptiTextStyles.bodySmall,
+          FittedBox(
+            child: Text(
+              title,
+              style: OptiTextStyles.bodySmall,
+            ),
+            fit: BoxFit.scaleDown,
           ),
-          Text(
-            value,
-            style: OptiTextStyles.titleLarge,
-          )
+          FittedBox(
+            child: Text(
+              value,
+              style: OptiTextStyles.titleLarge,
+            ),
+            fit: BoxFit.scaleDown,
+          ),
         ],
       ),
     );
