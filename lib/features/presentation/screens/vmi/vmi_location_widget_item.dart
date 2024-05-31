@@ -49,7 +49,7 @@ class VMICurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                         },
                         child: CurrentLocationWidgetItem(
                             locationData: locationData,
-                            isVMILocaitonfinder: false)))
+                            isVMILocationfinder: false)))
               ],
             ),
           ),
