@@ -14,4 +14,8 @@ class CurrentLocationUseCase extends BaseUseCase {
         .getVmiService()
         .getPlaceFromAddress(address);
   }
+
+  Future<void> saveCurrentVmiLocation(VmiLocationModel vmiLocation) async {
+    coreServiceProvider.getVmiService().saveCurrentVmiLocation(vmiLocation);
+  }
 }

@@ -2,9 +2,11 @@ import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_type_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/location_search_type.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -137,6 +139,13 @@ class BaseActionItemWidget extends StatelessWidget {
       case ActionType.vmi:
         return () {
           AppRoute.vmi.navigateBackStack(context);
+        };
+      case ActionType.locationFinder:
+        return () {
+          AppRoute.locationSearch.navigateBackStack(context,
+              extra: VMILocationSelectCallbackHelper(
+                  onSelectVMILocation: (location) {},
+                  locationSearchType: LocationSearchType.locationFinder));
         };
       default:
         return () {
