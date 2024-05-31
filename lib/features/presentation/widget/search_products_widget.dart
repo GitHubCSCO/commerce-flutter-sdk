@@ -14,6 +14,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -24,13 +25,13 @@ class SearchProductsWidget extends StatefulWidget {
   final Function(int) onPageChanged; // Callback to handle page changes
 
   const SearchProductsWidget({
-    Key? key,
+    super.key,
     // required this.productCollectionResult,
     required this.onPageChanged,
-  }) : super(key: key);
+  });
 
   @override
-  _SearchProductsWidgetState createState() => _SearchProductsWidgetState();
+  State<SearchProductsWidget> createState() => _SearchProductsWidgetState();
 }
 
 class _SearchProductsWidgetState extends State<SearchProductsWidget> {
@@ -77,59 +78,83 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                 context.read<CartCountCubit>().onCartItemChange();
                 CustomSnackBar.showProductAddedToCart(context);
                 break;
-              case AddToCartFailure(errorResponse: final errorResponse):
+              case AddToCartFailure():
                 break;
             }
           },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  LocalizationConstants.resultsFor.format([
-                    (state.productEntities?.pagination?.totalItemCount == 0)
-                        ? LocalizationConstants.no
-                        : state.productEntities?.pagination?.totalItemCount,
-                    state.productEntities?.originalQuery
-                  ]),
-                  style: OptiTextStyles.header3,
-                ),
-              ),
-              Expanded(
-                child: ListView.separated(
-                  controller: _scrollController,
-                  padding: EdgeInsets.zero,
-                  separatorBuilder: (context, index) => const Divider(
-                    height: 1,
-                    indent: 16,
-                    endIndent: 16,
-                    color: Color(0xFFF5F5F5),
-                  ),
-                  itemCount: state.searchProductStatus ==
-                          SearchProductStatus.moreLoading
-                      ? (state.productEntities?.products?.length ?? 0) + 1
-                      : state.productEntities?.products?.length ?? 0,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    if (index >=
-                            (state.productEntities?.products?.length ?? 0) &&
-                        state.searchProductStatus ==
-                            SearchProductStatus.moreLoading) {
-                      return const Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    }
+          child: state.searchProductStatus == SearchProductStatus.loading
+              ? const Center(child: CircularProgressIndicator())
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            LocalizationConstants.resultsFor.format(
+                              [
+                                (state.productEntities?.pagination
+                                            ?.totalItemCount ==
+                                        0)
+                                    ? LocalizationConstants.no
+                                    : state.productEntities?.pagination
+                                        ?.totalItemCount,
+                                state.productEntities?.originalQuery
+                              ],
+                            ),
+                            style: OptiTextStyles.header3,
+                          ),
+                          SortToolMenu(
+                            availableSortOrders: state.availableSortOrders,
+                            onSortOrderChanged: (sortOrder) async {
+                              await context
+                                  .read<SearchProductsCubit>()
+                                  .sortOrderChanged(sortOrder);
+                            },
+                            selectedSortOrder: state.selectedSortOrder,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView.separated(
+                        controller: _scrollController,
+                        padding: EdgeInsets.zero,
+                        separatorBuilder: (context, index) => const Divider(
+                          height: 1,
+                          indent: 16,
+                          endIndent: 16,
+                          color: Color(0xFFF5F5F5),
+                        ),
+                        itemCount: state.searchProductStatus ==
+                                SearchProductStatus.moreLoading
+                            ? (state.productEntities?.products?.length ?? 0) + 1
+                            : state.productEntities?.products?.length ?? 0,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          if (index >=
+                                  (state.productEntities?.products?.length ??
+                                      0) &&
+                              state.searchProductStatus ==
+                                  SearchProductStatus.moreLoading) {
+                            return const Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Center(child: CircularProgressIndicator()),
+                            );
+                          }
 
-                    final product = state.productEntities?.products![index];
-                    return SearchProductWidget(
-                        product: ProductEntityMapper().toEntity(product!));
-                  },
+                          final product =
+                              state.productEntities?.products![index];
+                          return SearchProductWidget(
+                              product:
+                                  ProductEntityMapper().toEntity(product!));
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
         );
       },
     );
