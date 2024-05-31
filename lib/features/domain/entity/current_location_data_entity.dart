@@ -9,7 +9,10 @@ class CurrentLocationDataEntity extends Equatable {
   final String? thridLineValue;
   final String? locationName;
   final LatLong? latLong;
+  final VmiLocationModel? vmiLocation;
+
   CurrentLocationDataEntity({
+    this.vmiLocation,
     this.firestLineValue,
     this.secondLineValue,
     this.thridLineValue,
@@ -22,7 +25,8 @@ class CurrentLocationDataEntity extends Equatable {
     String? secondLineValue,
     String? thridLineValue,
     String? locationName,
-    LatLong? latLong, 
+    LatLong? latLong,
+    VmiLocationModel? vmiLocation,
   }) {
     return CurrentLocationDataEntity(
       firestLineValue: firestLineValue ?? this.firestLineValue,
@@ -30,21 +34,22 @@ class CurrentLocationDataEntity extends Equatable {
       thridLineValue: thridLineValue ?? this.thridLineValue,
       locationName: locationName ?? this.locationName,
       latLong: latLong ?? this.latLong,
+      vmiLocation: vmiLocation ?? this.vmiLocation,
     );
   }
 
   factory CurrentLocationDataEntity.fromVmiLocation(VmiLocationModel? value) {
     return CurrentLocationDataEntity(
-      firestLineValue: isNullOrWhiteSpace(value?.customer.address2)
-          ? value?.customer.address1
-          : "${value?.customer.address1}, ${value?.customer.address2}",
-      secondLineValue: isNullOrWhiteSpace(value?.customer.state?.name) &&
-              isNullOrWhiteSpace(value?.customer.postalCode)
-          ? "${value?.customer.city}"
-          : "${value?.customer.city}, ${value?.customer.state?.name} ${value?.customer.postalCode}",
-      thridLineValue: value?.customer.phone,
-      locationName: value?.name,
-    );
+        firestLineValue: isNullOrWhiteSpace(value?.customer?.address2)
+            ? value?.customer?.address1
+            : "${value?.customer?.address1}, ${value?.customer?.address2}",
+        secondLineValue: isNullOrWhiteSpace(value?.customer?.state?.name) &&
+                isNullOrWhiteSpace(value?.customer?.postalCode)
+            ? "${value?.customer?.city}"
+            : "${value?.customer?.city}, ${value?.customer?.state?.name} ${value?.customer?.postalCode}",
+        thridLineValue: value?.customer?.phone,
+        locationName: value?.name,
+        vmiLocation: value);
   }
 
   @override
@@ -55,6 +60,7 @@ class CurrentLocationDataEntity extends Equatable {
       thridLineValue,
       locationName,
       latLong,
+      vmiLocation
     ];
   }
 }
