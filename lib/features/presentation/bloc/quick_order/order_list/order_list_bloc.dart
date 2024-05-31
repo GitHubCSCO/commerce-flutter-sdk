@@ -40,7 +40,6 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
   void _createAlternateCart() {
     if (scanningMode == ScanningMode.count || scanningMode == ScanningMode.create) {
-      print('vmicheckout createAlternateCart');
       _quickOrderUseCase.createAlternateCart();
     }
   }
@@ -48,7 +47,6 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   @override
   Future<void> close() async {
     if (scanningMode == ScanningMode.count || scanningMode == ScanningMode.create) {
-      print('vmicheckout removeAlternateCart');
       _quickOrderUseCase.removeAlternateCart();
     }
     super.close();
