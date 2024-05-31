@@ -158,3 +158,29 @@ class SortToolMenu extends StatelessWidget {
     );
   }
 }
+
+class SortToolMenuHelper {
+  static List<SortOrderAttribute> convertOptionToAttribute({
+    required List<SortOption> sortOptions,
+  }) {
+    return sortOptions
+        .map(
+          (e) => SortOrderAttribute(
+            groupTitle: e.displayName ?? '',
+            title: '${e.displayName ?? ''} \u2713',
+            value: e.sortType ?? '',
+          ),
+        )
+        .toList();
+  }
+
+  static SortOrderAttribute getSelectedSortOrder({
+    required List<SortOrderAttribute> availableSortOrders,
+    required String selectedSortOrderType,
+  }) {
+    return availableSortOrders.firstWhere(
+      (element) => element.value == selectedSortOrderType,
+      orElse: () => availableSortOrders.first,
+    );
+  }
+}

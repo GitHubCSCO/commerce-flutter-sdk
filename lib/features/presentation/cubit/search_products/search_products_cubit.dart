@@ -13,18 +13,37 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
   SearchProductsCubit({required SearchUseCase searchUseCase})
       : _searchUseCase = searchUseCase,
         super(
-        const SearchProductsState(
-          productEntities: null,
-          searchProductStatus: SearchProductStatus.initial,
-        ),
-      );
+          SearchProductsState(
+            productEntities: null,
+            searchProductStatus: SearchProductStatus.initial,
+            availableSortOrders: const [],
+            selectedSortOrder: SortOrderAttribute(
+              groupTitle: '',
+              title: '',
+              value: '',
+            ),
+          ),
+        );
 
-  void loadInitialSearchProducts(GetProductCollectionResult productCollectionResult) {
+  void loadInitialSearchProducts(
+      GetProductCollectionResult productCollectionResult) {
     query = productCollectionResult.originalQuery;
+
+    final sortOptions = productCollectionResult.pagination?.sortOptions ?? [];
+    final availableSortOrders = _searchUseCase.getAvailableSortOrders(
+      sortOptions: sortOptions,
+    );
+    final selectedSortOrder = _searchUseCase.getSelectedSortOrder(
+      availableSortOrders: availableSortOrders,
+      selectedSortOrderType: productCollectionResult.pagination?.sortType ?? '',
+    );
+
     emit(
       state.copyWith(
         productEntities: productCollectionResult,
         searchProductStatus: SearchProductStatus.success,
+        availableSortOrders: availableSortOrders,
+        selectedSortOrder: selectedSortOrder,
       ),
     );
   }
@@ -41,10 +60,12 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
     final result = await _searchUseCase.loadSearchProductsResults(
       state.productEntities?.originalQuery ?? '',
       (state.productEntities?.pagination?.page ?? 0) + 1,
+      selectedSortOrder: state.selectedSortOrder,
     );
 
     if (result == null) {
-      emit(state.copyWith(searchProductStatus: SearchProductStatus.moreLoadingFailure));
+      emit(state.copyWith(
+          searchProductStatus: SearchProductStatus.moreLoadingFailure));
       return;
     }
 
@@ -55,8 +76,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
         products?.addAll(data?.products ?? []);
         state.productEntities?.products = products;
         state.productEntities?.pagination = data?.pagination;
-      case Failure(errorResponse: final errorResponse):
-      default:
+      case Failure():
     }
 
     emit(
@@ -67,4 +87,42 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
     );
   }
 
+  Future<void> sortOrderChanged(SortOrderAttribute sortOrder) async {
+    emit(state.copyWith(searchProductStatus: SearchProductStatus.loading));
+    final result = await _searchUseCase.loadSearchProductsResults(
+      state.productEntities?.originalQuery ?? '',
+      1,
+      selectedSortOrder: sortOrder,
+    );
+
+    switch (result) {
+      case Success(value: final data):
+        if (data == null) {
+          emit(
+              state.copyWith(searchProductStatus: SearchProductStatus.failure));
+          return;
+        }
+
+        final sortOptions = data.pagination?.sortOptions ?? [];
+        final availableSortOrders = _searchUseCase.getAvailableSortOrders(
+          sortOptions: sortOptions,
+        );
+
+        final selectedSortOrder = _searchUseCase.getSelectedSortOrder(
+          availableSortOrders: availableSortOrders,
+          selectedSortOrderType: data.pagination?.sortType ?? '',
+        );
+
+        emit(
+          state.copyWith(
+            productEntities: data,
+            searchProductStatus: SearchProductStatus.success,
+            availableSortOrders: availableSortOrders,
+            selectedSortOrder: selectedSortOrder,
+          ),
+        );
+      default:
+        emit(state.copyWith(searchProductStatus: SearchProductStatus.failure));
+    }
+  }
 }
