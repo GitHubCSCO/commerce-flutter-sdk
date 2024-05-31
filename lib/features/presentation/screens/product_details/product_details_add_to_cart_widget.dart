@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
@@ -106,8 +107,6 @@ class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ProductDetailsAddCartRow(widget.detailsAddToCartEntity, (int? value) {
           setState(() {
@@ -151,10 +150,13 @@ class ProductDetailsAddCartRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             flex: 4,
             child: NumberTextField(
+                max: CoreConstants.maximumOrderQuantity,
                 initialtText: detailsAddToCartEntity.quantityText,
                 shouldShowIncrementDecermentIcon: true,
                 onChanged: (int? quantity) {
@@ -183,7 +185,7 @@ class ProductDetailsAddCartRow extends StatelessWidget {
               flex: 1,
               child: ProductDetailsAddCartTtitleSubTitleColumn('U/M', 'E/A')),
           Expanded(
-            flex: 4,
+            flex: 3,
             child: ProductDetailsAddCartTtitleSubTitleColumn(
                 'Subtotal', detailsAddToCartEntity?.subtotalValueText ?? ''),
           ),
@@ -201,26 +203,20 @@ class ProductDetailsAddCartTtitleSubTitleColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: 2,
-      child: Column(
-        children: [
-          FittedBox(
-            child: Text(
-              title,
-              style: OptiTextStyles.bodySmall,
-            ),
-            fit: BoxFit.scaleDown,
+    return Column(
+      children: [
+        Text(
+          title,
+          style: OptiTextStyles.bodySmall,
+        ),
+        FittedBox(
+          child: Text(
+            value,
+            style: OptiTextStyles.titleLarge,
           ),
-          FittedBox(
-            child: Text(
-              value,
-              style: OptiTextStyles.titleLarge,
-            ),
-            fit: BoxFit.scaleDown,
-          ),
-        ],
-      ),
+          fit: BoxFit.scaleDown,
+        ),
+      ],
     );
   }
 }

@@ -26,7 +26,7 @@ class NumberTextField extends StatefulWidget {
     this.controller,
     this.focusNode,
     this.min = 1,
-    this.max = 100000,
+    this.max = 999,
     this.step = 1,
     this.arrowsWidth = 24,
     this.arrowsHeight = kMinInteractiveDimension,
@@ -78,7 +78,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
           // Minus button
           if (_shouldShowIncrementDecermentIcon)
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(right: 8.0),
               child: SizedBox(
                 width: 40,
                 height: 40,
@@ -153,7 +153,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
           // Plus button
           if (_shouldShowIncrementDecermentIcon)
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(right: 8.0),
               child: SizedBox(
                 width: 40,
                 height: 40,
