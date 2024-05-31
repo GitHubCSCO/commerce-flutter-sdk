@@ -16,14 +16,14 @@ PODS:
   - Firebase/RemoteConfig (10.25.0):
     - Firebase/CoreOnly
     - FirebaseRemoteConfig (~> 10.25.0)
-  - firebase_core (2.31.1):
+  - firebase_core (2.32.0):
     - Firebase/CoreOnly (= 10.25.0)
     - Flutter
-  - firebase_crashlytics (3.5.6):
+  - firebase_crashlytics (3.5.7):
     - Firebase/Crashlytics (= 10.25.0)
     - firebase_core
     - Flutter
-  - firebase_remote_config (4.4.6):
+  - firebase_remote_config (4.4.7):
     - Firebase/RemoteConfig (= 10.25.0)
     - firebase_core
     - Flutter
@@ -73,6 +73,9 @@ PODS:
   - Flutter (1.0.0)
   - flutter_secure_storage (6.0.0):
     - Flutter
+  - google_maps_flutter_ios (0.0.1):
+    - Flutter
+    - GoogleMaps (< 9.0, >= 8.4)
   - google_mlkit_barcode_scanning (0.10.0):
     - Flutter
     - google_mlkit_commons
@@ -84,6 +87,11 @@ PODS:
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30911.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleMaps (8.4.0):
+    - GoogleMaps/Maps (= 8.4.0)
+  - GoogleMaps/Base (8.4.0)
+  - GoogleMaps/Maps (8.4.0):
+    - GoogleMaps/Base
   - GoogleMLKit/BarcodeScanning (4.0.0):
     - GoogleMLKit/MLKitCore
     - MLKitBarcodeScanning (~> 3.0.0)
@@ -119,6 +127,8 @@ PODS:
   - just_audio (0.0.1):
     - Flutter
   - local_auth_darwin (0.0.1):
+    - Flutter
+  - location (0.0.1):
     - Flutter
   - map_launcher (0.0.1):
     - Flutter
@@ -180,10 +190,12 @@ DEPENDENCIES:
   - firebase_remote_config (from `.symlinks/plugins/firebase_remote_config/ios`)
   - Flutter (from `Flutter`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
   - google_mlkit_barcode_scanning (from `.symlinks/plugins/google_mlkit_barcode_scanning/ios`)
   - google_mlkit_commons (from `.symlinks/plugins/google_mlkit_commons/ios`)
   - just_audio (from `.symlinks/plugins/just_audio/ios`)
   - local_auth_darwin (from `.symlinks/plugins/local_auth_darwin/darwin`)
+  - location (from `.symlinks/plugins/location/ios`)
   - map_launcher (from `.symlinks/plugins/map_launcher/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -208,6 +220,7 @@ SPEC REPOS:
     - FirebaseSessions
     - FirebaseSharedSwift
     - GoogleDataTransport
+    - GoogleMaps
     - GoogleMLKit
     - GoogleToolboxForMac
     - GoogleUtilities
@@ -241,6 +254,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  google_maps_flutter_ios:
+    :path: ".symlinks/plugins/google_maps_flutter_ios/ios"
   google_mlkit_barcode_scanning:
     :path: ".symlinks/plugins/google_mlkit_barcode_scanning/ios"
   google_mlkit_commons:
@@ -249,6 +264,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/just_audio/ios"
   local_auth_darwin:
     :path: ".symlinks/plugins/local_auth_darwin/darwin"
+  location:
+    :path: ".symlinks/plugins/location/ios"
   map_launcher:
     :path: ".symlinks/plugins/map_launcher/ios"
   package_info_plus:
@@ -274,9 +291,9 @@ SPEC CHECKSUMS:
   connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
   device_info_plus: c6fb39579d0f423935b0c9ce7ee2f44b71b9fce6
   Firebase: 0312a2352584f782ea56f66d91606891d4607f06
-  firebase_core: 22e117a2e0dec3cb318c8f53f2dd01c140375617
-  firebase_crashlytics: bd50e4bbd2ac62cb6d5efd73449f414a2619e55b
-  firebase_remote_config: 347436da419c4b6d64995edc037e9ed56158354b
+  firebase_core: a626d00494efa398e7c54f25f1454a64c8abf197
+  firebase_crashlytics: 17e856fabec68d993662abaf2f6fe2413f0abece
+  firebase_remote_config: 7b05c80210ab558c80f7a756681022b4ee98eea0
   FirebaseABTesting: e6e3c3e0e35813874f571d1b7bdae2aab319dd38
   FirebaseCore: 7ec4d0484817f12c3373955bc87762d96842d483
   FirebaseCoreExtension: 8a47811d0b155501559ef05d089518152a0a1677
@@ -289,9 +306,11 @@ SPEC CHECKSUMS:
   FirebaseSharedSwift: 0274086954b1b2d5fd7e829eccc587044d72a4ba
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_secure_storage: d33dac7ae2ea08509be337e775f6b59f1ff45f12
+  google_maps_flutter_ios: c454f18e0e22df6ac0e9f2a4df340858f5a3680c
   google_mlkit_barcode_scanning: d42717e8a28a5523bcb0b8a285c7d19555021c68
   google_mlkit_commons: 3857c1e9f23ca02073f8dd34a7a3580feb814cef
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
+  GoogleMaps: 8939898920281c649150e0af74aa291c60f2e77d
   GoogleMLKit: 2bd0dc6253c4d4f227aad460f69215a504b2980e
   GoogleToolboxForMac: 8bef7c7c5cf7291c687cf5354f39f9db6399ad34
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
@@ -299,6 +318,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
   just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
   local_auth_darwin: 4d56c90c2683319835a61274b57620df9c4520ab
+  location: d5cf8598915965547c3f36761ae9cc4f4e87d22e
   map_launcher: 5fde49ac9a52672bf99da746599f507b4490d7b5
   MLImage: 7bb7c4264164ade9bf64f679b40fb29c8f33ee9b
   MLKitBarcodeScanning: 04e264482c5f3810cb89ebc134ef6b61e67db505
@@ -317,6 +337,6 @@ SPEC CHECKSUMS:
   wakelock_plus: 78ec7c5b202cab7761af8e2b2b3d0671be6c4ae1
   webview_flutter_wkwebview: be0f0d33777f1bfd0c9fdcb594786704dbf65f36
 
-PODFILE CHECKSUM: c5c5bbf44beb76db17e254e0a8177e044d50a534
+PODFILE CHECKSUM: ed3a98e587ab30bf60c59e7384f93c779c47a98c
 
 COCOAPODS: 1.15.2

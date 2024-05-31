@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/current_location_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/location_note_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/previous_orders_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
@@ -9,6 +10,7 @@ import 'package:commerce_flutter_app/features/domain/entity/product_carousel/pro
 import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/location_note_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -120,11 +122,18 @@ class CmsCubit extends Cubit<CmsState> {
               widgetEntity as CurrentLocationWidgetEntity;
           return currentLocationWidgetEntity;
         }
-        case PreviousOrdersWidgetEntity:
+      case PreviousOrdersWidgetEntity:
         {
           final PreviousOrdersWidgetEntity previousOrdersWidgetEntity =
               widgetEntity as PreviousOrdersWidgetEntity;
           return previousOrdersWidgetEntity;
+        }
+
+      case LocationNoteWidgetEntity:
+        {
+          final LocationNoteWidgetEntity locationNoteWidgetEntity =
+              widgetEntity as LocationNoteWidgetEntity;
+          return locationNoteWidgetEntity;
         }
     }
     return null;

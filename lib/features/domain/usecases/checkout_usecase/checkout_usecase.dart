@@ -4,7 +4,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class CheckoutUsecase extends BaseUseCase {
   CheckoutUsecase() : super();
 
-  Future<Result<Cart, ErrorResponse>> getCart(String cartId) async {
+  Future<Result<Cart, ErrorResponse>> getCart(String? cartId) async {
     // cart get for IsAcceptQuote is different,, need to implement it later
     var cartParameters = CartQueryParameters(cartId: cartId, expand: [
       'cartlines',

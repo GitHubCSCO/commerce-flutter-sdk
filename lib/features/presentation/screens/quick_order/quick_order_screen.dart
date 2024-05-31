@@ -27,6 +27,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/sty
 import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/barcode_scanner_view.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/vmi_checkout/vmi_checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_list/quick_order_list_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
@@ -173,6 +174,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                 context.read<CartCountCubit>().onCartItemChange();
                                 context.read<CartCountCubit>().onSelectCartTab();
                                 AppRoute.cart.navigate(context);
+                              } else if (state is OrderListNavigateToVmiCheckoutState) {
+                                _handleVmiCheckout(state.cart);
                               } else if (state is OrderListAddToListSuccessState) {
                                 WishListCallbackHelper.addItemsToWishList(
                                   context, 
@@ -320,7 +323,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                             ),
                                           ),
                                           const SizedBox(height: 20),
-                                          PrimaryButton(
+                                          TertiaryButton(
                                             isEnabled: (state is OrderListLoadedState &&
                                                 state.quickOrderItemList.isNotEmpty)
                                                 ? true
@@ -328,7 +331,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                             onPressed: () {
                                               _addToCart(context);
                                             },
-                                            text: _getCheckoutButtonTitle(widget.scanningMode),
+                                            child: Text(_getCheckoutButtonTitle(widget.scanningMode)),
                                           ),
                                           const SizedBox(height: 4),
                                           PrimaryButton(
@@ -646,6 +649,16 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     } else {
       context.read<OrderListBloc>().add(OrderListLoadEvent());
     }
+  }
+
+  void _handleVmiCheckout(Cart cart) async {
+    final vmiCheckoutEntity = VmiCheckoutEntity(cart, widget.scanningMode);
+    await context.pushNamed(
+      AppRoute.vmiCheckout.name,
+      extra: vmiCheckoutEntity,
+    );
+
+    context.read<OrderListBloc>().add(OrderListLoadEvent());
   }
 
   String _getTitle(ScanningMode scanningMode) {

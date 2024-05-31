@@ -94,5 +94,23 @@ class CustomSnackBar {
     );
   }
 
+  static void showVMILocationNoteSaved(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(LocalizationConstants.locationNoteUpdated),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showVMILocationNoteNotSaved(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(LocalizationConstants.error),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
   static showComingSoon(BuildContext context) {}
 }

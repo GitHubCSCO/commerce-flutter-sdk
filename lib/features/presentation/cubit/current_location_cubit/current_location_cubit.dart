@@ -13,6 +13,7 @@ class CurrentLocationCubit extends Cubit<CurrentLocationState> {
         super(CurrentLocationInitialState());
 
   Future<void> onLoadLocationData() async {
+    emit(CurrentLocationLoadingState());
     VmiLocationModel? vmiLocation =
         _currentLocationUseCase.getCurrentLocation();
     LatLong? latLong;
@@ -25,8 +26,16 @@ class CurrentLocationCubit extends Cubit<CurrentLocationState> {
         CurrentLocationDataEntity.fromVmiLocation(vmiLocation);
     currentLocationDataEntity =
         currentLocationDataEntity.copyWith(latLong: latLong);
+    currentLocationDataEntity =
+        currentLocationDataEntity.copyWith(vmiLocation: vmiLocation);
 
     emit(CurrentLocationLoadedState(
         currentLocationDataEntity: currentLocationDataEntity));
+  }
+
+  Future<void> onLocationSelectEvent(
+      CurrentLocationDataEntity currentLocationDataEntity) async {
+    await _currentLocationUseCase
+        .saveCurrentVmiLocation(currentLocationDataEntity.vmiLocation!);
   }
 }

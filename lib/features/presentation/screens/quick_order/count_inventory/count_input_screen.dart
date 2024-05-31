@@ -11,6 +11,7 @@ import 'package:commerce_flutter_app/features/presentation/components/buttons.da
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/count_inventory/count_inventory_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/product_list_with_basicInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -98,7 +99,7 @@ class _CountInputPageState extends State<CountInputPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ProductListItemWithTitleAndNumber(
+                      ProductListItemWithBasicInfo(
                         imageUrl: widget.countInventoryEntity.vmiBinEntity
                             .productEntity?.smallImagePath,
                         title: widget.countInventoryEntity.vmiBinEntity
@@ -454,79 +455,5 @@ class _CountInputPageState extends State<CountInputPage> {
       }
     }
     return '';
-  }
-}
-
-class ProductListItemWithTitleAndNumber extends StatelessWidget {
-  final String? imageUrl, title, productNumber;
-
-  const ProductListItemWithTitleAndNumber(
-      {this.imageUrl, this.title, this.productNumber, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      decoration: const BoxDecoration(color: Colors.white),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 60,
-            height: 60,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(width: 1, color: const Color(0xFFD6D6D6)),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  imageUrl.makeImageUrl(),
-                  fit: BoxFit.cover,
-                  errorBuilder: (BuildContext context, Object error,
-                      StackTrace? stackTrace) {
-                    // This function is called when the image fails to load
-                    return Container(
-                      color: OptiAppColors.backgroundGray, // Placeholder color
-                      alignment: Alignment.center,
-                      child: const Icon(
-                        Icons.image, // Icon to display
-                        color: Colors.grey, // Icon color
-                        size: 30, // Icon size
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 11),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  title ?? "",
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                  style: OptiTextStyles.bodySmall,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  LocalizationConstants.itemNumber
-                      .format([productNumber ?? '']),
-                  style: OptiTextStyles.bodySmall.copyWith(
-                    color: OptiAppColors.textDisabledColor,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
