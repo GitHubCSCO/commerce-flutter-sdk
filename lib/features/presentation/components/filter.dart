@@ -10,6 +10,7 @@ class FilterValueViewModel {
     required this.id,
     required this.title,
     this.facetType,
+    this.isSelected,
   });
 
   final String id;
@@ -18,16 +19,48 @@ class FilterValueViewModel {
 
   final FacetType? facetType;
 
+  final bool? isSelected;
+
   FilterValueViewModel copyWith({
     String? id,
     String? title,
     FacetType? facetType,
+    bool? isSelected,
   }) {
     return FilterValueViewModel(
       id: id ?? this.id,
       title: title ?? this.title,
       facetType: facetType ?? this.facetType,
+      isSelected: isSelected ?? this.isSelected,
     );
+  }
+}
+
+class FilterValueViewModelCollection {
+  final int? maxItemsToShow;
+  final List<FilterValueViewModel> values;
+  final String title;
+
+  FilterValueViewModelCollection({
+    this.maxItemsToShow,
+    required this.values,
+    required this.title,
+  });
+
+  FilterValueViewModelCollection copyWith({
+    int? maxItemsToShow,
+    List<FilterValueViewModel>? values,
+    String? title,
+  }) {
+    return FilterValueViewModelCollection(
+      maxItemsToShow: maxItemsToShow ?? this.maxItemsToShow,
+      values: values ?? this.values,
+      title: title ?? this.title,
+    );
+  }
+
+  bool get anyFiltersSelected {
+    return values.any((element) => element.isSelected == true);
   }
 }
 
