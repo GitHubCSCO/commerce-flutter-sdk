@@ -25,14 +25,12 @@ class _MapWidgetState extends State<MapWidget> {
   Widget build(BuildContext context) {
     return BlocListener<GMapCubit, GMapState>(
       listener: (context, state) async {
-
-
         if (state is GMapMarkesUpdated) {
           final GoogleMapController controller = await _controller.future;
           final firstMarker = state.focusMarker;
           final CameraPosition newPosition = CameraPosition(
             target: firstMarker.position,
-            zoom: 14.4746,
+            zoom: 6,
           );
           Future.microtask(() async {
             await controller
@@ -55,7 +53,7 @@ class _MapWidgetState extends State<MapWidget> {
                   final firstMarker = state.focusMarker;
                   final CameraPosition newPosition = CameraPosition(
                     target: firstMarker.position,
-                    zoom: 14.4746,
+                    zoom: 6,
                   );
 
                   if (newPosition != null) {

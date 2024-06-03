@@ -2,14 +2,24 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/mixins/map_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class DealerLocationWidgetItem extends StatelessWidget with MapDirection {
+class DealerLocationWidgetItem extends StatefulWidget {
   final Dealer dealerData;
 
   DealerLocationWidgetItem({
     required this.dealerData,
   });
+
+  @override
+  _DealerLocationWidgetItemState createState() =>
+      _DealerLocationWidgetItemState();
+}
+
+class _DealerLocationWidgetItemState extends State<DealerLocationWidgetItem>
+    with MapDirection {
+  bool _isHoursExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -22,22 +32,22 @@ class DealerLocationWidgetItem extends StatelessWidget with MapDirection {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                dealerData.name ?? "",
+                widget.dealerData.name ?? "",
                 style: OptiTextStyles.subtitle,
                 overflow: TextOverflow.ellipsis,
               ),
               Text(
-                dealerData.address1 ?? "",
+                widget.dealerData.address1 ?? "",
                 style: OptiTextStyles.body,
                 overflow: TextOverflow.ellipsis,
               ),
               Text(
-                dealerData.address2 ?? "",
+                "${widget.dealerData.city}, ${widget.dealerData.state} ${widget.dealerData.postalCode}",
                 style: OptiTextStyles.body,
                 overflow: TextOverflow.ellipsis,
               ),
               Text(
-                dealerData.phone ?? "",
+                widget.dealerData.phone ?? "",
                 style: OptiTextStyles.body,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -48,12 +58,14 @@ class DealerLocationWidgetItem extends StatelessWidget with MapDirection {
                   children: [
                     InkWell(
                       child: Text(
-                        LocalizationConstants.call,
+                        LocalizationConstants.hours,
                         textAlign: TextAlign.center,
                         style: OptiTextStyles.link,
                       ),
                       onTap: () {
-                        // _onmakeCall(locationData.thridLineValue ?? "");
+                        setState(() {
+                          _isHoursExpanded = !_isHoursExpanded;
+                        });
                       },
                     ),
                     const SizedBox(width: 16),
@@ -64,25 +76,28 @@ class DealerLocationWidgetItem extends StatelessWidget with MapDirection {
                         style: OptiTextStyles.link,
                       ),
                       onTap: () {
-                        // _onDirectionsClick(
-                        //     locationData.latLong?.latitude ?? 0.0,
-                        //     locationData.latLong?.longitude ?? 0.0);
+                        _onDirectionsClick(widget.dealerData.latitude ?? 0.0,
+                            widget.dealerData.longitude ?? 0.0);
                       },
                     ),
                     const SizedBox(width: 16),
-                    InkWell(
-                      child: Text(
-                        LocalizationConstants.changeLocation,
-                        textAlign: TextAlign.center,
-                        style: OptiTextStyles.link,
-                      ),
-                      onTap: () {
-                        _onChangeLocationClick(context);
-                      },
-                    )
+                    Text(
+                      "Distance ${widget.dealerData.distance?.toStringAsFixed(2)} Mi",
+                      textAlign: TextAlign.center,
+                      style: OptiTextStyles.body,
+                    ),
                   ],
                 ),
               ),
+              if (_isHoursExpanded)
+                HtmlWidget(
+                  widget.dealerData.htmlContent ?? "",
+                  textStyle: OptiTextStyles.body,
+                ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Divider(),
+              )
             ],
           ),
         ),
@@ -90,32 +105,7 @@ class DealerLocationWidgetItem extends StatelessWidget with MapDirection {
     );
   }
 
-  void _onmakeCall(String phoneNumber) async {
-    // final Uri call = Uri(
-    //   scheme: 'tel',
-    //   path: phoneNumber,
-    // );
-    // if (await canLaunchUrl(call)) {
-    //   await launchUrl(call);
-    // }
-  }
-
   Future<void> _onDirectionsClick(double longitude, double latitude) async {
     await launchMap(latitude, longitude);
-  }
-
-  Future<void> _onChangeLocationClick(BuildContext context) async {
-    // AppRoute.locationSearch.navigateBackStack(context,
-    //     extra: VMILocationSelectCallbackHelper(
-    //         onSelectVMILocation: (location) {
-    //           context
-    //               .read<CurrentLocationCubit>()
-    //               .onLocationSelectEvent(location);
-    //           context.read<CurrentLocationCubit>().onLoadLocationData();
-
-    //           // ignore: avoid_print
-    //           print("Location Selected: $location");
-    //         },
-    //         locationSearchType: LocationSearchType.vmi));
   }
 }
