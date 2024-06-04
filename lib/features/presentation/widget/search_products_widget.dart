@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/product_list_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/search_product_status.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
@@ -15,6 +16,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/search_product_filter_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -106,14 +108,20 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                             ),
                             style: OptiTextStyles.header3,
                           ),
-                          SortToolMenu(
-                            availableSortOrders: state.availableSortOrders,
-                            onSortOrderChanged: (sortOrder) async {
-                              await context
-                                  .read<SearchProductsCubit>()
-                                  .sortOrderChanged(sortOrder);
-                            },
-                            selectedSortOrder: state.selectedSortOrder,
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SortToolMenu(
+                                availableSortOrders: state.availableSortOrders,
+                                onSortOrderChanged: (sortOrder) async {
+                                  await context
+                                      .read<SearchProductsCubit>()
+                                      .sortOrderChanged(sortOrder);
+                                },
+                                selectedSortOrder: state.selectedSortOrder,
+                              ),
+                              SearchProductFilterWidget(context, productListType: ProductListType.searchProducts),
+                            ],
                           ),
                         ],
                       ),
