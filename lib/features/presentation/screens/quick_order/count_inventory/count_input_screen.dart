@@ -1,17 +1,16 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/date_time_extension.dart';
-import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/count_inventory/count_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/product_list_with_basicInfo.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/tab_switch_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -108,47 +107,11 @@ class _CountInputPageState extends State<CountInputPage> {
                             .productEntity?.erpNumber,
                       ),
                       const SizedBox(height: 20.0),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: OptiAppColors.backgroundGray,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                _buildSelectableContainer(
-                                  text: LocalizationConstants.history,
-                                  isSelected: selectedIndex == 0,
-                                  onTap: () {
-                                    if (selectedIndex != 0) {
-                                      setState(() {
-                                        selectedIndex = 0;
-                                      });
-                                    }
-                                  },
-                                ),
-                                _buildSelectableContainer(
-                                  text: LocalizationConstants.productInfo,
-                                  isSelected: selectedIndex == 1,
-                                  onTap: () {
-                                    if (selectedIndex != 1) {
-                                      setState(() {
-                                        selectedIndex = 1;
-                                      });
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: selectedIndex == 0 ? _getHistoryWidget() : _getProductInfoWidget(),
+                      TabSwitchWidget(
+                        tabTitle0: LocalizationConstants.history,
+                        tabTitle1: LocalizationConstants.productInfo,
+                        tabWidget0: _getHistoryWidget(),
+                        tabWidget1: _getProductInfoWidget(),
                       ),
                       _getQtyInputWidget()
                     ],
