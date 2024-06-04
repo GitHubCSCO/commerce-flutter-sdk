@@ -104,23 +104,27 @@ void showFilterModalSheet(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                    ),
-                    child: Text(
-                      LocalizationConstants.filter,
-                      style: OptiTextStyles.titleLarge,
-                    ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                        ),
+                        child: Text(
+                          LocalizationConstants.filter,
+                          style: OptiTextStyles.titleLarge,
+                        ),
+                      ),
+                      child,
+                    ],
                   ),
-                  child,
-                ],
+                ),
               ),
             ),
             Container(
