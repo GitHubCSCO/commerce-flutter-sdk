@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_change_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/biometric/biometric_login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
@@ -374,6 +375,15 @@ List<NavigationNode> _getNavigationRoot() {
     parent: orderHistory,
   );
 
+  // path: /billToShipToChange
+  final billToShipToChange = createNode(
+    name: AppRoute.billToShipToChange.name,
+    path: AppRoute.billToShipToChange.suffix,
+    builder: (context, state) => const BillToShipToChangeScreen(),
+    parent: null,
+  );
+
+
   return [
     root,
     navbarRoot,
@@ -394,6 +404,7 @@ List<NavigationNode> _getNavigationRoot() {
     addToWishList,
     forgotPassword,
     vmiLocationNote,
-    locationSearch
+    locationSearch,
+    billToShipToChange
   ];
 }
