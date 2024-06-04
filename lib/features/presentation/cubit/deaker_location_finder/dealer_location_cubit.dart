@@ -7,6 +7,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class DealerLocationCubit extends Cubit<DealerLocationState> {
   GooglePlace? seachPlace;
   final DealerLocationUsecase _dealerLocationUsecase;
+  double radius = 100.0;
   DealerLocationCubit({required DealerLocationUsecase dealerLocationUsecase})
       : _dealerLocationUsecase = dealerLocationUsecase,
         super(DealerLocationInitialState());
@@ -15,7 +16,7 @@ class DealerLocationCubit extends Cubit<DealerLocationState> {
     var requestParameters = DealerLocationFinderQueryParameters(
         latitude: seachPlace?.latitude,
         longitude: seachPlace?.longitude,
-        radius: 100.0,
+        radius: radius,
         page: 1,
         pageSize: 16);
 
@@ -31,5 +32,14 @@ class DealerLocationCubit extends Cubit<DealerLocationState> {
           emit(DealerLocationFailureState(message: error.message ?? ''));
         }
     }
+  }
+
+  Future<void> updateSeachPlaceForDealer(GooglePlace? seachPlace) async {
+    this.seachPlace = seachPlace;
+    loadDealersLocation();
+  }
+
+  Future<void> updateVisibleMapRdius(double radius) async {
+    this.radius = radius;
   }
 }

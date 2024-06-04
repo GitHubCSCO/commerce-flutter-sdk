@@ -94,11 +94,7 @@ class LocationSearchPage extends StatelessWidget {
                         context
                             .read<LocationSearchBloc>()
                             .add(LocationSeachHistoryLoadEvent());
-                      } else {
-                        // context
-                        //     .read<LocationSearchBloc>()
-                        //     .add(LocationSearchInitialEvent());
-                      }
+                      } else {}
                     },
                     onChanged: (String searchQuery) {},
                     onSubmitted: (String query) {
@@ -120,11 +116,19 @@ class LocationSearchPage extends StatelessWidget {
                   if (state is LocationSearchLoadedState) {
                     textEditingController.text =
                         state.searchedLocation?.formattedName ?? "";
-                    context.read<VMILocationBloc>().add(UpdateSearchPlaceEvent(
-                        seachPlace: state.searchedLocation));
-                    context
-                        .read<VMILocationBloc>()
-                        .add(LoadVMILocationsEvent());
+
+                    if (locationSearchType == LocationSearchType.vmi) {
+                      context.read<VMILocationBloc>().add(
+                          UpdateSearchPlaceEvent(
+                              seachPlace: state.searchedLocation));
+                      context
+                          .read<VMILocationBloc>()
+                          .add(LoadVMILocationsEvent());
+                    } else {
+                      context
+                          .read<DealerLocationCubit>()
+                          .updateSeachPlaceForDealer(state.searchedLocation);
+                    }
                   }
                 },
               ),
@@ -168,12 +172,12 @@ class LocationSearchPage extends StatelessWidget {
                       }
                   }
                 } else if (state is LocationSearchFocusState) {
-                  return Container(child: Text('LocationSearchFocusState'));
+                  return const Text('LocationSearchFocusState');
                 } else if (state is LocationSearchFailureState) {
-                  return Container(child: Text('LocationSearchFailureState'));
+                  return const Text('LocationSearchFailureState');
                 } else if (state is LocationSearchHistoryLoadedState) {
                   return (state.searchHistory.length == 0)
-                      ? Container(child: Text("No History Found"))
+                      ? const Text("No History Found")
                       : buildSearchHistoryList(state);
                 } else {
                   return Container();
