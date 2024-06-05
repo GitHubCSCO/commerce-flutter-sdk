@@ -142,29 +142,4 @@ class ProductListFilterCubit extends Cubit<ProductListFilterState> {
       productListType: productListType,
     );
   }
-
-  Future<void> resetFilter({
-    List<String>? selectedAttributeValueIds,
-    List<String>? selectedBrandIds,
-    List<String>? selectedProductLineIds,
-    String? selectedCategoryId,
-    bool? previouslyPurchased,
-    bool? selectedStockedItems,
-    String? searchText,
-    required ProductListType productListType,
-  }) async {
-    state.productsParameters.attributeValueIds = selectedAttributeValueIds;
-    state.productsParameters.brandIds = selectedBrandIds;
-    state.productsParameters.productLineIds = selectedProductLineIds;
-    state.productsParameters.categoryId = selectedCategoryId;
-    state.productsParameters.previouslyPurchasedProducts = previouslyPurchased;
-    state.productsParameters.stockedItemsOnly = selectedStockedItems;
-    state.productsParameters.query = searchText;
-
-    emit(state.copyWith(productsParameters: state.productsParameters));
-
-    await loadFilters(
-      productListType: productListType,
-    );
-  }
 }
