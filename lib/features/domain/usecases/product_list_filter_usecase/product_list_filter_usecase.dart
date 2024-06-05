@@ -148,7 +148,7 @@ class ProductListFilterUsecase extends BaseUseCase {
     bool isFilteringByStockedItems = false,
   }) {
     if (requestResult != null &&
-        productSettings.displayFacetsForStockeditems == true) {
+        productSettings.displayFacetsForStockedItems == true) {
       return [
         FilterValueViewModelCollection(
           values: [

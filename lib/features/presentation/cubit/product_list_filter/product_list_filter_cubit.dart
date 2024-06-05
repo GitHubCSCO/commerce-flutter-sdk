@@ -16,8 +16,18 @@ class ProductListFilterCubit extends Cubit<ProductListFilterState> {
       : _productListFilterUsecase = productListFilterUsecase,
         super(
           ProductListFilterState(
-            productsParameters:
-                ProductsQueryParameters(expand: ["pricing", "facets", "brand"]),
+            productsParameters: ProductsQueryParameters(
+              replaceProducts: false,
+              getAllAttributeFacets: false,
+              includeAlternateInventory: true,
+              previouslyPurchasedProducts: false,
+              stockedItemsOnly: false,
+              page: 1,
+              pageSize: 16,
+              makeBrandUrls: false,
+              expand: ["pricing", "facets", "brand"],
+              includeSuggestions: "True",
+            ),
             productSettings: ProductSettings(),
             searchSettings: SearchSettings(),
             status: ProductListFilterStatus.initial,
@@ -27,9 +37,13 @@ class ProductListFilterCubit extends Cubit<ProductListFilterState> {
 
   Future<void> initialize({
     required ProductListType productListType,
+    required ProductsQueryParameters productsParameters,
   }) async {
     emit(
-      state.copyWith(status: ProductListFilterStatus.loading),
+      state.copyWith(
+        status: ProductListFilterStatus.loading,
+        productsParameters: productsParameters,
+      ),
     );
 
     final settingsCollection =
