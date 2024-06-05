@@ -104,15 +104,15 @@ class SearchProductFilterWidget extends StatelessWidget {
                 },
                 onReset: () {
                   context.read<ProductListFilterCubit>().resetFilter(
-                        productListType: productListType,
-                        previouslyPurchased: previouslyPurchased,
-                        searchText: searchText,
-                        selectedAttributeValueIds: selectedAttributeValueIds,
-                        selectedBrandIds: selectedBrandIds,
-                        selectedProductLineIds: selectedProductLineIds,
-                        selectedCategoryId: selectedCategoryId,
-                        selectedStockedItems: selectedStockedItems,
-                      );
+                    selectedAttributeValueIds: const [],
+                    selectedBrandIds: const [],
+                    selectedProductLineIds: const [],
+                    selectedCategoryId: null,
+                    previouslyPurchased: false,
+                    selectedStockedItems: false,
+                    productListType: productListType,
+                    searchText: searchText,
+                  );
                 },
                 onFilterSelected: (v) {
                   context.read<ProductListFilterCubit>().selectFilter(
