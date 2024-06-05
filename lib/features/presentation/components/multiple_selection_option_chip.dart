@@ -4,7 +4,7 @@ import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.d
 import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
 import 'package:flutter/material.dart';
 
-class MultipleSelectionOptionChip<T> extends StatefulWidget {
+class MultipleSelectionOptionChip<T> extends StatelessWidget {
   const MultipleSelectionOptionChip({
     super.key,
     required this.values,
@@ -18,31 +18,17 @@ class MultipleSelectionOptionChip<T> extends StatefulWidget {
   final String? chipTitle;
   final void Function(T? selection) onSelectionChanged;
 
-  @override
-  State<MultipleSelectionOptionChip<T>> createState() =>
-      _MultipleSelectionOptionChipState<T>();
-}
-
-class _MultipleSelectionOptionChipState<T>
-    extends State<MultipleSelectionOptionChip<T>> {
-  late Set<T> selectedValues;
-
-  @override
-  void initState() {
-    super.initState();
-    selectedValues = widget.selectedValues.toSet();
-  }
-
+  // late Set<T> selectedValues;
   @override
   Widget build(BuildContext context) {
-    List<T> itemsToShow = _getItemsToShow(widget.values);
+    List<T> itemsToShow = _getItemsToShow(values);
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 10.0, 0.0, 0.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.chipTitle ?? '',
+            chipTitle ?? '',
             style: OptiTextStyles.body,
           ),
           Wrap(
@@ -69,14 +55,14 @@ class _MultipleSelectionOptionChipState<T>
                       if (!_getValueAvailibility(value)) {
                         return;
                       }
-                      setState(
-                        () {
-                          selectedValues.contains(value)
-                              ? selectedValues.remove(value)
-                              : selectedValues.add(value);
-                        },
-                      );
-                      widget.onSelectionChanged(selected ? value : null);
+                      // setState(
+                      //   () {
+                      //     selectedValues.contains(value)
+                      //         ? selectedValues.remove(value)
+                      //         : selectedValues.add(value);
+                      //   },
+                      // );
+                      onSelectionChanged(value);
                     },
                     backgroundColor: (!_getValueAvailibility(value))
                         ? Colors.grey // Gray if not available
