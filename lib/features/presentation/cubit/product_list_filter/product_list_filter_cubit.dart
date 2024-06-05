@@ -76,6 +76,12 @@ class ProductListFilterCubit extends Cubit<ProductListFilterState> {
       productSettings: state.productSettings,
       searchSettings: state.searchSettings,
       productListType: productListType,
+      previouslyPurchased: state.productsParameters.previouslyPurchasedProducts,
+      selectedStockedItems: state.productsParameters.stockedItemsOnly,
+      selectedAttributeValueIds: state.productsParameters.attributeValueIds,
+      selectedBrandIds: state.productsParameters.brandIds,
+      selectedProductLineIds: state.productsParameters.productLineIds,
+      selectedCategoryId: state.productsParameters.categoryId,
     );
 
     if (filters == null) {
@@ -88,6 +94,61 @@ class ProductListFilterCubit extends Cubit<ProductListFilterState> {
         filterValues: filters,
         status: ProductListFilterStatus.success,
       ),
+    );
+  }
+
+  Future<void> selectFilter({
+    required FilterValueViewModel filterValue,
+    required ProductListType productListType,
+  }) async {
+    if (filterValue.facetType == null) {
+      return;
+    }
+
+    switch (filterValue.facetType!) {
+      case FacetType.previouslyPurchased:
+        state.productsParameters.previouslyPurchasedProducts =
+            filterValue.isSelected;
+        break;
+
+      case FacetType.stockedItemsFacet:
+        state.productsParameters.stockedItemsOnly = filterValue.isSelected;
+        break;
+
+      case FacetType.categoryFacet:
+        state.productsParameters.categoryId =
+            (filterValue.isSelected ?? false) ? filterValue.id : null;
+        break;
+
+      case FacetType.brandFacet:
+        state.productsParameters.brandIds = (filterValue.isSelected ?? false)
+            ? [...?state.productsParameters.brandIds, filterValue.id]
+            : state.productsParameters.brandIds
+                ?.where((element) => element != filterValue.id)
+                .toList();
+        break;
+
+      case FacetType.productLineFacet:
+        state.productsParameters.productLineIds = (filterValue.isSelected ?? false)
+            ? [...?state.productsParameters.productLineIds, filterValue.id]
+            : state.productsParameters.productLineIds
+                ?.where((element) => element != filterValue.id)
+                .toList();
+        break;
+
+      case FacetType.attributeValueFacet:
+        state.productsParameters.attributeValueIds = (filterValue.isSelected ?? false)
+            ? [...?state.productsParameters.attributeValueIds, filterValue.id]
+            : state.productsParameters.attributeValueIds
+                ?.where((element) => element != filterValue.id)
+                .toList();
+        break;
+    }
+
+    emit(state.copyWith(productsParameters: state.productsParameters));
+
+    await loadFilters(
+      productListType: productListType,
     );
   }
 }
