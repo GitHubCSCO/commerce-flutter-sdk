@@ -137,7 +137,9 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                                 selectedCategoryId: state.selectedCategoryId,
                                 selectedStockedItems:
                                     state.selectedStockedItems,
-                                onApply: context.read<SearchProductsCubit>().applyFilter,
+                                onApply: context
+                                    .read<SearchProductsCubit>()
+                                    .applyFilter,
                               ),
                             ],
                           ),

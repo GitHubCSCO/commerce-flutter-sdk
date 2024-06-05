@@ -76,7 +76,8 @@ class ProductListFilterUsecase extends BaseUseCase {
       listType: productListType,
       searchSettings: searchSettings,
       isFilteringByPreviouslyPurchased: isFilteringByPreviouslyPurchased,
-      isAuthenticated: isAuthenticated is Success,
+      isAuthenticated:
+          isAuthenticated is Success && (isAuthenticated as Success).value,
     );
 
     final stockedItemsFilter = getStockedItemsFilters(
@@ -123,7 +124,7 @@ class ProductListFilterUsecase extends BaseUseCase {
     required bool isAuthenticated,
   }) {
     if (requestResult != null &&
-        isAuthenticated is Success &&
+        isAuthenticated &&
         searchSettings.enableBoostingByPurchaseHistory == true &&
         searchSettings.allowFilteringForPreviouslyPurchasedProducts == true) {
       return [
