@@ -120,7 +120,24 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                                 },
                                 selectedSortOrder: state.selectedSortOrder,
                               ),
-                              SearchProductFilterWidget(context, productListType: ProductListType.searchProducts),
+                              SearchProductFilterWidget(
+                                context,
+                                productListType: ProductListType.searchProducts,
+                                badgeCount: context
+                                    .watch<SearchProductsCubit>()
+                                    .selectedFiltersCount,
+                                previouslyPurchased: state.previouslyPurchased,
+                                searchText:
+                                    state.productEntities?.originalQuery,
+                                selectedAttributeValueIds:
+                                    state.selectedAttributeValueIds,
+                                selectedBrandIds: state.selectedBrandIds,
+                                selectedProductLineIds:
+                                    state.selectedProductLineIds,
+                                selectedCategoryId: state.selectedCategoryId,
+                                selectedStockedItems:
+                                    state.selectedStockedItems,
+                              ),
                             ],
                           ),
                         ],

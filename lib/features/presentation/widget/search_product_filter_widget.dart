@@ -6,15 +6,37 @@ import 'package:commerce_flutter_app/features/domain/enums/product_list_type.dar
 import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
 import 'package:commerce_flutter_app/features/presentation/components/multiple_selection_option_chip.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_list_filter/product_list_filter_cubit.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class SearchProductFilterWidget extends StatelessWidget {
   final ProductListType productListType;
-  const SearchProductFilterWidget(BuildContext context,
-      {super.key, required this.productListType});
+  final int badgeCount;
+  final List<String>? selectedAttributeValueIds;
+  final List<String>? selectedBrandIds;
+  final List<String>? selectedProductLineIds;
+  final String? selectedCategoryId;
+  final bool? previouslyPurchased;
+  final bool? selectedStockedItems;
+  final String? searchText;
+
+  const SearchProductFilterWidget(
+    BuildContext context, {
+    super.key,
+    required this.productListType,
+    required this.badgeCount,
+    this.selectedAttributeValueIds,
+    this.selectedBrandIds,
+    this.selectedProductLineIds,
+    this.selectedCategoryId,
+    this.previouslyPurchased,
+    this.selectedStockedItems,
+    this.searchText,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +51,29 @@ class SearchProductFilterWidget extends StatelessWidget {
             padding: EdgeInsets.all(6),
             elevation: 0,
           ),
-          showBadge: true,
+          showBadge: badgeCount > 0,
           badgeContent: Text(
-            '0',
+            badgeCount.toString(),
             style: OptiTextStyles.badgesStyle,
           ),
           child: IconButton(
             padding: const EdgeInsets.all(10),
             onPressed: () {
+              context.read<ProductListFilterCubit>().initialize(
+                    productListType: productListType,
+                    productsParameters: ProductsQueryParameters(
+                      page: 1,
+                      pageSize: 16,
+                      expand: ["pricing", "facets", "brand"],
+                      attributeValueIds: selectedAttributeValueIds,
+                      brandIds: selectedBrandIds,
+                      productLineIds: selectedProductLineIds,
+                      categoryId: selectedCategoryId,
+                      previouslyPurchasedProducts: previouslyPurchased,
+                      stockedItemsOnly: selectedStockedItems,
+                      query: searchText,
+                    ),
+                  );
               _showProductFilterWidget(
                 context,
                 productListType: productListType,
@@ -60,9 +97,23 @@ void _showProductFilterWidget(
   BuildContext context, {
   required ProductListType productListType,
 }) {
-  context.read<ProductListFilterCubit>().initialize(
-        productListType: productListType,
-      );
+  // context.read<ProductListFilterCubit>().initialize(
+  //       productListType: productListType,
+  //       productsParameters: ProductsQueryParameters(
+  //         replaceProducts: false,
+  //         getAllAttributeFacets: false,
+  //         includeAlternateInventory: true,
+  //         previouslyPurchasedProducts: false,
+  //         stockedItemsOnly: false,
+  //         page: 1,
+  //         pageSize: 16,
+  //         makeBrandUrls: false,
+  //         expand: ["pricing", "facets", "brand"],
+  //         includeSuggestions: "True",
+  // applyPersonalization: true,
+  // query: 'vmi',
+  //   ),
+  // );
   showFilterModalSheet(
     context,
     onApply: () {},
@@ -80,15 +131,6 @@ void _showProductFilterWidget(
               child: Text('Failed to load filters'),
             );
           } else {
-            for (var filter in state.filterValues) {
-              print(filter.title);
-              print('---');
-              for (var value in filter.values) {
-                print(value.title);
-              }
-              print('###');
-            }
-
             return Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -100,7 +142,9 @@ void _showProductFilterWidget(
                       chipTitle: e.title,
                       selectedValues: const <FilterValueViewModel>{},
                       onSelectionChanged: (FilterValueViewModel? v) {
-                        print(v?.title);
+                        if (kDebugMode) {
+                          debugPrint('Selected value: $v');
+                        }
                       },
                     ),
                   )
