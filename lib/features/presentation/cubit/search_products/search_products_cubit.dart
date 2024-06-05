@@ -162,17 +162,19 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
         state.selectedCategoryId != selectedCategoryId ||
         previouslyPurchased != state.previouslyPurchased ||
         selectedStockedItems != selectedStockedItems) {
-      state.copyWith(
-        selectedAttributeValueIds:
-            selectedAttributeValueIds ?? state.selectedAttributeValueIds,
-        selectedBrandIds: selectedBrandIds ?? state.selectedBrandIds,
-        selectedProductLineIds:
-            selectedProductLineIds ?? state.selectedProductLineIds,
-        selectedCategoryId: selectedCategoryId ?? state.selectedCategoryId,
-        previouslyPurchased: previouslyPurchased ?? state.previouslyPurchased,
-        selectedStockedItems:
-            selectedStockedItems ?? state.selectedStockedItems,
-        searchProductStatus: SearchProductStatus.loading,
+      emit(
+        state.copyWith(
+          selectedAttributeValueIds:
+              selectedAttributeValueIds ?? state.selectedAttributeValueIds,
+          selectedBrandIds: selectedBrandIds ?? state.selectedBrandIds,
+          selectedProductLineIds:
+              selectedProductLineIds ?? state.selectedProductLineIds,
+          selectedCategoryId: selectedCategoryId ?? state.selectedCategoryId,
+          previouslyPurchased: previouslyPurchased ?? state.previouslyPurchased,
+          selectedStockedItems:
+              selectedStockedItems ?? state.selectedStockedItems,
+          searchProductStatus: SearchProductStatus.loading,
+        ),
       );
 
       await _loadSearchProducts();

@@ -23,6 +23,14 @@ class SearchProductFilterWidget extends StatelessWidget {
   final bool? previouslyPurchased;
   final bool? selectedStockedItems;
   final String? searchText;
+  final void Function({
+    List<String>? selectedAttributeValueIds,
+    List<String>? selectedBrandIds,
+    List<String>? selectedProductLineIds,
+    String? selectedCategoryId,
+    bool? previouslyPurchased,
+    bool? selectedStockedItems,
+  }) onApply;
 
   const SearchProductFilterWidget(
     BuildContext context, {
@@ -36,6 +44,7 @@ class SearchProductFilterWidget extends StatelessWidget {
     this.previouslyPurchased,
     this.selectedStockedItems,
     this.searchText,
+    required this.onApply,
   });
 
   @override
@@ -76,6 +85,23 @@ class SearchProductFilterWidget extends StatelessWidget {
                   );
               _showProductFilterWidget(
                 context,
+                onApply: () {
+                  final currentState =
+                      context.read<ProductListFilterCubit>().state;
+                  onApply(
+                    selectedAttributeValueIds:
+                        currentState.productsParameters.attributeValueIds,
+                    selectedBrandIds: currentState.productsParameters.brandIds,
+                    selectedProductLineIds:
+                        currentState.productsParameters.productLineIds,
+                    selectedCategoryId:
+                        currentState.productsParameters.categoryId,
+                    previouslyPurchased: currentState
+                        .productsParameters.previouslyPurchasedProducts,
+                    selectedStockedItems:
+                        currentState.productsParameters.stockedItemsOnly,
+                  );
+                },
                 onReset: () {
                   context.read<ProductListFilterCubit>().resetFilter(
                         productListType: productListType,
@@ -114,6 +140,7 @@ void _showProductFilterWidget(
   BuildContext context, {
   required void Function(FilterValueViewModel v)? onFilterSelected,
   required void Function() onReset,
+  required void Function() onApply,
 }) {
   // context.read<ProductListFilterCubit>().initialize(
   //       productListType: productListType,
@@ -134,7 +161,7 @@ void _showProductFilterWidget(
   // );
   showFilterModalSheet(
     context,
-    onApply: () {},
+    onApply: onApply,
     onReset: onReset,
     child: BlocProvider.value(
       value: BlocProvider.of<ProductListFilterCubit>(context),
