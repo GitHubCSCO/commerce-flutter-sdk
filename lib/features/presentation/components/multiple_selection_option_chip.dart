@@ -44,7 +44,7 @@ class _MultipleSelectionOptionChipState<T>
           MultipleSelectionOptionChip.maxItemsToShow) {
         showAll = true;
 
-        continue;
+        break;
       }
     }
   }
