@@ -53,7 +53,7 @@ class _MultipleSelectionOptionChipState<T>
   Widget build(BuildContext context) {
     List<T> itemsToShow = _getItemsToShow(widget.values);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
