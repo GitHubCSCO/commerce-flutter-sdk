@@ -38,6 +38,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/shop/shop_scr
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/domain_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_details/wish_list_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/add_credit_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -145,13 +146,24 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
+  // path: /addCreditCard
+  final addCreditCard = createNode(
+    name: AppRoute.addCreditCard.name,
+    path: AppRoute.addCreditCard.suffix,
+    builder: (context, state) {
+      return AddCreditCardScreen();
+    },
+    parent: null,
+  );
+
   // path: /checkoutSuccess
   final checkoutSuccess = createNode(
     name: AppRoute.checkoutSuccess.name,
     path: AppRoute.checkoutSuccess.suffix,
     builder: (context, state) {
       final checkoutSuccessEntity = state.extra as CheckoutSuccessEntity;
-      return CheckoutSuccessScreen(checkoutSuccessEntity: checkoutSuccessEntity);
+      return CheckoutSuccessScreen(
+          checkoutSuccessEntity: checkoutSuccessEntity);
     },
     parent: null,
   );
@@ -394,6 +406,7 @@ List<NavigationNode> _getNavigationRoot() {
     addToWishList,
     forgotPassword,
     vmiLocationNote,
-    locationSearch
+    locationSearch,
+    addCreditCard
   ];
 }

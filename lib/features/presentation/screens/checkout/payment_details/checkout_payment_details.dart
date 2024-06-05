@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
@@ -31,8 +32,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
     return BlocListener<PaymentDetailsBloc, PaymentDetailsState>(
       listener: (_, state) {
         if (state is PaymentDetailsLoaded) {
-          context
-               .read<TokenExBloc>().resetTokenExData();
+          context.read<TokenExBloc>().resetTokenExData();
         }
       },
       child: BlocBuilder<PaymentDetailsBloc, PaymentDetailsState>(
@@ -58,6 +58,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
                   if (state.tokenExEntity != null)
                     _buildTokenExWebView(state, context),
                   if (state.showPOField!) _buildPOField(state, context),
+                  _buildAddPaymentMethodButton(context)
                 ],
               );
             default:
@@ -142,7 +143,9 @@ class CheckoutPaymentDetails extends StatelessWidget {
       padding: const EdgeInsets.all(24.0),
       child: Input(
         label: LocalizationConstants.pONumber,
-        hintText: cart.requiresPoNumber! ? LocalizationConstants.pONumberRequired :LocalizationConstants.pONumberOptional,
+        hintText: cart.requiresPoNumber!
+            ? LocalizationConstants.pONumberRequired
+            : LocalizationConstants.pONumberOptional,
         controller: state.poTextEditingController,
         onTapOutside: (_) {
           FocusManager.instance.primaryFocus?.unfocus();
@@ -161,5 +164,20 @@ class CheckoutPaymentDetails extends StatelessWidget {
     context.read<PaymentDetailsBloc>().add(
           UpdatePaymentMethodEvent(paymentMethodDto: item),
         );
+  }
+
+  Widget _buildAddPaymentMethodButton(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        AppRoute.addCreditCard.navigateBackStack(context);
+      },
+      style: TextButton.styleFrom(
+        foregroundColor: Colors.blue,
+        backgroundColor: Colors.white, // Button color
+        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        textStyle: OptiTextStyles.linkMedium,
+      ),
+      child: const Text('+ New Payment Method'),
+    );
   }
 }
