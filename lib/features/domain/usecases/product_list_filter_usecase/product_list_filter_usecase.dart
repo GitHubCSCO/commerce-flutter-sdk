@@ -50,6 +50,7 @@ class ProductListFilterUsecase extends BaseUseCase {
           searchSettings: searchSettings,
           productSettings: productSettings,
           isFilteringByPreviouslyPurchased: previouslyPurchased ?? false,
+          isFilteringByStockedItems: selectedStockedItems ?? false,
         );
 
         return availableFiltersCollection;
@@ -64,6 +65,7 @@ class ProductListFilterUsecase extends BaseUseCase {
     required SearchSettings searchSettings,
     required ProductSettings productSettings,
     bool isFilteringByPreviouslyPurchased = false,
+    bool isFilteringByStockedItems = false,
   }) async {
     final isAuthenticated = await commerceAPIServiceProvider
         .getAuthenticationService()
@@ -81,6 +83,7 @@ class ProductListFilterUsecase extends BaseUseCase {
       requestResult: requestResult,
       listType: productListType,
       productSettings: productSettings,
+      isFilteringByStockedItems: isFilteringByStockedItems,
     );
 
     final categories = getCategoriesFilters(
@@ -294,7 +297,7 @@ class ProductListFilterUsecase extends BaseUseCase {
                 values: sortedAttributeValueFacets
                         ?.map(
                           (attributeValue) => FilterValueViewModel(
-                            id: attributeValue.id ?? '',
+                            id: attributeValue.attributeValueId ?? '',
                             title: attributeValue.valueDisplay ?? '',
                             isSelected: attributeValue.selected ?? false,
                             facetType: FacetType.attributeValueFacet,
