@@ -169,8 +169,11 @@ class CartPaymentSummaryWidget extends StatelessWidget {
   }
 
   Widget? _buildYouSaved(List<Promotion>? orderPromotions, List<Promotion>? shippingPromotions) {
-    var discountTotal = (orderPromotions?.fold(0, (previousValue, element) => (previousValue.toInt()) + element.amount!.toInt()) ?? 0) +
-        (shippingPromotions?.fold(0, (previousValue, element) => previousValue!.toInt() + element.amount!) ?? 0);
+    double sumAmounts(List<Promotion>? promotions) {
+      return promotions?.fold(0.0, (sum, item) => (sum ?? 0) + (item.amount ?? 0)) ?? 0.0;
+    }
+
+    var discountTotal = sumAmounts(orderPromotions) + sumAmounts(shippingPromotions);
     String formattedDiscountTotal = discountTotal > 0
         ? '${CoreConstants.currencySymbol}${discountTotal.toStringAsFixed(2)}'
         : '';

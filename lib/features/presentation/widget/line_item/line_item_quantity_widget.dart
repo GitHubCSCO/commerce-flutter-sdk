@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
@@ -27,6 +28,7 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
             flex: 1,
             child: canEdit
                 ? NumberTextField(
+                    max: CoreConstants.maximumOrderQuantity,
                     initialtText: qtyOrdered,
                     shouldShowIncrementDecermentIcon: false,
                     onChanged: onQtyChanged,
