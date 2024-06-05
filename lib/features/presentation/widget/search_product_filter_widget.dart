@@ -76,6 +76,18 @@ class SearchProductFilterWidget extends StatelessWidget {
                   );
               _showProductFilterWidget(
                 context,
+                onReset: () {
+                  context.read<ProductListFilterCubit>().resetFilter(
+                        productListType: productListType,
+                        previouslyPurchased: previouslyPurchased,
+                        searchText: searchText,
+                        selectedAttributeValueIds: selectedAttributeValueIds,
+                        selectedBrandIds: selectedBrandIds,
+                        selectedProductLineIds: selectedProductLineIds,
+                        selectedCategoryId: selectedCategoryId,
+                        selectedStockedItems: selectedStockedItems,
+                      );
+                },
                 onFilterSelected: (v) {
                   context.read<ProductListFilterCubit>().selectFilter(
                         productListType: productListType,
@@ -101,6 +113,7 @@ class SearchProductFilterWidget extends StatelessWidget {
 void _showProductFilterWidget(
   BuildContext context, {
   required void Function(FilterValueViewModel v)? onFilterSelected,
+  required void Function() onReset,
 }) {
   // context.read<ProductListFilterCubit>().initialize(
   //       productListType: productListType,
@@ -122,7 +135,7 @@ void _showProductFilterWidget(
   showFilterModalSheet(
     context,
     onApply: () {},
-    onReset: () {},
+    onReset: onReset,
     child: BlocProvider.value(
       value: BlocProvider.of<ProductListFilterCubit>(context),
       child: BlocBuilder<ProductListFilterCubit, ProductListFilterState>(
