@@ -76,7 +76,12 @@ class SearchProductFilterWidget extends StatelessWidget {
                   );
               _showProductFilterWidget(
                 context,
-                productListType: productListType,
+                onFilterSelected: (v) {
+                  context.read<ProductListFilterCubit>().selectFilter(
+                        productListType: productListType,
+                        filterValue: v,
+                      );
+                },
               );
             },
             icon: SvgPicture.asset(
@@ -95,7 +100,7 @@ class SearchProductFilterWidget extends StatelessWidget {
 
 void _showProductFilterWidget(
   BuildContext context, {
-  required ProductListType productListType,
+  required void Function(FilterValueViewModel v)? onFilterSelected,
 }) {
   // context.read<ProductListFilterCubit>().initialize(
   //       productListType: productListType,
@@ -140,10 +145,24 @@ void _showProductFilterWidget(
                     (e) => MultipleSelectionOptionChip<FilterValueViewModel>(
                       values: e.values,
                       chipTitle: e.title,
-                      selectedValues: const <FilterValueViewModel>{},
+                      selectedValues: e.values
+                          .where((element) => element.isSelected ?? false)
+                          .toSet(),
                       onSelectionChanged: (FilterValueViewModel? v) {
+                        if (v == null) {
+                          return;
+                        }
+
+                        final changedValue = v.copyWith(
+                          isSelected: !(v.isSelected ?? false),
+                        );
+
                         if (kDebugMode) {
-                          debugPrint('Selected value: $v');
+                          debugPrint('Selected value: $changedValue');
+                        }
+
+                        if (onFilterSelected != null) {
+                          onFilterSelected(changedValue);
                         }
                       },
                     ),
