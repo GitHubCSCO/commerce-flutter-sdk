@@ -161,7 +161,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
         !listEquals(state.selectedProductLineIds, selectedProductLineIds) ||
         state.selectedCategoryId != selectedCategoryId ||
         previouslyPurchased != state.previouslyPurchased ||
-        selectedStockedItems != selectedStockedItems) {
+        selectedStockedItems != state.selectedStockedItems) {
       emit(
         state.copyWith(
           selectedAttributeValueIds: selectedAttributeValueIds,
