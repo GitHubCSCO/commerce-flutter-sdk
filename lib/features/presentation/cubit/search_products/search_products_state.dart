@@ -8,7 +8,7 @@ class SearchProductsState extends Equatable {
   final List<String> selectedAttributeValueIds;
   final List<String> selectedBrandIds;
   final List<String> selectedProductLineIds;
-  final String? selectedCategoryId;
+  final String selectedCategoryId;
   final bool previouslyPurchased;
   final bool selectedStockedItems;
 
@@ -34,7 +34,7 @@ class SearchProductsState extends Equatable {
         selectedAttributeValueIds,
         selectedBrandIds,
         selectedProductLineIds,
-        selectedCategoryId ?? '',
+        selectedCategoryId,
         previouslyPurchased,
         selectedStockedItems,
       ];

@@ -26,7 +26,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
             selectedAttributeValueIds: const [],
             selectedBrandIds: const [],
             selectedProductLineIds: const [],
-            selectedCategoryId: null,
+            selectedCategoryId: '',
             previouslyPurchased: false,
             selectedStockedItems: false,
           ),
@@ -148,12 +148,12 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
   }
 
   Future<void> applyFilter({
-    List<String>? selectedAttributeValueIds,
-    List<String>? selectedBrandIds,
-    List<String>? selectedProductLineIds,
-    String? selectedCategoryId,
-    bool? previouslyPurchased,
-    bool? selectedStockedItems,
+    required List<String> selectedAttributeValueIds,
+    required List<String> selectedBrandIds,
+    required List<String> selectedProductLineIds,
+    required String selectedCategoryId,
+    required bool previouslyPurchased,
+    required bool selectedStockedItems,
   }) async {
     if (!listEquals(
             state.selectedAttributeValueIds, selectedAttributeValueIds) ||
@@ -164,15 +164,12 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
         selectedStockedItems != selectedStockedItems) {
       emit(
         state.copyWith(
-          selectedAttributeValueIds:
-              selectedAttributeValueIds ?? state.selectedAttributeValueIds,
-          selectedBrandIds: selectedBrandIds ?? state.selectedBrandIds,
-          selectedProductLineIds:
-              selectedProductLineIds ?? state.selectedProductLineIds,
-          selectedCategoryId: selectedCategoryId ?? state.selectedCategoryId,
-          previouslyPurchased: previouslyPurchased ?? state.previouslyPurchased,
-          selectedStockedItems:
-              selectedStockedItems ?? state.selectedStockedItems,
+          selectedAttributeValueIds: selectedAttributeValueIds,
+          selectedBrandIds: selectedBrandIds,
+          selectedProductLineIds: selectedProductLineIds,
+          selectedCategoryId: selectedCategoryId,
+          previouslyPurchased: previouslyPurchased,
+          selectedStockedItems: selectedStockedItems,
           searchProductStatus: SearchProductStatus.loading,
         ),
       );
@@ -189,15 +186,15 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
     return valueIdsCount +
         state.selectedBrandIds.length +
         state.selectedProductLineIds.length +
-        (state.selectedCategoryId != null ? 1 : 0);
+        (state.selectedCategoryId.isNotEmpty ? 1 : 0);
     // } else if (state.productListType == ProductListType.categoryProducts) {
     //   return valueIdsCount + state.selectedBrandIds.length + state.selectedProductLineIds.length;
     // } else if (state.productListType == ProductListType.shopBrandProducts) {
-    //   return valueIdsCount + state.selectedProductLineIds.length + (state.selectedCategoryId != null ? 1 : 0);
+    //   return valueIdsCount + state.selectedProductLineIds.length + (state.selectedCategoryId.isNotEmpty ? 1 : 0);
     // } else if (state.productListType == ProductListType.shopBrandCategoryProducts) {
     //   return valueIdsCount + state.selectedProductLineIds.length;
     // } else if (state.productListType == ProductListType.shopBrandProductLineProducts) {
-    //   return valueIdsCount + (state.selectedCategoryId != null ? 1 : 0);
+    //   return valueIdsCount + (state.selectedCategoryId.isNotEmpty ? 1 : 0);
     // } else {
     //   return 0;
     // }

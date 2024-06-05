@@ -24,12 +24,12 @@ class SearchProductFilterWidget extends StatelessWidget {
   final bool? selectedStockedItems;
   final String? searchText;
   final void Function({
-    List<String>? selectedAttributeValueIds,
-    List<String>? selectedBrandIds,
-    List<String>? selectedProductLineIds,
-    String? selectedCategoryId,
-    bool? previouslyPurchased,
-    bool? selectedStockedItems,
+    required List<String> selectedAttributeValueIds,
+    required List<String> selectedBrandIds,
+    required List<String> selectedProductLineIds,
+    required String selectedCategoryId,
+    required bool previouslyPurchased,
+    required bool selectedStockedItems,
   }) onApply;
 
   const SearchProductFilterWidget(
@@ -90,29 +90,37 @@ class SearchProductFilterWidget extends StatelessWidget {
                       context.read<ProductListFilterCubit>().state;
                   onApply(
                     selectedAttributeValueIds:
-                        currentState.productsParameters.attributeValueIds,
-                    selectedBrandIds: currentState.productsParameters.brandIds,
+                        currentState.productsParameters.attributeValueIds ?? [],
+                    selectedBrandIds:
+                        currentState.productsParameters.brandIds ?? [],
                     selectedProductLineIds:
-                        currentState.productsParameters.productLineIds,
+                        currentState.productsParameters.productLineIds ?? [],
                     selectedCategoryId:
-                        currentState.productsParameters.categoryId,
+                        currentState.productsParameters.categoryId ?? '',
                     previouslyPurchased: currentState
-                        .productsParameters.previouslyPurchasedProducts,
+                            .productsParameters.previouslyPurchasedProducts ??
+                        false,
                     selectedStockedItems:
-                        currentState.productsParameters.stockedItemsOnly,
+                        currentState.productsParameters.stockedItemsOnly ??
+                            false,
                   );
                 },
                 onReset: () {
-                  context.read<ProductListFilterCubit>().resetFilter(
-                    selectedAttributeValueIds: const [],
-                    selectedBrandIds: const [],
-                    selectedProductLineIds: const [],
-                    selectedCategoryId: null,
-                    previouslyPurchased: false,
-                    selectedStockedItems: false,
-                    productListType: productListType,
-                    searchText: searchText,
-                  );
+                  context.read<ProductListFilterCubit>().initialize(
+                        productsParameters: ProductsQueryParameters(
+                          page: 1,
+                          pageSize: 16,
+                          expand: ["pricing", "facets", "brand"],
+                          attributeValueIds: const [],
+                          brandIds: const [],
+                          productLineIds: const [],
+                          categoryId: null,
+                          previouslyPurchasedProducts: false,
+                          stockedItemsOnly: false,
+                          query: searchText,
+                        ),
+                        productListType: productListType,
+                      );
                 },
                 onFilterSelected: (v) {
                   context.read<ProductListFilterCubit>().selectFilter(
