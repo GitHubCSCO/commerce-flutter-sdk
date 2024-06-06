@@ -65,6 +65,12 @@ class SearchUseCase extends BaseUseCase {
     String searchQuery,
     int currentPage, {
     SortOrderAttribute? selectedSortOrder,
+    List<String>? selectedAttributeValueIds,
+    List<String>? selectedBrandIds,
+    List<String>? selectedProductLineIds,
+    String? selectedCategoryId,
+    bool? previouslyPurchased,
+    bool? selectedStockedItems,
   }) async {
     var parameters = ProductsQueryParameters(
       query: searchQuery,
@@ -76,6 +82,12 @@ class SearchUseCase extends BaseUseCase {
       // CategoryId = this.SelectedCategoryId,
       // PreviouslyPurchasedProducts = this.PreviouslyPurchased,
       // StockedItemsOnly = this.SelectedStockedItems,
+      attributeValueIds: selectedAttributeValueIds,
+      brandIds: selectedBrandIds,
+      productLineIds: selectedProductLineIds,
+      categoryId: selectedCategoryId,
+      previouslyPurchasedProducts: previouslyPurchased,
+      stockedItemsOnly: selectedStockedItems,
       expand: ["pricing", "facets", "brand"],
       sort: selectedSortOrder?.value,
     );
