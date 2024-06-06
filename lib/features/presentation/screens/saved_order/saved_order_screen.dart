@@ -195,7 +195,8 @@ class _SavedOrderItem extends StatelessWidget {
             ),
             Text(
               cart.orderDate != null
-                  ? DateFormat(CoreConstants.dateFormatFullString)
+                  ? DateFormat(CoreConstants.dateFormatString)
+                      .add_jms()
                       .format(cart.orderDate!)
                   : '',
               style: OptiTextStyles.bodySmall.copyWith(
