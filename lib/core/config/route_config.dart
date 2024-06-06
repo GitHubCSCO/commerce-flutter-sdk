@@ -19,6 +19,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/location_seac
 import 'package:commerce_flutter_app/features/presentation/screens/login/forgot_password_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_details/order_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_location_note.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_screen.dart';
@@ -151,7 +152,8 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.checkoutSuccess.suffix,
     builder: (context, state) {
       final checkoutSuccessEntity = state.extra as CheckoutSuccessEntity;
-      return CheckoutSuccessScreen(checkoutSuccessEntity: checkoutSuccessEntity);
+      return CheckoutSuccessScreen(
+          checkoutSuccessEntity: checkoutSuccessEntity);
     },
     parent: null,
   );
@@ -372,6 +374,14 @@ List<NavigationNode> _getNavigationRoot() {
       return OrderDetailsScreen(orderNumber: orderNumber);
     },
     parent: orderHistory,
+  );
+
+  // path: /account/savedOrders
+  final savedOrders = createNode(
+    name: AppRoute.savedOrders.name,
+    path: AppRoute.savedOrders.suffix,
+    builder: (context, state) => const SavedOrderScreen(),
+    parent: account,
   );
 
   return [
