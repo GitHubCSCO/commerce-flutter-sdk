@@ -35,6 +35,7 @@ class RouteNames {
   static const String orderDetails = 'orderDetails';
   static const String locationSearch = 'locationSearch';
   static const String vmiLocationNote = 'vmiLocationNote';
+  static const String savedOrders = 'savedOrders';
 }
 
 class RoutePaths {
@@ -74,6 +75,8 @@ class RoutePaths {
   static const String addToWishList = '/${RouteNames.addToWishList}';
   static const String forgotPassword = '/${RouteNames.forgotPassword}';
   static const String orderDetails = '${RoutePaths.orderHistory}/:orderNumber';
+  static const String savedOrders =
+      '${RoutePaths.account}/${RouteNames.savedOrders}';
 }
 
 enum AppRoute {
@@ -122,7 +125,8 @@ enum AppRoute {
   locationSearch(
       name: RouteNames.locationSearch, fullPath: RoutePaths.locationSearch),
   vmilocaitonote(
-      name: RouteNames.vmiLocationNote, fullPath: RoutePaths.vmiLocationNote);
+      name: RouteNames.vmiLocationNote, fullPath: RoutePaths.vmiLocationNote),
+  savedOrders(name: RouteNames.savedOrders, fullPath: RoutePaths.savedOrders);
 
   const AppRoute({
     required this.name,
