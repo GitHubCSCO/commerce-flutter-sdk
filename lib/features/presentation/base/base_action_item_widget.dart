@@ -147,6 +147,10 @@ class BaseActionItemWidget extends StatelessWidget {
                   onSelectVMILocation: (location) {},
                   locationSearchType: LocationSearchType.locationFinder));
         };
+      case ActionType.changeCustomer:
+        return () {
+          AppRoute.billToShipToChange.navigateBackStack(context);
+        };
       default:
         return () {
           CustomSnackBar.showComingSoonSnackBar(context);

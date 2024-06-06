@@ -22,6 +22,7 @@ class _TabSwitchWidgetState extends State<TabSwitchWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -62,7 +63,7 @@ class _TabSwitchWidgetState extends State<TabSwitchWidget> {
             ),
           ),
         ),
-        Center(
+        SizedBox(
           child: selectedIndex == 0 ? widget.tabWidget0 : widget.tabWidget1,
         )
       ],
