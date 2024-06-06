@@ -179,6 +179,8 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
   }
 
   int get selectedFiltersCount {
+    /// Depending on the product list type, the number of selected filters will be different
+    /// For now, we are only supporting search products
     var valueIdsCount = state.selectedAttributeValueIds.length +
         (state.previouslyPurchased ? 1 : 0) +
         (state.selectedStockedItems ? 1 : 0);

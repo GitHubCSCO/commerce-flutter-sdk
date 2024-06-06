@@ -150,6 +150,9 @@ void _showProductFilterWidget(
   required void Function() onReset,
   required void Function() onApply,
 }) {
+  /// This is how you can initialize the filter cubit
+  /// and load the filters for the first time
+  /// Might need in the future when we implement more search filters
   // context.read<ProductListFilterCubit>().initialize(
   //       productListType: productListType,
   //       productsParameters: ProductsQueryParameters(
