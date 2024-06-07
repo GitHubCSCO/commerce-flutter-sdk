@@ -161,7 +161,7 @@ class CartPage extends StatelessWidget {
                             padding: const EdgeInsets.all(24),
                             child: TertiaryButton(
                               onPressed: () {
-                                CustomSnackBar.showComingSoonSnackBar(context);
+                                AppRoute.shop.navigate(context);
                               },
                               child: Text('Continue Shopping'),
                             ),
