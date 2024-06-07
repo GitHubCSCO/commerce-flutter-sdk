@@ -2,12 +2,14 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order/saved_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -36,6 +38,11 @@ class SavedOrderPage extends StatelessWidget {
         backgroundColor: OptiAppColors.backgroundWhite,
         title: const Text(LocalizationConstants.savedOrders),
         centerTitle: false,
+        actions: [
+          BottomMenuWidget(
+            websitePath: WebsitePaths.savedOrdersWebsitePath,
+          )
+        ],
       ),
       body: BlocBuilder<SavedOrderCubit, SavedOrderState>(
         builder: (context, state) {

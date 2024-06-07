@@ -3,4 +3,5 @@ class WebsitePaths {
   static const cartWebsitePath = 'redirectto/CartPage';
   static const listsWebsitePath = 'redirectto/MyListsPage';
   static const listDetailsWebsitePath = 'redirectto/MyListDetailPage?id=%s';
+  static const savedOrdersWebsitePath = 'redirectto/SavedOrderListPage';
 }
