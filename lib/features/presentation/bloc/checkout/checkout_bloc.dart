@@ -1,5 +1,5 @@
-import 'dart:math';
 
+import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -48,28 +48,26 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         final shipToAddress = session?.shipTo;
         final wareHouse = session?.pickUpWarehouse;
         var shippingMethod = session?.fulfillmentMethod;
-        var promotionsResult = await _checkoutUseCase.loadCartPromotions();
-        PromotionCollectionModel? promotionCollection =
-            promotionsResult is Success
-                ? (promotionsResult as Success).value
-                : null;
-        var cartSettingResult = await _checkoutUseCase.getCartSetting();
-        CartSettings cartSettings = cartSettingResult is Success
-            ? (cartSettingResult as Success).value
-            : null;
+        PromotionCollectionModel? promotionCollection = (await _checkoutUseCase.loadCartPromotions()).getResultSuccessValue();
+        CartSettings? cartSettings = (await _checkoutUseCase.getCartSetting()).getResultSuccessValue();
 
-        emit(CheckoutDataLoaded(
-          cart: cartData,
-          billToAddress: billToAddress!,
-          shipToAddress: shipToAddress!,
-          wareHouse: wareHouse!,
-          promotions: promotionCollection!,
-          shippingMethod: shippingMethod!,
-          cartSettings: cartSettings,
-          selectedCarrier: selectedCarrier,
-          selectedService: selectedService,
-          requestDeliveryDate: requestDeliveryDate,
-        ));
+        if(billToAddress!=null && shipToAddress!=null && wareHouse!=null && shippingMethod!=null){
+          emit(CheckoutDataLoaded(
+            cart: cartData,
+            billToAddress: billToAddress,
+            shipToAddress: shipToAddress,
+            wareHouse: wareHouse,
+            promotions: promotionCollection,
+            shippingMethod: shippingMethod,
+            cartSettings: cartSettings,
+            selectedCarrier: selectedCarrier,
+            selectedService: selectedService,
+            requestDeliveryDate: requestDeliveryDate,
+          ));
+        }else{
+          emit(CheckoutDataFetchFailed(
+            error: 'BillTo: $billToAddress, ShipTo: $shipToAddress, WareHouse: ${wareHouse?.toJson()}, ShippingMethod: $shippingMethod'));
+        }
         break;
       case Failure(errorResponse: final errorResponse):
         emit(CheckoutDataFetchFailed(

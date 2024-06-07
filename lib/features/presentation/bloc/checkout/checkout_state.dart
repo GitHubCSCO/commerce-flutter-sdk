@@ -11,9 +11,9 @@ class CheckoutDataLoaded extends CheckoutState {
   final BillTo billToAddress;
   final ShipTo shipToAddress;
   final Warehouse wareHouse;
-  final PromotionCollectionModel promotions;
+  final PromotionCollectionModel? promotions;
   final String shippingMethod;
-  final CartSettings cartSettings;
+  final CartSettings? cartSettings;
   final CarrierDto? selectedCarrier;
   final ShipViaDto? selectedService;
   final DateTime? requestDeliveryDate;
