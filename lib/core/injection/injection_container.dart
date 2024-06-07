@@ -23,6 +23,7 @@ import 'package:commerce_flutter_app/features/domain/service/vmi_service.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/billto_shipto_usecase/address_selection/billto_shipto_address_selection_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/billto_shipto_usecase/billto_shipto_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_content_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_shipping_usecase.dart';
@@ -64,6 +65,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/billto_shipto/address_selection/billto_shipto_address_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/billto_shipto/billto_shipto_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
@@ -275,6 +277,10 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => BillToShipToBloc(billToShipToUseCase: sl()))
     ..registerFactory(() => BillToShipToUseCase())
 
+    //billToShipToSelection
+    ..registerFactory(() => BilltoShiptoAddressSelectionBloc(billToShipToAddressSelectionUseCase: sl()))
+    ..registerFactory(() => BillToShipToAddressSelectionUseCase())
+
     //barcode
     ..registerFactory(() => BarcodeScanBloc())
 
@@ -438,6 +444,11 @@ Future<void> initInjectionContainer() async {
         cacheService: sl(),
         networkService: sl()))
     ..registerLazySingleton<IOrderService>(() => OrderService(
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
+    ..registerLazySingleton<IBillToService>(() => BillToService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),

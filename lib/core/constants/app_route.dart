@@ -36,6 +36,7 @@ class RouteNames {
   static const String locationSearch = 'locationSearch';
   static const String vmiLocationNote = 'vmiLocationNote';
   static const String billToShipToChange = 'billToShipToChange';
+  static const String billToShipToSelection = 'billToShipToSelection';
 }
 
 class RoutePaths {
@@ -76,6 +77,7 @@ class RoutePaths {
   static const String forgotPassword = '/${RouteNames.forgotPassword}';
   static const String orderDetails = '${RoutePaths.orderHistory}/:orderNumber';
   static const String billToShipToChange = '/${RouteNames.billToShipToChange}';
+  static const String billToShipToSelection = '/${RouteNames.billToShipToSelection}';
 }
 
 enum AppRoute {
@@ -126,7 +128,9 @@ enum AppRoute {
   vmilocaitonote(
       name: RouteNames.vmiLocationNote, fullPath: RoutePaths.vmiLocationNote),
   billToShipToChange(
-      name: RouteNames.billToShipToChange, fullPath: RoutePaths.billToShipToChange);
+      name: RouteNames.billToShipToChange, fullPath: RoutePaths.billToShipToChange),
+  billToShipToSelection(
+      name: RouteNames.billToShipToSelection, fullPath: RoutePaths.billToShipToSelection);
 
   const AppRoute({
     required this.name,

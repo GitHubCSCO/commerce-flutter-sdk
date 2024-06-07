@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_change_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/biometric/biometric_login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
@@ -383,6 +384,17 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
+  // path: /billToShipToSelection
+  final billToShipToSelection = createNode(
+    name: AppRoute.billToShipToSelection.name,
+    path: AppRoute.billToShipToSelection.suffix,
+    builder: (context, state) {
+      final entity = state.extra as BillToShipToAddressSelectionEntity;
+      return BillToShipToAddressSelectionScreen(billToShipToAddressSelectionEntity: entity);
+    },
+    parent: null,
+  );
+
 
   return [
     root,
@@ -405,6 +417,7 @@ List<NavigationNode> _getNavigationRoot() {
     forgotPassword,
     vmiLocationNote,
     locationSearch,
-    billToShipToChange
+    billToShipToChange,
+    billToShipToSelection
   ];
 }

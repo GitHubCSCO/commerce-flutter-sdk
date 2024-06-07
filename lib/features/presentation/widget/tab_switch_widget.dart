@@ -29,10 +29,10 @@ class _TabSwitchWidgetState extends State<TabSwitchWidget> {
           child: Container(
             decoration: BoxDecoration(
               color: OptiAppColors.backgroundGray,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(20),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(2.0),
+              padding: const EdgeInsets.all(4.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -63,6 +63,7 @@ class _TabSwitchWidgetState extends State<TabSwitchWidget> {
             ),
           ),
         ),
+        const SizedBox(height: 8.0),
         SizedBox(
           child: selectedIndex == 0 ? widget.tabWidget0 : widget.tabWidget1,
         )

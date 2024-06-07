@@ -1,0 +1,4 @@
+enum AddressType {
+  billTo,
+  shipTo,
+}
