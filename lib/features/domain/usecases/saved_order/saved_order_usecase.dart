@@ -105,7 +105,7 @@ class SavedOrderUsecase extends BaseUseCase {
               return OrderStatus.deleteCartFailure;
             case Success(value: final value):
               if (value == true) {
-                return OrderStatus.success;
+                return OrderStatus.addToCartSuccess;
               } else {
                 return OrderStatus.deleteCartFailure;
               }
