@@ -19,12 +19,12 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class SavedOrderDetailsScreen extends StatelessWidget {
   final String cartId;
-  final void Function() onDeleted;
+  final void Function() refreshSavedOrders;
 
   const SavedOrderDetailsScreen({
     super.key,
     required this.cartId,
-    required this.onDeleted,
+    required this.refreshSavedOrders,
   });
 
   @override
@@ -32,15 +32,15 @@ class SavedOrderDetailsScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           sl<SavedOrderDetailsCubit>()..loadCart(cartId: cartId),
-      child: OrderDetailsPage(onDeleted: onDeleted),
+      child: OrderDetailsPage(refreshSavedOrders: refreshSavedOrders),
     );
   }
 }
 
 class OrderDetailsPage extends StatelessWidget {
-  final void Function() onDeleted;
+  final void Function() refreshSavedOrders;
 
-  const OrderDetailsPage({super.key, required this.onDeleted});
+  const OrderDetailsPage({super.key, required this.refreshSavedOrders});
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +64,12 @@ class OrderDetailsPage extends StatelessWidget {
           if (state.status == OrderStatus.addToCartSuccess) {
             Navigator.of(context, rootNavigator: true).pop();
             context.read<CartCountCubit>().onCartItemChange();
+            refreshSavedOrders();
             CustomSnackBar.showSnackBarMessage(
               context,
               SiteMessageConstants.defaultValueAddToCartSuccess,
             );
+            context.pop();
           }
 
           if (state.status == OrderStatus.addToCartFailure) {
@@ -80,7 +82,7 @@ class OrderDetailsPage extends StatelessWidget {
 
           if (state.status == OrderStatus.deleteCartSuccess) {
             Navigator.of(context, rootNavigator: true).pop();
-            onDeleted();
+            refreshSavedOrders();
             context.pop();
           }
 
