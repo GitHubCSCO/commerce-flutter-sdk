@@ -1,7 +1,9 @@
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/saved_order/saved_order_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 part 'saved_order_details_state.dart';
@@ -62,4 +64,12 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
       emit(state.copyWith(status: OrderStatus.deleteCartFailure));
     }
   }
+
+  String get shipToLabel => state.cart.shipToLabel ?? '';
+
+  String get orderDate => state.cart.orderDate != null
+      ? DateFormat(CoreConstants.dateFormatString).format(state.cart.orderDate!)
+      : '';
+
+  String get orderSubTotalDisplay => state.cart.orderSubTotalDisplay ?? '';
 }
