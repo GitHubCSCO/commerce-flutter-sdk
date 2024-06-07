@@ -30,13 +30,13 @@ mixin BaseCheckout {
   }
 
   Widget buildSummary(
-      Cart cart, PromotionCollectionModel promotionCollectionModel) {
+      Cart cart, PromotionCollectionModel? promotionCollectionModel) {
     String promotionInfo;
     String promotionValue;
     Promotion? lastPromotion;
     Promotion? promotion;
 
-    var promotions = promotionCollectionModel.promotions
+    var promotions = promotionCollectionModel?.promotions
         ?.where((x) => x.amount != 0)
         .toList();
 
