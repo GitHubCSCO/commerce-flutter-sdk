@@ -207,7 +207,7 @@ class _SavedOrderInfoWidget extends StatelessWidget {
               value: orderDateText!,
               textStyle: OptiTextStyles.subtitle,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
           ],
           if (!subtotalText.isNullOrEmpty) ...[
             TwoTextsRow(
