@@ -11,7 +11,9 @@ import 'package:commerce_flutter_app/features/presentation/bloc/location_search/
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/deaker_location_finder/dealer_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/location_finder_dealer/dealer_location_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_location_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +35,9 @@ class LocationSearchScreen extends StatelessWidget {
           BlocProvider<VMILocationBloc>(
               create: (context) =>
                   sl<VMILocationBloc>()..add(LoadVMILocationsEvent())),
-          BlocProvider<GMapCubit>(create: (context) => sl<GMapCubit>())
+          BlocProvider<GMapCubit>(create: (context) => sl<GMapCubit>()),
+          BlocProvider<DealerLocationCubit>(
+              create: (context) => sl<DealerLocationCubit>())
         ],
         child: LocationSearchPage(
           onVMILocationUpdated: onVMILocationUpdated,
@@ -90,11 +94,7 @@ class LocationSearchPage extends StatelessWidget {
                         context
                             .read<LocationSearchBloc>()
                             .add(LocationSeachHistoryLoadEvent());
-                      } else {
-                        // context
-                        //     .read<LocationSearchBloc>()
-                        //     .add(LocationSearchInitialEvent());
-                      }
+                      } else {}
                     },
                     onChanged: (String searchQuery) {},
                     onSubmitted: (String query) {
@@ -116,11 +116,19 @@ class LocationSearchPage extends StatelessWidget {
                   if (state is LocationSearchLoadedState) {
                     textEditingController.text =
                         state.searchedLocation?.formattedName ?? "";
-                    context.read<VMILocationBloc>().add(UpdateSearchPlaceEvent(
-                        seachPlace: state.searchedLocation));
-                    context
-                        .read<VMILocationBloc>()
-                        .add(LoadVMILocationsEvent());
+
+                    if (locationSearchType == LocationSearchType.vmi) {
+                      context.read<VMILocationBloc>().add(
+                          UpdateSearchPlaceEvent(
+                              seachPlace: state.searchedLocation));
+                      context
+                          .read<VMILocationBloc>()
+                          .add(LoadVMILocationsEvent());
+                    } else {
+                      context
+                          .read<DealerLocationCubit>()
+                          .updateSeachPlaceForDealer(state.searchedLocation);
+                    }
                   }
                 },
               ),
@@ -144,9 +152,7 @@ class LocationSearchPage extends StatelessWidget {
                       }
                     case LocationSearchType.locationFinder:
                       {
-                        return Container(
-                          child: Text('LocationSearchInitialState'),
-                        );
+                        return DealerLocationWidget();
                       }
                   }
                 } else if (state is LocationSearchLoadedState) {
@@ -162,18 +168,16 @@ class LocationSearchPage extends StatelessWidget {
                       }
                     case LocationSearchType.locationFinder:
                       {
-                        return Container(
-                          child: Text('LocationSearchLoadedState'),
-                        );
+                        return DealerLocationWidget();
                       }
                   }
                 } else if (state is LocationSearchFocusState) {
-                  return Container(child: Text('LocationSearchFocusState'));
+                  return const Text('LocationSearchFocusState');
                 } else if (state is LocationSearchFailureState) {
-                  return Container(child: Text('LocationSearchFailureState'));
+                  return const Text('LocationSearchFailureState');
                 } else if (state is LocationSearchHistoryLoadedState) {
                   return (state.searchHistory.length == 0)
-                      ? Container(child: Text("No History Found"))
+                      ? const Text("No History Found")
                       : buildSearchHistoryList(state);
                 } else {
                   return Container();

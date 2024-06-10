@@ -30,6 +30,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/biometric_usecase/
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/payment_details/payment_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/curent_location_usecase/current_location_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/dealer_location_usecase/dealer_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/location_note_usecase/location_note_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/location_search_usecase/location_search_usecase.dart';
@@ -97,6 +98,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.d
 import 'package:commerce_flutter_app/features/presentation/cubit/count_inventory/count_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/date_selection/date_selection_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/deaker_location_finder/dealer_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/location_note/location_note_cubit.dart';
@@ -179,15 +181,18 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => CurrentLocationCubit(currentLocationUseCase: sl()))
     ..registerFactory(() => CurrentLocationUseCase())
 
+    // dealer location
+    ..registerFactory(() => DealerLocationCubit(dealerLocationUsecase: sl()))
+    ..registerFactory(() => DealerLocationUsecase())
+
     // location  search
     ..registerFactory(() => LocationSearchBloc(locationSearchUseCase: sl()))
     ..registerFactory(() => LocationSearchUseCase())
 
     // gmap cubit
-
     ..registerFactory(() => GMapCubit())
-    // previous orders
 
+    // previous orders
     ..registerFactory(() => PreviousOrdersCubit(previousOrdersUseCse: sl()))
     ..registerFactory(() => PreviousOrdersUseCse())
 
@@ -323,7 +328,6 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ProductDetailsAddToCartUseCase())
 
     //product style trait
-
     ..registerFactory(() => ProductDetailsStyleTraitsUseCase())
     ..registerFactory(() => StyleTraitCubit(styleTraitsUseCase: sl()))
 
@@ -431,6 +435,8 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
+    ..registerLazySingleton<IDealerService>(() => DealerService(
+        clientService: sl(), cacheService: sl(), networkService: sl()))
     ..registerLazySingleton<IVmiLocationsService>(() => VMILocationService(
           clientService: sl(),
           cacheService: sl(),
