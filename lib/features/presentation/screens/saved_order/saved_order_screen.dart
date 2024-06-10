@@ -80,7 +80,14 @@ class SavedOrderPage extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(''),
+                          Text(
+                            state.cartCollectionModel.pagination
+                                        ?.totalItemCount !=
+                                    null
+                                ? '${state.cartCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.orders}'
+                                : '',
+                            style: OptiTextStyles.header3,
+                          ),
                           SortToolMenu(
                             availableSortOrders: CartSortOrder.values,
                             onSortOrderChanged: (selectedSortOrder) async {
