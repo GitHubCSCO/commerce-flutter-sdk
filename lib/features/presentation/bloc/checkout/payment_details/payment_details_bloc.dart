@@ -15,6 +15,7 @@ class PaymentDetailsBloc
   final PaymentDetailsUseCase _paymentDetailsUseCase;
   PaymentMethodDto? selectedPaymentMethod;
   Cart? cart;
+  AccountPaymentProfile? accountPaymentProfile;
   TokenExDto? tokenExConfiguration;
   final _poNumberController = TextEditingController();
 
@@ -29,6 +30,9 @@ class PaymentDetailsBloc
         (event, emit) => _updatePaymentMethod(event, emit));
     on<UpdateCreditCartInfoEvent>(
         (event, emit) => _updateCreditCardInfoToCart(event, emit));
+    on<UpdateNewAccountPaymentProfileEvent>((event, emit) async {
+      await _updateNewAccountPaymentPorfile(event, emit);
+    });
   }
 
   void _updateCreditCardInfoToCart(
@@ -43,12 +47,24 @@ class PaymentDetailsBloc
   Future<void> _loadPaymentDetailsData(
       LoadPaymentDetailsEvent event, Emitter<PaymentDetailsState> emit) async {
     emit(PaymentDetailsLoading());
-    cart = event.cart;
-    _setUpSelectedPaymentMethod(event.cart);
+
+    var cartResponse = await _paymentDetailsUseCase.getCurrentCart();
+    cart = (cartResponse is Success)
+        ? (cartResponse as Success).value
+        : event.cart;
+    _setUpSelectedPaymentMethod(cart!);
     var showPOField = cart?.showPoNumber;
     emit(PaymentDetailsLoaded(
+        isNewCreditCard: false,
         showPOField: showPOField,
-        poTextEditingController: _poNumberController));
+        poTextEditingController: _poNumberController,
+        cart: cart));
+  }
+
+  Future<void> _updateNewAccountPaymentPorfile(
+      UpdateNewAccountPaymentProfileEvent event,
+      Emitter<PaymentDetailsState> emit) async {
+    accountPaymentProfile = event.accountPaymentProfile;
   }
 
   Future<void> _updatePaymentMethod(
@@ -59,6 +75,16 @@ class PaymentDetailsBloc
 
   Future<void> _setupPaymentDataSources(
       UpdatePaymentMethodEvent event, Emitter<PaymentDetailsState> emit) async {
+    if (!event.isCVVRequired) {
+      emit(PaymentDetailsLoaded(
+          tokenExEntity: null,
+          showPOField: false,
+          poTextEditingController: _poNumberController,
+          isNewCreditCard: true,
+          cardDetails: _getCardDetails(accountPaymentProfile!),
+          cart: cart));
+      return;
+    }
     var showPOField = cart?.showPoNumber;
     if (selectedPaymentMethod != null &&
         selectedPaymentMethod?.isCreditCard != null &&
@@ -133,6 +159,7 @@ class PaymentDetailsBloc
                 tokenExUrl: tokeExUrl);
 
             emit(PaymentDetailsLoaded(
+                isNewCreditCard: false,
                 tokenExEntity: tokenExEnity,
                 cardDetails: cardDetails,
                 showPOField: showPOField,
@@ -143,6 +170,7 @@ class PaymentDetailsBloc
       }
     } else {
       emit(PaymentDetailsLoaded(
+          isNewCreditCard: false,
           tokenExEntity: null,
           showPOField: showPOField,
           poTextEditingController: _poNumberController));

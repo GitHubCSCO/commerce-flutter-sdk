@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/tokenex_entity.dart';
@@ -24,7 +25,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class AddCreditCardScreen extends StatelessWidget {
-  const AddCreditCardScreen({super.key});
+  final void Function(AccountPaymentProfile) onCrtaeditCardAdded;
+
+  const AddCreditCardScreen({super.key, required this.onCrtaeditCardAdded});
 
   @override
   Widget build(BuildContext context) {
@@ -34,33 +37,32 @@ class AddCreditCardScreen extends StatelessWidget {
           title: const Text(LocalizationConstants.addCreditCard),
           centerTitle: false,
         ),
-        body: MultiBlocProvider(providers: [
-          BlocProvider<AddCreditCardBloc>(
-              create: (context) =>
-                  sl<AddCreditCardBloc>()..add(SetUpDataSourceEvent())),
-          BlocProvider<BillingAddressCubit>(
-              create: (context) =>
-                  sl<BillingAddressCubit>()..setUpDataBillingAddress()),
-          BlocProvider<TokenExBloc>(create: (context) => sl<TokenExBloc>()),
-          BlocProvider<CardExpirationCubit>(
-              create: (context) => sl<CardExpirationCubit>()),
-        ], child: AddCreditCardPage()));
-
-    // return MultiBlocProvider(providers: [
-    //   BlocProvider<AddCreditCardCubit>(
-    //       create: (context) => sl<AddCreditCardCubit>()..setUpDataSource()),
-    //   BlocProvider<TokenExBloc>(create: (context) => sl<TokenExBloc>()),
-    // ], child: AddCreditCardPage());
+        body: MultiBlocProvider(
+            providers: [
+              BlocProvider<AddCreditCardBloc>(
+                  create: (context) =>
+                      sl<AddCreditCardBloc>()..add(SetUpDataSourceEvent())),
+              BlocProvider<BillingAddressCubit>(
+                  create: (context) =>
+                      sl<BillingAddressCubit>()..setUpDataBillingAddress()),
+              BlocProvider<TokenExBloc>(create: (context) => sl<TokenExBloc>()),
+              BlocProvider<CardExpirationCubit>(
+                  create: (context) => sl<CardExpirationCubit>()),
+            ],
+            child: AddCreditCardPage(
+              onCrtaeditCardAdded: onCrtaeditCardAdded,
+            )));
   }
 }
 
 class AddCreditCardPage extends StatelessWidget {
+  final void Function(AccountPaymentProfile) onCrtaeditCardAdded;
   final TextEditingController addressController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController postalCodeController = TextEditingController();
 
-  AddCreditCardPage({super.key});
+  AddCreditCardPage({super.key, required this.onCrtaeditCardAdded});
   @override
   Widget build(BuildContext context) {
     // return Text("dsfdsfsd");
@@ -71,9 +73,13 @@ class AddCreditCardPage extends StatelessWidget {
       child: MultiBlocListener(
           listeners: [
             BlocListener<AddCreditCardBloc, AddCreditCardState>(
-                listener: (context, state) {
+                listener: (_, state) {
               if (state is AddCreditCardLoadedState) {
                 context.read<TokenExBloc>().resetTokenExData();
+              }
+              if (state is SavedPaymentAddedSuccessState) {
+                onCrtaeditCardAdded(state.accountPaymentProfile);
+                Navigator.pop(context);
               }
             }),
           ],
@@ -105,6 +111,38 @@ class AddCreditCardPage extends StatelessWidget {
     );
   }
 
+  String? _validateNameInput(String? value) {
+    if (value?.isEmpty ?? false) {
+      return SiteMessageConstants.nameCreditCardInfoCardHolderNameRequired;
+    }
+
+    return null;
+  }
+
+  String? _validateAddressInput(String? value) {
+    if (value?.isEmpty ?? false) {
+      return SiteMessageConstants.defaultValueAddressRequired;
+    }
+
+    return null;
+  }
+
+  String? _validateCityInput(String? value) {
+    if (value?.isEmpty ?? false) {
+      return SiteMessageConstants.defaultValueAddressCityRequired;
+    }
+
+    return null;
+  }
+
+  String? _validatePostalCodeInput(String? value) {
+    if (value?.isEmpty ?? false) {
+      return SiteMessageConstants.defaultValueAddressZipRequired;
+    }
+
+    return null;
+  }
+
   void getInputData(BuildContext context) {
     var name = nameController.text;
     var address = addressController.text;
@@ -116,34 +154,68 @@ class AddCreditCardPage extends StatelessWidget {
         context.read<CardExpirationCubit>().selectedExpirationYear;
     var selectCountry = context.read<BillingAddressCubit>().selectedCountry;
     var selectState = context.read<BillingAddressCubit>().selectedState;
+
+    // Validate inputs
+    bool isValid = true;
+    if (name.isEmpty) {
+      _validateNameInput(nameController.text);
+      isValid = false;
+    }
+    if (address.isEmpty) {
+      _validateAddressInput(addressController.text);
+      isValid = false;
+    }
+    if (city.isEmpty) {
+      _validateCityInput(cityController.text);
+      isValid = false;
+    }
+    if (postalCode.isEmpty) {
+      _validatePostalCodeInput(postalCodeController.text);
+      isValid = false;
+    }
+    if (expirationMonth == null) {
+      // Show error message in your UI
+      print('Please select expiration month');
+      isValid = false;
+    }
+    if (expirationYear == null) {
+      // Show error message in your UI
+      print('Please select expiration year');
+      isValid = false;
+    }
+    if (selectCountry == null) {
+      // Show error message in your UI
+      print('Please select a country');
+      isValid = false;
+    }
+    if (selectState == null) {
+      // Show error message in your UI
+      print('Please select a state');
+      isValid = false;
+    }
+
+    if (!isValid) {
+      // Stop further execution if validation fails
+      return;
+    }
+
     var expirationDate =
         "${expirationMonth?.value.toString().padLeft(2, '0')}/${expirationYear!.key % 100}";
-
-    print('Name: $name');
-    print('Address: $address');
-    print('City: $city');
-    print('Postal Code: $postalCode');
-    print(expirationYear?.key);
-    print(expirationMonth?.key);
-    print('Selected Country: $selectCountry');
-    print('Selected State: $selectState');
-
     context.read<TokenExBloc>().add(TokenExValidateEvent());
 
     AccountPaymentProfile? paymentProfile = AccountPaymentProfile(
-        cardHolderName: name,
-        address1: address,
-        city: city,
-        postalCode: postalCode,
-        expirationDate: expirationDate,
-        country: selectCountry?.abbreviation,
-        state: selectState?.abbreviation,
-        securityCode: context.read<TokenExBloc>().cardInfo?.securityCode,
-        cardIdentifier: context.read<TokenExBloc>().cardInfo?.cardIdentifier,
-        cardType: context.read<TokenExBloc>().cardInfo?.cardType,
-        isDefault: false,
-        
-        );
+      cardHolderName: name,
+      address1: address,
+      city: city,
+      postalCode: postalCode,
+      expirationDate: expirationDate,
+      country: selectCountry?.abbreviation,
+      state: selectState?.abbreviation,
+      securityCode: context.read<TokenExBloc>().cardInfo?.securityCode,
+      cardIdentifier: context.read<TokenExBloc>().cardInfo?.cardIdentifier,
+      cardType: context.read<TokenExBloc>().cardInfo?.cardType,
+      isDefault: false,
+    );
 
     context
         .read<AddCreditCardBloc>()
@@ -274,8 +346,11 @@ class AddCreditCardPage extends StatelessWidget {
               style: OptiTextStyles.subtitle,
             ),
             const SizedBox(height: 20),
-            _createInputField(LocalizationConstants.address,
-                LocalizationConstants.address, addressController),
+            _createInputField(
+              LocalizationConstants.address,
+              LocalizationConstants.address,
+              addressController,
+            ),
             Row(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -311,8 +386,11 @@ class AddCreditCardPage extends StatelessWidget {
                 ),
               ],
             ),
-            _createInputField(LocalizationConstants.city,
-                LocalizationConstants.city, cityController),
+            _createInputField(
+              LocalizationConstants.city,
+              LocalizationConstants.city,
+              cityController,
+            ),
             Row(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -348,8 +426,11 @@ class AddCreditCardPage extends StatelessWidget {
                 ),
               ],
             ),
-            _createInputField(LocalizationConstants.postalCode,
-                LocalizationConstants.postalCode, postalCodeController),
+            _createInputField(
+              LocalizationConstants.postalCode,
+              LocalizationConstants.postalCode,
+              postalCodeController,
+            ),
           ],
         );
       } else {

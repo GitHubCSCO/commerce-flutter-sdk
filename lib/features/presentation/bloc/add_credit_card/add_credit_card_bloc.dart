@@ -62,7 +62,7 @@ class AddCreditCardBloc extends Bloc<AddCreditCardEvent, AddCreditCardState> {
 
     switch (response) {
       case Success(value: final value):
-        print("success");
+        emit(SavedPaymentAddedSuccessState(accountPaymentProfile: value!));
         break;
       case Failure(errorResponse: final errorResponse):
         print(errorResponse);

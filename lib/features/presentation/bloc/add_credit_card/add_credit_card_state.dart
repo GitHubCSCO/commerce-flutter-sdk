@@ -18,3 +18,9 @@ class AddCreditCardLoadedState extends AddCreditCardState {
   });
 }
 
+class SavedPaymentAddedSuccessState extends AddCreditCardState {
+  final AccountPaymentProfile accountPaymentProfile;
+  SavedPaymentAddedSuccessState({
+    required this.accountPaymentProfile,
+  });
+}

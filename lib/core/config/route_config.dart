@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart'
 import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/credit_card_add_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_note_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
@@ -151,7 +152,11 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.addCreditCard.name,
     path: AppRoute.addCreditCard.suffix,
     builder: (context, state) {
-      return const AddCreditCardScreen();
+      final callbackHelper = state.extra as CreditCardAddCallbackHelper;
+
+      final onCreaditCardAdded = callbackHelper.onAddedCeditCard;
+
+      return AddCreditCardScreen(onCrtaeditCardAdded: onCreaditCardAdded);
     },
     parent: null,
   );

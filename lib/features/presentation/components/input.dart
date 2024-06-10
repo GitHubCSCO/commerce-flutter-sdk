@@ -18,6 +18,7 @@ class Input extends StatefulWidget {
   final TextInputAction? textInputAction;
   final void Function(bool hasFocus)? focusListener;
   final Widget? suffixIcon;
+  final String? errorMessage; // Added errorMessage parameter
 
   const Input({
     super.key,
@@ -36,6 +37,7 @@ class Input extends StatefulWidget {
     this.textAlign = TextAlign.start,
     this.focusListener,
     this.suffixIcon,
+    this.errorMessage, // Added errorMessage parameter
   });
 
   @override
@@ -88,6 +90,12 @@ class _InputState extends State<Input> {
     super.dispose();
   }
 
+  void _handleChange(String value) {
+    if (widget.onChanged != null) {
+      widget.onChanged!(value);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -118,7 +126,7 @@ class _InputState extends State<Input> {
           ),
           child: TextField(
             scrollController: _scrollController,
-            onChanged: widget.onChanged,
+            onChanged: _handleChange,
             onSubmitted: widget.onSubmitted,
             controller: widget.controller,
             obscureText: widget.obscureText,
@@ -163,6 +171,17 @@ class _InputState extends State<Input> {
             ),
           ),
         ),
+        if (widget.errorMessage != null && widget.errorMessage != "")
+          Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: Text(
+              widget.errorMessage ?? "",
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 12,
+              ),
+            ),
+          ),
       ],
     );
   }

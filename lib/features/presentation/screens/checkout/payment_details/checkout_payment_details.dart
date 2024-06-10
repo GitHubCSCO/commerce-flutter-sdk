@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/credit_card_add_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/token_ex_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
@@ -27,13 +28,40 @@ class CheckoutPaymentDetails extends StatelessWidget {
     required this.onCompleteCheckoutPaymentSection,
   }) : super(key: key);
 
+  PaymentMethodDto? getPaymenmentMedthodDtoFromCart(
+      Cart cart, AccountPaymentProfile accountPaymentProfile) {
+    for (var mehtod in cart.paymentOptions!.paymentMethods!) {
+      if (mehtod.name?.toLowerCase() ==
+          accountPaymentProfile.cardIdentifier?.toLowerCase()) {
+        return mehtod;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<PaymentDetailsBloc, PaymentDetailsState>(
       listener: (_, state) {
         if (state is PaymentDetailsLoaded) {
           context.read<TokenExBloc>().resetTokenExData();
+
+          if (context.read<PaymentDetailsBloc>().accountPaymentProfile !=
+                  null &&
+              state.isNewCreditCard == false) {
+            context.read<PaymentDetailsBloc>().add(
+                  UpdatePaymentMethodEvent(
+                    paymentMethodDto: getPaymenmentMedthodDtoFromCart(
+                        context.read<PaymentDetailsBloc>().cart!,
+                        context
+                            .read<PaymentDetailsBloc>()
+                            .accountPaymentProfile!),
+                    isCVVRequired: false,
+                  ),
+                );
+          }
         }
+
+        if (state is PaymentDetailsNewCardSelectedState) {}
       },
       child: BlocBuilder<PaymentDetailsBloc, PaymentDetailsState>(
         builder: (_, state) {
@@ -69,6 +97,16 @@ class CheckoutPaymentDetails extends StatelessWidget {
     );
   }
 
+  int getIndexForSelectedPaymentMethod(List<PaymentMethodDto>? paymentMethods,
+      PaymentMethodDto paymentMethodDto) {
+    for (var i = 0; i < (paymentMethods?.length ?? 0); i++) {
+      if (paymentMethods?[i].name == paymentMethodDto.name) {
+        return i;
+      }
+    }
+    return 0;
+  }
+
   Widget _buildPaymentMethodPicker(
       PaymentDetailsLoaded state, BuildContext context) {
     return Padding(
@@ -90,7 +128,13 @@ class CheckoutPaymentDetails extends StatelessWidget {
                 children: [
                   Expanded(
                       child: ListPickerWidget(
-                          items: cart.paymentOptions!.paymentMethods!,
+                          items:
+                              state.cart?.paymentOptions?.paymentMethods ?? [],
+                          selectedIndex: getIndexForSelectedPaymentMethod(
+                              state.cart?.paymentOptions?.paymentMethods ?? [],
+                              context
+                                  .read<PaymentDetailsBloc>()
+                                  .selectedPaymentMethod!),
                           callback: _onPaymentMethodSelect)),
                   const Icon(
                     Icons.arrow_forward_ios,
@@ -162,14 +206,27 @@ class CheckoutPaymentDetails extends StatelessWidget {
           SelectPaymentMethodEvent(item as PaymentMethodDto),
         );
     context.read<PaymentDetailsBloc>().add(
-          UpdatePaymentMethodEvent(paymentMethodDto: item),
+          UpdatePaymentMethodEvent(
+            paymentMethodDto: item,
+            isCVVRequired: true,
+          ),
         );
   }
 
   Widget _buildAddPaymentMethodButton(BuildContext context) {
     return TextButton(
       onPressed: () {
-        AppRoute.addCreditCard.navigateBackStack(context);
+        AppRoute.addCreditCard.navigateBackStack(context, extra:
+            CreditCardAddCallbackHelper(onAddedCeditCard: (paymentProfile) {
+          context.read<PaymentDetailsBloc>().add(
+                UpdateNewAccountPaymentProfileEvent(
+                  accountPaymentProfile: paymentProfile,
+                ),
+              );
+          context.read<PaymentDetailsBloc>().add(LoadPaymentDetailsEvent(
+                cart: context.read<PaymentDetailsBloc>().cart!,
+              ));
+        }));
       },
       style: TextButton.styleFrom(
         foregroundColor: Colors.blue,
