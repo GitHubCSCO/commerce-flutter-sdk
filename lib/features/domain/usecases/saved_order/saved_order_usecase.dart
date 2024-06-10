@@ -128,4 +128,16 @@ class SavedOrderUsecase extends BaseUseCase {
         return InventoryUtils.isInventoryPerWarehouseButtonShownAsync(value);
     }
   }
+
+  Future<bool> addCartToSavedOrders({required Cart cart}) async {
+    final result =
+        await commerceAPIServiceProvider.getCartService().updateCart(cart);
+
+    switch (result) {
+      case Success(value: final value):
+        return value != null ? true : false;
+      case Failure():
+        return false;
+    }
+  }
 }
