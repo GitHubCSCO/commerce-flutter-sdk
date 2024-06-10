@@ -193,26 +193,30 @@ class _SavedOrderInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (!shipToText.isNullOrEmpty)
-          Text(
-            shipToText!,
-            style: OptiTextStyles.titleSmall,
-          ),
-        if (!orderDateText.isNullOrEmpty)
-          Text(
-            orderDateText!,
-            style: OptiTextStyles.subtitle,
-          ),
-        if (!subtotalText.isNullOrEmpty)
-          TwoTextsRow(
-            label: '${LocalizationConstants.subtotal}(${subTotalCount ?? 0})',
-            value: subtotalText!,
-            textStyle: OptiTextStyles.subtitle,
-          ),
-      ],
+    return Container(
+      color: OptiAppColors.backgroundWhite,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (!orderDateText.isNullOrEmpty) ...[
+            TwoTextsRow(
+              label: LocalizationConstants.orderDate,
+              value: orderDateText!,
+              textStyle: OptiTextStyles.subtitle,
+            ),
+            const SizedBox(height: 10),
+          ],
+          if (!subtotalText.isNullOrEmpty)
+            TwoTextsRow(
+              label:
+                  '${LocalizationConstants.subtotal} (${subTotalCount ?? 0})',
+              value: subtotalText!,
+              textStyle: OptiTextStyles.subtitle,
+            ),
+        ],
+      ),
     );
   }
 }
