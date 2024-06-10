@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/presentation/components/snackbar_c
 import 'package:commerce_flutter_app/features/presentation/components/two_texts_row.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_details/saved_order_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/order_details_body_widget.dart';
 import 'package:flutter/material.dart';
@@ -208,13 +209,28 @@ class _SavedOrderInfoWidget extends StatelessWidget {
             ),
             const SizedBox(height: 10),
           ],
-          if (!subtotalText.isNullOrEmpty)
+          if (!subtotalText.isNullOrEmpty) ...[
             TwoTextsRow(
               label:
                   '${LocalizationConstants.subtotal} (${subTotalCount ?? 0})',
               value: subtotalText!,
               textStyle: OptiTextStyles.subtitle,
             ),
+            const SizedBox(height: 20)
+          ],
+          BillingAddressWidget(
+            companyName:
+                context.watch<SavedOrderDetailsCubit>().billingCompanyName,
+            fullAddress:
+                '${context.watch<SavedOrderDetailsCubit>().billingFullAddress ?? ''}\n${context.watch<SavedOrderDetailsCubit>().billingCityStatePostalCode ?? ''}',
+          ),
+          const SizedBox(height: 20),
+          ShippingAddressWidget(
+            companyName:
+                context.watch<SavedOrderDetailsCubit>().shippingCompanyName,
+            fullAddress:
+                '${context.watch<SavedOrderDetailsCubit>().shippingFullAddress ?? ''}\n${context.watch<SavedOrderDetailsCubit>().shippingCityStatePostalCode ?? ''}',
+          ),
         ],
       ),
     );

@@ -72,4 +72,31 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
       : '';
 
   String get orderSubTotalDisplay => state.cart.orderSubTotalDisplay ?? '';
+
+  // Billing Address
+  String? get billingCompanyName => state.cart.billTo?.companyName;
+
+  String? get billingFullAddress =>
+      (!(state.cart.billTo?.address1).isNullOrEmpty
+          ? '${state.cart.billTo?.address1!}, '
+          : '') +
+      (!(state.cart.billTo?.address2).isNullOrEmpty
+          ? '${state.cart.billTo?.address2!}'
+          : '');
+
+  String? get billingCityStatePostalCode =>
+      '${state.cart.billTo?.city}, ${state.cart.billTo?.state?.name} ${state.cart.billTo?.postalCode}';
+
+  // Shipping Address
+  String? get shippingCompanyName => state.cart.shipTo?.companyName;
+
+  String? get shippingFullAddress =>
+      (!(state.cart.shipTo?.address1).isNullOrEmpty
+          ? '${state.cart.shipTo?.address1!}, '
+          : '') +
+      (!(state.cart.shipTo?.address2).isNullOrEmpty
+          ? '${state.cart.shipTo?.address2!}'
+          : '');
+  String? get shippingCityStatePostalCode =>
+      '${state.cart.shipTo?.city}, ${state.cart.shipTo?.state?.name} ${state.cart.shipTo?.postalCode}';
 }
