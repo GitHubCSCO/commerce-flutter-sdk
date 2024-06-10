@@ -4,6 +4,10 @@ import 'package:commerce_flutter_app/core/constants/site_message_constants.dart'
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/cart_line_extentions.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
@@ -12,6 +16,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_details/saved_order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/order_details_body_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -121,6 +126,9 @@ class OrderDetailsPage extends StatelessWidget {
                           subtotalText: context
                               .watch<SavedOrderDetailsCubit>()
                               .orderSubTotalDisplay,
+                        ),
+                        _SavedOrderProductsSectionWidget(
+                          cartLines: state.cart.cartLines ?? [],
                         ),
                       ],
                     ),
@@ -233,6 +241,70 @@ class _SavedOrderInfoWidget extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _SavedOrderProductsSectionWidget extends StatelessWidget {
+  final List<CartLine> cartLines;
+
+  const _SavedOrderProductsSectionWidget({
+    required this.cartLines,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)
+              .copyWith(bottom: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                LocalizationConstants.products,
+                style: OptiTextStyles.titleLarge,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '(${cartLines.length} item)',
+                style: OptiTextStyles.body,
+              ),
+            ],
+          ),
+        ),
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            final cartLine = cartLines[index];
+            final cartLineEntity = CartLineEntityMapper().toEntity(cartLine);
+            return LineItemWidget(
+              productId: cartLineEntity.id,
+              imagePath: cartLineEntity.smallImagePath,
+              shortDescription: cartLineEntity.shortDescription,
+              manufacturerItem: cartLineEntity.manufacturerItem,
+              productNumber: cartLineEntity.getProductNumber(),
+              discountMessage:
+                  cartLineEntity.pricing?.getDiscountValue(),
+              priceValueText: cartLineEntity.updatePriceValueText(),
+              unitOfMeasureValueText:
+                  cartLineEntity.updateUnitOfMeasureValueText(),
+              qtyOrdered: cartLineEntity.qtyOrdered?.toInt().toString(),
+              subtotalPriceText: cartLineEntity.updateSubtotalPriceValueText(),
+              canEditQty: false,
+              showViewAvailabilityByWarehouse: false,
+              showViewQuantityPricing: false,
+            );
+          },
+          separatorBuilder: (context, index) => const Divider(height: 1),
+          itemCount: cartLines.length,
+        )
+      ],
     );
   }
 }
