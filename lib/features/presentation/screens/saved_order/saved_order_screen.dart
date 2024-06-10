@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
@@ -6,7 +7,6 @@ import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order/saved_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
@@ -156,7 +156,15 @@ class _SavedOrderListWidgetState extends State<_SavedOrderListWidget> {
             return _SavedOrderItem(
               cart: widget.savedOrders[index],
               onTap: () {
-                CustomSnackBar.showComingSoon(context);
+                AppRoute.savedOrderDetails.navigateBackStack(
+                  context,
+                  pathParameters: {
+                    'cartId': widget.savedOrders[index].id ?? '',
+                  },
+                  extra: () {
+                    context.read<SavedOrderCubit>().loadSavedOrders();
+                  },
+                );
               },
             );
           },
