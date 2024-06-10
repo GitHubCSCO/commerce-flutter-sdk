@@ -151,7 +151,7 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.addCreditCard.name,
     path: AppRoute.addCreditCard.suffix,
     builder: (context, state) {
-      return AddCreditCardScreen();
+      return const AddCreditCardScreen();
     },
     parent: null,
   );

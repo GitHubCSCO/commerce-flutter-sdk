@@ -22,7 +22,9 @@ import 'package:commerce_flutter_app/features/domain/service/search_history_serv
 import 'package:commerce_flutter_app/features/domain/service/vmi_service.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/add_credit_card_usecase/add_credit_card_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/billing_address_create_usecase/billing_address_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_content_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_shipping_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_usecase.dart';
@@ -82,11 +84,14 @@ import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_b
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_main/vmi_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/add_credit_card/add_credit_card_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/billing_address/billing_address_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/biometric_auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_controller/biometric_controller_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/bottom_menu_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/card_expiration_cubit.dart/card_expiration_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/expansion_panel/expansion_panel_cubit.dart';
@@ -250,6 +255,17 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => PaymentDetailsUseCase())
     ..registerFactory(() => TokenExBloc())
     ..registerFactory(() => ReviewOrderCubit())
+
+    // Add Credit Card
+    ..registerFactory(() => AddCreditCardBloc(addCreditCardUsecase: sl()))
+    ..registerFactory(() => AddCreditCardUsecase())
+
+    // Billing Address
+    ..registerFactory(() => BillingAddressCubit(billingAddressUsecase: sl()))
+    ..registerFactory(() => BillingAddressUsecase())
+
+    // Card Expiration
+    ..registerFactory(() => CardExpirationCubit())
 
     //quickOrder
     ..registerFactory(() => OrderListBloc(
