@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
@@ -6,8 +7,8 @@ import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order/saved_order_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_add_to/saved_order_add_to_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
@@ -44,52 +45,64 @@ class SavedOrderPage extends StatelessWidget {
           )
         ],
       ),
-      body: BlocBuilder<SavedOrderCubit, SavedOrderState>(
-        builder: (context, state) {
-          switch (state.status) {
-            case OrderStatus.loading || OrderStatus.initial:
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-
-            case OrderStatus.failure:
-              return Center(
-                child: Text(
-                  SiteMessageConstants.defaultMobileAppAlertCommunicationError,
-                ),
-              );
-
-            default:
-              return Column(
-                children: [
-                  Container(
-                    height: 50,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(''),
-                        SortToolMenu(
-                          availableSortOrders: CartSortOrder.values,
-                          onSortOrderChanged: (selectedSortOrder) async {
-                            context.read<SavedOrderCubit>().changeSortOrder(
-                                  selectedSortOrder as CartSortOrder,
-                                );
-                          },
-                          selectedSortOrder: state.sortOrder,
-                        )
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: _SavedOrderListWidget(
-                      savedOrders: state.cartCollectionModel.carts ?? [],
-                    ),
-                  ),
-                ],
-              );
+      body: BlocListener<SavedOrderAddToCubit, SavedOrderAddToState>(
+        listener: (context, state) async {
+          if (state.status == SavedOrderAddToStatus.shouldRefreshSavedOrder ||
+              state.status == SavedOrderAddToStatus.failure) {
+            await context.read<SavedOrderCubit>().loadSavedOrders();
+            if (context.mounted) {
+              context.read<SavedOrderAddToCubit>().resetState();
+            }
           }
         },
+        child: BlocBuilder<SavedOrderCubit, SavedOrderState>(
+          builder: (context, state) {
+            switch (state.status) {
+              case OrderStatus.loading || OrderStatus.initial:
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+
+              case OrderStatus.failure:
+                return Center(
+                  child: Text(
+                    SiteMessageConstants
+                        .defaultMobileAppAlertCommunicationError,
+                  ),
+                );
+
+              default:
+                return Column(
+                  children: [
+                    Container(
+                      height: 50,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(''),
+                          SortToolMenu(
+                            availableSortOrders: CartSortOrder.values,
+                            onSortOrderChanged: (selectedSortOrder) async {
+                              context.read<SavedOrderCubit>().changeSortOrder(
+                                    selectedSortOrder as CartSortOrder,
+                                  );
+                            },
+                            selectedSortOrder: state.sortOrder,
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: _SavedOrderListWidget(
+                        savedOrders: state.cartCollectionModel.carts ?? [],
+                      ),
+                    ),
+                  ],
+                );
+            }
+          },
+        ),
       ),
     );
   }
@@ -156,7 +169,15 @@ class _SavedOrderListWidgetState extends State<_SavedOrderListWidget> {
             return _SavedOrderItem(
               cart: widget.savedOrders[index],
               onTap: () {
-                CustomSnackBar.showComingSoon(context);
+                AppRoute.savedOrderDetails.navigateBackStack(
+                  context,
+                  pathParameters: {
+                    'cartId': widget.savedOrders[index].id ?? '',
+                  },
+                  extra: () {
+                    context.read<SavedOrderCubit>().loadSavedOrders();
+                  },
+                );
               },
             );
           },

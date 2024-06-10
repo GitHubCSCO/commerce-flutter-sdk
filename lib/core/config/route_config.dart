@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_l
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
+import 'package:commerce_flutter_app/features/presentation/saved_order_details/saved_order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/biometric/biometric_login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
@@ -382,6 +383,19 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.savedOrders.suffix,
     builder: (context, state) => const SavedOrderScreen(),
     parent: account,
+  );
+
+  // path: /account/savedOrders/:cartId
+  final savedOrderDetails = createNode(
+    name: AppRoute.savedOrderDetails.name,
+    path: AppRoute.savedOrderDetails.suffix,
+    builder: (context, state) {
+      final cartId = state.pathParameters['cartId'] ?? '';
+      final refreshSavedOrders = state.extra as void Function();
+      return SavedOrderDetailsScreen(
+          cartId: cartId, refreshSavedOrders: refreshSavedOrders);
+    },
+    parent: savedOrders,
   );
 
   return [
