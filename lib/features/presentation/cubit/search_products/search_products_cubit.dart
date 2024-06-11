@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/features/domain/enums/search_product_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -22,6 +23,12 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
               title: '',
               value: '',
             ),
+            selectedAttributeValueIds: const [],
+            selectedBrandIds: const [],
+            selectedProductLineIds: const [],
+            selectedCategoryId: '',
+            previouslyPurchased: false,
+            selectedStockedItems: false,
           ),
         );
 
@@ -88,11 +95,25 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
   }
 
   Future<void> sortOrderChanged(SortOrderAttribute sortOrder) async {
-    emit(state.copyWith(searchProductStatus: SearchProductStatus.loading));
+    emit(state.copyWith(
+      searchProductStatus: SearchProductStatus.loading,
+      selectedSortOrder: sortOrder,
+    ));
+
+    await _loadSearchProducts();
+  }
+
+  Future<void> _loadSearchProducts() async {
     final result = await _searchUseCase.loadSearchProductsResults(
       state.productEntities?.originalQuery ?? '',
       1,
-      selectedSortOrder: sortOrder,
+      selectedSortOrder: state.selectedSortOrder,
+      selectedAttributeValueIds: state.selectedAttributeValueIds,
+      selectedBrandIds: state.selectedBrandIds,
+      selectedProductLineIds: state.selectedProductLineIds,
+      selectedCategoryId: state.selectedCategoryId,
+      previouslyPurchased: state.previouslyPurchased,
+      selectedStockedItems: state.selectedStockedItems,
     );
 
     switch (result) {
@@ -124,5 +145,60 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
       default:
         emit(state.copyWith(searchProductStatus: SearchProductStatus.failure));
     }
+  }
+
+  Future<void> applyFilter({
+    required List<String> selectedAttributeValueIds,
+    required List<String> selectedBrandIds,
+    required List<String> selectedProductLineIds,
+    required String selectedCategoryId,
+    required bool previouslyPurchased,
+    required bool selectedStockedItems,
+  }) async {
+    if (!listEquals(
+            state.selectedAttributeValueIds, selectedAttributeValueIds) ||
+        !listEquals(state.selectedBrandIds, selectedBrandIds) ||
+        !listEquals(state.selectedProductLineIds, selectedProductLineIds) ||
+        state.selectedCategoryId != selectedCategoryId ||
+        previouslyPurchased != state.previouslyPurchased ||
+        selectedStockedItems != state.selectedStockedItems) {
+      emit(
+        state.copyWith(
+          selectedAttributeValueIds: selectedAttributeValueIds,
+          selectedBrandIds: selectedBrandIds,
+          selectedProductLineIds: selectedProductLineIds,
+          selectedCategoryId: selectedCategoryId,
+          previouslyPurchased: previouslyPurchased,
+          selectedStockedItems: selectedStockedItems,
+          searchProductStatus: SearchProductStatus.loading,
+        ),
+      );
+
+      await _loadSearchProducts();
+    }
+  }
+
+  int get selectedFiltersCount {
+    /// Depending on the product list type, the number of selected filters will be different
+    /// For now, we are only supporting search products
+    var valueIdsCount = state.selectedAttributeValueIds.length +
+        (state.previouslyPurchased ? 1 : 0) +
+        (state.selectedStockedItems ? 1 : 0);
+    // if (state.productListType == ProductListType.searchProducts) {
+    return valueIdsCount +
+        state.selectedBrandIds.length +
+        state.selectedProductLineIds.length +
+        (state.selectedCategoryId.isNotEmpty ? 1 : 0);
+    // } else if (state.productListType == ProductListType.categoryProducts) {
+    //   return valueIdsCount + state.selectedBrandIds.length + state.selectedProductLineIds.length;
+    // } else if (state.productListType == ProductListType.shopBrandProducts) {
+    //   return valueIdsCount + state.selectedProductLineIds.length + (state.selectedCategoryId.isNotEmpty ? 1 : 0);
+    // } else if (state.productListType == ProductListType.shopBrandCategoryProducts) {
+    //   return valueIdsCount + state.selectedProductLineIds.length;
+    // } else if (state.productListType == ProductListType.shopBrandProductLineProducts) {
+    //   return valueIdsCount + (state.selectedCategoryId.isNotEmpty ? 1 : 0);
+    // } else {
+    //   return 0;
+    // }
   }
 }

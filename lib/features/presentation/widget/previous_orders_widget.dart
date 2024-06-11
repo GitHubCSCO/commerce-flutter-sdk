@@ -44,7 +44,7 @@ class PreviousOrdersWidget extends StatelessWidget {
                 child: ListView.separated(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: state.previousOrdersDataEntity.orders.length,
                   itemBuilder: (context, index) {
                     return OrderHistoryListItem(

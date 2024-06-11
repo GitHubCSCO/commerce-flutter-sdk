@@ -129,6 +129,9 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                 case CheckoutInitial():
                 case CheckoutLoading():
                   return const Center(child: CircularProgressIndicator());
+                case CheckoutDataFetchFailed():
+                  //Send some analytics event here from state.error so we can analyze what was the root cause
+                  return const Center(child: Text("Something went wrong"));
                 case CheckoutDataLoaded():
                   return Column(
                     children: [

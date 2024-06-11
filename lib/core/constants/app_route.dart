@@ -37,6 +37,8 @@ class RouteNames {
   static const String vmiLocationNote = 'vmiLocationNote';
   static const String addCreditCard = 'addCreditCard';
   static const String addShippingAddress = 'addShippingAddress';
+  static const String savedOrders = 'savedOrders';
+  static const String savedOrderDetails = 'savedOrderDetails';
 }
 
 class RoutePaths {
@@ -77,7 +79,10 @@ class RoutePaths {
   static const String forgotPassword = '/${RouteNames.forgotPassword}';
   static const String orderDetails = '${RoutePaths.orderHistory}/:orderNumber';
   static const String addCreditCard = '/${RouteNames.addCreditCard}';
-  static const String addShippingAddress =  '/${RouteNames.addShippingAddress}';
+  static const String addShippingAddress = '/${RouteNames.addShippingAddress}';
+  static const String savedOrders =
+      '${RoutePaths.account}/${RouteNames.savedOrders}';
+  static const String savedOrderDetails = '${RoutePaths.savedOrders}/:cartId';
 }
 
 enum AppRoute {
@@ -131,7 +136,11 @@ enum AppRoute {
       name: RouteNames.addCreditCard, fullPath: RoutePaths.addCreditCard),
   addShippingAddress(
       name: RouteNames.addShippingAddress,
-      fullPath: RoutePaths.addShippingAddress);
+      fullPath: RoutePaths.addShippingAddress),
+  savedOrders(name: RouteNames.savedOrders, fullPath: RoutePaths.savedOrders),
+  savedOrderDetails(
+      name: RouteNames.savedOrderDetails,
+      fullPath: RoutePaths.savedOrderDetails);
 
   const AppRoute({
     required this.name,

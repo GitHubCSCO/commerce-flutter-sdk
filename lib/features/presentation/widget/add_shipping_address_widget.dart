@@ -26,7 +26,7 @@ class AddShippingAddressScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: OptiAppColors.backgroundWhite,
-          title: const Text(LocalizationConstants.addCreditCard),
+          title: const Text(LocalizationConstants.shippingAddress),
           centerTitle: false,
         ),
         body: MultiBlocProvider(
@@ -72,7 +72,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
           child: BlocBuilder<AddShippingAddressCubit, AddShippingAddressState>(
             builder: (_, state) {
               if (state is AddShippingAddtessLoadingState) {
-                return CircularProgressIndicator();
+                return Center(child: CircularProgressIndicator());
               } else if (state is AddShippingAddtessLoadedState) {
                 return Form(
                   key: _formKey,
