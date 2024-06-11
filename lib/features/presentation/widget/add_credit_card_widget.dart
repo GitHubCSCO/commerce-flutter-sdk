@@ -88,7 +88,7 @@ class AddCreditCardPage extends StatelessWidget {
               if (state is AddCreditCardInitialState) {
                 return Container();
               } else if (state is AddCreditCardLoadingState) {
-                return const CircularProgressIndicator();
+                return Center(child: const CircularProgressIndicator());
               } else if (state is AddCreditCardLoadedState) {
                 // return Text("data");
                 return Column(

@@ -182,7 +182,7 @@ List<NavigationNode> _getNavigationRoot() {
   final checkoutSuccess = createNode(
     name: AppRoute.checkoutSuccess.name,
     path: AppRoute.checkoutSuccess.suffix,
-    builder: (context, state) {
+    builder: (_, state) {
       final checkoutSuccessEntity = state.extra as CheckoutSuccessEntity;
       return CheckoutSuccessScreen(
           checkoutSuccessEntity: checkoutSuccessEntity);

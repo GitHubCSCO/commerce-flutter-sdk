@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:commerce_flutter_app/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -93,7 +94,12 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
                 ? cartData.erpOrderNumber
                 : cartData?.orderNumber) ??
             '';
-        emit(CheckoutPlaceOrder(orderNumber: orderNumber));
+
+        emit(CheckoutPlaceOrder(
+            orderNumber: orderNumber,
+            reviewOrderEntity: event.reviewOrderEntity,
+            cart: cartData!));
+
         break;
       case Failure(errorResponse: final errorResponse):
         emit(CheckoutDataFetchFailed(

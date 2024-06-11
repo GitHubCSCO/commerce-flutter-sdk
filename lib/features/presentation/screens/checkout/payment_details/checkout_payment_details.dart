@@ -77,7 +77,9 @@ class CheckoutPaymentDetails extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AddPromotionWidget(shouldShowPromotionList: true,),
+                  AddPromotionWidget(
+                    shouldShowPromotionList: false,
+                  ),
                   _buildPaymentMethodPicker(state, context),
                   if (state.cardDetails != null)
                     Padding(
@@ -135,8 +137,9 @@ class CheckoutPaymentDetails extends StatelessWidget {
                           selectedIndex: getIndexForSelectedPaymentMethod(
                               state.cart?.paymentOptions?.paymentMethods ?? [],
                               context
-                                  .read<PaymentDetailsBloc>()
-                                  .selectedPaymentMethod!),
+                                      .read<PaymentDetailsBloc>()
+                                      .selectedPaymentMethod ??
+                                  PaymentMethodDto()),
                           callback: _onPaymentMethodSelect)),
                   const Icon(
                     Icons.arrow_forward_ios,

@@ -206,6 +206,13 @@ class ProductDetailsAddCartTtitleSubTitleColumn extends StatelessWidget {
 
   ProductDetailsAddCartTtitleSubTitleColumn(this.title, this.value);
 
+  String getFormattedValue(String value) {
+    if (value.isEmpty) {
+      return 'N/A';
+    }
+    return value;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -215,11 +222,11 @@ class ProductDetailsAddCartTtitleSubTitleColumn extends StatelessWidget {
           style: OptiTextStyles.bodySmall,
         ),
         FittedBox(
+          fit: BoxFit.scaleDown,
           child: Text(
-            value,
+            getFormattedValue(value),
             style: OptiTextStyles.titleLarge,
           ),
-          fit: BoxFit.scaleDown,
         ),
       ],
     );

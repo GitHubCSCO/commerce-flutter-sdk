@@ -26,6 +26,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
+ReviewOrderEntity prepareReviewOrderEnrity(CheckoutDataLoaded state) {
+  return ReviewOrderEntity(
+      billTo: state.billToAddress,
+      shipTo: state.shipToAddress,
+      warehouse: state.wareHouse,
+      shippingMethod:
+          (state.shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)
+              ? ShippingOption.pickUp
+              : ShippingOption.ship),
+      carriers: state.cart.carriers,
+      cartSettings: state.cartSettings,
+      paymentMethod: state.cart.paymentMethod,
+      selectedCarrier: state.selectedCarrier,
+      selectedService: state.selectedService,
+      requestDeliveryDate: state.requestDeliveryDate);
+}
+
 class CheckoutScreen extends StatelessWidget {
   final Cart cart;
 
@@ -99,7 +116,10 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
             context.read<CartCountCubit>().onCartItemChange();
             AppRoute.checkoutSuccess.navigate(context,
                 extra: CheckoutSuccessEntity(
-                    orderNumber: state.orderNumber, isVmiCheckout: false));
+                    orderNumber: state.orderNumber,
+                    isVmiCheckout: false,
+                    cart: context.read<CheckoutBloc>().cart!,
+                    reviewOrderEntity: state.reviewOrderEntity));
           }
         },
         builder: (_, state) {
@@ -145,18 +165,8 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                         state.requestDeliveryDate,
                                   );
 
-                                  final reviewOrderEntity = ReviewOrderEntity(
-                                      billTo: state.billToAddress,
-                                      shipTo: state.shipToAddress,
-                                      warehouse: state.wareHouse,
-                                      shippingMethod: (state.shippingMethod
-                                              .equalsIgnoreCase(
-                                                  ShippingOption.pickUp.name)
-                                          ? ShippingOption.pickUp
-                                          : ShippingOption.ship),
-                                      carriers: state.cart.carriers,
-                                      cartSettings: state.cartSettings,
-                                      paymentMethod: state.cart.paymentMethod);
+                                  final reviewOrderEntity =
+                                      prepareReviewOrderEnrity(state);
 
                                   return ExpansionPanelList(
                                     expansionCallback:
@@ -310,9 +320,13 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                     }
 
                                   case 2:
-                                    context
-                                        .read<CheckoutBloc>()
-                                        .add(PlaceOrderEvent());
+                                    final reviewOrderEntity =
+                                        prepareReviewOrderEnrity(state);
+
+                                    context.read<CheckoutBloc>().add(
+                                        PlaceOrderEvent(
+                                            reviewOrderEntity:
+                                                reviewOrderEntity));
                                   default:
                                     context
                                         .read<ExpansionPanelCubit>()

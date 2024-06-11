@@ -104,7 +104,7 @@ class CartPage extends StatelessWidget {
                 .add(PullToRefreshInitialEvent());
           },
           child: BlocBuilder<CartPageBloc, CartPageState>(
-            builder: (context, state) {
+            builder: (_, state) {
               switch (state) {
                 case CartPageInitialState():
                 case CartPageLoadingState():
