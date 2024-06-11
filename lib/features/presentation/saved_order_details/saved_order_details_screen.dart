@@ -179,8 +179,8 @@ class _OptionsMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SavedOrderDetailsCubit, SavedOrderDetailsState>(
       builder: (context, state) {
-        final websitePath =
-            WebsitePaths.savedOrderDetailsWebsitePath.format([state.cart.id ?? '']);
+        final websitePath = WebsitePaths.savedOrderDetailsWebsitePath
+            .format([state.cart.id ?? '']);
         return BottomMenuWidget(
           websitePath: websitePath,
         );
@@ -286,13 +286,12 @@ class _SavedOrderProductsSectionWidget extends StatelessWidget {
             final cartLine = cartLines[index];
             final cartLineEntity = CartLineEntityMapper().toEntity(cartLine);
             return LineItemWidget(
-              productId: cartLineEntity.id,
+              productId: cartLineEntity.productId,
               imagePath: cartLineEntity.smallImagePath,
               shortDescription: cartLineEntity.shortDescription,
               manufacturerItem: cartLineEntity.manufacturerItem,
               productNumber: cartLineEntity.getProductNumber(),
-              discountMessage:
-                  cartLineEntity.pricing?.getDiscountValue(),
+              discountMessage: cartLineEntity.pricing?.getDiscountValue(),
               priceValueText: cartLineEntity.updatePriceValueText(),
               unitOfMeasureValueText:
                   cartLineEntity.updateUnitOfMeasureValueText(),
