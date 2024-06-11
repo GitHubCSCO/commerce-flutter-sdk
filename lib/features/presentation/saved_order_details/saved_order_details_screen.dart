@@ -1,6 +1,8 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/core/constants/website_paths.dart';
+import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
@@ -178,7 +180,7 @@ class _OptionsMenu extends StatelessWidget {
     return BlocBuilder<SavedOrderDetailsCubit, SavedOrderDetailsState>(
       builder: (context, state) {
         final websitePath =
-            'redirectto/SavedOrderDetailPage?cartId=${state.cart.id ?? ''}';
+            WebsitePaths.savedOrderDetailsWebsitePath.format([state.cart.id ?? '']);
         return BottomMenuWidget(
           websitePath: websitePath,
         );
