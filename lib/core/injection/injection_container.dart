@@ -23,6 +23,7 @@ import 'package:commerce_flutter_app/features/domain/service/vmi_service.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/add_credit_card_usecase/add_credit_card_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/add_shipping_address_usecase/add_shipping_address_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/billing_address_create_usecase/billing_address_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_content_usecase.dart';
@@ -47,6 +48,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_us
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/warehouse_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/previous_orders_usecase/previous_orders_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/promo_code_usecase/promo_code_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/count_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/order_pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/quick_order_usecase.dart';
@@ -85,6 +87,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_location
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_main/vmi_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/add_credit_card/add_credit_card_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/add_shipping_address/add_shipping_address_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/billing_address/billing_address_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/biometric_auth_cubit.dart';
@@ -111,6 +114,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/order_details/o
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders_cubit/previous_orders_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
@@ -263,6 +267,15 @@ Future<void> initInjectionContainer() async {
     // Billing Address
     ..registerFactory(() => BillingAddressCubit(billingAddressUsecase: sl()))
     ..registerFactory(() => BillingAddressUsecase())
+
+    // shipping address
+    ..registerFactory(
+        () => AddShippingAddressCubit(addShippingAddressUsecase: sl()))
+    ..registerFactory(() => AddShippingAddressUsecase())
+
+    // PromoCdeo
+    ..registerFactory(() => PromoCodeCubit(promoCodeUsecase: sl()))
+    ..registerFactory(() => PromoCodeUsecase())
 
     // Card Expiration
     ..registerFactory(() => CardExpirationCubit())
@@ -428,6 +441,11 @@ Future<void> initInjectionContainer() async {
           networkService: sl(),
         ))
     ..registerLazySingleton<ICartService>(() => CartService(
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
+    ..registerLazySingleton<IBillToService>(() => BillToService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),

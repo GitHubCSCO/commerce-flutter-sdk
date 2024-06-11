@@ -11,6 +11,7 @@ import 'package:commerce_flutter_app/features/presentation/components/input.dart
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/credit_card_add_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/token_ex_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/add_promotion_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -76,6 +77,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  AddPromotionWidget(shouldShowPromotionList: true,),
                   _buildPaymentMethodPicker(state, context),
                   if (state.cardDetails != null)
                     Padding(

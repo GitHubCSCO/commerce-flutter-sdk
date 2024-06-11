@@ -18,6 +18,7 @@ import 'package:commerce_flutter_app/features/presentation/components/snackbar_c
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line_list.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_payment_summary_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
@@ -42,12 +43,12 @@ class CartScreen extends StatelessWidget {
           create: (context) => sl<PullToRefreshBloc>()),
       BlocProvider<CartPageBloc>(
           create: (context) => sl<CartPageBloc>()..add(CartPageLoadEvent())),
+      BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
     ], child: const CartPage());
   }
 }
 
 class CartPage extends StatelessWidget {
-
   final websitePath = WebsitePaths.cartWebsitePath;
 
   const CartPage({super.key});

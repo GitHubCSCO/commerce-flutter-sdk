@@ -28,6 +28,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         (event, emit) => _onPaymentMethodSelect(event, emit));
     on<SelectPaymentEvent>((event, emit) => _onPaymentSelect(event, emit));
     on<UpdatePONumberEvent>((event, emit) => _onUpdatePONumber(event, emit));
+    on<UpdateShiptoAddressEvent>((event, emit) => _onUpdateShipTo(event, emit));
   }
 
   void updateCheckoutData(Cart cart) {
@@ -147,7 +148,18 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         selectedPayment?.creditCard?.expirationYear;
   }
 
-  void _onUpdatePONumber(UpdatePONumberEvent event, Emitter<CheckoutState> emit) {
+  void _onUpdatePONumber(
+      UpdatePONumberEvent event, Emitter<CheckoutState> emit) {
     cart?.poNumber = event.poNumber;
+  }
+
+  Future<void> _onUpdateShipTo(
+      UpdateShiptoAddressEvent event, Emitter<CheckoutState> emit) async {
+    var response =
+        await _checkoutUseCase.postCurrentBillToShipToAsync(event.shipTo);
+
+    cart?.shipTo = response is Success
+        ? (response as Success).value as ShipTo
+        : event.shipTo;
   }
 }

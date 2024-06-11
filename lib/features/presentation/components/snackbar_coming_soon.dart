@@ -112,5 +112,23 @@ class CustomSnackBar {
     );
   }
 
+  static void showPromotionApplied(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(LocalizationConstants.promotionApplied),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showPromotionNotApplied(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(LocalizationConstants.promotionNotAppliedContinue),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
   static showComingSoon(BuildContext context) {}
 }

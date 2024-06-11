@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/credit_card_add_callback_helper.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/shipping_address_add_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_note_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
@@ -40,6 +41,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/welcome/domai
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_details/wish_list_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/add_credit_card_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/add_shipping_address_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -157,6 +159,21 @@ List<NavigationNode> _getNavigationRoot() {
       final onCreaditCardAdded = callbackHelper.onAddedCeditCard;
 
       return AddCreditCardScreen(onCrtaeditCardAdded: onCreaditCardAdded);
+    },
+    parent: null,
+  );
+
+  // path: /addShippingAddress
+  final addShippingAddress = createNode(
+    name: AppRoute.addShippingAddress.name,
+    path: AppRoute.addShippingAddress.suffix,
+    builder: (context, state) {
+      final callbackHelper = state.extra as ShippingAddressAddCallbackHelper;
+
+      final onShippingAddressAdded = callbackHelper.onShippingAddressAdded;
+
+      return AddShippingAddressScreen(
+          onShippingAddressAdded: onShippingAddressAdded);
     },
     parent: null,
   );
@@ -412,6 +429,7 @@ List<NavigationNode> _getNavigationRoot() {
     forgotPassword,
     vmiLocationNote,
     locationSearch,
-    addCreditCard
+    addCreditCard,
+    addShippingAddress
   ];
 }

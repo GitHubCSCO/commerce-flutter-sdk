@@ -14,6 +14,7 @@ import 'package:commerce_flutter_app/features/presentation/components/snackbar_c
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/expansion_panel/expansion_panel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/base_checkout.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
@@ -43,6 +44,7 @@ class CheckoutScreen extends StatelessWidget {
         BlocProvider<TokenExBloc>(create: (context) => sl<TokenExBloc>()),
         BlocProvider<ReviewOrderCubit>(
             create: (context) => sl<ReviewOrderCubit>()),
+        BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
         BlocProvider<PaymentDetailsBloc>(
           create: (context) => sl<PaymentDetailsBloc>()
             ..add(LoadPaymentDetailsEvent(cart: cart)),
@@ -118,7 +120,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                               buildSummary(state.cart, state.promotions),
                               BlocBuilder<ExpansionPanelCubit,
                                   ExpansionPanelState>(
-                                builder: (context, panelState) {
+                                builder: (_, panelState) {
                                   List<Item>? list;
                                   switch (panelState) {
                                     case ExpansionPanelChangeState():
@@ -318,7 +320,8 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                 }
                               },
                               text: buttonText,
-                              isEnabled: (index == 2 && isCheckoutButtonEnabled == false)
+                              isEnabled: (index == 2 &&
+                                      isCheckoutButtonEnabled == false)
                                   ? false
                                   : true,
                             );

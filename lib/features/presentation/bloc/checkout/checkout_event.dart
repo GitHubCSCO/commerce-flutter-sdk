@@ -39,9 +39,14 @@ class SelectPaymentEvent extends CheckoutEvent {
   SelectPaymentEvent(this.paymentOption);
 }
 
-
 class UpdatePONumberEvent extends CheckoutEvent {
   final String poNumber;
 
   UpdatePONumberEvent(this.poNumber);
+}
+
+class UpdateShiptoAddressEvent extends CheckoutEvent {
+  final ShipTo shipTo;
+
+  UpdateShiptoAddressEvent(this.shipTo);
 }

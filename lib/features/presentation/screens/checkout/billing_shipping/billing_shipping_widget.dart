@@ -1,9 +1,11 @@
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shipping_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/warehouse_extension.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/shipping_address_add_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/date_picker_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
@@ -25,12 +27,12 @@ class BillingShippingWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: _buildItems(),
+        children: _buildItems(context),
       ),
     );
   }
 
-  List<Widget> _buildItems() {
+  List<Widget> _buildItems(BuildContext context) {
     List<Widget> list = [];
 
     list.add(_buildBillingAddress());
@@ -66,7 +68,7 @@ class BillingShippingWidget extends StatelessWidget {
             selectedServiceIndex = i;
           }
         }
-
+        list.add(_buildAddShippingAddressButton(context));
         list.add(_buildShippingMethod(
             billingShippingEntity.carriers!,
             billingShippingEntity.carriers![0].shipVias!,
@@ -93,6 +95,24 @@ class BillingShippingWidget extends StatelessWidget {
     }
 
     return list;
+  }
+
+  Widget _buildAddShippingAddressButton(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        AppRoute.addShippingAddress.navigateBackStack(context, extra:
+            ShippingAddressAddCallbackHelper(onShippingAddressAdded: (shiptTo) {
+          context.read<CheckoutBloc>().add(UpdateShiptoAddressEvent(shiptTo));
+        }));
+      },
+      style: TextButton.styleFrom(
+        foregroundColor: Colors.blue,
+        backgroundColor: Colors.white, // Button color
+        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        textStyle: OptiTextStyles.linkMedium,
+      ),
+      child: const Text('+ New Address'),
+    );
   }
 
   Widget _buildBillingAddress() {

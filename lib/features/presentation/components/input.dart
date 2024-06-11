@@ -18,7 +18,7 @@ class Input extends StatefulWidget {
   final TextInputAction? textInputAction;
   final void Function(bool hasFocus)? focusListener;
   final Widget? suffixIcon;
-  final String? errorMessage; // Added errorMessage parameter
+  final FormFieldValidator<String>? validator; // Added validator parameter
 
   const Input({
     super.key,
@@ -37,7 +37,7 @@ class Input extends StatefulWidget {
     this.textAlign = TextAlign.start,
     this.focusListener,
     this.suffixIcon,
-    this.errorMessage, // Added errorMessage parameter
+    this.validator,
   });
 
   @override
@@ -47,6 +47,7 @@ class Input extends StatefulWidget {
 class _InputState extends State<Input> {
   late FocusNode _focusNode;
   late ScrollController _scrollController;
+  String? _errorText; // State to hold the error text
 
   void _setState() {
     setState(() {});
@@ -96,93 +97,112 @@ class _InputState extends State<Input> {
     }
   }
 
+  String? _validate(String? value) {
+    if (widget.validator != null) {
+      final error = widget.validator!(value);
+      setState(() {
+        _errorText = error;
+      });
+      return error;
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (widget.label != null)
-          Padding(
-            padding: const EdgeInsets.only(bottom: AppStyle.inputLabelGap),
-            child: Text(
-              widget.label!,
-              style: OptiTextStyles.body,
-            ),
-          ),
-        Container(
-          margin: const EdgeInsets.symmetric(
-            horizontal: AppStyle.inputDropShadowSpreadRadius,
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppStyle.borderRadius),
-            boxShadow: _focusNode.hasFocus
-                ? const [
-                    BoxShadow(
-                      color: AppStyle.inputDropShadowColor,
-                      spreadRadius: AppStyle.inputDropShadowSpreadRadius,
+    return FormField<String>(
+      validator: _validate,
+      builder: (FormFieldState<String> state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (widget.label != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Text(
+                  widget.label!,
+                  style: OptiTextStyles.body,
+                ),
+              ),
+            Container(
+              margin: const EdgeInsets.symmetric(
+                horizontal: AppStyle.inputDropShadowSpreadRadius,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppStyle.borderRadius),
+                boxShadow: _focusNode.hasFocus
+                    ? const [
+                        BoxShadow(
+                          color: AppStyle.inputDropShadowColor,
+                          spreadRadius: AppStyle.inputDropShadowSpreadRadius,
+                        ),
+                      ]
+                    : null,
+              ),
+              child: TextField(
+                scrollController: _scrollController,
+                onChanged: (value) {
+                  _handleChange(value);
+                  state.didChange(value); // Notify the form field of the change
+                },
+                onSubmitted: widget.onSubmitted,
+                controller: widget.controller,
+                obscureText: widget.obscureText,
+                keyboardType: widget.keyboardType,
+                onEditingComplete: widget.onEditingComplete,
+                onTap: widget.onTap,
+                onTapOutside: widget.onTapOutside,
+                style: OptiTextStyles.body,
+                textAlign: widget.textAlign,
+                textDirection: widget.textDirection,
+                textInputAction: widget.textInputAction,
+                focusNode: _focusNode,
+                cursorColor: AppStyle.neutral990,
+                decoration: InputDecoration(
+                  hintText: widget.hintText,
+                  hintStyle: OptiTextStyles.body.copyWith(
+                    color: AppStyle.neutral500,
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: AppStyle.defaultHorizontalPadding,
+                    vertical: AppStyle.defaultVerticalPadding,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      AppStyle.borderRadius,
                     ),
-                  ]
-                : null,
-          ),
-          child: TextField(
-            scrollController: _scrollController,
-            onChanged: _handleChange,
-            onSubmitted: widget.onSubmitted,
-            controller: widget.controller,
-            obscureText: widget.obscureText,
-            keyboardType: widget.keyboardType,
-            onEditingComplete: widget.onEditingComplete,
-            onTap: widget.onTap,
-            onTapOutside: widget.onTapOutside,
-            style: OptiTextStyles.body,
-            textAlign: widget.textAlign,
-            textDirection: widget.textDirection,
-            textInputAction: widget.textInputAction,
-            focusNode: _focusNode,
-            cursorColor: AppStyle.neutral990,
-            decoration: InputDecoration(
-              hintText: widget.hintText,
-              hintStyle: OptiTextStyles.body.copyWith(
-                color: AppStyle.neutral500,
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: AppStyle.defaultHorizontalPadding,
-                vertical: AppStyle.defaultVerticalPadding,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(
-                  AppStyle.borderRadius,
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      AppStyle.borderRadius,
+                    ),
+                    borderSide: const BorderSide(
+                      color: AppStyle.primary500,
+                    ),
+                  ),
+                  filled: true,
+                  fillColor: _focusNode.hasFocus
+                      ? AppStyle.neutral00
+                      : AppStyle.neutral100,
+                  suffixIcon: _focusNode.hasFocus ? widget.suffixIcon : null,
                 ),
-                borderSide: BorderSide.none,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(
-                  AppStyle.borderRadius,
-                ),
-                borderSide: const BorderSide(
-                  color: AppStyle.primary500,
-                ),
-              ),
-              filled: true,
-              fillColor: _focusNode.hasFocus
-                  ? AppStyle.neutral00
-                  : AppStyle.neutral100,
-              suffixIcon: _focusNode.hasFocus ? widget.suffixIcon : null,
-            ),
-          ),
-        ),
-        if (widget.errorMessage != null && widget.errorMessage != "")
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0),
-            child: Text(
-              widget.errorMessage ?? "",
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 12,
               ),
             ),
-          ),
-      ],
+            if (_errorText != null && _errorText!.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: Text(
+                  _errorText!,
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }
