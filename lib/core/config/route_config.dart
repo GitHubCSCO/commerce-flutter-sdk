@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_l
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
+import 'package:commerce_flutter_app/features/presentation/saved_order_details/saved_order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/biometric/biometric_login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
@@ -19,6 +20,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/location_seac
 import 'package:commerce_flutter_app/features/presentation/screens/login/forgot_password_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_details/order_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_location_note.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_screen.dart';
@@ -151,7 +153,8 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.checkoutSuccess.suffix,
     builder: (context, state) {
       final checkoutSuccessEntity = state.extra as CheckoutSuccessEntity;
-      return CheckoutSuccessScreen(checkoutSuccessEntity: checkoutSuccessEntity);
+      return CheckoutSuccessScreen(
+          checkoutSuccessEntity: checkoutSuccessEntity);
     },
     parent: null,
   );
@@ -372,6 +375,27 @@ List<NavigationNode> _getNavigationRoot() {
       return OrderDetailsScreen(orderNumber: orderNumber);
     },
     parent: orderHistory,
+  );
+
+  // path: /account/savedOrders
+  final savedOrders = createNode(
+    name: AppRoute.savedOrders.name,
+    path: AppRoute.savedOrders.suffix,
+    builder: (context, state) => const SavedOrderScreen(),
+    parent: account,
+  );
+
+  // path: /account/savedOrders/:cartId
+  final savedOrderDetails = createNode(
+    name: AppRoute.savedOrderDetails.name,
+    path: AppRoute.savedOrderDetails.suffix,
+    builder: (context, state) {
+      final cartId = state.pathParameters['cartId'] ?? '';
+      final refreshSavedOrders = state.extra as void Function();
+      return SavedOrderDetailsScreen(
+          cartId: cartId, refreshSavedOrders: refreshSavedOrders);
+    },
+    parent: savedOrders,
   );
 
   return [
