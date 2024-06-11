@@ -18,6 +18,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/checkout/chec
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/vmi_checkout/vmi_checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/location_seach/location_serach_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/forgot_password_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/order_approval/order_approval_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_details/order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_screen.dart';
@@ -396,6 +397,14 @@ List<NavigationNode> _getNavigationRoot() {
           cartId: cartId, refreshSavedOrders: refreshSavedOrders);
     },
     parent: savedOrders,
+  );
+
+  // path: /account/orderApproval
+  final orderApproval = createNode(
+    name: AppRoute.orderApproval.name,
+    path: AppRoute.orderApproval.suffix,
+    builder: (context, state) => const OrderApprovalScreen(),
+    parent: account,
   );
 
   return [
