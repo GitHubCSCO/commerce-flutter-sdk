@@ -37,6 +37,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/location_search_us
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/forgot_password_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/order_approval_usecase/order_approval_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/order_usecase/order_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/platform_usecase/platform_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
@@ -218,6 +219,9 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => SavedOrderUsecase())
     ..registerFactory(() => SavedOrderDetailsCubit(savedOrderUsecase: sl()))
     ..registerFactory(() => SavedOrderAddToCubit(savedOrderUsecase: sl()))
+
+    //order approval
+    ..registerFactory(() => OrderApprovalUseCase())
 
     //Pull to refresh
     ..registerFactory(() => PullToRefreshBloc())
