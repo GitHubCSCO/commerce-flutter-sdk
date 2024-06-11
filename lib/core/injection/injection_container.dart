@@ -107,6 +107,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/login/forgot_pa
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_details/order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders_cubit/previous_orders_cubit.dart';
@@ -222,6 +223,7 @@ Future<void> initInjectionContainer() async {
 
     //order approval
     ..registerFactory(() => OrderApprovalUseCase())
+    ..registerFactory(() => OrderApprovalCubit(orderApprovalUseCase: sl()))
 
     //Pull to refresh
     ..registerFactory(() => PullToRefreshBloc())
