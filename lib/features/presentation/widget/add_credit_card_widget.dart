@@ -61,7 +61,7 @@ class AddCreditCardPage extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController postalCodeController = TextEditingController();
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   AddCreditCardPage({super.key, required this.onCrtaeditCardAdded});
   @override
   Widget build(BuildContext context) {
@@ -91,18 +91,21 @@ class AddCreditCardPage extends StatelessWidget {
                 return Center(child: const CircularProgressIndicator());
               } else if (state is AddCreditCardLoadedState) {
                 // return Text("data");
-                return Column(
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: _buildItems(state, context),
+                return Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: _buildItems(state, context),
+                          ),
                         ),
                       ),
-                    ),
-                    _buildContinueButtonWidget(context)
-                  ],
+                      _buildContinueButtonWidget(context)
+                    ],
+                  ),
                 );
               } else
                 return Container();
@@ -144,82 +147,39 @@ class AddCreditCardPage extends StatelessWidget {
   }
 
   void getInputData(BuildContext context) {
-    var name = nameController.text;
-    var address = addressController.text;
-    var city = cityController.text;
-    var postalCode = postalCodeController.text;
-    var expirationMonth =
-        context.read<CardExpirationCubit>().selectedExpirationMonth;
-    var expirationYear =
-        context.read<CardExpirationCubit>().selectedExpirationYear;
-    var selectCountry = context.read<BillingAddressCubit>().selectedCountry;
-    var selectState = context.read<BillingAddressCubit>().selectedState;
+    if (_formKey.currentState?.validate() ?? false) {
+      var name = nameController.text;
+      var address = addressController.text;
+      var city = cityController.text;
+      var postalCode = postalCodeController.text;
+      var expirationMonth =
+          context.read<CardExpirationCubit>().selectedExpirationMonth;
+      var expirationYear =
+          context.read<CardExpirationCubit>().selectedExpirationYear;
+      var selectCountry = context.read<BillingAddressCubit>().selectedCountry;
+      var selectState = context.read<BillingAddressCubit>().selectedState;
+      var expirationDate =
+          "${expirationMonth?.value.toString().padLeft(2, '0')}/${expirationYear!.key % 100}";
+      context.read<TokenExBloc>().add(TokenExValidateEvent());
 
-    // Validate inputs
-    bool isValid = true;
-    if (name.isEmpty) {
-      _validateNameInput(nameController.text);
-      isValid = false;
-    }
-    if (address.isEmpty) {
-      _validateAddressInput(addressController.text);
-      isValid = false;
-    }
-    if (city.isEmpty) {
-      _validateCityInput(cityController.text);
-      isValid = false;
-    }
-    if (postalCode.isEmpty) {
-      _validatePostalCodeInput(postalCodeController.text);
-      isValid = false;
-    }
-    if (expirationMonth == null) {
-      // Show error message in your UI
-      print('Please select expiration month');
-      isValid = false;
-    }
-    if (expirationYear == null) {
-      // Show error message in your UI
-      print('Please select expiration year');
-      isValid = false;
-    }
-    if (selectCountry == null) {
-      // Show error message in your UI
-      print('Please select a country');
-      isValid = false;
-    }
-    if (selectState == null) {
-      // Show error message in your UI
-      print('Please select a state');
-      isValid = false;
-    }
+      AccountPaymentProfile? paymentProfile = AccountPaymentProfile(
+        cardHolderName: name,
+        address1: address,
+        city: city,
+        postalCode: postalCode,
+        expirationDate: expirationDate,
+        country: selectCountry?.abbreviation,
+        state: selectState?.abbreviation,
+        securityCode: context.read<TokenExBloc>().cardInfo?.securityCode,
+        cardIdentifier: context.read<TokenExBloc>().cardInfo?.cardIdentifier,
+        cardType: context.read<TokenExBloc>().cardInfo?.cardType,
+        isDefault: false,
+      );
 
-    if (!isValid) {
-      // Stop further execution if validation fails
-      return;
+      context
+          .read<AddCreditCardBloc>()
+          .add(SavePaymentProfileEvent(accountPaymentProfile: paymentProfile));
     }
-
-    var expirationDate =
-        "${expirationMonth?.value.toString().padLeft(2, '0')}/${expirationYear!.key % 100}";
-    context.read<TokenExBloc>().add(TokenExValidateEvent());
-
-    AccountPaymentProfile? paymentProfile = AccountPaymentProfile(
-      cardHolderName: name,
-      address1: address,
-      city: city,
-      postalCode: postalCode,
-      expirationDate: expirationDate,
-      country: selectCountry?.abbreviation,
-      state: selectState?.abbreviation,
-      securityCode: context.read<TokenExBloc>().cardInfo?.securityCode,
-      cardIdentifier: context.read<TokenExBloc>().cardInfo?.cardIdentifier,
-      cardType: context.read<TokenExBloc>().cardInfo?.cardType,
-      isDefault: false,
-    );
-
-    context
-        .read<AddCreditCardBloc>()
-        .add(SavePaymentProfileEvent(accountPaymentProfile: paymentProfile));
   }
 
   List<Widget> _buildItems(
@@ -273,15 +233,23 @@ class AddCreditCardPage extends StatelessWidget {
 
   Widget _buildNameField() {
     return _createInputField(
-        LocalizationConstants.name, LocalizationConstants.name, nameController);
+        LocalizationConstants.name, LocalizationConstants.name, nameController,
+        validator: (value) {
+      if (value == null || value.isEmpty) {
+        return 'Name cannot be empty';
+      }
+      return null;
+    });
   }
 
   Widget _createInputField(
-      String label, hintText, TextEditingController controller) {
+      String label, hintText, TextEditingController controller,
+      {FormFieldValidator<String>? validator}) {
     return Input(
       label: label,
       hintText: hintText,
       controller: controller,
+      validator: validator,
       onTapOutside: (_) {
         FocusManager.instance.primaryFocus?.unfocus();
       },
@@ -347,10 +315,14 @@ class AddCreditCardPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             _createInputField(
-              LocalizationConstants.address,
-              LocalizationConstants.address,
-              addressController,
-            ),
+                LocalizationConstants.address,
+                LocalizationConstants.address,
+                addressController, validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Address cannot be empty';
+              }
+              return null;
+            }),
             Row(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -386,11 +358,13 @@ class AddCreditCardPage extends StatelessWidget {
                 ),
               ],
             ),
-            _createInputField(
-              LocalizationConstants.city,
-              LocalizationConstants.city,
-              cityController,
-            ),
+            _createInputField(LocalizationConstants.city,
+                LocalizationConstants.city, cityController, validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'City cannot be empty';
+              }
+              return null;
+            }),
             Row(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -427,10 +401,14 @@ class AddCreditCardPage extends StatelessWidget {
               ],
             ),
             _createInputField(
-              LocalizationConstants.postalCode,
-              LocalizationConstants.postalCode,
-              postalCodeController,
-            ),
+                LocalizationConstants.postalCode,
+                LocalizationConstants.postalCode,
+                postalCodeController, validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Postal code cannot be empty';
+              }
+              return null;
+            }),
           ],
         );
       } else {
@@ -450,7 +428,7 @@ class AddCreditCardPage extends StatelessWidget {
           return i;
         }
       }
-      return 0;
+      return -1;
     }
 
     int getIndexForSelectedExpirationYears(
@@ -461,7 +439,7 @@ class AddCreditCardPage extends StatelessWidget {
           return i;
         }
       }
-      return 0;
+      return -1;
     }
 
     return BlocBuilder<CardExpirationCubit, CardExpirationState>(
@@ -497,6 +475,7 @@ class AddCreditCardPage extends StatelessWidget {
                       Expanded(
                           child: ListPickerWidget(
                               items: expirationMonths as List<Object>,
+                              descriptionText: "Select Month",
                               selectedIndex:
                                   getIndexForSelectedExpirationMonths(
                                       expirationMonths,
@@ -532,6 +511,7 @@ class AddCreditCardPage extends StatelessWidget {
                       Expanded(
                           child: ListPickerWidget(
                               items: expirationYears as List<Object>,
+                              descriptionText: "Select Year",
                               selectedIndex: getIndexForSelectedExpirationYears(
                                   expirationYears,
                                   context
