@@ -12,11 +12,13 @@ import 'package:commerce_flutter_app/features/presentation/helper/routing/route_
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/biometric/biometric_login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/category/category_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/vmi_checkout/vmi_checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/location_seach/location_serach_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/forgot_password_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_details/order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
@@ -374,6 +376,25 @@ List<NavigationNode> _getNavigationRoot() {
     parent: orderHistory,
   );
 
+  // path: /shopCategory
+  final shopCategory = createNode(
+    name: AppRoute.shopCategory.name,
+    path: AppRoute.shopCategory.suffix,
+    builder: (context, state) => const CategoryScreen(),
+    parent: null,
+  );
+
+  // path: /product
+  final product = createNode(
+    name: AppRoute.product.name,
+    path: AppRoute.product.suffix,
+    builder: (context, state) {
+      final entity = state.extra as ProductPageEntity;
+      return ProductScreen(pageEntity: entity);
+    },
+    parent: null,
+  );
+
   return [
     root,
     navbarRoot,
@@ -394,6 +415,8 @@ List<NavigationNode> _getNavigationRoot() {
     addToWishList,
     forgotPassword,
     vmiLocationNote,
-    locationSearch
+    locationSearch,
+    shopCategory,
+    product
   ];
 }

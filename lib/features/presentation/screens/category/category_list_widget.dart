@@ -14,12 +14,10 @@ class CategoryListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: const BoxDecoration(color: Colors.white),
       child: ListView.separated(
         itemCount: list.length ?? 0,
         shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
         separatorBuilder: (context, index) => const Divider(
           height: 0,
           thickness: 0.3,

@@ -50,45 +50,48 @@ class CategoryGridItemWidget extends StatelessWidget {
       onTap: () {
         callback(context, category);
       },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(2),
-            height: height,
-            child: Image.network(
-              category.smallImagePath.makeImageUrl(),
-              fit: BoxFit.cover,
-              errorBuilder: (BuildContext context, Object error,
-                  StackTrace? stackTrace) {
-                // This function is called when the image fails to load
-                return Container(
-                  color:
-                  OptiAppColors.backgroundGray, // Placeholder color
-                  alignment: Alignment.center,
-                  child: const Icon(
-                    Icons.image, // Icon to display
-                    color: Colors.grey, // Icon color
-                    size: 30, // Icon size
-                  ),
-                );
-              },
+      child: Container(
+        color: OptiAppColors.backgroundWhite,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(2),
+              height: height,
+              child: Image.network(
+                category.smallImagePath.makeImageUrl(),
+                fit: BoxFit.cover,
+                errorBuilder: (BuildContext context, Object error,
+                    StackTrace? stackTrace) {
+                  // This function is called when the image fails to load
+                  return Container(
+                    color:
+                    OptiAppColors.backgroundGray, // Placeholder color
+                    alignment: Alignment.center,
+                    child: const Icon(
+                      Icons.image, // Icon to display
+                      color: Colors.grey, // Icon color
+                      size: 30, // Icon size
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-            alignment: Alignment.center,
-            child: Text(
-              category.shortDescription ?? '',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: OptiTextStyles.bodyExtraSmall,
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+              alignment: Alignment.center,
+              child: Text(
+                category.shortDescription ?? '',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: OptiTextStyles.bodyExtraSmall,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
