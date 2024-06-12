@@ -6,6 +6,7 @@ import 'package:commerce_flutter_app/core/extensions/string_format_extension.dar
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
+import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/components/two_texts_row.dart';
@@ -13,6 +14,8 @@ import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval_details/order_approval_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/cart_order_products_section_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/order_details_body_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -120,50 +123,96 @@ class OrderApprovalDetailsPage extends StatelessWidget {
           } else {
             return Column(
               children: [
-                _OrderApprovalHeaderWidget(
-                  subtotalTitleLabel:
-                      context.watch<OrderApprovalDetailsCubit>().subtotalTitle,
-                  subtotalValueLabel:
-                      context.watch<OrderApprovalDetailsCubit>().subtotalValue,
-                  estimatedTaxValueLabel:
-                      context.watch<OrderApprovalDetailsCubit>().taxValue,
-                  estimatedShippingTitleLabel:
-                      LocalizationConstants.shippingHandling,
-                  estimatedShippingValueLabel:
-                      context.watch<OrderApprovalDetailsCubit>().shippingValue,
-                  estiamatedTotalTitleLabel: LocalizationConstants.total,
-                  estimatedTotalValueLabel:
-                      context.watch<OrderApprovalDetailsCubit>().totalValue,
-                  estitamatedTaxTitleLabel: LocalizationConstants.tax,
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _OrderApprovalHeaderWidget(
+                          subtotalTitleLabel: context
+                              .watch<OrderApprovalDetailsCubit>()
+                              .subtotalTitle,
+                          subtotalValueLabel: context
+                              .watch<OrderApprovalDetailsCubit>()
+                              .subtotalValue,
+                          estimatedTaxValueLabel: context
+                              .watch<OrderApprovalDetailsCubit>()
+                              .taxValue,
+                          estimatedShippingTitleLabel:
+                              LocalizationConstants.shippingHandling,
+                          estimatedShippingValueLabel: context
+                              .watch<OrderApprovalDetailsCubit>()
+                              .shippingValue,
+                          estiamatedTotalTitleLabel:
+                              LocalizationConstants.total,
+                          estimatedTotalValueLabel: context
+                              .watch<OrderApprovalDetailsCubit>()
+                              .totalValue,
+                          estitamatedTaxTitleLabel: LocalizationConstants.tax,
+                        ),
+                        _OrderApprovalInfoWidget(
+                          orderStatusLabel: LocalizationConstants.status,
+                          orderStatusValueLabel: context
+                              .watch<OrderApprovalDetailsCubit>()
+                              .statusValue,
+                          poTitleLabel: LocalizationConstants.pONumberSign,
+                          poValueLabel: context
+                              .watch<OrderApprovalDetailsCubit>()
+                              .poValue,
+                          orderDateValueLabel: LocalizationConstants.orderDate,
+                          orderDateTitleLabel: context
+                              .watch<OrderApprovalDetailsCubit>()
+                              .orderDateValue,
+                          companyNameLabel: context
+                              .watch<OrderApprovalDetailsCubit>()
+                              .billingCompanyTitle,
+                          addressLabel: context
+                              .watch<OrderApprovalDetailsCubit>()
+                              .billToAddressLines,
+                          postalCodeLabel: context
+                              .watch<OrderApprovalDetailsCubit>()
+                              .billToCityStatePostalCodeDisplay,
+                          stCompanyNameLabel: context
+                              .watch<OrderApprovalDetailsCubit>()
+                              .shippingCompanyTitle,
+                          stAddressLabel: context
+                              .watch<OrderApprovalDetailsCubit>()
+                              .shipToAddressLines,
+                          stPostalCodeLabel: context
+                              .watch<OrderApprovalDetailsCubit>()
+                              .shipToCityStatePostalCodeDisplay,
+                        ),
+                        CartOrderProductsSectionWidget(
+                          cartLines: state.cart.cartLines ?? [],
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                _OrderApprovalInfoWidget(
-                  orderStatusLabel: LocalizationConstants.status,
-                  orderStatusValueLabel:
-                      context.watch<OrderApprovalDetailsCubit>().statusValue,
-                  poTitleLabel: LocalizationConstants.pONumberSign,
-                  poValueLabel:
-                      context.watch<OrderApprovalDetailsCubit>().poValue,
-                  orderDateValueLabel: LocalizationConstants.orderDate,
-                  orderDateTitleLabel:
-                      context.watch<OrderApprovalDetailsCubit>().orderDateValue,
-                  companyNameLabel: context
-                      .watch<OrderApprovalDetailsCubit>()
-                      .billingCompanyTitle,
-                  addressLabel: context
-                      .watch<OrderApprovalDetailsCubit>()
-                      .billToAddressLines,
-                  postalCodeLabel: context
-                      .watch<OrderApprovalDetailsCubit>()
-                      .billToCityStatePostalCodeDisplay,
-                  stCompanyNameLabel: context
-                      .watch<OrderApprovalDetailsCubit>()
-                      .shippingCompanyTitle,
-                  stAddressLabel: context
-                      .watch<OrderApprovalDetailsCubit>()
-                      .shipToAddressLines,
-                  stPostalCodeLabel: context
-                      .watch<OrderApprovalDetailsCubit>()
-                      .shipToCityStatePostalCodeDisplay,
+                OrderBottomSectionWidget(
+                  actions: [
+                    SecondaryButton(
+                      child: const Text(LocalizationConstants.deleteOrder),
+                      onPressed: () {
+                        confirmDialog(
+                          context: context,
+                          message: '${LocalizationConstants.deleteOrder}?',
+                          onConfirm: () async {
+                            await context
+                                .read<OrderApprovalDetailsCubit>()
+                                .deleteOrder();
+                          },
+                        );
+                      },
+                    ),
+                    PrimaryButton(
+                      text: LocalizationConstants.approveOrder,
+                      onPressed: () async {
+                        await context
+                            .read<OrderApprovalDetailsCubit>()
+                            .approveOrder();
+                      },
+                    ),
+                  ],
                 ),
               ],
             );
