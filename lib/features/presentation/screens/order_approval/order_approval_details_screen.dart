@@ -11,6 +11,7 @@ import 'package:commerce_flutter_app/features/presentation/components/snackbar_c
 import 'package:commerce_flutter_app/features/presentation/components/two_texts_row.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval_details/order_approval_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -135,6 +136,35 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                       context.watch<OrderApprovalDetailsCubit>().totalValue,
                   estitamatedTaxTitleLabel: LocalizationConstants.tax,
                 ),
+                _OrderApprovalInfoWidget(
+                  orderStatusLabel: LocalizationConstants.status,
+                  orderStatusValueLabel:
+                      context.watch<OrderApprovalDetailsCubit>().statusValue,
+                  poTitleLabel: LocalizationConstants.pONumberSign,
+                  poValueLabel:
+                      context.watch<OrderApprovalDetailsCubit>().poValue,
+                  orderDateValueLabel: LocalizationConstants.orderDate,
+                  orderDateTitleLabel:
+                      context.watch<OrderApprovalDetailsCubit>().orderDateValue,
+                  companyNameLabel: context
+                      .watch<OrderApprovalDetailsCubit>()
+                      .billingCompanyTitle,
+                  addressLabel: context
+                      .watch<OrderApprovalDetailsCubit>()
+                      .billToAddressLines,
+                  postalCodeLabel: context
+                      .watch<OrderApprovalDetailsCubit>()
+                      .billToCityStatePostalCodeDisplay,
+                  stCompanyNameLabel: context
+                      .watch<OrderApprovalDetailsCubit>()
+                      .shippingCompanyTitle,
+                  stAddressLabel: context
+                      .watch<OrderApprovalDetailsCubit>()
+                      .shipToAddressLines,
+                  stPostalCodeLabel: context
+                      .watch<OrderApprovalDetailsCubit>()
+                      .shipToCityStatePostalCodeDisplay,
+                ),
               ],
             );
           }
@@ -223,10 +253,86 @@ class _OrderApprovalHeaderWidget extends StatelessWidget {
 }
 
 class _OrderApprovalInfoWidget extends StatelessWidget {
-  const _OrderApprovalInfoWidget();
+  final String orderStatusLabel;
+  final String orderStatusValueLabel;
+  final String poTitleLabel;
+  final String poValueLabel;
+  final String orderDateValueLabel;
+  final String orderDateTitleLabel;
+
+  final String companyNameLabel;
+  final String addressLabel;
+  final String postalCodeLabel;
+
+  final String stCompanyNameLabel;
+  final String stAddressLabel;
+  final String stPostalCodeLabel;
+
+  const _OrderApprovalInfoWidget({
+    required this.orderStatusValueLabel,
+    required this.poValueLabel,
+    required this.orderDateTitleLabel,
+    required this.orderStatusLabel,
+    required this.poTitleLabel,
+    required this.orderDateValueLabel,
+    required this.companyNameLabel,
+    required this.addressLabel,
+    required this.postalCodeLabel,
+    required this.stCompanyNameLabel,
+    required this.stAddressLabel,
+    required this.stPostalCodeLabel,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)
+              .copyWith(bottom: 8),
+          child: Text(
+            LocalizationConstants.orderInformation,
+            style: OptiTextStyles.titleLarge,
+          ),
+        ),
+        Container(
+          color: OptiAppColors.backgroundWhite,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TwoTextsRow(
+                label: orderStatusLabel,
+                value: orderStatusValueLabel,
+                textStyle: OptiTextStyles.subtitle,
+              ),
+              TwoTextsRow(
+                label: poTitleLabel,
+                value: poValueLabel,
+                textStyle: OptiTextStyles.body,
+              ),
+              TwoTextsRow(
+                label: orderDateValueLabel,
+                value: orderDateTitleLabel,
+                textStyle: OptiTextStyles.body,
+              ),
+              const SizedBox(height: 20),
+              BillingAddressWidget(
+                companyName: companyNameLabel,
+                fullAddress: '$addressLabel\n$postalCodeLabel',
+              ),
+              const SizedBox(height: 20),
+              ShippingAddressWidget(
+                companyName: stCompanyNameLabel,
+                fullAddress: '$stAddressLabel\n$stPostalCodeLabel',
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

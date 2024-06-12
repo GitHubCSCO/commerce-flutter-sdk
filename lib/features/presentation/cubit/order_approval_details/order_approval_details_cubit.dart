@@ -88,7 +88,7 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
       : (_checkIfPickup ? LocalizationConstants.pickUpLocation : '');
 
   String get shipToCityStatePostalCodeDisplay => _checkIfShip
-      ? '${state.cart.shipTo?.city}, ${state.cart.shipTo?.state} ${state.cart.shipTo?.postalCode}'
+      ? '${state.cart.shipTo?.city}, ${state.cart.shipTo?.state?.name} ${state.cart.shipTo?.postalCode}'
       : (_checkIfPickup
           ? '${state.cart.defaultWarehouse?.city}, ${state.cart.defaultWarehouse?.state} ${state.cart.defaultWarehouse?.postalCode}'
           : '');
