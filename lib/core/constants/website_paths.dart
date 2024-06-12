@@ -6,5 +6,5 @@ class WebsitePaths {
   static const savedOrdersWebsitePath = 'redirectto/SavedOrderListPage';
   static const savedOrderDetailsWebsitePath = 'redirectto/SavedOrderDetailPage?cartId=%s';
   static const orderApprovalWebsitePath = 'redirectto/OrderApprovalListPage';
-  static const orderApprovalDetailsWebsitePath = 'redirectto/OrderApprovalDetailPage?cartid=%s';
+  static const orderApprovalDetailsWebsitePath = 'redirectto/OrderApprovalDetailPage?cartId=%s';
 }
