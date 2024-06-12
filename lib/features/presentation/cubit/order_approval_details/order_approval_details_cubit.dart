@@ -19,6 +19,7 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
             cart: Cart(),
             status: OrderStatus.initial,
             shouldShowWarehouseInventoryButton: false,
+            hasRestrictedCartLines: false,
           ),
         );
 
@@ -37,6 +38,8 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
           status: OrderStatus.success,
           shouldShowWarehouseInventoryButton:
               shouldShowWarehouseInventoryButton,
+          hasRestrictedCartLines: cart.cartLines
+              ?.any((cartLine) => cartLine.isRestricted == true),
         ),
       );
     } else {
@@ -121,4 +124,6 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
 
   // footer section
   bool get hasApprover => state.cart.hasApprover == true;
+
+  bool get isApprovedButtonEnabled => state.hasRestrictedCartLines == false;
 }

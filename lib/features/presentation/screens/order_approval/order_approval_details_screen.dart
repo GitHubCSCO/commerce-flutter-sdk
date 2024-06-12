@@ -188,31 +188,38 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                OrderBottomSectionWidget(
-                  actions: [
-                    SecondaryButton(
-                      child: const Text(LocalizationConstants.deleteOrder),
-                      onPressed: () {
-                        confirmDialog(
-                          context: context,
-                          message: '${LocalizationConstants.deleteOrder}?',
-                          onConfirm: () async {
-                            await context
-                                .read<OrderApprovalDetailsCubit>()
-                                .deleteOrder();
-                          },
-                        );
-                      },
-                    ),
-                    PrimaryButton(
-                      text: LocalizationConstants.approveOrder,
-                      onPressed: () async {
-                        await context
-                            .read<OrderApprovalDetailsCubit>()
-                            .approveOrder();
-                      },
-                    ),
-                  ],
+                Visibility(
+                  visible:
+                      !context.watch<OrderApprovalDetailsCubit>().hasApprover,
+                  child: OrderBottomSectionWidget(
+                    actions: [
+                      SecondaryButton(
+                        child: const Text(LocalizationConstants.deleteOrder),
+                        onPressed: () {
+                          confirmDialog(
+                            context: context,
+                            message: '${LocalizationConstants.deleteOrder}?',
+                            onConfirm: () async {
+                              await context
+                                  .read<OrderApprovalDetailsCubit>()
+                                  .deleteOrder();
+                            },
+                          );
+                        },
+                      ),
+                      PrimaryButton(
+                        text: LocalizationConstants.approveOrder,
+                        isEnabled: context
+                            .watch<OrderApprovalDetailsCubit>()
+                            .isApprovedButtonEnabled,
+                        onPressed: () async {
+                          await context
+                              .read<OrderApprovalDetailsCubit>()
+                              .approveOrder();
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             );
