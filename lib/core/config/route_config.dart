@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_l
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/order_approval/order_approval_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/biometric/biometric_login_screen.dart';
@@ -405,6 +406,19 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.orderApproval.suffix,
     builder: (context, state) => const OrderApprovalScreen(),
     parent: account,
+  );
+
+  // path: /account/orderApproval/:cartId
+  final orderApprovalDetails = createNode(
+    name: AppRoute.orderApprovalDetails.name,
+    path: AppRoute.orderApprovalDetails.suffix,
+    builder: (context, state) {
+      final cartId = state.pathParameters['cartId'] ?? '';
+      final refreshOrderApprovals = state.extra as void Function();
+      return OrderApprovalDetailsScreen(
+          cartId: cartId, refreshOrderApprovals: refreshOrderApprovals);
+    },
+    parent: orderApproval,
   );
 
   return [

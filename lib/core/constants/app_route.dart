@@ -38,6 +38,7 @@ class RouteNames {
   static const String savedOrders = 'savedOrders';
   static const String savedOrderDetails = 'savedOrderDetails';
   static const String orderApproval = 'orderApproval';
+  static const String orderApprovalDetails = 'orderApprovalDetails';
 }
 
 class RoutePaths {
@@ -82,6 +83,8 @@ class RoutePaths {
   static const String savedOrderDetails = '${RoutePaths.savedOrders}/:cartId';
   static const String orderApproval =
       '${RoutePaths.account}/${RouteNames.orderApproval}';
+  static const String orderApprovalDetails =
+      '${RoutePaths.orderApproval}/:cartId';
 }
 
 enum AppRoute {
@@ -136,7 +139,10 @@ enum AppRoute {
       name: RouteNames.savedOrderDetails,
       fullPath: RoutePaths.savedOrderDetails),
   orderApproval(
-      name: RouteNames.orderApproval, fullPath: RoutePaths.orderApproval);
+      name: RouteNames.orderApproval, fullPath: RoutePaths.orderApproval),
+  orderApprovalDetails(
+      name: RouteNames.orderApprovalDetails,
+      fullPath: RoutePaths.orderApprovalDetails);
 
   const AppRoute({
     required this.name,
