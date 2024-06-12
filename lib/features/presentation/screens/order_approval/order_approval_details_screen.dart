@@ -100,6 +100,10 @@ class OrderApprovalDetailsPage extends StatelessWidget {
           if (state.status == OrderStatus.deleteCartSuccess) {
             Navigator.of(context, rootNavigator: true).pop();
             refreshOrderApprovals();
+            CustomSnackBar.showSnackBarMessage(
+              context,
+              LocalizationConstants.orderDeleted,
+            );
             context.pop();
           }
 
