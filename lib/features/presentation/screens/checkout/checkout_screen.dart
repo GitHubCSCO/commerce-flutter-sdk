@@ -112,7 +112,11 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
       appBar: buildAppBar(context),
       body: BlocConsumer<CheckoutBloc, CheckoutState>(
         listener: (_, state) {
-          if (state is CheckoutPlaceOrder) {
+          if (state is CheckoutShipToAddressAddedState) {
+            context.read<CheckoutBloc>().add(
+                LoadCheckoutEvent(cart: context.read<CheckoutBloc>().cart!));
+          }
+          else if (state is CheckoutPlaceOrder) {
             context.read<CartCountCubit>().onCartItemChange();
             AppRoute.checkoutSuccess.navigate(context,
                 extra: CheckoutSuccessEntity(

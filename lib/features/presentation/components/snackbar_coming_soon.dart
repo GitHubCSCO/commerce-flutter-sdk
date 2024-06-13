@@ -130,5 +130,23 @@ class CustomSnackBar {
     );
   }
 
+  static void showCreditCardDeletedsuccess(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Card deleted successfully"),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showCreditCardDeletedFailed(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Error deleting card"),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
   static showComingSoon(BuildContext context) {}
 }

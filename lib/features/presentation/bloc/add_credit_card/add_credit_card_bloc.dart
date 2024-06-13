@@ -10,11 +10,15 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class AddCreditCardBloc extends Bloc<AddCreditCardEvent, AddCreditCardState> {
   final AddCreditCardUsecase _addCreditCardUsecase;
 
+  bool useAsDefaultCard = false;
+
   AddCreditCardBloc({required AddCreditCardUsecase addCreditCardUsecase})
       : _addCreditCardUsecase = addCreditCardUsecase,
         super(AddCreditCardInitialState()) {
     on<SetUpDataSourceEvent>(_onSetUpDataSourceEvent);
     on<SavePaymentProfileEvent>(_onSavePaymentProfile);
+    on<UpdateUseAsDefaultCardEvent>(_onUpdateUseAsDefaultCard);
+    on<DeletCreditCardEvent>(_onDeleteCreditCard);
   }
 
   Future<void> _onSetUpDataSourceEvent(
@@ -63,10 +67,33 @@ class AddCreditCardBloc extends Bloc<AddCreditCardEvent, AddCreditCardState> {
     switch (response) {
       case Success(value: final value):
         emit(SavedPaymentAddedSuccessState(accountPaymentProfile: value!));
-        break;
-      case Failure(errorResponse: final errorResponse):
-        print(errorResponse);
-        break;
+
+      case Failure():
+        emit(SavedPaymentAddedFailureState());
+    }
+  }
+
+  Future<void> _onUpdateUseAsDefaultCard(UpdateUseAsDefaultCardEvent event,
+      Emitter<AddCreditCardState> emit) async {
+    useAsDefaultCard = !useAsDefaultCard;
+    emit(UseAsDefaultCardUpdatedState());
+  }
+
+  Future<void> _onDeleteCreditCard(
+      DeletCreditCardEvent event, Emitter<AddCreditCardState> emit) async {
+    var response = await _addCreditCardUsecase
+        .deleteCreditCard(event.accountPaymentProfile.id ?? "");
+
+    switch (response) {
+      case Success(value: final value):
+        if (value == true) {
+          emit(CreditCardDeletedSuccessState());
+        } else {
+          emit(CreditCardDeletedFailureState());
+        }
+
+      case Failure():
+        emit(CreditCardDeletedFailureState());
     }
   }
 }

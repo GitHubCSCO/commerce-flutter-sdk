@@ -17,6 +17,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/billing_address
 import 'package:commerce_flutter_app/features/presentation/cubit/billing_address/billing_address_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/card_expiration_cubit.dart/card_expiration_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/card_expiration_cubit.dart/card_expiration_state.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/token_ex_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
@@ -24,10 +25,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class AddCreditCardScreen extends StatelessWidget {
-  final void Function(AccountPaymentProfile) onCrtaeditCardAdded;
+class AddCreditCardEntity {
+  final AccountPaymentProfile? accountPaymentProfile;
+  final bool isAddNewCreditCard;
+  AddCreditCardEntity({
+    required this.isAddNewCreditCard,
+    this.accountPaymentProfile,
+  });
+}
 
-  const AddCreditCardScreen({super.key, required this.onCrtaeditCardAdded});
+class AddCreditCardScreen extends StatelessWidget {
+  final AddCreditCardEntity addCreditCardEntity;
+  final void Function(AccountPaymentProfile) onCreditCardAdded;
+  final void Function()? onCreditCardDeleted;
+  const AddCreditCardScreen(
+      {super.key,
+      this.onCreditCardDeleted,
+      required this.onCreditCardAdded,
+      required this.addCreditCardEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -40,29 +55,52 @@ class AddCreditCardScreen extends StatelessWidget {
         body: MultiBlocProvider(
             providers: [
               BlocProvider<AddCreditCardBloc>(
-                  create: (context) =>
-                      sl<AddCreditCardBloc>()..add(SetUpDataSourceEvent())),
+                  create: (context) => sl<AddCreditCardBloc>()
+                    ..add(SetUpDataSourceEvent(
+                        addCreditCardEntity: addCreditCardEntity))),
               BlocProvider<BillingAddressCubit>(
-                  create: (context) =>
-                      sl<BillingAddressCubit>()..setUpDataBillingAddress()),
+                  create: (context) => sl<BillingAddressCubit>()
+                    ..setUpDataBillingAddress(addCreditCardEntity)),
               BlocProvider<TokenExBloc>(create: (context) => sl<TokenExBloc>()),
               BlocProvider<CardExpirationCubit>(
                   create: (context) => sl<CardExpirationCubit>()),
             ],
             child: AddCreditCardPage(
-              onCrtaeditCardAdded: onCrtaeditCardAdded,
+              onCreditCardAdded: onCreditCardAdded,
+              onCreditCardDeleted: onCreditCardDeleted,
+              addCreditCardEntity: addCreditCardEntity,
             )));
   }
 }
 
 class AddCreditCardPage extends StatelessWidget {
-  final void Function(AccountPaymentProfile) onCrtaeditCardAdded;
+  final AddCreditCardEntity addCreditCardEntity;
+
+  final void Function(AccountPaymentProfile) onCreditCardAdded;
+  final void Function()? onCreditCardDeleted;
   final TextEditingController addressController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController postalCodeController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  AddCreditCardPage({super.key, required this.onCrtaeditCardAdded});
+
+  AddCreditCardPage({
+    super.key,
+    this.onCreditCardDeleted,
+    required this.onCreditCardAdded,
+    required this.addCreditCardEntity,
+  });
+
+  void _setUpEditCreditCardValues(BuildContext context) {
+    nameController.text =
+        addCreditCardEntity.accountPaymentProfile?.cardHolderName ?? "";
+    addressController.text =
+        addCreditCardEntity.accountPaymentProfile?.address1 ?? "";
+    cityController.text = addCreditCardEntity.accountPaymentProfile?.city ?? "";
+    postalCodeController.text =
+        addCreditCardEntity.accountPaymentProfile?.postalCode ?? "";
+  }
+
   @override
   Widget build(BuildContext context) {
     // return Text("dsfdsfsd");
@@ -74,23 +112,44 @@ class AddCreditCardPage extends StatelessWidget {
           listeners: [
             BlocListener<AddCreditCardBloc, AddCreditCardState>(
                 listener: (_, state) {
+              if (state is CreditCardDeletedSuccessState) {
+                CustomSnackBar.showCreditCardDeletedsuccess(context);
+                onCreditCardDeleted!();
+                Navigator.pop(context);
+              }
+              if (state is CreditCardDeletedFailureState) {
+                CustomSnackBar.showCreditCardDeletedFailed(context);
+              }
               if (state is AddCreditCardLoadedState) {
                 context.read<TokenExBloc>().resetTokenExData();
               }
               if (state is SavedPaymentAddedSuccessState) {
-                onCrtaeditCardAdded(state.accountPaymentProfile);
+                onCreditCardAdded(state.accountPaymentProfile);
                 Navigator.pop(context);
               }
             }),
           ],
           child: BlocBuilder<AddCreditCardBloc, AddCreditCardState>(
+            buildWhen: (previous, current) {
+              if (current is AddCreditCardLoadedState) {
+                return true;
+              }
+              return false;
+            },
             builder: (_, state) {
               if (state is AddCreditCardInitialState) {
                 return Container();
               } else if (state is AddCreditCardLoadingState) {
-                return Center(child: const CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               } else if (state is AddCreditCardLoadedState) {
-                // return Text("data");
+                if (!addCreditCardEntity.isAddNewCreditCard) {
+                  _setUpEditCreditCardValues(context);
+                  context.read<CardExpirationCubit>().onLoadCardExpirarionData(
+                      addCreditCardEntity,
+                      state.expirationYears,
+                      state.expirationMonths);
+                }
+
                 return Form(
                   key: _formKey,
                   child: Column(
@@ -103,7 +162,12 @@ class AddCreditCardPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      _buildContinueButtonWidget(context)
+                      Visibility(
+                          visible: addCreditCardEntity.isAddNewCreditCard,
+                          child: _buildContinueButtonWidget(context)),
+                      Visibility(
+                          visible: !addCreditCardEntity.isAddNewCreditCard,
+                          child: _buildDeleteButtonWidget(context))
                     ],
                   ),
                 );
@@ -114,36 +178,120 @@ class AddCreditCardPage extends StatelessWidget {
     );
   }
 
-  String? _validateNameInput(String? value) {
-    if (value?.isEmpty ?? false) {
-      return SiteMessageConstants.nameCreditCardInfoCardHolderNameRequired;
+  List<Widget> _buildItems(
+      AddCreditCardLoadedState state, BuildContext context) {
+    List<Widget> list = [];
+    list.add(_buildNameField());
+
+    if (addCreditCardEntity.isAddNewCreditCard) {
+      list.add(
+          _buildTokenExWebViewForAddCreditCard(state.tokenExEntity!, context));
+    } else {
+      list.add(const SizedBox(height: 20));
+      list.add(_buildMaskedCardNumberWidget(context));
+      list.add(const SizedBox(height: 20));
     }
 
-    return null;
+    list.add(_buildExpirationWidget(
+      expirationMonths: state.expirationMonths,
+      expirationYears: state.expirationYears,
+    ));
+
+    list.add(_buildBillingAddressWidget(
+        selectedCountryIndex: -1, selectedStateIndex: -1));
+    list.add(_buildToggleSwitchForUseAsDefaultCard(context));
+
+    return list;
   }
 
-  String? _validateAddressInput(String? value) {
-    if (value?.isEmpty ?? false) {
-      return SiteMessageConstants.defaultValueAddressRequired;
-    }
-
-    return null;
+  Widget _buildMaskedCardNumberWidget(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      height: 50.0,
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          addCreditCardEntity.accountPaymentProfile?.maskedCardNumber ?? "",
+          style: TextStyle(
+            color: OptiAppColors.textDisabledColor,
+            fontSize: 16.0,
+          ),
+        ),
+      ),
+    );
   }
 
-  String? _validateCityInput(String? value) {
-    if (value?.isEmpty ?? false) {
-      return SiteMessageConstants.defaultValueAddressCityRequired;
-    }
-
-    return null;
+  Widget _buildToggleSwitchForUseAsDefaultCard(BuildContext context) {
+    return BlocBuilder<AddCreditCardBloc, AddCreditCardState>(
+        buildWhen: (previous, current) {
+      if (previous is AddCreditCardLoadingState &&
+          current is AddCreditCardLoadedState) {
+        return true;
+      }
+      if (current is UseAsDefaultCardUpdatedState) {
+        return true;
+      }
+      return false;
+    }, builder: (_, state) {
+      if (state is UseAsDefaultCardUpdatedState ||
+          state is AddCreditCardLoadedState) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Switch(
+                value: context.read<AddCreditCardBloc>().useAsDefaultCard,
+                onChanged: (bool value) {
+                  context
+                      .read<AddCreditCardBloc>()
+                      .add(UpdateUseAsDefaultCardEvent());
+                },
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Text(
+                "Use as a default card",
+                style: OptiTextStyles.body,
+              ),
+            ],
+          ),
+        );
+      } else
+        return Container();
+    });
   }
 
-  String? _validatePostalCodeInput(String? value) {
-    if (value?.isEmpty ?? false) {
-      return SiteMessageConstants.defaultValueAddressZipRequired;
-    }
-
-    return null;
+  Widget _buildToggleSwitchForBillingAddress(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Switch(
+            value:
+                context.read<BillingAddressCubit>().billingAddressAddNewToggle,
+            onChanged: (bool value) {
+              context
+                  .read<BillingAddressCubit>()
+                  .updateaddNewBillingAddressToggleState();
+            },
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          Text(
+            "Use Billing Address",
+            style: OptiTextStyles.body,
+          ),
+        ],
+      ),
+    );
   }
 
   void getInputData(BuildContext context) {
@@ -173,31 +321,13 @@ class AddCreditCardPage extends StatelessWidget {
         securityCode: context.read<TokenExBloc>().cardInfo?.securityCode,
         cardIdentifier: context.read<TokenExBloc>().cardInfo?.cardIdentifier,
         cardType: context.read<TokenExBloc>().cardInfo?.cardType,
-        isDefault: false,
+        isDefault: context.read<AddCreditCardBloc>().useAsDefaultCard,
       );
 
       context
           .read<AddCreditCardBloc>()
           .add(SavePaymentProfileEvent(accountPaymentProfile: paymentProfile));
     }
-  }
-
-  List<Widget> _buildItems(
-      AddCreditCardLoadedState state, BuildContext context) {
-    List<Widget> list = [];
-    list.add(_buildNameField());
-    list.add(
-        _buildTokenExWebViewForAddCreditCard(state.tokenExEntity!, context));
-
-    list.add(_buildExpirationWidget(
-      expirationMonths: state.expirationMonths,
-      expirationYears: state.expirationYears,
-    ));
-
-    list.add(_buildBillingAddressWidget(
-        selectedCountryIndex: -1, selectedStateIndex: -1));
-
-    return list;
   }
 
   Widget _buildTokenExWebViewForAddCreditCard(
@@ -224,7 +354,6 @@ class AddCreditCardPage extends StatelessWidget {
                     cardIdentifier: cardNumber,
                     cardType: cardType,
                     securityCode: securityCode)));
-            // onCompleteCheckoutPaymentSection();
           },
         ),
       ),
@@ -236,7 +365,7 @@ class AddCreditCardPage extends StatelessWidget {
         LocalizationConstants.name, LocalizationConstants.name, nameController,
         validator: (value) {
       if (value == null || value.isEmpty) {
-        return 'Name cannot be empty';
+        return SiteMessageConstants.defaultValueAddressNameRequired;
       }
       return null;
     });
@@ -265,6 +394,45 @@ class AddCreditCardPage extends StatelessWidget {
         text: LocalizationConstants.continueText,
         onPressed: () {
           getInputData(context);
+        },
+      ),
+    ]);
+  }
+
+  Widget _buildDeleteButtonWidget(BuildContext context) {
+    return ListInformationBottomSubmitWidget(actions: [
+      PrimaryButton(
+        text: LocalizationConstants.delete,
+        onPressed: () {
+          if (addCreditCardEntity.accountPaymentProfile != null) {
+            showDialog(
+              context: context,
+              builder: (BuildContext alertContext) {
+                return AlertDialog(
+                  title: Text(LocalizationConstants.delete),
+                  content: Text(LocalizationConstants.deleteCard),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text(LocalizationConstants.cancel),
+                      onPressed: () {
+                        Navigator.of(alertContext).pop(); // Dismiss the dialog
+                      },
+                    ),
+                    TextButton(
+                      child: Text(LocalizationConstants.delete),
+                      onPressed: () {
+                        context.read<AddCreditCardBloc>().add(
+                            DeletCreditCardEvent(
+                                accountPaymentProfile: addCreditCardEntity
+                                    .accountPaymentProfile!));
+                        Navigator.of(alertContext).pop(); // Dismiss the dialog
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
         },
       ),
     ]);
@@ -303,114 +471,136 @@ class AddCreditCardPage extends StatelessWidget {
       if (state is BillingAddressLoadingState) {
         return const CircularProgressIndicator();
       } else if (state is BilingAddressLoadedState) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              LocalizationConstants.billingAddress,
-              textAlign: TextAlign.center,
-              style: OptiTextStyles.subtitle,
-            ),
-            const SizedBox(height: 20),
-            _createInputField(
-                LocalizationConstants.address,
-                LocalizationConstants.address,
-                addressController, validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Address cannot be empty';
-              }
-              return null;
-            }),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    LocalizationConstants.selectCountry,
-                    textAlign: TextAlign.start,
-                    style: OptiTextStyles.body,
+        if (state.showNewBillingAddressFields) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildToggleSwitchForBillingAddress(context),
+              BillingAddressWidget(
+                companyName: state.billTo?.companyName,
+                fullAddress: state.billTo?.fullAddress,
+                countryName: state.billTo?.country?.name,
+                email: state.billTo?.email,
+                phone: state.billTo?.phone,
+                buildSeperator: false,
+              )
+            ],
+          );
+        } else {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildToggleSwitchForBillingAddress(context),
+              Text(
+                LocalizationConstants.billingAddress,
+                textAlign: TextAlign.center,
+                style: OptiTextStyles.subtitle,
+              ),
+              const SizedBox(height: 20),
+              _createInputField(
+                  LocalizationConstants.address,
+                  LocalizationConstants.address,
+                  addressController, validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return SiteMessageConstants.defaultValueAddressRequired;
+                }
+                return null;
+              }),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      LocalizationConstants.selectCountry,
+                      textAlign: TextAlign.start,
+                      style: OptiTextStyles.body,
+                    ),
                   ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: ListPickerWidget(
-                              items: state.countries,
-                              selectedIndex: getIndexOfCountry(
-                                  state.countries,
-                                  context
-                                      .read<BillingAddressCubit>()
-                                      .selectedCountry),
-                              descriptionText: LocalizationConstants.country,
-                              callback: _onCountrySelect)),
-                      const Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.grey,
-                        size: 16,
-                      ),
-                    ],
+                  Expanded(
+                    flex: 2,
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: ListPickerWidget(
+                                items: state.countries,
+                                selectedIndex: getIndexOfCountry(
+                                    state.countries,
+                                    context
+                                        .read<BillingAddressCubit>()
+                                        .selectedCountry),
+                                descriptionText: LocalizationConstants.country,
+                                callback: _onCountrySelect)),
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.grey,
+                          size: 16,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            _createInputField(LocalizationConstants.city,
-                LocalizationConstants.city, cityController, validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'City cannot be empty';
-              }
-              return null;
-            }),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    LocalizationConstants.selectState,
-                    textAlign: TextAlign.start,
-                    style: OptiTextStyles.body,
+                ],
+              ),
+              _createInputField(
+                  LocalizationConstants.city,
+                  LocalizationConstants.city,
+                  cityController, validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return SiteMessageConstants.defaultValueAddressCityRequired;
+                }
+                return null;
+              }),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      LocalizationConstants.selectState,
+                      textAlign: TextAlign.start,
+                      style: OptiTextStyles.body,
+                    ),
                   ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: ListPickerWidget(
-                              items: state.states ?? [],
-                              selectedIndex: getIndexOfState(
-                                  state.states,
-                                  context
-                                      .read<BillingAddressCubit>()
-                                      .selectedState),
-                              descriptionText: LocalizationConstants.state,
-                              callback: _onStateSelect)),
-                      const Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.grey,
-                        size: 16,
-                      ),
-                    ],
+                  Expanded(
+                    flex: 2,
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: ListPickerWidget(
+                                items: state.states ?? [],
+                                selectedIndex: getIndexOfState(
+                                    state.states,
+                                    context
+                                        .read<BillingAddressCubit>()
+                                        .selectedState),
+                                descriptionText: LocalizationConstants.state,
+                                callback: _onStateSelect)),
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.grey,
+                          size: 16,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            _createInputField(
-                LocalizationConstants.postalCode,
-                LocalizationConstants.postalCode,
-                postalCodeController, validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Postal code cannot be empty';
-              }
-              return null;
-            }),
-          ],
-        );
+                ],
+              ),
+              _createInputField(
+                  LocalizationConstants.postalCode,
+                  LocalizationConstants.postalCode,
+                  postalCodeController, validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return SiteMessageConstants.defaultValueAddressZipRequired;
+                }
+                return null;
+              }),
+            ],
+          );
+        }
       } else {
         return Container();
       }
@@ -474,7 +664,9 @@ class AddCreditCardPage extends StatelessWidget {
                     children: [
                       Expanded(
                           child: ListPickerWidget(
-                              items: expirationMonths as List<Object>,
+                              items: (expirationMonths != null)
+                                  ? expirationMonths as List<Object>
+                                  : [],
                               descriptionText: "Select Month",
                               selectedIndex:
                                   getIndexForSelectedExpirationMonths(
@@ -510,7 +702,9 @@ class AddCreditCardPage extends StatelessWidget {
                     children: [
                       Expanded(
                           child: ListPickerWidget(
-                              items: expirationYears as List<Object>,
+                              items: (expirationYears != null)
+                                  ? expirationYears as List<Object>
+                                  : [],
                               descriptionText: "Select Year",
                               selectedIndex: getIndexForSelectedExpirationYears(
                                   expirationYears,

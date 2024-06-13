@@ -30,4 +30,11 @@ class AddCreditCardUsecase extends BaseUseCase {
         .getAccountService()
         .savePaymentProfile(paymentProfile);
   }
+
+  Future<Result<bool, ErrorResponse>> deleteCreditCard(
+      String paymentProfileId) async {
+    return await commerceAPIServiceProvider
+        .getAccountService()
+        .deletePaymentProfile(paymentProfileId);
+  }
 }

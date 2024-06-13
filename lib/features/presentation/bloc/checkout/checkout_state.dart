@@ -49,3 +49,8 @@ class CheckoutPlaceOrder extends CheckoutState {
     this.reviewOrderEntity,
   });
 }
+
+
+class CheckoutShipToAddressAddedState extends CheckoutState {
+
+}

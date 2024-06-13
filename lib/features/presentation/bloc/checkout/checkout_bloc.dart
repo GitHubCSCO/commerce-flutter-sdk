@@ -14,6 +14,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   CarrierDto? selectedCarrier;
   ShipViaDto? selectedService;
   PaymentOptionsDto? selectedPayment;
+  Session? session;
 
   CheckoutBloc({required CheckoutUsecase checkoutUsecase})
       : _checkoutUseCase = checkoutUsecase,
@@ -41,10 +42,12 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       LoadCheckoutEvent event, Emitter<CheckoutState> emit) async {
     emit(CheckoutLoading());
     var data = await _checkoutUseCase.getCart(event.cart.id!);
+    session ??= _checkoutUseCase.getCurrentSession();
+
     switch (data) {
       case Success(value: final cartData):
         updateCheckoutData(cartData!);
-        final session = _checkoutUseCase.getCurrentSession();
+
         final billToAddress = session?.billTo;
         final shipToAddress = session?.shipTo;
         final wareHouse = session?.pickUpWarehouse;
@@ -171,5 +174,9 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     cart?.shipTo = response is Success
         ? (response as Success).value as ShipTo
         : event.shipTo;
+
+    session?.shipTo = cart?.shipTo;
+
+    emit(CheckoutShipToAddressAddedState());
   }
 }

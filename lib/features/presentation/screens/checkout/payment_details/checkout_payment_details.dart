@@ -11,6 +11,7 @@ import 'package:commerce_flutter_app/features/presentation/components/input.dart
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/credit_card_add_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/token_ex_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/add_credit_card_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/add_promotion_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
@@ -221,17 +222,22 @@ class CheckoutPaymentDetails extends StatelessWidget {
   Widget _buildAddPaymentMethodButton(BuildContext context) {
     return TextButton(
       onPressed: () {
-        AppRoute.addCreditCard.navigateBackStack(context, extra:
-            CreditCardAddCallbackHelper(onAddedCeditCard: (paymentProfile) {
-          context.read<PaymentDetailsBloc>().add(
-                UpdateNewAccountPaymentProfileEvent(
-                  accountPaymentProfile: paymentProfile,
-                ),
-              );
-          context.read<PaymentDetailsBloc>().add(LoadPaymentDetailsEvent(
-                cart: context.read<PaymentDetailsBloc>().cart!,
-              ));
-        }));
+        AppRoute.addCreditCard.navigateBackStack(context,
+            extra: CreditCardAddCallbackHelper(
+                addCreditCardEntity:
+                    AddCreditCardEntity(isAddNewCreditCard: true),
+                onAddedCeditCard: (paymentProfile) {
+                  context.read<PaymentDetailsBloc>().add(
+                        UpdateNewAccountPaymentProfileEvent(
+                          accountPaymentProfile: paymentProfile,
+                        ),
+                      );
+                  context
+                      .read<PaymentDetailsBloc>()
+                      .add(LoadPaymentDetailsEvent(
+                        cart: context.read<PaymentDetailsBloc>().cart!,
+                      ));
+                }));
       },
       style: TextButton.styleFrom(
         foregroundColor: Colors.blue,

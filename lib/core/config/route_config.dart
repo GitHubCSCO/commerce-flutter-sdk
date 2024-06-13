@@ -23,6 +23,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/login/forgot_
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_details/order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/saved_payments/saved_payments_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_location_note.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_screen.dart';
@@ -159,8 +160,14 @@ List<NavigationNode> _getNavigationRoot() {
       final callbackHelper = state.extra as CreditCardAddCallbackHelper;
 
       final onCreaditCardAdded = callbackHelper.onAddedCeditCard;
+      final addCreditCardEntity = callbackHelper.addCreditCardEntity;
+      final onCreditCardDeleted = callbackHelper.onDeletedCreditCard;
 
-      return AddCreditCardScreen(onCrtaeditCardAdded: onCreaditCardAdded);
+      return AddCreditCardScreen(
+        onCreditCardAdded: onCreaditCardAdded,
+        addCreditCardEntity: addCreditCardEntity,
+        onCreditCardDeleted: onCreditCardDeleted,
+      );
     },
     parent: null,
   );
@@ -178,6 +185,16 @@ List<NavigationNode> _getNavigationRoot() {
           onShippingAddressAdded: onShippingAddressAdded);
     },
     parent: null,
+  );
+
+  // path: /savedPayments
+  final savedPayments = createNode(
+    name: AppRoute.savedPayments.name,
+    path: AppRoute.savedPayments.suffix,
+    builder: (context, state) {
+      return SavedPaymentsScreen();
+    },
+    parent: account,
   );
 
   // path: /checkoutSuccess

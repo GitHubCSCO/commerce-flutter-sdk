@@ -24,3 +24,11 @@ class SavedPaymentAddedSuccessState extends AddCreditCardState {
     required this.accountPaymentProfile,
   });
 }
+
+class SavedPaymentAddedFailureState extends AddCreditCardState {}
+
+class UseAsDefaultCardUpdatedState extends AddCreditCardState {}
+
+class CreditCardDeletedSuccessState extends AddCreditCardState {}
+
+class CreditCardDeletedFailureState extends AddCreditCardState {}

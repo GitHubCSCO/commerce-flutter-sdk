@@ -10,4 +10,10 @@ class BillingAddressUsecase extends BaseUseCase {
         .getWebsiteService()
         .getCountries(parameters: parameters);
   }
+
+  Future<Result<Session, ErrorResponse>> getCurrentSession() async {
+    return await commerceAPIServiceProvider
+        .getSessionService()
+        .getCurrentSession();
+  }
 }

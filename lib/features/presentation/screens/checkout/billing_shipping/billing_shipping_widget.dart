@@ -103,6 +103,7 @@ class BillingShippingWidget extends StatelessWidget {
         AppRoute.addShippingAddress.navigateBackStack(context, extra:
             ShippingAddressAddCallbackHelper(onShippingAddressAdded: (shiptTo) {
           context.read<CheckoutBloc>().add(UpdateShiptoAddressEvent(shiptTo));
+
         }));
       },
       style: TextButton.styleFrom(

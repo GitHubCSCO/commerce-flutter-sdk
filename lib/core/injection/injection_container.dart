@@ -56,6 +56,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecas
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/quick_order_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/remote_config/remote_config_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/saved_order/saved_order_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/saved_payments_usecase/saved_payments_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_cms_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/add_to_cart_usecase.dart';
@@ -124,6 +125,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/ord
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order/saved_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_add_to/saved_order_add_to_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_details/saved_order_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_payments/saved_payments_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/vmi_location_note/vmi_location_note_cubit.dart';
@@ -292,6 +294,10 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(
         () => AddShippingAddressCubit(addShippingAddressUsecase: sl()))
     ..registerFactory(() => AddShippingAddressUsecase())
+
+    // saved payments
+    ..registerFactory(() => SavedPaymentsCubit(savedPaymentsUsecase: sl()))
+    ..registerFactory(() => SavedPaymentsUsecase())
 
     // PromoCdeo
     ..registerFactory(() => PromoCodeCubit(promoCodeUsecase: sl()))

@@ -8,10 +8,14 @@ class BillingAddressInitialState extends BillingAddressState {}
 class BillingAddressLoadingState extends BillingAddressState {}
 
 class BilingAddressLoadedState extends BillingAddressState {
+  final bool showNewBillingAddressFields;
   final List<Country> countries;
   final List<StateModel>? states;
+  final BillTo? billTo;
   BilingAddressLoadedState({
+    required this.showNewBillingAddressFields,
     required this.countries,
     required this.states,
+    this.billTo,
   });
 }
