@@ -183,7 +183,7 @@ class LocalizationConstants {
   static const approveOrder = "Approve Order";
   static const orderInformation = "Order Information";
   static const approvingCart = "Approving Cart";
-  static const approvingCartInfos = "Approving {0} for {1}";
+  static const approvingCartInfos = "Approving %s for %s";
 
   // Orders
   static const noOrdersFound = "No Orders Found";

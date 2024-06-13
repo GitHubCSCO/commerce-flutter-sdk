@@ -37,8 +37,10 @@ class CartUseCase extends BaseUseCase {
         ?.fulfillmentMethod;
   }
 
-  bool isCustomerOrderApproval() {
-    return false;
+  Future<bool> isCustomerOrderApproval() async {
+    return await commerceAPIServiceProvider
+        .getClientService()
+        .isCustomerOrderApproval();
   }
 
   Future<String> getSiteMessage(String messageName, String? defaultMessage) async {
