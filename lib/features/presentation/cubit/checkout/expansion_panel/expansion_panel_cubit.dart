@@ -1,15 +1,16 @@
 import 'dart:async';
 
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/models/expansion_panel_item.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'expansion_panel_state.dart';
 
 class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
-  List<Item> list = [
-    Item(headerValue: LocalizationConstants.billingShipping, isExpanded: true),
-    Item(headerValue: LocalizationConstants.paymentDetails, isExpanded: false),
-    Item(headerValue: LocalizationConstants.reviewOrder, isExpanded: false)
+  List<ExpansionPanelItem> list = [
+    ExpansionPanelItem(headerValue: LocalizationConstants.billingShipping, isExpanded: true),
+    ExpansionPanelItem(headerValue: LocalizationConstants.paymentDetails, isExpanded: false),
+    ExpansionPanelItem(headerValue: LocalizationConstants.reviewOrder, isExpanded: false)
   ];
 
   int expansionIndex = 0;
@@ -63,14 +64,4 @@ class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
     _continueButtonController.close();
   }
 
-}
-
-class Item {
-  Item({
-    required this.headerValue,
-    required this.isExpanded,
-  });
-
-  String headerValue;
-  bool isExpanded;
 }

@@ -6,7 +6,7 @@ class ExpansionPanelInitialState extends ExpansionPanelState {}
 
 class ExpansionPanelChangeState extends ExpansionPanelState {
 
-  List<Item> list;
+  List<ExpansionPanelItem> list;
 
   ExpansionPanelChangeState({required this.list});
 

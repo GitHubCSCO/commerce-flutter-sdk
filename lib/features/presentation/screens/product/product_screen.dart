@@ -73,7 +73,7 @@ class ProductPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            LocalizationConstants.categories, style: OptiTextStyles.titleLarge),
+            _getTitle(pageEntity), style: OptiTextStyles.titleLarge),
         actions: [
           BottomMenuWidget(isViewOnWebsiteEnable: false,
               toolMenuList: []),
@@ -142,6 +142,14 @@ class ProductPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _getTitle(ProductPageEntity entity) {
+    if (entity.parentType == ProductParentType.category) {
+      return entity.category?.name ?? '';
+    } else {
+      return entity.brand?.name ?? '';
+    }
   }
 
 }

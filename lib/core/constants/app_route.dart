@@ -36,6 +36,8 @@ class RouteNames {
   static const String locationSearch = 'locationSearch';
   static const String vmiLocationNote = 'vmiLocationNote';
   static const String shopCategory = 'shopCategory';
+  static const String shopBrand = 'shopBrand';
+  static const String shopBrandDetails = 'shopBrandDetails';
   static const String product = 'product';
   static const String savedOrders = 'savedOrders';
   static const String savedOrderDetails = 'savedOrderDetails';
@@ -79,6 +81,8 @@ class RoutePaths {
   static const String forgotPassword = '/${RouteNames.forgotPassword}';
   static const String orderDetails = '${RoutePaths.orderHistory}/:orderNumber';
   static const String shopCategory = '/${RouteNames.shopCategory}';
+  static const String shopBrand = '/${RouteNames.shopBrand}';
+  static const String shopBrandDetails = '/${RouteNames.shopBrandDetails}';
   static const String product = '/${RouteNames.product}';
   static const String savedOrders =
       '${RoutePaths.account}/${RouteNames.savedOrders}';
@@ -135,10 +139,15 @@ enum AppRoute {
   savedOrders(name: RouteNames.savedOrders, fullPath: RoutePaths.savedOrders),
   savedOrderDetails(
       name: RouteNames.savedOrderDetails,
-      fullPath: RoutePaths.savedOrderDetails);
+      fullPath: RoutePaths.savedOrderDetails),
+  vmiLocationNote(
       name: RouteNames.vmiLocationNote, fullPath: RoutePaths.vmiLocationNote),
   shopCategory(
       name: RouteNames.shopCategory, fullPath: RoutePaths.shopCategory),
+  shopBrand(
+      name: RouteNames.shopBrand, fullPath: RoutePaths.shopBrand),
+  shopBrandDetails(
+      name: RouteNames.shopBrandDetails, fullPath: RoutePaths.shopBrandDetails),
   product(
       name: RouteNames.product, fullPath: RoutePaths.product);
 

@@ -23,6 +23,7 @@ import 'package:commerce_flutter_app/features/domain/service/vmi_service.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/brand_usecase/brand_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_content_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_shipping_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_usecase.dart';
@@ -93,6 +94,9 @@ import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_controller/biometric_controller_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/bottom_menu_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_details/brand_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_list/brand_list_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_section/brand_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/expansion_panel/expansion_panel_cubit.dart';
@@ -262,6 +266,12 @@ Future<void> initInjectionContainer() async {
     //shop category
     ..registerFactory(() => CategoryBloc(categoryUseCase: sl()))
     ..registerFactory(() => CategoryUseCase())
+
+    //shop brand
+    ..registerFactory(() => BrandCubit(brandUseCase: sl()))
+    ..registerFactory(() => BrandListCubit(brandUseCase: sl()))
+    ..registerFactory(() => BrandDetailsCubit(brandUseCase: sl()))
+    ..registerFactory(() => BrandUseCase())
 
     //cart
     ..registerFactory(() => CartPageBloc(cartUseCase: sl()))
@@ -521,6 +531,11 @@ Future<void> initInjectionContainer() async {
         ))
 
     ..registerLazySingleton<ICategoryService>(() => CategoryService(
+      clientService: sl(),
+      cacheService: sl(),
+      networkService: sl(),
+    ))
+    ..registerLazySingleton<IBrandService>(() => BrandService(
       clientService: sl(),
       cacheService: sl(),
       networkService: sl(),

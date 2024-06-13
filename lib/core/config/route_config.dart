@@ -12,6 +12,8 @@ import 'package:commerce_flutter_app/features/presentation/helper/routing/route_
 import 'package:commerce_flutter_app/features/presentation/saved_order_details/saved_order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/biometric/biometric_login_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
@@ -387,6 +389,25 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
+  // path: /shopBrand
+  final shopBrand = createNode(
+    name: AppRoute.shopBrand.name,
+    path: AppRoute.shopBrand.suffix,
+    builder: (context, state) => const BrandScreen(),
+    parent: null,
+  );
+
+  // path: /shopBrandDetails
+  final shopBrandDetails = createNode(
+    name: AppRoute.shopBrandDetails.name,
+    path: AppRoute.shopBrandDetails.suffix,
+    builder: (context, state) {
+      final brand = state.extra as Brand;
+      return BrandDetailsScreen(brand: brand);
+    },
+    parent: null,
+  );
+
   // path: /product
   final product = createNode(
     name: AppRoute.product.name,
@@ -441,6 +462,8 @@ List<NavigationNode> _getNavigationRoot() {
     vmiLocationNote,
     locationSearch,
     shopCategory,
+    shopBrand,
+    shopBrandDetails,
     product
   ];
 }
