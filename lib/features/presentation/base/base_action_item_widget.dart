@@ -151,6 +151,10 @@ class BaseActionItemWidget extends StatelessWidget {
                   onSelectVMILocation: (location) {},
                   locationSearchType: LocationSearchType.locationFinder));
         };
+      case ActionType.savedOrders:
+        return () {
+          AppRoute.savedOrders.navigateBackStack(context);
+        };
       default:
         return () {
           CustomSnackBar.showComingSoonSnackBar(context);

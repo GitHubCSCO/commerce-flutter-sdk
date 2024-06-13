@@ -6,6 +6,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_add_to/saved_order_add_to_cubit.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -45,7 +46,8 @@ Future<void> main() async {
         BlocProvider(create: (context) => sl<LogoutCubit>()),
         BlocProvider(create: (context) => sl<DomainCubit>()),
         BlocProvider(
-            create: (context) => sl<CartCountCubit>()..loadCurrentCartCount())
+            create: (context) => sl<CartCountCubit>()..loadCurrentCartCount()),
+        BlocProvider(create: (context) => sl<SavedOrderAddToCubit>()),
       ],
       child: const MyApp(),
     ),

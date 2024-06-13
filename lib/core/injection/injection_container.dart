@@ -52,6 +52,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecas
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/order_pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/quick_order_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/remote_config/remote_config_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/saved_order/saved_order_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_cms_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/add_to_cart_usecase.dart';
@@ -114,6 +115,9 @@ import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_list_filter/product_list_filter_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_order/saved_order_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_add_to/saved_order_add_to_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_details/saved_order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/vmi_location_note/vmi_location_note_cubit.dart';
@@ -212,6 +216,12 @@ Future<void> initInjectionContainer() async {
     //order details
     ..registerFactory(() => OrderDetailsCubit(orderUsercase: sl()))
 
+    //saved order
+    ..registerFactory(() => SavedOrderCubit(savedOrderUsecase: sl()))
+    ..registerFactory(() => SavedOrderUsecase())
+    ..registerFactory(() => SavedOrderDetailsCubit(savedOrderUsecase: sl()))
+    ..registerFactory(() => SavedOrderAddToCubit(savedOrderUsecase: sl()))
+
     //Pull to refresh
     ..registerFactory(() => PullToRefreshBloc())
 
@@ -233,7 +243,8 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => AddToCartCubit(addToCartUsecase: sl()))
     ..registerFactory(() => AddToCartUsecase())
     ..registerFactory(() => SearchProductsCubit(searchUseCase: sl()))
-    ..registerFactory(() => ProductListFilterCubit(productListFilterUsecase: sl()))
+    ..registerFactory(
+        () => ProductListFilterCubit(productListFilterUsecase: sl()))
     ..registerFactory(() => ProductListFilterUsecase())
 
     //product
