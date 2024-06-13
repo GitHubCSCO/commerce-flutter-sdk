@@ -144,6 +144,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   Future<void> _onPaymentMethodSelect(
       SelectPaymentMethodEvent event, Emitter<CheckoutState> emit) async {
     cart?.paymentMethod = event.paymentMethod;
+   
   }
 
   Future<void> _onPaymentSelect(

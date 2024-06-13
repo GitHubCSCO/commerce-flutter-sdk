@@ -80,6 +80,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
                 children: [
                   AddPromotionWidget(
                     shouldShowPromotionList: false,
+                    fromCartPage: false,
                   ),
                   _buildPaymentMethodPicker(state, context),
                   if (state.cardDetails != null)

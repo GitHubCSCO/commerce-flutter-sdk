@@ -13,6 +13,7 @@ class BillingAddressCubit extends Cubit<BillingAddressState> {
   Session? session;
   StateModel? selectedState;
   List<Country>? countries;
+  BillTo? billTo;
 
   BillingAddressCubit({required BillingAddressUsecase billingAddressUsecase})
       : _billingAddressUsecase = billingAddressUsecase,
@@ -50,6 +51,8 @@ class BillingAddressCubit extends Cubit<BillingAddressState> {
 
         this.session = session;
       }
+
+      billTo = session?.billTo;
 
       if (session != null) {
         emit(BilingAddressLoadedState(

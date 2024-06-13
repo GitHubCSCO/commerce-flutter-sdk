@@ -103,8 +103,6 @@ class AddCreditCardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return Text("dsfdsfsd");
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       color: Colors.white,
@@ -126,6 +124,9 @@ class AddCreditCardPage extends StatelessWidget {
               if (state is SavedPaymentAddedSuccessState) {
                 onCreditCardAdded(state.accountPaymentProfile);
                 Navigator.pop(context);
+              }
+              if(state is SavedPaymentAddedFailureState){
+                CustomSnackBar.showCreditCardSavedFailure(context);
               }
             }),
           ],
@@ -309,6 +310,16 @@ class AddCreditCardPage extends StatelessWidget {
       var expirationDate =
           "${expirationMonth?.value.toString().padLeft(2, '0')}/${expirationYear!.key % 100}";
       context.read<TokenExBloc>().add(TokenExValidateEvent());
+
+
+      if(context.read<BillingAddressCubit>().billingAddressAddNewToggle){
+       var billTo = context.read<BillingAddressCubit>().billTo;
+        address = billTo?.fullAddress ?? "";
+        city = billTo?.city ?? "";
+        postalCode = billTo?.postalCode ?? "";
+        selectCountry = billTo?.country;
+        selectState = billTo?.state;
+      }
 
       AccountPaymentProfile? paymentProfile = AccountPaymentProfile(
         cardHolderName: name,
@@ -501,15 +512,17 @@ class AddCreditCardPage extends StatelessWidget {
                 style: OptiTextStyles.subtitle,
               ),
               const SizedBox(height: 20),
-              _createInputField(
-                  LocalizationConstants.address,
-                  LocalizationConstants.address,
-                  addressController, validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return SiteMessageConstants.defaultValueAddressRequired;
-                }
-                return null;
-              }),
+              _createInputField(LocalizationConstants.address,
+                  LocalizationConstants.address, addressController,
+                  validator: addCreditCardEntity.isAddNewCreditCard
+                      ? (value) {
+                          if (value == null || value.isEmpty) {
+                            return SiteMessageConstants
+                                .defaultValueAddressRequired;
+                          }
+                          return null;
+                        }
+                      : null),
               Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -545,15 +558,17 @@ class AddCreditCardPage extends StatelessWidget {
                   ),
                 ],
               ),
-              _createInputField(
-                  LocalizationConstants.city,
-                  LocalizationConstants.city,
-                  cityController, validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return SiteMessageConstants.defaultValueAddressCityRequired;
-                }
-                return null;
-              }),
+              _createInputField(LocalizationConstants.city,
+                  LocalizationConstants.city, cityController,
+                  validator: addCreditCardEntity.isAddNewCreditCard
+                      ? (value) {
+                          if (value == null || value.isEmpty) {
+                            return SiteMessageConstants
+                                .defaultValueAddressCityRequired;
+                          }
+                          return null;
+                        }
+                      : null),
               Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -589,15 +604,17 @@ class AddCreditCardPage extends StatelessWidget {
                   ),
                 ],
               ),
-              _createInputField(
-                  LocalizationConstants.postalCode,
-                  LocalizationConstants.postalCode,
-                  postalCodeController, validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return SiteMessageConstants.defaultValueAddressZipRequired;
-                }
-                return null;
-              }),
+              _createInputField(LocalizationConstants.postalCode,
+                  LocalizationConstants.postalCode, postalCodeController,
+                  validator: addCreditCardEntity.isAddNewCreditCard
+                      ? (value) {
+                          if (value == null || value.isEmpty) {
+                            return SiteMessageConstants
+                                .defaultValueAddressZipRequired;
+                          }
+                          return null;
+                        }
+                      : null),
             ],
           );
         }

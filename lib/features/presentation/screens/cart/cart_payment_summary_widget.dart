@@ -98,13 +98,16 @@ class CartPaymentSummaryWidget extends StatelessWidget {
       list.add(savedAmount);
     }
 
-    list.add(
-      AddPromotionWidget(
-        shouldShowPromotionList: false,
-      ),
-    );
+    list.add(_buildAddPromoWidget());
 
     return list;
+  }
+
+  Widget _buildAddPromoWidget() {
+    return AddPromotionWidget(
+      shouldShowPromotionList: false,
+      fromCartPage: true,
+    );
   }
 
   Widget? _buildOrderApprove() {

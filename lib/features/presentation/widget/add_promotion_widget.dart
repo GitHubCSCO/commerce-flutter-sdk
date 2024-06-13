@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
@@ -11,9 +12,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddPromotionWidget extends StatelessWidget {
   final bool shouldShowPromotionList;
+  final bool fromCartPage;
   final TextEditingController promoCodeController = TextEditingController();
 
-  AddPromotionWidget({super.key, required this.shouldShowPromotionList});
+  AddPromotionWidget(
+      {super.key,
+      required this.shouldShowPromotionList,
+      required this.fromCartPage});
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +27,10 @@ class AddPromotionWidget extends StatelessWidget {
     return BlocListener<PromoCodeCubit, PromoCodeState>(
       listener: (context, state) {
         if (state is PromoCodeApplySuccessState) {
+          if (fromCartPage) {
+            context.read<CartPageBloc>().add(CartPageLoadEvent());
+          }
+
           CustomSnackBar.showPromotionApplied(context);
         } else if (state is PromoCodeFailureState) {
           CustomSnackBar.showPromotionNotApplied(context);

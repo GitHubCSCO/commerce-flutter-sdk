@@ -25,7 +25,12 @@ class SavedPaymentAddedSuccessState extends AddCreditCardState {
   });
 }
 
-class SavedPaymentAddedFailureState extends AddCreditCardState {}
+class SavedPaymentAddedFailureState extends AddCreditCardState {
+  final String errorMessage;
+  SavedPaymentAddedFailureState({
+    required this.errorMessage,
+  });
+}
 
 class UseAsDefaultCardUpdatedState extends AddCreditCardState {}
 

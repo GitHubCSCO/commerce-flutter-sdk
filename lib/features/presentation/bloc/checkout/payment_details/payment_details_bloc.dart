@@ -163,7 +163,8 @@ class PaymentDetailsBloc
                 tokenExEntity: tokenExEnity,
                 cardDetails: cardDetails,
                 showPOField: showPOField,
-                poTextEditingController: _poNumberController));
+                poTextEditingController: _poNumberController,
+                cart: cart));
           }
         case Failure(errorResponse: final errorResponse):
           break;
@@ -173,7 +174,8 @@ class PaymentDetailsBloc
           isNewCreditCard: false,
           tokenExEntity: null,
           showPOField: showPOField,
-          poTextEditingController: _poNumberController));
+          poTextEditingController: _poNumberController,
+          cart: cart));
     }
   }
 

@@ -68,8 +68,10 @@ class AddCreditCardBloc extends Bloc<AddCreditCardEvent, AddCreditCardState> {
       case Success(value: final value):
         emit(SavedPaymentAddedSuccessState(accountPaymentProfile: value!));
 
-      case Failure():
-        emit(SavedPaymentAddedFailureState());
+      case Failure(errorResponse: final errorResponse):
+        emit(SavedPaymentAddedFailureState(
+            errorMessage:
+                errorResponse.message ?? "Credit card could not be saved"));
     }
   }
 

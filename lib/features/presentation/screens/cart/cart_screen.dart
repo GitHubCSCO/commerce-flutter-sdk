@@ -14,7 +14,6 @@ import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_b
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
@@ -164,7 +163,7 @@ class CartPage extends StatelessWidget {
                               onPressed: () {
                                 AppRoute.shop.navigate(context);
                               },
-                              child: Text('Continue Shopping'),
+                              child: const Text('Continue Shopping'),
                             ),
                           )
                         ],
