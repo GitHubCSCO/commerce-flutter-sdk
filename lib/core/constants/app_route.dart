@@ -37,6 +37,8 @@ class RouteNames {
   static const String vmiLocationNote = 'vmiLocationNote';
   static const String billToShipToChange = 'billToShipToChange';
   static const String billToShipToSelection = 'billToShipToSelection';
+  static const String savedOrders = 'savedOrders';
+  static const String savedOrderDetails = 'savedOrderDetails';
 }
 
 class RoutePaths {
@@ -78,6 +80,9 @@ class RoutePaths {
   static const String orderDetails = '${RoutePaths.orderHistory}/:orderNumber';
   static const String billToShipToChange = '/${RouteNames.billToShipToChange}';
   static const String billToShipToSelection = '/${RouteNames.billToShipToSelection}';
+  static const String savedOrders =
+      '${RoutePaths.account}/${RouteNames.savedOrders}';
+  static const String savedOrderDetails = '${RoutePaths.savedOrders}/:cartId';
 }
 
 enum AppRoute {
@@ -130,7 +135,11 @@ enum AppRoute {
   billToShipToChange(
       name: RouteNames.billToShipToChange, fullPath: RoutePaths.billToShipToChange),
   billToShipToSelection(
-      name: RouteNames.billToShipToSelection, fullPath: RoutePaths.billToShipToSelection);
+      name: RouteNames.billToShipToSelection, fullPath: RoutePaths.billToShipToSelection),
+  savedOrders(name: RouteNames.savedOrders, fullPath: RoutePaths.savedOrders),
+  savedOrderDetails(
+      name: RouteNames.savedOrderDetails,
+      fullPath: RoutePaths.savedOrderDetails);
 
   const AppRoute({
     required this.name,

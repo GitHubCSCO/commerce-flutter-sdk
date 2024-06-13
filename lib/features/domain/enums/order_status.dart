@@ -9,4 +9,11 @@ enum OrderStatus {
   reorderLoading,
   reorderSuccess,
   reorderFailure,
+
+  deleteCartSuccess,
+  deleteCartLoading,
+  deleteCartFailure,
+  addToCartSuccess,
+  addToCartLoading,
+  addToCartFailure,
 }

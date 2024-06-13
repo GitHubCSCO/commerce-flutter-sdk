@@ -32,6 +32,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/biometric_usecase/
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/payment_details/payment_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/curent_location_usecase/current_location_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/dealer_location_usecase/dealer_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/location_note_usecase/location_note_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/location_search_usecase/location_search_usecase.dart';
@@ -52,6 +53,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecas
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/order_pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/quick_order_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/remote_config/remote_config_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/saved_order/saved_order_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_cms_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/add_to_cart_usecase.dart';
@@ -100,6 +102,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.d
 import 'package:commerce_flutter_app/features/presentation/cubit/count_inventory/count_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/date_selection/date_selection_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/deaker_location_finder/dealer_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/location_note/location_note_cubit.dart';
@@ -113,6 +116,9 @@ import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_list_filter/product_list_filter_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_order/saved_order_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_add_to/saved_order_add_to_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_details/saved_order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/vmi_location_note/vmi_location_note_cubit.dart';
@@ -179,15 +185,18 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => CurrentLocationCubit(currentLocationUseCase: sl()))
     ..registerFactory(() => CurrentLocationUseCase())
 
+    // dealer location
+    ..registerFactory(() => DealerLocationCubit(dealerLocationUsecase: sl()))
+    ..registerFactory(() => DealerLocationUsecase())
+
     // location  search
     ..registerFactory(() => LocationSearchBloc(locationSearchUseCase: sl()))
     ..registerFactory(() => LocationSearchUseCase())
 
     // gmap cubit
-
     ..registerFactory(() => GMapCubit())
-    // previous orders
 
+    // previous orders
     ..registerFactory(() => PreviousOrdersCubit(previousOrdersUseCse: sl()))
     ..registerFactory(() => PreviousOrdersUseCse())
 
@@ -207,6 +216,12 @@ Future<void> initInjectionContainer() async {
 
     //order details
     ..registerFactory(() => OrderDetailsCubit(orderUsercase: sl()))
+
+    //saved order
+    ..registerFactory(() => SavedOrderCubit(savedOrderUsecase: sl()))
+    ..registerFactory(() => SavedOrderUsecase())
+    ..registerFactory(() => SavedOrderDetailsCubit(savedOrderUsecase: sl()))
+    ..registerFactory(() => SavedOrderAddToCubit(savedOrderUsecase: sl()))
 
     //Pull to refresh
     ..registerFactory(() => PullToRefreshBloc())
@@ -229,7 +244,8 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => AddToCartCubit(addToCartUsecase: sl()))
     ..registerFactory(() => AddToCartUsecase())
     ..registerFactory(() => SearchProductsCubit(searchUseCase: sl()))
-    ..registerFactory(() => ProductListFilterCubit(productListFilterUsecase: sl()))
+    ..registerFactory(
+        () => ProductListFilterCubit(productListFilterUsecase: sl()))
     ..registerFactory(() => ProductListFilterUsecase())
 
     //account
@@ -324,7 +340,6 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ProductDetailsAddToCartUseCase())
 
     //product style trait
-
     ..registerFactory(() => ProductDetailsStyleTraitsUseCase())
     ..registerFactory(() => StyleTraitCubit(styleTraitsUseCase: sl()))
 
@@ -432,6 +447,8 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
+    ..registerLazySingleton<IDealerService>(() => DealerService(
+        clientService: sl(), cacheService: sl(), networkService: sl()))
     ..registerLazySingleton<IVmiLocationsService>(() => VMILocationService(
           clientService: sl(),
           cacheService: sl(),
