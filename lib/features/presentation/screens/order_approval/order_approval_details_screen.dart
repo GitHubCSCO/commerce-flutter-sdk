@@ -84,7 +84,7 @@ class OrderApprovalDetailsPage extends StatelessWidget {
             refreshOrderApprovals();
             CustomSnackBar.showSnackBarMessage(
               context,
-              SiteMessageConstants.defaultValueAddToCartSuccess,
+              LocalizationConstants.orderApproved,
             );
             context.pop();
           }
@@ -93,7 +93,7 @@ class OrderApprovalDetailsPage extends StatelessWidget {
             Navigator.of(context, rootNavigator: true).pop();
             CustomSnackBar.showSnackBarMessage(
               context,
-              SiteMessageConstants.defaultValueAddToCartFail,
+              SiteMessageConstants.defaultVaLueOrderApprovalBadRequest,
             );
           }
 
