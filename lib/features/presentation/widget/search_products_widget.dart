@@ -23,12 +23,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class SearchProductsWidget extends StatefulWidget {
-  // final GetProductCollectionResult productCollectionResult;
   final Function(int) onPageChanged; // Callback to handle page changes
 
   const SearchProductsWidget({
     super.key,
-    // required this.productCollectionResult,
     required this.onPageChanged,
   });
 
@@ -95,6 +93,18 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
+                            state.productEntities?.originalQuery==null ? 
+                            LocalizationConstants.results.format(
+                              [
+                                (state.productEntities?.pagination
+                                            ?.totalItemCount ==
+                                        0)
+                                    ? LocalizationConstants.no
+                                    : state.productEntities?.pagination
+                                        ?.totalItemCount
+                              ],
+                            )
+                            :
                             LocalizationConstants.resultsFor.format(
                               [
                                 (state.productEntities?.pagination
@@ -199,7 +209,8 @@ class SearchProductWidget extends StatelessWidget {
     return InkWell(
       onTap: () {
         var productId = product.styleParentId ?? product.id;
-        AppRoute.productDetails.navigateBackStack(context,
+        //TODO what if productid is null, 
+        AppRoute.topLevelProductDetails.navigateBackStack(context,
             pathParameters: {"productId": productId.toString()},
             extra: product);
       },

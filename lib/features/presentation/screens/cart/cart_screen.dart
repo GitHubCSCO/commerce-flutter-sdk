@@ -14,10 +14,10 @@ import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_b
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line_list.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_payment_summary_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
@@ -42,12 +42,12 @@ class CartScreen extends StatelessWidget {
           create: (context) => sl<PullToRefreshBloc>()),
       BlocProvider<CartPageBloc>(
           create: (context) => sl<CartPageBloc>()..add(CartPageLoadEvent())),
+      BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
     ], child: const CartPage());
   }
 }
 
 class CartPage extends StatelessWidget {
-
   final websitePath = WebsitePaths.cartWebsitePath;
 
   const CartPage({super.key});
@@ -103,7 +103,7 @@ class CartPage extends StatelessWidget {
                 .add(PullToRefreshInitialEvent());
           },
           child: BlocBuilder<CartPageBloc, CartPageState>(
-            builder: (context, state) {
+            builder: (_, state) {
               switch (state) {
                 case CartPageInitialState():
                 case CartPageLoadingState():
@@ -163,7 +163,7 @@ class CartPage extends StatelessWidget {
                               onPressed: () {
                                 AppRoute.shop.navigate(context);
                               },
-                              child: Text('Continue Shopping'),
+                              child: const Text('Continue Shopping'),
                             ),
                           )
                         ],
