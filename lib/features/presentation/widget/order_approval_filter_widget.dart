@@ -7,6 +7,7 @@ import 'package:commerce_flutter_app/features/presentation/components/filter.dar
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_filter_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/date_picker_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -110,7 +111,7 @@ void _showOrderApprovalFilterWidget(
               _FilterOrderTotalWidget(
                 orderNumber: state.orderNumber,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               Text(
                 LocalizationConstants.orderTotal,
                 style: OptiTextStyles.subtitle,
@@ -120,6 +121,27 @@ void _showOrderApprovalFilterWidget(
               const SizedBox(height: 10),
               _FilterTotalAmountWidget(
                 orderTotal: state.orderTotal,
+              ),
+              const SizedBox(height: 30),
+              Text(
+                LocalizationConstants.dateRange,
+                style: OptiTextStyles.subtitle,
+              ),
+              const SizedBox(height: 10),
+              _FilterDatePickerWidget(
+                title: LocalizationConstants.from,
+                selectedDate: state.fromDate,
+                onSelectDate: (innerContext, date) {
+                  context.read<OrderApprovalFilterCubit>().setFromDate(date);
+                },
+              ),
+              const SizedBox(height: 10),
+              _FilterDatePickerWidget(
+                title: LocalizationConstants.to,
+                selectedDate: state.toDate,
+                onSelectDate: (innerContext, date) {
+                  context.read<OrderApprovalFilterCubit>().setToDate(date);
+                },
               ),
             ],
           );
@@ -343,6 +365,56 @@ class _FilterTotalAmountWidgetState extends State<_FilterTotalAmountWidget> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _FilterDatePickerWidget extends StatelessWidget {
+  final DateTime? selectedDate;
+  final String title;
+  final void Function(BuildContext context, DateTime) onSelectDate;
+
+  const _FilterDatePickerWidget({
+    required this.selectedDate,
+    required this.onSelectDate,
+    required this.title,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+          flex: 1,
+          child: Text(
+            title,
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: Row(
+            children: [
+              Expanded(
+                child: DatePickerWidget(
+                  key: UniqueKey(),
+                  maxDate: null,
+                  selectedDateTime: selectedDate,
+                  callback: onSelectDate,
+                ),
+              ),
+              const Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.grey,
+                size: 16,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
