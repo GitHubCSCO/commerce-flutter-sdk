@@ -233,11 +233,21 @@ class CheckoutPaymentDetails extends StatelessWidget {
                           accountPaymentProfile: paymentProfile,
                         ),
                       );
+                  context.read<CheckoutBloc>().add(
+                        SelectPaymentMethodEvent(PaymentMethodDto(
+                            name: paymentProfile.cardIdentifier,
+                            cardType: paymentProfile.cardType,
+                            isCreditCard: true,
+                            description:
+                                "${paymentProfile.cardType} ${paymentProfile.maskedCardNumber}",
+                            isPaymentProfile: true)),
+                      );
                   context
                       .read<PaymentDetailsBloc>()
                       .add(LoadPaymentDetailsEvent(
                         cart: context.read<PaymentDetailsBloc>().cart!,
                       ));
+                  onCompleteCheckoutPaymentSection();
                 }));
       },
       style: TextButton.styleFrom(

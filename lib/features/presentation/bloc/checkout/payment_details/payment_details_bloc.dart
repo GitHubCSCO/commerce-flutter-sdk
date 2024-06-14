@@ -18,7 +18,7 @@ class PaymentDetailsBloc
   AccountPaymentProfile? accountPaymentProfile;
   TokenExDto? tokenExConfiguration;
   final _poNumberController = TextEditingController();
-
+  bool isSelectedNewAddedCard = false;
   bool isCreditCardSectionCompleted = false;
 
   PaymentDetailsBloc({required PaymentDetailsUseCase paymentDetailsUseCase})
@@ -64,6 +64,15 @@ class PaymentDetailsBloc
   Future<void> _updateNewAccountPaymentPorfile(
       UpdateNewAccountPaymentProfileEvent event,
       Emitter<PaymentDetailsState> emit) async {
+
+    cart?.paymentOptions = PaymentOptionsDto(
+        creditCard: CreditCardDto(
+            cardHolderName: event.accountPaymentProfile.cardHolderName,
+            cardNumber: event.accountPaymentProfile.cardIdentifier,
+            cardType: event.accountPaymentProfile.cardType,
+            expirationMonth: event.accountPaymentProfile.expirationMonth,
+            expirationYear: event.accountPaymentProfile.expirationYear,));
+
     accountPaymentProfile = event.accountPaymentProfile;
   }
 
@@ -76,6 +85,7 @@ class PaymentDetailsBloc
   Future<void> _setupPaymentDataSources(
       UpdatePaymentMethodEvent event, Emitter<PaymentDetailsState> emit) async {
     if (!event.isCVVRequired) {
+      isSelectedNewAddedCard = true;
       emit(PaymentDetailsLoaded(
           tokenExEntity: null,
           showPOField: false,
@@ -85,6 +95,7 @@ class PaymentDetailsBloc
           cart: cart));
       return;
     }
+    isSelectedNewAddedCard = false;
     var showPOField = cart?.showPoNumber;
     if (selectedPaymentMethod != null &&
         selectedPaymentMethod?.isCreditCard != null &&

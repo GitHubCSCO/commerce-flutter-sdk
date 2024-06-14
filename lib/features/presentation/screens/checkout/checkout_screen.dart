@@ -26,7 +26,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-ReviewOrderEntity prepareReviewOrderEnrity(CheckoutDataLoaded state) {
+ReviewOrderEntity prepareReviewOrderEntiity(
+  CheckoutDataLoaded state, BuildContext context
+) {
   return ReviewOrderEntity(
       billTo: state.billToAddress,
       shipTo: state.shipToAddress,
@@ -37,7 +39,7 @@ ReviewOrderEntity prepareReviewOrderEnrity(CheckoutDataLoaded state) {
               : ShippingOption.ship),
       carriers: state.cart.carriers,
       cartSettings: state.cartSettings,
-      paymentMethod: state.cart.paymentMethod,
+      paymentMethod: context.read<CheckoutBloc>().cart!.paymentMethod,
       selectedCarrier: state.selectedCarrier,
       selectedService: state.selectedService,
       requestDeliveryDate: state.requestDeliveryDate);
@@ -115,8 +117,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
           if (state is CheckoutShipToAddressAddedState) {
             context.read<CheckoutBloc>().add(
                 LoadCheckoutEvent(cart: context.read<CheckoutBloc>().cart!));
-          }
-          else if (state is CheckoutPlaceOrder) {
+          } else if (state is CheckoutPlaceOrder) {
             context.read<CartCountCubit>().onCartItemChange();
             AppRoute.checkoutSuccess.navigate(context,
                 extra: CheckoutSuccessEntity(
@@ -173,7 +174,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                   );
 
                                   final reviewOrderEntity =
-                                      prepareReviewOrderEnrity(state);
+                                      prepareReviewOrderEntiity(state,context);
 
                                   return ExpansionPanelList(
                                     expansionCallback:
@@ -283,6 +284,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                     final service = context
                                         .read<CheckoutBloc>()
                                         .selectedService;
+
                                     if (carrier != null && service != null) {
                                       context
                                           .read<ExpansionPanelCubit>()
@@ -297,9 +299,16 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                     var isCreditCardSectionCompleted = context
                                         .read<PaymentDetailsBloc>()
                                         .isCreditCardSectionCompleted;
-
-                                    if (isPaymentCardType &&
-                                        !isCreditCardSectionCompleted) {
+                                    var isSelectedNewAddedCard = context
+                                        .read<PaymentDetailsBloc>()
+                                        .isSelectedNewAddedCard;
+                                    if (isSelectedNewAddedCard) {
+                                      context
+                                          .read<ExpansionPanelCubit>()
+                                          .onContinueClick();
+                                    } else if (isPaymentCardType &&
+                                        !isCreditCardSectionCompleted &&
+                                        !isSelectedNewAddedCard) {
                                       context
                                           .read<TokenExBloc>()
                                           .add(TokenExValidateEvent());
@@ -328,7 +337,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
 
                                   case 2:
                                     final reviewOrderEntity =
-                                        prepareReviewOrderEnrity(state);
+                                        prepareReviewOrderEntiity(state,context);
 
                                     context.read<CheckoutBloc>().add(
                                         PlaceOrderEvent(
