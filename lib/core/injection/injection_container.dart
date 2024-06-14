@@ -43,6 +43,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/location_search_us
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/forgot_password_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/order_approval_usecase/order_approval_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/order_usecase/order_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/pickup_location_usecase/pickup_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/platform_usecase/platform_usecase.dart';
@@ -124,6 +125,9 @@ import 'package:commerce_flutter_app/features/presentation/cubit/login/forgot_pa
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_filter_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/order_approval_details/order_approval_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_details/order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders_cubit/previous_orders_cubit.dart';
@@ -238,6 +242,14 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => SavedOrderUsecase())
     ..registerFactory(() => SavedOrderDetailsCubit(savedOrderUsecase: sl()))
     ..registerFactory(() => SavedOrderAddToCubit(savedOrderUsecase: sl()))
+
+    //order approval
+    ..registerFactory(() => OrderApprovalUseCase())
+    ..registerFactory(() => OrderApprovalCubit(orderApprovalUseCase: sl()))
+    ..registerFactory(
+        () => OrderApprovalDetailsCubit(orderApprovalUseCase: sl()))
+    ..registerFactory(
+        () => OrderApprovalFilterCubit(orderApprovalUseCase: sl()))
 
     //Pull to refresh
     ..registerFactory(() => PullToRefreshBloc())

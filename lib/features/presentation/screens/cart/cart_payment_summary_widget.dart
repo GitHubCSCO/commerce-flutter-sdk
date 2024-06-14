@@ -27,7 +27,7 @@ class CartPaymentSummaryWidget extends StatelessWidget {
           ),
         ),
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
           color: Colors.white,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -118,9 +118,11 @@ class CartPaymentSummaryWidget extends StatelessWidget {
             paymentSummaryEntity.cart!.initiatedByUserName
           ]);
 
-    String body = '';
     TextStyle textStyle = OptiTextStyles.body;
-    return _buildRow(title, body, textStyle);
+    return paymentSummaryEntity.isCustomerOrderApproval ? Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Text(title, style: textStyle),
+    ) : null;
   }
 
   Widget? _buildSubTotal() {
