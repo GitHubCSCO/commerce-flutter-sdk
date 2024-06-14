@@ -7,14 +7,14 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class OrderApprovalUseCase extends BaseUseCase {
   Future<GetOrderApprovalCollectionResult?> loadOrderApproval({
     int? page,
+    required OrderApprovalParameters orderApprovalParameters,
   }) async {
-    final result =
-        await commerceAPIServiceProvider.getOrderService().getOrderApprovalList(
-              OrderApprovalParameters(
-                page: page,
-                pageSize: CoreConstants.defaultPageSize,
-              ),
-            );
+    orderApprovalParameters.page = page;
+    orderApprovalParameters.pageSize = CoreConstants.defaultPageSize;
+
+    final result = await commerceAPIServiceProvider
+        .getOrderService()
+        .getOrderApprovalList(orderApprovalParameters);
 
     return result.getResultSuccessValue();
   }
@@ -28,9 +28,8 @@ class OrderApprovalUseCase extends BaseUseCase {
   }
 
   Future<bool> deleteOrder({required String cartId}) async {
-    final deleteResponse = await commerceAPIServiceProvider
-        .getCartService()
-        .deleteCart(cartId);
+    final deleteResponse =
+        await commerceAPIServiceProvider.getCartService().deleteCart(cartId);
 
     return deleteResponse.getResultSuccessValue() != null;
   }

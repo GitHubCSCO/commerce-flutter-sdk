@@ -15,13 +15,17 @@ class OrderApprovalCubit extends Cubit<OrderApprovalState> {
           OrderApprovalState(
             status: OrderStatus.initial,
             orderApprovalCollectionModel: GetOrderApprovalCollectionResult(),
+            orderApprovalParameters: OrderApprovalParameters(),
           ),
         );
 
   Future<void> loadOrderApprovalList() async {
     emit(state.copyWith(status: OrderStatus.loading));
 
-    final result = await _orderApprovalUseCase.loadOrderApproval(page: 1);
+    final result = await _orderApprovalUseCase.loadOrderApproval(
+      page: 1,
+      orderApprovalParameters: state.orderApprovalParameters,
+    );
 
     if (result == null) {
       emit(state.copyWith(status: OrderStatus.failure));
@@ -46,6 +50,7 @@ class OrderApprovalCubit extends Cubit<OrderApprovalState> {
     emit(state.copyWith(status: OrderStatus.moreLoading));
     final result = await _orderApprovalUseCase.loadOrderApproval(
       page: state.orderApprovalCollectionModel.pagination!.page! + 1,
+      orderApprovalParameters: state.orderApprovalParameters,
     );
 
     if (result == null) {
@@ -65,5 +70,32 @@ class OrderApprovalCubit extends Cubit<OrderApprovalState> {
         ),
       ),
     );
+  }
+
+  Future<void> applyFilter({
+    String? orderNumber,
+    String? orderTotal,
+    String? orderTotalOperator,
+    DateTime? fromDate,
+    DateTime? toDate,
+    ShipTo? shipTo,
+  }) async {
+    final newOrderApprovalParameters = OrderApprovalParameters(
+      orderNumber: orderNumber,
+      orderTotal: orderTotal,
+      orderTotalOperator:
+          orderTotalOperator != null ? [orderTotalOperator] : null,
+      fromDate: fromDate,
+      toDate: toDate,
+      shipTo: shipTo,
+    );
+
+    emit(
+      state.copyWith(
+        orderApprovalParameters: newOrderApprovalParameters,
+      ),
+    );
+
+    await loadOrderApprovalList();
   }
 }
