@@ -56,6 +56,17 @@ class _ListPickerState extends State<ListPicker> {
   }
 
   @override
+  void didUpdateWidget(covariant ListPicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedIndex != oldWidget.selectedIndex) {
+      setState(() {
+        selectedIndex = widget.selectedIndex ?? 0;
+        isButtonEnabled = _isOptionAvailable(widget.items[selectedIndex]);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       alignment: AlignmentDirectional.centerStart,
