@@ -4,11 +4,14 @@ import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart'
 import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/credit_card_add_callback_helper.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/shipping_address_add_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_note_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
+import 'package:commerce_flutter_app/features/presentation/saved_order_details/saved_order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/biometric/biometric_login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
@@ -22,6 +25,8 @@ import 'package:commerce_flutter_app/features/presentation/screens/login/forgot_
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_details/order_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/saved_payments/saved_payments_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_location_note.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_screen.dart';
@@ -41,6 +46,8 @@ import 'package:commerce_flutter_app/features/presentation/screens/shop/shop_scr
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/domain_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_details/wish_list_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/add_credit_card_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/add_shipping_address_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -148,13 +155,59 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
+  // path: /addCreditCard
+  final addCreditCard = createNode(
+    name: AppRoute.addCreditCard.name,
+    path: AppRoute.addCreditCard.suffix,
+    builder: (context, state) {
+      final callbackHelper = state.extra as CreditCardAddCallbackHelper;
+
+      final onCreaditCardAdded = callbackHelper.onAddedCeditCard;
+      final addCreditCardEntity = callbackHelper.addCreditCardEntity;
+      final onCreditCardDeleted = callbackHelper.onDeletedCreditCard;
+
+      return AddCreditCardScreen(
+        onCreditCardAdded: onCreaditCardAdded,
+        addCreditCardEntity: addCreditCardEntity,
+        onCreditCardDeleted: onCreditCardDeleted,
+      );
+    },
+    parent: null,
+  );
+
+  // path: /addShippingAddress
+  final addShippingAddress = createNode(
+    name: AppRoute.addShippingAddress.name,
+    path: AppRoute.addShippingAddress.suffix,
+    builder: (context, state) {
+      final callbackHelper = state.extra as ShippingAddressAddCallbackHelper;
+
+      final onShippingAddressAdded = callbackHelper.onShippingAddressAdded;
+
+      return AddShippingAddressScreen(
+          onShippingAddressAdded: onShippingAddressAdded);
+    },
+    parent: null,
+  );
+
+  // path: /savedPayments
+  final savedPayments = createNode(
+    name: AppRoute.savedPayments.name,
+    path: AppRoute.savedPayments.suffix,
+    builder: (context, state) {
+      return SavedPaymentsScreen();
+    },
+    parent: account,
+  );
+
   // path: /checkoutSuccess
   final checkoutSuccess = createNode(
     name: AppRoute.checkoutSuccess.name,
     path: AppRoute.checkoutSuccess.suffix,
-    builder: (context, state) {
+    builder: (_, state) {
       final checkoutSuccessEntity = state.extra as CheckoutSuccessEntity;
-      return CheckoutSuccessScreen(checkoutSuccessEntity: checkoutSuccessEntity);
+      return CheckoutSuccessScreen(
+          checkoutSuccessEntity: checkoutSuccessEntity);
     },
     parent: null,
   );
@@ -413,7 +466,28 @@ List<NavigationNode> _getNavigationRoot() {
       final entity = state.extra as ProductPageEntity;
       return ProductScreen(pageEntity: entity);
     },
-    parent: null,
+    parent: null
+  );
+  
+  // path: /account/savedOrders
+  final savedOrders = createNode(
+    name: AppRoute.savedOrders.name,
+    path: AppRoute.savedOrders.suffix,
+    builder: (context, state) => const SavedOrderScreen(),
+    parent: account,
+  );
+
+  // path: /account/savedOrders/:cartId
+  final savedOrderDetails = createNode(
+    name: AppRoute.savedOrderDetails.name,
+    path: AppRoute.savedOrderDetails.suffix,
+    builder: (context, state) {
+      final cartId = state.pathParameters['cartId'] ?? '';
+      final refreshSavedOrders = state.extra as void Function();
+      return SavedOrderDetailsScreen(
+          cartId: cartId, refreshSavedOrders: refreshSavedOrders);
+    },
+    parent: savedOrders,
   );
 
   return [
@@ -440,6 +514,8 @@ List<NavigationNode> _getNavigationRoot() {
     shopCategory,
     shopSubCatagory,
     product,
-    topLevelProductDetails
+    topLevelProductDetails,
+    addCreditCard,
+    addShippingAddress
   ];
 }

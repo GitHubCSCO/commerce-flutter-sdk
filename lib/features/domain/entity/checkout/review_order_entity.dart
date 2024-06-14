@@ -9,25 +9,35 @@ class ReviewOrderEntity {
   final List<CarrierDto>? carriers;
   final CartSettings? cartSettings;
   final PaymentMethodDto? paymentMethod;
+  final CarrierDto? selectedCarrier;
+  final ShipViaDto? selectedService;
+  final DateTime? requestDeliveryDate;
 
-  ReviewOrderEntity(
-      {this.billTo,
-      this.shipTo,
-      this.warehouse,
-      this.shippingMethod,
-      this.carriers,
-      this.cartSettings,
-      this.paymentMethod});
+  ReviewOrderEntity({
+    this.billTo,
+    this.shipTo,
+    this.warehouse,
+    this.shippingMethod,
+    this.carriers,
+    this.cartSettings,
+    this.paymentMethod,
+    this.selectedCarrier,
+    this.selectedService,
+    this.requestDeliveryDate,
+  });
 
   ReviewOrderEntity copyWith(
       {BillTo? billTo,
-        ShipTo? shipTo,
-        Warehouse? warehouse,
-        ShippingOption? shippingMethod,
-        List<CarrierDto>? carriers,
-        CartSettings? cartSettings,
-        PaymentMethodDto? paymentMethod}) {
+      ShipTo? shipTo,
+      Warehouse? warehouse,
+      ShippingOption? shippingMethod,
+      List<CarrierDto>? carriers,
+      CartSettings? cartSettings,
+      PaymentMethodDto? paymentMethod}) {
     return ReviewOrderEntity(
+      selectedCarrier: selectedCarrier,
+      selectedService: selectedService,
+      requestDeliveryDate: requestDeliveryDate,
       billTo: billTo ?? this.billTo,
       shipTo: shipTo ?? this.shipTo,
       warehouse: warehouse ?? this.warehouse,

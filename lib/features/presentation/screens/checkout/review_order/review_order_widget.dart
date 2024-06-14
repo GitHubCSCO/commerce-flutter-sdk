@@ -11,7 +11,6 @@ import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ReviewOrderWidget extends StatelessWidget {
-
   final ReviewOrderEntity reviewOrderEntity;
 
   const ReviewOrderWidget({super.key, required this.reviewOrderEntity});
@@ -40,8 +39,8 @@ class ReviewOrderWidget extends StatelessWidget {
     list.add(_buildBillingAddress());
 
     if (reviewOrderEntity.shippingMethod == ShippingOption.ship) {
-      final carrier = context.read<CheckoutBloc>().selectedCarrier;
-      final service = context.read<CheckoutBloc>().selectedService;
+      final carrier = reviewOrderEntity.selectedCarrier;
+      final service = reviewOrderEntity.selectedService;
 
       list.add(_buildShippingAddress());
       list.add(_buildShippingMethod(context, carrier, service));
@@ -198,7 +197,8 @@ class ReviewOrderWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildShippingMethod(BuildContext context, CarrierDto? selectedCarrier, ShipViaDto? selectedService) {
+  Widget _buildShippingMethod(BuildContext context, CarrierDto? selectedCarrier,
+      ShipViaDto? selectedService) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -318,7 +318,8 @@ class ReviewOrderWidget extends StatelessWidget {
 
   String _paymentDescription(PaymentMethodDto? paymentMethodDto) {
     if (paymentMethodDto != null) {
-      if (paymentMethodDto.description != null && paymentMethodDto.description!.isNotEmpty) {
+      if (paymentMethodDto.description != null &&
+          paymentMethodDto.description!.isNotEmpty) {
         return paymentMethodDto.description!;
       } else {
         return paymentMethodDto.name!;
@@ -330,19 +331,18 @@ class ReviewOrderWidget extends StatelessWidget {
 
   String _getRequestDateTime(BuildContext context) {
     if (_isRequestDateAvailable(context)) {
-      final dateTime = context.read<CheckoutBloc>().requestDeliveryDate;
+      final dateTime = reviewOrderEntity.requestDeliveryDate;
       return 'Arrives between ${DateFormat('E, MM/dd').format(dateTime!)}';
     }
     return '';
   }
 
   bool _isRequestDateAvailable(BuildContext context) {
-    final dateTime = context.read<CheckoutBloc>().requestDeliveryDate;
+    final dateTime = reviewOrderEntity.requestDeliveryDate;
     if (dateTime != null && dateTime != DateTime(0)) {
       return true;
     } else {
       return false;
     }
   }
-
 }

@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/features/domain/entity/checkout/tokenex_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/credit_card_info_entity.dart';
 
 abstract class TokenExEvent {}
 
@@ -19,4 +20,9 @@ class TokenExCongigurationSetEvent extends TokenExEvent {
 
 class TokenExValidateEvent extends TokenExEvent {
   TokenExValidateEvent();
+}
+
+class UpdateCreditCardInfo extends TokenExEvent {
+  final CreditCardInfoEntity cardInfoEntity;
+  UpdateCreditCardInfo({required this.cardInfoEntity});
 }
