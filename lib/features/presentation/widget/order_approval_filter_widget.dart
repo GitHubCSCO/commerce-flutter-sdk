@@ -1,8 +1,13 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
+import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_filter_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -97,8 +102,26 @@ void _showOrderApprovalFilterWidget(
       value: BlocProvider.of<OrderApprovalFilterCubit>(context),
       child: BlocBuilder<OrderApprovalFilterCubit, OrderApprovalFilterState>(
         builder: (context, state) {
-          return _FilterBodyWidget(
-            orderNumber: state.orderNumber,
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _FilterOrderTotalWidget(
+                orderNumber: state.orderNumber,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                LocalizationConstants.orderTotal,
+                style: OptiTextStyles.subtitle,
+              ),
+              const SizedBox(height: 10),
+              const _FilterTotalTypeWidget(),
+              const SizedBox(height: 10),
+              _FilterTotalAmountWidget(
+                orderTotal: state.orderTotal,
+              ),
+            ],
           );
         },
       ),
@@ -106,18 +129,19 @@ void _showOrderApprovalFilterWidget(
   );
 }
 
-class _FilterBodyWidget extends StatefulWidget {
-  const _FilterBodyWidget({
+class _FilterOrderTotalWidget extends StatefulWidget {
+  const _FilterOrderTotalWidget({
     required this.orderNumber,
   });
 
   final String? orderNumber;
 
   @override
-  State<_FilterBodyWidget> createState() => __FilterBodyWidgetState();
+  State<_FilterOrderTotalWidget> createState() =>
+      _FilterOrderTotalWidgetState();
 }
 
-class __FilterBodyWidgetState extends State<_FilterBodyWidget> {
+class _FilterOrderTotalWidgetState extends State<_FilterOrderTotalWidget> {
   final TextEditingController orderNumberController = TextEditingController();
 
   @override
@@ -161,7 +185,161 @@ class __FilterBodyWidgetState extends State<_FilterBodyWidget> {
           Input(
             controller: orderNumberController,
             label: 'Order Number',
-            hintText: 'Order #',
+            hintText: LocalizationConstants.orderNumberSign,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FilterTotalTypeWidget extends StatelessWidget {
+  const _FilterTotalTypeWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<OrderApprovalFilterCubit, OrderApprovalFilterState>(
+      builder: (context, state) {
+        return Container(
+          decoration: BoxDecoration(
+            color: OptiAppColors.backgroundInput,
+            borderRadius: BorderRadius.circular(AppStyle.borderRadius),
+          ),
+          height: 50,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: OptiAppColors.backgroundInput,
+                  borderRadius: BorderRadius.circular(AppStyle.borderRadius),
+                ),
+                height: 50,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: ListPicker(
+                              selectedIndex: context
+                                      .watch<OrderApprovalFilterCubit>()
+                                      .orderTotalOperators
+                                      .contains(state.orderTotalOperator)
+                                  ? context
+                                      .watch<OrderApprovalFilterCubit>()
+                                      .orderTotalOperators
+                                      .indexOf(
+                                        state.orderTotalOperator ?? '',
+                                      )
+                                  : 0,
+                              items: context
+                                  .watch<OrderApprovalFilterCubit>()
+                                  .orderTotalOperators,
+                              callback: (context, item) {
+                                if (item ==
+                                    context
+                                        .read<OrderApprovalFilterCubit>()
+                                        .orderTotalOperators
+                                        .first) {
+                                  context
+                                      .read<OrderApprovalFilterCubit>()
+                                      .setOrderTotalOperator(null);
+                                  return;
+                                }
+                                context
+                                    .read<OrderApprovalFilterCubit>()
+                                    .setOrderTotalOperator(item.toString());
+                              },
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            padding: const EdgeInsets.all(10),
+                            child: SvgPicture.asset(
+                              AssetConstants.iconArrowDown,
+                              fit: BoxFit.fitWidth,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _FilterTotalAmountWidget extends StatefulWidget {
+  final String? orderTotal;
+
+  const _FilterTotalAmountWidget({
+    required this.orderTotal,
+  });
+
+  @override
+  State<_FilterTotalAmountWidget> createState() =>
+      _FilterTotalAmountWidgetState();
+}
+
+class _FilterTotalAmountWidgetState extends State<_FilterTotalAmountWidget> {
+  final TextEditingController orderTotalController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    widget.orderTotal != null
+        ? orderTotalController.text = widget.orderTotal!
+        : null;
+    orderTotalController.addListener(submit);
+  }
+
+  @override
+  void dispose() {
+    orderTotalController.removeListener(submit);
+    orderTotalController.dispose();
+    super.dispose();
+  }
+
+  void submit() {
+    context
+        .read<OrderApprovalFilterCubit>()
+        .setOrderTotal(orderTotalController.text);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<OrderApprovalFilterCubit, OrderApprovalFilterState>(
+      listener: (context, state) {
+        if (state.orderTotal != orderTotalController.text) {
+          orderTotalController.text = state.orderTotal ?? '';
+          orderTotalController.selection = TextSelection.fromPosition(
+            TextPosition(offset: orderTotalController.text.length),
+          );
+        }
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Input(
+            controller: orderTotalController,
+            hintText: LocalizationConstants.orderTotal,
+            keyboardType: TextInputType.number,
+            onTapOutside: (p0) => FocusManager.instance.primaryFocus?.unfocus(),
           ),
         ],
       ),

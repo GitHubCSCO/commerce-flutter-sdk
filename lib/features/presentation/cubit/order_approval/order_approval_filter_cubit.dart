@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -57,4 +58,11 @@ class OrderApprovalFilterCubit extends Cubit<OrderApprovalFilterState> {
     newState.shipTo = shipTo;
     emit(newState);
   }
+
+  List<String> get orderTotalOperators => const [
+        LocalizationConstants.selectTotalType,
+        LocalizationConstants.greaterThan,
+        LocalizationConstants.lessThan,
+        LocalizationConstants.equalTo,
+      ];
 }
