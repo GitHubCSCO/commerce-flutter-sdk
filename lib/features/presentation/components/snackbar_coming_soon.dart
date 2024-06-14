@@ -112,5 +112,50 @@ class CustomSnackBar {
     );
   }
 
+  static void showPromotionApplied(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(LocalizationConstants.promotionApplied),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showPromotionNotApplied(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(LocalizationConstants.promotionNotAppliedContinue),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showCreditCardDeletedsuccess(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Card deleted successfully"),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showCreditCardDeletedFailed(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Error deleting card"),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showCreditCardSavedFailure(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Can not add  card"),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
   static showComingSoon(BuildContext context) {}
 }

@@ -252,7 +252,7 @@ class OptiTextStyles {
         ),
       );
 
-    static TextStyle get subtitleFade => _getInterFontStyle(
+  static TextStyle get subtitleFade => _getInterFontStyle(
         const TextStyle(
           fontSize: 14,
           color: bodyFadeColor,
@@ -285,7 +285,6 @@ class OptiTextStyles {
         ),
       );
 
-
   static TextStyle get bodySmall => _getInterFontStyle(
         const TextStyle(
           fontSize: 12,
@@ -303,16 +302,23 @@ class OptiTextStyles {
       );
 
   static TextStyle get bodyExtraSmall => _getInterFontStyle(
-    const TextStyle(
-      fontSize: 11,
-      color: bodyColor,
-      fontWeight: bodyWeight,
-    ),
-  );
+        const TextStyle(
+          fontSize: 11,
+          color: bodyColor,
+          fontWeight: bodyWeight,
+        ),
+      );
 
   static TextStyle get link => _getInterFontStyle(
         const TextStyle(
           fontSize: 12,
+          color: _primary,
+          fontWeight: linkWeight,
+        ),
+      );
+  static TextStyle get linkMedium => _getInterFontStyle(
+        const TextStyle(
+          fontSize: 15,
           color: _primary,
           fontWeight: linkWeight,
         ),

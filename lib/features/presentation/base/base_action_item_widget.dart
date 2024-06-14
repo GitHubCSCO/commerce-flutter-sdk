@@ -151,6 +151,10 @@ class BaseActionItemWidget extends StatelessWidget {
         return () {
           AppRoute.savedOrders.navigateBackStack(context);
         };
+      case ActionType.savedPayments:
+        return () {
+          AppRoute.savedPayments.navigateBackStack(context);
+        };
       default:
         return () {
           CustomSnackBar.showComingSoonSnackBar(context);
