@@ -1,13 +1,19 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/order_approval_usecase/order_approval_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 part 'order_approval_filter_state.dart';
 
 class OrderApprovalFilterCubit extends Cubit<OrderApprovalFilterState> {
-  OrderApprovalFilterCubit() : super(OrderApprovalFilterState());
+  final OrderApprovalUseCase _orderApprovalUseCase;
+  OrderApprovalFilterCubit({
+    required OrderApprovalUseCase orderApprovalUseCase,
+  })  : _orderApprovalUseCase = orderApprovalUseCase,
+        super(OrderApprovalFilterState());
 
-  void initialize({required OrderApprovalParameters orderApprovalParameters}) {
+  Future<void> initialize(
+      {required OrderApprovalParameters orderApprovalParameters}) async {
     var newState = state.copyWith();
     newState.orderNumber = orderApprovalParameters.orderNumber;
     newState.orderTotal = orderApprovalParameters.orderTotal;
@@ -16,6 +22,8 @@ class OrderApprovalFilterCubit extends Cubit<OrderApprovalFilterState> {
     newState.fromDate = orderApprovalParameters.fromDate;
     newState.toDate = orderApprovalParameters.toDate;
     newState.shipTo = orderApprovalParameters.shipTo;
+    newState.billTo = await _orderApprovalUseCase.getBillToAddress();
+
     emit(newState);
   }
 

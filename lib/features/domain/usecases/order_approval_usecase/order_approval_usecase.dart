@@ -50,4 +50,14 @@ class OrderApprovalUseCase extends BaseUseCase {
     final value = productSettingsResult.getResultSuccessValue();
     return InventoryUtils.isInventoryPerWarehouseButtonShownAsync(value);
   }
+
+  Future<BillTo?> getBillToAddress() async {
+    var session = commerceAPIServiceProvider.getSessionService().currentSession;
+    session ??= (await commerceAPIServiceProvider
+            .getSessionService()
+            .getCurrentSession())
+        .getResultSuccessValue();
+
+    return session?.billTo;
+  }
 }

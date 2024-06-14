@@ -248,7 +248,8 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => OrderApprovalCubit(orderApprovalUseCase: sl()))
     ..registerFactory(
         () => OrderApprovalDetailsCubit(orderApprovalUseCase: sl()))
-    ..registerFactory(() => OrderApprovalFilterCubit())
+    ..registerFactory(
+        () => OrderApprovalFilterCubit(orderApprovalUseCase: sl()))
 
     //Pull to refresh
     ..registerFactory(() => PullToRefreshBloc())

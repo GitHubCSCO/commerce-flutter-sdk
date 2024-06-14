@@ -1,17 +1,21 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/enums/address_type.dart';
 import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_filter_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/date_picker_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -111,7 +115,17 @@ void _showOrderApprovalFilterWidget(
               _FilterOrderTotalWidget(
                 orderNumber: state.orderNumber,
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 45),
+              Text(
+                LocalizationConstants.customer,
+                style: OptiTextStyles.subtitle,
+              ),
+              const SizedBox(height: 10),
+              _FilterShipToPickerWidget(
+                shipTo: state.shipTo,
+                billTo: state.billTo,
+              ),
+              const SizedBox(height: 45),
               Text(
                 LocalizationConstants.orderTotal,
                 style: OptiTextStyles.subtitle,
@@ -122,7 +136,7 @@ void _showOrderApprovalFilterWidget(
               _FilterTotalAmountWidget(
                 orderTotal: state.orderTotal,
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 45),
               Text(
                 LocalizationConstants.dateRange,
                 style: OptiTextStyles.subtitle,
@@ -415,6 +429,75 @@ class _FilterDatePickerWidget extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _FilterShipToPickerWidget extends StatelessWidget {
+  final ShipTo? shipTo;
+  final BillTo? billTo;
+
+  const _FilterShipToPickerWidget({
+    required this.shipTo,
+    required this.billTo,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        final result = await context.pushNamed(
+          AppRoute.billToShipToSelection.name,
+          extra: BillToShipToAddressSelectionEntity(
+            addressType: AddressType.shipTo,
+            selectedShipTo: shipTo,
+            selectedBillTo: billTo,
+          ),
+        );
+
+        if (result != null && result is ShipTo && context.mounted) {
+          context.read<OrderApprovalFilterCubit>().setShipTo(result);
+        }
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          shipTo == null
+              ? Text(
+                  LocalizationConstants.selectShipToAddress,
+                  style: OptiTextStyles.body,
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      shipTo?.companyName ?? '',
+                      style: OptiTextStyles.titleSmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      shipTo?.address1 ?? '',
+                      style: OptiTextStyles.body,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      '${shipTo?.city ?? ''}, ${shipTo?.state?.abbreviation ?? ''} ${shipTo?.postalCode ?? ''}',
+                      style: OptiTextStyles.body,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+          const Icon(
+            Icons.arrow_forward_ios,
+            color: Colors.grey,
+            size: 16,
+          ),
+        ],
+      ),
     );
   }
 }

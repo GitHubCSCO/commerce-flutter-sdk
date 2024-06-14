@@ -7,6 +7,7 @@ class OrderApprovalFilterState {
   DateTime? fromDate;
   DateTime? toDate;
   ShipTo? shipTo;
+  BillTo? billTo;
 
   OrderApprovalFilterState({
     this.orderNumber,
@@ -15,6 +16,7 @@ class OrderApprovalFilterState {
     this.fromDate,
     this.toDate,
     this.shipTo,
+    this.billTo,
   });
 
   OrderApprovalFilterState copyWith({
@@ -24,6 +26,7 @@ class OrderApprovalFilterState {
     DateTime? fromDate,
     DateTime? toDate,
     ShipTo? shipTo,
+    BillTo? billTo,
   }) {
     return OrderApprovalFilterState(
       orderNumber: orderNumber ?? this.orderNumber,
@@ -32,6 +35,7 @@ class OrderApprovalFilterState {
       fromDate: fromDate ?? this.fromDate,
       toDate: toDate ?? this.toDate,
       shipTo: shipTo ?? this.shipTo,
+      billTo: billTo ?? this.billTo,
     );
   }
 }
