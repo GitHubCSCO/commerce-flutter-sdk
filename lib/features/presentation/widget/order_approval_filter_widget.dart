@@ -127,7 +127,6 @@ void _showOrderApprovalFilterWidget(
                 LocalizationConstants.dateRange,
                 style: OptiTextStyles.subtitle,
               ),
-              const SizedBox(height: 10),
               _FilterDatePickerWidget(
                 title: LocalizationConstants.from,
                 selectedDate: state.fromDate,
@@ -359,7 +358,7 @@ class _FilterTotalAmountWidgetState extends State<_FilterTotalAmountWidget> {
         children: [
           Input(
             controller: orderTotalController,
-            hintText: LocalizationConstants.orderTotal,
+            hintText: LocalizationConstants.enterAmount,
             keyboardType: TextInputType.number,
             onTapOutside: (p0) => FocusManager.instance.primaryFocus?.unfocus(),
           ),
