@@ -88,6 +88,7 @@ class OrderApprovalCubit extends Cubit<OrderApprovalState> {
       fromDate: fromDate,
       toDate: toDate,
       shipTo: shipTo,
+      shipToId: shipTo?.id,
     );
 
     emit(
@@ -98,4 +99,13 @@ class OrderApprovalCubit extends Cubit<OrderApprovalState> {
 
     await loadOrderApprovalList();
   }
+
+  bool get hasFilter =>
+      state.orderApprovalParameters.fromDate != null ||
+      state.orderApprovalParameters.toDate != null ||
+      !state.orderApprovalParameters.orderNumber.isNullOrEmpty ||
+      !state.orderApprovalParameters.orderTotal.isNullOrEmpty ||
+      !state.orderApprovalParameters.shipToId.isNullOrEmpty ||
+      (state.orderApprovalParameters.orderTotalOperator != null &&
+          state.orderApprovalParameters.orderTotalOperator?.isNotEmpty == true);
 }

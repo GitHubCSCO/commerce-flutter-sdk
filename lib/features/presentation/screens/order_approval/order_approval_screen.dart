@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/order_approval_filter_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -64,7 +65,7 @@ class OrderApprovalPage extends StatelessWidget {
                     height: 50,
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           state.orderApprovalCollectionModel.pagination
@@ -74,8 +75,29 @@ class OrderApprovalPage extends StatelessWidget {
                               : '',
                           style: OptiTextStyles.header3,
                         ),
-
-                        /// TODO: Add filter icon
+                        OrderApprovalFilterWidget(
+                          orderApprovalParameters:
+                              state.orderApprovalParameters,
+                          onApply: ({
+                            orderNumber,
+                            orderTotal,
+                            orderTotalOperator,
+                            fromDate,
+                            toDate,
+                            shipTo,
+                          }) {
+                            context.read<OrderApprovalCubit>().applyFilter(
+                                  orderNumber: orderNumber,
+                                  orderTotal: orderTotal,
+                                  orderTotalOperator: orderTotalOperator,
+                                  fromDate: fromDate,
+                                  toDate: toDate,
+                                  shipTo: shipTo,
+                                );
+                          },
+                          hasFilter:
+                              context.read<OrderApprovalCubit>().hasFilter,
+                        ),
                       ],
                     ),
                   ),
