@@ -82,32 +82,33 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
             .read<ProductDetailsBloc>()
             .add(FetchProductDetailsEvent(productId, product));
       }
-    }, child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
-      builder: (_, state) {
-        switch (state) {
-          case ProductDetailsInitial():
-          case ProductDetailsLoading():
-            return const Center(child: CircularProgressIndicator());
-          case ProductDetailsLoaded():
-            return Scaffold(
-                backgroundColor: OptiAppColors.backgroundGray,
-                appBar: AppBar(actions: <Widget>[
-                  BottomMenuWidget(websitePath: product?.productDetailUrl),
-                ], backgroundColor: Theme.of(context).colorScheme.surface),
-                body: SingleChildScrollView(
+    }, child: Scaffold(
+      backgroundColor: OptiAppColors.backgroundGray,
+                  appBar: AppBar(actions: <Widget>[
+                    BottomMenuWidget(websitePath: product?.productDetailUrl),
+                  ], backgroundColor: Theme.of(context).colorScheme.surface),
+      body: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
+        builder: (_, state) {
+          switch (state) {
+            case ProductDetailsInitial():
+            case ProductDetailsLoading():
+              return const Center(child: CircularProgressIndicator());
+            case ProductDetailsLoaded():
+              return SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: _buildProductDetailsWidgets(
                         state.productDetailsEntities, context),
                   ),
-                ));
-          case ProductDetailsErrorState():
-            return const Center(child: Text("failure"));
-          default:
-            return const Center(child: Text("failure"));
-        }
-      },
+              );
+            case ProductDetailsErrorState():
+              return const Center(child: Text("failure"));
+            default:
+              return const Center(child: Text("failure"));
+          }
+        },
+      ),
     ));
   }
 
