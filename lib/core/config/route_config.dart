@@ -11,7 +11,8 @@ import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_l
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
-import 'package:commerce_flutter_app/features/presentation/saved_order_details/saved_order_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/order_approval/order_approval_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_change_screen.dart';
@@ -25,6 +26,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/checkout/vmi_
 import 'package:commerce_flutter_app/features/presentation/screens/location_seach/location_serach_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/forgot_password_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/order_approval/order_approval_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_details/order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_screen.dart';
@@ -510,6 +512,27 @@ List<NavigationNode> _getNavigationRoot() {
           cartId: cartId, refreshSavedOrders: refreshSavedOrders);
     },
     parent: savedOrders,
+  );
+
+  // path: /account/orderApproval
+  final orderApproval = createNode(
+    name: AppRoute.orderApproval.name,
+    path: AppRoute.orderApproval.suffix,
+    builder: (context, state) => const OrderApprovalScreen(),
+    parent: account,
+  );
+
+  // path: /account/orderApproval/:cartId
+  final orderApprovalDetails = createNode(
+    name: AppRoute.orderApprovalDetails.name,
+    path: AppRoute.orderApprovalDetails.suffix,
+    builder: (context, state) {
+      final cartId = state.pathParameters['cartId'] ?? '';
+      final refreshOrderApprovals = state.extra as void Function();
+      return OrderApprovalDetailsScreen(
+          cartId: cartId, refreshOrderApprovals: refreshOrderApprovals);
+    },
+    parent: orderApproval,
   );
 
   return [
