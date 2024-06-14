@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
+import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_filter_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -96,9 +97,74 @@ void _showOrderApprovalFilterWidget(
       value: BlocProvider.of<OrderApprovalFilterCubit>(context),
       child: BlocBuilder<OrderApprovalFilterCubit, OrderApprovalFilterState>(
         builder: (context, state) {
-          return Text('Empty Filter');
+          return _FilterBodyWidget(
+            orderNumber: state.orderNumber,
+          );
         },
       ),
     ),
   );
+}
+
+class _FilterBodyWidget extends StatefulWidget {
+  const _FilterBodyWidget({
+    required this.orderNumber,
+  });
+
+  final String? orderNumber;
+
+  @override
+  State<_FilterBodyWidget> createState() => __FilterBodyWidgetState();
+}
+
+class __FilterBodyWidgetState extends State<_FilterBodyWidget> {
+  final TextEditingController orderNumberController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    widget.orderNumber != null
+        ? orderNumberController.text = widget.orderNumber!
+        : null;
+    orderNumberController.addListener(submit);
+  }
+
+  @override
+  void dispose() {
+    orderNumberController.removeListener(submit);
+    orderNumberController.dispose();
+    super.dispose();
+  }
+
+  void submit() {
+    context
+        .read<OrderApprovalFilterCubit>()
+        .setOrderNumber(orderNumberController.text);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<OrderApprovalFilterCubit, OrderApprovalFilterState>(
+      listener: (context, state) {
+        if (state.orderNumber != orderNumberController.text) {
+          orderNumberController.text = state.orderNumber ?? '';
+          orderNumberController.selection = TextSelection.fromPosition(
+            TextPosition(offset: orderNumberController.text.length),
+          );
+        }
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Input(
+            controller: orderNumberController,
+            label: 'Order Number',
+            hintText: 'Order #',
+          ),
+        ],
+      ),
+    );
+  }
 }
