@@ -12,6 +12,8 @@ import 'package:commerce_flutter_app/features/presentation/helper/routing/route_
 import 'package:commerce_flutter_app/features/presentation/screens/order_approval/order_approval_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_change_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/biometric/biometric_login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
@@ -379,6 +381,26 @@ List<NavigationNode> _getNavigationRoot() {
     parent: orderHistory,
   );
 
+  // path: /billToShipToChange
+  final billToShipToChange = createNode(
+    name: AppRoute.billToShipToChange.name,
+    path: AppRoute.billToShipToChange.suffix,
+    builder: (context, state) => const BillToShipToChangeScreen(),
+    parent: null,
+  );
+
+  // path: /billToShipToSelection
+  final billToShipToSelection = createNode(
+    name: AppRoute.billToShipToSelection.name,
+    path: AppRoute.billToShipToSelection.suffix,
+    builder: (context, state) {
+      final entity = state.extra as BillToShipToAddressSelectionEntity;
+      return BillToShipToAddressSelectionScreen(billToShipToAddressSelectionEntity: entity);
+    },
+    parent: null,
+  );
+
+
   // path: /account/savedOrders
   final savedOrders = createNode(
     name: AppRoute.savedOrders.name,
@@ -441,6 +463,8 @@ List<NavigationNode> _getNavigationRoot() {
     addToWishList,
     forgotPassword,
     vmiLocationNote,
-    locationSearch
+    locationSearch,
+    billToShipToChange,
+    billToShipToSelection
   ];
 }

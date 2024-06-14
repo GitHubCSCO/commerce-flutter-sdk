@@ -86,7 +86,7 @@ class LocalizationConstants {
   static const shippingMethod = "Shipping Method";
   static const pickUpLocation = "Pick Up Location";
   static const shippingAddress = "Shipping Address";
-  static const recipientAddress = "RECIPIENT ADDRESS";
+  static const recipientAddress = "Recipient Address";
   static const setAsDefault =
       "Set as default and skip this step next time you log in";
   static const cancelSignIn = "Cancel Sign In";
