@@ -144,6 +144,8 @@ class _ListPickerState extends State<ListPicker> {
       return item.description!;
     } else if (item is ProductDetailStyleValue) {
       return item.displayName!;
+    } else if (item is String) {
+      return item;
     } else {
       return '';
     }
