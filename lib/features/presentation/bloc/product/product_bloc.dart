@@ -1,0 +1,40 @@
+import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+
+part 'product_event.dart';
+part 'product_state.dart';
+
+class ProductBloc extends Bloc<ProductEvent, ProductState> {
+
+  final SearchUseCase _searchUseCase;
+
+  ProductBloc({required SearchUseCase searchUseCase})
+      : _searchUseCase = searchUseCase,
+        super(ProductInitial()) {
+    on<ProductLoadEvent>((event, emit) => _onProductLoadEvent(event, emit));
+  }
+
+  Future<void> _onProductLoadEvent(ProductLoadEvent event, Emitter<ProductState> emit) async {
+    emit(ProductLoading());
+
+    Result<GetProductCollectionResult, ErrorResponse>? result;
+    if (event.entity.parentType == ProductParentType.category) {
+      result = await _searchUseCase.loadSearchProductsResults('', 1,
+          selectedCategoryId: event.entity.category?.id ?? '');
+    } else {
+      result = await _searchUseCase.loadSearchProductsResults('', 1,
+          selectedBrandIds: [event.entity.brand?.id ?? '']);
+    }
+
+    switch (result) {
+      case Success(value: final data):
+        emit(ProductLoaded(result: data));
+      case Failure(errorResponse: final errorResponse):
+        emit(ProductFailed(errorResponse.errorDescription ?? ''));
+      default:
+    }
+  }
+
+}

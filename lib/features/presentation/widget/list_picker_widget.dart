@@ -11,12 +11,14 @@ class ListPickerWidget extends StatelessWidget {
   final void Function(BuildContext context, Object item)? callback;
   final List<Object> items;
   final int? selectedIndex;
+  final String? descriptionText;
 
   const ListPickerWidget({
     super.key,
     required this.items,
     this.selectedIndex,
     required this.callback,
+    this.descriptionText,
   });
 
   @override
@@ -25,6 +27,7 @@ class ListPickerWidget extends StatelessWidget {
       items: items,
       selectedIndex: selectedIndex,
       callback: callback,
+      descriptionText: descriptionText,
     );
   }
 }
@@ -33,12 +36,14 @@ class ListPicker extends StatefulWidget {
   final void Function(BuildContext context, Object item)? callback;
   final List<Object> items;
   final int? selectedIndex;
+  final String? descriptionText;
 
   const ListPicker({
     super.key,
     required this.items,
     this.selectedIndex,
     required this.callback,
+    this.descriptionText,
   });
 
   @override
@@ -52,7 +57,10 @@ class _ListPickerState extends State<ListPicker> {
   void initState() {
     super.initState();
     selectedIndex = widget.selectedIndex ?? 0;
-    isButtonEnabled = _isOptionAvailable(widget.items[selectedIndex]);
+
+    isButtonEnabled = (selectedIndex != -1 && widget.items.isNotEmpty)
+        ? _isOptionAvailable(widget.items[selectedIndex])
+        : true;
   }
 
   @override
@@ -75,7 +83,9 @@ class _ListPickerState extends State<ListPicker> {
           _selectItem(context);
         },
         child: Text(
-          _getDescriptions(widget.items[selectedIndex]),
+          (selectedIndex != -1 && widget.items.isNotEmpty)
+              ? _getDescriptions(widget.items[selectedIndex])
+              : widget.descriptionText ?? "",
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.start,
@@ -104,8 +114,11 @@ class _ListPickerState extends State<ListPicker> {
                             ? () {
                                 Navigator.pop(innerContext);
                                 if (widget.callback != null) {
-                                  widget.callback!(
-                                      context, widget.items[selectedIndex]);
+                                  if (selectedIndex != -1 &&
+                                      widget.items.isNotEmpty) {
+                                    widget.callback!(
+                                        context, widget.items[selectedIndex]);
+                                  }
                                 }
                               }
                             : null,
@@ -155,6 +168,14 @@ class _ListPickerState extends State<ListPicker> {
       return item.description!;
     } else if (item is ProductDetailStyleValue) {
       return item.displayName!;
+    } else if (item is String) {
+      return item;
+    } else if (item is KeyValuePair) {
+      return item.key.toString();
+    } else if (item is Country) {
+      return item.name ?? "";
+    } else if (item is StateModel) {
+      return item.name ?? "";
     } else if (item is String) {
       return item;
     } else {

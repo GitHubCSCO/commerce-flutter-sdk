@@ -12,9 +12,11 @@ import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/base_checkout.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/product_list_with_basicInfo.dart';
@@ -23,16 +25,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class VmiCheckoutEntity {
-
   final Cart cart;
   final ScanningMode scanningMode;
 
   VmiCheckoutEntity(this.cart, this.scanningMode);
-
 }
 
 class VmiCheckoutScreen extends StatelessWidget {
-
   final VmiCheckoutEntity vmiCheckoutEntity;
 
   const VmiCheckoutScreen({super.key, required this.vmiCheckoutEntity});
@@ -42,9 +41,10 @@ class VmiCheckoutScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<CheckoutBloc>(
-            create: (context) =>
-            sl<CheckoutBloc>()..add(LoadCheckoutEvent(cart: vmiCheckoutEntity.cart))),
+            create: (context) => sl<CheckoutBloc>()
+              ..add(LoadCheckoutEvent(cart: vmiCheckoutEntity.cart))),
         BlocProvider<TokenExBloc>(create: (context) => sl<TokenExBloc>()),
+        BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
         BlocProvider<ReviewOrderCubit>(
             create: (context) => sl<ReviewOrderCubit>()),
         BlocProvider<PaymentDetailsBloc>(
@@ -55,11 +55,9 @@ class VmiCheckoutScreen extends StatelessWidget {
       child: VmiCheckoutPage(scanningMode: vmiCheckoutEntity.scanningMode),
     );
   }
-
 }
 
 class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
-
   final ScanningMode scanningMode;
 
   VmiCheckoutPage({super.key, required this.scanningMode});
@@ -73,7 +71,10 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
           if (state is CheckoutPlaceOrder) {
             AppRoute.checkoutSuccess.navigate(context,
                 extra: CheckoutSuccessEntity(
-                    orderNumber: state.orderNumber, isVmiCheckout: true));
+                    orderNumber: state.orderNumber,
+                    reviewOrderEntity: state.reviewOrderEntity,
+                    isVmiCheckout: true,
+                    cart: context.read<CheckoutBloc>().cart!));
           }
         },
         builder: (_, state) {
@@ -99,69 +100,73 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                     requestDeliveryDate: state.requestDeliveryDate,
                   );
 
-                  return Column(
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
+                  return Container(
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                buildSummary(state.cart, state.promotions),
+                                BillingShippingWidget(
+                                    billingShippingEntity:
+                                        billingShippingEntity),
+                                CheckoutPaymentDetails(
+                                    cart: context.read<CheckoutBloc>().cart!,
+                                    onCompleteCheckoutPaymentSection: () {
+                                      context.read<CheckoutBloc>().add(
+                                          SelectPaymentEvent(context
+                                              .read<PaymentDetailsBloc>()
+                                              .cart!
+                                              .paymentOptions!));
+                                      // context
+                                      //     .read<ExpansionPanelCubit>()
+                                      //     .onContinueClick();
+                                    }),
+                                buildOrderNote(),
+                                const SizedBox(height: 8),
+                                ProductListWithBasicInfo(
+                                  totalItemsTitle:
+                                      LocalizationConstants.cartContentsItems,
+                                  list: CartLineListMapper()
+                                          .toEntity(CartLineList(
+                                              cartLines:
+                                                  state.cart.cartLines ?? []))
+                                          .cartLines ??
+                                      [],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 16),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: const BoxDecoration(color: Colors.white),
                           child: Column(
                             children: [
-                              buildSummary(state.cart, state.promotions),
-                              BillingShippingWidget(
-                                  billingShippingEntity: billingShippingEntity),
-                              CheckoutPaymentDetails(
-                                  cart: context.read<CheckoutBloc>().cart!,
-                                  onCompleteCheckoutPaymentSection: () {
-                                    context.read<CheckoutBloc>().add(
-                                        SelectPaymentEvent(context
-                                            .read<PaymentDetailsBloc>()
-                                            .cart!
-                                            .paymentOptions!));
-                                    // context
-                                    //     .read<ExpansionPanelCubit>()
-                                    //     .onContinueClick();
-                                  }),
-                              buildOrderNote(),
-                              const SizedBox(height: 8),
-                              ProductListWithBasicInfo(
-                                totalItemsTitle:
-                                    LocalizationConstants.cartContentsItems,
-                                list: CartLineListMapper()
-                                        .toEntity(CartLineList(
-                                            cartLines:
-                                                state.cart.cartLines ?? []))
-                                        .cartLines ??
-                                    [],
+                              TertiaryButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text(scanningMode == ScanningMode.count
+                                    ? LocalizationConstants.backToCountInventory
+                                    : LocalizationConstants.backToCreateOrder),
+                              ),
+                              const SizedBox(height: 4.0),
+                              PrimaryButton(
+                                onPressed: () {
+                                  _handleSubmitOrderClick(context, state);
+                                },
+                                text: LocalizationConstants.submitOrder,
                               ),
                             ],
                           ),
                         ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 32, vertical: 16),
-                        clipBehavior: Clip.antiAlias,
-                        decoration: const BoxDecoration(color: Colors.white),
-                        child: Column(
-                          children: [
-                            TertiaryButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text(scanningMode == ScanningMode.count
-                                  ? LocalizationConstants.backToCountInventory
-                                  : LocalizationConstants.backToCreateOrder),
-                            ),
-                            const SizedBox(height: 4.0),
-                            PrimaryButton(
-                              onPressed: () {
-                                _handleSubmitOrderClick(context);
-                              },
-                              text: LocalizationConstants.submitOrder,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                 default:
                   return const Center();
@@ -173,42 +178,26 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
     );
   }
 
-  void _handleSubmitOrderClick(BuildContext context) {
-    var isPaymentCardType = context
-        .read<PaymentDetailsBloc>()
-        .selectedPaymentMethod
-        ?.cardType !=
-        null;
-    var isCreditCardSectionCompleted = context
-        .read<PaymentDetailsBloc>()
-        .isCreditCardSectionCompleted;
+  void _handleSubmitOrderClick(BuildContext context, CheckoutDataLoaded state) {
+    var isPaymentCardType =
+        context.read<PaymentDetailsBloc>().selectedPaymentMethod?.cardType !=
+            null;
+    var isCreditCardSectionCompleted =
+        context.read<PaymentDetailsBloc>().isCreditCardSectionCompleted;
 
-    if (isPaymentCardType &&
-        !isCreditCardSectionCompleted) {
-      context
-          .read<TokenExBloc>()
-          .add(TokenExValidateEvent());
+    if (isPaymentCardType && !isCreditCardSectionCompleted) {
+      context.read<TokenExBloc>().add(TokenExValidateEvent());
     } else {
-      var poNumber = context
-          .read<PaymentDetailsBloc>()
-          .getPONumber();
-      var cart = context
-          .read<PaymentDetailsBloc>()
-          .cart;
+      var poNumber = context.read<PaymentDetailsBloc>().getPONumber();
+      var cart = context.read<PaymentDetailsBloc>().cart;
 
-      if (cart!.requiresPoNumber! &&
-          poNumber.isNullOrEmpty) {
-        CustomSnackBar.showPoNumberRequired(
-            context);
+      if (cart!.requiresPoNumber! && poNumber.isNullOrEmpty) {
+        CustomSnackBar.showPoNumberRequired(context);
       } else {
-        context
-            .read<CheckoutBloc>()
-            .add(UpdatePONumberEvent(poNumber));
-        context
-            .read<CheckoutBloc>()
-            .add(PlaceOrderEvent());
+        context.read<CheckoutBloc>().add(UpdatePONumberEvent(poNumber));
+        context.read<CheckoutBloc>().add(PlaceOrderEvent(
+            reviewOrderEntity: prepareReviewOrderEntiity(state, context)));
       }
     }
   }
-
 }

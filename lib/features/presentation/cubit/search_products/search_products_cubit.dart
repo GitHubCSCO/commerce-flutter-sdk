@@ -33,16 +33,16 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
         );
 
   void loadInitialSearchProducts(
-      GetProductCollectionResult productCollectionResult) {
-    query = productCollectionResult.originalQuery;
+      GetProductCollectionResult? productCollectionResult) {
+    query = productCollectionResult?.originalQuery;
 
-    final sortOptions = productCollectionResult.pagination?.sortOptions ?? [];
+    final sortOptions = productCollectionResult?.pagination?.sortOptions ?? [];
     final availableSortOrders = _searchUseCase.getAvailableSortOrders(
       sortOptions: sortOptions,
     );
     final selectedSortOrder = _searchUseCase.getSelectedSortOrder(
       availableSortOrders: availableSortOrders,
-      selectedSortOrderType: productCollectionResult.pagination?.sortType ?? '',
+      selectedSortOrderType: productCollectionResult?.pagination?.sortType ?? '',
     );
 
     emit(

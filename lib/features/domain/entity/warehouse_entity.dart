@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:commerce_flutter_app/core/models/lat_long.dart';
 import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
 
 class WarehouseEntity extends AvailabilityEntity {
@@ -23,6 +24,7 @@ class WarehouseEntity extends AvailabilityEntity {
   final double? distance;
   final bool? allowPickup;
   final String? pickupShipViaId;
+  final LatLong? latLong;
 
   const WarehouseEntity({
     final int? messageType,
@@ -49,6 +51,7 @@ class WarehouseEntity extends AvailabilityEntity {
     this.distance,
     this.allowPickup,
     this.pickupShipViaId,
+    this.latLong,
   }) : super(
             message: message,
             messageType: messageType,
@@ -80,6 +83,7 @@ class WarehouseEntity extends AvailabilityEntity {
     double? distance,
     bool? allowPickup,
     String? pickupShipViaId,
+    LatLong? latLong,
   }) {
     return WarehouseEntity(
       messageType: messageType ?? this.messageType,
@@ -107,6 +111,7 @@ class WarehouseEntity extends AvailabilityEntity {
       distance: distance ?? this.distance,
       allowPickup: allowPickup ?? this.allowPickup,
       pickupShipViaId: pickupShipViaId ?? this.pickupShipViaId,
+      latLong: latLong ?? this.latLong,
     );
   }
 }

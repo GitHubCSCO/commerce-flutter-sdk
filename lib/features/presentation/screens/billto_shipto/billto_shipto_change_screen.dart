@@ -4,8 +4,11 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/address_type.dart';
+import 'package:commerce_flutter_app/features/domain/enums/location_search_type.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/warehouse_extension.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/warehouse_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/billto_shipto/billto_shipto_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/tab_switch_widget.dart';
@@ -78,11 +81,14 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                     TabSwitchWidget(
                       tabTitle0: LocalizationConstants.ship,
                       tabTitle1: LocalizationConstants.pickUp,
-                      tabWidget0: _buildShipToWidget(state.billToAddress, state.shipToAddress),
-                      tabWidget1: _buildPickUpWidget(state.billToAddress, state.pickUpWarehouse, state.recipientAddress),
+                      tabWidget0: _buildShipToWidget(
+                          state.billToAddress, state.shipToAddress),
+                      tabWidget1: _buildPickUpWidget(state.billToAddress,
+                          state.pickUpWarehouse, state.recipientAddress),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 20.0),
                       child: Row(
                         children: [
                           Expanded(
@@ -124,7 +130,8 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
       padding: const EdgeInsets.all(20.0),
       child: InkWell(
         onTap: () {
-          final selectionEntity = BillToShipToAddressSelectionEntity(selectedBillTo: billTo, addressType: AddressType.billTo);
+          final selectionEntity = BillToShipToAddressSelectionEntity(
+              selectedBillTo: billTo, addressType: AddressType.billTo);
           _handleAddressSelection(selectionEntity);
         },
         child: Row(
@@ -157,7 +164,10 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
       padding: const EdgeInsets.all(20.0),
       child: InkWell(
         onTap: () {
-          final selectionEntity = BillToShipToAddressSelectionEntity(selectedBillTo: billTo, selectedShipTo: shipTo, addressType: AddressType.shipTo);
+          final selectionEntity = BillToShipToAddressSelectionEntity(
+              selectedBillTo: billTo,
+              selectedShipTo: shipTo,
+              addressType: AddressType.shipTo);
           _handleAddressSelection(selectionEntity);
         },
         child: Row(
@@ -183,36 +193,54 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
     );
   }
 
-  Widget _buildPickUpWidget(BillTo? billTo, Warehouse? wareHouse, ShipTo? recipientAddress) {
+  Widget _buildPickUpWidget(
+      BillTo? billTo, Warehouse? wareHouse, ShipTo? recipientAddress) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: PickupLocationWidget(
+          InkWell(
+            onTap: () {
+              print("object");
+
+              AppRoute.locationSearch.navigateBackStack(context,
+                  extra: VMILocationSelectCallbackHelper(
+                      onSelectVMILocation: (location) {},
+                      onWarehouseLocationSelected: (wareHouse) {
+                        context.read<BillToShipToBloc>().add(PickUpUpdateEvent(
+                            WarehouseEntityMapper().toModel(wareHouse)));
+                      },
+                      locationSearchType: LocationSearchType.pickUpLocation));
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: PickupLocationWidget(
                     description: wareHouse?.description,
                     address: wareHouse.wareHouseAddress(),
                     city: wareHouse.wareHouseCity(),
                     phone: wareHouse?.phone,
                     buildSeperator: true,
+                  ),
                 ),
-              ),
-              const Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.grey,
-                size: 20,
-              )
-            ],
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.grey,
+                  size: 20,
+                )
+              ],
+            ),
           ),
           const SizedBox(height: 8.0),
           InkWell(
             onTap: () {
-              final selectionEntity = BillToShipToAddressSelectionEntity(selectedBillTo: billTo, selectedShipTo: recipientAddress, addressType: AddressType.shipTo);
+              final selectionEntity = BillToShipToAddressSelectionEntity(
+                  selectedBillTo: billTo,
+                  selectedShipTo: recipientAddress,
+                  addressType: AddressType.shipTo);
               _handleAddressSelection(selectionEntity);
             },
             child: Row(
@@ -241,7 +269,8 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
     );
   }
 
-  void _handleAddressSelection(BillToShipToAddressSelectionEntity selectionEntity) async {
+  void _handleAddressSelection(
+      BillToShipToAddressSelectionEntity selectionEntity) async {
     final result = await context.pushNamed(
       AppRoute.billToShipToSelection.name,
       extra: selectionEntity,
@@ -253,5 +282,4 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
       context.read<BillToShipToBloc>().add(ShipToUpdateEvent(result));
     }
   }
-
 }

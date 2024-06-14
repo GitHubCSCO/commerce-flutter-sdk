@@ -20,10 +20,9 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
         super(BillToShipToInitial()) {
     on<BillToShipToLoadEvent>(
         (event, emit) => _onBillToShipToLoadEvent(event, emit));
-    on<BillToUpdateEvent>(
-            (event, emit) => _onBillToUpdateEvent(event, emit));
-    on<ShipToUpdateEvent>(
-            (event, emit) => _onShipToUpdateEvent(event, emit));
+    on<BillToUpdateEvent>((event, emit) => _onBillToUpdateEvent(event, emit));
+    on<ShipToUpdateEvent>((event, emit) => _onShipToUpdateEvent(event, emit));
+    on<PickUpUpdateEvent>((event, emit) => _onPickUpUpdateEvent(event, emit));
   }
 
   Future<void> _onBillToUpdateEvent(
@@ -45,6 +44,18 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
       ShipToUpdateEvent event, Emitter<BillToShipToState> emit) async {
     emit(BillToShipToLoading());
     shipToAddress = event.shipToAddress;
+    emit(BillToShipToLoaded(
+        billToAddress: billToAddress,
+        shipToAddress: shipToAddress,
+        recipientAddress: recipientAddress,
+        pickUpWarehouse: pickUpWarehouse,
+        hasWillCall: hasWillCall!));
+  }
+
+  Future<void> _onPickUpUpdateEvent(
+      PickUpUpdateEvent event, Emitter<BillToShipToState> emit) async {
+    emit(BillToShipToLoading());
+    pickUpWarehouse = event.warehouse;
     emit(BillToShipToLoaded(
         billToAddress: billToAddress,
         shipToAddress: shipToAddress,
