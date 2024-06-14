@@ -22,3 +22,7 @@ class BillToShipToLoaded extends BillToShipToState {
 }
 
 class BillToShipToFailed extends BillToShipToState {}
+
+class SaveBillToShipToSuccess extends BillToShipToState {}
+
+class SaveBillToShipToFailed extends BillToShipToState {}

@@ -157,5 +157,23 @@ class CustomSnackBar {
     );
   }
 
+  static void showBilltoShipToSuccess(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Changed Customer Success"),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showBilltoShipToFailure(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Changed Customer Failure"),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
   static showComingSoon(BuildContext context) {}
 }

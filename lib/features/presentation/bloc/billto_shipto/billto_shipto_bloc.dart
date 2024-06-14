@@ -23,6 +23,8 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
     on<BillToUpdateEvent>((event, emit) => _onBillToUpdateEvent(event, emit));
     on<ShipToUpdateEvent>((event, emit) => _onShipToUpdateEvent(event, emit));
     on<PickUpUpdateEvent>((event, emit) => _onPickUpUpdateEvent(event, emit));
+    on<SaveBillToShipToEvent>(
+        (event, emit) => _onSaveBillToShipToEvent(event, emit));
   }
 
   Future<void> _onBillToUpdateEvent(
@@ -88,5 +90,18 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
         recipientAddress: recipientAddress,
         pickUpWarehouse: pickUpWarehouse,
         hasWillCall: hasWillCall!));
+  }
+
+  Future<void> _onSaveBillToShipToEvent(
+      SaveBillToShipToEvent event, Emitter<BillToShipToState> emit) async {
+    emit(BillToShipToLoading());
+
+    var patchedSession = await _billToShipToUseCase.updateCurrentSession(billToAddress: billToAddress, shipToRecipientAddress:  shipToAddress, pickUpWarehouse: pickUpWarehouse, selectedShippingMethod: FulfillmentMethodType.Ship );
+
+    if (patchedSession != null) {
+      emit(SaveBillToShipToSuccess());
+    } else {
+      emit(SaveBillToShipToFailed());
+    }
   }
 }
