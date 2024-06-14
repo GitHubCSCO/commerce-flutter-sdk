@@ -91,87 +91,89 @@ void showFilterModalSheet(
     ),
     context: context,
     builder: (innerContext) {
-      return Container(
-        decoration: const BoxDecoration(
-          color: OptiAppColors.backgroundWhite,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+      return SafeArea(
+        child: Container(
+          decoration: const BoxDecoration(
+            color: OptiAppColors.backgroundWhite,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
           ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                          ),
+                          child: Text(
+                            LocalizationConstants.filter,
+                            style: OptiTextStyles.titleLarge,
+                          ),
                         ),
-                        child: Text(
-                          LocalizationConstants.filter,
-                          style: OptiTextStyles.titleLarge,
-                        ),
-                      ),
-                      child,
-                    ],
+                        child,
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Container(
-              decoration: const BoxDecoration(
-                color: OptiAppColors.backgroundWhite,
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromRGBO(0, 0, 0, 0.05),
-                    blurRadius: 5,
-                    offset: Offset(0, -4),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.symmetric(
-                vertical: 13.5,
-                horizontal: 31.5,
-              ),
-              child: Row(
-                children: [
-                  if (onReset != null)
+              Container(
+                decoration: const BoxDecoration(
+                  color: OptiAppColors.backgroundWhite,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromRGBO(0, 0, 0, 0.05),
+                      blurRadius: 5,
+                      offset: Offset(0, -4),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 13.5,
+                  horizontal: 31.5,
+                ),
+                child: Row(
+                  children: [
+                    if (onReset != null)
+                      Expanded(
+                        child: SizedBox(
+                          height: 48,
+                          child: SecondaryButton(
+                            onPressed: onReset,
+                            child: const Text(LocalizationConstants.reset),
+                          ),
+                        ),
+                      ),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: SizedBox(
+                        width: 176,
                         height: 48,
-                        child: SecondaryButton(
-                          onPressed: onReset,
-                          child: const Text(LocalizationConstants.reset),
+                        child: PrimaryButton(
+                          text: LocalizationConstants.apply,
+                          onPressed: () {
+                            onApply();
+                            Navigator.pop(innerContext);
+                          },
                         ),
                       ),
                     ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: SizedBox(
-                      width: 176,
-                      height: 48,
-                      child: PrimaryButton(
-                        text: LocalizationConstants.apply,
-                        onPressed: () {
-                          onApply();
-                          Navigator.pop(innerContext);
-                        },
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     },
