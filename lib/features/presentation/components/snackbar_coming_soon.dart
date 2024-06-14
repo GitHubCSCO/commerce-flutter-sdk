@@ -160,7 +160,7 @@ class CustomSnackBar {
   static void showBilltoShipToSuccess(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text("Changed Customer Success"),
+        content: Text("Changed Customer Successfully"),
         duration: Duration(seconds: 1),
       ),
     );
@@ -169,7 +169,7 @@ class CustomSnackBar {
   static void showBilltoShipToFailure(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text("Changed Customer Failure"),
+        content: Text("Failed to Change Customer"),
         duration: Duration(seconds: 1),
       ),
     );

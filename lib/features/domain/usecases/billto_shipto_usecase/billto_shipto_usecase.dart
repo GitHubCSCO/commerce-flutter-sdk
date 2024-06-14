@@ -3,17 +3,21 @@ import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart'
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BillToShipToUseCase extends BaseUseCase {
-  Future<Session> getCurrentSession() async {
-    Session? currentSession =
-        commerceAPIServiceProvider.getSessionService().currentSession;
-
-    if (currentSession == null) {
+  Future<Session?> getCurrentSession() async {
+    Session? cachedCurrentSession = 
+            commerceAPIServiceProvider
+                .getSessionService()
+                .getCachedCurrentSession();
+                
+    if(cachedCurrentSession==null){
       final result = await commerceAPIServiceProvider
           .getSessionService()
           .getCurrentSession();
-      currentSession = result is Success ? (result as Success).value : null;
+      Session? currentSession = result is Success ? (result as Success).value : null;
+      return Future.value(currentSession);
     }
-    return Future.value(currentSession!);
+
+    return Future.value(cachedCurrentSession);
   }
 
   Future<Session?> updateCurrentSession(
@@ -21,14 +25,14 @@ class BillToShipToUseCase extends BaseUseCase {
       ShipTo? shipToRecipientAddress,
       Warehouse? pickUpWarehouse,
       FulfillmentMethodType? selectedShippingMethod}) async {
-    Session currentSession = await getCurrentSession();
-    if (currentSession.isAuthenticated != true) {
+    Session? curSession = await getCurrentSession();
+    if (curSession?.isAuthenticated != true) {
       return null;
     }
 
-    bool willCall = await hasWillCall();
+    Session currentSession = curSession!;
 
-    commerceAPIServiceProvider.getCacheService().clearAllCaches();
+    bool willCall = await hasWillCall();
 
     Session newSession = Session(
       activateAccount: currentSession.activateAccount,
@@ -74,10 +78,16 @@ class BillToShipToUseCase extends BaseUseCase {
     final result = await commerceAPIServiceProvider
         .getSessionService()
         .patchCustomerSession(newSession);
-
-    Session? patchedSession =
-        result is Success ? (result as Success).value as Session : null;
-    return patchedSession;
+    //TODO we need to make it better:
+    //TODO follow webflow
+    if(result is Success){
+        commerceAPIServiceProvider.getCacheService().clearAllCaches();
+        Session patchedSession = (result as Success).value as Session;
+        // commerceAPIServiceProvider.getSessionService().currentSession = patchedSession;
+        return patchedSession;
+    }else{
+      return null;
+    }
   }
 
   Future<bool> hasWillCall() async {

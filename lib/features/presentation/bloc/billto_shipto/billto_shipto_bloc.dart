@@ -12,8 +12,10 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
   BillTo? billToAddress;
   ShipTo? shipToAddress;
   ShipTo? recipientAddress;
+  ShipTo? shipToRecipientAddress;
   Warehouse? pickUpWarehouse;
-  bool? hasWillCall;
+  FulfillmentMethodType? selectedShippingMethod;
+  bool hasWillCall = false;
 
   BillToShipToBloc({required BillToShipToUseCase billToShipToUseCase})
       : _billToShipToUseCase = billToShipToUseCase,
@@ -31,72 +33,91 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
       BillToUpdateEvent event, Emitter<BillToShipToState> emit) async {
     emit(BillToShipToLoading());
     billToAddress = event.billToAddress;
-    shipToAddress = null;
-    pickUpWarehouse = null;
-    recipientAddress = null;
     emit(BillToShipToLoaded(
         billToAddress: billToAddress,
         shipToAddress: shipToAddress,
         recipientAddress: recipientAddress,
         pickUpWarehouse: pickUpWarehouse,
-        hasWillCall: hasWillCall!));
+        selectedShippingMethod: selectedShippingMethod,
+        hasWillCall: hasWillCall));
   }
 
   Future<void> _onShipToUpdateEvent(
       ShipToUpdateEvent event, Emitter<BillToShipToState> emit) async {
     emit(BillToShipToLoading());
     shipToAddress = event.shipToAddress;
+    selectedShippingMethod = FulfillmentMethodType.Ship;
     emit(BillToShipToLoaded(
         billToAddress: billToAddress,
         shipToAddress: shipToAddress,
         recipientAddress: recipientAddress,
         pickUpWarehouse: pickUpWarehouse,
-        hasWillCall: hasWillCall!));
+        selectedShippingMethod: selectedShippingMethod,
+        hasWillCall: hasWillCall));
   }
 
   Future<void> _onPickUpUpdateEvent(
       PickUpUpdateEvent event, Emitter<BillToShipToState> emit) async {
     emit(BillToShipToLoading());
     pickUpWarehouse = event.warehouse;
+    selectedShippingMethod = FulfillmentMethodType.PickUp;
     emit(BillToShipToLoaded(
         billToAddress: billToAddress,
         shipToAddress: shipToAddress,
         recipientAddress: recipientAddress,
         pickUpWarehouse: pickUpWarehouse,
-        hasWillCall: hasWillCall!));
+        selectedShippingMethod: selectedShippingMethod,
+        hasWillCall: hasWillCall));
   }
 
   Future<void> _onBillToShipToLoadEvent(
       BillToShipToLoadEvent event, Emitter<BillToShipToState> emit) async {
     emit(BillToShipToLoading());
-
     final session = await _billToShipToUseCase.getCurrentSession();
-    billToAddress = session.billTo;
-    pickUpWarehouse = session.pickUpWarehouse;
+    if(session==null){
+      emit(BillToShipToFailed());
+    }else{
+      billToAddress = session.billTo;
+      pickUpWarehouse = session.pickUpWarehouse;
 
-    hasWillCall = await _billToShipToUseCase.hasWillCall();
+      hasWillCall = await _billToShipToUseCase.hasWillCall();
 
-    if (hasWillCall != null &&
-        hasWillCall! &&
-        session.fulfillmentMethod == FulfillmentMethodType.PickUp.name) {
-      recipientAddress = session.shipTo;
-    } else {
-      shipToAddress = session.shipTo;
+      if (hasWillCall && session.fulfillmentMethod == FulfillmentMethodType.PickUp.name) {
+        recipientAddress = session.shipTo;
+        selectedShippingMethod = FulfillmentMethodType.PickUp;
+      } else {
+        shipToAddress = session.shipTo;
+        selectedShippingMethod = FulfillmentMethodType.Ship;
+      }
+
+      emit(BillToShipToLoaded(
+          billToAddress: billToAddress,
+          shipToAddress: shipToAddress,
+          recipientAddress: recipientAddress,
+          pickUpWarehouse: pickUpWarehouse,
+          selectedShippingMethod: selectedShippingMethod,
+          hasWillCall: hasWillCall));
     }
-
-    emit(BillToShipToLoaded(
-        billToAddress: billToAddress,
-        shipToAddress: shipToAddress,
-        recipientAddress: recipientAddress,
-        pickUpWarehouse: pickUpWarehouse,
-        hasWillCall: hasWillCall!));
   }
 
   Future<void> _onSaveBillToShipToEvent(
       SaveBillToShipToEvent event, Emitter<BillToShipToState> emit) async {
     emit(BillToShipToLoading());
 
-    var patchedSession = await _billToShipToUseCase.updateCurrentSession(billToAddress: billToAddress, shipToRecipientAddress:  shipToAddress, pickUpWarehouse: pickUpWarehouse, selectedShippingMethod: FulfillmentMethodType.Ship );
+    if (selectedShippingMethod == FulfillmentMethodType.PickUp)
+    {
+        shipToRecipientAddress = recipientAddress;
+    } 
+    else if (selectedShippingMethod == FulfillmentMethodType.Ship)
+    {
+        shipToRecipientAddress = shipToAddress;
+    }
+
+    var patchedSession = await _billToShipToUseCase.updateCurrentSession(
+      billToAddress: billToAddress, 
+      shipToRecipientAddress:  shipToRecipientAddress,
+      pickUpWarehouse: pickUpWarehouse, 
+      selectedShippingMethod: selectedShippingMethod);
 
     if (patchedSession != null) {
       emit(SaveBillToShipToSuccess());

@@ -52,7 +52,7 @@ class OrderApprovalUseCase extends BaseUseCase {
   }
 
   Future<BillTo?> getBillToAddress() async {
-    var session = commerceAPIServiceProvider.getSessionService().currentSession;
+    var session = commerceAPIServiceProvider.getSessionService().getCachedCurrentSession();
     session ??= (await commerceAPIServiceProvider
             .getSessionService()
             .getCurrentSession())

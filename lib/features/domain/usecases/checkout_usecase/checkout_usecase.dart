@@ -31,7 +31,7 @@ class CheckoutUsecase extends BaseUseCase {
   }
 
   Session? getCurrentSession() {
-    return commerceAPIServiceProvider.getSessionService().currentSession;
+    return commerceAPIServiceProvider.getSessionService().getCachedCurrentSession();
   }
 
   Future<Result<CartSettings, ErrorResponse>> getCartSetting() {

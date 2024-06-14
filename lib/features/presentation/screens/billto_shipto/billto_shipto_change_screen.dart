@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/address_type.dart';
+import 'package:commerce_flutter_app/features/domain/enums/fullfillment_method_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/location_search_type.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/warehouse_extension.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/warehouse_mapper.dart';
@@ -71,10 +72,11 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
         listener: (context, state) {
           if (state is SaveBillToShipToSuccess) {
             CustomSnackBar.showBilltoShipToSuccess(context);
+            context.pop();
           } else if (state is SaveBillToShipToSuccess) {
+            context.pop();
             CustomSnackBar.showBilltoShipToFailure(context);
           }
-          context.pop();
         },
         child: BlocBuilder<BillToShipToBloc, BillToShipToState>(
           builder: (context, state) {
@@ -97,6 +99,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                             state.billToAddress, state.shipToAddress),
                         tabWidget1: _buildPickUpWidget(state.billToAddress,
                             state.pickUpWarehouse, state.recipientAddress),
+                        selectedIndex: (state.hasWillCall && state.selectedShippingMethod == FulfillmentMethodType.PickUp) == true ? 1 : 0,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(

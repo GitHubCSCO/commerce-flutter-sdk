@@ -18,7 +18,7 @@ class BiometricAuthenticationService
   Future<bool> authenticate(String password) async {
     final userName = _commerceAPIServiceProvider
         .getSessionService()
-        .currentSession
+        .getCachedCurrentSession()
         ?.userName;
 
     if (userName.isNullorWhitespace) {
@@ -57,7 +57,7 @@ class BiometricAuthenticationService
   Future<bool> enableBiometricAuthentication(String password) async {
     final userName = _commerceAPIServiceProvider
         .getSessionService()
-        .currentSession
+        .getCachedCurrentSession()
         ?.userName;
 
     final domain = _commerceAPIServiceProvider.getClientService().host;
@@ -82,7 +82,7 @@ class BiometricAuthenticationService
     final domain = _commerceAPIServiceProvider.getClientService().host;
     final userName = _commerceAPIServiceProvider
         .getSessionService()
-        .currentSession
+        .getCachedCurrentSession()
         ?.userName;
 
     if (domain.isNullorWhitespace || userName.isNullorWhitespace) {
@@ -125,7 +125,7 @@ class BiometricAuthenticationService
 
     final userName = _commerceAPIServiceProvider
         .getSessionService()
-        .currentSession
+        .getCachedCurrentSession()
         ?.userName;
     final storedUserName = await _commerceAPIServiceProvider
         .getSecureStorageService()
@@ -164,7 +164,7 @@ class BiometricAuthenticationService
   Future<void> logoutWithStoredCredentials() async {
     final userName = _commerceAPIServiceProvider
         .getSessionService()
-        .currentSession
+        .getCachedCurrentSession()
         ?.userName;
     final storedUserName = await _commerceAPIServiceProvider
         .getSecureStorageService()
@@ -190,7 +190,7 @@ class BiometricAuthenticationService
     final domain = _commerceAPIServiceProvider.getClientService().host;
     final userName = _commerceAPIServiceProvider
         .getSessionService()
-        .currentSession
+        .getCachedCurrentSession()
         ?.userName;
 
     if (domain.isNullorWhitespace || userName.isNullorWhitespace) {

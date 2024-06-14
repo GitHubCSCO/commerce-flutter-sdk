@@ -26,14 +26,14 @@ class CartUseCase extends BaseUseCase {
   Warehouse? getPickUpWareHouse() {
     return commerceAPIServiceProvider
         .getSessionService()
-        .currentSession
+        .getCachedCurrentSession()
         ?.pickUpWarehouse;
   }
 
   String? getShippingMethod() {
     return commerceAPIServiceProvider
         .getSessionService()
-        .currentSession
+        .getCachedCurrentSession()
         ?.fulfillmentMethod;
   }
 
