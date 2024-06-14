@@ -25,6 +25,8 @@ import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecas
 import 'package:commerce_flutter_app/features/domain/usecases/add_credit_card_usecase/add_credit_card_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/add_shipping_address_usecase/add_shipping_address_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/billto_shipto_usecase/address_selection/billto_shipto_address_selection_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/billto_shipto_usecase/billto_shipto_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/billing_address_create_usecase/billing_address_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_content_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_shipping_usecase.dart';
@@ -42,6 +44,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/forg
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/order_usecase/order_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pickup_location_usecase/pickup_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/platform_usecase/platform_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
@@ -71,6 +74,8 @@ import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/billto_shipto/address_selection/billto_shipto_address_selection_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/billto_shipto/billto_shipto_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
@@ -79,6 +84,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkou
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/pickup_location/pickup_location_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product/product_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
@@ -330,6 +336,19 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => CountInventoryCubit(countInventoryUseCase: sl()))
     ..registerFactory(() => CountInventoryUseCase())
 
+    //billToShipToChange
+    ..registerFactory(() => BillToShipToBloc(billToShipToUseCase: sl()))
+    ..registerFactory(() => BillToShipToUseCase())
+
+    //billToShipToSelection
+    ..registerFactory(() => BilltoShiptoAddressSelectionBloc(
+        billToShipToAddressSelectionUseCase: sl()))
+    ..registerFactory(() => BillToShipToAddressSelectionUseCase())
+
+    //pickup location
+    ..registerFactory(() => PickupLocationBloc(pickUpLocationUseCase: sl()))
+    ..registerFactory(() => PickUpLocationUseCase())
+
     //barcode
     ..registerFactory(() => BarcodeScanBloc())
 
@@ -475,6 +494,8 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
+    ..registerLazySingleton<IWarehouseService>(() => WarehouseService(
+        clientService: sl(), cacheService: sl(), networkService: sl()))
     ..registerLazySingleton<ICartService>(() => CartService(
           clientService: sl(),
           cacheService: sl(),
@@ -482,11 +503,6 @@ Future<void> initInjectionContainer() async {
         ))
     ..registerLazySingleton<IDealerService>(() => DealerService(
         clientService: sl(), cacheService: sl(), networkService: sl()))
-    ..registerLazySingleton<IBillToService>(() => BillToService(
-          clientService: sl(),
-          cacheService: sl(),
-          networkService: sl(),
-        ))
     ..registerLazySingleton<IVmiLocationsService>(() => VMILocationService(
           clientService: sl(),
           cacheService: sl(),
@@ -499,6 +515,11 @@ Future<void> initInjectionContainer() async {
         cacheService: sl(),
         networkService: sl()))
     ..registerLazySingleton<IOrderService>(() => OrderService(
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
+    ..registerLazySingleton<IBillToService>(() => BillToService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
@@ -559,12 +580,11 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
-
     ..registerLazySingleton<ICategoryService>(() => CategoryService(
-      clientService: sl(),
-      cacheService: sl(),
-      networkService: sl(),
-    ));
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ));
 
   await sl.allReady();
 }

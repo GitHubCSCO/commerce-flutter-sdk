@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/models/gogole_place.dart';
 import 'package:commerce_flutter_app/features/domain/entity/current_location_data_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -29,6 +30,19 @@ class GMapCubit extends Cubit<GMapState> {
       markers.add(Marker(
           position: LatLng(dealer.latitude ?? 0.0, dealer.longitude ?? 0.0),
           markerId: MarkerId(dealer.name ?? "")));
+    }
+    this.markers = markers;
+    emit(GMapMarkesUpdated(markers: markers, focusMarker: markers.first));
+  }
+
+  Future<void> updateMarkersFromPickUpLocation(
+      List<WarehouseEntity> warehouses) async {
+    final Set<Marker> markers = {};
+    for (var warehouse in warehouses) {
+      markers.add(Marker(
+          position: LatLng(warehouse.latitude?.toDouble() ?? 0.0,
+              warehouse.longitude?.toDouble() ?? 0.0),
+          markerId: MarkerId(warehouse.name ?? "")));
     }
     this.markers = markers;
     emit(GMapMarkesUpdated(markers: markers, focusMarker: markers.first));

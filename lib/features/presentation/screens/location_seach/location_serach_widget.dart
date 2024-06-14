@@ -4,15 +4,19 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/current_location_data_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/location_search_type.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_state.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/pickup_location/pickup_location_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/pickup_location/pickup_location_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/deaker_location_finder/dealer_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/pick_up_location_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/location_finder_dealer/dealer_location_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_location_screen.dart';
 import 'package:flutter/material.dart';
@@ -22,9 +26,12 @@ import 'package:flutter_svg/svg.dart';
 class LocationSearchScreen extends StatelessWidget {
   final LocationSearchType locationSearchType;
   final void Function(CurrentLocationDataEntity)? onVMILocationUpdated;
-
+  final void Function(WarehouseEntity)? onWarehouseLocationSelected;
   const LocationSearchScreen(
-      {super.key, this.onVMILocationUpdated, required this.locationSearchType});
+      {super.key,
+      this.onVMILocationUpdated,
+      required this.locationSearchType,
+      this.onWarehouseLocationSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -37,30 +44,48 @@ class LocationSearchScreen extends StatelessWidget {
                   sl<VMILocationBloc>()..add(LoadVMILocationsEvent())),
           BlocProvider<GMapCubit>(create: (context) => sl<GMapCubit>()),
           BlocProvider<DealerLocationCubit>(
-              create: (context) => sl<DealerLocationCubit>())
+              create: (context) => sl<DealerLocationCubit>()),
+          BlocProvider<PickupLocationBloc>(
+              create: (context) =>
+                  sl<PickupLocationBloc>()..add(LoadPickUpLocationsEvent()))
         ],
         child: LocationSearchPage(
           onVMILocationUpdated: onVMILocationUpdated,
           locationSearchType: locationSearchType,
+          onWarehouseLocationSelected: onWarehouseLocationSelected,
         ));
   }
 }
 
 class LocationSearchPage extends StatelessWidget {
   final void Function(CurrentLocationDataEntity)? onVMILocationUpdated;
+  final void Function(WarehouseEntity)? onWarehouseLocationSelected;
   final LocationSearchType locationSearchType;
   LocationSearchPage(
-      {super.key, this.onVMILocationUpdated, required this.locationSearchType});
+      {super.key,
+      this.onVMILocationUpdated,
+      required this.locationSearchType,
+      this.onWarehouseLocationSelected});
   final textEditingController = TextEditingController();
+
+  String getTitle() {
+    switch (locationSearchType) {
+      case LocationSearchType.vmi:
+        return 'VMI';
+      case LocationSearchType.locationFinder:
+        return 'Location Finder';
+      case LocationSearchType.pickUpLocation:
+        return 'Pick Up Location';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         backgroundColor: OptiAppColors.backgroundWhite,
-        title: (locationSearchType == LocationSearchType.locationFinder)
-            ? const Text('Location Finder')
-            : const Text('VMI'),
+        title: Text(getTitle()),
         centerTitle: false,
       ),
       body: Column(
@@ -124,7 +149,8 @@ class LocationSearchPage extends StatelessWidget {
                       context
                           .read<VMILocationBloc>()
                           .add(LoadVMILocationsEvent());
-                    } else {
+                    } else if (locationSearchType ==
+                        LocationSearchType.locationFinder) {
                       context
                           .read<DealerLocationCubit>()
                           .updateSeachPlaceForDealer(state.searchedLocation);
@@ -154,6 +180,11 @@ class LocationSearchPage extends StatelessWidget {
                       {
                         return DealerLocationWidget();
                       }
+                    case LocationSearchType.pickUpLocation:
+                      return PickUpLocationScreen(
+                          onWarehouseLocationSelected: (locationData) {
+                        onWarehouseLocationSelected!(locationData);
+                      });
                   }
                 } else if (state is LocationSearchLoadedState) {
                   switch (locationSearchType) {
@@ -170,6 +201,8 @@ class LocationSearchPage extends StatelessWidget {
                       {
                         return DealerLocationWidget();
                       }
+                    case LocationSearchType.pickUpLocation:
+                      return Text("pickUpLocation");
                   }
                 } else if (state is LocationSearchFocusState) {
                   return const Text('LocationSearchFocusState');

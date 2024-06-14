@@ -36,13 +36,16 @@ class RouteNames {
   static const String orderDetails = 'orderDetails';
   static const String locationSearch = 'locationSearch';
   static const String vmiLocationNote = 'vmiLocationNote';
+  static const String billToShipToChange = 'billToShipToChange';
+  static const String billToShipToSelection = 'billToShipToSelection';
+  static const String savedOrders = 'savedOrders';
+  static const String savedOrderDetails = 'savedOrderDetails';
+  static const String pickUpLocation = 'pickUpLocation';
   static const String shopCategory = 'shopCategory';
   static const String shopSubCategory = 'shopSubCategory';
   static const String product = 'product';
   static const String addCreditCard = 'addCreditCard';
   static const String addShippingAddress = 'addShippingAddress';
-  static const String savedOrders = 'savedOrders';
-  static const String savedOrderDetails = 'savedOrderDetails';
   static const String savedPayments = 'savedPayments';
 }
 
@@ -85,14 +88,18 @@ class RoutePaths {
   static const String addToWishList = '/${RouteNames.addToWishList}';
   static const String forgotPassword = '/${RouteNames.forgotPassword}';
   static const String orderDetails = '${RoutePaths.orderHistory}/:orderNumber';
-  static const String shopCategory = '/${RouteNames.shopCategory}';
-  static const String shopSubCategory = '/${RouteNames.shopSubCategory}/:categoryId/:categoryTitle';
-  static const String product = '/${RouteNames.product}';
-  static const String addCreditCard = '/${RouteNames.addCreditCard}';
-  static const String addShippingAddress = '/${RouteNames.addShippingAddress}';
+  static const String billToShipToChange = '/${RouteNames.billToShipToChange}';
+  static const String billToShipToSelection =
+      '/${RouteNames.billToShipToSelection}';
   static const String savedOrders =
       '${RoutePaths.account}/${RouteNames.savedOrders}';
   static const String savedOrderDetails = '${RoutePaths.savedOrders}/:cartId';
+  static const String shopCategory = '/${RouteNames.shopCategory}';
+  static const String shopSubCategory =
+      '/${RouteNames.shopSubCategory}/:categoryId/:categoryTitle';
+  static const String product = '/${RouteNames.product}';
+  static const String addCreditCard = '/${RouteNames.addCreditCard}';
+  static const String addShippingAddress = '/${RouteNames.addShippingAddress}';
   static const String savedPayments =
       '${RoutePaths.account}/${RouteNames.savedPayments}';
 }
@@ -112,7 +119,8 @@ enum AppRoute {
   productDetails(
       name: RouteNames.productDetails, fullPath: RoutePaths.productDetails),
   topLevelProductDetails(
-      name: RouteNames.topLevelProductDetails, fullPath: RoutePaths.topLevelProductDetails),
+      name: RouteNames.topLevelProductDetails,
+      fullPath: RoutePaths.topLevelProductDetails),
   checkout(name: RouteNames.checkout, fullPath: RoutePaths.checkout),
   vmiCheckout(name: RouteNames.vmiCheckout, fullPath: RoutePaths.vmiCheckout),
   checkoutSuccess(
@@ -146,12 +154,17 @@ enum AppRoute {
       name: RouteNames.locationSearch, fullPath: RoutePaths.locationSearch),
   vmilocaitonote(
       name: RouteNames.vmiLocationNote, fullPath: RoutePaths.vmiLocationNote),
+  billToShipToChange(
+      name: RouteNames.billToShipToChange,
+      fullPath: RoutePaths.billToShipToChange),
+  billToShipToSelection(
+      name: RouteNames.billToShipToSelection,
+      fullPath: RoutePaths.billToShipToSelection),
   shopCategory(
       name: RouteNames.shopCategory, fullPath: RoutePaths.shopCategory),
   shopSubCategory(
       name: RouteNames.shopSubCategory, fullPath: RoutePaths.shopSubCategory),
-  product(
-      name: RouteNames.product, fullPath: RoutePaths.product),
+  product(name: RouteNames.product, fullPath: RoutePaths.product),
   addCreditCard(
       name: RouteNames.addCreditCard, fullPath: RoutePaths.addCreditCard),
   addShippingAddress(

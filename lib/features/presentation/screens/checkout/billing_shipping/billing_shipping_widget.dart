@@ -321,6 +321,7 @@ Widget _buildSeparator() {
 class ShippingAddressWidget extends StatelessWidget {
   final bool visible;
   final bool buildSeperator;
+  final String? title;
   final String? companyName;
   final String? fullAddress;
   final String? countryName;
@@ -329,6 +330,7 @@ class ShippingAddressWidget extends StatelessWidget {
     super.key,
     this.visible = true,
     this.buildSeperator = false,
+    this.title,
     this.companyName,
     this.fullAddress,
     this.countryName,
@@ -344,7 +346,7 @@ class ShippingAddressWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            LocalizationConstants.shippingAddress,
+            title != null ? title! : LocalizationConstants.shippingAddress,
             textAlign: TextAlign.start,
             style: OptiTextStyles.subtitle,
           ),

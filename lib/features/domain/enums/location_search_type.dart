@@ -1,1 +1,1 @@
-enum LocationSearchType { vmi, locationFinder }
+enum LocationSearchType { vmi, locationFinder, pickUpLocation }

@@ -366,8 +366,7 @@ class AppConfigurationService extends ServiceBase
 
   @override
   Future<bool> hasWillCall() {
-    // TODO: implement hasWillCall
-    throw UnimplementedError();
+    return Future.value(false);
   }
 
   @override
