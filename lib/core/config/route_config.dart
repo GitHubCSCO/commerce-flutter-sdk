@@ -15,11 +15,14 @@ import 'package:commerce_flutter_app/features/presentation/saved_order_details/s
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/biometric/biometric_login_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/category/category_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/category/sub_category_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/vmi_checkout/vmi_checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/location_seach/location_serach_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/login/forgot_password_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_details/order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_screen.dart';
@@ -217,6 +220,15 @@ List<NavigationNode> _getNavigationRoot() {
         productId: state.pathParameters['productId'] ?? '',
         product: state.extra as ProductEntity),
     parent: shop,
+  );
+
+  final topLevelProductDetails = createNode(
+    name: AppRoute.topLevelProductDetails.name,
+    path: AppRoute.topLevelProductDetails.fullPath,
+    builder: (context, state) => ProductDetailsScreen(
+        productId: state.pathParameters['productId'] ?? '',
+        product: state.extra as ProductEntity),
+    parent: null,
   );
 
   // path: /account/settings
@@ -427,6 +439,36 @@ List<NavigationNode> _getNavigationRoot() {
     parent: orderHistory,
   );
 
+  // path: /shopCategory
+  final shopCategory = createNode(
+    name: AppRoute.shopCategory.name,
+    path: AppRoute.shopCategory.suffix,
+    builder: (context, state) => const CategoryScreen(),
+    parent: null,
+  );
+
+  final shopSubCatagory = createNode(
+    name: AppRoute.shopSubCategory.name,
+    path: AppRoute.shopSubCategory.fullPath,
+    builder: (context, state) {
+      final categoryId = state.pathParameters['categoryId'];
+      final categoryTitle = state.pathParameters['categoryTitle'] ?? '';
+      return SubCategoryScreen(categoryId: categoryId, categoryTitle: categoryTitle);
+    },
+    parent: null,
+  );
+
+  // path: /product
+  final product = createNode(
+    name: AppRoute.product.name,
+    path: AppRoute.product.suffix,
+    builder: (context, state) {
+      final entity = state.extra as ProductPageEntity;
+      return ProductScreen(pageEntity: entity);
+    },
+    parent: null
+  );
+  
   // path: /account/savedOrders
   final savedOrders = createNode(
     name: AppRoute.savedOrders.name,
@@ -469,6 +511,10 @@ List<NavigationNode> _getNavigationRoot() {
     forgotPassword,
     vmiLocationNote,
     locationSearch,
+    shopCategory,
+    shopSubCatagory,
+    product,
+    topLevelProductDetails,
     addCreditCard,
     addShippingAddress
   ];

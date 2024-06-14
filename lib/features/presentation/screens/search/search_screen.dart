@@ -230,7 +230,7 @@ class SearchPage extends BaseDynamicContentScreen {
                       ));
                 case SearchProductsLoadedState:
                   final productCollectionResult =
-                  (state as SearchProductsLoadedState).result!;
+                  (state as SearchProductsLoadedState).result;
                   return MultiBlocProvider(
                     providers: [
                       BlocProvider<AddToCartCubit>(

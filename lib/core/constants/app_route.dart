@@ -14,6 +14,7 @@ class RouteNames {
   static const String cart = 'cart';
   static const String vmi = 'vmi';
   static const String productDetails = 'productDetails';
+  static const String topLevelProductDetails = 'topLevelProductDetails';
   static const String checkout = 'checkout';
   static const String vmiCheckout = 'vmiCheckout';
   static const String checkoutSuccess = 'checkoutSuccess';
@@ -35,6 +36,9 @@ class RouteNames {
   static const String orderDetails = 'orderDetails';
   static const String locationSearch = 'locationSearch';
   static const String vmiLocationNote = 'vmiLocationNote';
+  static const String shopCategory = 'shopCategory';
+  static const String shopSubCategory = 'shopSubCategory';
+  static const String product = 'product';
   static const String addCreditCard = 'addCreditCard';
   static const String addShippingAddress = 'addShippingAddress';
   static const String savedOrders = 'savedOrders';
@@ -54,6 +58,8 @@ class RoutePaths {
   static const String vmi = '/${RoutePaths.account}/${RouteNames.vmi}';
   static const String productDetails =
       '/${RouteNames.productDetails}/:productId';
+  static const String topLevelProductDetails =
+      '/${RouteNames.topLevelProductDetails}/:productId';
   static const String checkout = '/${RouteNames.checkout}';
   static const String vmiCheckout = '/${RouteNames.vmiCheckout}';
   static const String checkoutSuccess = '/${RouteNames.checkoutSuccess}';
@@ -79,6 +85,9 @@ class RoutePaths {
   static const String addToWishList = '/${RouteNames.addToWishList}';
   static const String forgotPassword = '/${RouteNames.forgotPassword}';
   static const String orderDetails = '${RoutePaths.orderHistory}/:orderNumber';
+  static const String shopCategory = '/${RouteNames.shopCategory}';
+  static const String shopSubCategory = '/${RouteNames.shopSubCategory}/:categoryId/:categoryTitle';
+  static const String product = '/${RouteNames.product}';
   static const String addCreditCard = '/${RouteNames.addCreditCard}';
   static const String addShippingAddress = '/${RouteNames.addShippingAddress}';
   static const String savedOrders =
@@ -102,6 +111,8 @@ enum AppRoute {
   productList(name: RouteNames.productList, fullPath: RoutePaths.shopProdlist),
   productDetails(
       name: RouteNames.productDetails, fullPath: RoutePaths.productDetails),
+  topLevelProductDetails(
+      name: RouteNames.topLevelProductDetails, fullPath: RoutePaths.topLevelProductDetails),
   checkout(name: RouteNames.checkout, fullPath: RoutePaths.checkout),
   vmiCheckout(name: RouteNames.vmiCheckout, fullPath: RoutePaths.vmiCheckout),
   checkoutSuccess(
@@ -135,6 +146,12 @@ enum AppRoute {
       name: RouteNames.locationSearch, fullPath: RoutePaths.locationSearch),
   vmilocaitonote(
       name: RouteNames.vmiLocationNote, fullPath: RoutePaths.vmiLocationNote),
+  shopCategory(
+      name: RouteNames.shopCategory, fullPath: RoutePaths.shopCategory),
+  shopSubCategory(
+      name: RouteNames.shopSubCategory, fullPath: RoutePaths.shopSubCategory),
+  product(
+      name: RouteNames.product, fullPath: RoutePaths.product),
   addCreditCard(
       name: RouteNames.addCreditCard, fullPath: RoutePaths.addCreditCard),
   addShippingAddress(

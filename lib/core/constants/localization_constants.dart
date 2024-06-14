@@ -303,6 +303,7 @@ class LocalizationConstants {
   static const searchPrompt = "Search for products.";
   static const sort = "Sort";
   static const resultsFor = "%s result(s) for '%s'";
+  static const results = "%s result(s)";
   static const searchInsteadFor = "Search instead for {0}";
   static const didYouMean = "Did you mean {0}";
   static const autocompleteCategoryOrBrandCombinedTitle = "{0} in {1}";

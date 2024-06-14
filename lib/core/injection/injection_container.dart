@@ -30,6 +30,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_shipping_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/biometric_usecase/biometric_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/category_usecase/category_useacase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/payment_details/payment_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/curent_location_usecase/current_location_usecase.dart';
@@ -73,10 +74,12 @@ import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/bar
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/category/category_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product/product_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
@@ -255,6 +258,9 @@ Future<void> initInjectionContainer() async {
         () => ProductListFilterCubit(productListFilterUsecase: sl()))
     ..registerFactory(() => ProductListFilterUsecase())
 
+    //product
+    ..registerFactory(() => ProductBloc(searchUseCase: sl()))
+
     //account
     ..registerFactory(() => AccountPageBloc(accountUseCase: sl()))
     ..registerFactory(() => AccountUseCase())
@@ -263,6 +269,10 @@ Future<void> initInjectionContainer() async {
     //account
     ..registerFactory(() => RemoteConfigCubit(remoteConfigUsecase: sl()))
     ..registerFactory(() => RemoteConfigUsecase())
+
+    //shop category
+    ..registerFactory(() => CategoryBloc(categoryUseCase: sl()))
+    ..registerFactory(() => CategoryUseCase())
 
     //cart
     ..registerFactory(() => CartPageBloc(cartUseCase: sl()))
@@ -548,7 +558,13 @@ Future<void> initInjectionContainer() async {
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
-        ));
+        ))
+
+    ..registerLazySingleton<ICategoryService>(() => CategoryService(
+      clientService: sl(),
+      cacheService: sl(),
+      networkService: sl(),
+    ));
 
   await sl.allReady();
 }

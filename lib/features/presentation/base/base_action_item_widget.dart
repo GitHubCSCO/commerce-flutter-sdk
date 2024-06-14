@@ -140,6 +140,10 @@ class BaseActionItemWidget extends StatelessWidget {
         return () {
           AppRoute.vmi.navigateBackStack(context);
         };
+      case ActionType.categories:
+        return () {
+          AppRoute.shopCategory.navigateBackStack(context);
+        };
       case ActionType.locationFinder:
         return () {
           AppRoute.locationSearch.navigateBackStack(context,
