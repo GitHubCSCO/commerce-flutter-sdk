@@ -14,6 +14,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
+//TODO we need to take another look at the name of each class in this file
+//TODO these classes are associated with category or brand product list page
+
 enum ProductParentType {
   category,
   brand
@@ -57,14 +60,17 @@ class ProductScreen extends StatelessWidget {
       child: ProductPage(pageEntity: pageEntity),
     );
   }
-
 }
-
 class ProductPage extends StatelessWidget {
 
   final ProductPageEntity pageEntity;
+  late final String pageTitle;
 
-  ProductPage({super.key, required this.pageEntity});
+  ProductPage({super.key, required this.pageEntity}){
+    pageTitle = pageEntity.category?.name ?? 
+            pageEntity.brand?.name ?? 
+            (pageEntity.parentType == ProductParentType.category ? LocalizationConstants.categories : LocalizationConstants.brands);
+  }
 
   final textEditingController = TextEditingController();
 
@@ -73,7 +79,8 @@ class ProductPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            LocalizationConstants.categories, style: OptiTextStyles.titleLarge),
+            pageTitle, 
+            style: OptiTextStyles.titleLarge),
         actions: [
           BottomMenuWidget(isViewOnWebsiteEnable: false,
               toolMenuList: []),
@@ -127,6 +134,9 @@ class ProductPage extends StatelessWidget {
                         create: (context) => sl<SearchProductsCubit>()..loadInitialSearchProducts(productCollectionResult),
                       ),
                     ],
+                    //TODO from category product list to search product list
+                    //TODO sort and filter does not work properly
+                    //TODO either we should take another look whether to use SearchProductsWidget or introduce a new product list screen
                     child: SearchProductsWidget(
                       onPageChanged: (page) {},
                     ),
@@ -143,5 +153,4 @@ class ProductPage extends StatelessWidget {
       ),
     );
   }
-
 }

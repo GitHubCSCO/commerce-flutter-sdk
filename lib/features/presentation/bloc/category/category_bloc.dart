@@ -18,7 +18,9 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   Future<void> _onCategoryLoadEvent(CategoryLoadEvent event, Emitter<CategoryState> emit) async {
     emit(CategoryLoading());
 
-    final response = await _categoryUseCase.getCategories();
+    final response = await _categoryUseCase.getCategories(
+      categoryId: event.categoryId
+    );
 
     switch (response) {
       case Success(value: final data):

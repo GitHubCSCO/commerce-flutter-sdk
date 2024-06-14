@@ -12,26 +12,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class CategoryScreen extends StatelessWidget {
-  const CategoryScreen({super.key});
+class SubCategoryScreen extends StatelessWidget {
+  String? categoryId;
+  String? categoryTitle;
+  SubCategoryScreen({super.key, this.categoryId, this.categoryTitle});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<CategoryBloc>(
-      create: (context) => sl<CategoryBloc>()..add(CategoryLoadEvent()),
-      child: const CategoryPage(),
+      create: (context) => sl<CategoryBloc>()..add(CategoryLoadEvent(categoryId: categoryId)),
+      child: SubCategoryPage(categoryTitle: categoryTitle),
     );
   }
+
 }
 
-class CategoryPage extends StatefulWidget {
-  const CategoryPage({super.key});
+class SubCategoryPage extends StatefulWidget {
+  late final String? categoryTitle;
+
+  SubCategoryPage({super.key,this.categoryTitle});
 
   @override
-  State<CategoryPage> createState() => _CategoryPageState();
+  State<SubCategoryPage> createState() => _SubCategoryPageState();
 }
 
-class _CategoryPageState extends State<CategoryPage> {
+class _SubCategoryPageState extends State<SubCategoryPage> {
   bool isGridView = true;
 
   @override
@@ -39,6 +44,7 @@ class _CategoryPageState extends State<CategoryPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
+            widget.categoryTitle ?? 
             LocalizationConstants.categories, style: OptiTextStyles.titleLarge),
         actions: [
           BottomMenuWidget(isViewOnWebsiteEnable: false,
@@ -70,9 +76,8 @@ class _CategoryPageState extends State<CategoryPage> {
     if((category.subCategories?.length ?? 0) > 0){
       AppRoute.shopSubCategory.navigateBackStack(
         context,
-        //TODO what if id or name is null, we need to take care of that
-        //TODO we should find a better way to pass categorytitle, 
-        //TODO because if category title is long or does have special character it mmight or might not work properly
+        //TODO SubCategoryScreen might be redundant, we might be able to use categoryscreen do the same thing
+        //TODO what if id and name is null, we need to take care of that
         pathParameters: {"categoryId": category.id.toString(), "categoryTitle": category.name.toString()}
       );
     }else{
