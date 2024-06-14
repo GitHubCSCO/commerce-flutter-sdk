@@ -83,7 +83,6 @@ class AddCreditCardPage extends StatelessWidget {
   final TextEditingController cityController = TextEditingController();
   final TextEditingController postalCodeController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   AddCreditCardPage({
     super.key,
     this.onCreditCardDeleted,
@@ -125,7 +124,7 @@ class AddCreditCardPage extends StatelessWidget {
                 onCreditCardAdded(state.accountPaymentProfile);
                 Navigator.pop(context);
               }
-              if(state is SavedPaymentAddedFailureState){
+              if (state is SavedPaymentAddedFailureState) {
                 CustomSnackBar.showCreditCardSavedFailure(context);
               }
             }),
@@ -311,9 +310,8 @@ class AddCreditCardPage extends StatelessWidget {
           "${expirationMonth?.value.toString().padLeft(2, '0')}/${expirationYear!.key % 100}";
       context.read<TokenExBloc>().add(TokenExValidateEvent());
 
-
-      if(context.read<BillingAddressCubit>().billingAddressAddNewToggle){
-       var billTo = context.read<BillingAddressCubit>().billTo;
+      if (context.read<BillingAddressCubit>().billingAddressAddNewToggle) {
+        var billTo = context.read<BillingAddressCubit>().billTo;
         address = billTo?.fullAddress ?? "";
         city = billTo?.city ?? "";
         postalCode = billTo?.postalCode ?? "";
@@ -321,23 +319,43 @@ class AddCreditCardPage extends StatelessWidget {
         selectState = billTo?.state;
       }
 
-      AccountPaymentProfile? paymentProfile = AccountPaymentProfile(
-        cardHolderName: name,
-        address1: address,
-        city: city,
-        postalCode: postalCode,
-        expirationDate: expirationDate,
-        country: selectCountry?.abbreviation,
-        state: selectState?.abbreviation,
-        securityCode: context.read<TokenExBloc>().cardInfo?.securityCode,
-        cardIdentifier: context.read<TokenExBloc>().cardInfo?.cardIdentifier,
-        cardType: context.read<TokenExBloc>().cardInfo?.cardType,
-        isDefault: context.read<AddCreditCardBloc>().useAsDefaultCard,
-      );
+      if (addCreditCardEntity.isAddNewCreditCard) {
+        AccountPaymentProfile? paymentProfile = AccountPaymentProfile(
+          cardHolderName: name,
+          address1: address,
+          city: city,
+          postalCode: postalCode,
+          expirationDate: expirationDate,
+          country: selectCountry?.abbreviation,
+          state: selectState?.abbreviation,
+          securityCode: context.read<TokenExBloc>().cardInfo?.securityCode,
+          cardIdentifier: context.read<TokenExBloc>().cardInfo?.cardIdentifier,
+          cardType: context.read<TokenExBloc>().cardInfo?.cardType,
+          isDefault: context.read<AddCreditCardBloc>().useAsDefaultCard,
+        );
 
-      context
-          .read<AddCreditCardBloc>()
-          .add(SavePaymentProfileEvent(accountPaymentProfile: paymentProfile));
+        context.read<AddCreditCardBloc>().add(
+            SavePaymentProfileEvent(accountPaymentProfile: paymentProfile));
+      } else {
+        AccountPaymentProfile? paymentProfile = AccountPaymentProfile(
+            cardHolderName: name,
+            address1: address,
+            city: city,
+            postalCode: postalCode,
+            expirationDate: expirationDate,
+            country: selectCountry?.abbreviation,
+            state: selectState?.abbreviation,
+            securityCode:
+                addCreditCardEntity.accountPaymentProfile?.securityCode,
+            cardIdentifier:
+                addCreditCardEntity.accountPaymentProfile?.cardIdentifier,
+            cardType: addCreditCardEntity.accountPaymentProfile?.cardType,
+            isDefault: addCreditCardEntity.accountPaymentProfile?.isDefault,
+            id: addCreditCardEntity.accountPaymentProfile?.id);
+
+        context.read<AddCreditCardBloc>().add(
+            SavePaymentProfileEvent(accountPaymentProfile: paymentProfile));
+      }
     }
   }
 
@@ -402,7 +420,7 @@ class AddCreditCardPage extends StatelessWidget {
   Widget _buildContinueButtonWidget(BuildContext context) {
     return ListInformationBottomSubmitWidget(actions: [
       PrimaryButton(
-        text: LocalizationConstants.continueText,
+        text: LocalizationConstants.save,
         onPressed: () {
           getInputData(context);
         },
@@ -412,8 +430,8 @@ class AddCreditCardPage extends StatelessWidget {
 
   Widget _buildDeleteButtonWidget(BuildContext context) {
     return ListInformationBottomSubmitWidget(actions: [
-      PrimaryButton(
-        text: LocalizationConstants.delete,
+      TertiaryButton(
+        child: Text(LocalizationConstants.delete),
         onPressed: () {
           if (addCreditCardEntity.accountPaymentProfile != null) {
             showDialog(
@@ -444,6 +462,12 @@ class AddCreditCardPage extends StatelessWidget {
               },
             );
           }
+        },
+      ),
+      PrimaryButton(
+        text: LocalizationConstants.save,
+        onPressed: () {
+          getInputData(context);
         },
       ),
     ]);
