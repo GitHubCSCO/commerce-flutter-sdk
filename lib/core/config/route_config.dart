@@ -288,10 +288,13 @@ List<NavigationNode> _getNavigationRoot() {
       final callbackHelper = state.extra as VMILocationSelectCallbackHelper;
 
       final onVMILocationUpdated = callbackHelper.onSelectVMILocation;
+      final onWarehouseLocationSelected =
+          callbackHelper.onWarehouseLocationSelected;
 
       return LocationSearchScreen(
         onVMILocationUpdated: onVMILocationUpdated,
         locationSearchType: callbackHelper.locationSearchType,
+        onWarehouseLocationSelected: onWarehouseLocationSelected,
       );
     },
     parent: null,
@@ -393,11 +396,11 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.billToShipToSelection.suffix,
     builder: (context, state) {
       final entity = state.extra as BillToShipToAddressSelectionEntity;
-      return BillToShipToAddressSelectionScreen(billToShipToAddressSelectionEntity: entity);
+      return BillToShipToAddressSelectionScreen(
+          billToShipToAddressSelectionEntity: entity);
     },
     parent: null,
   );
-
 
   // path: /account/savedOrders
   final savedOrders = createNode(

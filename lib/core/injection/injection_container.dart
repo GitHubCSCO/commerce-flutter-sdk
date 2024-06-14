@@ -40,6 +40,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/forg
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/order_usecase/order_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pickup_location_usecase/pickup_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/platform_usecase/platform_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
@@ -76,6 +77,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkou
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/pickup_location/pickup_location_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
@@ -294,8 +296,13 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => BillToShipToUseCase())
 
     //billToShipToSelection
-    ..registerFactory(() => BilltoShiptoAddressSelectionBloc(billToShipToAddressSelectionUseCase: sl()))
+    ..registerFactory(() => BilltoShiptoAddressSelectionBloc(
+        billToShipToAddressSelectionUseCase: sl()))
     ..registerFactory(() => BillToShipToAddressSelectionUseCase())
+
+    //pickup location
+    ..registerFactory(() => PickupLocationBloc(pickUpLocationUseCase: sl()))
+    ..registerFactory(() => PickUpLocationUseCase())
 
     //barcode
     ..registerFactory(() => BarcodeScanBloc())
@@ -442,6 +449,8 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
+    ..registerLazySingleton<IWarehouseService>(() => WarehouseService(
+        clientService: sl(), cacheService: sl(), networkService: sl()))
     ..registerLazySingleton<ICartService>(() => CartService(
           clientService: sl(),
           cacheService: sl(),
