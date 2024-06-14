@@ -245,6 +245,7 @@ class _FilterTotalTypeWidget extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 10.0),
                             child: ListPicker(
+                              key: UniqueKey(),
                               selectedIndex: context
                                       .watch<OrderApprovalFilterCubit>()
                                       .orderTotalOperators

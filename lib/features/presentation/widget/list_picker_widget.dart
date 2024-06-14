@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
@@ -61,17 +59,6 @@ class _ListPickerState extends State<ListPicker> {
     isButtonEnabled = (selectedIndex != -1 && widget.items.isNotEmpty)
         ? _isOptionAvailable(widget.items[selectedIndex])
         : true;
-  }
-
-  @override
-  void didUpdateWidget(covariant ListPicker oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.selectedIndex != oldWidget.selectedIndex) {
-      setState(() {
-        selectedIndex = widget.selectedIndex ?? 0;
-        isButtonEnabled = _isOptionAvailable(widget.items[selectedIndex]);
-      });
-    }
   }
 
   @override
@@ -176,8 +163,6 @@ class _ListPickerState extends State<ListPicker> {
       return item.name ?? "";
     } else if (item is StateModel) {
       return item.name ?? "";
-    } else if (item is String) {
-      return item;
     } else {
       return '';
     }
