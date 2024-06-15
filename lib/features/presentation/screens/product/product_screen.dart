@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product/product_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
@@ -27,21 +28,33 @@ class ProductPageEntity {
   String query = '';
   ProductParentType parentType;
   Category? category;
-  Brand? brand;
+  String? categoryId;
+  String? categoryTitle;
+  BrandEntity? brandEntity;
+  String? brandEntityId;
+  String? brandEntityTitle;
 
-  ProductPageEntity(this.query, this.parentType, {this.category, this.brand});
+  ProductPageEntity(this.query, this.parentType, {this.category, this.categoryId, this.categoryTitle, this.brandEntity, this.brandEntityId, this.brandEntityTitle});
 
   ProductPageEntity copyWith({
     String? query,
     ProductParentType? parentType,
     Category? category,
-    Brand? brand,
+    String? categoryId,
+    String? categoryTitle,
+    BrandEntity? brandEntity,
+    String? brandEntityId,
+    String? brandEntityTitle,
   }) {
     return ProductPageEntity(
       query ?? this.query,
       parentType ?? this.parentType,
       category: category ?? this.category,
-      brand: brand ?? this.brand,
+      categoryId: categoryId ?? this.categoryId,
+      categoryTitle: categoryTitle ?? this.categoryTitle,
+      brandEntity: brandEntity ?? this.brandEntity,
+      brandEntityId: brandEntityId ?? this.brandEntityId,
+      brandEntityTitle: brandEntityTitle ?? this.brandEntityTitle,
     );
   }
 
@@ -150,9 +163,9 @@ class ProductPage extends StatelessWidget {
 
   String _getTitle(ProductPageEntity entity) {
     if (entity.parentType == ProductParentType.category) {
-      return entity.category?.name ?? LocalizationConstants.categories;
+      return entity.category?.name ?? entity.categoryTitle ?? LocalizationConstants.categories;
     } else {
-      return entity.brand?.name ?? LocalizationConstants.brands;
+      return entity.brandEntity?.name ?? entity.brandEntityTitle ?? LocalizationConstants.brands;
     }
   }
 }

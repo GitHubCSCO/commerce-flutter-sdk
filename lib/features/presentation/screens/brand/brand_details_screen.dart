@@ -4,8 +4,11 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/extensions/html_string_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_details/brand_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
@@ -16,13 +19,12 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BrandDetailsEntity {
 
-  Brand? brand;
+  BrandEntity? brandEntity;
   List<BrandCategory>? brandCategories;
   List<BrandProductLine>? brandProductLines;
-  List<Product>? products;
 
   BrandDetailsEntity(
-      {this.brand, this.brandCategories, this.brandProductLines, this.products});
+      {this.brandEntity, this.brandCategories, this.brandProductLines});
 
 }
 
@@ -69,11 +71,20 @@ class BrandDetailsPage extends StatelessWidget {
               child: Center(
                 child: Column(
                   children: [
-                    BrandInfoWidget(brand: state.brandDetailsEntity.brand),
-                    const SizedBox(height: 8),
-                    CategoryCarouselWidget(list: state.brandDetailsEntity.brandCategories),
-                    const SizedBox(height: 8),
-                    BrandProductLinesWidget(list: state.brandDetailsEntity.brandProductLines),
+                    BrandInfoWidget(brandEntity: state.brandDetailsEntity.brandEntity),
+                    if((state.brandDetailsEntity.brandCategories?.length ?? 0) > 0) ...[
+                      const SizedBox(height: 8),
+                      CategoryCarouselWidget(list: state.brandDetailsEntity.brandCategories),
+                    ],
+                    if((state.brandDetailsEntity.brandProductLines?.length ?? 0) > 0) ...[
+                      const SizedBox(height: 8),
+                      BrandProductLinesWidget(list: state.brandDetailsEntity.brandProductLines),
+                    ],
+                    if((state.brandDetailsEntity.brandEntity?.topSellerProducts?.length ?? 0) > 0) ...[
+                      const SizedBox(height: 8),
+                      TopSellerProductsWidget(list: state.brandDetailsEntity.brandEntity?.topSellerProducts),
+                      const SizedBox(height: 32),
+                    ],
                   ],
                 ),
               ),
@@ -90,15 +101,16 @@ class BrandDetailsPage extends StatelessWidget {
 
 class BrandInfoWidget extends StatelessWidget {
 
-  final Brand? brand;
+  final BrandEntity? brandEntity;
 
-  const BrandInfoWidget({super.key, required this.brand});
+  const BrandInfoWidget({super.key, required this.brandEntity});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: OptiAppColors.backgroundWhite,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      width: double.infinity,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -108,7 +120,7 @@ class BrandInfoWidget extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
-                (brand?.logoSmallImagePath ?? '').makeImageUrl(),
+                (brandEntity?.logoSmallImagePath ?? '').makeImageUrl(),
                 fit: BoxFit.fitHeight,
                 errorBuilder: (BuildContext context, Object error,
                     StackTrace? stackTrace) {
@@ -129,7 +141,7 @@ class BrandInfoWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: HtmlWidget(
-              brand?.htmlContent?.styleHtmlContent() ?? '',
+              brandEntity?.htmlContent?.styleHtmlContent() ?? '',
               textStyle: OptiTextStyles.body,
             ),
           ),
@@ -137,7 +149,7 @@ class BrandInfoWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             child: PrimaryButton(
               onPressed: () {
-                final productPageEntity = ProductPageEntity('', ProductParentType.brand, brand: brand);
+                final productPageEntity = ProductPageEntity('', ProductParentType.brand, brandEntity: brandEntity);
                 AppRoute.product.navigateBackStack(context, extra: productPageEntity);
               },
               text: LocalizationConstants.shopAllBrandProducts,
@@ -161,6 +173,7 @@ class CategoryCarouselWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       color: OptiAppColors.backgroundWhite,
+      width: double.infinity,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -185,7 +198,17 @@ class CategoryCarouselWidget extends StatelessWidget {
                 final category = list?[index];
                 return InkWell(
                   onTap: () {
-
+                    if((category?.subCategories?.length ?? 0) > 0 && category?.categoryId.isNullOrEmpty == false){
+                      AppRoute.shopSubCategory.navigateBackStack(
+                        context,
+                        //TODO SubCategoryScreen might be redundant, we might be able to use categoryscreen do the same thing
+                        //TODO what if id and name is null, we need to take care of that
+                        pathParameters: {"categoryId": category!.categoryId!.toString() , "categoryTitle": category.categoryName.toString()}
+                      );
+                    }else{
+                      final productPageEntity = ProductPageEntity('', ProductParentType.category, categoryId: category?.categoryId, categoryTitle: category?.categoryName);
+                      AppRoute.product.navigateBackStack(context, extra: productPageEntity);
+                    }
                   },
                   child: CategoryCarouselItemWidget(
                       category: category),
@@ -197,7 +220,7 @@ class CategoryCarouselWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
             child: TertiaryButton(
               onPressed: () {
-
+                  CustomSnackBar.showComingSoonSnackBar(context);
               },
               child: const Text(LocalizationConstants.shopAllBrandCategories),
             ),
@@ -206,7 +229,6 @@ class CategoryCarouselWidget extends StatelessWidget {
       ),
     );
   }
-
 }
 
 class CategoryCarouselItemWidget extends StatelessWidget {
@@ -268,8 +290,8 @@ class CategoryCarouselItemWidget extends StatelessWidget {
       ),
     );
   }
-
 }
+
 
 
 class BrandProductLinesWidget extends StatelessWidget {
@@ -283,6 +305,7 @@ class BrandProductLinesWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       color: OptiAppColors.backgroundWhite,
+      width: double.infinity,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -329,7 +352,6 @@ class BrandProductLinesWidget extends StatelessWidget {
       ),
     );
   }
-
 }
 
 class BrandProductLinesItemWidget extends StatelessWidget {
@@ -393,4 +415,120 @@ class BrandProductLinesItemWidget extends StatelessWidget {
     );
   }
 
+}
+
+class TopSellerProductsWidget extends StatelessWidget {
+
+  final List<ProductEntity>? list;
+
+  const TopSellerProductsWidget({super.key, required this.list});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      color: OptiAppColors.backgroundWhite,
+      width: double.infinity,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Text(
+              LocalizationConstants.topSellers,
+              style: OptiTextStyles.titleLarge,
+            ),
+          ),
+          SizedBox(
+            height: 140,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemCount: list?.length ?? 0,
+              separatorBuilder: (context, index) =>
+              const SizedBox(width: 12),
+              itemBuilder: (context, index) {
+                final topSellerProductEntityLine = list?[index];
+                return InkWell(
+                  onTap: () {
+                      var productId = topSellerProductEntityLine?.styleParentId ?? topSellerProductEntityLine?.id;
+                      //TODO what if productid is null, 
+                      AppRoute.topLevelProductDetails.navigateBackStack(context,
+                          pathParameters: {"productId": productId.toString()},
+                          extra: topSellerProductEntityLine);                      
+                  },
+                  child: TopSellerProductItemWidget(
+                      topSellerProductEntityLine: topSellerProductEntityLine),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class TopSellerProductItemWidget extends StatelessWidget {
+
+  final ProductEntity? topSellerProductEntityLine;
+
+  const TopSellerProductItemWidget({super.key, required this.topSellerProductEntityLine});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 130,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(width: 1, color: OptiAppColors.backgroundGray),
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 108,
+            height: 80,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                (topSellerProductEntityLine?.smallImagePath ?? '').makeImageUrl(),
+                fit: BoxFit.fitHeight,
+                errorBuilder: (BuildContext context, Object error,
+                    StackTrace? stackTrace) {
+                  // This function is called when the image fails to load
+                  return Container(
+                    color: OptiAppColors.backgroundGray, // Placeholder color
+                    alignment: Alignment.center,
+                    child: const Icon(
+                      Icons.image, // Icon to display
+                      color: Colors.grey, // Icon color
+                      size: 30, // Icon size
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 30,
+            child: Text(topSellerProductEntityLine?.shortDescription ?? "",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: OptiTextStyles.bodySmall),
+          ),
+        ],
+      ),
+    );
+  }
 }
