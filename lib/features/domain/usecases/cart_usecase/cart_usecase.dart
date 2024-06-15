@@ -26,19 +26,21 @@ class CartUseCase extends BaseUseCase {
   Warehouse? getPickUpWareHouse() {
     return commerceAPIServiceProvider
         .getSessionService()
-        .currentSession
+        .getCachedCurrentSession()
         ?.pickUpWarehouse;
   }
 
   String? getShippingMethod() {
     return commerceAPIServiceProvider
         .getSessionService()
-        .currentSession
+        .getCachedCurrentSession()
         ?.fulfillmentMethod;
   }
 
-  bool isCustomerOrderApproval() {
-    return false;
+  Future<bool> isCustomerOrderApproval() async {
+    return await commerceAPIServiceProvider
+        .getClientService()
+        .isCustomerOrderApproval();
   }
 
   Future<String> getSiteMessage(String messageName, String? defaultMessage) async {

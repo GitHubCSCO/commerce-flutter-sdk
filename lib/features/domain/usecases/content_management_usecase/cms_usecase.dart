@@ -43,7 +43,7 @@ class CmsUseCase extends BaseUseCase {
               {
                 var currentSession = commerceAPIServiceProvider
                         .getSessionService()
-                        .currentSession ??
+                        .getCachedCurrentSession() ??
                     session;
 
                 if (pageData?.pageClassicWidget != null) {

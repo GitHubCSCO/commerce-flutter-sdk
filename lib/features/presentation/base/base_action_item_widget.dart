@@ -155,9 +155,21 @@ class BaseActionItemWidget extends StatelessWidget {
                   onSelectVMILocation: (location) {},
                   locationSearchType: LocationSearchType.locationFinder));
         };
+      case ActionType.changeCustomer:
+        return () {
+          AppRoute.billToShipToChange.navigateBackStack(context);
+        };
       case ActionType.savedOrders:
         return () {
           AppRoute.savedOrders.navigateBackStack(context);
+        };
+      case ActionType.savedPayments:
+        return () {
+          AppRoute.savedPayments.navigateBackStack(context);
+        };
+      case ActionType.orderApproval:
+        return () {
+          AppRoute.orderApproval.navigateBackStack(context);
         };
       default:
         return () {

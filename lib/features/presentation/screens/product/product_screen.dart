@@ -14,6 +14,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
+//TODO we need to take another look at the name of each class in this file
+//TODO these classes are associated with category or brand product list page
+
 enum ProductParentType {
   category,
   brand
@@ -57,9 +60,7 @@ class ProductScreen extends StatelessWidget {
       child: ProductPage(pageEntity: pageEntity),
     );
   }
-
 }
-
 class ProductPage extends StatelessWidget {
 
   final ProductPageEntity pageEntity;
@@ -127,6 +128,9 @@ class ProductPage extends StatelessWidget {
                         create: (context) => sl<SearchProductsCubit>()..loadInitialSearchProducts(productCollectionResult),
                       ),
                     ],
+                    //TODO from category product list to search product list
+                    //TODO sort and filter does not work properly
+                    //TODO either we should take another look whether to use SearchProductsWidget or introduce a new product list screen
                     child: SearchProductsWidget(
                       onPageChanged: (page) {},
                     ),
@@ -146,10 +150,9 @@ class ProductPage extends StatelessWidget {
 
   String _getTitle(ProductPageEntity entity) {
     if (entity.parentType == ProductParentType.category) {
-      return entity.category?.name ?? '';
+      return entity.category?.name ?? LocalizationConstants.categories;
     } else {
-      return entity.brand?.name ?? '';
+      return entity.brand?.name ?? LocalizationConstants.brands;
     }
   }
-
 }

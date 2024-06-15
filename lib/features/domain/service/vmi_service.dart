@@ -31,7 +31,7 @@ class VMIService extends ServiceBase implements IVmiService {
   @override
   Future<VmiLocationModel?> getClosestVmiLocation() async {
     String key =
-        '${CoreConstants.currentVmiLocationKey}:${_commerceAPIServiceProvider.getClientService().host}:${_commerceAPIServiceProvider.getSessionService().currentSession?.userName}';
+        '${CoreConstants.currentVmiLocationKey}:${_commerceAPIServiceProvider.getClientService().host}:${_commerceAPIServiceProvider.getSessionService().getCachedCurrentSession()?.userName}';
     // VmiLocationModel? closestVmiLocation = await _commerceAPIServiceProvider
     //     .getCacheService()
     //     .loadPersistedData<VmiLocationModel>(key);
@@ -125,7 +125,7 @@ class VMIService extends ServiceBase implements IVmiService {
   void saveCurrentVmiLocation(VmiLocationModel vmiLocation) {
     currentVmiLocation = vmiLocation;
     String key =
-        '${CoreConstants.currentVmiLocationKey}:${_commerceAPIServiceProvider.getClientService().host}:${_commerceAPIServiceProvider.getSessionService().currentSession?.userName}';
+        '${CoreConstants.currentVmiLocationKey}:${_commerceAPIServiceProvider.getClientService().host}:${_commerceAPIServiceProvider.getSessionService().getCachedCurrentSession()?.userName}';
     _commerceAPIServiceProvider.getCacheService().persistData(key, vmiLocation);
   }
 

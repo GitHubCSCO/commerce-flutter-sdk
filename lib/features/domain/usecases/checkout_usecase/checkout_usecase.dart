@@ -20,27 +20,30 @@ class CheckoutUsecase extends BaseUseCase {
   }
 
   Future<Result<Cart, ErrorResponse>> patchCart(Cart cart) async {
-    return await commerceAPIServiceProvider
-        .getCartService()
-        .updateCart(cart);
+    return await commerceAPIServiceProvider.getCartService().updateCart(cart);
   }
 
   Future<Result<PromotionCollectionModel, ErrorResponse>>
-  loadCartPromotions() async {
+      loadCartPromotions() async {
     return await commerceAPIServiceProvider
         .getCartService()
         .getCurrentCartPromotions();
   }
 
   Session? getCurrentSession() {
-    return commerceAPIServiceProvider
-        .getSessionService()
-        .currentSession;
+    return commerceAPIServiceProvider.getSessionService().getCachedCurrentSession();
   }
 
   Future<Result<CartSettings, ErrorResponse>> getCartSetting() {
     return commerceAPIServiceProvider
-        .getSettingsService().getCartSettingAsync();
+        .getSettingsService()
+        .getCartSettingAsync();
   }
 
+  Future<Result<ShipTo, ErrorResponse>> postCurrentBillToShipToAsync(
+      ShipTo shipTo) async {
+    return commerceAPIServiceProvider
+        .getBillToService()
+        .postCurrentBillToShipToAsync(shipTo);
+  }
 }

@@ -13,22 +13,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class CategoryScreen extends StatelessWidget {
-
   const CategoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<CategoryBloc>(
       create: (context) => sl<CategoryBloc>()..add(CategoryLoadEvent()),
-      child: CategoryPage(),
+      child: const CategoryPage(),
     );
   }
-
 }
 
 class CategoryPage extends StatefulWidget {
-
-  CategoryPage({super.key});
+  const CategoryPage({super.key});
 
   @override
   State<CategoryPage> createState() => _CategoryPageState();
@@ -70,8 +67,18 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 
   void _handleCategoryClick(BuildContext context, Category category) {
-    final productPageEntity = ProductPageEntity('', ProductParentType.category, category: category);
-    AppRoute.product.navigateBackStack(context, extra: productPageEntity);
+    if((category.subCategories?.length ?? 0) > 0){
+      AppRoute.shopSubCategory.navigateBackStack(
+        context,
+        //TODO what if id or name is null, we need to take care of that
+        //TODO we should find a better way to pass categorytitle, 
+        //TODO because if category title is long or does have special character it mmight or might not work properly
+        pathParameters: {"categoryId": category.id.toString(), "categoryTitle": category.name.toString()}
+      );
+    }else{
+      final productPageEntity = ProductPageEntity('', ProductParentType.category, category: category);
+      AppRoute.product.navigateBackStack(context, extra: productPageEntity);
+    }
   }
 
   List<ToolMenu> _getToolMenu(BuildContext context) {

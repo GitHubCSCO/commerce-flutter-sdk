@@ -86,7 +86,7 @@ class LocalizationConstants {
   static const shippingMethod = "Shipping Method";
   static const pickUpLocation = "Pick Up Location";
   static const shippingAddress = "Shipping Address";
-  static const recipientAddress = "RECIPIENT ADDRESS";
+  static const recipientAddress = "Recipient Address";
   static const setAsDefault =
       "Set as default and skip this step next time you log in";
   static const cancelSignIn = "Cancel Sign In";
@@ -183,7 +183,7 @@ class LocalizationConstants {
   static const approveOrder = "Approve Order";
   static const orderInformation = "Order Information";
   static const approvingCart = "Approving Cart";
-  static const approvingCartInfos = "Approving {0} for {1}";
+  static const approvingCartInfos = "Approving %s for %s";
 
   // Orders
   static const noOrdersFound = "No Orders Found";
@@ -303,6 +303,7 @@ class LocalizationConstants {
   static const searchPrompt = "Search for products.";
   static const sort = "Sort";
   static const resultsFor = "%s result(s) for '%s'";
+  static const results = "%s result(s)";
   static const searchInsteadFor = "Search instead for {0}";
   static const didYouMean = "Did you mean {0}";
   static const autocompleteCategoryOrBrandCombinedTitle = "{0} in {1}";

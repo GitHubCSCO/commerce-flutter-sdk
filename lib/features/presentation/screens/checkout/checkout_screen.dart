@@ -15,6 +15,7 @@ import 'package:commerce_flutter_app/features/presentation/components/snackbar_c
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/expansion_panel/expansion_panel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/base_checkout.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
@@ -25,6 +26,25 @@ import 'package:commerce_flutter_app/features/presentation/widget/product_list_w
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+
+ReviewOrderEntity prepareReviewOrderEntiity(
+  CheckoutDataLoaded state, BuildContext context
+) {
+  return ReviewOrderEntity(
+      billTo: state.billToAddress,
+      shipTo: state.shipToAddress,
+      warehouse: state.wareHouse,
+      shippingMethod:
+          (state.shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)
+              ? ShippingOption.pickUp
+              : ShippingOption.ship),
+      carriers: state.cart.carriers,
+      cartSettings: state.cartSettings,
+      paymentMethod: context.read<CheckoutBloc>().cart!.paymentMethod,
+      selectedCarrier: state.selectedCarrier,
+      selectedService: state.selectedService,
+      requestDeliveryDate: state.requestDeliveryDate);
+}
 
 class CheckoutScreen extends StatelessWidget {
   final Cart cart;
@@ -44,6 +64,7 @@ class CheckoutScreen extends StatelessWidget {
         BlocProvider<TokenExBloc>(create: (context) => sl<TokenExBloc>()),
         BlocProvider<ReviewOrderCubit>(
             create: (context) => sl<ReviewOrderCubit>()),
+        BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
         BlocProvider<PaymentDetailsBloc>(
           create: (context) => sl<PaymentDetailsBloc>()
             ..add(LoadPaymentDetailsEvent(cart: cart)),
@@ -94,11 +115,17 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
       appBar: buildAppBar(context),
       body: BlocConsumer<CheckoutBloc, CheckoutState>(
         listener: (_, state) {
-          if (state is CheckoutPlaceOrder) {
+          if (state is CheckoutShipToAddressAddedState) {
+            context.read<CheckoutBloc>().add(
+                LoadCheckoutEvent(cart: context.read<CheckoutBloc>().cart!));
+          } else if (state is CheckoutPlaceOrder) {
             context.read<CartCountCubit>().onCartItemChange();
             AppRoute.checkoutSuccess.navigate(context,
                 extra: CheckoutSuccessEntity(
-                    orderNumber: state.orderNumber, isVmiCheckout: false));
+                    orderNumber: state.orderNumber,
+                    isVmiCheckout: false,
+                    cart: context.read<CheckoutBloc>().cart!,
+                    reviewOrderEntity: state.reviewOrderEntity));
           }
         },
         builder: (_, state) {
@@ -122,7 +149,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                               buildSummary(state.cart, state.promotions),
                               BlocBuilder<ExpansionPanelCubit,
                                   ExpansionPanelState>(
-                                builder: (context, panelState) {
+                                builder: (_, panelState) {
                                   List<ExpansionPanelItem>? list;
                                   switch (panelState) {
                                     case ExpansionPanelChangeState():
@@ -147,18 +174,8 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                         state.requestDeliveryDate,
                                   );
 
-                                  final reviewOrderEntity = ReviewOrderEntity(
-                                      billTo: state.billToAddress,
-                                      shipTo: state.shipToAddress,
-                                      warehouse: state.wareHouse,
-                                      shippingMethod: (state.shippingMethod
-                                              .equalsIgnoreCase(
-                                                  ShippingOption.pickUp.name)
-                                          ? ShippingOption.pickUp
-                                          : ShippingOption.ship),
-                                      carriers: state.cart.carriers,
-                                      cartSettings: state.cartSettings,
-                                      paymentMethod: state.cart.paymentMethod);
+                                  final reviewOrderEntity =
+                                      prepareReviewOrderEntiity(state,context);
 
                                   return ExpansionPanelList(
                                     expansionCallback:
@@ -268,6 +285,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                     final service = context
                                         .read<CheckoutBloc>()
                                         .selectedService;
+
                                     if (carrier != null && service != null) {
                                       context
                                           .read<ExpansionPanelCubit>()
@@ -282,9 +300,16 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                     var isCreditCardSectionCompleted = context
                                         .read<PaymentDetailsBloc>()
                                         .isCreditCardSectionCompleted;
-
-                                    if (isPaymentCardType &&
-                                        !isCreditCardSectionCompleted) {
+                                    var isSelectedNewAddedCard = context
+                                        .read<PaymentDetailsBloc>()
+                                        .isSelectedNewAddedCard;
+                                    if (isSelectedNewAddedCard) {
+                                      context
+                                          .read<ExpansionPanelCubit>()
+                                          .onContinueClick();
+                                    } else if (isPaymentCardType &&
+                                        !isCreditCardSectionCompleted &&
+                                        !isSelectedNewAddedCard) {
                                       context
                                           .read<TokenExBloc>()
                                           .add(TokenExValidateEvent());
@@ -312,9 +337,13 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                     }
 
                                   case 2:
-                                    context
-                                        .read<CheckoutBloc>()
-                                        .add(PlaceOrderEvent());
+                                    final reviewOrderEntity =
+                                        prepareReviewOrderEntiity(state,context);
+
+                                    context.read<CheckoutBloc>().add(
+                                        PlaceOrderEvent(
+                                            reviewOrderEntity:
+                                                reviewOrderEntity));
                                   default:
                                     context
                                         .read<ExpansionPanelCubit>()
@@ -322,7 +351,8 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                 }
                               },
                               text: buttonText,
-                              isEnabled: (index == 2 && isCheckoutButtonEnabled == false)
+                              isEnabled: (index == 2 &&
+                                      isCheckoutButtonEnabled == false)
                                   ? false
                                   : true,
                             );
