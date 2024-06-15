@@ -33,7 +33,7 @@ class ProductCarouselSectionWidget extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(16),
                     child: Text(
-                      productCarouselWidgetEntity.title!,
+                      productCarouselWidgetEntity.title ?? productCarouselWidgetEntity.carouselType?.name.toUpperCase() ??'',
                       style: OptiTextStyles.titleLarge,
                     ),
                   ),

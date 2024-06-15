@@ -27,3 +27,5 @@ class PickUpUpdateEvent extends BillToShipToEvent {
 
   PickUpUpdateEvent(this.warehouse);
 }
+
+class SaveBillToShipToEvent extends BillToShipToEvent {}

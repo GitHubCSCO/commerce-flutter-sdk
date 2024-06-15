@@ -8,8 +8,14 @@ class TabSwitchWidget extends StatefulWidget {
   final String tabTitle1;
   final Widget tabWidget0;
   final Widget tabWidget1;
+  final int selectedIndex;
 
-  const TabSwitchWidget({super.key, required this.tabTitle0, required this.tabTitle1, required this.tabWidget0, required this.tabWidget1});
+  const TabSwitchWidget({super.key, 
+        required this.tabTitle0, 
+        required this.tabTitle1, 
+        required this.tabWidget0, 
+        required this.tabWidget1, 
+        this.selectedIndex = 0});
 
   @override
   State<TabSwitchWidget> createState() => _TabSwitchWidgetState();
@@ -18,6 +24,12 @@ class TabSwitchWidget extends StatefulWidget {
 
 class _TabSwitchWidgetState extends State<TabSwitchWidget> {
   int selectedIndex = 0;
+
+  @override
+  void initState() {
+    selectedIndex = widget.selectedIndex;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

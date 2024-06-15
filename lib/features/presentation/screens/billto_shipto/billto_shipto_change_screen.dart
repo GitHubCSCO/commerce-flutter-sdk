@@ -4,13 +4,17 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/address_type.dart';
+import 'package:commerce_flutter_app/features/domain/enums/fullfillment_method_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/location_search_type.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/warehouse_extension.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/warehouse_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/billto_shipto/billto_shipto_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/tab_switch_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -64,63 +68,85 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
         ],
         automaticallyImplyLeading: false,
       ),
-      body: BlocBuilder<BillToShipToBloc, BillToShipToState>(
-        builder: (context, state) {
-          switch (state) {
-            case BillToShipToInitial():
-            case BillToShipToLoading():
-              return const Center(child: CircularProgressIndicator());
-            case BillToShipToLoaded():
-              return Container(
-                color: OptiAppColors.backgroundWhite,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildBillToWidget(state.billToAddress),
-                    const SizedBox(height: 20.0),
-                    TabSwitchWidget(
-                      tabTitle0: LocalizationConstants.ship,
-                      tabTitle1: LocalizationConstants.pickUp,
-                      tabWidget0: _buildShipToWidget(
-                          state.billToAddress, state.shipToAddress),
-                      tabWidget1: _buildPickUpWidget(state.billToAddress,
-                          state.pickUpWarehouse, state.recipientAddress),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 20.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(LocalizationConstants.setAsDefault,
-                                style: OptiTextStyles.body),
-                          ),
-                          Switch(
-                              value: _isSwitched,
-                              onChanged: (value) {
-                                setState(() {
-                                  _isSwitched = value;
-                                });
-                              }),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              );
-            case BillToShipToFailed():
-            default:
-              return const CustomScrollView(
-                slivers: <Widget>[
-                  SliverFillRemaining(
-                    child: Center(
-                      child: Text(LocalizationConstants.error),
-                    ),
-                  ),
-                ],
-              );
+      body: BlocListener<BillToShipToBloc, BillToShipToState>(
+        listener: (context, state) {
+          if (state is SaveBillToShipToSuccess) {
+            CustomSnackBar.showBilltoShipToSuccess(context);
+            context.pop();
+          } else if (state is SaveBillToShipToSuccess) {
+            context.pop();
+            CustomSnackBar.showBilltoShipToFailure(context);
           }
         },
+        child: BlocBuilder<BillToShipToBloc, BillToShipToState>(
+          builder: (context, state) {
+            switch (state) {
+              case BillToShipToInitial():
+              case BillToShipToLoading():
+                return const Center(child: CircularProgressIndicator());
+              case BillToShipToLoaded():
+                return Container(
+                  color: OptiAppColors.backgroundWhite,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildBillToWidget(state.billToAddress),
+                      const SizedBox(height: 20.0),
+                      TabSwitchWidget(
+                        tabTitle0: LocalizationConstants.ship,
+                        tabTitle1: LocalizationConstants.pickUp,
+                        tabWidget0: _buildShipToWidget(
+                            state.billToAddress, state.shipToAddress),
+                        tabWidget1: _buildPickUpWidget(state.billToAddress,
+                            state.pickUpWarehouse, state.recipientAddress),
+                        selectedIndex: (state.hasWillCall && state.selectedShippingMethod == FulfillmentMethodType.PickUp) == true ? 1 : 0,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 20.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(LocalizationConstants.setAsDefault,
+                                  style: OptiTextStyles.body),
+                            ),
+                            Switch(
+                                value: _isSwitched,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _isSwitched = value;
+                                  });
+                                }),
+                          ],
+                        ),
+                      ),
+                      ListInformationBottomSubmitWidget(actions: [
+                        PrimaryButton(
+                          text: LocalizationConstants.save,
+                          onPressed: () {
+                            context
+                                .read<BillToShipToBloc>()
+                                .add(SaveBillToShipToEvent());
+                          },
+                        ),
+                      ]),
+                    ],
+                  ),
+                );
+              case BillToShipToFailed():
+              default:
+                return const CustomScrollView(
+                  slivers: <Widget>[
+                    SliverFillRemaining(
+                      child: Center(
+                        child: Text(LocalizationConstants.error),
+                      ),
+                    ),
+                  ],
+                );
+            }
+          },
+        ),
       ),
     );
   }

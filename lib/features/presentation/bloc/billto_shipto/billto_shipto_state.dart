@@ -11,6 +11,7 @@ class BillToShipToLoaded extends BillToShipToState {
   ShipTo? shipToAddress;
   ShipTo? recipientAddress;
   Warehouse? pickUpWarehouse;
+  FulfillmentMethodType? selectedShippingMethod;
   bool hasWillCall;
 
   BillToShipToLoaded(
@@ -18,7 +19,12 @@ class BillToShipToLoaded extends BillToShipToState {
       required this.shipToAddress,
       required this.recipientAddress,
       required this.pickUpWarehouse,
+      required this.selectedShippingMethod,
       required this.hasWillCall});
 }
 
 class BillToShipToFailed extends BillToShipToState {}
+
+class SaveBillToShipToSuccess extends BillToShipToState {}
+
+class SaveBillToShipToFailed extends BillToShipToState {}
