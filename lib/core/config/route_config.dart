@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_l
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_category_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_approval/order_approval_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
@@ -505,6 +506,20 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
+  // path: /brandCategory
+  final brandCategory = createNode(
+    name: AppRoute.brandCategory.name,
+    path: AppRoute.brandCategory.suffix,
+    builder: (context, state) {
+      //! TODO caution
+      //! TODO we are passing multiple objects through extra using record
+      //! TODO either we need to organize this record in a better way or use any other data structure
+      final brandCategory = state.extra as (Brand, BrandCategory?, GetBrandSubCategoriesResult?);
+      return BrandCategoryScreen(brand: brandCategory.$1, brandCategory: brandCategory.$2, brandSubCategories: brandCategory.$3);
+    },
+    parent: null,
+  );
+
   // path: /product
   final product = createNode(
     name: AppRoute.product.name,
@@ -583,6 +598,7 @@ List<NavigationNode> _getNavigationRoot() {
     billToShipToSelection,
     shopBrand,
     shopBrandDetails,
+    brandCategory,
     shopCategory,
     shopSubCatagory,
     product,

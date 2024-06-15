@@ -6,6 +6,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 part 'product_event.dart';
 part 'product_state.dart';
 
+//TODO confusing name: ProductCollectionBloc or ListProductBloc would've made sense
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   final SearchUseCase _searchUseCase;
@@ -23,8 +24,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     if (event.entity.parentType == ProductParentType.category) {
       result = await _searchUseCase.loadSearchProductsResults('', 1,
           selectedCategoryId: event.entity.category?.id ?? event.entity.categoryId ??'');
-    } else {
+    }else if (event.entity.parentType == ProductParentType.brand) {
       result = await _searchUseCase.loadSearchProductsResults('', 1,
+          selectedCategoryId: event.entity.categoryId,
           selectedBrandIds: [event.entity.brandEntity?.id ?? event.entity.brandEntityId ?? '']);
     }
 

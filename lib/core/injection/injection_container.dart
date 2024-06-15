@@ -25,6 +25,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecas
 import 'package:commerce_flutter_app/features/domain/usecases/add_credit_card_usecase/add_credit_card_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/add_shipping_address_usecase/add_shipping_address_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/brand_category_usecase/brand_category_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/brand_usecase/brand_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/billto_shipto_usecase/address_selection/billto_shipto_address_selection_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/billto_shipto_usecase/billto_shipto_usecase.dart';
@@ -78,6 +79,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.
 import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/billto_shipto/address_selection/billto_shipto_address_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/billto_shipto/billto_shipto_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/brand_category/brand_category_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
@@ -301,6 +303,9 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => BrandListCubit(brandUseCase: sl()))
     ..registerFactory(() => BrandDetailsCubit(brandUseCase: sl()))
     ..registerFactory(() => BrandUseCase())
+
+    ..registerFactory(() => BrandCategoryBloc(brandCategoryUseCase: sl()))
+    ..registerFactory(() => BrandCategoryUseCase())
 
     //cart
     ..registerFactory(() => CartPageBloc(cartUseCase: sl()))

@@ -74,11 +74,11 @@ class BrandDetailsPage extends StatelessWidget {
                     BrandInfoWidget(brandEntity: state.brandDetailsEntity.brandEntity),
                     if((state.brandDetailsEntity.brandCategories?.length ?? 0) > 0) ...[
                       const SizedBox(height: 8),
-                      CategoryCarouselWidget(list: state.brandDetailsEntity.brandCategories),
+                      CategoryCarouselWidget(brand: brand, list: state.brandDetailsEntity.brandCategories),
                     ],
                     if((state.brandDetailsEntity.brandProductLines?.length ?? 0) > 0) ...[
                       const SizedBox(height: 8),
-                      BrandProductLinesWidget(list: state.brandDetailsEntity.brandProductLines),
+                      BrandProductLinesWidget(brand: brand, list: state.brandDetailsEntity.brandProductLines),
                     ],
                     if((state.brandDetailsEntity.brandEntity?.topSellerProducts?.length ?? 0) > 0) ...[
                       const SizedBox(height: 8),
@@ -165,8 +165,9 @@ class BrandInfoWidget extends StatelessWidget {
 class CategoryCarouselWidget extends StatelessWidget {
 
   final List<BrandCategory>? list;
+  final Brand brand;
 
-  const CategoryCarouselWidget({super.key, required this.list});
+  const CategoryCarouselWidget({super.key, required this.brand, required this.list});
 
   @override
   Widget build(BuildContext context) {
@@ -195,23 +196,46 @@ class CategoryCarouselWidget extends StatelessWidget {
               separatorBuilder: (context, index) =>
               const SizedBox(width: 12),
               itemBuilder: (context, index) {
-                final category = list?[index];
+                final brandCategory = list?[index];
                 return InkWell(
-                  onTap: () {
-                    if((category?.subCategories?.length ?? 0) > 0 && category?.categoryId.isNullOrEmpty == false){
-                      AppRoute.shopSubCategory.navigateBackStack(
+                  onTap: () async {
+                    //TODO need to fix it. This is anti pattern
+                    var result = await context.read<BrandDetailsCubit>().onSelectBrandCategory(brandCategory);
+                    if(result?.subCategories?.isNotEmpty == true){
+                      AppRoute.brandCategory.navigateBackStack(
                         context,
-                        //TODO SubCategoryScreen might be redundant, we might be able to use categoryscreen do the same thing
-                        //TODO what if id and name is null, we need to take care of that
-                        pathParameters: {"categoryId": category!.categoryId!.toString() , "categoryTitle": category.categoryName.toString()}
+                        extra: (brand, brandCategory, null)
                       );
                     }else{
-                      final productPageEntity = ProductPageEntity('', ProductParentType.category, categoryId: category?.categoryId, categoryTitle: category?.categoryName);
-                      AppRoute.product.navigateBackStack(context, extra: productPageEntity);
+                      final productPageEntity = ProductPageEntity(
+                        '', 
+                        ProductParentType.brand, 
+                        brandEntityId: brandCategory?.brandId, 
+                        brandEntityTitle: brandCategory?.categoryName,
+                      );
+                      AppRoute.product.navigateBackStack(context, extra: productPageEntity); 
                     }
+                    // //! TODO caution
+                    // //! TODO we are passing multiple objects through extra using record
+                    // //! TODO either we need to organize this record in a better way or use any other data structure
+                    // if((brandCategory?.subCategories?.length ?? 0) > 0 && brandCategory?.categoryId.isNullOrEmpty == false){
+                    //   AppRoute.brandCategory.navigateBackStack(
+                    //     context,
+                    //     extra: (brand, brandCategory, null)
+                    //   );
+                    // }else{
+                    //   final productPageEntity = ProductPageEntity(
+                    //     '', 
+                    //     ProductParentType.brand, 
+                    //     brandEntityId: brandCategory?.brandId, 
+                    //     brandEntityTitle: brandCategory?.categoryName,
+                    //   );
+                    //   AppRoute.product.navigateBackStack(context, extra: productPageEntity);
+                    // }
                   },
                   child: CategoryCarouselItemWidget(
-                      category: category),
+                    category: brandCategory,
+                  ),
                 );
               },
             ),
@@ -220,7 +244,14 @@ class CategoryCarouselWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
             child: TertiaryButton(
               onPressed: () {
-                  CustomSnackBar.showComingSoonSnackBar(context);
+                  //! TODO caution
+                  //! TODO we are passing multiple objects through extra using record
+                  //! TODO either we need to organize this record in a better way or use any other data structure
+                  AppRoute.brandCategory.navigateBackStack(
+                    context,
+                    extra: (brand, null, null)
+                  );
+                  // CustomSnackBar.showComingSoonSnackBar(context);
               },
               child: const Text(LocalizationConstants.shopAllBrandCategories),
             ),
@@ -297,8 +328,9 @@ class CategoryCarouselItemWidget extends StatelessWidget {
 class BrandProductLinesWidget extends StatelessWidget {
 
   final List<BrandProductLine>? list;
+  final Brand brand;
 
-  const BrandProductLinesWidget({super.key, required this.list});
+  const BrandProductLinesWidget({super.key, required this.brand, required this.list});
 
   @override
   Widget build(BuildContext context) {

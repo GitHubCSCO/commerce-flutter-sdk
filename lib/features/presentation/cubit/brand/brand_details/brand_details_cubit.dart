@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/brand_usecase/brand_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_details_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,4 +19,12 @@ class BrandDetailsCubit extends Cubit<BrandDetailsState> {
     emit(BrandDetailsLoaded(brandDetailsEntity: response));
   }
 
+  Future<GetBrandSubCategoriesResult?> onSelectBrandCategory(BrandCategory? brandCategory) async {
+    final brandCategoriesQueryParameter = BrandCategoriesQueryParameter(
+      brandId: brandCategory?.brandId,
+      categoryId: brandCategory?.categoryId
+    );
+    final response = await _brandUseCase.getBrandCategorySubCategories(brandCategoriesQueryParameter);
+    return response.getResultSuccessValue();
+  }
 }

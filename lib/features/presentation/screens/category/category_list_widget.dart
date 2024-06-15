@@ -4,10 +4,10 @@ import 'package:commerce_flutter_app/features/domain/extensions/url_string_exten
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class CategoryListWidget extends StatelessWidget {
+class CategoryListWidget<T extends BaseModel> extends StatelessWidget {
 
-  final List<Category> list;
-  final Function(BuildContext, Category) callback;
+  final List<T> list;
+  final Function(BuildContext, T) callback;
 
   const CategoryListWidget({super.key, required this.list, required this.callback});
 
@@ -24,7 +24,7 @@ class CategoryListWidget extends StatelessWidget {
         ),
         itemBuilder: (context, index) {
           final category = list[index];
-          return CategoryListItemWidget(callback: callback, category: category);
+          return CategoryListItemWidget<T>(callback: callback, item: category);
         },
       ),
     );
@@ -32,15 +32,29 @@ class CategoryListWidget extends StatelessWidget {
 
 }
 
-class CategoryListItemWidget extends StatelessWidget {
+class CategoryListItemWidget<T extends BaseModel> extends StatelessWidget {
 
-  final Category category;
-  final Function(BuildContext, Category) callback;
+  final T item;
+  final Function(BuildContext, T) callback;
 
-  const CategoryListItemWidget({super.key, required this.category, required this.callback});
+  const CategoryListItemWidget({super.key, required this.item, required this.callback});
 
   @override
   Widget build(BuildContext context) {
+    String imagePath;
+    String description;
+
+    if (item is Category) {
+      imagePath = (item as Category).smallImagePath ?? '';
+      description = (item as Category).shortDescription ?? '';
+    } else if (item is BrandCategory) {
+      imagePath = (item as BrandCategory).featuredImagePath ?? '';
+      description = (item as BrandCategory).categoryName ?? '';
+    } else {
+      imagePath = '';
+      description = '';
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: const BoxDecoration(color: Colors.white),
@@ -59,7 +73,7 @@ class CategoryListItemWidget extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
-                  category.smallImagePath.makeImageUrl(),
+                  imagePath.makeImageUrl(),
                   fit: BoxFit.cover,
                   errorBuilder: (BuildContext context, Object error,
                       StackTrace? stackTrace) {
@@ -82,7 +96,7 @@ class CategoryListItemWidget extends StatelessWidget {
           const SizedBox(width: 11),
           Expanded(
             child: Text(
-              category.shortDescription ?? "",
+              description,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
               style: OptiTextStyles.bodySmall,
