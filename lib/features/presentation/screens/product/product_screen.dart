@@ -20,21 +20,24 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 enum ProductParentType {
   category,
-  brand
+  brand,
+  brandProductLine
 }
 
 class ProductPageEntity {
 
   String query = '';
   ProductParentType parentType;
+  String? pageTitle;
   Category? category;
   String? categoryId;
   String? categoryTitle;
   BrandEntity? brandEntity;
   String? brandEntityId;
   String? brandEntityTitle;
+  BrandProductLine? brandProductLine;
 
-  ProductPageEntity(this.query, this.parentType, {this.category, this.categoryId, this.categoryTitle, this.brandEntity, this.brandEntityId, this.brandEntityTitle});
+  ProductPageEntity(this.query, this.parentType, {this.pageTitle, this.category, this.categoryId, this.categoryTitle, this.brandEntity, this.brandEntityId, this.brandEntityTitle, this.brandProductLine});
 
   ProductPageEntity copyWith({
     String? query,
@@ -164,8 +167,10 @@ class ProductPage extends StatelessWidget {
   String _getTitle(ProductPageEntity entity) {
     if (entity.parentType == ProductParentType.category) {
       return entity.category?.name ?? entity.categoryTitle ?? LocalizationConstants.categories;
-    } else {
+    } else if (entity.parentType == ProductParentType.brand) {
       return entity.brandEntity?.name ?? entity.brandEntityTitle ?? LocalizationConstants.brands;
+    }else{
+      return entity.pageTitle ?? "Product list";
     }
   }
 }

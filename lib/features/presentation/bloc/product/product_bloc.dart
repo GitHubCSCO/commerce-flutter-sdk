@@ -28,6 +28,11 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       result = await _searchUseCase.loadSearchProductsResults('', 1,
           selectedCategoryId: event.entity.categoryId,
           selectedBrandIds: [event.entity.brandEntity?.id ?? event.entity.brandEntityId ?? '']);
+    }else if (event.entity.parentType == ProductParentType.brandProductLine) {
+      result = await _searchUseCase.loadSearchProductsResults('', 1,
+          selectedCategoryId: event.entity.categoryId,
+          selectedProductLineIds: [event.entity.brandProductLine?.id ?? ''],
+          selectedBrandIds: [event.entity.brandEntity?.id ?? event.entity.brandEntityId ?? '']);
     }
 
     switch (result) {

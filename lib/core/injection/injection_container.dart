@@ -26,6 +26,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/add_credit_card_us
 import 'package:commerce_flutter_app/features/domain/usecases/add_shipping_address_usecase/add_shipping_address_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/brand_category_usecase/brand_category_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/brand_product_lines_usecase/brand_product_lines_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/brand_usecase/brand_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/billto_shipto_usecase/address_selection/billto_shipto_address_selection_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/billto_shipto_usecase/billto_shipto_usecase.dart';
@@ -113,6 +114,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/biometric_optio
 import 'package:commerce_flutter_app/features/presentation/cubit/bottom_menu_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_details/brand_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_list/brand_list_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_product_line/brand_product_line_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_section/brand_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/card_expiration_cubit.dart/card_expiration_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
@@ -306,6 +308,9 @@ Future<void> initInjectionContainer() async {
 
     ..registerFactory(() => BrandCategoryBloc(brandCategoryUseCase: sl()))
     ..registerFactory(() => BrandCategoryUseCase())
+
+    ..registerFactory(() => BrandProductLinesCubit(brandProductLinesUseCase: sl()))
+    ..registerFactory(() => BrandProductLinesUseCase())
 
     //cart
     ..registerFactory(() => CartPageBloc(cartUseCase: sl()))

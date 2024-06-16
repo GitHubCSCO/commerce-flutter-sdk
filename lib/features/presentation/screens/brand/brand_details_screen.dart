@@ -8,7 +8,6 @@ import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_details/brand_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
@@ -375,7 +374,10 @@ class BrandProductLinesWidget extends StatelessWidget {
             child: TertiaryButton(
               backgroundColor: OptiAppColors.grayBackgroundColor,
               onPressed: () {
-
+                  AppRoute.brandProductLines.navigateBackStack(
+                    context,
+                    extra: brand
+                  );
               },
               child: const Text(LocalizationConstants.shopAllBrandProductLines),
             ),

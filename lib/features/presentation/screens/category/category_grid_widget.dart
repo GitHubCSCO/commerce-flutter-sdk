@@ -58,6 +58,9 @@ class CategoryGridItemWidget<T extends BaseModel> extends StatelessWidget {
     } else if (item is GetBrandSubCategoriesResult) {
       imagePath = (item as GetBrandSubCategoriesResult).featuredImagePath ?? '';
       description = (item as GetBrandSubCategoriesResult).categoryName ?? '';
+    } else if (item is BrandProductLine) {
+      imagePath = (item as BrandProductLine).featuredImagePath ?? '';
+      description = (item as BrandProductLine).name ?? '';
     } else {
       imagePath = '';
       description = '';

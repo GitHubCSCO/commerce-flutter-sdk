@@ -11,6 +11,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_category_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_product_lines_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_approval/order_approval_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
@@ -520,6 +521,18 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
+  // path: /brandProductLines
+  final brandProductLines = createNode(
+    name: AppRoute.brandProductLines.name,
+    path: AppRoute.brandProductLines.suffix,
+    builder: (context, state) {
+      //! TODO caution
+      final brand = state.extra as Brand;
+      return BrandProductLinesScreen(brand: brand);
+    },
+    parent: null,
+  );
+
   // path: /product
   final product = createNode(
     name: AppRoute.product.name,
@@ -599,6 +612,7 @@ List<NavigationNode> _getNavigationRoot() {
     shopBrand,
     shopBrandDetails,
     brandCategory,
+    brandProductLines,
     shopCategory,
     shopSubCatagory,
     product,

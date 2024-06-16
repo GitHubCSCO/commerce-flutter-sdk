@@ -39,6 +39,7 @@ class RouteNames {
   static const String shopBrand = 'shopBrand';
   static const String shopBrandDetails = 'shopBrandDetails';
   static const String brandCategory = 'brandCategory';
+  static const String brandProductLines = 'brandProductLines';
   static const String billToShipToChange = 'billToShipToChange';
   static const String billToShipToSelection = 'billToShipToSelection';
   static const String savedOrders = 'savedOrders';
@@ -96,6 +97,7 @@ class RoutePaths {
   static const String shopBrand = '/${RouteNames.shopBrand}';
   static const String shopBrandDetails = '/${RouteNames.shopBrandDetails}';
   static const String brandCategory = '/${RouteNames.brandCategory}';
+  static const String brandProductLines = '/${RouteNames.brandProductLines}';
   static const String billToShipToChange = '/${RouteNames.billToShipToChange}';
   static const String billToShipToSelection =
       '/${RouteNames.billToShipToSelection}';
@@ -194,6 +196,8 @@ enum AppRoute {
       name: RouteNames.shopBrandDetails, fullPath: RoutePaths.shopBrandDetails),
   brandCategory(
       name: RouteNames.brandCategory, fullPath: RoutePaths.brandCategory),
+  brandProductLines(
+        name: RouteNames.brandProductLines, fullPath: RoutePaths.brandProductLines),
   savedPayments(
       name: RouteNames.savedPayments, fullPath: RoutePaths.savedPayments),
   orderApproval(
