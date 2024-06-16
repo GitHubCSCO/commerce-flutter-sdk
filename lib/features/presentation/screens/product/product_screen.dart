@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product/product_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
@@ -19,29 +20,44 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 enum ProductParentType {
   category,
-  brand
+  brand,
+  brandProductLine
 }
 
 class ProductPageEntity {
 
   String query = '';
   ProductParentType parentType;
+  String? pageTitle;
   Category? category;
-  Brand? brand;
+  String? categoryId;
+  String? categoryTitle;
+  BrandEntity? brandEntity;
+  String? brandEntityId;
+  String? brandEntityTitle;
+  BrandProductLine? brandProductLine;
 
-  ProductPageEntity(this.query, this.parentType, {this.category, this.brand});
+  ProductPageEntity(this.query, this.parentType, {this.pageTitle, this.category, this.categoryId, this.categoryTitle, this.brandEntity, this.brandEntityId, this.brandEntityTitle, this.brandProductLine});
 
   ProductPageEntity copyWith({
     String? query,
     ProductParentType? parentType,
     Category? category,
-    Brand? brand,
+    String? categoryId,
+    String? categoryTitle,
+    BrandEntity? brandEntity,
+    String? brandEntityId,
+    String? brandEntityTitle,
   }) {
     return ProductPageEntity(
       query ?? this.query,
       parentType ?? this.parentType,
       category: category ?? this.category,
-      brand: brand ?? this.brand,
+      categoryId: categoryId ?? this.categoryId,
+      categoryTitle: categoryTitle ?? this.categoryTitle,
+      brandEntity: brandEntity ?? this.brandEntity,
+      brandEntityId: brandEntityId ?? this.brandEntityId,
+      brandEntityTitle: brandEntityTitle ?? this.brandEntityTitle,
     );
   }
 
@@ -64,13 +80,8 @@ class ProductScreen extends StatelessWidget {
 class ProductPage extends StatelessWidget {
 
   final ProductPageEntity pageEntity;
-  late final String pageTitle;
 
-  ProductPage({super.key, required this.pageEntity}){
-    pageTitle = pageEntity.category?.name ?? 
-            pageEntity.brand?.name ?? 
-            (pageEntity.parentType == ProductParentType.category ? LocalizationConstants.categories : LocalizationConstants.brands);
-  }
+  ProductPage({super.key, required this.pageEntity});
 
   final textEditingController = TextEditingController();
 
@@ -79,8 +90,7 @@ class ProductPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            pageTitle, 
-            style: OptiTextStyles.titleLarge),
+            _getTitle(pageEntity), style: OptiTextStyles.titleLarge),
         actions: [
           BottomMenuWidget(isViewOnWebsiteEnable: false,
               toolMenuList: []),
@@ -152,5 +162,15 @@ class ProductPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _getTitle(ProductPageEntity entity) {
+    if (entity.parentType == ProductParentType.category) {
+      return entity.category?.name ?? entity.categoryTitle ?? LocalizationConstants.categories;
+    } else if (entity.parentType == ProductParentType.brand) {
+      return entity.brandEntity?.name ?? entity.brandEntityTitle ?? LocalizationConstants.brands;
+    }else{
+      return entity.pageTitle ?? "Product list";
+    }
   }
 }

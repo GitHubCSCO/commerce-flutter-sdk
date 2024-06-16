@@ -1,7 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/credit_card_add_callback_helper.dart';
@@ -11,12 +10,16 @@ import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_l
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_category_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_product_lines_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_approval/order_approval_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_change_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/biometric/biometric_login_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/sub_category_screen.dart';
@@ -462,7 +465,9 @@ List<NavigationNode> _getNavigationRoot() {
         final entity = state.extra as BillToShipToAddressSelectionEntity;
         return BillToShipToAddressSelectionScreen(
             billToShipToAddressSelectionEntity: entity);
-      });
+      },
+  );
+  
   // path: /shopCategory
   final shopCategory = createNode(
     name: AppRoute.shopCategory.name,
@@ -482,16 +487,62 @@ List<NavigationNode> _getNavigationRoot() {
     },
     parent: null,
   );
+  
+  // path: /shopBrand
+  final shopBrand = createNode(
+    name: AppRoute.shopBrand.name,
+    path: AppRoute.shopBrand.suffix,
+    builder: (context, state) => const BrandScreen(),
+    parent: null,
+  );
+
+  // path: /shopBrandDetails
+  final shopBrandDetails = createNode(
+    name: AppRoute.shopBrandDetails.name,
+    path: AppRoute.shopBrandDetails.suffix,
+    builder: (context, state) {
+      final brand = state.extra as Brand;
+      return BrandDetailsScreen(brand: brand);
+    },
+    parent: null,
+  );
+
+  // path: /brandCategory
+  final brandCategory = createNode(
+    name: AppRoute.brandCategory.name,
+    path: AppRoute.brandCategory.suffix,
+    builder: (context, state) {
+      //! TODO caution
+      //! TODO we are passing multiple objects through extra using record
+      //! TODO either we need to organize this record in a better way or use any other data structure
+      final brandCategory = state.extra as (Brand, BrandCategory?, GetBrandSubCategoriesResult?);
+      return BrandCategoryScreen(brand: brandCategory.$1, brandCategory: brandCategory.$2, brandSubCategories: brandCategory.$3);
+    },
+    parent: null,
+  );
+
+  // path: /brandProductLines
+  final brandProductLines = createNode(
+    name: AppRoute.brandProductLines.name,
+    path: AppRoute.brandProductLines.suffix,
+    builder: (context, state) {
+      //! TODO caution
+      final brand = state.extra as Brand;
+      return BrandProductLinesScreen(brand: brand);
+    },
+    parent: null,
+  );
 
   // path: /product
   final product = createNode(
-      name: AppRoute.product.name,
-      path: AppRoute.product.suffix,
-      builder: (context, state) {
-        final entity = state.extra as ProductPageEntity;
-        return ProductScreen(pageEntity: entity);
-      },
-      parent: null);
+    name: AppRoute.product.name,
+    path: AppRoute.product.suffix,
+    builder: (_, state) {
+      final entity = state.extra as ProductPageEntity;
+      return ProductScreen(pageEntity: entity);
+    },
+    parent: null,
+  );
 
   // path: /account/savedOrders
   final savedOrders = createNode(
@@ -558,6 +609,10 @@ List<NavigationNode> _getNavigationRoot() {
     locationSearch,
     billToShipToChange,
     billToShipToSelection,
+    shopBrand,
+    shopBrandDetails,
+    brandCategory,
+    brandProductLines,
     shopCategory,
     shopSubCatagory,
     product,

@@ -4,10 +4,10 @@ import 'package:commerce_flutter_app/features/domain/extensions/url_string_exten
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class CategoryGridWidget extends StatelessWidget {
+class CategoryGridWidget<T extends BaseModel> extends StatelessWidget {
 
-  final List<Category> list;
-  final Function(BuildContext, Category) callback;
+  final List<T> list;
+  final Function(BuildContext, T) callback;
 
   const CategoryGridWidget({super.key, required this.list, required this.callback});
 
@@ -23,7 +23,7 @@ class CategoryGridWidget extends StatelessWidget {
           const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
       itemBuilder: (context, index) {
         final category = list[index];
-        return CategoryGridItemWidget(height: itemHeight, category: category, callback: callback);
+        return CategoryGridItemWidget<T>(height: itemHeight, item: category, callback: callback);
       },
     );
   }
@@ -36,19 +36,39 @@ class CategoryGridWidget extends StatelessWidget {
 
 }
 
-class CategoryGridItemWidget extends StatelessWidget {
+class CategoryGridItemWidget<T extends BaseModel> extends StatelessWidget {
 
   final double height;
-  final Category category;
-  final Function(BuildContext, Category) callback;
+  final T item;
+  final Function(BuildContext, T) callback;
 
-  const CategoryGridItemWidget({super.key, required this.height, required this.category, required this.callback});
+  const CategoryGridItemWidget({super.key, required this.height, required this.item, required this.callback});
 
   @override
   Widget build(BuildContext context) {
+    String imagePath;
+    String description;
+
+    if (item is Category) {
+      imagePath = (item as Category).smallImagePath ?? '';
+      description = (item as Category).shortDescription ?? '';
+    } else if (item is BrandCategory) {
+      imagePath = (item as BrandCategory).featuredImagePath ?? '';
+      description = (item as BrandCategory).categoryName ?? '';
+    } else if (item is GetBrandSubCategoriesResult) {
+      imagePath = (item as GetBrandSubCategoriesResult).featuredImagePath ?? '';
+      description = (item as GetBrandSubCategoriesResult).categoryName ?? '';
+    } else if (item is BrandProductLine) {
+      imagePath = (item as BrandProductLine).featuredImagePath ?? '';
+      description = (item as BrandProductLine).name ?? '';
+    } else {
+      imagePath = '';
+      description = '';
+    }
+
     return InkWell(
       onTap: () {
-        callback(context, category);
+        callback(context, item);
       },
       child: Container(
         color: OptiAppColors.backgroundWhite,
@@ -60,7 +80,7 @@ class CategoryGridItemWidget extends StatelessWidget {
               padding: const EdgeInsets.all(2),
               height: height,
               child: Image.network(
-                category.smallImagePath.makeImageUrl(),
+                imagePath.makeImageUrl(),
                 fit: BoxFit.cover,
                 errorBuilder: (BuildContext context, Object error,
                     StackTrace? stackTrace) {
@@ -83,7 +103,7 @@ class CategoryGridItemWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
               alignment: Alignment.center,
               child: Text(
-                category.shortDescription ?? '',
+                description,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,

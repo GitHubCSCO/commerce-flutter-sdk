@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/models/expansion_panel_item.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shipping_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
@@ -149,7 +150,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                               BlocBuilder<ExpansionPanelCubit,
                                   ExpansionPanelState>(
                                 builder: (_, panelState) {
-                                  List<Item>? list;
+                                  List<ExpansionPanelItem>? list;
                                   switch (panelState) {
                                     case ExpansionPanelChangeState():
                                       list = panelState.list;

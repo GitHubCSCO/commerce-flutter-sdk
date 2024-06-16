@@ -144,6 +144,10 @@ class BaseActionItemWidget extends StatelessWidget {
         return () {
           AppRoute.shopCategory.navigateBackStack(context);
         };
+      case ActionType.brands:
+        return () {
+          AppRoute.shopBrand.navigateBackStack(context);
+        };
       case ActionType.locationFinder:
         return () {
           AppRoute.locationSearch.navigateBackStack(context,
