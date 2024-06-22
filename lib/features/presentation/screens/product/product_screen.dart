@@ -140,7 +140,9 @@ class ProductPage extends StatelessWidget {
                         create: (context) => sl<AddToCartCubit>(),
                       ),
                       BlocProvider(
-                        create: (context) => sl<SearchProductsCubit>()..loadInitialSearchProducts(productCollectionResult),
+                        create: (context) => sl<SearchProductsCubit>()
+                          ..setProductFilter(pageEntity)
+                          ..loadInitialSearchProducts(productCollectionResult),
                       ),
                     ],
                     //TODO from category product list to search product list
