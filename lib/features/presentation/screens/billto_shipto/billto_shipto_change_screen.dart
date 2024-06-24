@@ -41,7 +41,9 @@ class BillToShipToChangePage extends StatefulWidget {
 }
 
 class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
+
   bool _isSwitched = false;
+  bool _isSaveEnable = false;
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +87,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
               case BillToShipToLoading():
                 return const Center(child: CircularProgressIndicator());
               case BillToShipToLoaded():
+                _isSaveEnable = context.read<BillToShipToBloc>().saveButtonEnable();
                 return Container(
                   color: OptiAppColors.backgroundWhite,
                   child: Column(
@@ -99,7 +102,23 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                             state.billToAddress, state.shipToAddress),
                         tabWidget1: _buildPickUpWidget(state.billToAddress,
                             state.pickUpWarehouse, state.recipientAddress),
-                        selectedIndex: (state.hasWillCall && state.selectedShippingMethod == FulfillmentMethodType.PickUp) == true ? 1 : 0,
+                        selectedIndex: (state.hasWillCall &&
+                                    state.selectedShippingMethod ==
+                                        FulfillmentMethodType.PickUp) ==
+                                true
+                            ? 1
+                            : 0,
+                        onTabSelectionChange: (index) {
+                          final type = index == 1
+                              ? FulfillmentMethodType.PickUp
+                              : FulfillmentMethodType.Ship;
+                          context.read<BillToShipToBloc>().add(FulfillmentMethodUpdateEvent(type));
+                          bool isEnable = context.read<BillToShipToBloc>().saveButtonEnable(
+                              fulfillmentMethodType: type);
+                          setState(() {
+                            _isSaveEnable = isEnable;
+                          });
+                        },
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -123,6 +142,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                       ListInformationBottomSubmitWidget(actions: [
                         PrimaryButton(
                           text: LocalizationConstants.save,
+                          isEnabled: _isSaveEnable,
                           onPressed: () {
                             context
                                 .read<BillToShipToBloc>()
@@ -227,8 +247,6 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
         children: [
           InkWell(
             onTap: () {
-              print("object");
-
               AppRoute.locationSearch.navigateBackStack(context,
                   extra: VMILocationSelectCallbackHelper(
                       onSelectVMILocation: (location) {},
@@ -308,4 +326,5 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
       context.read<BillToShipToBloc>().add(ShipToUpdateEvent(result));
     }
   }
+
 }

@@ -25,6 +25,7 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
     on<BillToUpdateEvent>((event, emit) => _onBillToUpdateEvent(event, emit));
     on<ShipToUpdateEvent>((event, emit) => _onShipToUpdateEvent(event, emit));
     on<PickUpUpdateEvent>((event, emit) => _onPickUpUpdateEvent(event, emit));
+    on<FulfillmentMethodUpdateEvent>((event, emit) => _onFulfillmentMethodUpdateEvent(event, emit));
     on<SaveBillToShipToEvent>(
         (event, emit) => _onSaveBillToShipToEvent(event, emit));
   }
@@ -33,6 +34,8 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
       BillToUpdateEvent event, Emitter<BillToShipToState> emit) async {
     emit(BillToShipToLoading());
     billToAddress = event.billToAddress;
+    shipToAddress = null;
+    recipientAddress = null;
     emit(BillToShipToLoaded(
         billToAddress: billToAddress,
         shipToAddress: shipToAddress,
@@ -45,8 +48,11 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
   Future<void> _onShipToUpdateEvent(
       ShipToUpdateEvent event, Emitter<BillToShipToState> emit) async {
     emit(BillToShipToLoading());
-    shipToAddress = event.shipToAddress;
-    selectedShippingMethod = FulfillmentMethodType.Ship;
+    if (selectedShippingMethod == FulfillmentMethodType.PickUp) {
+      recipientAddress = event.shipToAddress;
+    } else if (selectedShippingMethod == FulfillmentMethodType.Ship) {
+      shipToAddress = event.shipToAddress;
+    }
     emit(BillToShipToLoaded(
         billToAddress: billToAddress,
         shipToAddress: shipToAddress,
@@ -100,17 +106,19 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
     }
   }
 
+  void _onFulfillmentMethodUpdateEvent(
+      FulfillmentMethodUpdateEvent event, Emitter<BillToShipToState> emit) {
+    selectedShippingMethod = event.fulfillmentMethodType;
+  }
+
   Future<void> _onSaveBillToShipToEvent(
       SaveBillToShipToEvent event, Emitter<BillToShipToState> emit) async {
     emit(BillToShipToLoading());
 
-    if (selectedShippingMethod == FulfillmentMethodType.PickUp)
-    {
-        shipToRecipientAddress = recipientAddress;
-    } 
-    else if (selectedShippingMethod == FulfillmentMethodType.Ship)
-    {
-        shipToRecipientAddress = shipToAddress;
+    if (selectedShippingMethod == FulfillmentMethodType.PickUp) {
+      shipToRecipientAddress = recipientAddress;
+    } else if (selectedShippingMethod == FulfillmentMethodType.Ship) {
+      shipToRecipientAddress = shipToAddress;
     }
 
     var patchedSession = await _billToShipToUseCase.updateCurrentSession(
@@ -125,4 +133,15 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
       emit(SaveBillToShipToFailed());
     }
   }
+
+  bool saveButtonEnable({FulfillmentMethodType? fulfillmentMethodType}) {
+    final type = fulfillmentMethodType ?? selectedShippingMethod;
+
+    if (type == FulfillmentMethodType.PickUp) {
+      return recipientAddress != null && pickUpWarehouse != null;
+    } else {
+      return shipToAddress != null;
+    }
+  }
+
 }
