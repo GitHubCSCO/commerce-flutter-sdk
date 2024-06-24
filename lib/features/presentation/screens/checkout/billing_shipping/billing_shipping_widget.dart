@@ -351,6 +351,12 @@ class ShippingAddressWidget extends StatelessWidget {
             style: OptiTextStyles.subtitle,
           ),
           const SizedBox(height: 8),
+          if (companyName.isNullOrEmpty && fullAddress.isNullOrEmpty && countryName.isNullOrEmpty)
+            Text(
+              LocalizationConstants.selectShippingAddress,
+              textAlign: TextAlign.start,
+              style: OptiTextStyles.bodyFade,
+            ),
           if (!companyName.isNullOrEmpty)
             Text(
               companyName ?? '',
@@ -482,6 +488,12 @@ class PickupLocationWidget extends StatelessWidget {
           style: OptiTextStyles.subtitle,
         ),
         const SizedBox(height: 8),
+        if (description.isNullOrEmpty && address.isNullOrEmpty && city.isNullOrEmpty && phone.isNullOrEmpty)
+          Text(
+            LocalizationConstants.selectPickUpLocation,
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.bodyFade,
+          ),
         if (!description.isNullOrEmpty)
           Text(
             description ?? '',
