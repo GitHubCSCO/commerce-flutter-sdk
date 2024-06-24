@@ -485,6 +485,7 @@ class OrderPaymentSectionWidget extends StatelessWidget {
                     }
 
                     return TwoTextsRow(
+                      maxLines: 3,
                       label: promotion.promotionLabel,
                       value: promotion.promotionValue,
                       textStyle: OptiTextStyles.body.copyWith(
