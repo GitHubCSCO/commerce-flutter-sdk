@@ -34,6 +34,8 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
       BillToUpdateEvent event, Emitter<BillToShipToState> emit) async {
     emit(BillToShipToLoading());
     billToAddress = event.billToAddress;
+    shipToAddress = null;
+    recipientAddress = null;
     emit(BillToShipToLoaded(
         billToAddress: billToAddress,
         shipToAddress: shipToAddress,

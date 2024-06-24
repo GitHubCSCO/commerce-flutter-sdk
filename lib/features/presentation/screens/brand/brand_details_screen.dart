@@ -363,7 +363,14 @@ class BrandProductLinesWidget extends StatelessWidget {
                 final brandProductLine = list?[index];
                 return InkWell(
                   onTap: () {
-
+                    final productPageEntity = ProductPageEntity(
+                      '',
+                      ProductParentType.brandProductLine,
+                      brandProductLine: brandProductLine,
+                      brandEntityId: brand.id,
+                      pageTitle: brandProductLine?.name,
+                    );
+                    AppRoute.product.navigateBackStack(context, extra: productPageEntity);
                   },
                   child: BrandProductLinesItemWidget(
                       brandProductLine: brandProductLine),
