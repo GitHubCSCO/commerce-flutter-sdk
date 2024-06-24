@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_list/brand_list_cubit.dart';
@@ -26,7 +27,9 @@ class BrandScreen extends StatelessWidget {
 
 class BrandPage extends StatelessWidget {
 
-  BrandPage({super.key});
+  final websitePath = WebsitePaths.brandsWebsitePath;
+
+  const BrandPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +38,7 @@ class BrandPage extends StatelessWidget {
         title: Text(
             LocalizationConstants.brands, style: OptiTextStyles.titleLarge),
         actions: [
-          BottomMenuWidget(isViewOnWebsiteEnable: false,
-              toolMenuList: []),
+          BottomMenuWidget(websitePath: websitePath),
         ],
       ),
       body: BlocBuilder<BrandCubit, BrandState>(

@@ -106,7 +106,7 @@ class RoutePaths {
   static const String savedOrderDetails = '${RoutePaths.savedOrders}/:cartId';
   static const String shopCategory = '/${RouteNames.shopCategory}';
   static const String shopSubCategory =
-      '/${RouteNames.shopSubCategory}/:categoryId/:categoryTitle';
+      '/${RouteNames.shopSubCategory}/:categoryId/:categoryTitle/:categoryPath';
   static const String product = '/${RouteNames.product}';
   static const String addCreditCard = '/${RouteNames.addCreditCard}';
   static const String addShippingAddress = '/${RouteNames.addShippingAddress}';
