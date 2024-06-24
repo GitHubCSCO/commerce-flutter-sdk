@@ -9,13 +9,14 @@ class TabSwitchWidget extends StatefulWidget {
   final Widget tabWidget0;
   final Widget tabWidget1;
   final int selectedIndex;
+  final void Function(int)? onTabSelectionChange;
 
   const TabSwitchWidget({super.key, 
         required this.tabTitle0, 
         required this.tabTitle1, 
         required this.tabWidget0, 
         required this.tabWidget1, 
-        this.selectedIndex = 0});
+        this.selectedIndex = 0, this.onTabSelectionChange});
 
   @override
   State<TabSwitchWidget> createState() => _TabSwitchWidgetState();
@@ -53,6 +54,7 @@ class _TabSwitchWidgetState extends State<TabSwitchWidget> {
                     isSelected: selectedIndex == 0,
                     onTap: () {
                       if (selectedIndex != 0) {
+                        widget.onTabSelectionChange?.call(0);
                         setState(() {
                           selectedIndex = 0;
                         });
@@ -64,6 +66,7 @@ class _TabSwitchWidgetState extends State<TabSwitchWidget> {
                     isSelected: selectedIndex == 1,
                     onTap: () {
                       if (selectedIndex != 1) {
+                        widget.onTabSelectionChange?.call(1);
                         setState(() {
                           selectedIndex = 1;
                         });
@@ -109,4 +112,5 @@ class _TabSwitchWidgetState extends State<TabSwitchWidget> {
       ),
     );
   }
+
 }

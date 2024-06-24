@@ -1,12 +1,9 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/features/domain/entity/current_location_data_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/warehouse_extension.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/pickup_location/pickup_location_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/pickup_location/pickup_location_state.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/map_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/pick_up_location_item_widget.dart';
