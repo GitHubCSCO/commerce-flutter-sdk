@@ -170,6 +170,7 @@ class _SavedOrderListWidgetState extends State<_SavedOrderListWidget> {
     return BlocBuilder<SavedOrderCubit, SavedOrderState>(
       builder: (context, state) {
         return ListView.separated(
+          controller: _scrollController,
           itemBuilder: (context, index) {
             if (index >= (state.cartCollectionModel.carts?.length ?? 0) &&
                 state.status == OrderStatus.moreLoading) {
