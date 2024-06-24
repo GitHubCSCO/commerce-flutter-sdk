@@ -73,8 +73,11 @@ class _CategoryPageState extends State<CategoryPage> {
         //TODO what if id or name is null, we need to take care of that
         //TODO we should find a better way to pass categorytitle, 
         //TODO because if category title is long or does have special character it mmight or might not work properly
-        pathParameters: {"categoryId": category.id.toString(), "categoryTitle": category.name.toString()}
-      );
+          pathParameters: {
+            "categoryId": category.id.toString(),
+            "categoryTitle": category.name.toString(),
+            "categoryPath": category.path.toString()
+          });
     }else{
       final productPageEntity = ProductPageEntity('', ProductParentType.category, category: category);
       AppRoute.product.navigateBackStack(context, extra: productPageEntity);

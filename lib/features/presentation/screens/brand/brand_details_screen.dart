@@ -7,6 +7,7 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/brand_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_details/brand_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
@@ -56,8 +57,7 @@ class BrandDetailsPage extends StatelessWidget {
         title: Text(
             brand.name ?? '', style: OptiTextStyles.titleLarge),
         actions: [
-          BottomMenuWidget(isViewOnWebsiteEnable: false,
-              toolMenuList: []),
+          BottomMenuWidget(websitePath: brand.detailPagePath),
         ],
       ),
       body: BlocBuilder<BrandDetailsCubit, BrandDetailsState>(builder: (context, state) {
@@ -206,9 +206,11 @@ class CategoryCarouselWidget extends StatelessWidget {
                         extra: (brand, brandCategory, null)
                       );
                     }else{
+                      final brandEntity = BrandEntityMapper().toEntity(brand);
                       final productPageEntity = ProductPageEntity(
                         '', 
-                        ProductParentType.brand, 
+                        ProductParentType.brand,
+                        brandEntity: brandEntity,
                         brandEntityId: brandCategory?.brandId, 
                         brandEntityTitle: brandCategory?.categoryName,
                       );

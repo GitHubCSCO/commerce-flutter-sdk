@@ -15,13 +15,14 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class SubCategoryScreen extends StatelessWidget {
   String? categoryId;
   String? categoryTitle;
-  SubCategoryScreen({super.key, this.categoryId, this.categoryTitle});
+  String? categoryPath;
+  SubCategoryScreen({super.key, this.categoryId, this.categoryTitle, this.categoryPath});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<CategoryBloc>(
       create: (context) => sl<CategoryBloc>()..add(CategoryLoadEvent(categoryId: categoryId)),
-      child: SubCategoryPage(categoryTitle: categoryTitle),
+      child: SubCategoryPage(categoryTitle: categoryTitle, categoryPath: categoryPath),
     );
   }
 
@@ -29,8 +30,9 @@ class SubCategoryScreen extends StatelessWidget {
 
 class SubCategoryPage extends StatefulWidget {
   late final String? categoryTitle;
+  late final String? categoryPath;
 
-  SubCategoryPage({super.key,this.categoryTitle});
+  SubCategoryPage({super.key,this.categoryTitle, this.categoryPath});
 
   @override
   State<SubCategoryPage> createState() => _SubCategoryPageState();
@@ -47,7 +49,7 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
             widget.categoryTitle ?? 
             LocalizationConstants.categories, style: OptiTextStyles.titleLarge),
         actions: [
-          BottomMenuWidget(isViewOnWebsiteEnable: false,
+          BottomMenuWidget(websitePath: widget.categoryPath,
               toolMenuList: _getToolMenu(context)),
         ],
       ),
