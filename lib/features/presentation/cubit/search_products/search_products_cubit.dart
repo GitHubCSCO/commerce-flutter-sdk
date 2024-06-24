@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/features/domain/enums/search_product_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,6 +32,18 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
             selectedStockedItems: false,
           ),
         );
+
+  void setProductFilter(ProductPageEntity entity) {
+    switch (entity.parentType) {
+      case ProductParentType.category:
+        emit(state.copyWith(selectedCategoryId: entity.category?.id));
+        break;
+      case ProductParentType.brand:
+      case ProductParentType.brandProductLine:
+        emit(state.copyWith(selectedBrandIds: [entity.brandEntity?.id ?? '']));
+        break;
+    }
+  }
 
   void loadInitialSearchProducts(
       GetProductCollectionResult? productCollectionResult) {
@@ -68,6 +81,12 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
       state.productEntities?.originalQuery ?? '',
       (state.productEntities?.pagination?.page ?? 0) + 1,
       selectedSortOrder: state.selectedSortOrder,
+      selectedAttributeValueIds: state.selectedAttributeValueIds,
+      selectedBrandIds: state.selectedBrandIds,
+      selectedProductLineIds: state.selectedProductLineIds,
+      selectedCategoryId: state.selectedCategoryId,
+      previouslyPurchased: state.previouslyPurchased,
+      selectedStockedItems: state.selectedStockedItems,
     );
 
     if (result == null) {
