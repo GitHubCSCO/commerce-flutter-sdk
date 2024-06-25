@@ -28,7 +28,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 void _reloadCartPage(BuildContext context) {
-  context.read<CartCountCubit>().cartItemChanged();
+  context.read<CartCountCubit>().onCartItemChange();
   context.read<CartPageBloc>().add(CartPageLoadEvent());
 }
 
