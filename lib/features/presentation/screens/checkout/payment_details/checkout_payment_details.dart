@@ -134,8 +134,10 @@ class CheckoutPaymentDetails extends StatelessWidget {
                 children: [
                   Expanded(
                       child: ListPickerWidget(
-                          items:
-                              state.cart?.paymentOptions?.paymentMethods ?? [],
+                          items: context
+                                  .read<PaymentDetailsBloc>()
+                                  .getPaymentMethods(state.cart) ??
+                              [],
                           selectedIndex: getIndexForSelectedPaymentMethod(
                               state.cart?.paymentOptions?.paymentMethods ?? [],
                               context
