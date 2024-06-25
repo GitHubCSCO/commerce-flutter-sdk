@@ -126,7 +126,9 @@ class OrderDetailsPage extends StatelessWidget {
                               .orderSubTotalDisplay,
                         ),
                         CartOrderProductsSectionWidget(
-                          cartLines: state.cart.cartLines ?? [],
+                          cartLines: context
+                              .read<SavedOrderDetailsCubit>()
+                              .getCartLines(),
                         ),
                       ],
                     ),

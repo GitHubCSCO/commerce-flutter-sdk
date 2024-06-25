@@ -67,12 +67,22 @@ class WarehouseInventoryCubit extends Cubit<WareHouseInventoryState> {
       var realTimeInventoryResult = realTimeInventory.realTimeInventoryResults
           ?.firstWhere((o) => o.productId == productId);
 
-      if (realTimeInventoryResult != null) {
+      if (realTimeInventoryResult != null &&
+          realTimeInventoryResult.inventoryWarehousesDtos != null &&
+          realTimeInventoryResult.inventoryWarehousesDtos!.isNotEmpty &&
+          realTimeInventoryResult
+                  .inventoryWarehousesDtos?.first.unitOfMeasure !=
+              null) {
         var inventoryWarehousesDto =
-            realTimeInventoryResult.inventoryWarehousesDtos?.firstWhere((o) =>
-                o.unitOfMeasure?.toLowerCase() == unitOfMeasure.toLowerCase());
+            realTimeInventoryResult.inventoryWarehousesDtos?.firstWhere(
+                (o) =>
+                    o.unitOfMeasure?.toLowerCase() ==
+                    unitOfMeasure.toLowerCase(),
+                orElse: () => InventoryWarehouses());
+
         return inventoryWarehousesDto?.warehouseDtos ?? [];
       }
+
     }
 
     return [];

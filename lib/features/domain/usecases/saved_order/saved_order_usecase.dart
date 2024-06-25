@@ -116,19 +116,6 @@ class SavedOrderUsecase extends BaseUseCase {
     }
   }
 
-  Future<bool> shouldShowWarehouseInventoryButton() async {
-    final productSettingsResult = await commerceAPIServiceProvider
-        .getSettingsService()
-        .getProductSettingsAsync();
-
-    switch (productSettingsResult) {
-      case Failure():
-        return false;
-      case Success(value: final value):
-        return InventoryUtils.isInventoryPerWarehouseButtonShownAsync(value);
-    }
-  }
-
   Future<bool> addCartToSavedOrders({required Cart cart}) async {
     final result =
         await commerceAPIServiceProvider.getCartService().updateCart(cart);
@@ -139,5 +126,11 @@ class SavedOrderUsecase extends BaseUseCase {
       case Failure():
         return false;
     }
+  }
+
+  Future<Result<ProductSettings, ErrorResponse>> loadProductSettings() async {
+    return await commerceAPIServiceProvider
+        .getSettingsService()
+        .getProductSettingsAsync();
   }
 }
