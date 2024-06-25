@@ -57,11 +57,11 @@ class QuickOrderUseCase extends BaseUseCase {
   }
 
   Future<Result<VmiBinModelEntity, ErrorResponse>> getVmiBin(
-      String binNumber) async {
+      String? binNumber) async {
     var parameters = VmiBinQueryParameters(
       vmiLocationId:
           coreServiceProvider.getVmiService().currentVmiLocation?.id ?? '',
-      filter: binNumber,
+      searchCriteria: binNumber,
       expand: 'product',
     );
 
@@ -84,9 +84,9 @@ class QuickOrderUseCase extends BaseUseCase {
   }
 
   Future<Result<ProductEntity, ErrorResponse>> getScanProduct(
-      String name) async {
+      String? name) async {
     var parameters = ProductsQueryParameters(
-      extendedNames: [name],
+      extendedNames: [name ?? ''],
     );
 
     var resultResponse = await commerceAPIServiceProvider

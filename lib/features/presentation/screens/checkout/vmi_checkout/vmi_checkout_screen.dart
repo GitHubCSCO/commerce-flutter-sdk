@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
@@ -75,8 +76,14 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                     reviewOrderEntity: state.reviewOrderEntity,
                     isVmiCheckout: true,
                     cart: context.read<CheckoutBloc>().cart!));
+          } else if (state is CheckoutPlaceOrderFailed) {
+            _showAlert(context, message: LocalizationConstants.orderFailed);
           }
         },
+        buildWhen: (previous, current) =>
+            current is CheckoutInitial ||
+            current is CheckoutLoading ||
+            current is CheckoutDataLoaded,
         builder: (_, state) {
           return BlocBuilder<CheckoutBloc, CheckoutState>(
             builder: (_, state) {
@@ -200,4 +207,20 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
       }
     }
   }
+
+  void _showAlert(BuildContext context, {String? title, String? message}) {
+    displayDialogWidget(
+        context: context,
+        title: title,
+        message: message,
+        actions: [
+          DialogPlainButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text(LocalizationConstants.oK),
+          ),
+        ]);
+  }
+
 }
