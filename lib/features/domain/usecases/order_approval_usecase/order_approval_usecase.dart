@@ -42,22 +42,22 @@ class OrderApprovalUseCase extends BaseUseCase {
     return approveResponse.getResultSuccessValue() != null;
   }
 
-  Future<bool> shouldShowWarehouseInventoryButton() async {
-    final productSettingsResult = await commerceAPIServiceProvider
-        .getSettingsService()
-        .getProductSettingsAsync();
-
-    final value = productSettingsResult.getResultSuccessValue();
-    return InventoryUtils.isInventoryPerWarehouseButtonShownAsync(value);
-  }
 
   Future<BillTo?> getBillToAddress() async {
-    var session = commerceAPIServiceProvider.getSessionService().getCachedCurrentSession();
+    var session = commerceAPIServiceProvider
+        .getSessionService()
+        .getCachedCurrentSession();
     session ??= (await commerceAPIServiceProvider
             .getSessionService()
             .getCurrentSession())
         .getResultSuccessValue();
 
     return session?.billTo;
+  }
+
+  Future<Result<ProductSettings, ErrorResponse>> loadProductSettings() async {
+    return await commerceAPIServiceProvider
+        .getSettingsService()
+        .getProductSettingsAsync();
   }
 }

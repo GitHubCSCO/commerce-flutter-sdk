@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CartLineWidgetList extends StatelessWidget {
-  final CartLineListEntity cartLineEntities;
+  final List<CartLineEntity> cartLineEntities;
 
   CartLineWidgetList({required this.cartLineEntities});
 
@@ -30,10 +30,9 @@ class CartLineWidgetList extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CartContentHeaderWidget(
-                  cartCount: cartLineEntities.cartLines!.length),
+              CartContentHeaderWidget(cartCount: cartLineEntities.length),
               Column(
-                children: cartLineEntities.cartLines!
+                children: cartLineEntities
                     .map((cartLineEntity) =>
                         CartLineWidget(cartLineEntity: cartLineEntity))
                     .toList(),

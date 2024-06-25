@@ -27,6 +27,8 @@ class LineItemWidget extends StatelessWidget {
   final bool isDeleteButtonVisible;
   final void Function()? onAddToCart;
   final void Function()? onDelete;
+  final String? unitOfMeasure;
+
 
   const LineItemWidget({
     super.key,
@@ -47,7 +49,7 @@ class LineItemWidget extends StatelessWidget {
     this.canAddToCart = false,
     this.isDeleteButtonVisible = false,
     this.onAddToCart,
-    this.onDelete,
+    this.onDelete, this.unitOfMeasure,
   });
 
   @override
@@ -101,6 +103,11 @@ class LineItemWidget extends StatelessWidget {
             availabilityText: availabilityText,
             showViewQuantityPricing: showViewQuantityPricing,
             showViewAvailabilityByWarehouse: showViewAvailabilityByWarehouse,
+            productId: productId,
+            erpNumber: productNumber,
+            unitOfMeasure: unitOfMeasure,
+            
+            
           ),
           LineItemQuantityGroupWidget(
             qtyOrdered: qtyOrdered,

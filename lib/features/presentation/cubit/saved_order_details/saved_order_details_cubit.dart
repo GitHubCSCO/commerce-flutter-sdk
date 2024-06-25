@@ -1,5 +1,8 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
+import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
+import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/saved_order/saved_order_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -10,6 +13,7 @@ part 'saved_order_details_state.dart';
 
 class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
   final SavedOrderUsecase _savedOrderUsecase;
+  ProductSettings? productSettings;
 
   SavedOrderDetailsCubit({
     required SavedOrderUsecase savedOrderUsecase,
@@ -25,8 +29,10 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
   Future<void> loadCart({required String cartId}) async {
     emit(state.copyWith(status: OrderStatus.loading));
 
-    final shouldShowWarehouseInventoryButton =
-        await _savedOrderUsecase.shouldShowWarehouseInventoryButton();
+    var productSettingsResult = await _savedOrderUsecase.loadProductSettings();
+    productSettings = productSettingsResult is Success
+        ? (productSettingsResult as Success).value as ProductSettings
+        : null;
 
     final cart = await _savedOrderUsecase.loadCart(cartId: cartId);
 
@@ -35,8 +41,6 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
         state.copyWith(
           cart: cart,
           status: OrderStatus.success,
-          shouldShowWarehouseInventoryButton:
-              shouldShowWarehouseInventoryButton,
         ),
       );
     } else {
@@ -63,6 +67,21 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
     } else {
       emit(state.copyWith(status: OrderStatus.deleteCartFailure));
     }
+  }
+
+  List<CartLineEntity> getCartLines() {
+    List<CartLineEntity> cartlines = [];
+    for (var cartLine in state.cart.cartLines ?? []) {
+      var cartLineEntity = CartLineEntityMapper().toEntity(cartLine);
+      var shouldShowWarehouseInventoryButton =
+          InventoryUtils.isInventoryPerWarehouseButtonShownAsync(
+                  productSettings) &&
+              cartLine.availability.messageType != 0;
+      cartLineEntity = cartLineEntity.copyWith(
+          showInventoryAvailability: shouldShowWarehouseInventoryButton);
+      cartlines.add(cartLineEntity);
+    }
+    return cartlines;
   }
 
   String get shipToLabel => state.cart.shipToLabel ?? '';
