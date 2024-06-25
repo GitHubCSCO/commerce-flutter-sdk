@@ -1,6 +1,6 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/view_warehouse_availability_widget.dart';
 import 'package:flutter/material.dart';
 
 class LineItemPricingWidget extends StatelessWidget {
@@ -10,6 +10,9 @@ class LineItemPricingWidget extends StatelessWidget {
   final String? availabilityText;
   final bool showViewQuantityPricing;
   final bool showViewAvailabilityByWarehouse;
+  final String? productId;
+  final String? erpNumber;
+  final String? unitOfMeasure;
 
   const LineItemPricingWidget({
     super.key,
@@ -18,7 +21,10 @@ class LineItemPricingWidget extends StatelessWidget {
     this.unitOfMeasureValueText,
     this.availabilityText,
     this.showViewQuantityPricing = true,
-    this.showViewAvailabilityByWarehouse = true,
+    this.showViewAvailabilityByWarehouse = false,
+    this.productId,
+    this.erpNumber,
+    this.unitOfMeasure,
   });
 
   @override
@@ -41,17 +47,7 @@ class LineItemPricingWidget extends StatelessWidget {
                 priceValueText: priceValueText,
                 unitOfMeasureValueText: unitOfMeasureValueText,
               ),
-              if (showViewQuantityPricing)
-                GestureDetector(
-                  onTap: () {
-                    // TODO: Implement the logic for "View Quantity Pricing"
-                    CustomSnackBar.showComingSoonSnackBar(context);
-                  },
-                  child: Text(
-                    "View Quantity Pricing",
-                    style: OptiTextStyles.link,
-                  ),
-                ),
+
               availabilityText != null
                   ? _buildInventorySection(
                       context,
@@ -63,8 +59,8 @@ class LineItemPricingWidget extends StatelessWidget {
               if (showViewAvailabilityByWarehouse)
                 GestureDetector(
                   onTap: () {
-                    // TODO: Implement the logic for "View Quantity Pricing"
-                    CustomSnackBar.showComingSoonSnackBar(context);
+                    viewWarehouseWidget(context, productId, erpNumber ?? "",
+                        unitOfMeasure ?? "");
                   },
                   child: Text(
                     "View Availability by Warehouse",

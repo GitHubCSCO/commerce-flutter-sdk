@@ -1,6 +1,9 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
+import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/order_approval_usecase/order_approval_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -11,6 +14,8 @@ part 'order_approval_details_state.dart';
 
 class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
   final OrderApprovalUseCase _orderApprovalUseCase;
+  ProductSettings? productSettings;
+
   OrderApprovalDetailsCubit({
     required OrderApprovalUseCase orderApprovalUseCase,
   })  : _orderApprovalUseCase = orderApprovalUseCase,
@@ -26,8 +31,11 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
   Future<void> loadCart({required String cartId}) async {
     emit(state.copyWith(status: OrderStatus.loading));
 
-    final shouldShowWarehouseInventoryButton =
-        await _orderApprovalUseCase.shouldShowWarehouseInventoryButton();
+    var productSettingsResult =
+        await _orderApprovalUseCase.loadProductSettings();
+    productSettings = productSettingsResult is Success
+        ? (productSettingsResult as Success).value as ProductSettings
+        : null;
 
     final cart = await _orderApprovalUseCase.loadCart(cartId: cartId);
 
@@ -36,10 +44,8 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
         state.copyWith(
           cart: cart,
           status: OrderStatus.success,
-          shouldShowWarehouseInventoryButton:
-              shouldShowWarehouseInventoryButton,
-          hasRestrictedCartLines: cart.cartLines
-              ?.any((cartLine) => cartLine.isRestricted == true),
+          hasRestrictedCartLines:
+              cart.cartLines?.any((cartLine) => cartLine.isRestricted == true),
         ),
       );
     } else {
@@ -72,6 +78,21 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
     } else {
       emit(state.copyWith(status: OrderStatus.deleteCartFailure));
     }
+  }
+
+  List<CartLineEntity> getCartLines() {
+    List<CartLineEntity> cartlines = [];
+    for (var cartLine in state.cart.cartLines ?? []) {
+      var cartLineEntity = CartLineEntityMapper().toEntity(cartLine);
+      var shouldShowWarehouseInventoryButton =
+          InventoryUtils.isInventoryPerWarehouseButtonShownAsync(
+                  productSettings) &&
+              cartLine.availability.messageType != 0;
+      cartLineEntity = cartLineEntity.copyWith(
+          showInventoryAvailability: shouldShowWarehouseInventoryButton);
+      cartlines.add(cartLineEntity);
+    }
+    return cartlines;
   }
 
   // header section

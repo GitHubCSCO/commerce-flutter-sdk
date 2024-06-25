@@ -1,5 +1,8 @@
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
+import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/fullfillment_method_type.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -10,7 +13,7 @@ part 'cart_page_state.dart';
 class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
   final CartUseCase _cartUseCase;
   Cart? cart;
-
+  ProductSettings? productSettings;
   CartPageBloc({required CartUseCase cartUseCase})
       : _cartUseCase = cartUseCase,
         super(CartPageInitialState()) {
@@ -23,6 +26,11 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
 
     try {
       var result = await _cartUseCase.loadCurrentCart();
+      var productSettingsResult = await _cartUseCase.loadProductSettings();
+      productSettings = productSettingsResult is Success
+          ? (productSettingsResult as Success).value as ProductSettings
+          : null;
+
       switch (result) {
         case Success(value: final data):
           cart = data;
@@ -31,7 +39,8 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
             return;
           }
           var wareHouse = _cartUseCase.getPickUpWareHouse();
-          var isCustomerOrderApproval = await _cartUseCase.isCustomerOrderApproval();
+          var isCustomerOrderApproval =
+              await _cartUseCase.isCustomerOrderApproval();
           var shippingMethod = _cartUseCase.getShippingMethod();
           var promotionsResult = await _cartUseCase.loadCartPromotions();
           var cartWarningMsg = await _getCartWarningMessage(shippingMethod);
@@ -128,5 +137,20 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
     }
 
     return false;
+  }
+
+  List<CartLineEntity> getCartLines() {
+    List<CartLineEntity> cartlines = [];
+    for (var cartLine in cart?.cartLines ?? []) {
+      var cartLineEntity = CartLineEntityMapper().toEntity(cartLine);
+      var shouldShowWarehouseInventoryButton =
+          InventoryUtils.isInventoryPerWarehouseButtonShownAsync(
+                  productSettings) &&
+              cartLine.availability.messageType != 0;
+      cartLineEntity = cartLineEntity.copyWith(
+          showInventoryAvailability: shouldShowWarehouseInventoryButton);
+      cartlines.add(cartLineEntity);
+    }
+    return cartlines;
   }
 }
