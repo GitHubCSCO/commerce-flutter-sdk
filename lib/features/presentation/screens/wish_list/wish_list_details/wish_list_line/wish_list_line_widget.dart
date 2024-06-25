@@ -137,18 +137,20 @@ class WishListLineWidget extends StatelessWidget {
             subtotalPriceText: wishListLineEntity.updateSubtotalPriceValueText,
             canEdit: canEditQuantity,
             realTimeLoading: realTimeLoading,
-            onQtyChanged: (int? quantity) async {
-              if (canEditQuantity == false) {
-                return;
-              }
-
-              final newWishListLineEntity =
-                  wishListLineEntity.copyWith(qtyOrdered: quantity);
-              await context
-                  .read<WishListDetailsCubit>()
-                  .updateWishListLineQuantity(newWishListLineEntity,
-                      quantity ?? (wishListLineEntity.qtyOrdered as int?) ?? 1);
-            },
+            onQtyChanged: canEditQuantity
+                ? (int? quantity) async {
+                    final newWishListLineEntity =
+                        wishListLineEntity.copyWith(qtyOrdered: quantity);
+                    await context
+                        .read<WishListDetailsCubit>()
+                        .updateWishListLineQuantity(
+                          newWishListLineEntity,
+                          quantity ??
+                              (wishListLineEntity.qtyOrdered as int?) ??
+                              1,
+                        );
+                  }
+                : null,
           ),
         ],
       ),
