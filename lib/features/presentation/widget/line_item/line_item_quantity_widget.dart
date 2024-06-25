@@ -1,14 +1,17 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class LineItemQuantityGroupWidget extends StatelessWidget {
   final String? qtyOrdered;
   final void Function(int?)? onQtyChanged;
   final String? subtotalPriceText;
   final bool canEdit;
+  final bool realTimeLoading;
 
   const LineItemQuantityGroupWidget({
     super.key,
@@ -16,6 +19,7 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
     this.onQtyChanged,
     this.subtotalPriceText,
     this.canEdit = true,
+    this.realTimeLoading = false,
   });
 
   @override
@@ -50,6 +54,7 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
           LineItemSubtotalColumnWidget(
             title: 'Subtotal',
             value: subtotalPriceText ?? '',
+            realTimeLoading: realTimeLoading,
           ),
         ],
       ),
@@ -60,10 +65,12 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
 class LineItemSubtotalColumnWidget extends StatelessWidget {
   final String title;
   final String value;
+  final bool realTimeLoading;
 
   const LineItemSubtotalColumnWidget({
     required this.title,
     required this.value,
+    this.realTimeLoading = false,
     super.key,
   });
 
@@ -77,10 +84,18 @@ class LineItemSubtotalColumnWidget extends StatelessWidget {
             title,
             style: OptiTextStyles.bodySmall,
           ),
-          Text(
-            value,
-            style: OptiTextStyles.titleLarge,
-          )
+          realTimeLoading
+              ? Container(
+                  alignment: Alignment.center,
+                  child: LoadingAnimationWidget.prograssiveDots(
+                    color: OptiAppColors.iconPrimary,
+                    size: 30,
+                  ),
+                )
+              : Text(
+                  value,
+                  style: OptiTextStyles.titleLarge,
+                )
         ],
       ),
     );
