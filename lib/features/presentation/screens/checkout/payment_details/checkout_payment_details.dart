@@ -115,6 +115,8 @@ class CheckoutPaymentDetails extends StatelessWidget {
 
   Widget _buildPaymentMethodPicker(
       PaymentDetailsLoaded state, BuildContext context) {
+    var paymentMethods =
+        context.read<PaymentDetailsBloc>().getPaymentMethods(state.cart) ?? [];
     return Padding(
       padding: const EdgeInsets.fromLTRB(24.0, 0, 24.0, 0),
       child: Row(
@@ -134,12 +136,9 @@ class CheckoutPaymentDetails extends StatelessWidget {
                 children: [
                   Expanded(
                       child: ListPickerWidget(
-                          items: context
-                                  .read<PaymentDetailsBloc>()
-                                  .getPaymentMethods(state.cart) ??
-                              [],
+                          items: paymentMethods,
                           selectedIndex: getIndexForSelectedPaymentMethod(
-                              state.cart?.paymentOptions?.paymentMethods ?? [],
+                              paymentMethods,
                               context
                                       .read<PaymentDetailsBloc>()
                                       .selectedPaymentMethod ??
