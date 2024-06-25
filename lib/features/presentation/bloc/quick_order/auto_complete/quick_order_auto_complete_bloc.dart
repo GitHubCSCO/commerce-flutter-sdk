@@ -77,10 +77,8 @@ class QuickOrderAutoCompleteBloc extends Bloc<QuickOrderAutoCompleteEvent, Quick
   }
 
   Future<Result<AutocompleteResult, ErrorResponse>?> loadAutoCompleteProducts() async {
-    if (_scanningMode == ScanningMode.count) {
+    if (_scanningMode == ScanningMode.count || _scanningMode == ScanningMode.create) {
       return await _searchUseCase.loadVmiAutocompleteResults(searchQuery);
-    } else if (_scanningMode == ScanningMode.create) {
-      return await _searchUseCase.loadAutocompleteResults(searchQuery);
     } else {
       return await _searchUseCase.loadAutocompleteResults(searchQuery);
     }
