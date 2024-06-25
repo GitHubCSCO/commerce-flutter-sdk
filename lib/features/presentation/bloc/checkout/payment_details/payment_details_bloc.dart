@@ -227,12 +227,16 @@ class PaymentDetailsBloc
   List<PaymentMethodDto>? getPaymentMethods(Cart? cart) {
     List<PaymentMethodDto>? paymentMethods = [];
 
-    for (PaymentMethodDto paymentMethod
-        in cart?.paymentOptions?.paymentMethods ?? []) {
-      if (paymentMethod.description != "Credit Card") {
-        paymentMethods.add(paymentMethod);
+    if (cart?.paymentOptions?.paymentMethods != null) {
+      for (PaymentMethodDto paymentMethod
+          in cart!.paymentOptions!.paymentMethods!) {
+        if (paymentMethod.isCreditCard == null ||
+            !paymentMethod.isCreditCard!) {
+          paymentMethods.add(paymentMethod);
+        }
       }
     }
+
     return paymentMethods;
   }
 }
