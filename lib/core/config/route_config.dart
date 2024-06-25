@@ -482,8 +482,9 @@ List<NavigationNode> _getNavigationRoot() {
     builder: (context, state) {
       final categoryId = state.pathParameters['categoryId'];
       final categoryTitle = state.pathParameters['categoryTitle'] ?? '';
+      final categoryPath = state.pathParameters['categoryPath'] ?? '';
       return SubCategoryScreen(
-          categoryId: categoryId, categoryTitle: categoryTitle);
+          categoryId: categoryId, categoryTitle: categoryTitle, categoryPath: categoryPath);
     },
     parent: null,
   );

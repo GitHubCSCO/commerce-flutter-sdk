@@ -28,4 +28,10 @@ class PickUpUpdateEvent extends BillToShipToEvent {
   PickUpUpdateEvent(this.warehouse);
 }
 
+class FulfillmentMethodUpdateEvent extends BillToShipToEvent {
+  final FulfillmentMethodType fulfillmentMethodType;
+
+  FulfillmentMethodUpdateEvent(this.fulfillmentMethodType);
+}
+
 class SaveBillToShipToEvent extends BillToShipToEvent {}

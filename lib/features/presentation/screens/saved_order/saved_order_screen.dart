@@ -81,9 +81,10 @@ class SavedOrderPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            state.cartCollectionModel.pagination
-                                        ?.totalItemCount !=
-                                    null
+                            ((state.cartCollectionModel.pagination
+                                            ?.totalItemCount ??
+                                        0) !=
+                                    0)
                                 ? '${state.cartCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.orders}'
                                 : '',
                             style: OptiTextStyles.header3,
@@ -101,9 +102,14 @@ class SavedOrderPage extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                      child: _SavedOrderListWidget(
-                        savedOrders: state.cartCollectionModel.carts ?? [],
-                      ),
+                      child: (state.cartCollectionModel.carts ?? []).isNotEmpty
+                          ? _SavedOrderListWidget(
+                              savedOrders:
+                                  state.cartCollectionModel.carts ?? [],
+                            )
+                          : const Center(
+                              child: Text(LocalizationConstants.noSavedOrders),
+                            ),
                     ),
                   ],
                 );
@@ -164,6 +170,7 @@ class _SavedOrderListWidgetState extends State<_SavedOrderListWidget> {
     return BlocBuilder<SavedOrderCubit, SavedOrderState>(
       builder: (context, state) {
         return ListView.separated(
+          controller: _scrollController,
           itemBuilder: (context, index) {
             if (index >= (state.cartCollectionModel.carts?.length ?? 0) &&
                 state.status == OrderStatus.moreLoading) {

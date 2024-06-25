@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/brand_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/brand_category/brand_category_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_grid_widget.dart';
@@ -49,7 +50,7 @@ class _BrandCategoryPageState extends State<BrandCategoryPage> {
             widget.categoryTitle ?? 
             LocalizationConstants.categories, style: OptiTextStyles.titleLarge),
         actions: [
-          BottomMenuWidget(isViewOnWebsiteEnable: false,
+          BottomMenuWidget(websitePath: widget.brand.detailPagePath,
               toolMenuList: _getToolMenu(context)),
         ],
       ),
@@ -99,9 +100,11 @@ class _BrandCategoryPageState extends State<BrandCategoryPage> {
         extra: (brand, brandCategory, null)
       );
     }else{
+      final brandEntity = BrandEntityMapper().toEntity(brand);
       final productPageEntity = ProductPageEntity(
         '', 
-        ProductParentType.brand, 
+        ProductParentType.brand,
+        brandEntity: brandEntity,
         brandEntityId: brandCategory?.brandId, 
         categoryId: brandCategory?.categoryId,
         brandEntityTitle: brandCategory?.categoryName,

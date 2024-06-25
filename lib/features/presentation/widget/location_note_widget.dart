@@ -34,6 +34,7 @@ class LocationNoteWidget extends StatelessWidget {
               ),
             ),
             Container(
+              width: double.infinity,
               color: Colors.white,
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -44,23 +45,26 @@ class LocationNoteWidget extends StatelessWidget {
                       state.locationNote,
                       style: OptiTextStyles.body,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: TertiaryButton(
-                          borderColor: OptiAppColors.grayBackgroundColor,
-                          backgroundColor: OptiAppColors.grayBackgroundColor,
-                          child: const Text(
-                            LocalizationConstants.editLocationNote,
-                          ),
-                          onPressed: () {
-                            AppRoute.vmilocaitonote.navigateBackStack(context,
-                                extra: VMILocationNoteCallbackHelper(
-                                    onUpdateVMILocationNote: () {
-                              context
-                                  .read<LocationNoteCubit>()
-                                  .loadLocationNote();
-                            }));
-                          }),
+                    Visibility(
+                      visible: context.read<LocationNoteCubit>().isVmiAdmin(),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: TertiaryButton(
+                            borderColor: OptiAppColors.grayBackgroundColor,
+                            backgroundColor: OptiAppColors.grayBackgroundColor,
+                            child: const Text(
+                              LocalizationConstants.editLocationNote,
+                            ),
+                            onPressed: () {
+                              AppRoute.vmilocaitonote.navigateBackStack(context,
+                                  extra: VMILocationNoteCallbackHelper(
+                                      onUpdateVMILocationNote: () {
+                                context
+                                    .read<LocationNoteCubit>()
+                                    .loadLocationNote();
+                              }));
+                            }),
+                      ),
                     ),
                   ],
                 ),

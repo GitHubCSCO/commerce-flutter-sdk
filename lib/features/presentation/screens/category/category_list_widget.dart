@@ -61,54 +61,59 @@ class CategoryListItemWidget<T extends BaseModel> extends StatelessWidget {
       description = '';
     }
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: const BoxDecoration(color: Colors.white),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 60,
-            height: 60,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(width: 1, color: const Color(0xFFD6D6D6)),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  imagePath.makeImageUrl(),
-                  fit: BoxFit.cover,
-                  errorBuilder: (BuildContext context, Object error,
-                      StackTrace? stackTrace) {
-                    // This function is called when the image fails to load
-                    return Container(
-                      color:
-                      OptiAppColors.backgroundGray, // Placeholder color
-                      alignment: Alignment.center,
-                      child: const Icon(
-                        Icons.image, // Icon to display
-                        color: Colors.grey, // Icon color
-                        size: 30, // Icon size
-                      ),
-                    );
-                  },
+    return InkWell(
+      onTap: () {
+        callback(context, item);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: const BoxDecoration(color: Colors.white),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 60,
+              height: 60,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(width: 1, color: const Color(0xFFD6D6D6)),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    imagePath.makeImageUrl(),
+                    fit: BoxFit.cover,
+                    errorBuilder: (BuildContext context, Object error,
+                        StackTrace? stackTrace) {
+                      // This function is called when the image fails to load
+                      return Container(
+                        color:
+                        OptiAppColors.backgroundGray, // Placeholder color
+                        alignment: Alignment.center,
+                        child: const Icon(
+                          Icons.image, // Icon to display
+                          color: Colors.grey, // Icon color
+                          size: 30, // Icon size
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(width: 11),
-          Expanded(
-            child: Text(
-              description,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-              style: OptiTextStyles.bodySmall,
+            const SizedBox(width: 11),
+            Expanded(
+              child: Text(
+                description,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+                style: OptiTextStyles.bodySmall,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

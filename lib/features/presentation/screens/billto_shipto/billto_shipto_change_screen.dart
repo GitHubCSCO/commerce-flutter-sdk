@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/mixins/map_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/address_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/fullfillment_method_type.dart';
@@ -10,6 +11,7 @@ import 'package:commerce_flutter_app/features/domain/extensions/warehouse_extens
 import 'package:commerce_flutter_app/features/domain/mapper/warehouse_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/billto_shipto/billto_shipto_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
@@ -33,7 +35,7 @@ class BillToShipToChangeScreen extends StatelessWidget {
   }
 }
 
-class BillToShipToChangePage extends StatefulWidget {
+class BillToShipToChangePage extends StatefulWidget with MapDirection {
   const BillToShipToChangePage({super.key});
 
   @override
@@ -41,7 +43,9 @@ class BillToShipToChangePage extends StatefulWidget {
 }
 
 class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
+
   bool _isSwitched = false;
+  bool _isSaveEnable = false;
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +89,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
               case BillToShipToLoading():
                 return const Center(child: CircularProgressIndicator());
               case BillToShipToLoaded():
+                _isSaveEnable = context.read<BillToShipToBloc>().saveButtonEnable();
                 return Container(
                   color: OptiAppColors.backgroundWhite,
                   child: Column(
@@ -99,7 +104,23 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                             state.billToAddress, state.shipToAddress),
                         tabWidget1: _buildPickUpWidget(state.billToAddress,
                             state.pickUpWarehouse, state.recipientAddress),
-                        selectedIndex: (state.hasWillCall && state.selectedShippingMethod == FulfillmentMethodType.PickUp) == true ? 1 : 0,
+                        selectedIndex: (state.hasWillCall &&
+                                    state.selectedShippingMethod ==
+                                        FulfillmentMethodType.PickUp) ==
+                                true
+                            ? 1
+                            : 0,
+                        onTabSelectionChange: (index) {
+                          final type = index == 1
+                              ? FulfillmentMethodType.PickUp
+                              : FulfillmentMethodType.Ship;
+                          context.read<BillToShipToBloc>().add(FulfillmentMethodUpdateEvent(type));
+                          bool isEnable = context.read<BillToShipToBloc>().saveButtonEnable(
+                              fulfillmentMethodType: type);
+                          setState(() {
+                            _isSaveEnable = isEnable;
+                          });
+                        },
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -123,6 +144,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                       ListInformationBottomSubmitWidget(actions: [
                         PrimaryButton(
                           text: LocalizationConstants.save,
+                          isEnabled: _isSaveEnable,
                           onPressed: () {
                             context
                                 .read<BillToShipToBloc>()
@@ -227,8 +249,6 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
         children: [
           InkWell(
             onTap: () {
-              print("object");
-
               AppRoute.locationSearch.navigateBackStack(context,
                   extra: VMILocationSelectCallbackHelper(
                       onSelectVMILocation: (location) {},
@@ -249,13 +269,41 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                     address: wareHouse.wareHouseAddress(),
                     city: wareHouse.wareHouseCity(),
                     phone: wareHouse?.phone,
-                    buildSeperator: true,
+                    buildSeperator: false,
                   ),
                 ),
                 const Icon(
                   Icons.arrow_forward_ios,
                   color: Colors.grey,
                   size: 20,
+                )
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Row(
+              children: [
+                InkWell(
+                  child: Text(
+                    LocalizationConstants.hours,
+                    textAlign: TextAlign.center,
+                    style: OptiTextStyles.link,
+                  ),
+                  onTap: () {
+                    _onHoursClick(context, wareHouse);
+                  },
+                ),
+                const SizedBox(width: 16),
+                InkWell(
+                  child: Text(
+                    LocalizationConstants.directions,
+                    textAlign: TextAlign.center,
+                    style: OptiTextStyles.link,
+                  ),
+                  onTap: () {
+                    _onDirectionsClick(wareHouse);
+                  },
                 )
               ],
             ),
@@ -308,4 +356,30 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
       context.read<BillToShipToBloc>().add(ShipToUpdateEvent(result));
     }
   }
+
+  void _onHoursClick(BuildContext context, Warehouse? warehouse) {
+    displayDialogWidget(
+        context: context,
+        title: LocalizationConstants.hours,
+        message: warehouse!.hours,
+        actions: [
+          DialogPlainButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text(LocalizationConstants.oK),
+          ),
+        ]);
+  }
+
+  Future<void> _onDirectionsClick(Warehouse? warehouse) async {
+    num latitude = warehouse?.latitude ?? 0;
+    num longitude = warehouse?.longitude ?? 0;
+
+    double latitudeDouble = latitude.toDouble();
+    double longitudeDouble = longitude.toDouble();
+
+    await widget.launchMap(latitudeDouble, longitudeDouble);
+  }
+
 }
