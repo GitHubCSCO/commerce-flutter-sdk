@@ -109,7 +109,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
 
         break;
       case Failure(errorResponse: final errorResponse):
-        emit(CheckoutDataFetchFailed(
+        emit(CheckoutPlaceOrderFailed(
             error: errorResponse.errorDescription ?? ''));
         break;
     }

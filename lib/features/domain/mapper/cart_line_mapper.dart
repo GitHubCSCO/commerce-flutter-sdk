@@ -78,6 +78,7 @@ class CartLineEntityMapper {
         sectionOptions: model.sectionOptions
             ?.map((e) => SectionOptionEntityMapper().toEntity(e))
             .toList(),
+    
       );
 
   CartLine toModel(CartLineEntity entity) => CartLine(

@@ -76,7 +76,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     if (scanningMode == ScanningMode.count ||
         scanningMode == ScanningMode.create) {
       final result = await _quickOrderUseCase
-          .getVmiBin(event.autocompleteProduct.binNumber!);
+          .getVmiBin(event.autocompleteProduct.binNumber);
 
       await _addVmiOrderItem(result, emit);
     } else {
@@ -93,11 +93,11 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
     if (scanningMode == ScanningMode.count ||
         scanningMode == ScanningMode.create) {
-      final result = await _quickOrderUseCase.getVmiBin(event.name!);
+      final result = await _quickOrderUseCase.getVmiBin(event.name);
 
       await _addVmiOrderItem(result, emit);
     } else {
-      final result = await _quickOrderUseCase.getScanProduct(event.name!);
+      final result = await _quickOrderUseCase.getScanProduct(event.name);
 
       await _addOrderItem(result, emit);
     }
@@ -320,7 +320,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
           productId: x.productEntity.id,
           qtyOrdered: x.quantityOrdered,
           unitOfMeasure: x.selectedUnitOfMeasure?.unitOfMeasure,
-          vmiBinId: x.productEntity.id,
+          vmiBinId: x.vmiBinEntity!.id,
           // properties: Properties(),
         );
       } else {
