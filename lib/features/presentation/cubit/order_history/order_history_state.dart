@@ -10,6 +10,7 @@ class OrderHistoryState extends Equatable {
   final Set<String> temporarySelectedFilterValueIds;
   final List<FilterValueViewModel> filterValues;
   final FilterStatus filterStatus;
+  final String searchQuery;
 
   const OrderHistoryState({
     required this.orderEntities,
@@ -21,6 +22,7 @@ class OrderHistoryState extends Equatable {
     required this.filterValues,
     required this.temporarySelectedFilterValueIds,
     required this.temporaryShowMyOrdersValue,
+    required this.searchQuery,
   });
 
   @override
@@ -34,6 +36,7 @@ class OrderHistoryState extends Equatable {
         filterStatus,
         temporarySelectedFilterValueIds,
         temporaryShowMyOrdersValue,
+        searchQuery,
       ];
 
   OrderHistoryState copyWith({
@@ -46,6 +49,7 @@ class OrderHistoryState extends Equatable {
     Set<String>? temporarySelectedFilterValueIds,
     List<FilterValueViewModel>? filterValues,
     FilterStatus? filterStatus,
+    String? searchQuery,
   }) {
     return OrderHistoryState(
       orderEntities: orderEntities ?? this.orderEntities,
@@ -60,6 +64,7 @@ class OrderHistoryState extends Equatable {
           this.temporarySelectedFilterValueIds,
       filterValues: filterValues ?? this.filterValues,
       filterStatus: filterStatus ?? this.filterStatus,
+      searchQuery: searchQuery ?? this.searchQuery,
     );
   }
 
