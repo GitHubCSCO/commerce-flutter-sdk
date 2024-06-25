@@ -22,14 +22,14 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
     Result<GetProductCollectionResult, ErrorResponse>? result;
     if (event.entity.parentType == ProductParentType.category) {
-      result = await _searchUseCase.loadSearchProductsResults('', 1,
+      result = await _searchUseCase.loadSearchProductsResults(event.entity.query, 1,
           selectedCategoryId: event.entity.category?.id ?? event.entity.categoryId ??'');
     }else if (event.entity.parentType == ProductParentType.brand) {
-      result = await _searchUseCase.loadSearchProductsResults('', 1,
+      result = await _searchUseCase.loadSearchProductsResults(event.entity.query, 1,
           selectedCategoryId: event.entity.categoryId,
           selectedBrandIds: [event.entity.brandEntity?.id ?? event.entity.brandEntityId ?? '']);
     }else if (event.entity.parentType == ProductParentType.brandProductLine) {
-      result = await _searchUseCase.loadSearchProductsResults('', 1,
+      result = await _searchUseCase.loadSearchProductsResults(event.entity.query, 1,
           selectedCategoryId: event.entity.categoryId,
           selectedProductLineIds: [event.entity.brandProductLine?.id ?? ''],
           selectedBrandIds: [event.entity.brandEntity?.id ?? event.entity.brandEntityId ?? '']);

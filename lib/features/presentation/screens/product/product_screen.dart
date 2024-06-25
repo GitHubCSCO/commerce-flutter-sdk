@@ -92,8 +92,7 @@ class ProductPage extends StatelessWidget {
         title: Text(
             _getTitle(pageEntity), style: OptiTextStyles.titleLarge),
         actions: [
-          BottomMenuWidget(isViewOnWebsiteEnable: false,
-              toolMenuList: []),
+          BottomMenuWidget(websitePath: _getWebsitePath(pageEntity)),
         ],
       ),
       body: Column(
@@ -141,7 +140,9 @@ class ProductPage extends StatelessWidget {
                         create: (context) => sl<AddToCartCubit>(),
                       ),
                       BlocProvider(
-                        create: (context) => sl<SearchProductsCubit>()..loadInitialSearchProducts(productCollectionResult),
+                        create: (context) => sl<SearchProductsCubit>()
+                          ..setProductFilter(pageEntity)
+                          ..loadInitialSearchProducts(productCollectionResult),
                       ),
                     ],
                     //TODO from category product list to search product list
@@ -172,5 +173,16 @@ class ProductPage extends StatelessWidget {
     }else{
       return entity.pageTitle ?? "Product list";
     }
+  }
+
+  String? _getWebsitePath(ProductPageEntity entity) {
+    if (entity.parentType == ProductParentType.category) {
+      return entity.category?.path;
+    } else if (entity.parentType == ProductParentType.brand) {
+      return entity.brandEntity?.detailPagePath;
+    } else if (entity.parentType == ProductParentType.brandProductLine) {
+      return entity.brandProductLine?.productListPagePath;
+    }
+    return null;
   }
 }

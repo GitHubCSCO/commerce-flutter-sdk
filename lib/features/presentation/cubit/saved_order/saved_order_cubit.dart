@@ -72,7 +72,8 @@ class SavedOrderCubit extends Cubit<SavedOrderState> {
   Future<void> loadMoreSavedOrders() async {
     if (state.cartCollectionModel.pagination?.page == null ||
         state.cartCollectionModel.pagination!.page! + 1 >
-            state.cartCollectionModel.pagination!.numberOfPages!) {
+            state.cartCollectionModel.pagination!.numberOfPages! ||
+        state.status == OrderStatus.moreLoading) {
       return;
     }
 
