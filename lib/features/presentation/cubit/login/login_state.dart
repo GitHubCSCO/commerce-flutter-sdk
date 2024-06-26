@@ -12,9 +12,9 @@ class LoginInitialState extends LoginState {}
 class LoginLoadingState extends LoginState {}
 
 class LoginSuccessState extends LoginState {
-  final bool showBiometricOptionView;
+  final LoginStatus loginStatus;
 
-  const LoginSuccessState({this.showBiometricOptionView = false});
+  const LoginSuccessState({required this.loginStatus});
 }
 
 class LoginFailureState extends LoginState {

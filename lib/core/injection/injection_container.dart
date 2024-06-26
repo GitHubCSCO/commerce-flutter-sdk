@@ -89,6 +89,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/category/categor
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/load_website_url/load_website_url_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/pickup_location/pickup_location_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product/product_bloc.dart';
@@ -405,6 +406,9 @@ Future<void> initInjectionContainer() async {
     //bottom menu
     ..registerFactory(() => BottomMenuCubit(platformUseCase: sl()))
     ..registerFactory(() => PlatformUseCase())
+
+    //for view on website bloc
+    ..registerFactory(() => LoadWebsiteUrlBloc(platformUsecase: sl()))
 
     //product carousel
     ..registerFactory(() => ProductCarouselCubit(productCarouselUseCase: sl()))

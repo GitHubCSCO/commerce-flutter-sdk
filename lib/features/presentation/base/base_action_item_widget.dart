@@ -1,8 +1,10 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_type_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/location_search_type.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/load_website_url/load_website_url_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
@@ -74,7 +76,7 @@ class BaseActionItemWidget extends StatelessWidget {
         return LocalizationConstants.settings;
       case ActionType.changeCustomer:
         // return this.hasWillCall ? LocalizationConstants.ChangeCustomerWillCall : LocalizationConstants.ChangeCustomer;
-        return LocalizationConstants.changeCustomer;
+        return LocalizationConstants.changeCustomerWillCall;
       case ActionType.signOut:
         return LocalizationConstants.signOut;
       case ActionType.viewAccountOnWebsite:
@@ -170,6 +172,12 @@ class BaseActionItemWidget extends StatelessWidget {
       case ActionType.orderApproval:
         return () {
           AppRoute.orderApproval.navigateBackStack(context);
+        };
+      case ActionType.viewAccountOnWebsite:
+        return () {
+          context.read<LoadWebsiteUrlBloc>().add(LoadWebsiteUrlLoadEvent(
+            redirectUrl: WebsitePaths.accountWebsitePath
+          ));
         };
       default:
         return () {
