@@ -23,6 +23,8 @@ class SavedOrderHandlerCubit extends Cubit<SavedOrderHandlerState> {
       return;
     }
 
+    emit(state.copyWith(status: SavedOrderHandlerStatus.shouldClearCart));
+
     emit(state.copyWith(
         status: SavedOrderHandlerStatus.shouldRefreshSavedOrder));
   }

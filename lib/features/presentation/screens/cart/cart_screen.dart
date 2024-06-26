@@ -7,9 +7,9 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/shipping_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
@@ -18,6 +18,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line_list.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_payment_summary_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
@@ -127,17 +128,30 @@ class CartPage extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        height: 80,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 32, vertical: 16),
                         clipBehavior: Clip.antiAlias,
                         decoration: const BoxDecoration(color: Colors.white),
-                        child: PrimaryButton(
-                          onPressed: () {
-                            AppRoute.checkout.navigateBackStack(context,
-                                extra: context.read<CartPageBloc>().cart);
-                          },
-                          text: LocalizationConstants.checkout,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TertiaryBlackButton(
+                              child:
+                                  const Text(LocalizationConstants.saveOrder),
+                              onPressed: () {
+                                context
+                                    .read<SavedOrderHandlerCubit>()
+                                    .addCartToSavedOrders(cart: state.cart);
+                              },
+                            ),
+                            PrimaryButton(
+                              onPressed: () {
+                                AppRoute.checkout.navigateBackStack(context,
+                                    extra: context.read<CartPageBloc>().cart);
+                              },
+                              text: LocalizationConstants.checkout,
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -221,8 +235,32 @@ class CartPage extends StatelessWidget {
 
     list.add(BlocProvider<CartContentBloc>(
       create: (context) => sl<CartContentBloc>(),
-      child: CartLineWidgetList(
-          cartLineEntities: context.read<CartPageBloc>().getCartLines()),
+      child: Builder(
+        builder: (context) {
+          return BlocListener<SavedOrderHandlerCubit, SavedOrderHandlerState>(
+            listener: (context, state) {
+              if (state.status == SavedOrderHandlerStatus.shouldClearCart) {
+                context.read<CartContentBloc>().add(CartContentClearAllEvent());
+              }
+
+              // AppRoute.savedOrderDetails.navigateBackStack(
+              //     context,
+              //     pathParameters: {
+              //       'cartId': widget.savedOrders[index].id ?? '',
+              //     },
+              //     extra: () {
+              //       context
+              //           .read<SavedOrderHandlerCubit>()
+              //           .shouldRefreshSavedOrder();
+              //     },
+              //   );
+            },
+            child: CartLineWidgetList(
+              cartLineEntities: context.read<CartPageBloc>().getCartLines(),
+            ),
+          );
+        },
+      ),
     ));
     list.add(const SizedBox(height: 8));
 

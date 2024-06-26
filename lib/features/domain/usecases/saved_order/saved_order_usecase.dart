@@ -1,5 +1,4 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
-import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -117,6 +116,7 @@ class SavedOrderUsecase extends BaseUseCase {
   }
 
   Future<bool> addCartToSavedOrders({required Cart cart}) async {
+    cart.status = 'Saved';
     final result =
         await commerceAPIServiceProvider.getCartService().updateCart(cart);
 

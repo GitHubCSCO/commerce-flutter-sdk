@@ -4,6 +4,7 @@ enum SavedOrderHandlerStatus {
   initial,
   loading,
   shouldRefreshSavedOrder,
+  shouldClearCart,
   failure,
 }
 
