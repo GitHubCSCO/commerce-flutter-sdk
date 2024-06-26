@@ -11,30 +11,45 @@ class SavedOrderHandlerCubit extends Cubit<SavedOrderHandlerState> {
   SavedOrderHandlerCubit({required SavedOrderUsecase savedOrderUsecase})
       : _savedOrderUsecase = savedOrderUsecase,
         super(
-          const SavedOrderHandlerState(status: SavedOrderHandlerStatus.initial),
+          SavedOrderHandlerState(
+            status: SavedOrderHandlerStatus.initial,
+            savedCart: Cart(),
+          ),
         );
 
   Future<void> addCartToSavedOrders({required Cart cart}) async {
     emit(state.copyWith(status: SavedOrderHandlerStatus.loading));
     final result = await _savedOrderUsecase.addCartToSavedOrders(cart: cart);
 
-    if (!result) {
+    if (result == null) {
       emit(state.copyWith(status: SavedOrderHandlerStatus.failure));
       return;
     }
 
-    emit(state.copyWith(status: SavedOrderHandlerStatus.shouldClearCart));
+    emit(
+      state.copyWith(
+        status: SavedOrderHandlerStatus.shouldClearCart,
+        savedCart: result,
+      ),
+    );
 
-    emit(state.copyWith(
-        status: SavedOrderHandlerStatus.shouldRefreshSavedOrder));
+    emit(
+      state.copyWith(status: SavedOrderHandlerStatus.shouldRefreshSavedOrder),
+    );
   }
 
   void shouldRefreshSavedOrder() {
-    emit(state.copyWith(
-        status: SavedOrderHandlerStatus.shouldRefreshSavedOrder));
+    emit(
+      state.copyWith(status: SavedOrderHandlerStatus.shouldRefreshSavedOrder),
+    );
   }
 
   void resetState() {
-    emit(const SavedOrderHandlerState(status: SavedOrderHandlerStatus.initial));
+    emit(
+      SavedOrderHandlerState(
+        status: SavedOrderHandlerStatus.initial,
+        savedCart: Cart(),
+      ),
+    );
   }
 }
