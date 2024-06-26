@@ -44,12 +44,20 @@ class AddCreditCardScreen extends StatelessWidget {
       required this.onCreditCardAdded,
       required this.addCreditCardEntity});
 
+  String getTitle() {
+    if (addCreditCardEntity.isAddNewCreditCard) {
+      return LocalizationConstants.addCreditCard;
+    } else {
+      return LocalizationConstants.editCreditCard;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: OptiAppColors.backgroundWhite,
-          title: const Text(LocalizationConstants.addCreditCard),
+          title: Text(getTitle()),
           centerTitle: false,
         ),
         body: MultiBlocProvider(
@@ -572,11 +580,6 @@ class AddCreditCardPage extends StatelessWidget {
                                         .selectedCountry),
                                 descriptionText: LocalizationConstants.country,
                                 callback: _onCountrySelect)),
-                        const Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.grey,
-                          size: 16,
-                        ),
                       ],
                     ),
                   ),
@@ -618,11 +621,6 @@ class AddCreditCardPage extends StatelessWidget {
                                         .selectedState),
                                 descriptionText: LocalizationConstants.state,
                                 callback: _onStateSelect)),
-                        const Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.grey,
-                          size: 16,
-                        ),
                       ],
                     ),
                   ),
@@ -716,11 +714,6 @@ class AddCreditCardPage extends StatelessWidget {
                                           .read<CardExpirationCubit>()
                                           .selectedExpirationMonth),
                               callback: _onMonthSelect)),
-                      const Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.grey,
-                        size: 16,
-                      ),
                     ],
                   ),
                 ),
@@ -753,11 +746,6 @@ class AddCreditCardPage extends StatelessWidget {
                                       .read<CardExpirationCubit>()
                                       .selectedExpirationYear),
                               callback: _onYearSelect)),
-                      const Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.grey,
-                        size: 16,
-                      ),
                     ],
                   ),
                 ),

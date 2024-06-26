@@ -103,7 +103,6 @@ class BillingShippingWidget extends StatelessWidget {
         AppRoute.addShippingAddress.navigateBackStack(context, extra:
             ShippingAddressAddCallbackHelper(onShippingAddressAdded: (shiptTo) {
           context.read<CheckoutBloc>().add(UpdateShiptoAddressEvent(shiptTo));
-
         }));
       },
       style: TextButton.styleFrom(
@@ -198,11 +197,6 @@ class BillingShippingWidget extends StatelessWidget {
                           items: carriers,
                           selectedIndex: selectedCarrierIndex,
                           callback: _onCarrierSelect)),
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.grey,
-                    size: 16,
-                  ),
                 ],
               ),
             ),
@@ -228,11 +222,6 @@ class BillingShippingWidget extends StatelessWidget {
                           items: services,
                           selectedIndex: selectedServiceIndex,
                           callback: _onServiceSelect)),
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.grey,
-                    size: 16,
-                  ),
                 ],
               ),
             ),
@@ -275,11 +264,6 @@ class BillingShippingWidget extends StatelessWidget {
                           maxDate: maxDate,
                           selectedDateTime: selectedDate,
                           callback: _onSelectDate)),
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.grey,
-                    size: 16,
-                  ),
                 ],
               ),
             ),
@@ -351,7 +335,9 @@ class ShippingAddressWidget extends StatelessWidget {
             style: OptiTextStyles.subtitle,
           ),
           const SizedBox(height: 8),
-          if (companyName.isNullOrEmpty && fullAddress.isNullOrEmpty && countryName.isNullOrEmpty)
+          if (companyName.isNullOrEmpty &&
+              fullAddress.isNullOrEmpty &&
+              countryName.isNullOrEmpty)
             Text(
               LocalizationConstants.selectShippingAddress,
               textAlign: TextAlign.start,
@@ -488,7 +474,10 @@ class PickupLocationWidget extends StatelessWidget {
           style: OptiTextStyles.subtitle,
         ),
         const SizedBox(height: 8),
-        if (description.isNullOrEmpty && address.isNullOrEmpty && city.isNullOrEmpty && phone.isNullOrEmpty)
+        if (description.isNullOrEmpty &&
+            address.isNullOrEmpty &&
+            city.isNullOrEmpty &&
+            phone.isNullOrEmpty)
           Text(
             LocalizationConstants.selectPickUpLocation,
             textAlign: TextAlign.start,

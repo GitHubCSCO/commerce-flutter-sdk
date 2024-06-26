@@ -283,11 +283,6 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
                               .selectedCountry),
                       descriptionText: LocalizationConstants.country,
                       callback: _onCountrySelect)),
-              const Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.grey,
-                size: 16,
-              ),
             ],
           ),
         ),
@@ -322,11 +317,6 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
                               .selectedState),
                       descriptionText: LocalizationConstants.state,
                       callback: _onStateSelect)),
-              const Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.grey,
-                size: 16,
-              ),
             ],
           ),
         ),

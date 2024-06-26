@@ -10,7 +10,6 @@ import 'package:commerce_flutter_app/features/presentation/widget/list_picker_wi
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-
 enum StyleTraitType {
   swatchDropdown,
   dropdown,
@@ -138,19 +137,6 @@ Widget _buildStyleTraitDropdownWidget(
                     child: ListPickerWidget(
                         items: styleValues!, callback: onSelectItemCallback),
                   )),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      padding: const EdgeInsets.all(10),
-                      child: SvgPicture.asset(
-                        AssetConstants.iconArrowDown,
-                        fit: BoxFit.fitWidth,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ],
