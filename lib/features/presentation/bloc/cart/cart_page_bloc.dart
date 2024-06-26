@@ -153,4 +153,16 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
     }
     return cartlines;
   }
+
+  List<AddCartLine> getAddCartLines() {
+    return (cart?.cartLines ?? [])
+        .map(
+          (cartLine) => AddCartLine(
+            productId: cartLine.productId,
+            qtyOrdered: cartLine.qtyOrdered,
+            unitOfMeasure: cartLine.unitOfMeasure,
+          ),
+        )
+        .toList();
+  }
 }
