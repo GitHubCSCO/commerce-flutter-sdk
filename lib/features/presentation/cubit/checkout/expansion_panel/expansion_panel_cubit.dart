@@ -8,12 +8,16 @@ part 'expansion_panel_state.dart';
 
 class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
   List<ExpansionPanelItem> list = [
-    ExpansionPanelItem(headerValue: LocalizationConstants.billingShipping, isExpanded: true),
-    ExpansionPanelItem(headerValue: LocalizationConstants.paymentDetails, isExpanded: false),
-    ExpansionPanelItem(headerValue: LocalizationConstants.reviewOrder, isExpanded: false)
+    ExpansionPanelItem(
+        headerValue: LocalizationConstants.billingShipping, isExpanded: true),
+    ExpansionPanelItem(
+        headerValue: LocalizationConstants.paymentDetails, isExpanded: false),
+    ExpansionPanelItem(
+        headerValue: LocalizationConstants.reviewOrder, isExpanded: false)
   ];
 
   int expansionIndex = 0;
+  int numberOfPanels = 3;
 
   late StreamController<String> _continueButtonController;
 
@@ -22,6 +26,14 @@ class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
   ExpansionPanelCubit() : super(ExpansionPanelInitialState()) {
     _continueButtonController = StreamController<String>.broadcast();
     _continueButtonController.add(LocalizationConstants.continueText);
+  }
+
+  void initialize(int numberOfPanels) {
+    this.numberOfPanels = numberOfPanels;
+    // For order approval
+    if (numberOfPanels == 2) {
+      list.removeAt(1);
+    }
   }
 
   Future<void> onPanelExpansionChange(int index) async {
@@ -35,13 +47,16 @@ class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
         }
       }
       emit(ExpansionPanelChangeState(list: list));
-      _updateButtonText(expansionIndex == 2 ? LocalizationConstants.placeOrder : LocalizationConstants.continueText);
+      _updateButtonText(expansionIndex == (numberOfPanels == 2 ? 1 : 2)
+          ? (numberOfPanels == 2
+              ? LocalizationConstants.submitForApproval
+              : LocalizationConstants.placeOrder)
+          : LocalizationConstants.continueText);
     }
   }
 
   Future<void> onContinueClick() async {
-    if (expansionIndex >= 2) {
-
+    if (expansionIndex >= (numberOfPanels == 2 ? 1 : 2)) {
     } else {
       expansionIndex++;
       for (int i = 0; i < list.length; i++) {
@@ -53,7 +68,11 @@ class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
       }
     }
     emit(ExpansionPanelChangeState(list: list));
-    _updateButtonText(expansionIndex == 2 ? LocalizationConstants.placeOrder : LocalizationConstants.continueText);
+    _updateButtonText(expansionIndex == (numberOfPanels == 2 ? 1 : 2)
+        ? (numberOfPanels == 2
+            ? LocalizationConstants.submitForApproval
+            : LocalizationConstants.placeOrder)
+        : LocalizationConstants.continueText);
   }
 
   void _updateButtonText(String text) {
@@ -63,5 +82,4 @@ class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
   void dispose() {
     _continueButtonController.close();
   }
-
 }
