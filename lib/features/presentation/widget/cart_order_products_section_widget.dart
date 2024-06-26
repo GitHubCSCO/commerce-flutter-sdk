@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/cart_line_extentions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
@@ -9,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class CartOrderProductsSectionWidget extends StatelessWidget {
-  final List<CartLine> cartLines;
+  final List<CartLineEntity> cartLines;
 
   const CartOrderProductsSectionWidget({
     super.key,
@@ -45,8 +46,7 @@ class CartOrderProductsSectionWidget extends StatelessWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            final cartLine = cartLines[index];
-            final cartLineEntity = CartLineEntityMapper().toEntity(cartLine);
+            final cartLineEntity = cartLines[index];
             return LineItemWidget(
               productId: cartLineEntity.productId,
               imagePath: cartLineEntity.smallImagePath,
@@ -60,8 +60,10 @@ class CartOrderProductsSectionWidget extends StatelessWidget {
               qtyOrdered: cartLineEntity.qtyOrdered?.toInt().toString(),
               subtotalPriceText: cartLineEntity.updateSubtotalPriceValueText(),
               canEditQty: false,
-              showViewAvailabilityByWarehouse: false,
+              showViewAvailabilityByWarehouse:
+                  cartLineEntity.showInventoryAvailability ?? false,
               showViewQuantityPricing: false,
+              unitOfMeasure: cartLineEntity.baseUnitOfMeasure,
             );
           },
           separatorBuilder: (context, index) => const Divider(height: 1),

@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/wish_list_line_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/view_warehouse_availability_widget.dart';
 
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -39,29 +40,26 @@ class WishListContentPricingWidget extends StatelessWidget {
                       ),
                     )
                   : _buildPricingSection(context, wishListLineEntity),
-              GestureDetector(
-                onTap: () {
-                  // TODO: Implement the logic for "View Quantity Pricing"
-                  CustomSnackBar.showComingSoonSnackBar(context);
-                },
-                child: Text(
-                  "View Quantity Pricing",
-                  style: OptiTextStyles.link,
-                ),
-              ),
+
               wishListLineEntity.availability?.message != null
                   ? _buildInventorySection(context, wishListLineEntity)
                   : Container(),
               // _buildInventorySection(context),
-              // For "View Availability by Warehouse"
-              GestureDetector(
-                onTap: () {
-                  // TODO: Implement the logic for "View Quantity Pricing"
-                  CustomSnackBar.showComingSoonSnackBar(context);
-                },
-                child: Text(
-                  "View Availability by Warehouse",
-                  style: OptiTextStyles.link,
+              Visibility(
+                visible: wishListLineEntity.availability?.message != null &&
+                    wishListLineEntity.availability?.message != "",
+                child: GestureDetector(
+                  onTap: () {
+                    viewWarehouseWidget(
+                        context,
+                        wishListLineEntity.productId,
+                        wishListLineEntity.erpNumber ?? "",
+                        wishListLineEntity.unitOfMeasure ?? "");
+                  },
+                  child: Text(
+                    "View Availability by Warehouse",
+                    style: OptiTextStyles.link,
+                  ),
                 ),
               ),
             ],

@@ -50,6 +50,11 @@ class CheckoutPlaceOrder extends CheckoutState {
   });
 }
 
+class CheckoutPlaceOrderFailed extends CheckoutState {
+  final String error;
+
+  CheckoutPlaceOrderFailed({required this.error});
+}
 
 class CheckoutShipToAddressAddedState extends CheckoutState {
 

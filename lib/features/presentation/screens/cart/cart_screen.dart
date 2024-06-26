@@ -28,7 +28,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 void _reloadCartPage(BuildContext context) {
-  context.read<CartCountCubit>().cartItemChanged();
+  context.read<CartCountCubit>().onCartItemChange();
   context.read<CartPageBloc>().add(CartPageLoadEvent());
 }
 
@@ -122,7 +122,8 @@ class CartPage extends StatelessWidget {
                               state.warehouse,
                               state.promotions,
                               state.isCustomerOrderApproval,
-                              state.shippingMethod),
+                              state.shippingMethod,
+                              context),
                         ),
                       ),
                       Container(
@@ -194,7 +195,8 @@ class CartPage extends StatelessWidget {
       Warehouse? warehouse,
       PromotionCollectionModel promotions,
       bool isCustomerOrderApproval,
-      String shippingMethod) {
+      String shippingMethod,
+      BuildContext context) {
     List<Widget> list = [];
 
     final paymentSummaryEntity = PaymentSummaryEntity(
@@ -220,8 +222,7 @@ class CartPage extends StatelessWidget {
     list.add(BlocProvider<CartContentBloc>(
       create: (context) => sl<CartContentBloc>(),
       child: CartLineWidgetList(
-          cartLineEntities: CartLineListMapper()
-              .toEntity(CartLineList(cartLines: cart!.cartLines))),
+          cartLineEntities: context.read<CartPageBloc>().getCartLines()),
     ));
     list.add(const SizedBox(height: 8));
 

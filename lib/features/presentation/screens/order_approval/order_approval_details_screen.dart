@@ -186,7 +186,7 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                               .shipToCityStatePostalCodeDisplay,
                         ),
                         CartOrderProductsSectionWidget(
-                          cartLines: state.cart.cartLines ?? [],
+                          cartLines:  context.read<OrderApprovalDetailsCubit>().getCartLines() ?? [],
                         ),
                       ],
                     ),

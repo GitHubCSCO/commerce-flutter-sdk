@@ -20,6 +20,7 @@ class OrderUsecase extends BaseUseCase {
     OrderSortOrder sortOrder = OrderSortOrder.orderDateDescending,
     bool showMyOrders = false,
     List<String> filterAttributes = const [],
+    required String searchText,
   }) async {
     final sortOrders = commerceAPIServiceProvider
         .getOrderService()
@@ -33,6 +34,7 @@ class OrderUsecase extends BaseUseCase {
             page: page,
             showMyOrders: showMyOrders,
             status: filterAttributes.isEmpty ? null : filterAttributes,
+            search: searchText != '' ? searchText : null,
           ),
         );
 
@@ -125,8 +127,8 @@ class OrderUsecase extends BaseUseCase {
 
   /// Refresh the Cart after calling this method
   Future<OrderStatus> reorderAllProducts({
-    required List<OrderLineEntity> orderLines,}
-  ) async {
+    required List<OrderLineEntity> orderLines,
+  }) async {
     if (orderLines.isEmpty) {
       return OrderStatus.failure;
     }

@@ -32,17 +32,29 @@ class BrandUseCase extends BaseUseCase {
     return result;
   }
 
+  Future<Result<List<AutocompleteBrand>, ErrorResponse>> getAutoCompleteBrands(String searchQuery) async {
+    final result = await commerceAPIServiceProvider.getAutocompleteService().getAutocompleteBrands(searchQuery);
+    return result;
+  }
+
+  Future<Result<Brand, ErrorResponse>> getBrand(String id) async {
+    final result = await commerceAPIServiceProvider.getBrandService().getBrand(id);
+    return result;
+  }
+
   Future<List<BrandCategory>?> _getBrandCategories(Brand brand) async {
-      final brandCategoriesQueryParameter = BrandCategoriesQueryParameter(
+    final brandCategoriesQueryParameter = BrandCategoriesQueryParameter(
         brandId: brand.id,
         page: 1,
         pageSize: numberOfInitiallyVisibleCategories,
-        maximumDepth: 2
-      );
-      final brandCategoriesResultResponse = await commerceAPIServiceProvider.getBrandService().getBrandCategories(brandCategoriesQueryParameter);
-      final brandCategories = brandCategoriesResultResponse.getResultSuccessValue();
+        maximumDepth: 2);
+    final brandCategoriesResultResponse = await commerceAPIServiceProvider
+        .getBrandService()
+        .getBrandCategories(brandCategoriesQueryParameter);
+    final brandCategories =
+        brandCategoriesResultResponse.getResultSuccessValue();
 
-      return brandCategories?.brandCategories; 
+    return brandCategories?.brandCategories;
   }
 
   Future<List<BrandProductLine>?> _getBrandProductLines(Brand brand) async {
