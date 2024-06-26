@@ -580,11 +580,6 @@ class AddCreditCardPage extends StatelessWidget {
                                         .selectedCountry),
                                 descriptionText: LocalizationConstants.country,
                                 callback: _onCountrySelect)),
-                        const Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.grey,
-                          size: 16,
-                        ),
                       ],
                     ),
                   ),
@@ -626,11 +621,6 @@ class AddCreditCardPage extends StatelessWidget {
                                         .selectedState),
                                 descriptionText: LocalizationConstants.state,
                                 callback: _onStateSelect)),
-                        const Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.grey,
-                          size: 16,
-                        ),
                       ],
                     ),
                   ),
@@ -724,11 +714,6 @@ class AddCreditCardPage extends StatelessWidget {
                                           .read<CardExpirationCubit>()
                                           .selectedExpirationMonth),
                               callback: _onMonthSelect)),
-                      const Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.grey,
-                        size: 16,
-                      ),
                     ],
                   ),
                 ),
@@ -761,11 +746,6 @@ class AddCreditCardPage extends StatelessWidget {
                                       .read<CardExpirationCubit>()
                                       .selectedExpirationYear),
                               callback: _onYearSelect)),
-                      const Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.grey,
-                        size: 16,
-                      ),
                     ],
                   ),
                 ),

@@ -292,19 +292,6 @@ class _FilterTotalTypeWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Container(
-                            width: 40,
-                            height: 40,
-                            padding: const EdgeInsets.all(10),
-                            child: SvgPicture.asset(
-                              AssetConstants.iconArrowDown,
-                              fit: BoxFit.fitWidth,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ],
@@ -419,11 +406,6 @@ class _FilterDatePickerWidget extends StatelessWidget {
                   selectedDateTime: selectedDate,
                   callback: onSelectDate,
                 ),
-              ),
-              const Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.grey,
-                size: 16,
               ),
             ],
           ),
