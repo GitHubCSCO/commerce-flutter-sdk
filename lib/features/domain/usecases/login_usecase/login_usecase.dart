@@ -115,18 +115,15 @@ class LoginUsecase extends BiometricUsecase {
   }
 
   Future<Result<Session, ErrorResponse>> getCurrentSession() async {
-    final fullSession = await commerceAPIServiceProvider.getSessionService().getCurrentSession();
-    return fullSession;
+    return await commerceAPIServiceProvider.getSessionService().getCurrentSession();
   }
 
   Future<Result<GetBillTosResult, ErrorResponse>> getBillTo(BillTosQueryParameters parameters) async {
-    final billTo = await commerceAPIServiceProvider.getBillToService().getBillTosAsync(parameters: parameters);
-    return billTo;
+    return await commerceAPIServiceProvider.getBillToService().getBillTosAsync(parameters: parameters);
   }
 
   Future<Result<GetShipTosResult, ErrorResponse>> getShipTo(String billToId, ShipTosQueryParameters parameters) async {
-    final shipTo = await commerceAPIServiceProvider.getBillToService().getShipTosAsync(billToId, parameters: parameters);
-    return shipTo;
+    return await commerceAPIServiceProvider.getBillToService().getShipTosAsync(billToId, parameters: parameters);
   }
 
   Future<LoginStatus> authenticateBiometrically(
