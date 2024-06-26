@@ -16,6 +16,9 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
   Warehouse? pickUpWarehouse;
   FulfillmentMethodType? selectedShippingMethod;
   bool hasWillCall = false;
+  bool wasShipToUpdated = false;
+  bool isDefaultCustomerSelected = false;
+  bool? isDefaultSwitchEnable = false;
 
   BillToShipToBloc({required BillToShipToUseCase billToShipToUseCase})
       : _billToShipToUseCase = billToShipToUseCase,
@@ -33,6 +36,7 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
   Future<void> _onBillToUpdateEvent(
       BillToUpdateEvent event, Emitter<BillToShipToState> emit) async {
     emit(BillToShipToLoading());
+    wasShipToUpdated = true;
     billToAddress = event.billToAddress;
     shipToAddress = null;
     recipientAddress = null;
@@ -48,6 +52,7 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
   Future<void> _onShipToUpdateEvent(
       ShipToUpdateEvent event, Emitter<BillToShipToState> emit) async {
     emit(BillToShipToLoading());
+    wasShipToUpdated = true;
     if (selectedShippingMethod == FulfillmentMethodType.PickUp) {
       recipientAddress = event.shipToAddress;
     } else if (selectedShippingMethod == FulfillmentMethodType.Ship) {
@@ -87,6 +92,11 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
       pickUpWarehouse = session.pickUpWarehouse;
 
       hasWillCall = await _billToShipToUseCase.hasWillCall();
+      isDefaultCustomerSelected =
+          await _billToShipToUseCase.isDefaultCustomerSelected(
+              selectedShippingMethod ?? FulfillmentMethodType.Ship,
+              wasShipToUpdated);
+      isDefaultSwitchEnable = isDefaultCustomerSelected;
 
       if (hasWillCall && session.fulfillmentMethod == FulfillmentMethodType.PickUp.name) {
         recipientAddress = session.shipTo;
@@ -97,12 +107,14 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
       }
 
       emit(BillToShipToLoaded(
-          billToAddress: billToAddress,
-          shipToAddress: shipToAddress,
-          recipientAddress: recipientAddress,
-          pickUpWarehouse: pickUpWarehouse,
-          selectedShippingMethod: selectedShippingMethod,
-          hasWillCall: hasWillCall));
+        billToAddress: billToAddress,
+        shipToAddress: shipToAddress,
+        recipientAddress: recipientAddress,
+        pickUpWarehouse: pickUpWarehouse,
+        selectedShippingMethod: selectedShippingMethod,
+        hasWillCall: hasWillCall,
+        isDefaultCustomerSelected: isDefaultCustomerSelected,
+      ));
     }
   }
 
@@ -127,6 +139,14 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
       pickUpWarehouse: pickUpWarehouse, 
       selectedShippingMethod: selectedShippingMethod);
 
+    if (event.isDefaultEnable) {
+      await _billToShipToUseCase.updateDefaultCustomerIfNeeded(
+          event.isDefaultEnable,
+          isDefaultCustomerSelected,
+          selectedShippingMethod ?? FulfillmentMethodType.Ship,
+          wasShipToUpdated);
+    }
+
     if (patchedSession != null) {
       emit(SaveBillToShipToSuccess());
     } else {
@@ -141,6 +161,16 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
       return recipientAddress != null && pickUpWarehouse != null;
     } else {
       return shipToAddress != null;
+    }
+  }
+
+  bool defaultEnable(bool isSwitch) {
+    if (isDefaultSwitchEnable != null) {
+      bool isEnable = isDefaultSwitchEnable ?? false;
+      isDefaultSwitchEnable = null;
+      return isEnable;
+    } else {
+      return isSwitch;
     }
   }
 

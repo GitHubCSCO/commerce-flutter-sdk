@@ -8,7 +8,7 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order/saved_order_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_add_to/saved_order_add_to_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
@@ -45,13 +45,13 @@ class SavedOrderPage extends StatelessWidget {
           )
         ],
       ),
-      body: BlocListener<SavedOrderAddToCubit, SavedOrderAddToState>(
+      body: BlocListener<SavedOrderHandlerCubit, SavedOrderHandlerState>(
         listener: (context, state) async {
-          if (state.status == SavedOrderAddToStatus.shouldRefreshSavedOrder ||
-              state.status == SavedOrderAddToStatus.failure) {
+          if (state.status == SavedOrderHandlerStatus.shouldRefreshSavedOrder ||
+              state.status == SavedOrderHandlerStatus.failure) {
             await context.read<SavedOrderCubit>().loadSavedOrders();
             if (context.mounted) {
-              context.read<SavedOrderAddToCubit>().resetState();
+              context.read<SavedOrderHandlerCubit>().resetState();
             }
           }
         },
@@ -189,7 +189,9 @@ class _SavedOrderListWidgetState extends State<_SavedOrderListWidget> {
                     'cartId': widget.savedOrders[index].id ?? '',
                   },
                   extra: () {
-                    context.read<SavedOrderCubit>().loadSavedOrders();
+                    context
+                        .read<SavedOrderHandlerCubit>()
+                        .shouldRefreshSavedOrder();
                   },
                 );
               },

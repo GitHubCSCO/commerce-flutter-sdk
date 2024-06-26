@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/enums/fullfillment_method_type.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -87,6 +88,57 @@ class BillToShipToUseCase extends BaseUseCase {
         return patchedSession;
     }else{
       return null;
+    }
+  }
+
+  Future<void> updateDefaultCustomerIfNeeded(bool isDefaultEnable, bool isDefaultCustomer, FulfillmentMethodType selectedShippingMethod, bool wasShipToUpdated) async {
+    final session = (await commerceAPIServiceProvider.getSessionService().getCurrentSession()).getResultSuccessValue();
+    final willCall = await hasWillCall();
+
+    var willUpdateDefaultCustomer = !isDefaultCustomer && isDefaultEnable;
+    willUpdateDefaultCustomer |= isDefaultCustomer && !isDefaultEnable;
+
+    if (willUpdateDefaultCustomer) {
+      final currentAccount = commerceAPIServiceProvider.getAccountService().currentAccount;
+      if (session == null || currentAccount == null) {
+        return;
+      }
+
+      currentAccount.setDefaultCustomer = true;
+      var isFulfillmentMethodPickUpSetAsDefault = willCall && selectedShippingMethod == FulfillmentMethodType.PickUp && isDefaultEnable;
+      currentAccount.defaultWarehouseId = isFulfillmentMethodPickUpSetAsDefault ? session.pickUpWarehouse?.id.toString() : null;
+      currentAccount.defaultWarehouse = isFulfillmentMethodPickUpSetAsDefault ? session.pickUpWarehouse : null;
+
+      currentAccount.defaultFulfillmentMethod = selectedShippingMethod.toString();
+      currentAccount.defaultCustomerId = isDefaultEnable ? session.shipTo?.id : null;
+
+      final accountPatchResultResponse = (await commerceAPIServiceProvider
+          .getAccountService()
+          .patchAccountAsync(currentAccount))
+          .getResultSuccessValue();
+
+      if (accountPatchResultResponse == null) {
+        return;
+      }
+    }
+  }
+
+  Future<bool> isDefaultCustomerSelected(FulfillmentMethodType selectedShippingMethod, bool wasShipToUpdated) async {
+    final session = (await commerceAPIServiceProvider.getSessionService().getCurrentSession()).getResultSuccessValue();
+    if (session?.shipTo == null) {
+      return false;
+    } else {
+      final currentAccount = commerceAPIServiceProvider.getAccountService().currentAccount;
+
+      if (currentAccount?.defaultFulfillmentMethod != null && !(currentAccount?.defaultFulfillmentMethod == selectedShippingMethod.name)) {
+        return false;
+      } else {
+        if (wasShipToUpdated) {
+          return session?.shipTo?.isDefault ?? false;
+        } else {
+          return !(session?.redirectToChangeCustomerPageOnSignIn ?? false);
+        }
+      }
     }
   }
 
