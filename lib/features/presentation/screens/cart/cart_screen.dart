@@ -7,6 +7,8 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/shipping_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/warehouse_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
@@ -260,7 +262,10 @@ class CartPage extends StatelessWidget {
     list.add(BlocProvider<CartShippingSelectionBloc>(
       create: (context) => sl<CartShippingSelectionBloc>()
         ..add(CartShippingOptionDefaultEvent(shippingEntity.shippingMethod!)),
-      child: CartShippingWidget(shippingEntity: shippingEntity),
+      child: CartShippingWidget(
+        shippingEntity: shippingEntity,
+        onCallBack: _handlePickUpLocationCallBack,
+      ),
     ));
 
     list.add(BlocProvider<CartContentBloc>(
@@ -305,6 +310,11 @@ class CartPage extends StatelessWidget {
 
     return list;
   }
+
+  void _handlePickUpLocationCallBack(BuildContext context, WarehouseEntity wareHouse) {
+    context.read<CartPageBloc>().add(CartPagePickUpLocationChangeEvent(WarehouseEntityMapper().toModel(wareHouse)));
+  }
+
 }
 
 class _buildCartEroorWidget extends StatelessWidget {

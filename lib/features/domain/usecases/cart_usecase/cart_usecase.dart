@@ -23,6 +23,13 @@ class CartUseCase extends BaseUseCase {
         .getCurrentCartPromotions();
   }
 
+  Future<Result<Session, ErrorResponse>> patchPickUpLocation(Warehouse warehouse) async {
+    var newSession = commerceAPIServiceProvider.getSessionService().getCachedCurrentSession();
+    newSession?.pickUpWarehouse = warehouse;
+
+    return await commerceAPIServiceProvider.getSessionService().patchSession(newSession!);
+  }
+
   Warehouse? getPickUpWareHouse() {
     return commerceAPIServiceProvider
         .getSessionService()
