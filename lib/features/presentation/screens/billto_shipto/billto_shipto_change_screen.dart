@@ -59,7 +59,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
         actions: <Widget>[
           InkWell(
             onTap: () {
-              Navigator.pop(context);
+              context.pop(true);
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),

@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
+import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/remote_config/remote_config_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
@@ -178,11 +179,11 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 16.0),
                 BlocConsumer<LoginCubit, LoginState>(
-                  listener: (context, state) {
+                  listener: (context, state) async {
                     if (state is LoginSuccessState) {
                       context.read<AuthCubit>().loadAuthenticationState();
 
-                      if (state.showBiometricOptionView) {
+                      if (state.loginStatus == LoginStatus.loginSuccessBiometric) {
                         final biometricOptionsState =
                             context.read<BiometricOptionsCubit>().state;
                         final options =
@@ -202,6 +203,19 @@ class _LoginPageState extends State<LoginPage> {
                           return;
                         }
                         return;
+                      } else if (state.loginStatus == LoginStatus.loginSuccessBillToShipTo) {
+                        final isCancel = await context.pushNamed<bool>(
+                          AppRoute.billToShipToChange.name,
+                        );
+
+                        if (!context.mounted) {
+                          return;
+                        }
+
+                        if (isCancel != null && isCancel) {
+                          await context.read<LoginCubit>().onCancelLogin();
+                          context.read<AuthCubit>().loadAuthenticationState();
+                        }
                       }
 
                       context.pop();

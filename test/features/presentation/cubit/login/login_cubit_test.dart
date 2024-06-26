@@ -34,7 +34,7 @@ void main() {
       },
       expect: () => [
         LoginLoadingState(),
-        const LoginSuccessState(showBiometricOptionView: false),
+        const LoginSuccessState(loginStatus: LoginStatus.loginSuccess),
       ],
     );
 
@@ -50,7 +50,7 @@ void main() {
       },
       expect: () => [
         LoginLoadingState(),
-        const LoginSuccessState(showBiometricOptionView: true),
+        const LoginSuccessState(loginStatus: LoginStatus.loginSuccessBiometric),
       ],
     );
 
