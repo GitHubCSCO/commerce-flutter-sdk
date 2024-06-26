@@ -32,9 +32,18 @@ class VMIService extends ServiceBase implements IVmiService {
   Future<VmiLocationModel?> getClosestVmiLocation() async {
     String key =
         '${CoreConstants.currentVmiLocationKey}:${_commerceAPIServiceProvider.getClientService().host}:${_commerceAPIServiceProvider.getSessionService().getCachedCurrentSession()?.userName}';
-    // VmiLocationModel? closestVmiLocation = await _commerceAPIServiceProvider
-    //     .getCacheService()
-    //     .loadPersistedData<VmiLocationModel>(key);
+    VmiLocationModel? closestVmiLocationPersisted;
+    try {
+      closestVmiLocationPersisted = await _commerceAPIServiceProvider
+          .getCacheService()
+          .loadPersistedData<VmiLocationModel>(key);
+      // ignore: empty_catches
+    } catch (e) {}
+
+    if (closestVmiLocationPersisted != null) {
+      currentVmiLocation = closestVmiLocationPersisted;
+      return closestVmiLocationPersisted;
+    }
     VmiLocationModel? closestVmiLocation;
     if (closestVmiLocation == null) {
       VmiLocationQueryParameters param = VmiLocationQueryParameters(

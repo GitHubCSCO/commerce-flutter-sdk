@@ -48,4 +48,8 @@ class VMILocationUseCase extends BaseUseCase {
             .getDistanceBetweenPoints(fromSource, toSource) <
         CoreConstants.vmiLocationSearchRadius;
   }
+
+  Future<void> saveCurrentVmiLocation(VmiLocationModel vmiLocation) async {
+    coreServiceProvider.getVmiService().saveCurrentVmiLocation(vmiLocation);
+  }
 }
