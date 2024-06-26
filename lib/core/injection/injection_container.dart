@@ -80,6 +80,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.
 import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/billto_shipto/address_selection/billto_shipto_address_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/billto_shipto/billto_shipto_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/brand/brand_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/brand_category/brand_category_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
@@ -115,7 +116,6 @@ import 'package:commerce_flutter_app/features/presentation/cubit/bottom_menu_cub
 import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_details/brand_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_list/brand_list_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_product_line/brand_product_line_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_section/brand_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/card_expiration_cubit.dart/card_expiration_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
@@ -301,7 +301,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => CategoryUseCase())
 
     //shop brand
-    ..registerFactory(() => BrandCubit(brandUseCase: sl()))
+    ..registerFactory(() => BrandBloc(brandUseCase: sl()))
     ..registerFactory(() => BrandListCubit(brandUseCase: sl()))
     ..registerFactory(() => BrandDetailsCubit(brandUseCase: sl()))
     ..registerFactory(() => BrandUseCase())

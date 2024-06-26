@@ -134,7 +134,17 @@ class _ListPickerState extends State<ListPicker> {
                         });
                       },
                       children: widget.items.map((Object option) {
-                        return Center(child: Text(_getDescriptions(option)));
+                        return Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              _getDescriptions(option),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: OptiTextStyles.body,
+                            ),
+                          ),
+                        );
                       }).toList(),
                     ),
                   ),
