@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/biometric_usecase/biometric_usecase.dart';
@@ -113,6 +114,18 @@ class LoginUsecase extends BiometricUsecase {
     }
   }
 
+  Future<Result<Session, ErrorResponse>> getCurrentSession() async {
+    return await commerceAPIServiceProvider.getSessionService().getCurrentSession();
+  }
+
+  Future<Result<GetBillTosResult, ErrorResponse>> getBillTo(BillTosQueryParameters parameters) async {
+    return await commerceAPIServiceProvider.getBillToService().getBillTosAsync(parameters: parameters);
+  }
+
+  Future<Result<GetShipTosResult, ErrorResponse>> getShipTo(String billToId, ShipTosQueryParameters parameters) async {
+    return await commerceAPIServiceProvider.getBillToService().getShipTosAsync(billToId, parameters: parameters);
+  }
+
   Future<LoginStatus> authenticateBiometrically(
       DeviceAuthenticationOption option) async {
     if (option == DeviceAuthenticationOption.none) {
@@ -138,4 +151,9 @@ class LoginUsecase extends BiometricUsecase {
 
     return await super.getBiometricOptions();
   }
+
+  Future<void> loginCancel() async {
+    await commerceAPIServiceProvider.getAuthenticationService().logoutAsync();
+  }
+
 }
