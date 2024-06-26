@@ -63,21 +63,33 @@ class _ListPickerState extends State<ListPicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: AlignmentDirectional.centerStart,
-      child: TextButton(
-        onPressed: () {
-          _selectItem(context);
-        },
-        child: Text(
-          (selectedIndex != -1 && widget.items.isNotEmpty)
-              ? _getDescriptions(widget.items[selectedIndex])
-              : widget.descriptionText ?? "",
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.start,
-          style:
-              OptiTextStyles.body, // Assuming you have OptiTextStyles defined
+    return GestureDetector(
+      onTap: () {
+        _selectItem(context);
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                (selectedIndex != -1 && widget.items.isNotEmpty)
+                    ? _getDescriptions(widget.items[selectedIndex!])
+                    : widget.descriptionText ?? "",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.start,
+                style: OptiTextStyles
+                    .body, // Assuming you have OptiTextStyles defined
+              ),
+            ),
+            const Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.grey,
+              size: 16,
+            ),
+          ],
         ),
       ),
     );
