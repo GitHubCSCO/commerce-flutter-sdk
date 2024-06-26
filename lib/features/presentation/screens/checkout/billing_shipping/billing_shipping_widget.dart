@@ -2,21 +2,25 @@ import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shipping_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/address_type.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/warehouse_extension.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/shipping_address_add_callback_helper.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/date_picker_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BillingShippingWidget extends StatelessWidget {
   final BillingShippingEntity billingShippingEntity;
+  final void Function(BuildContext, Object)? onCallBack;
 
-  const BillingShippingWidget({super.key, required this.billingShippingEntity});
+  const BillingShippingWidget({super.key, required this.billingShippingEntity, this.onCallBack});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +42,7 @@ class BillingShippingWidget extends StatelessWidget {
     list.add(_buildBillingAddress());
 
     if (billingShippingEntity.shippingMethod == ShippingOption.ship) {
-      list.add(_buildShippingAddress());
+      list.add(_buildShippingAddress(context));
 
       if (billingShippingEntity.carriers != null &&
           billingShippingEntity.carriers!.isNotEmpty) {
@@ -126,13 +130,48 @@ class BillingShippingWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildShippingAddress() {
-    return ShippingAddressWidget(
-      visible: billingShippingEntity.shippingMethod == ShippingOption.ship,
-      companyName: billingShippingEntity.shipTo?.companyName,
-      fullAddress: billingShippingEntity.shipTo?.fullAddress,
-      countryName: billingShippingEntity.shipTo?.country?.name,
-      buildSeperator: true,
+  Widget _buildShippingAddress(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        final selectionEntity = BillToShipToAddressSelectionEntity(
+            selectedBillTo: billingShippingEntity.billTo,
+            selectedShipTo: billingShippingEntity.shipTo,
+            addressType: AddressType.shipTo);
+        final result = await context.pushNamed(
+          AppRoute.billToShipToSelection.name,
+          extra: selectionEntity,
+        );
+        if (result is ShipTo) {
+          onCallBack?.call(context, result);
+        }
+      },
+      child: Column(
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: ShippingAddressWidget(
+                  visible: billingShippingEntity.shippingMethod == ShippingOption.ship,
+                  companyName: billingShippingEntity.shipTo?.companyName,
+                  fullAddress: billingShippingEntity.shipTo?.fullAddress,
+                  countryName: billingShippingEntity.shipTo?.country?.name,
+                ),
+              ),
+              const Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.grey,
+                size: 20,
+              )
+            ],
+          ),
+          const SizedBox(height: 12),
+          _buildSeparator(),
+          const SizedBox(height: 12),
+        ],
+      ),
     );
   }
 
