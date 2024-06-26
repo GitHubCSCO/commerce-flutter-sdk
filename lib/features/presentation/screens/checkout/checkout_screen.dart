@@ -201,8 +201,11 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                             );
                                           },
                                           body: BillingShippingWidget(
-                                              billingShippingEntity:
-                                                  billingShippingEntity),
+                                            billingShippingEntity:
+                                                billingShippingEntity,
+                                            onCallBack:
+                                                _handleAddressSelectionCallBack,
+                                          ),
                                           isExpanded:
                                               list?[0].isExpanded ?? true,
                                           canTapOnHeader: true),
@@ -420,4 +423,11 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
       ),
     );
   }
+
+  void _handleAddressSelectionCallBack(BuildContext context, Object result) {
+    if (result is ShipTo) {
+      context.read<CheckoutBloc>().add(UpdateShiptoAddressEvent(result));
+    }
+  }
+
 }

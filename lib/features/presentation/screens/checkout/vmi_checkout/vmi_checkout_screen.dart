@@ -117,8 +117,9 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                               children: [
                                 buildSummary(state.cart, state.promotions),
                                 BillingShippingWidget(
-                                    billingShippingEntity:
-                                        billingShippingEntity),
+                                  billingShippingEntity: billingShippingEntity,
+                                  onCallBack: _handleAddressSelectionCallBack,
+                                ),
                                 CheckoutPaymentDetails(
                                     cart: context.read<CheckoutBloc>().cart!,
                                     onCompleteCheckoutPaymentSection: () {
@@ -183,6 +184,12 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
         },
       ),
     );
+  }
+
+  void _handleAddressSelectionCallBack(BuildContext context, Object result) {
+    if (result is ShipTo) {
+      context.read<CheckoutBloc>().add(UpdateShiptoAddressEvent(result));
+    }
   }
 
   void _handleSubmitOrderClick(BuildContext context, CheckoutDataLoaded state) {
