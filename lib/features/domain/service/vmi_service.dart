@@ -37,9 +37,9 @@ class VMIService extends ServiceBase implements IVmiService {
       closestVmiLocationPersisted = await _commerceAPIServiceProvider
           .getCacheService()
           .loadPersistedData<VmiLocationModel>(key);
-    } catch (e) {
-      print(e);
-    }
+      // ignore: empty_catches
+    } catch (e) {}
+
     if (closestVmiLocationPersisted != null) {
       currentVmiLocation = closestVmiLocationPersisted;
       return closestVmiLocationPersisted;
