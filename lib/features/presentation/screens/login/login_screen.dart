@@ -212,7 +212,7 @@ class _LoginPageState extends State<LoginPage> {
                           return;
                         }
 
-                        if (isCancel != null && isCancel) {
+                        if (isCancel == null || isCancel) {
                           await context.read<LoginCubit>().onCancelLogin();
                           context.read<AuthCubit>().loadAuthenticationState();
                         }

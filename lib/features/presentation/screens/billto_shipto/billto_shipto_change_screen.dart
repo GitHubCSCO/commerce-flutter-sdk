@@ -76,9 +76,9 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
         listener: (context, state) {
           if (state is SaveBillToShipToSuccess) {
             CustomSnackBar.showBilltoShipToSuccess(context);
-            context.pop();
-          } else if (state is SaveBillToShipToSuccess) {
-            context.pop();
+            context.pop(false);
+          } else if (state is SaveBillToShipToFailed) {
+            context.pop(true);
             CustomSnackBar.showBilltoShipToFailure(context);
           }
         },
@@ -90,6 +90,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                 return const Center(child: CircularProgressIndicator());
               case BillToShipToLoaded():
                 _isSaveEnable = context.read<BillToShipToBloc>().saveButtonEnable();
+                _isSwitched = context.read<BillToShipToBloc>().defaultEnable(_isSwitched);
                 return Container(
                   color: OptiAppColors.backgroundWhite,
                   child: Column(
@@ -148,7 +149,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                           onPressed: () {
                             context
                                 .read<BillToShipToBloc>()
-                                .add(SaveBillToShipToEvent());
+                                .add(SaveBillToShipToEvent(_isSwitched));
                           },
                         ),
                       ]),
