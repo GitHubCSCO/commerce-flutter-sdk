@@ -7,6 +7,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -48,6 +49,7 @@ Future<void> main() async {
         BlocProvider(
             create: (context) => sl<CartCountCubit>()..loadCurrentCartCount()),
         BlocProvider(create: (context) => sl<SavedOrderHandlerCubit>()),
+        BlocProvider(create: (context) => sl<WishListHandlerCubit>()),
       ],
       child: const MyApp(),
     ),

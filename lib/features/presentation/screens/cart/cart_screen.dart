@@ -19,6 +19,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line_list.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_payment_summary_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
@@ -135,14 +136,43 @@ class CartPage extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            TertiaryBlackButton(
-                              child:
-                                  const Text(LocalizationConstants.saveOrder),
-                              onPressed: () {
-                                context
-                                    .read<SavedOrderHandlerCubit>()
-                                    .addCartToSavedOrders(cart: state.cart);
-                              },
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: TertiaryBlackButton(
+                                    child: const Text(
+                                      LocalizationConstants.addAllToList,
+                                    ),
+                                    onPressed: () {
+                                      final addCartLines = context
+                                          .read<CartPageBloc>()
+                                          .getAddCartLines();
+                                      WishListCallbackHelper.addItemsToWishList(
+                                        context,
+                                        addToCartCollection:
+                                            WishListAddToCartCollection(
+                                          wishListLines: addCartLines,
+                                        ),
+                                        onAddedToCart: null,
+                                      );
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: TertiaryBlackButton(
+                                    child: const Text(
+                                        LocalizationConstants.saveOrder),
+                                    onPressed: () {
+                                      context
+                                          .read<SavedOrderHandlerCubit>()
+                                          .addCartToSavedOrders(
+                                              cart: state.cart);
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                             PrimaryButton(
                               onPressed: () {
