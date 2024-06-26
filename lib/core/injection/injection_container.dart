@@ -144,7 +144,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/product_list_fi
 import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order/saved_order_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_add_to/saved_order_add_to_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_details/saved_order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_payments/saved_payments_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
@@ -156,6 +156,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_
 import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/style_trait_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_details/wish_list_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_information/wish_list_information_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:commerce_flutter_app/services/secure_storage_service.dart';
@@ -249,7 +250,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => SavedOrderCubit(savedOrderUsecase: sl()))
     ..registerFactory(() => SavedOrderUsecase())
     ..registerFactory(() => SavedOrderDetailsCubit(savedOrderUsecase: sl()))
-    ..registerFactory(() => SavedOrderAddToCubit(savedOrderUsecase: sl()))
+    ..registerFactory(() => SavedOrderHandlerCubit(savedOrderUsecase: sl()))
 
     //order approval
     ..registerFactory(() => OrderApprovalUseCase())
@@ -305,11 +306,10 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => BrandListCubit(brandUseCase: sl()))
     ..registerFactory(() => BrandDetailsCubit(brandUseCase: sl()))
     ..registerFactory(() => BrandUseCase())
-
     ..registerFactory(() => BrandCategoryBloc(brandCategoryUseCase: sl()))
     ..registerFactory(() => BrandCategoryUseCase())
-
-    ..registerFactory(() => BrandProductLinesCubit(brandProductLinesUseCase: sl()))
+    ..registerFactory(
+        () => BrandProductLinesCubit(brandProductLinesUseCase: sl()))
     ..registerFactory(() => BrandProductLinesUseCase())
 
     //cart
@@ -392,6 +392,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => WishListInformationCubit(wishListUsecase: sl()))
     ..registerFactory(() => WishListCreateCubit(wishListUsecase: sl()))
     ..registerFactory(() => WishListAddToCubit(wishListUsecase: sl()))
+    ..registerFactory(() => WishListHandlerCubit())
 
     //date selection
     ..registerFactory(() => DateSelectionCubit())
@@ -613,15 +614,15 @@ Future<void> initInjectionContainer() async {
           networkService: sl(),
         ))
     ..registerLazySingleton<ICategoryService>(() => CategoryService(
-      clientService: sl(),
-      cacheService: sl(),
-      networkService: sl(),
-    ))
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
     ..registerLazySingleton<IBrandService>(() => BrandService(
-      clientService: sl(),
-      cacheService: sl(),
-      networkService: sl(),
-    ));
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ));
 
   await sl.allReady();
 }

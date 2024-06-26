@@ -14,6 +14,7 @@ import 'package:commerce_flutter_app/features/presentation/components/dialog.dar
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
@@ -34,7 +35,17 @@ class WishListsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<WishListCubit>()..loadWishLists(),
-      child: const WishListsPage(),
+      child: Builder(builder: (context) {
+        return BlocListener<WishListHandlerCubit, WishListHandlerState>(
+          listener: (context, state) {
+            if (state.status == WishListHandlerStatus.shouldRefreshWishList) {
+              context.read<WishListCubit>().loadWishLists();
+              context.read<WishListHandlerCubit>().resetState();
+            }
+          },
+          child: const WishListsPage(),
+        );
+      }),
     );
   }
 }

@@ -223,4 +223,20 @@ class PaymentDetailsBloc
   String getPONumber() {
     return _poNumberController.text;
   }
+
+  List<PaymentMethodDto>? getPaymentMethods(Cart? cart) {
+    List<PaymentMethodDto>? paymentMethods = [];
+
+    if (cart?.paymentOptions?.paymentMethods != null) {
+      for (PaymentMethodDto paymentMethod
+          in cart!.paymentOptions!.paymentMethods!) {
+        if (paymentMethod.isCreditCard == null ||
+            !paymentMethod.isCreditCard!) {
+          paymentMethods.add(paymentMethod);
+        }
+      }
+    }
+
+    return paymentMethods;
+  }
 }

@@ -16,6 +16,7 @@ import 'package:commerce_flutter_app/features/presentation/components/input.dart
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_details/wish_list_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
@@ -46,10 +47,22 @@ class WishListDetailsScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           sl<WishListDetailsCubit>()..loadWishListDetails(wishListId),
-      child: WishListDetailsPage(
-        onWishListUpdated: onWishListUpdated,
-        onWishListDeleted: onWishListDeleted,
-      ),
+      child: Builder(builder: (context) {
+        return BlocListener<WishListHandlerCubit, WishListHandlerState>(
+          listener: (context, state) {
+            if (state.status == WishListHandlerStatus.shouldRefreshWishList) {
+              context
+                  .read<WishListDetailsCubit>()
+                  .loadWishListDetails(wishListId);
+              context.read<WishListHandlerCubit>().resetState();
+            }
+          },
+          child: WishListDetailsPage(
+            onWishListUpdated: onWishListUpdated,
+            onWishListDeleted: onWishListDeleted,
+          ),
+        );
+      }),
     );
   }
 }

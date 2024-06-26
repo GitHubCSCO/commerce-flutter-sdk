@@ -75,19 +75,6 @@ class ProductDetailsStandardConfigurationWidget extends StatelessWidget {
                                                     .sectionName!]),
                                         callback: _onSelectConfigurationPicker),
                                   )),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 10),
-                                    child: Container(
-                                      width: 40,
-                                      height: 40,
-                                      padding: const EdgeInsets.all(10),
-                                      child: SvgPicture.asset(
-                                        AssetConstants.iconArrowDown,
-                                        fit: BoxFit.fitWidth,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
                                 ],
                               ),
                             ],
