@@ -699,4 +699,7 @@ class LocalizationConstants {
   static const locationNote = "Location Note";
   static const saveLocationNote = "Save Location Note";
   static const locationNoteUpdated = "Location Note Updated";
+
+  // saved payments
+  static const noSavedPaymentsFound = "No saved payments found.";
 }

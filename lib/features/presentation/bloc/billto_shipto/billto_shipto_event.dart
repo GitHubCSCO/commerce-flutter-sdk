@@ -34,4 +34,10 @@ class FulfillmentMethodUpdateEvent extends BillToShipToEvent {
   FulfillmentMethodUpdateEvent(this.fulfillmentMethodType);
 }
 
-class SaveBillToShipToEvent extends BillToShipToEvent {}
+class SaveBillToShipToEvent extends BillToShipToEvent {
+
+  final bool isDefaultEnable;
+
+  SaveBillToShipToEvent(this.isDefaultEnable);
+
+}
