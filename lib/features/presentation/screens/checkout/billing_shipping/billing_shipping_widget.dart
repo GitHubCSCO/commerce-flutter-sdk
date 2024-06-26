@@ -190,11 +190,6 @@ class BillingShippingWidget extends StatelessWidget {
             phone: billingShippingEntity.warehouse?.phone,
             buildSeperator: true,
           ),
-          const Icon(
-            Icons.arrow_forward_ios,
-            color: Colors.grey,
-            size: 20,
-          )
         ],
       ),
     );

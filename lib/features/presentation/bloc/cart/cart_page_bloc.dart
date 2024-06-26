@@ -18,6 +18,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
       : _cartUseCase = cartUseCase,
         super(CartPageInitialState()) {
     on<CartPageLoadEvent>(_onCurrentCartLoadEvent);
+    on<CartPagePickUpLocationChangeEvent>(_onCartPagePickUpLocationChangeEvent);
   }
 
   Future<void> _onCurrentCartLoadEvent(
@@ -75,6 +76,12 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
     } catch (e) {
       emit(CartPageFailureState(error: 'An unexpected error occurred'));
     }
+  }
+
+  Future<void> _onCartPagePickUpLocationChangeEvent(
+      CartPagePickUpLocationChangeEvent event, Emitter<CartPageState> emit) async {
+    await _cartUseCase.patchPickUpLocation(event.wareHouse);
+    add(CartPageLoadEvent());
   }
 
   Future<String> _getCartWarningMessage(String? shippingMethod) async {
