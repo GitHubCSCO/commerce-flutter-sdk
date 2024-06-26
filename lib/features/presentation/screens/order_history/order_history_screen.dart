@@ -11,7 +11,6 @@ import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/order_history_list_item_widget.dart';
@@ -62,14 +61,21 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
                 ),
                 onPressed: () {
                   _textEditingController.clear();
+
+                  context
+                      .read<OrderHistoryCubit>()
+                      .searchQueryChanged(_textEditingController.text);
                   context.closeKeyboard();
                 },
               ),
               onTapOutside: (p0) => context.closeKeyboard(),
               textInputAction: TextInputAction.search,
               controller: _textEditingController,
+              onChanged: (value) {
+                context.read<OrderHistoryCubit>().searchQueryChanged(value);
+              },
               onSubmitted: (value) {
-                CustomSnackBar.showComingSoonSnackBar(context);
+                context.read<OrderHistoryCubit>().searchQueryChanged(value);
               },
             ),
           ),
