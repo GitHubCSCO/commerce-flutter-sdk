@@ -44,12 +44,20 @@ class AddCreditCardScreen extends StatelessWidget {
       required this.onCreditCardAdded,
       required this.addCreditCardEntity});
 
+  String getTitle() {
+    if (addCreditCardEntity.isAddNewCreditCard) {
+      return LocalizationConstants.addCreditCard;
+    } else {
+      return LocalizationConstants.editCreditCard;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: OptiAppColors.backgroundWhite,
-          title: const Text(LocalizationConstants.addCreditCard),
+          title: Text(getTitle()),
           centerTitle: false,
         ),
         body: MultiBlocProvider(
