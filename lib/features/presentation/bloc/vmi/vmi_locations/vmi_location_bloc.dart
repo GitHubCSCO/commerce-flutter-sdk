@@ -21,6 +21,7 @@ class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
     on<LoadVMILocationsEvent>(_onloadVMILocations);
     on<LocationSelectEvent>(_onLocationSelectEvent);
     on<UpdateSearchPlaceEvent>(_updateSeachPlace);
+    on<SaveVmiLocationEvent>(_saveVMILocationEvent);
   }
 
   Future<void> _onloadVMILocations(
@@ -41,8 +42,8 @@ class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
 
             var currentLocationDataEntity =
                 CurrentLocationDataEntity.fromVmiLocation(vmiLocation);
-            currentLocationDataEntity =
-                currentLocationDataEntity.copyWith(latLong: latLong);
+            currentLocationDataEntity = currentLocationDataEntity.copyWith(
+                latLong: latLong, id: vmiLocation.id);
 
             currentLocationDataEntityList.add(currentLocationDataEntity);
           }
@@ -60,7 +61,7 @@ class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
           } else {
             emit(VMILocationLoadedState(
                 currentLocationDataEntityList: currentLocationDataEntityList,
-                selectedLocation: currentLocationDataEntityList.first.latLong));
+                selectedLocation: currentLocationDataEntityList.first));
           }
         }
       case Failure():
@@ -85,21 +86,26 @@ class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
       LocationSelectEvent event, Emitter<VMILocationState> emit) async {
     seachPlace = null;
     selectedLocation = event.selectedLocation;
-    LatLong selectedLocationLatlng = event.selectedLocation.latLong!;
+    String selectedLocationId = event.selectedLocation.id!;
     var selectedItem = currentLocationDataEntityList.firstWhere(
-      (location) => location.latLong == selectedLocationLatlng,
+      (location) => location.id == selectedLocationId,
     );
     currentLocationDataEntityList
-        .removeWhere((location) => location.latLong == selectedLocationLatlng);
-    selectedItem = selectedItem.copyWith(latLong: selectedLocationLatlng);
+        .removeWhere((location) => location.id == selectedLocationId);
     currentLocationDataEntityList.insert(0, selectedItem);
     emit(VMILocationLoadedState(
         currentLocationDataEntityList: currentLocationDataEntityList,
-        selectedLocation: selectedLocationLatlng));
+        selectedLocation: selectedLocation));
   }
 
   Future<void> _updateSeachPlace(
       UpdateSearchPlaceEvent event, Emitter<VMILocationState> emit) async {
     seachPlace = event.seachPlace;
+  }
+
+  Future<void> _saveVMILocationEvent(
+      SaveVmiLocationEvent event, Emitter<VMILocationState> emit) async {
+    await _vmiLocationUseCase
+        .saveCurrentVmiLocation(event.selectedLocation.vmiLocation!);
   }
 }

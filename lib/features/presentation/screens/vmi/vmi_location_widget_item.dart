@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class VMICurrentLocationWidgetItem extends StatelessWidget with MapDirection {
   final CurrentLocationDataEntity locationData;
-  final LatLong? selectedLocation;
+  final CurrentLocationDataEntity? selectedLocation;
   final bool isSelectionOn;
 
   VMICurrentLocationWidgetItem(
@@ -31,10 +31,10 @@ class VMICurrentLocationWidgetItem extends StatelessWidget with MapDirection {
               children: [
                 Visibility(
                   visible: isSelectionOn,
-                  child: Radio<LatLong?>(
-                    value: locationData.latLong,
-                    groupValue: selectedLocation,
-                    onChanged: (LatLong? value) {
+                  child: Radio<String>(
+                    value: locationData.id!,
+                    groupValue: selectedLocation!.id,
+                    onChanged: (String? value) {
                       context.read<VMILocationBloc>().add(
                           LocationSelectEvent(selectedLocation: locationData));
                     },
