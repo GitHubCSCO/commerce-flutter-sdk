@@ -129,6 +129,9 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                     orderNumber: state.orderNumber,
                     isVmiCheckout: false,
                     cart: context.read<CheckoutBloc>().cart!,
+                    isOrderApproval:
+                        context.read<CheckoutBloc>().cart?.requiresApproval ??
+                            false,
                     reviewOrderEntity: state.reviewOrderEntity));
           }
         },
