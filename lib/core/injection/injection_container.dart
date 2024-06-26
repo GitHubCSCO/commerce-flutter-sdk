@@ -144,7 +144,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/product_list_fi
 import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order/saved_order_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_add_to/saved_order_add_to_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_details/saved_order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_payments/saved_payments_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
@@ -249,7 +249,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => SavedOrderCubit(savedOrderUsecase: sl()))
     ..registerFactory(() => SavedOrderUsecase())
     ..registerFactory(() => SavedOrderDetailsCubit(savedOrderUsecase: sl()))
-    ..registerFactory(() => SavedOrderAddToCubit(savedOrderUsecase: sl()))
+    ..registerFactory(() => SavedOrderHandlerCubit(savedOrderUsecase: sl()))
 
     //order approval
     ..registerFactory(() => OrderApprovalUseCase())
@@ -305,11 +305,10 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => BrandListCubit(brandUseCase: sl()))
     ..registerFactory(() => BrandDetailsCubit(brandUseCase: sl()))
     ..registerFactory(() => BrandUseCase())
-
     ..registerFactory(() => BrandCategoryBloc(brandCategoryUseCase: sl()))
     ..registerFactory(() => BrandCategoryUseCase())
-
-    ..registerFactory(() => BrandProductLinesCubit(brandProductLinesUseCase: sl()))
+    ..registerFactory(
+        () => BrandProductLinesCubit(brandProductLinesUseCase: sl()))
     ..registerFactory(() => BrandProductLinesUseCase())
 
     //cart
@@ -613,15 +612,15 @@ Future<void> initInjectionContainer() async {
           networkService: sl(),
         ))
     ..registerLazySingleton<ICategoryService>(() => CategoryService(
-      clientService: sl(),
-      cacheService: sl(),
-      networkService: sl(),
-    ))
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
     ..registerLazySingleton<IBrandService>(() => BrandService(
-      clientService: sl(),
-      cacheService: sl(),
-      networkService: sl(),
-    ));
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ));
 
   await sl.allReady();
 }
