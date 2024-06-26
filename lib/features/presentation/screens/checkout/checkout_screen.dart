@@ -199,33 +199,38 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                           isExpanded:
                                               list?[0].isExpanded ?? true,
                                           canTapOnHeader: true),
-                                      ExpansionPanel(
+                                      if (context
+                                              .watch<CheckoutBloc>()
+                                              .cart
+                                              ?.requiresApproval !=
+                                          true)
+                                        ExpansionPanel(
                                           headerBuilder: (BuildContext context,
-                                              bool isExpanded) {
-                                            return const ListTile(
+                                                    bool isExpanded) {
+                                              return const ListTile(
                                               title: Text(LocalizationConstants
-                                                  .paymentDetails),
-                                            );
-                                          },
-                                          body: CheckoutPaymentDetails(
-                                              cart: context
-                                                  .read<CheckoutBloc>()
-                                                  .cart!,
-                                              onCompleteCheckoutPaymentSection:
-                                                  () {
-                                                context.read<CheckoutBloc>().add(
-                                                    SelectPaymentEvent(context
-                                                        .read<
-                                                            PaymentDetailsBloc>()
-                                                        .cart!
-                                                        .paymentOptions!));
-                                                context
+                                                        .paymentDetails),
+                                              );
+                                            },
+                                            body: CheckoutPaymentDetails(
+                                                cart: context
+                                                    .read<CheckoutBloc>()
+                                                    .cart!,
+                                                onCompleteCheckoutPaymentSection:
+                                                    () {
+                                                  context.read<CheckoutBloc>().add(
+                                                      SelectPaymentEvent(context
+                                                          .read<
+                                                              PaymentDetailsBloc>()
+                                                          .cart!
+                                                          .paymentOptions!));
+                                                  context
                                                     .read<ExpansionPanelCubit>()
-                                                    .onContinueClick();
-                                              }),
-                                          isExpanded:
-                                              list?[1].isExpanded ?? false,
-                                          canTapOnHeader: true),
+                                                      .onContinueClick();
+                                                }),
+                                            isExpanded:
+                                                list?[1].isExpanded ?? false,
+                                            canTapOnHeader: true),
                                       ExpansionPanel(
                                           headerBuilder: (BuildContext context,
                                               bool isExpanded) {
