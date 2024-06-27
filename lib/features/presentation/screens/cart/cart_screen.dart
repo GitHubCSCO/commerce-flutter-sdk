@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/shipping_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/warehouse_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
@@ -16,6 +17,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_b
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
@@ -178,8 +180,10 @@ class CartPage extends StatelessWidget {
                             ),
                             PrimaryButton(
                               onPressed: () {
-                                AppRoute.checkout.navigateBackStack(context,
-                                    extra: context.read<CartPageBloc>().cart);
+                                final currentState =
+                                    context.read<AuthCubit>().state;
+                                handleAuthStatus(context, currentState.status,
+                                    context.read<CartPageBloc>());
                               },
                               text: context
                                       .read<CartPageBloc>()
@@ -236,6 +240,42 @@ class CartPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void handleAuthStatus(
+      BuildContext context, AuthStatus status, CartPageBloc cartPageBloc) {
+    if (status == AuthStatus.authenticated) {
+      navigateToCheckout(context, cartPageBloc);
+    } else {
+      showSignInDialog(context);
+    }
+  }
+
+  void navigateToCheckout(BuildContext context, CartPageBloc cartPageBloc) {
+    AppRoute.checkout.navigateBackStack(context, extra: cartPageBloc.cart);
+  }
+
+  void showSignInDialog(BuildContext context) {
+    displayDialogWidget(
+      context: context,
+      title: LocalizationConstants.notSignedIn,
+      message: LocalizationConstants.pleaseSignInCheckout,
+      actions: [
+        DialogPlainButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text(LocalizationConstants.cancel),
+        ),
+        DialogPlainButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            AppRoute.login.navigateBackStack(context);
+          },
+          child: const Text(LocalizationConstants.signIn),
+        ),
+      ],
     );
   }
 
