@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,7 +46,11 @@ class QuickOrderAutoCompleteBloc extends Bloc<QuickOrderAutoCompleteEvent, Quick
       final result = await loadAutoCompleteProducts();
       switch (result) {
         case Success(value: final data):
-          emit(QuickOrderAutoCompleteLoadedState(result: data));
+          if ((data?.products ?? []).isNotEmpty) {
+            emit(QuickOrderAutoCompleteLoadedState(result: data));
+          } else {
+            emit(QuickOrderAutoCompleteFailureState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
+          }
         case Failure(errorResponse: final errorResponse):
           emit(QuickOrderAutoCompleteFailureState(errorResponse.errorDescription ?? ''));
         default:
@@ -62,7 +67,11 @@ class QuickOrderAutoCompleteBloc extends Bloc<QuickOrderAutoCompleteEvent, Quick
       final result = await loadAutoCompleteProducts();
       switch (result) {
         case Success(value: final data):
-          emit(QuickOrderAutoCompleteLoadedState(result: data));
+          if ((data?.products ?? []).isNotEmpty) {
+            emit(QuickOrderAutoCompleteLoadedState(result: data));
+          } else {
+            emit(QuickOrderAutoCompleteFailureState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
+          }
         case Failure(errorResponse: final errorResponse):
           emit(QuickOrderAutoCompleteFailureState(errorResponse.errorDescription ?? ''));
         default:
