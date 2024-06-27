@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/get_order_collection_result_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_line_entity.dart';
@@ -32,6 +33,7 @@ class OrderUsecase extends BaseUseCase {
           OrdersQueryParameters(
             sort: sortOrdersValue,
             page: page,
+            pageSize: CoreConstants.defaultPageSize,
             showMyOrders: showMyOrders,
             status: filterAttributes.isEmpty ? null : filterAttributes,
             search: searchText != '' ? searchText : null,
