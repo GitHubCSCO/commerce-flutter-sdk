@@ -322,6 +322,19 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                       .read<PaymentDetailsBloc>()
                                       .isCVVFieldOpened;
 
+                                  var isPaymentMethodSelectedInCard = context
+                                          .read<CheckoutBloc>()
+                                          .cart
+                                          ?.paymentMethod !=
+                                      null;
+
+                                  if (!isPaymentMethodSelectedInCard) {
+                                    context.read<CheckoutBloc>().add(
+                                        SelectPaymentMethodEvent(context
+                                            .read<PaymentDetailsBloc>()
+                                            .selectedPaymentMethod!));
+                                  }
+
                                   if (isSelectedNewAddedCard) {
                                     context
                                         .read<ExpansionPanelCubit>()
