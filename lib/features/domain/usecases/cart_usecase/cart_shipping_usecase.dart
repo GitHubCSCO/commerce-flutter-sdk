@@ -5,7 +5,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class CartShippingUseCase extends BaseUseCase {
 
   Future<Result<Session, ErrorResponse>> patchCurrentShippingOption(ShippingOption shippingOption) async {
-    var newSession = commerceAPIServiceProvider.getSessionService().currentSession;
+    var newSession = commerceAPIServiceProvider.getSessionService().getCachedCurrentSession();
     newSession?.fulfillmentMethod = shippingOption.name;
 
     return await commerceAPIServiceProvider.getSessionService().patchSession(newSession!);

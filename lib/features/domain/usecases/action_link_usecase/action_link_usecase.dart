@@ -8,7 +8,7 @@ class ActionLinkUseCase extends BaseUseCase {
   Future<List<ActionLinkEntity>> getViewableActions(List<ActionLinkEntity>? actions) async {
     List<ActionLinkEntity> list = [];
 
-    var session = commerceAPIServiceProvider.getSessionService().currentSession;
+    var session = commerceAPIServiceProvider.getSessionService().getCachedCurrentSession();
     var authentication = await commerceAPIServiceProvider.getAuthenticationService().isAuthenticatedAsync();
 
     bool? isAuthenticated = switch (authentication) {

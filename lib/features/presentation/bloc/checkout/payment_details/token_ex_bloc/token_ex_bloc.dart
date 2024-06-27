@@ -1,13 +1,17 @@
+import 'package:commerce_flutter_app/features/domain/entity/credit_card_info_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
+  CreditCardInfoEntity? cardInfo;
   bool isTokenExConfigurationSet = false;
   bool isCardDataFetched = false;
   TokenExBloc() : super(TokenExInitial()) {
     on<LoadTokenExFieldEvent>((event, emit) => _setUpTokenExField(event, emit));
     on<HandleTokenExEvent>((event, emit) => _handleWebViewRequest(event, emit));
+    on<UpdateCreditCardInfo>(
+        (event, emit) => _onUpdareCreditCardInfo(event, emit));
     on<TokenExCongigurationSetEvent>((event, emit) {
       _setTokenExconfiguration(event.isConfigurationSet);
     });
@@ -32,6 +36,11 @@ class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
     isCardDataFetched = false;
   }
 
+  Future<void> _onUpdareCreditCardInfo(
+      UpdateCreditCardInfo event, Emitter<TokenExState> emit) async {
+    cardInfo = event.cardInfoEntity;
+  }
+
   Future<void> _handleWebViewRequest(
       HandleTokenExEvent event, Emitter<TokenExState> emit) async {
     var urlString = event.urlString;
@@ -43,7 +52,7 @@ class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
     }
 
     if (urlString.endsWith("error")) {
-      emit(TokenExInvalidCvvState());
+      emit(TokenExInvalidCvvState(false));
       return;
     }
 
@@ -55,7 +64,7 @@ class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
     var isValid = valid.toLowerCase() == 'true';
 
     if (!isValid) {
-      emit(TokenExInvalidCvvState());
+      emit(TokenExInvalidCvvState(true));
     }
 
     if (isValid && !isCardDataFetched) {

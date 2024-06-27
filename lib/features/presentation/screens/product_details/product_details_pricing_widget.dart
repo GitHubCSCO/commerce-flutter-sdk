@@ -61,7 +61,6 @@ class ProductDetailsPricingWidget extends StatelessWidget {
             state.productDetailsPriceEntity.viewQuantityPricingButtonShown!) {
           return GestureDetector(
             onTap: () {
-              // TODO: Implement the logic for "View Quantity Pricing"
               viewPricingQuantityWidget(
                   context,
                   state.productDetailsPriceEntity.product?.pricing

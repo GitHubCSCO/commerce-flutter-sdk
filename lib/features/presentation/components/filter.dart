@@ -10,6 +10,7 @@ class FilterValueViewModel {
     required this.id,
     required this.title,
     this.facetType,
+    this.isSelected,
   });
 
   final String id;
@@ -18,16 +19,48 @@ class FilterValueViewModel {
 
   final FacetType? facetType;
 
+  final bool? isSelected;
+
   FilterValueViewModel copyWith({
     String? id,
     String? title,
     FacetType? facetType,
+    bool? isSelected,
   }) {
     return FilterValueViewModel(
       id: id ?? this.id,
       title: title ?? this.title,
       facetType: facetType ?? this.facetType,
+      isSelected: isSelected ?? this.isSelected,
     );
+  }
+}
+
+class FilterValueViewModelCollection {
+  final int? maxItemsToShow;
+  final List<FilterValueViewModel> values;
+  final String title;
+
+  FilterValueViewModelCollection({
+    this.maxItemsToShow,
+    required this.values,
+    required this.title,
+  });
+
+  FilterValueViewModelCollection copyWith({
+    int? maxItemsToShow,
+    List<FilterValueViewModel>? values,
+    String? title,
+  }) {
+    return FilterValueViewModelCollection(
+      maxItemsToShow: maxItemsToShow ?? this.maxItemsToShow,
+      values: values ?? this.values,
+      title: title ?? this.title,
+    );
+  }
+
+  bool get anyFiltersSelected {
+    return values.any((element) => element.isSelected == true);
   }
 }
 
@@ -58,83 +91,89 @@ void showFilterModalSheet(
     ),
     context: context,
     builder: (innerContext) {
-      return Container(
-        decoration: const BoxDecoration(
-          color: OptiAppColors.backgroundWhite,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                    ),
-                    child: Text(
-                      LocalizationConstants.filter,
-                      style: OptiTextStyles.titleLarge,
-                    ),
-                  ),
-                  child,
-                ],
-              ),
+      return SafeArea(
+        child: Container(
+          decoration: const BoxDecoration(
+            color: OptiAppColors.backgroundWhite,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
             ),
-            Container(
-              decoration: const BoxDecoration(
-                color: OptiAppColors.backgroundWhite,
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromRGBO(0, 0, 0, 0.05),
-                    blurRadius: 5,
-                    offset: Offset(0, -4),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                          ),
+                          child: Text(
+                            LocalizationConstants.filter,
+                            style: OptiTextStyles.titleLarge,
+                          ),
+                        ),
+                        child,
+                      ],
+                    ),
                   ),
-                ],
+                ),
               ),
-              padding: const EdgeInsets.symmetric(
-                vertical: 13.5,
-                horizontal: 31.5,
-              ),
-              child: Row(
-                children: [
-                  if (onReset != null)
+              Container(
+                decoration: const BoxDecoration(
+                  color: OptiAppColors.backgroundWhite,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromRGBO(0, 0, 0, 0.05),
+                      blurRadius: 5,
+                      offset: Offset(0, -4),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 13.5,
+                  horizontal: 31.5,
+                ),
+                child: Row(
+                  children: [
+                    if (onReset != null)
+                      Expanded(
+                        child: SizedBox(
+                          height: 48,
+                          child: SecondaryButton(
+                            onPressed: onReset,
+                            child: const Text(LocalizationConstants.reset),
+                          ),
+                        ),
+                      ),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: SizedBox(
+                        width: 176,
                         height: 48,
-                        child: SecondaryButton(
-                          onPressed: onReset,
-                          child: const Text(LocalizationConstants.reset),
+                        child: PrimaryButton(
+                          text: LocalizationConstants.apply,
+                          onPressed: () {
+                            onApply();
+                            Navigator.pop(innerContext);
+                          },
                         ),
                       ),
                     ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: SizedBox(
-                      width: 176,
-                      height: 48,
-                      child: PrimaryButton(
-                        text: LocalizationConstants.apply,
-                        onPressed: () {
-                          onApply();
-                          Navigator.pop(innerContext);
-                        },
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     },

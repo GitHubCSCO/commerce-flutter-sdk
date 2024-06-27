@@ -23,29 +23,44 @@ class CartUseCase extends BaseUseCase {
         .getCurrentCartPromotions();
   }
 
+  Future<Result<Session, ErrorResponse>> patchPickUpLocation(Warehouse warehouse) async {
+    var newSession = commerceAPIServiceProvider.getSessionService().getCachedCurrentSession();
+    newSession?.pickUpWarehouse = warehouse;
+
+    return await commerceAPIServiceProvider.getSessionService().patchSession(newSession!);
+  }
+
   Warehouse? getPickUpWareHouse() {
     return commerceAPIServiceProvider
         .getSessionService()
-        .currentSession
+        .getCachedCurrentSession()
         ?.pickUpWarehouse;
   }
 
   String? getShippingMethod() {
     return commerceAPIServiceProvider
         .getSessionService()
-        .currentSession
+        .getCachedCurrentSession()
         ?.fulfillmentMethod;
   }
 
-  bool isCustomerOrderApproval() {
-    return false;
+  Future<bool> isCustomerOrderApproval() async {
+    return await commerceAPIServiceProvider
+        .getClientService()
+        .isCustomerOrderApproval();
   }
 
-  Future<String> getSiteMessage(String messageName, String? defaultMessage) async {
+  Future<String> getSiteMessage(
+      String messageName, String? defaultMessage) async {
     var result = await commerceAPIServiceProvider
         .getWebsiteService()
         .getSiteMessage(messageName, defaultMessage: defaultMessage);
     return result is Success ? (result as Success).value : defaultMessage;
+  }
 
+  Future<Result<ProductSettings, ErrorResponse>> loadProductSettings() async {
+    return await commerceAPIServiceProvider
+        .getSettingsService()
+        .getProductSettingsAsync();
   }
 }

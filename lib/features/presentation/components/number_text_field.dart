@@ -17,6 +17,7 @@ class NumberTextField extends StatefulWidget {
   final ValueChanged<int?>? onChanged;
   final String? initialtText;
   final bool shouldShowIncrementDecermentIcon;
+  final void Function(bool hasFocus)? focusListener;
 
   const NumberTextField({
     Key? key,
@@ -32,6 +33,7 @@ class NumberTextField extends StatefulWidget {
     this.contentPadding = const EdgeInsets.symmetric(horizontal: 8),
     this.borderWidth = 2,
     this.onChanged,
+    this.focusListener,
   }) : super(key: key);
 
   @override
@@ -54,6 +56,12 @@ class _NumberTextFieldState extends State<NumberTextField> {
     _shouldShowIncrementDecermentIcon =
         widget.shouldShowIncrementDecermentIcon!;
     _updateArrows(int.tryParse(_controller.text));
+
+    if (widget.focusListener != null) {
+      _focusNode.addListener(() {
+        widget.focusListener!(_focusNode.hasFocus);
+      });
+    }
   }
 
   @override
@@ -69,21 +77,28 @@ class _NumberTextFieldState extends State<NumberTextField> {
         children: [
           // Minus button
           if (_shouldShowIncrementDecermentIcon)
-            TextButton(
-              onPressed: () {
-                if (_canGoDown) {
-                  _update(false);
-                }
-              },
-              style: TextButton.styleFrom(
-                backgroundColor: OptiAppColors.backgroundGray,
-                padding: EdgeInsets.all(16),
-                shape: CircleBorder(),
-              ),
-              child: Icon(
-                Icons.remove,
-                color: Colors.black,
-                size: 24,
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: SizedBox(
+                width: 40,
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_canGoDown) {
+                      _update(false);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: OptiAppColors.backgroundGray,
+                    padding: EdgeInsets.zero,
+                    shape: CircleBorder(),
+                  ),
+                  child: Icon(
+                    Icons.remove,
+                    color: Colors.black,
+                    size: 24,
+                  ),
+                ),
               ),
             ),
           // TextField
@@ -99,18 +114,18 @@ class _NumberTextFieldState extends State<NumberTextField> {
                 decoration: InputDecoration(
                   counterText: '',
                   contentPadding: const EdgeInsets.symmetric(
-                    horizontal: AppStyle.defaultHorizontalPadding,
+                    horizontal: AppStyle.textFieldDefaultHorizontalPadding,
                     vertical: AppStyle.defaultVerticalPadding,
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(
-                      AppStyle.borderRadius,
+                      AppStyle.textFieldborderRadius,
                     ),
                     borderSide: BorderSide.none,
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(
-                      AppStyle.borderRadius,
+                      AppStyle.textFieldborderRadius,
                     ),
                     borderSide: const BorderSide(
                       color: AppStyle.neutral500,
@@ -137,21 +152,28 @@ class _NumberTextFieldState extends State<NumberTextField> {
           ),
           // Plus button
           if (_shouldShowIncrementDecermentIcon)
-            TextButton(
-              onPressed: () {
-                if (_canGoUp) {
-                  _update(true);
-                }
-              },
-              style: TextButton.styleFrom(
-                backgroundColor: OptiAppColors.backgroundGray,
-                padding: EdgeInsets.all(16),
-                shape: CircleBorder(),
-              ),
-              child: Icon(
-                Icons.add,
-                color: Colors.black,
-                size: 24,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: 40,
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_canGoUp) {
+                      _update(true);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: OptiAppColors.backgroundGray,
+                    padding: EdgeInsets.zero,
+                    shape: CircleBorder(),
+                  ),
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.black,
+                    size: 24,
+                  ),
+                ),
               ),
             )
         ],

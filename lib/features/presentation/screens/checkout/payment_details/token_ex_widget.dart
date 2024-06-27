@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/tokenex_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/token_ex_view_mode.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_state.dart';
@@ -10,6 +11,16 @@ import 'package:webview_flutter/webview_flutter.dart';
 typedef handleWebViewRequestFromTokenEX = void Function(String urlString);
 typedef handleTokenExFinishedData = void Function(
     String cardNumber, String cardType, String securityCode, bool isInvalidCVV);
+
+int getTokenEXMode(TokenExViewMode mode) {
+  if (TokenExViewMode.cvv == mode) {
+    return 2;
+  } else if (TokenExViewMode.full == mode) {
+    return 0;
+  } else {
+    return 1;
+  }
+}
 
 class TokenExWebView extends StatelessWidget {
   final TokenExEntity tokenExEntity;
@@ -38,7 +49,7 @@ class TokenExWebView extends StatelessWidget {
           handleTokenExFinishedData(
               state.cardNumber, state.cardType, state.securityCode, false);
         } else if (state is TokenExInvalidCvvState) {
-          handleTokenExFinishedData(null, null, null, true);
+          handleTokenExFinishedData(null, null, null, state.showInvalidCVV);
         }
       },
       child: WebViewWidget(
@@ -62,7 +73,7 @@ class TokenExWebView extends StatelessWidget {
                       TokenExScripts.getTokenExSetupScript(
                     json.encode(tokenExEntity.tokenExConfiguration),
                     json.encode(tokenExEntity.tokenexStyle),
-                    2,
+                    getTokenEXMode(tokenExEntity.tokenexMode!),
                     json.encode(tokenExEntity.cardType!),
                   );
                   _webViewController.runJavaScript(tokenExSetGetawayJSAction);
@@ -83,6 +94,7 @@ class TokenExWebView extends StatelessWidget {
               onNavigationRequest: (NavigationRequest request) {
                 final isTokenExConfigurationSet =
                     context.read<TokenExBloc>().isTokenExConfigurationSet;
+
                 handleWebViewRequestFromTokenEX(request.url);
 
                 if (request.url.endsWith('loaded')) {

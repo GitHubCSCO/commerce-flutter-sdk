@@ -8,9 +8,12 @@ import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/auto_complete/quick_order_auto_complete_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
@@ -24,6 +27,8 @@ import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/sty
 import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/barcode_scanner_view.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/vmi_checkout/vmi_checkout_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_list/quick_order_list_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
@@ -31,9 +36,16 @@ import 'package:commerce_flutter_app/features/presentation/widget/style_trait_se
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuickOrderScreen extends StatelessWidget {
+
+  final ScanningMode _scanningMode;
+
+  const QuickOrderScreen({super.key, required ScanningMode scanningMode})
+      : _scanningMode = scanningMode;
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
@@ -42,14 +54,31 @@ class QuickOrderScreen extends StatelessWidget {
         create: (context) => sl<StyleTraitCubit>(),
       ),
       BlocProvider<OrderListBloc>(
-          create: (context) => sl<OrderListBloc>()..add(OrderListLoadEvent())),
+          create: (context) {
+            return OrderListBloc(
+              quickOrderUseCase: sl(),
+              scanningMode: _scanningMode,
+            )..add(OrderListLoadEvent());
+          },
+      ),
       BlocProvider<QuickOrderAutoCompleteBloc>(
-          create: (context) => sl<QuickOrderAutoCompleteBloc>()),
-    ], child: QuickOrderPage());
+        create: (context) {
+          return QuickOrderAutoCompleteBloc(
+            searchUseCase: sl(),
+            scanningMode: _scanningMode,
+          );
+        },
+      )
+    ], child: QuickOrderPage(scanningMode: _scanningMode));
   }
 }
 
 class QuickOrderPage extends StatefulWidget {
+
+  final ScanningMode scanningMode;
+
+  const QuickOrderPage({super.key, required this.scanningMode});
+
   @override
   State<QuickOrderPage> createState() => _QuickOrderPageState();
 }
@@ -66,9 +95,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
+      backgroundColor: OptiAppColors.backgroundWhite,
       appBar: AppBar(
-        title: const Text(LocalizationConstants.quickOrder),
+        title: Text(_getTitle(widget.scanningMode)),
         actions: <Widget>[
           IconButton(
               onPressed: () {
@@ -81,8 +110,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                 cameraFlash ? Icons.flash_on : Icons.flash_off,
                 color: Colors.black,
               )),
-          BottomMenuWidget(
-              toolMenuList: _buildToolMenu(context), websitePath: 'websitePath', isViewOnWebsiteEnable: false)
+          _buildAppBarMenu(),
         ],
       ),
       body: BlocConsumer<QuickOrderAutoCompleteBloc, QuickOrderAutoCompleteState>(
@@ -146,6 +174,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                 context.read<CartCountCubit>().onCartItemChange();
                                 context.read<CartCountCubit>().onSelectCartTab();
                                 AppRoute.cart.navigate(context);
+                              } else if (state is OrderListNavigateToVmiCheckoutState) {
+                                _handleVmiCheckout(state.cart);
                               } else if (state is OrderListAddToListSuccessState) {
                                 WishListCallbackHelper.addItemsToWishList(
                                   context, 
@@ -171,6 +201,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                 _showAlert(context, '', state.message);
                               } else if (state is OrderListStyleProductAddState) {
                                 handleStyleProductAdd(state.productEntity);
+                              } else if (state is OrderListVmiStyleProductAddState) {
+                                handleVmiStyleProductAdd(state.vmiBinEntity);
+                              } else if (state is OrderListVmiProductAddState) {
+                                handleVmiBinAdd(state.vmiBinEntity, state.previousOrderEntity);
                               }
                             },
                             buildWhen: (previous, current) =>
@@ -198,8 +232,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                     padding:
                                                     const EdgeInsets.only(right: 8),
                                                     child: Text(
-                                                      LocalizationConstants
-                                                          .quickOrderContents,
+                                                      _getContentTitle(widget.scanningMode),
                                                       textAlign: TextAlign.start,
                                                       style: OptiTextStyles.titleSmall,
                                                     ),
@@ -237,6 +270,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                             ),
                                             Expanded(
                                               child: QuickOrderListWidget(
+                                                scanningMode: widget.scanningMode,
                                                   callback:
                                                   _handleQuickOrderListCallback),
                                             ),
@@ -252,41 +286,44 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                       const BoxDecoration(color: Colors.white),
                                       child: Column(
                                         children: [
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Expanded(
-                                                child: Container(
-                                                  padding:
-                                                  const EdgeInsets.only(right: 8),
-                                                  child: Text(
-                                                    (state is OrderListLoadedState &&
+                                          Visibility(
+                                            visible: widget.scanningMode != ScanningMode.count,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  child: Container(
+                                                    padding:
+                                                    const EdgeInsets.only(right: 8),
+                                                    child: Text(
+                                                      (state is OrderListLoadedState &&
+                                                          state.quickOrderItemList
+                                                              .isNotEmpty)
+                                                          ? LocalizationConstants
+                                                          .listTotalProducts
+                                                          .format([
                                                         state.quickOrderItemList
-                                                            .isNotEmpty)
-                                                        ? LocalizationConstants
-                                                        .listTotalProducts
-                                                        .format([
-                                                      state.quickOrderItemList
-                                                          .length
-                                                    ])
-                                                        : LocalizationConstants
-                                                        .listTotal,
-                                                    textAlign: TextAlign.start,
-                                                    style: OptiTextStyles.subtitle,
+                                                            .length
+                                                      ])
+                                                          : LocalizationConstants
+                                                          .listTotal,
+                                                      textAlign: TextAlign.start,
+                                                      style: OptiTextStyles.subtitle,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              Text(
-                                                subTotal,
-                                                textAlign: TextAlign.start,
-                                                style: OptiTextStyles.subtitle,
-                                              )
-                                            ],
+                                                Text(
+                                                  subTotal,
+                                                  textAlign: TextAlign.start,
+                                                  style: OptiTextStyles.subtitle,
+                                                )
+                                              ],
+                                            ),
                                           ),
                                           const SizedBox(height: 20),
-                                          PrimaryButton(
+                                          TertiaryButton(
                                             isEnabled: (state is OrderListLoadedState &&
                                                 state.quickOrderItemList.isNotEmpty)
                                                 ? true
@@ -294,8 +331,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                             onPressed: () {
                                               _addToCart(context);
                                             },
-                                            text: LocalizationConstants
-                                                .addToCartAndCheckout,
+                                            child: Text(_getCheckoutButtonTitle(widget.scanningMode)),
                                           ),
                                           const SizedBox(height: 4),
                                           PrimaryButton(
@@ -326,91 +362,6 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                   )
                 ],
               );
-            // case AutoCompleteInitialState:
-            //   return Column(
-            //     children: [
-            //       Container(
-            //         padding: const EdgeInsets.symmetric(
-            //             vertical: 16, horizontal: 24),
-            //         child: Input(
-            //           hintText: LocalizationConstants.search,
-            //           suffixIcon: IconButton(
-            //             icon: SvgPicture.asset(
-            //               AssetConstants.iconClear,
-            //               semanticsLabel: 'search query clear icon',
-            //               fit: BoxFit.fitWidth,
-            //             ),
-            //             onPressed: () {
-            //               context
-            //                   .read<QuickOrderBloc>()
-            //                   .add(QuickOrderEndSearchEvent());
-            //               textEditingController.clear();
-            //               context
-            //                   .read<QuickOrderAutoCompleteBloc>()
-            //                   .add(QuickOrderTypingEvent(''));
-            //               context.closeKeyboard();
-            //             },
-            //           ),
-            //           onTapOutside: (p0) => context.closeKeyboard(),
-            //           textInputAction: TextInputAction.search,
-            //           focusListener: (bool hasFocus) {
-            //             if (hasFocus) {
-            //               context
-            //                   .read<QuickOrderAutoCompleteBloc>()
-            //                   .add(QuickOrderFocusEvent());
-            //             } else {
-            //               context
-            //                   .read<QuickOrderAutoCompleteBloc>()
-            //                   .add(QuickOrderUnFocusEvent());
-            //               context.read<QuickOrderBloc>().add(QuickOrderEndSearchEvent());
-            //             }
-            //           },
-            //           onChanged: (String searchQuery) {
-            //             context
-            //                 .read<QuickOrderAutoCompleteBloc>()
-            //                 .add(QuickOrderTypingEvent(searchQuery));
-            //           },
-            //           // onSubmitted: (String query) {
-            //           //   context.read<QuickOrderAutoCompleteBloc>().add(SearchSearchEvent());
-            //           // },
-            //           controller: textEditingController,
-            //         ),
-            //       ),
-            //       Expanded(child: BlocBuilder<QuickOrderAutoCompleteBloc,
-            //           QuickOrderAutoCompleteState>(
-            //         builder: (context, state) {
-            //           switch (state.runtimeType) {
-            //             case QuickOrderAutoCompleteInitialState:
-            //               return Center(
-            //                 child: Text(
-            //                   LocalizationConstants.searchPrompt,
-            //                   style: OptiTextStyles.body,
-            //                 ),
-            //               );
-            //             case QuickOrderAutoCompleteLoadingState:
-            //               return const Center(
-            //                   child: CircularProgressIndicator());
-            //             case QuickOrderAutoCompleteLoadedState:
-            //               final autoCompleteResult =
-            //                   (state as QuickOrderAutoCompleteLoadedState)
-            //                       .result!;
-            //               return AutoCompleteWidget(
-            //                   callback: _handleAutoCompleteCallback,
-            //                   autocompleteResult: autoCompleteResult);
-            //             //click to add product in quick order list
-            //             case QuickOrderAutoCompleteFailureState:
-            //               return Center(
-            //                   child: Text(
-            //                 (state as QuickOrderAutoCompleteFailureState).error,
-            //                 style: OptiTextStyles.body,
-            //               ));
-            //             default:
-            //               return Container();
-            //           }
-            //         },
-            //       ))
-            //     ],
-            //   );
             default:
               return Column(
                 children: [
@@ -479,10 +430,12 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                       autocompleteResult: (state as QuickOrderAutoCompleteLoadedState).result!,
                     )
                   else if (state is QuickOrderAutoCompleteFailureState)
-                    Center(
-                      child: Text(
-                        (state as QuickOrderAutoCompleteFailureState).error,
-                        style: OptiTextStyles.body,
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          (state as QuickOrderAutoCompleteFailureState).error,
+                          style: OptiTextStyles.body,
+                        ),
                       ),
                     ),
                 ],
@@ -609,6 +562,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
       OrderCallBackType orderCallBackType) {
     if (orderCallBackType == OrderCallBackType.quantityChange) {
       context.read<OrderListBloc>().add(OrderListLoadEvent());
+    } else if (orderCallBackType == OrderCallBackType.newCount) {
+      context.read<OrderListBloc>().add(OrderListItemScanAddEvent(quickOrderItemEntity.vmiBinEntity?.binNumber ?? ''));
     } else if (orderCallBackType == OrderCallBackType.itemDelete) {
       context
           .read<OrderListBloc>()
@@ -628,18 +583,36 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     context.read<OrderListBloc>().add(OrderListItemAddEvent(product));
   }
 
+  Widget _buildAppBarMenu() {
+    return Visibility(
+      visible: widget.scanningMode != ScanningMode.create,
+      child: BottomMenuWidget(
+          toolMenuList: _buildToolMenu(context), isViewOnWebsiteEnable: false),
+    );
+  }
+
   List<ToolMenu> _buildToolMenu(BuildContext context) {
     List<ToolMenu> list = [];
-    list.add(ToolMenu(
-        title: LocalizationConstants.addToList,
-        action: () {
-          _addToList(context);
-        }));
-    list.add(ToolMenu(
-        title: LocalizationConstants.removeAllProducts,
-        action: () {
-          _clearAllCart(context);
-        }));
+
+    if (widget.scanningMode == ScanningMode.count) {
+      list.add(ToolMenu(
+          title: LocalizationConstants.clearHistory,
+          action: () {
+            _clearAllCart(context);
+          }));
+    } else if (widget.scanningMode == ScanningMode.quick) {
+      list.add(ToolMenu(
+          title: LocalizationConstants.addToList,
+          action: () {
+            _addToList(context);
+          }));
+      list.add(ToolMenu(
+          title: LocalizationConstants.removeAllProducts,
+          action: () {
+            _clearAllCart(context);
+          }));
+    }
+
     return list;
   }
 
@@ -657,6 +630,69 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     });
   }
 
+  void handleVmiStyleProductAdd(VmiBinModelEntity vmiBinEntity) {
+    showStyleTraitFilter(vmiBinEntity.productEntity!, context, ongetProduct: (StyledProductEntity? styleProduct) {
+      context.read<OrderListBloc>().add(OrderListAddVmiStyleProductEvent(vmiBinEntity, styleProduct!));
+    });
+  }
+
+  void handleVmiBinAdd(VmiBinModelEntity vmiBinEntity, OrderEntity? previousOrder) async {
+    final result = await context.pushNamed<CountInventoryEntity>(
+      AppRoute.countInventory.name,
+      extra: CountInventoryEntity(vmiBinEntity: vmiBinEntity, previousOrder: previousOrder),
+    );
+
+    if (!context.mounted) {
+      return;
+    }
+
+    if (result != null) {
+      context.read<OrderListBloc>().add(OrderListAddVmiBinEvent(result.vmiBinEntity, result.qty ?? 0));
+    } else {
+      context.read<OrderListBloc>().add(OrderListLoadEvent());
+    }
+  }
+
+  void _handleVmiCheckout(Cart cart) async {
+    final vmiCheckoutEntity = VmiCheckoutEntity(cart, widget.scanningMode);
+    await context.pushNamed(
+      AppRoute.vmiCheckout.name,
+      extra: vmiCheckoutEntity,
+    );
+
+    context.read<OrderListBloc>().add(OrderListLoadEvent());
+  }
+
+  String _getTitle(ScanningMode scanningMode) {
+    if (scanningMode == ScanningMode.count) {
+      return LocalizationConstants.countInventory;
+    } else if (scanningMode == ScanningMode.create) {
+      return LocalizationConstants.createOrder;
+    } else {
+      return LocalizationConstants.quickOrder;
+    }
+  }
+
+  String _getContentTitle(ScanningMode scanningMode) {
+    if (scanningMode == ScanningMode.count) {
+      return LocalizationConstants.countHistory;
+    } else if (scanningMode == ScanningMode.create) {
+      return LocalizationConstants.orderContents;
+    } else {
+      return LocalizationConstants.quickOrderContents;
+    }
+  }
+
+  String _getCheckoutButtonTitle(ScanningMode scanningMode) {
+    if (scanningMode == ScanningMode.count) {
+      return LocalizationConstants.checkout;
+    } else if (scanningMode == ScanningMode.create) {
+      return LocalizationConstants.checkout;
+    } else {
+      return LocalizationConstants.addToCartAndCheckout;
+    }
+  }
+
 }
 
-enum OrderCallBackType { quantityChange, itemDelete, calculateSubtotal }
+enum OrderCallBackType { quantityChange, newCount, itemDelete, calculateSubtotal }

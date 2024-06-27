@@ -86,7 +86,7 @@ class LocalizationConstants {
   static const shippingMethod = "Shipping Method";
   static const pickUpLocation = "Pick Up Location";
   static const shippingAddress = "Shipping Address";
-  static const recipientAddress = "RECIPIENT ADDRESS";
+  static const recipientAddress = "Recipient Address";
   static const setAsDefault =
       "Set as default and skip this step next time you log in";
   static const cancelSignIn = "Cancel Sign In";
@@ -183,7 +183,7 @@ class LocalizationConstants {
   static const approveOrder = "Approve Order";
   static const orderInformation = "Order Information";
   static const approvingCart = "Approving Cart";
-  static const approvingCartInfos = "Approving {0} for {1}";
+  static const approvingCartInfos = "Approving %s for %s";
 
   // Orders
   static const noOrdersFound = "No Orders Found";
@@ -195,7 +195,7 @@ class LocalizationConstants {
   static const reorder = "Reorder";
   static const promo = "Promo {0}";
   static const shipments = "SHIPMENTS";
-  static const orderSummary = "ORDER SUMMARY";
+  static const orderSummary = "Order Summary";
   static const productItems = "PRODUCTS ({0} ITEMS)";
   static const trackShipment = "Track Shipment";
   static const requestPickUpDate = "Requested Pick Up Date";
@@ -303,6 +303,7 @@ class LocalizationConstants {
   static const searchPrompt = "Search for products.";
   static const sort = "Sort";
   static const resultsFor = "%s result(s) for '%s'";
+  static const results = "%s result(s)";
   static const searchInsteadFor = "Search instead for {0}";
   static const didYouMean = "Did you mean {0}";
   static const autocompleteCategoryOrBrandCombinedTitle = "{0} in {1}";
@@ -426,7 +427,7 @@ class LocalizationConstants {
   static const emailAddress = "Email Address";
   static const promoName = "Promo {0}";
   static const creditCardAddress = "Credit Card Address";
-  static const orderSummaryItems = "Order Summary ({0} Items)";
+  static const orderSummaryItems = "Order Summary (%s Items)";
   static const cardNumber = "Card Number";
   static const uPS = "UPS";
   static const nextDayAir = "Next Day Air";
@@ -678,6 +679,11 @@ class LocalizationConstants {
   static const manufactureSign = "Manufacture #";
   static const binNote = "Bin Note";
   static const binSign = "Bin #";
+  static const maxSign = "Max #";
+  static const minSign = "Min #";
+  static const dateSign = "Date #";
+  static const countQTYSign = "Count QTY:";
+  static const orderQTYSign = "Order QTY:";
   static const enterBinNote = "Enter Bin Note";
   static const qTY = "QTY";
   static const addToOrder = "Add To Order";
@@ -693,4 +699,7 @@ class LocalizationConstants {
   static const locationNote = "Location Note";
   static const saveLocationNote = "Save Location Note";
   static const locationNoteUpdated = "Location Note Updated";
+
+  // saved payments
+  static const noSavedPaymentsFound = "No saved payments found.";
 }

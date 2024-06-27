@@ -5,4 +5,15 @@ enum OrderStatus {
   success,
   failure,
   moreLoadingFailure,
+
+  reorderLoading,
+  reorderSuccess,
+  reorderFailure,
+
+  deleteCartSuccess,
+  deleteCartLoading,
+  deleteCartFailure,
+  addToCartSuccess,
+  addToCartLoading,
+  addToCartFailure,
 }

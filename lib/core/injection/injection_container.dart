@@ -1,92 +1,164 @@
 import 'package:commerce_flutter_app/core/config/route_config.dart';
+import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/domain/service/app_configuration_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/biometric_authentication_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/commerce_api_service_provider.dart';
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/core_service_provider.dart';
+import 'package:commerce_flutter_app/features/domain/service/geo_location_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/app_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/device_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/biometric_authentication_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/device_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/geo_location_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/location_search_history_service.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/search_history_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/vmi_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/location_search_history_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/network_service.dart';
+import 'package:commerce_flutter_app/features/domain/service/search_history_service.dart';
+import 'package:commerce_flutter_app/features/domain/service/vmi_service.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/add_credit_card_usecase/add_credit_card_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/add_shipping_address_usecase/add_shipping_address_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/brand_category_usecase/brand_category_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/brand_product_lines_usecase/brand_product_lines_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/brand_usecase/brand_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/billto_shipto_usecase/address_selection/billto_shipto_address_selection_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/billto_shipto_usecase/billto_shipto_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/billing_address_create_usecase/billing_address_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_content_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_shipping_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/biometric_usecase/biometric_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/category_usecase/category_useacase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/payment_details/payment_details_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/curent_location_usecase/current_location_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/dealer_location_usecase/dealer_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/location_note_usecase/location_note_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/location_search_usecase/location_search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/forgot_password_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/order_approval_usecase/order_approval_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/order_usecase/order_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pickup_location_usecase/pickup_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/platform_usecase/platform_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_pricing_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/warehouse_inventory_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/previous_orders_usecase/previous_orders_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/product_list_filter_usecase/product_list_filter_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/promo_code_usecase/promo_code_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/count_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/order_pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/quick_order_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/remote_config/remote_config_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/saved_order/saved_order_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/saved_payments_usecase/saved_payments_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_cms_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_location_note_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_location_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_main_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/billto_shipto/address_selection/billto_shipto_address_selection_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/billto_shipto/billto_shipto_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/brand/brand_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/brand_category/brand_category_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/category/category_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/load_website_url/load_website_url_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/pickup_location/pickup_location_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product/product_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/auto_complete/quick_order_auto_complete_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/remote_config/remote_config_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_main/vmi_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/add_credit_card/add_credit_card_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/add_shipping_address/add_shipping_address_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/billing_address/billing_address_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/biometric_auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_controller/biometric_controller_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/bottom_menu_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_details/brand_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_list/brand_list_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_product_line/brand_product_line_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/card_expiration_cubit.dart/card_expiration_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/expansion_panel/expansion_panel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/count_inventory/count_inventory_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/date_selection/date_selection_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/deaker_location_finder/dealer_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/location_note/location_note_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/forgot_password/forgot_password_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_filter_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_handler/order_approval_handler_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/order_approval_details/order_approval_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/order_details/order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders_cubit/previous_orders_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/product_list_filter/product_list_filter_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_order/saved_order_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_details/saved_order_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_payments/saved_payments_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/vmi_location_note/vmi_location_note_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_add_to/wish_list_add_to_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_create/wish_list_create_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/style_trait_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_details/wish_list_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_information/wish_list_information_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:commerce_flutter_app/services/secure_storage_service.dart';
@@ -124,6 +196,41 @@ Future<void> initInjectionContainer() async {
     //domain redirect
     ..registerFactory(() => DomainRedirectCubit(domainUsecase: sl()))
 
+    // vmi
+    ..registerFactory(() => VMIPageBloc(vmiMainUseCase: sl()))
+    ..registerFactory(() => VMIMainUseCase())
+
+    // vmi locations
+    ..registerFactory(() => VMILocationBloc(vmiLocationUseCase: sl()))
+    ..registerFactory(() => VMILocationUseCase())
+
+    //location note
+    ..registerFactory(() => LocationNoteCubit(locationNoteUsecase: sl()))
+    ..registerFactory(() => LocationNoteUsecase())
+
+    // vmi location note
+    ..registerFactory(() => VMILocationNoteCubit(vmilocationNoteUsecase: sl()))
+    ..registerFactory(() => VmiLocationNoteUsecase())
+
+    // current location
+    ..registerFactory(() => CurrentLocationCubit(currentLocationUseCase: sl()))
+    ..registerFactory(() => CurrentLocationUseCase())
+
+    // dealer location
+    ..registerFactory(() => DealerLocationCubit(dealerLocationUsecase: sl()))
+    ..registerFactory(() => DealerLocationUsecase())
+
+    // location  search
+    ..registerFactory(() => LocationSearchBloc(locationSearchUseCase: sl()))
+    ..registerFactory(() => LocationSearchUseCase())
+
+    // gmap cubit
+    ..registerFactory(() => GMapCubit())
+
+    // previous orders
+    ..registerFactory(() => PreviousOrdersCubit(previousOrdersUseCse: sl()))
+    ..registerFactory(() => PreviousOrdersUseCse())
+
     //login
     ..registerFactory(() => LoginCubit(loginUsecase: sl()))
     ..registerFactory(() => LoginUsecase())
@@ -137,6 +244,24 @@ Future<void> initInjectionContainer() async {
     //order history
     ..registerFactory(() => OrderHistoryCubit(orderUsecase: sl()))
     ..registerFactory(() => OrderUsecase())
+
+    //order details
+    ..registerFactory(() => OrderDetailsCubit(orderUsercase: sl()))
+
+    //saved order
+    ..registerFactory(() => SavedOrderCubit(savedOrderUsecase: sl()))
+    ..registerFactory(() => SavedOrderUsecase())
+    ..registerFactory(() => SavedOrderDetailsCubit(savedOrderUsecase: sl()))
+    ..registerFactory(() => SavedOrderHandlerCubit(savedOrderUsecase: sl()))
+
+    //order approval
+    ..registerFactory(() => OrderApprovalUseCase())
+    ..registerFactory(() => OrderApprovalCubit(orderApprovalUseCase: sl()))
+    ..registerFactory(
+        () => OrderApprovalDetailsCubit(orderApprovalUseCase: sl()))
+    ..registerFactory(
+        () => OrderApprovalFilterCubit(orderApprovalUseCase: sl()))
+    ..registerFactory(() => OrderApprovalHandlerCubit())
 
     //Pull to refresh
     ..registerFactory(() => PullToRefreshBloc())
@@ -159,11 +284,36 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => AddToCartCubit(addToCartUsecase: sl()))
     ..registerFactory(() => AddToCartUsecase())
     ..registerFactory(() => SearchProductsCubit(searchUseCase: sl()))
+    ..registerFactory(
+        () => ProductListFilterCubit(productListFilterUsecase: sl()))
+    ..registerFactory(() => ProductListFilterUsecase())
+
+    //product
+    ..registerFactory(() => ProductBloc(searchUseCase: sl()))
 
     //account
     ..registerFactory(() => AccountPageBloc(accountUseCase: sl()))
     ..registerFactory(() => AccountUseCase())
     ..registerFactory(() => AccountHeaderCubit(accountUseCase: sl()))
+
+    //account
+    ..registerFactory(() => RemoteConfigCubit(remoteConfigUsecase: sl()))
+    ..registerFactory(() => RemoteConfigUsecase())
+
+    //shop category
+    ..registerFactory(() => CategoryBloc(categoryUseCase: sl()))
+    ..registerFactory(() => CategoryUseCase())
+
+    //shop brand
+    ..registerFactory(() => BrandBloc(brandUseCase: sl()))
+    ..registerFactory(() => BrandListCubit(brandUseCase: sl()))
+    ..registerFactory(() => BrandDetailsCubit(brandUseCase: sl()))
+    ..registerFactory(() => BrandUseCase())
+    ..registerFactory(() => BrandCategoryBloc(brandCategoryUseCase: sl()))
+    ..registerFactory(() => BrandCategoryUseCase())
+    ..registerFactory(
+        () => BrandProductLinesCubit(brandProductLinesUseCase: sl()))
+    ..registerFactory(() => BrandProductLinesUseCase())
 
     //cart
     ..registerFactory(() => CartPageBloc(cartUseCase: sl()))
@@ -183,13 +333,56 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => TokenExBloc())
     ..registerFactory(() => ReviewOrderCubit())
 
+    // Add Credit Card
+    ..registerFactory(() => AddCreditCardBloc(addCreditCardUsecase: sl()))
+    ..registerFactory(() => AddCreditCardUsecase())
+
+    // Billing Address
+    ..registerFactory(() => BillingAddressCubit(billingAddressUsecase: sl()))
+    ..registerFactory(() => BillingAddressUsecase())
+
+    // shipping address
+    ..registerFactory(
+        () => AddShippingAddressCubit(addShippingAddressUsecase: sl()))
+    ..registerFactory(() => AddShippingAddressUsecase())
+
+    // saved payments
+    ..registerFactory(() => SavedPaymentsCubit(savedPaymentsUsecase: sl()))
+    ..registerFactory(() => SavedPaymentsUsecase())
+
+    // PromoCdeo
+    ..registerFactory(() => PromoCodeCubit(promoCodeUsecase: sl()))
+    ..registerFactory(() => PromoCodeUsecase())
+
+    // Card Expiration
+    ..registerFactory(() => CardExpirationCubit())
+
     //quickOrder
-    ..registerFactory(() => OrderListBloc(quickOrderUseCase: sl()))
+    ..registerFactory(() => OrderListBloc(
+        quickOrderUseCase: sl(), scanningMode: ScanningMode.quick))
     ..registerFactory(() => QuickOrderUseCase())
-    ..registerFactory(() => QuickOrderAutoCompleteBloc(searchUseCase: sl()))
+    ..registerFactory(() => QuickOrderAutoCompleteBloc(
+        searchUseCase: sl(), scanningMode: ScanningMode.quick))
     ..registerFactory(
         () => OrderItemPricingInventoryCubit(pricingInventoryUseCase: sl()))
     ..registerFactory(() => OrderPricingInventoryUseCase())
+
+    //countInventory
+    ..registerFactory(() => CountInventoryCubit(countInventoryUseCase: sl()))
+    ..registerFactory(() => CountInventoryUseCase())
+
+    //billToShipToChange
+    ..registerFactory(() => BillToShipToBloc(billToShipToUseCase: sl()))
+    ..registerFactory(() => BillToShipToUseCase())
+
+    //billToShipToSelection
+    ..registerFactory(() => BilltoShiptoAddressSelectionBloc(
+        billToShipToAddressSelectionUseCase: sl()))
+    ..registerFactory(() => BillToShipToAddressSelectionUseCase())
+
+    //pickup location
+    ..registerFactory(() => PickupLocationBloc(pickUpLocationUseCase: sl()))
+    ..registerFactory(() => PickUpLocationUseCase())
 
     //barcode
     ..registerFactory(() => BarcodeScanBloc())
@@ -202,6 +395,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => WishListInformationCubit(wishListUsecase: sl()))
     ..registerFactory(() => WishListCreateCubit(wishListUsecase: sl()))
     ..registerFactory(() => WishListAddToCubit(wishListUsecase: sl()))
+    ..registerFactory(() => WishListHandlerCubit())
 
     //date selection
     ..registerFactory(() => DateSelectionCubit())
@@ -212,6 +406,9 @@ Future<void> initInjectionContainer() async {
     //bottom menu
     ..registerFactory(() => BottomMenuCubit(platformUseCase: sl()))
     ..registerFactory(() => PlatformUseCase())
+
+    //for view on website bloc
+    ..registerFactory(() => LoadWebsiteUrlBloc(platformUsecase: sl()))
 
     //product carousel
     ..registerFactory(() => ProductCarouselCubit(productCarouselUseCase: sl()))
@@ -234,7 +431,6 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ProductDetailsAddToCartUseCase())
 
     //product style trait
-
     ..registerFactory(() => ProductDetailsStyleTraitsUseCase())
     ..registerFactory(() => StyleTraitCubit(styleTraitsUseCase: sl()))
 
@@ -302,12 +498,17 @@ Future<void> initInjectionContainer() async {
               cacheService: sl(),
               networkService: sl(),
             ))
+    ..registerLazySingleton<ISearchHistoryService>(
+        () => SearchHistoryService(commerceAPIServiceProvider: sl()))
+    ..registerLazySingleton<ILocationSearchHistoryService>(
+        () => LocationSearchHistoryService(commerceAPIServiceProvider: sl()))
     ..registerLazySingleton<IClientService>(() =>
         ClientService(localStorageService: sl(), secureStorageService: sl()))
     ..registerLazySingleton<ICacheService>(() => FakeCacheService())
     ..registerLazySingleton<INetworkService>(() => NetworkService())
     ..registerLazySingleton<ISecureStorageService>(() => SecureStorageService())
     ..registerLazySingleton<ILocalStorageService>(() => LocalStorageService())
+    ..registerLazySingleton<IGeoLocationService>(() => GeoLocationService())
     ..registerLazySingleton<ISettingsService>(() => SettingsService(
           cacheService: sl(),
           clientService: sl(),
@@ -332,12 +533,32 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
+    ..registerLazySingleton<IWarehouseService>(() => WarehouseService(
+        clientService: sl(), cacheService: sl(), networkService: sl()))
     ..registerLazySingleton<ICartService>(() => CartService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
         ))
+    ..registerLazySingleton<IDealerService>(() => DealerService(
+        clientService: sl(), cacheService: sl(), networkService: sl()))
+    ..registerLazySingleton<IVmiLocationsService>(() => VMILocationService(
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
+    ..registerLazySingleton<IVmiService>(() => VMIService(
+        commerceAPIServiceProvider: sl(),
+        coreServiceProvider: sl(),
+        clientService: sl(),
+        cacheService: sl(),
+        networkService: sl()))
     ..registerLazySingleton<IOrderService>(() => OrderService(
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
+    ..registerLazySingleton<IBillToService>(() => BillToService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
@@ -394,6 +615,16 @@ Future<void> initInjectionContainer() async {
       },
     )
     ..registerLazySingleton<IWishListService>(() => WishListService(
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
+    ..registerLazySingleton<ICategoryService>(() => CategoryService(
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
+    ..registerLazySingleton<IBrandService>(() => BrandService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),

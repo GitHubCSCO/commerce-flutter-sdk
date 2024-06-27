@@ -4,12 +4,13 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/wish_list_line_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_details/wish_list_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_details/wish_list_line/wish_list_line_image_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_details/wish_list_line/wish_list_line_pricing_widgert.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_details/wish_list_line/wish_list_line_quantity_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_details/wish_list_line/wish_list_line_title_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_quantity_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -85,6 +86,7 @@ class WishListLineWidget extends StatelessWidget {
             _buildProductDetails(
               realTimeLoading: realTimeLoading,
               canEditQuantity: canEditQuantity,
+              context: context,
             ),
             _buildRemoveAndAddToCartButton(
               context,
@@ -113,6 +115,7 @@ class WishListLineWidget extends StatelessWidget {
   Widget _buildProductDetails({
     required bool realTimeLoading,
     required bool canEditQuantity,
+    required BuildContext context,
   }) {
     return Expanded(
       child: Column(
@@ -120,15 +123,34 @@ class WishListLineWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          WishListContentProductTitleWidget(
-              wishListLineEntity: wishListLineEntity),
+          LineItemTitleWidget(
+            shortDescription: wishListLineEntity.shortDescription,
+            manufacturerItem: wishListLineEntity.manufacturerItem,
+            productNumber: wishListLineEntity.erpNumber,
+          ),
           WishListContentPricingWidget(
             wishListLineEntity: wishListLineEntity,
             realTimeLoading: realTimeLoading,
           ),
-          WishListContentQuantityGroupWidget(
-            wishListLineEntity: wishListLineEntity,
+          LineItemQuantityGroupWidget(
+            qtyOrdered: wishListLineEntity.qtyOrdered?.toInt().toString(),
+            subtotalPriceText: wishListLineEntity.updateSubtotalPriceValueText,
+            canEdit: canEditQuantity,
             realTimeLoading: realTimeLoading,
+            onQtyChanged: canEditQuantity
+                ? (int? quantity) async {
+                    final newWishListLineEntity =
+                        wishListLineEntity.copyWith(qtyOrdered: quantity);
+                    await context
+                        .read<WishListDetailsCubit>()
+                        .updateWishListLineQuantity(
+                          newWishListLineEntity,
+                          quantity ??
+                              (wishListLineEntity.qtyOrdered as int?) ??
+                              1,
+                        );
+                  }
+                : null,
           ),
         ],
       ),

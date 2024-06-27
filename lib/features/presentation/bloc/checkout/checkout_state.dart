@@ -11,25 +11,25 @@ class CheckoutDataLoaded extends CheckoutState {
   final BillTo billToAddress;
   final ShipTo shipToAddress;
   final Warehouse wareHouse;
-  final PromotionCollectionModel promotions;
+  final PromotionCollectionModel? promotions;
   final String shippingMethod;
-  final CartSettings cartSettings;
+  final CartSettings? cartSettings;
   final CarrierDto? selectedCarrier;
   final ShipViaDto? selectedService;
   final DateTime? requestDeliveryDate;
 
-  CheckoutDataLoaded(
-      {required this.cart,
-      required this.billToAddress,
-      required this.shipToAddress,
-      required this.wareHouse,
-      required this.promotions,
-      required this.shippingMethod,
-      required this.cartSettings,
-      required this.selectedCarrier,
-      required this.selectedService,
-      required this.requestDeliveryDate,
-      });
+  CheckoutDataLoaded({
+    required this.cart,
+    required this.billToAddress,
+    required this.shipToAddress,
+    required this.wareHouse,
+    required this.promotions,
+    required this.shippingMethod,
+    required this.cartSettings,
+    required this.selectedCarrier,
+    required this.selectedService,
+    required this.requestDeliveryDate,
+  });
 }
 
 class CheckoutDataFetchFailed extends CheckoutState {
@@ -40,6 +40,22 @@ class CheckoutDataFetchFailed extends CheckoutState {
 
 class CheckoutPlaceOrder extends CheckoutState {
   final String orderNumber;
+  final Cart cart;
+  final ReviewOrderEntity? reviewOrderEntity;
 
-  CheckoutPlaceOrder({required this.orderNumber});
+  CheckoutPlaceOrder({
+    required this.orderNumber,
+    required this.cart,
+    this.reviewOrderEntity,
+  });
+}
+
+class CheckoutPlaceOrderFailed extends CheckoutState {
+  final String error;
+
+  CheckoutPlaceOrderFailed({required this.error});
+}
+
+class CheckoutShipToAddressAddedState extends CheckoutState {
+
 }

@@ -3,12 +3,14 @@ import 'package:commerce_flutter_app/core/constants/site_message_constants.dart'
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuickOrderItemEntity {
 
   ProductEntity productEntity;
+  VmiBinModelEntity? vmiBinEntity;
   Availability? availability;
   ProductPriceEntity? pricing;
   ProductUnitOfMeasureEntity? selectedUnitOfMeasure;

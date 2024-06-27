@@ -1,6 +1,6 @@
-import 'dart:math';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/order/order_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
 
 class DiscountValueConverter {
@@ -14,10 +14,10 @@ class DiscountValueConverter {
       unitListPrice = value.unitListPrice as double?;
       unitNetPrice = value.unitNetPrice as double?;
     }
-    // else if (value is OrderLine) {
-    //   unitListPriceDisplay = value.unitListPriceDisplay;
-    //   unitListPrice = value.unitListPrice;
-    //   unitNetPrice = value.unitNetPrice;
+    else if (value is OrderLineEntity) {
+      unitListPriceDisplay = value.unitListPriceDisplay;
+      unitListPrice = value.unitListPrice as double?;
+      unitNetPrice = value.unitNetPrice as double?;
     // } else if (value is InvoiceLine) {
     //   var savingsAmount = value.discountAmount;
     //   var discountMessage =
@@ -29,7 +29,7 @@ class DiscountValueConverter {
     //   }
 
     //   return discountMessage;
-    // }
+    }
 
     if (unitListPriceDisplay != null &&
         unitListPrice != 0 &&

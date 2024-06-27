@@ -7,17 +7,23 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/shipping_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
+import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/warehouse_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line_list.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_payment_summary_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
@@ -28,7 +34,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 void _reloadCartPage(BuildContext context) {
-  context.read<CartCountCubit>().cartItemChanged();
+  context.read<CartCountCubit>().onCartItemChange();
   context.read<CartPageBloc>().add(CartPageLoadEvent());
 }
 
@@ -42,12 +48,12 @@ class CartScreen extends StatelessWidget {
           create: (context) => sl<PullToRefreshBloc>()),
       BlocProvider<CartPageBloc>(
           create: (context) => sl<CartPageBloc>()..add(CartPageLoadEvent())),
+      BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
     ], child: const CartPage());
   }
 }
 
 class CartPage extends StatelessWidget {
-
   final websitePath = WebsitePaths.cartWebsitePath;
 
   const CartPage({super.key});
@@ -103,7 +109,7 @@ class CartPage extends StatelessWidget {
                 .add(PullToRefreshInitialEvent());
           },
           child: BlocBuilder<CartPageBloc, CartPageState>(
-            builder: (context, state) {
+            builder: (_, state) {
               switch (state) {
                 case CartPageInitialState():
                 case CartPageLoadingState():
@@ -122,21 +128,70 @@ class CartPage extends StatelessWidget {
                               state.warehouse,
                               state.promotions,
                               state.isCustomerOrderApproval,
-                              state.shippingMethod),
+                              state.shippingMethod,
+                              context),
                         ),
                       ),
                       Container(
-                        height: 80,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 32, vertical: 16),
                         clipBehavior: Clip.antiAlias,
                         decoration: const BoxDecoration(color: Colors.white),
-                        child: PrimaryButton(
-                          onPressed: () {
-                            AppRoute.checkout.navigateBackStack(context,
-                                extra: context.read<CartPageBloc>().cart);
-                          },
-                          text: LocalizationConstants.checkout,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: TertiaryBlackButton(
+                                    child: const Text(
+                                      LocalizationConstants.addAllToList,
+                                    ),
+                                    onPressed: () {
+                                      final addCartLines = context
+                                          .read<CartPageBloc>()
+                                          .getAddCartLines();
+                                      WishListCallbackHelper.addItemsToWishList(
+                                        context,
+                                        addToCartCollection:
+                                            WishListAddToCartCollection(
+                                          wishListLines: addCartLines,
+                                        ),
+                                        onAddedToCart: null,
+                                      );
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: TertiaryBlackButton(
+                                    child: const Text(
+                                        LocalizationConstants.saveOrder),
+                                    onPressed: () {
+                                      context
+                                          .read<SavedOrderHandlerCubit>()
+                                          .addCartToSavedOrders(
+                                              cart: state.cart);
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            PrimaryButton(
+                              onPressed: () {
+                                final currentState =
+                                    context.read<AuthCubit>().state;
+                                handleAuthStatus(context, currentState.status,
+                                    context.read<CartPageBloc>());
+                              },
+                              text: context
+                                      .read<CartPageBloc>()
+                                      .approvalButtonVisible
+                                  ? LocalizationConstants.checkoutForApproval
+                                  : LocalizationConstants.checkout,
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -161,9 +216,9 @@ class CartPage extends StatelessWidget {
                             padding: const EdgeInsets.all(24),
                             child: TertiaryButton(
                               onPressed: () {
-                                CustomSnackBar.showComingSoonSnackBar(context);
+                                AppRoute.shop.navigate(context);
                               },
-                              child: Text('Continue Shopping'),
+                              child: const Text('Continue Shopping'),
                             ),
                           )
                         ],
@@ -188,13 +243,50 @@ class CartPage extends StatelessWidget {
     );
   }
 
+  void handleAuthStatus(
+      BuildContext context, AuthStatus status, CartPageBloc cartPageBloc) {
+    if (status == AuthStatus.authenticated) {
+      navigateToCheckout(context, cartPageBloc);
+    } else {
+      showSignInDialog(context);
+    }
+  }
+
+  void navigateToCheckout(BuildContext context, CartPageBloc cartPageBloc) {
+    AppRoute.checkout.navigateBackStack(context, extra: cartPageBloc.cart);
+  }
+
+  void showSignInDialog(BuildContext context) {
+    displayDialogWidget(
+      context: context,
+      title: LocalizationConstants.notSignedIn,
+      message: LocalizationConstants.pleaseSignInCheckout,
+      actions: [
+        DialogPlainButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text(LocalizationConstants.cancel),
+        ),
+        DialogPlainButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            AppRoute.login.navigateBackStack(context);
+          },
+          child: const Text(LocalizationConstants.signIn),
+        ),
+      ],
+    );
+  }
+
   List<Widget> _buildCartWidgets(
       Cart? cart,
       CartSettings? settings,
       Warehouse? warehouse,
       PromotionCollectionModel promotions,
       bool isCustomerOrderApproval,
-      String shippingMethod) {
+      String shippingMethod,
+      BuildContext context) {
     List<Widget> list = [];
 
     final paymentSummaryEntity = PaymentSummaryEntity(
@@ -214,19 +306,59 @@ class CartPage extends StatelessWidget {
     list.add(BlocProvider<CartShippingSelectionBloc>(
       create: (context) => sl<CartShippingSelectionBloc>()
         ..add(CartShippingOptionDefaultEvent(shippingEntity.shippingMethod!)),
-      child: CartShippingWidget(shippingEntity: shippingEntity),
+      child: CartShippingWidget(
+        shippingEntity: shippingEntity,
+        onCallBack: _handlePickUpLocationCallBack,
+      ),
     ));
 
     list.add(BlocProvider<CartContentBloc>(
       create: (context) => sl<CartContentBloc>(),
-      child: CartLineWidgetList(
-          cartLineEntities: CartLineListMapper()
-              .toEntity(CartLineList(cartLines: cart!.cartLines))),
+      child: Builder(
+        builder: (context) {
+          return BlocListener<SavedOrderHandlerCubit, SavedOrderHandlerState>(
+            listener: (context, state) async {
+              if (state.status == SavedOrderHandlerStatus.shouldClearCart) {
+                context.read<CartContentBloc>().add(CartContentClearAllEvent());
+              }
+
+              AppRoute.savedOrders.navigate(context);
+
+              if (context.mounted) {
+                AppRoute.savedOrderDetails.navigate(
+                  context,
+                  pathParameters: {
+                    'cartId': context
+                            .read<SavedOrderHandlerCubit>()
+                            .state
+                            .savedCart
+                            .id ??
+                        '',
+                  },
+                  extra: () {
+                    context
+                        .read<SavedOrderHandlerCubit>()
+                        .shouldRefreshSavedOrder();
+                  },
+                );
+              }
+            },
+            child: CartLineWidgetList(
+              cartLineEntities: context.read<CartPageBloc>().getCartLines(),
+            ),
+          );
+        },
+      ),
     ));
     list.add(const SizedBox(height: 8));
 
     return list;
   }
+
+  void _handlePickUpLocationCallBack(BuildContext context, WarehouseEntity wareHouse) {
+    context.read<CartPageBloc>().add(CartPagePickUpLocationChangeEvent(WarehouseEntityMapper().toModel(wareHouse)));
+  }
+
 }
 
 class _buildCartEroorWidget extends StatelessWidget {

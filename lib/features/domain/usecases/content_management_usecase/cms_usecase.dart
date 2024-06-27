@@ -6,7 +6,10 @@ import 'package:commerce_flutter_app/features/domain/entity/content_management/w
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/cart_contents_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/cart_buttons_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/current_location_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/location_note_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/order_summary_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/previous_orders_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/shipping_method_widget_entity.dart';
@@ -40,7 +43,7 @@ class CmsUseCase extends BaseUseCase {
               {
                 var currentSession = commerceAPIServiceProvider
                         .getSessionService()
-                        .currentSession ??
+                        .getCachedCurrentSession() ??
                     session;
 
                 if (pageData?.pageClassicWidget != null) {
@@ -103,13 +106,24 @@ class CmsUseCase extends BaseUseCase {
                 await convertWidgetToSearchHistoryEntityClassic(
                     pageClassicWidget, currentSession);
             widgetEntities.add(searchHistoryWidget);
+          case WidgetType.mobileCurrentLocation:
+            final currentLocationWidget =
+                CurrentLocationWidgetEntity(title: pageClassicWidget.title);
+            widgetEntities.add(currentLocationWidget);
+          case WidgetType.mobilePreviousOrders:
+            final previousOrdersWidget =
+                PreviousOrdersWidgetEntity(title: pageClassicWidget.title);
+            widgetEntities.add(previousOrdersWidget);
+          case WidgetType.mobileLocationNote:
+            final locationNoteWidget =
+                LocationNoteWidgetEntity(title: pageClassicWidget.title);
+            widgetEntities.add(locationNoteWidget);
           case WidgetType.unknown:
           default:
             break;
         }
       }
     }
-
     return widgetEntities;
   }
 
@@ -246,6 +260,10 @@ class CmsUseCase extends BaseUseCase {
                 type: WidgetType.mobileCartContents, title: "Cart Contents"));
 
             widgetEntities.add(mobileCartWidget);
+          // case WidgetType.mobileCurrentLocation:
+          //   final currentLocationWidget =
+          //       CurrentLocationWidgetEntity(title: pageWidget.);
+          //   widgetEntities.add(currentLocationWidget);
           case WidgetType.unknown:
           default:
             break;

@@ -105,56 +105,90 @@ class _CameraViewState extends State<CameraView> {
   }
 
   Widget _backButton() =>
-      Visibility(
-        visible: widget.barcodeFullView,
-        child: Positioned(
-          top: 40,
-          right: 24,
-          child: SizedBox(
-            height: 32.0,
-            width: 32.0,
-            child: FloatingActionButton(
-              heroTag: Object(),
-              shape: const CircleBorder(),
-              onPressed: () => Navigator.of(context).pop(),
-              backgroundColor: Colors.grey.shade100,
-              child: const Icon(
-                Icons.close,
-                size: 20,
-                color: Colors.black,
-              ),
+        Visibility(
+          visible: widget.barcodeFullView,
+          child: Positioned(
+            top: 40,
+            right: 24,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                InkWell(
+                  onTap: () => Navigator.of(context).pop(),
+                  borderRadius: BorderRadius.circular(32),
+                  child: Container(
+                    width: 64.0,
+                    height: 64.0,
+                    alignment: Alignment.center,
+                  ),
+                ),
+                SizedBox(
+                  height: 32.0,
+                  width: 32.0,
+                  child: FloatingActionButton(
+                    heroTag: Object(),
+                    shape: const CircleBorder(),
+                    onPressed: () => Navigator.of(context).pop(),
+                    backgroundColor: Colors.grey.shade100,
+                    child: const Icon(
+                      Icons.close,
+                      size: 20,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-      );
+        );
+
+
 
   Widget _switchFlashToggle() =>
-      Visibility(
-        visible: widget.barcodeFullView,
-        child: Positioned(
-          top: 40,
-          left: 24,
-          child: SizedBox(
-            height: 32.0,
-            width: 32.0,
-            child: FloatingActionButton(
-              heroTag: Object(),
-              shape: const CircleBorder(),
-              onPressed: () {
-                setState(() => cameraFlash = !cameraFlash);
-                _controller?.setFlashMode(
-                    cameraFlash ? FlashMode.torch : FlashMode.off);
-              },
-              backgroundColor: Colors.grey.shade100,
-              child: Icon(
-                cameraFlash ? Icons.flash_on : Icons.flash_off,
-                size: 20,
-                color: Colors.black,
-              ),
+        Visibility(
+          visible: widget.barcodeFullView,
+          child: Positioned(
+            top: 40,
+            left: 24,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                InkWell(
+                  onTap: (){
+                      setState(() => cameraFlash = !cameraFlash);
+                      _controller?.setFlashMode(
+                          cameraFlash ? FlashMode.torch : FlashMode.off);
+                  },
+                  borderRadius: BorderRadius.circular(32),
+                  child: Container(
+                    width: 64.0,
+                    height: 64.0,
+                    alignment: Alignment.center,
+                  ),
+                ),
+                SizedBox(
+                  height: 32.0,
+                  width: 32.0,
+                  child: FloatingActionButton(
+                    heroTag: Object(),
+                    shape: const CircleBorder(),
+                    onPressed: () {
+                      setState(() => cameraFlash = !cameraFlash);
+                      _controller?.setFlashMode(
+                          cameraFlash ? FlashMode.torch : FlashMode.off);
+                    },
+                    backgroundColor: Colors.grey.shade100,
+                    child: Icon(
+                      cameraFlash ? Icons.flash_on : Icons.flash_off,
+                      size: 20,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-      );
+        );
 
   Widget _rectangleScanArea() {
     double rectangleHeight = CoreConstants.barcodeRectangleSize;

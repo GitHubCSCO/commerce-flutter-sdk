@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
@@ -32,19 +33,22 @@ class ProductDetailsAddToCartWidget extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: (context
-                      .read<ProductDetailsBloc>()
-                      .productDetailDataEntity
-                      .addToCartEnabled! &&
+                          .read<ProductDetailsBloc>()
+                          .productDetailDataEntity
+                          .addToCartEnabled ==
+                      true &&
                   context
-                      .read<ProductDetailsBloc>()
-                      .productDetailDataEntity
-                      .productPricingEnabled!)
+                          .read<ProductDetailsBloc>()
+                          .productDetailDataEntity
+                          .productPricingEnabled ==
+                      true)
               ? AddToCartSignInWidget()
               : AddToCartNotSignedInWidget(
                   productPricingEnabled: context
-                      .read<ProductDetailsBloc>()
-                      .productDetailDataEntity
-                      .productPricingEnabled!),
+                          .read<ProductDetailsBloc>()
+                          .productDetailDataEntity
+                          .productPricingEnabled ==
+                      true),
         ),
       ),
     );
@@ -105,38 +109,37 @@ class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          ProductDetailsAddCartRow(widget.detailsAddToCartEntity, (int? value) {
-            setState(() {
-              quantity = value;
-            });
-          }),
-          if (widget.detailsAddToCartEntity.isAddToCartAllowed!)
-            PrimaryButton(
-                isEnabled:
-                    widget.detailsAddToCartEntity.addToCartButtonEnabled!,
-                leadingIcon: SvgPicture.asset(
-                  AssetConstants.productDeatilsAddToCartIcon,
-                  fit: BoxFit.fitWidth,
-                  color: Colors.white,
-                ),
-                text: LocalizationConstants.addToCart,
-                onPressed: widget.detailsAddToCartEntity.addToCartButtonEnabled!
-                    ? () {
-                        context.read<ProductDetailsAddToCartBloc>().add(
-                            AddToCartEvent(
-                                productDetailsDataEntity: context
-                                    .read<ProductDetailsBloc>()
-                                    .productDetailDataEntity,
-                                productDetailsAddToCartEntity:
-                                    widget.detailsAddToCartEntity.copyWith(
-                                        quantityText: quantity.toString())));
-                      }
-                    : null)
-        ],
-      ),
+    return Column(
+      children: [
+        ProductDetailsAddCartRow(widget.detailsAddToCartEntity, (int? value) {
+          setState(() {
+            quantity = value;
+          });
+        }),
+        if (widget.detailsAddToCartEntity.isAddToCartAllowed == true)
+          PrimaryButton(
+              isEnabled:
+                  widget.detailsAddToCartEntity.addToCartButtonEnabled == true,
+              leadingIcon: SvgPicture.asset(
+                AssetConstants.productDeatilsAddToCartIcon,
+                fit: BoxFit.fitWidth,
+                color: Colors.white,
+              ),
+              text: LocalizationConstants.addToCart,
+              onPressed:
+                  widget.detailsAddToCartEntity.addToCartButtonEnabled == true
+                      ? () {
+                          context.read<ProductDetailsAddToCartBloc>().add(
+                              AddToCartEvent(
+                                  productDetailsDataEntity: context
+                                      .read<ProductDetailsBloc>()
+                                      .productDetailDataEntity,
+                                  productDetailsAddToCartEntity:
+                                      widget.detailsAddToCartEntity.copyWith(
+                                          quantityText: quantity.toString())));
+                        }
+                      : null)
+      ],
     );
   }
 }
@@ -152,10 +155,13 @@ class ProductDetailsAddCartRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            flex: 5,
+            flex: 4,
             child: NumberTextField(
+                max: CoreConstants.maximumOrderQuantity,
                 initialtText: detailsAddToCartEntity.quantityText,
                 shouldShowIncrementDecermentIcon: true,
                 onChanged: (int? quantity) {
@@ -180,9 +186,14 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                   }
                 }),
           ),
-          ProductDetailsAddCartTtitleSubTitleColumn('U/M', 'E/A'),
-          ProductDetailsAddCartTtitleSubTitleColumn(
-              'Subtotal', detailsAddToCartEntity?.subtotalValueText ?? ''),
+          Expanded(
+              flex: 1,
+              child: ProductDetailsAddCartTtitleSubTitleColumn('U/M', 'E/A')),
+          Expanded(
+            flex: 3,
+            child: ProductDetailsAddCartTtitleSubTitleColumn(
+                'Subtotal', detailsAddToCartEntity.subtotalValueText ?? ''),
+          ),
         ],
       ),
     );
@@ -195,22 +206,29 @@ class ProductDetailsAddCartTtitleSubTitleColumn extends StatelessWidget {
 
   ProductDetailsAddCartTtitleSubTitleColumn(this.title, this.value);
 
+  String getFormattedValue(String value) {
+    if (value.isEmpty) {
+      return 'N/A';
+    }
+    return value;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: 2,
-      child: Column(
-        children: [
-          Text(
-            title,
-            style: OptiTextStyles.bodySmall,
-          ),
-          Text(
-            value,
+    return Column(
+      children: [
+        Text(
+          title,
+          style: OptiTextStyles.bodySmall,
+        ),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            getFormattedValue(value),
             style: OptiTextStyles.titleLarge,
-          )
-        ],
-      ),
+          ),
+        ),
+      ],
     );
   }
 }

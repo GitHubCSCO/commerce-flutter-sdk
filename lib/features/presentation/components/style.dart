@@ -14,6 +14,8 @@ class AppStyle {
   static const Color neutral990 = Color.fromRGBO(34, 34, 34, 1);
 
   static const double borderRadius = 32;
+  static const double textFieldborderRadius = 25;
+  static const double textFieldDefaultHorizontalPadding = 8;
 
   static const double disabledButtonOpacity = 0.4;
 

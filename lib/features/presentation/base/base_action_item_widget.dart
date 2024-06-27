@@ -1,10 +1,14 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_type_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/location_search_type.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/load_website_url/load_website_url_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -72,7 +76,7 @@ class BaseActionItemWidget extends StatelessWidget {
         return LocalizationConstants.settings;
       case ActionType.changeCustomer:
         // return this.hasWillCall ? LocalizationConstants.ChangeCustomerWillCall : LocalizationConstants.ChangeCustomer;
-        return LocalizationConstants.changeCustomer;
+        return LocalizationConstants.changeCustomerWillCall;
       case ActionType.signOut:
         return LocalizationConstants.signOut;
       case ActionType.viewAccountOnWebsite:
@@ -122,9 +126,58 @@ class BaseActionItemWidget extends StatelessWidget {
         return () {
           AppRoute.quickOrder.navigateBackStack(context);
         };
+      case ActionType.createOrder:
+        return () {
+          AppRoute.createOrder.navigateBackStack(context);
+        };
+      case ActionType.countInventory:
+        return () {
+          AppRoute.countOrder.navigateBackStack(context);
+        };
       case ActionType.lists:
         return () {
           AppRoute.wishlist.navigateBackStack(context);
+        };
+      case ActionType.vmi:
+        return () {
+          AppRoute.vmi.navigateBackStack(context);
+        };
+      case ActionType.categories:
+        return () {
+          AppRoute.shopCategory.navigateBackStack(context);
+        };
+      case ActionType.brands:
+        return () {
+          AppRoute.shopBrand.navigateBackStack(context);
+        };
+      case ActionType.locationFinder:
+        return () {
+          AppRoute.locationSearch.navigateBackStack(context,
+              extra: VMILocationSelectCallbackHelper(
+                  onSelectVMILocation: (location) {},
+                  locationSearchType: LocationSearchType.locationFinder));
+        };
+      case ActionType.changeCustomer:
+        return () {
+          AppRoute.billToShipToChange.navigateBackStack(context);
+        };
+      case ActionType.savedOrders:
+        return () {
+          AppRoute.savedOrders.navigateBackStack(context);
+        };
+      case ActionType.savedPayments:
+        return () {
+          AppRoute.savedPayments.navigateBackStack(context);
+        };
+      case ActionType.orderApproval:
+        return () {
+          AppRoute.orderApproval.navigateBackStack(context);
+        };
+      case ActionType.viewAccountOnWebsite:
+        return () {
+          context.read<LoadWebsiteUrlBloc>().add(LoadWebsiteUrlLoadEvent(
+            redirectUrl: WebsitePaths.accountWebsitePath
+          ));
         };
       default:
         return () {

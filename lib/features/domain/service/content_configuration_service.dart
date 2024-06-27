@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/page_content_management_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/cms_mode.dart';
 import 'package:commerce_flutter_app/features/domain/enums/content_mode.dart';
 import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/content_management/page_management_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
+import 'package:flutter/services.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ContentConfigurationService implements IContentConfigurationService {
@@ -89,7 +91,7 @@ class ContentConfigurationService implements IContentConfigurationService {
             final pageContentManagementEntity =
                 PageContentManagementMapper().toEntity(value);
 
-            persistContentManagementData(value, contentType);
+          persistContentManagementData(value, contentType);
             return Success(pageContentManagementEntity);
           } else {
             final persistedConternManagement =
@@ -129,6 +131,13 @@ class ContentConfigurationService implements IContentConfigurationService {
     }
   }
 
+  Future<PageContentManagement> _loadCMSFromLocally(String pageKey) async {
+    String jsonContent =
+        await rootBundle.loadString('${AssetConstants.jsonPath}$pageKey.json');
+    Map<String, dynamic> jsonData = json.decode(jsonContent);
+    return PageContentManagement.fromJson(jsonData);
+  }
+
   Future<Result<PageContentManagement, ErrorResponse>>
       getPageContentManagmentDataRepresentationForContentType(
           PageContentType contentType, bool useCache) async {
@@ -139,7 +148,7 @@ class ContentConfigurationService implements IContentConfigurationService {
     switch (response) {
       case Success(value: final value):
         {
-          if (value != null && value.page != null) {
+          if (value != null && value.statusCode != 404 && value.page != null) {
             currentCMSMode = CMSMode.spire;
             return Success(value);
           } else {
@@ -155,7 +164,10 @@ class ContentConfigurationService implements IContentConfigurationService {
 
               case Failure(errorResponse: final errorResponse):
                 {
-                  return Failure(errorResponse);
+                  var cmcLocalData = await _loadCMSFromLocally(pageKey);
+                  return Success(cmcLocalData);
+
+                  // return Failure(errorResponse);
                 }
             }
           }
@@ -195,7 +207,7 @@ class ContentConfigurationService implements IContentConfigurationService {
         return accountContentManagementPersistenceKey;
       case PageContentType.vmiMain:
         return vmiMainContentManagementPersistenceKey;
-        case PageContentType.cart:
+      case PageContentType.cart:
         return cartContentManagementPersistenceKey;
       default:
         return '';

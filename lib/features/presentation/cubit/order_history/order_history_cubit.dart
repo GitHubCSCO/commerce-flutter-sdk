@@ -29,6 +29,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
             temporarySelectedFilterValueIds: {},
             filterStatus: FilterStatus.unknown,
             temporaryShowMyOrdersValue: false,
+            searchQuery: '',
           ),
         );
 
@@ -116,6 +117,12 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
     await loadOrderHistory();
   }
 
+  Future<void> searchQueryChanged(String query) async {
+    emit(state.copyWith(searchQuery: query));
+
+    await loadOrderHistory();
+  }
+
   Future<void> loadOrderHistory() async {
     emit(
       state.copyWith(
@@ -127,6 +134,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       sortOrder: state.orderSortOrder,
       showMyOrders: state.showMyOrders,
       filterAttributes: state.selectedFilterValueIds.toList(),
+      searchText: state.searchQuery,
     );
 
     result != null
@@ -142,6 +150,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
                   state.temporarySelectedFilterValueIds,
               filterStatus: state.filterStatus,
               temporaryShowMyOrdersValue: state.temporaryShowMyOrdersValue,
+              searchQuery: state.searchQuery,
             ),
           )
         : emit(
@@ -165,6 +174,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       sortOrder: state.orderSortOrder,
       showMyOrders: state.showMyOrders,
       filterAttributes: state.selectedFilterValueIds.toList(),
+      searchText: state.searchQuery,
     );
 
     if (result == null) {

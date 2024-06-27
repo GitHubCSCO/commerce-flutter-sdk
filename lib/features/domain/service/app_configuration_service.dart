@@ -365,9 +365,30 @@ class AppConfigurationService extends ServiceBase
   }
 
   @override
-  Future<bool> hasWillCall() {
-    // TODO: implement hasWillCall
-    throw UnimplementedError();
+  Future<bool> hasWillCall() async {
+    var result = await _commerceAPIServiceProvider
+      .getSettingsService()
+      .getAccountSettingsAsync();
+    AccountSettings? accountSettings =
+        result is Success ? (result as Success).value as AccountSettings : null;
+    var hasWillCall = false;
+
+    if (accountSettings != null)
+    {
+        hasWillCall |= accountSettings.enableWarehousePickup == true;
+    }
+
+    if (hasWillCall)
+    {   
+        Session? session = _commerceAPIServiceProvider.getSessionService().getCachedCurrentSession();
+        if(session==null){
+          var sessionResult = await _commerceAPIServiceProvider.getSessionService().getCurrentSession();
+          session = sessionResult is Success ? (sessionResult as Success).value as Session : null;
+        }
+        hasWillCall &= session?.pickUpWarehouse != null;
+    }
+
+    return hasWillCall;
   }
 
   @override

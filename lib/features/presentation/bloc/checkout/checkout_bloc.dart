@@ -1,5 +1,5 @@
-import 'dart:math';
-
+import 'package:commerce_flutter_app/features/domain/entity/checkout/review_order_entity.dart';
+import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -14,6 +14,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   CarrierDto? selectedCarrier;
   ShipViaDto? selectedService;
   PaymentOptionsDto? selectedPayment;
+  Session? session;
 
   CheckoutBloc({required CheckoutUsecase checkoutUsecase})
       : _checkoutUseCase = checkoutUsecase,
@@ -28,6 +29,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         (event, emit) => _onPaymentMethodSelect(event, emit));
     on<SelectPaymentEvent>((event, emit) => _onPaymentSelect(event, emit));
     on<UpdatePONumberEvent>((event, emit) => _onUpdatePONumber(event, emit));
+    on<UpdateShiptoAddressEvent>((event, emit) => _onUpdateShipTo(event, emit));
   }
 
   void updateCheckoutData(Cart cart) {
@@ -40,36 +42,43 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       LoadCheckoutEvent event, Emitter<CheckoutState> emit) async {
     emit(CheckoutLoading());
     var data = await _checkoutUseCase.getCart(event.cart.id!);
+    session ??= _checkoutUseCase.getCurrentSession();
+
     switch (data) {
       case Success(value: final cartData):
         updateCheckoutData(cartData!);
-        final session = _checkoutUseCase.getCurrentSession();
+
         final billToAddress = session?.billTo;
         final shipToAddress = session?.shipTo;
         final wareHouse = session?.pickUpWarehouse;
         var shippingMethod = session?.fulfillmentMethod;
-        var promotionsResult = await _checkoutUseCase.loadCartPromotions();
         PromotionCollectionModel? promotionCollection =
-            promotionsResult is Success
-                ? (promotionsResult as Success).value
-                : null;
-        var cartSettingResult = await _checkoutUseCase.getCartSetting();
-        CartSettings cartSettings = cartSettingResult is Success
-            ? (cartSettingResult as Success).value
-            : null;
+            (await _checkoutUseCase.loadCartPromotions())
+                .getResultSuccessValue();
+        CartSettings? cartSettings =
+            (await _checkoutUseCase.getCartSetting()).getResultSuccessValue();
 
-        emit(CheckoutDataLoaded(
-          cart: cartData,
-          billToAddress: billToAddress!,
-          shipToAddress: shipToAddress!,
-          wareHouse: wareHouse!,
-          promotions: promotionCollection!,
-          shippingMethod: shippingMethod!,
-          cartSettings: cartSettings,
-          selectedCarrier: selectedCarrier,
-          selectedService: selectedService,
-          requestDeliveryDate: requestDeliveryDate,
-        ));
+        if (billToAddress != null &&
+            shipToAddress != null &&
+            wareHouse != null &&
+            shippingMethod != null) {
+          emit(CheckoutDataLoaded(
+            cart: cartData,
+            billToAddress: billToAddress,
+            shipToAddress: shipToAddress,
+            wareHouse: wareHouse,
+            promotions: promotionCollection,
+            shippingMethod: shippingMethod,
+            cartSettings: cartSettings,
+            selectedCarrier: selectedCarrier,
+            selectedService: selectedService,
+            requestDeliveryDate: requestDeliveryDate,
+          ));
+        } else {
+          emit(CheckoutDataFetchFailed(
+              error:
+                  'BillTo: $billToAddress, ShipTo: $shipToAddress, WareHouse: ${wareHouse?.toJson()}, ShippingMethod: $shippingMethod'));
+        }
         break;
       case Failure(errorResponse: final errorResponse):
         emit(CheckoutDataFetchFailed(
@@ -92,10 +101,17 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
                 ? cartData.erpOrderNumber
                 : cartData?.orderNumber) ??
             '';
-        emit(CheckoutPlaceOrder(orderNumber: orderNumber));
+
+        await _checkoutUseCase.removeOrderApprovalCookieIfAvailable();
+
+        emit(CheckoutPlaceOrder(
+            orderNumber: orderNumber,
+            reviewOrderEntity: event.reviewOrderEntity,
+            cart: cartData!));
+
         break;
       case Failure(errorResponse: final errorResponse):
-        emit(CheckoutDataFetchFailed(
+        emit(CheckoutPlaceOrderFailed(
             error: errorResponse.errorDescription ?? ''));
         break;
     }
@@ -147,7 +163,21 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         selectedPayment?.creditCard?.expirationYear;
   }
 
-  void _onUpdatePONumber(UpdatePONumberEvent event, Emitter<CheckoutState> emit) {
+  void _onUpdatePONumber(
+      UpdatePONumberEvent event, Emitter<CheckoutState> emit) {
     cart?.poNumber = event.poNumber;
+  }
+
+  Future<void> _onUpdateShipTo(
+      UpdateShiptoAddressEvent event, Emitter<CheckoutState> emit) async {
+    var response =
+        await _checkoutUseCase.postCurrentBillToShipToAsync(event.shipTo);
+
+    cart?.shipTo = response is Success
+        ? (response as Success).value as ShipTo
+        : event.shipTo;
+
+    session?.shipTo = cart?.shipTo;
+    emit(CheckoutShipToAddressAddedState());
   }
 }

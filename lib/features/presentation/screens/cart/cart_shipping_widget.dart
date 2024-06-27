@@ -1,19 +1,24 @@
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/mixins/map_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/shipping_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/location_search_type.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:map_launcher/map_launcher.dart';
 
 enum ShippingOption { ship, pickUp }
 
-class CartShippingWidget extends StatelessWidget {
+class CartShippingWidget extends StatelessWidget with MapDirection {
   final ShippingEntity shippingEntity;
+  final void Function(BuildContext, WarehouseEntity)? onCallBack;
 
-  const CartShippingWidget({super.key, required this.shippingEntity});
+  const CartShippingWidget({super.key, required this.shippingEntity, this.onCallBack});
 
   @override
   Widget build(BuildContext context) {
@@ -80,53 +85,64 @@ class CartShippingWidget extends StatelessWidget {
                   ),
                   Visibility(
                     visible: shippingOption == ShippingOption.pickUp,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 24),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                LocalizationConstants.pickUpLocation,
-                                textAlign: TextAlign.center,
-                                style: OptiTextStyles.subtitle,
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                shippingEntity.warehouse?.description ?? '',
-                                textAlign: TextAlign.center,
-                                style: OptiTextStyles.subtitle,
-                              ),
-                              Text(
-                                _wareHouseAddress(),
-                                textAlign: TextAlign.center,
-                                style: OptiTextStyles.body,
-                              ),
-                              Text(
-                                _wareHouseCity(),
-                                textAlign: TextAlign.center,
-                                style: OptiTextStyles.body,
-                              ),
-                              Text(
-                                shippingEntity.warehouse?.phone ?? '',
-                                textAlign: TextAlign.center,
-                                style: OptiTextStyles.body,
-                              ),
-                            ],
-                          ),
-                          const Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.grey,
-                            size: 20,
-                          )
-                        ],
+                    child: InkWell(
+                      onTap: () {
+                        AppRoute.locationSearch.navigateBackStack(context,
+                            extra: VMILocationSelectCallbackHelper(
+                                onSelectVMILocation: (location) {},
+                                onWarehouseLocationSelected: (wareHouse) {
+                                  onCallBack?.call(context, wareHouse);
+                                },
+                                locationSearchType: LocationSearchType.pickUpLocation));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 24),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  LocalizationConstants.pickUpLocation,
+                                  textAlign: TextAlign.center,
+                                  style: OptiTextStyles.subtitle,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  shippingEntity.warehouse?.description ?? '',
+                                  textAlign: TextAlign.center,
+                                  style: OptiTextStyles.subtitle,
+                                ),
+                                Text(
+                                  _wareHouseAddress(),
+                                  textAlign: TextAlign.center,
+                                  style: OptiTextStyles.body,
+                                ),
+                                Text(
+                                  _wareHouseCity(),
+                                  textAlign: TextAlign.center,
+                                  style: OptiTextStyles.body,
+                                ),
+                                Text(
+                                  shippingEntity.warehouse?.phone ?? '',
+                                  textAlign: TextAlign.center,
+                                  style: OptiTextStyles.body,
+                                ),
+                              ],
+                            ),
+                            const Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.grey,
+                              size: 20,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -207,9 +223,6 @@ class CartShippingWidget extends StatelessWidget {
     double latitudeDouble = latitude.toDouble();
     double longitudeDouble = longitude.toDouble();
 
-    final availableMaps = await MapLauncher.installedMaps;
-
-    await availableMaps.first
-        .showDirections(destination: Coords(latitudeDouble, longitudeDouble));
+    await launchMap(latitudeDouble, longitudeDouble);
   }
 }

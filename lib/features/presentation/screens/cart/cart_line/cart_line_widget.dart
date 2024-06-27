@@ -4,14 +4,17 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/cart_line_extentions.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_image_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_pricing_widgert.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_quantity_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_title_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_image_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_quantity_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -19,7 +22,7 @@ import 'package:flutter_svg/svg.dart';
 class CartLineWidget extends StatelessWidget {
   final CartLineEntity cartLineEntity;
 
-  CartLineWidget({required this.cartLineEntity});
+  const CartLineWidget({super.key, required this.cartLineEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +36,7 @@ class CartLineWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildProductImage(),
-            _buildProductDetails(),
+            _buildProductDetails(context),
             _buildRemoveButton(context),
           ],
         ),
@@ -49,20 +52,47 @@ class CartLineWidget extends StatelessWidget {
   }
 
   Widget _buildProductImage() {
-    return CartContentProductImageWidget(
-        imagePath: cartLineEntity.smallImagePath ?? "");
+    return LineItemImageWidget(imagePath: cartLineEntity.smallImagePath ?? "");
   }
 
-  Widget _buildProductDetails() {
+  Widget _buildProductDetails(BuildContext context) {
     return Expanded(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CartContentProductTitleWidget(cartLineEntity: cartLineEntity),
-          CartContentPricingWidget(cartLineEntity: cartLineEntity),
-          CartContentQuantityGroupWidget(cartLineEntity)
+          LineItemTitleWidget(
+            shortDescription: cartLineEntity.shortDescription,
+            manufacturerItem: cartLineEntity.manufacturerItem,
+            productNumber: cartLineEntity.getProductNumber(),
+          ),
+          LineItemPricingWidget(
+              discountMessage: cartLineEntity.pricing?.getDiscountValue(),
+              priceValueText: cartLineEntity.updatePriceValueText(),
+              unitOfMeasureValueText:
+                  cartLineEntity.updateUnitOfMeasureValueText(),
+              availabilityText: cartLineEntity.availability?.message,
+              productId: cartLineEntity.productId,
+              erpNumber: cartLineEntity.erpNumber,
+              unitOfMeasure: cartLineEntity.baseUnitOfMeasure,
+              showViewAvailabilityByWarehouse:
+                  cartLineEntity.showInventoryAvailability ?? false),
+          LineItemQuantityGroupWidget(
+            qtyOrdered: cartLineEntity.qtyOrdered?.toInt().toString(),
+            onQtyChanged: (int? qty) {
+              if (qty == null) {
+                return;
+              }
+
+              context.read<CartContentBloc>().add(
+                    CartContentQuantityChangedEvent(
+                      cartLineEntity: cartLineEntity.copyWith(qtyOrdered: qty),
+                    ),
+                  );
+            },
+            subtotalPriceText: cartLineEntity.updateSubtotalPriceValueText(),
+          ),
         ],
       ),
     );
@@ -76,7 +106,7 @@ class CartLineWidget extends StatelessWidget {
       },
       child: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: Container(
+        child: SizedBox(
           width: 30,
           height: 30,
           child: SvgPicture.asset(
@@ -148,25 +178,26 @@ class CartContentHeaderWidget extends StatelessWidget {
             onTap: () {
               _onClickClearAllCart(context);
             },
-            child: Container(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 16,
-                    height: 16,
-                    child: SvgPicture.asset(
-                      AssetConstants.cartClearIcon,
-                      fit: BoxFit.fitWidth,
-                    ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: SvgPicture.asset(
+                    AssetConstants.cartClearIcon,
+                    fit: BoxFit.fitWidth,
                   ),
-                  const SizedBox(width: 11),
-                  Text('Clear Cart',
-                      textAlign: TextAlign.center, style: OptiTextStyles.body),
-                ],
-              ),
+                ),
+                const SizedBox(width: 11),
+                Text(
+                  'Clear Cart',
+                  textAlign: TextAlign.center,
+                  style: OptiTextStyles.body,
+                ),
+              ],
             ),
           ),
         ],

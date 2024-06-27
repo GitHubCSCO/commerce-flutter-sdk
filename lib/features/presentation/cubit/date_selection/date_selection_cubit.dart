@@ -14,6 +14,8 @@ class DateSelectionCubit extends Cubit<DateSelectionState> {
       String formattedDate = DateFormat('dd/MM/yyyy').format(selectedDate);
       date = selectedDate;
       emit(DateSelectionState(formattedDate, selectedDate));
+    } else {
+      emit(DateSelectionState(LocalizationConstants.selectDate, DateTime(0)));
     }
   }
 

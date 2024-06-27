@@ -32,6 +32,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/product_detai
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_spefication_expansion_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_standart_configuration_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_style_traits_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/product_carousel_section_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -81,30 +82,33 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
             .read<ProductDetailsBloc>()
             .add(FetchProductDetailsEvent(productId, product));
       }
-    }, child: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
-      builder: (_, state) {
-        switch (state) {
-          case ProductDetailsInitial():
-          case ProductDetailsLoading():
-            return const Center(child: CircularProgressIndicator());
-          case ProductDetailsLoaded():
-            return Scaffold(
-                backgroundColor: OptiAppColors.backgroundGray,
-                appBar: AppBar(),
-                body: SingleChildScrollView(
+    }, child: Scaffold(
+      backgroundColor: OptiAppColors.backgroundGray,
+                  appBar: AppBar(actions: <Widget>[
+                    BottomMenuWidget(websitePath: product?.productDetailUrl),
+                  ], backgroundColor: Theme.of(context).colorScheme.surface),
+      body: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
+        builder: (_, state) {
+          switch (state) {
+            case ProductDetailsInitial():
+            case ProductDetailsLoading():
+              return const Center(child: CircularProgressIndicator());
+            case ProductDetailsLoaded():
+              return SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: _buildProductDetailsWidgets(
                         state.productDetailsEntities, context),
                   ),
-                ));
-          case ProductDetailsErrorState():
-            return const Center(child: Text("failure"));
-          default:
-            return const Center(child: Text("failure"));
-        }
-      },
+              );
+            case ProductDetailsErrorState():
+              return const Center(child: Text("failure"));
+            default:
+              return const Center(child: Text("failure"));
+          }
+        },
+      ),
     ));
   }
 
