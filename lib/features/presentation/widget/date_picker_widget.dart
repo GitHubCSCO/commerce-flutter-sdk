@@ -7,20 +7,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class DatePickerWidget extends StatelessWidget {
   final void Function(BuildContext context, DateTime dateTime)? callback;
   final DateTime? selectedDateTime;
+  final DateTime? minDate;
   final DateTime? maxDate;
 
-  const DatePickerWidget(
-      {super.key,
-      required this.maxDate,
-      required this.selectedDateTime,
-      required this.callback});
+  const DatePickerWidget({
+    super.key,
+    required this.maxDate,
+    required this.selectedDateTime,
+    required this.callback,
+    this.minDate,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<DateSelectionCubit>(
       create: (context) =>
           sl<DateSelectionCubit>()..onInitialDateSelect(selectedDateTime),
-      child: PickDate(maxDate: maxDate, callback: callback),
+      child: PickDate(
+        maxDate: maxDate,
+        callback: callback,
+        minDate: minDate,
+      ),
     );
   }
 }
@@ -28,8 +35,14 @@ class DatePickerWidget extends StatelessWidget {
 class PickDate extends StatelessWidget {
   final void Function(BuildContext context, DateTime dateTime)? callback;
   final DateTime? maxDate;
+  final DateTime? minDate;
 
-  const PickDate({super.key, required this.maxDate, required this.callback});
+  const PickDate({
+    super.key,
+    required this.maxDate,
+    required this.callback,
+    required this.minDate,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +55,7 @@ class PickDate extends StatelessWidget {
       builder: (context, state) {
         return GestureDetector(
           onTap: () {
-            final firstDate = DateTime.now();
+            final firstDate = minDate ?? DateTime.now();
             final lastDate = maxDate ?? DateTime(2100);
             _selectRequestDeliveryDate(context, firstDate, lastDate);
           },
