@@ -29,8 +29,7 @@ class TokenExEncodingFinishedState extends TokenExState {
       required this.securityCode});
 }
 
-
-
 class TokenExInvalidCvvState extends TokenExState {
-  TokenExInvalidCvvState();
+  bool showInvalidCVV;
+  TokenExInvalidCvvState(this.showInvalidCVV);
 }

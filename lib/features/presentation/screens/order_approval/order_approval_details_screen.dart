@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
@@ -11,6 +12,7 @@ import 'package:commerce_flutter_app/features/presentation/components/dialog.dar
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/components/two_texts_row.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_handler/order_approval_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval_details/order_approval_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
@@ -34,9 +36,24 @@ class OrderApprovalDetailsScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           sl<OrderApprovalDetailsCubit>()..loadCart(cartId: cartId),
-      child: OrderApprovalDetailsPage(
-        refreshOrderApprovals: refreshOrderApprovals,
-      ),
+      child: Builder(builder: (context) {
+        return BlocListener<OrderApprovalHandlerCubit,
+            OrderApprovalHandlerState>(
+          listener: (context, state) {
+            if (state.status ==
+                OrderApprovalHandlerStatus.shouldRefreshOrderApproval) {
+              context
+                  .read<OrderApprovalDetailsCubit>()
+                  .loadCart(cartId: cartId);
+
+              context.read<OrderApprovalHandlerCubit>().resetState();
+            }
+          },
+          child: OrderApprovalDetailsPage(
+            refreshOrderApprovals: refreshOrderApprovals,
+          ),
+        );
+      }),
     );
   }
 }
@@ -86,7 +103,10 @@ class OrderApprovalDetailsPage extends StatelessWidget {
               context,
               LocalizationConstants.orderApproved,
             );
-            context.pop();
+
+            context.read<CartCountCubit>().onSelectCartTab();
+
+            AppRoute.cart.navigate(context);
           }
 
           if (state.status == OrderStatus.addToCartFailure) {
@@ -186,7 +206,9 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                               .shipToCityStatePostalCodeDisplay,
                         ),
                         CartOrderProductsSectionWidget(
-                          cartLines:  context.read<OrderApprovalDetailsCubit>().getCartLines() ?? [],
+                          cartLines: context
+                              .read<OrderApprovalDetailsCubit>()
+                              .getCartLines(),
                         ),
                       ],
                     ),

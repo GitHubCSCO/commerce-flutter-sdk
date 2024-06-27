@@ -102,6 +102,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
                 : cartData?.orderNumber) ??
             '';
 
+        await _checkoutUseCase.removeOrderApprovalCookieIfAvailable();
+
         emit(CheckoutPlaceOrder(
             orderNumber: orderNumber,
             reviewOrderEntity: event.reviewOrderEntity,

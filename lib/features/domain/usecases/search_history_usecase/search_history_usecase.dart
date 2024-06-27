@@ -7,15 +7,16 @@ class SearchHistoryUseCase extends BaseUseCase {
 
   Future<List<String>> getSearchHistory() async {
     try {
-      final List<String> list = await commerceAPIServiceProvider
+      final List<String>? list = await commerceAPIServiceProvider
           .getCacheService()
           .loadPersistedData<List<String>>(CacheServiceConstants.searchHistory);
+      if (list != null) {
+        list.isEmpty
+            ? list.add(LocalizationConstants.searchNoHistoryAvailable)
+            : null;
+      }
 
-      list.isEmpty
-          ? list.add(LocalizationConstants.searchNoHistoryAvailable)
-          : null;
-
-      return list;
+      return list ?? [];
     } catch (e) {
       return [LocalizationConstants.searchNoHistoryAvailable];
     }

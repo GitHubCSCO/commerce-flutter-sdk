@@ -187,11 +187,6 @@ class ReviewOrderWidget extends StatelessWidget {
               _buildSeparator()
             ],
           ),
-          const Icon(
-            Icons.arrow_forward_ios,
-            color: Colors.grey,
-            size: 20,
-          )
         ],
       ),
     );

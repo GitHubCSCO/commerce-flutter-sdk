@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
@@ -5,6 +6,7 @@ import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/brand/brand_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_list/brand_list_cubit.dart';
@@ -98,32 +100,34 @@ class BrandPage extends StatelessWidget {
                 case BrandSectionLoaded():
                   final list = state.alphabetResult?.alphabet ?? [];
 
-                  return SingleChildScrollView(
-                    child: ExpansionPanelList(
-                      expansionCallback: (int index, bool isExpanded) {
-                        context.read<BrandBloc>().add(BrandToggleEvent(index));
-                      },
-                      children: list
-                          .asMap()
-                          .map((index, item) => MapEntry(
-                        index,
-                        ExpansionPanel(
-                          headerBuilder: (BuildContext context, bool isExpanded) {
-                            return ListTile(
-                              title: Text((item.letter ?? '').toUpperCase()),
-                            );
-                          },
-                          body: BlocProvider<BrandListCubit>(
-                            create: (context) =>
-                            sl<BrandListCubit>()..getBrands(item.letter ?? ''),
-                            child: BrandListWidget(name: item.letter ?? ''),
+                  return Expanded(
+                    child: SingleChildScrollView(
+                      child: ExpansionPanelList(
+                        expansionCallback: (int index, bool isExpanded) {
+                          context.read<BrandBloc>().add(BrandToggleEvent(index));
+                        },
+                        children: list
+                            .asMap()
+                            .map((index, item) => MapEntry(
+                          index,
+                          ExpansionPanel(
+                            headerBuilder: (BuildContext context, bool isExpanded) {
+                              return ListTile(
+                                title: Text((item.letter ?? '').toUpperCase()),
+                              );
+                            },
+                            body: BlocProvider<BrandListCubit>(
+                              create: (context) =>
+                              sl<BrandListCubit>()..getBrands(item.letter ?? ''),
+                              child: BrandListWidget(name: item.letter ?? ''),
+                            ),
+                            isExpanded: state.currentPanelIndex == index,
+                            canTapOnHeader: true,
                           ),
-                          isExpanded: state.currentPanelIndex == index,
-                          canTapOnHeader: true,
-                        ),
-                      ))
-                          .values
-                          .toList(),
+                        ))
+                            .values
+                            .toList(),
+                      ),
                     ),
                   );
                 case BrandSectionFailed():
@@ -185,10 +189,40 @@ class BrandListWidget extends StatelessWidget {
                     AppRoute.shopBrandDetails.navigateBackStack(context, extra: brand);
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: Text(
-                      brand.name ?? '',
-                      style: OptiTextStyles.body,
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            brand.name ?? '',
+                            style: OptiTextStyles.body,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(
+                              (brand.logoSmallImagePath ?? '').makeImageUrl(),
+                              fit: BoxFit.fitHeight,
+                              errorBuilder: (BuildContext context, Object error,
+                                  StackTrace? stackTrace) {
+                                // This function is called when the image fails to load
+                                return Container(
+                                  color: OptiAppColors.backgroundGray, // Placeholder color
+                                  alignment: Alignment.center,
+                                  child: const Icon(
+                                    Icons.image, // Icon to display
+                                    color: Colors.grey, // Icon color
+                                    size: 30, // Icon size
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 );

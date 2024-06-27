@@ -10,8 +10,10 @@ class CurrentLocationDataEntity extends Equatable {
   final String? locationName;
   final LatLong? latLong;
   final VmiLocationModel? vmiLocation;
+  final String? id;
 
   CurrentLocationDataEntity({
+    this.id,
     this.vmiLocation,
     this.firestLineValue,
     this.secondLineValue,
@@ -20,15 +22,16 @@ class CurrentLocationDataEntity extends Equatable {
     this.latLong,
   });
 
-  CurrentLocationDataEntity copyWith({
-    String? firestLineValue,
-    String? secondLineValue,
-    String? thridLineValue,
-    String? locationName,
-    LatLong? latLong,
-    VmiLocationModel? vmiLocation,
-  }) {
+  CurrentLocationDataEntity copyWith(
+      {String? firestLineValue,
+      String? secondLineValue,
+      String? thridLineValue,
+      String? locationName,
+      LatLong? latLong,
+      VmiLocationModel? vmiLocation,
+      String? id}) {
     return CurrentLocationDataEntity(
+      id: id ?? this.id,
       firestLineValue: firestLineValue ?? this.firestLineValue,
       secondLineValue: secondLineValue ?? this.secondLineValue,
       thridLineValue: thridLineValue ?? this.thridLineValue,
@@ -60,7 +63,8 @@ class CurrentLocationDataEntity extends Equatable {
       thridLineValue,
       locationName,
       latLong,
-      vmiLocation
+      vmiLocation,
+      id
     ];
   }
 }

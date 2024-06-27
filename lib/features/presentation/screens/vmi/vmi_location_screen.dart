@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/current_location_data_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_state.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
@@ -73,9 +74,9 @@ class VMILocationScreen extends StatelessWidget {
                       var selectedLocation =
                           context.read<VMILocationBloc>().selectedLocation;
                       if (selectedLocation != null) {
-                        // context
-                        //     .read<CurrentLocationCubit>()
-                        //     .onLocationSelectEvent(selectedLocation);
+                        context.read<VMILocationBloc>().add(
+                            SaveVmiLocationEvent(
+                                selectedLocation: selectedLocation));
                         onLocationSelected(selectedLocation);
                       }
                       context.pop();

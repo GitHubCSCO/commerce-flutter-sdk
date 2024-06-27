@@ -10,7 +10,7 @@ class VMILocationLoadingState extends VMILocationState {}
 
 class VMILocationLoadedState extends VMILocationState {
   List<CurrentLocationDataEntity> currentLocationDataEntityList;
-  LatLong? selectedLocation;
+  CurrentLocationDataEntity? selectedLocation;
   VMILocationLoadedState({
     required this.currentLocationDataEntityList,
     this.selectedLocation,

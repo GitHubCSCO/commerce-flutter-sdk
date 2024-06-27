@@ -45,7 +45,9 @@ class CheckoutPaymentDetails extends StatelessWidget {
     return BlocListener<PaymentDetailsBloc, PaymentDetailsState>(
       listener: (_, state) {
         if (state is PaymentDetailsLoaded) {
-          context.read<TokenExBloc>().resetTokenExData();
+          if (state.tokenExEntity != null) {
+            context.read<TokenExBloc>().resetTokenExData();
+          }
 
           if (context.read<PaymentDetailsBloc>().accountPaymentProfile !=
                   null &&

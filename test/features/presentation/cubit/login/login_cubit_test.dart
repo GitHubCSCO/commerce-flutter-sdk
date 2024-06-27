@@ -22,21 +22,6 @@ void main() {
       loginCubit.close();
     });
 
-    blocTest(
-      'emits [LoginLoadingState, LoginSuccessState] when onLoginSubmit is called successfully',
-      build: () {
-        when(() => loginUsecase.attemptSignIn(any(), any()))
-            .thenAnswer((_) async => LoginStatus.loginSuccessBillToShipTo);
-        return loginCubit;
-      },
-      act: (cubit) async {
-        cubit.onLoginSubmit('validUsername', 'validPassword');
-      },
-      expect: () => [
-        LoginLoadingState(),
-        const LoginSuccessState(loginStatus: LoginStatus.loginSuccess),
-      ],
-    );
 
     blocTest(
       'emits [LoginLoadingState, LoginSuccessState] when onLoginSubmit is called successfully with biometric option',

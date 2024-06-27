@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_handler/order_approval_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/order_approval_filter_widget.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,19 @@ class OrderApprovalScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<OrderApprovalCubit>()..loadOrderApprovalList(),
-      child: const OrderApprovalPage(),
+      child: Builder(builder: (context) {
+        return BlocListener<OrderApprovalHandlerCubit,
+            OrderApprovalHandlerState>(
+          listener: (context, state) {
+            if (state.status ==
+                OrderApprovalHandlerStatus.shouldRefreshOrderApproval) {
+              context.read<OrderApprovalCubit>().loadOrderApprovalList();
+              context.read<OrderApprovalHandlerCubit>().resetState();
+            }
+          },
+          child: const OrderApprovalPage(),
+        );
+      }),
     );
   }
 }

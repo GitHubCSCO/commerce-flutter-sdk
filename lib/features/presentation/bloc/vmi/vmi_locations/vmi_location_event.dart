@@ -15,3 +15,8 @@ class UpdateSearchPlaceEvent extends VMILocationEvent {
   final GooglePlace? seachPlace;
   UpdateSearchPlaceEvent({required this.seachPlace});
 }
+
+class SaveVmiLocationEvent extends VMILocationEvent {
+  final CurrentLocationDataEntity selectedLocation;
+  SaveVmiLocationEvent({required this.selectedLocation});
+}
