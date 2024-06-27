@@ -207,7 +207,7 @@ class LocationSearchPage extends StatelessWidget {
                 } else if (state is LocationSearchFocusState) {
                   return const Text('LocationSearchFocusState');
                 } else if (state is LocationSearchFailureState) {
-                  return const Text('LocationSearchFailureState');
+                  return Center(child: const Text('No Location Found'));
                 } else if (state is LocationSearchHistoryLoadedState) {
                   return (state.searchHistory.length == 0)
                       ? const Text("No History Found")
