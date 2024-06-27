@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/order_widgets/order_product_image_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_screen.dart';
@@ -45,7 +46,7 @@ class CountInventoryItemWidget extends StatelessWidget {
     final part = _buildRow(
         LocalizationConstants.partNumberSign,
         OptiTextStyles.subtitle,
-        quickOrderItemEntity.productEntity.productNumber ?? '',
+        quickOrderItemEntity.productEntity.getProductNumber(),
         OptiTextStyles.body);
     final myPart = _buildRow(
         LocalizationConstants.myPartNumberSign,
@@ -61,6 +62,11 @@ class CountInventoryItemWidget extends StatelessWidget {
         LocalizationConstants.binSign,
         OptiTextStyles.subtitle,
         quickOrderItemEntity.vmiBinEntity?.binNumber ?? '',
+        OptiTextStyles.body);
+    final count = _buildRow(
+        LocalizationConstants.count,
+        OptiTextStyles.subtitle,
+        quickOrderItemEntity.vmiBinEntity?.lastCountQty?.toInt().toString() ?? '',
         OptiTextStyles.body);
     final maxCount = _buildRow(
         LocalizationConstants.maxSign,
@@ -84,6 +90,9 @@ class CountInventoryItemWidget extends StatelessWidget {
     }
     if (bin != null) {
       list.add(bin);
+    }
+    if (count != null) {
+      list.add(count);
     }
     if (maxCount != null) {
       list.add(maxCount);
