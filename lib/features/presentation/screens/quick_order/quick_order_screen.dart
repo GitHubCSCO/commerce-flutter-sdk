@@ -430,10 +430,12 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                       autocompleteResult: (state as QuickOrderAutoCompleteLoadedState).result!,
                     )
                   else if (state is QuickOrderAutoCompleteFailureState)
-                    Center(
-                      child: Text(
-                        (state as QuickOrderAutoCompleteFailureState).error,
-                        style: OptiTextStyles.body,
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          (state as QuickOrderAutoCompleteFailureState).error,
+                          style: OptiTextStyles.body,
+                        ),
                       ),
                     ),
                 ],
