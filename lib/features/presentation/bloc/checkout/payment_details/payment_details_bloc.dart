@@ -209,14 +209,23 @@ class PaymentDetailsBloc
     if (cart.paymentOptions?.paymentMethods != null) {
       List<PaymentMethodDto> paymentMethods =
           cart.paymentOptions!.paymentMethods!;
-      selectedPaymentMethod = cart.paymentMethod;
+      if (cart.paymentMethod?.isCreditCard != null &&
+          cart.paymentMethod?.isCreditCard == false) {
+        selectedPaymentMethod = cart.paymentMethod;
+      }
 
       if (selectedPaymentMethod == null) {
-        selectedPaymentMethod = paymentMethods.first;
-        cart.paymentMethod = selectedPaymentMethod;
+        for (PaymentMethodDto method in paymentMethods) {
+          if (method.isCreditCard == false) {
+            selectedPaymentMethod = method;
+            cart.paymentMethod = selectedPaymentMethod;
+            break;
+          }
+        }
       } else {
         for (PaymentMethodDto method in paymentMethods) {
-          if (method.name == selectedPaymentMethod?.name) {
+          if (method.name == selectedPaymentMethod?.name &&
+              method.isCreditCard == false) {
             selectedPaymentMethod = method;
             break;
           }
