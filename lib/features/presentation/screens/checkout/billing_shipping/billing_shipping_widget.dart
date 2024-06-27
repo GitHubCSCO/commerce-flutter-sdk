@@ -112,7 +112,7 @@ class BillingShippingWidget extends StatelessWidget {
       style: TextButton.styleFrom(
         foregroundColor: Colors.blue,
         backgroundColor: Colors.white, // Button color
-        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         textStyle: OptiTextStyles.linkMedium,
       ),
       child: const Text('+ New Address'),
