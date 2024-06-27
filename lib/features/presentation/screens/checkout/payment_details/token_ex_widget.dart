@@ -49,7 +49,7 @@ class TokenExWebView extends StatelessWidget {
           handleTokenExFinishedData(
               state.cardNumber, state.cardType, state.securityCode, false);
         } else if (state is TokenExInvalidCvvState) {
-          handleTokenExFinishedData(null, null, null, true);
+          handleTokenExFinishedData(null, null, null, state.showInvalidCVV);
         }
       },
       child: WebViewWidget(

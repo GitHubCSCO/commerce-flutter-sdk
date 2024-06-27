@@ -52,7 +52,7 @@ class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
     }
 
     if (urlString.endsWith("error")) {
-      emit(TokenExInvalidCvvState());
+      emit(TokenExInvalidCvvState(false));
       return;
     }
 
@@ -64,7 +64,7 @@ class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {
     var isValid = valid.toLowerCase() == 'true';
 
     if (!isValid) {
-      emit(TokenExInvalidCvvState());
+      emit(TokenExInvalidCvvState(true));
     }
 
     if (isValid && !isCardDataFetched) {

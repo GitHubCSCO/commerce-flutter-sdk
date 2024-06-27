@@ -28,8 +28,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 ReviewOrderEntity prepareReviewOrderEntiity(
-  CheckoutDataLoaded state, BuildContext context
-) {
+    CheckoutDataLoaded state, BuildContext context) {
   return ReviewOrderEntity(
       billTo: state.billToAddress,
       shipTo: state.shipToAddress,
@@ -175,7 +174,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                   );
 
                                   final reviewOrderEntity =
-                                      prepareReviewOrderEntiity(state,context);
+                                      prepareReviewOrderEntiity(state, context);
 
                                   return ExpansionPanelList(
                                     expansionCallback:
@@ -219,9 +218,6 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                                             PaymentDetailsBloc>()
                                                         .cart!
                                                         .paymentOptions!));
-                                                context
-                                                    .read<ExpansionPanelCubit>()
-                                                    .onContinueClick();
                                               }),
                                           isExpanded:
                                               list?[1].isExpanded ?? false,
@@ -303,13 +299,16 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                     var isSelectedNewAddedCard = context
                                         .read<PaymentDetailsBloc>()
                                         .isSelectedNewAddedCard;
+                                    var isCVVFieldOpened = context
+                                        .read<PaymentDetailsBloc>()
+                                        .isCVVFieldOpened;
                                     if (isSelectedNewAddedCard) {
                                       context
                                           .read<ExpansionPanelCubit>()
                                           .onContinueClick();
                                     } else if (isPaymentCardType &&
                                         !isCreditCardSectionCompleted &&
-                                        !isSelectedNewAddedCard) {
+                                        !isSelectedNewAddedCard && isCVVFieldOpened) {
                                       context
                                           .read<TokenExBloc>()
                                           .add(TokenExValidateEvent());
@@ -338,7 +337,8 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
 
                                   case 2:
                                     final reviewOrderEntity =
-                                        prepareReviewOrderEntiity(state,context);
+                                        prepareReviewOrderEntiity(
+                                            state, context);
 
                                     context.read<CheckoutBloc>().add(
                                         PlaceOrderEvent(
