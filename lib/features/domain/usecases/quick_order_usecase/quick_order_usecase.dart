@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
@@ -95,14 +96,27 @@ class QuickOrderUseCase extends BaseUseCase {
 
     switch (resultResponse) {
       case Success(value: final data):
-        if ((data?.products ?? []).isNotEmpty &&
-            (data?.products ?? []).length == 1) {
-          final productEntity =
-              ProductEntityMapper().toEntity(data?.products![0] ?? Product());
-          return Success(productEntity);
-        } else {
-          return const Success(null);
+        final products = data?.products ?? [];
+        if (products.isNotEmpty && products.length == 1) {
+          final product = products[0];
+          if (product.isStyleProductParent ?? false) {
+            var parameters = ProductQueryParameters(expand: "styledproducts");
+
+            var result = (await commerceAPIServiceProvider
+                .getProductService()
+                .getProduct(product.id ?? '', parameters: parameters))
+                .getResultSuccessValue();
+
+            if (result?.product != null) {
+              final productEntity = ProductEntityMapper().toEntity(result!.product!);
+              return Success(productEntity);
+            }
+          } else {
+            final productEntity = ProductEntityMapper().toEntity(product);
+            return Success(productEntity);
+          }
         }
+        return const Success(null);
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
     }
