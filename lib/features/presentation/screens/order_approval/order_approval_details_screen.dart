@@ -104,10 +104,6 @@ class OrderApprovalDetailsPage extends StatelessWidget {
               LocalizationConstants.orderApproved,
             );
 
-            context.pop();
-            context.pop();
-
-            context.read<CartCountCubit>().onCartItemChange();
             context.read<CartCountCubit>().onSelectCartTab();
 
             AppRoute.cart.navigate(context);
