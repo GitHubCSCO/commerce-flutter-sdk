@@ -76,12 +76,14 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
 
   void _handleCategoryClick(BuildContext context, Category category) {
     if((category.subCategories?.length ?? 0) > 0){
-      AppRoute.shopSubCategory.navigateBackStack(
-        context,
-        //TODO SubCategoryScreen might be redundant, we might be able to use categoryscreen do the same thing
-        //TODO what if id and name is null, we need to take care of that
-        pathParameters: {"categoryId": category.id.toString(), "categoryTitle": category.name.toString()}
-      );
+      AppRoute.shopSubCategory.navigateBackStack(context,
+          //TODO SubCategoryScreen might be redundant, we might be able to use categoryscreen do the same thing
+          //TODO what if id and name is null, we need to take care of that
+          pathParameters: {
+            "categoryId": category.id.toString(),
+            "categoryTitle": category.name.toString(),
+            "categoryPath": category.path.toString()
+          });
     }else{
       final productPageEntity = ProductPageEntity('', ProductParentType.category, category: category);
       AppRoute.product.navigateBackStack(context, extra: productPageEntity);
