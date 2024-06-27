@@ -402,6 +402,7 @@ class _FilterDatePickerWidget extends StatelessWidget {
               Expanded(
                 child: DatePickerWidget(
                   key: UniqueKey(),
+                  minDate: DateTime(1970),
                   maxDate: null,
                   selectedDateTime: selectedDate,
                   callback: onSelectDate,
