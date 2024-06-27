@@ -236,10 +236,6 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                                               PaymentDetailsBloc>()
                                                           .cart!
                                                           .paymentOptions!));
-                                                  context
-                                                      .read<
-                                                          ExpansionPanelCubit>()
-                                                      .onContinueClick();
                                                 }),
                                             isExpanded:
                                                 list?[1].isExpanded ?? false,
@@ -322,13 +318,18 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                   var isSelectedNewAddedCard = context
                                       .read<PaymentDetailsBloc>()
                                       .isSelectedNewAddedCard;
+                                  var isCVVFieldOpened = context
+                                      .read<PaymentDetailsBloc>()
+                                      .isCVVFieldOpened;
+
                                   if (isSelectedNewAddedCard) {
                                     context
                                         .read<ExpansionPanelCubit>()
                                         .onContinueClick();
                                   } else if (isPaymentCardType &&
                                       !isCreditCardSectionCompleted &&
-                                      !isSelectedNewAddedCard) {
+                                      !isSelectedNewAddedCard &&
+                                      isCVVFieldOpened) {
                                     context
                                         .read<TokenExBloc>()
                                         .add(TokenExValidateEvent());
@@ -429,5 +430,4 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
       context.read<CheckoutBloc>().add(UpdateShiptoAddressEvent(result));
     }
   }
-
 }

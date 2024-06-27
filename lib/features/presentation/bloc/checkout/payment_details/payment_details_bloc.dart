@@ -20,6 +20,7 @@ class PaymentDetailsBloc
   final _poNumberController = TextEditingController();
   bool isSelectedNewAddedCard = false;
   bool isCreditCardSectionCompleted = false;
+  bool isCVVFieldOpened = false;
 
   PaymentDetailsBloc({required PaymentDetailsUseCase paymentDetailsUseCase})
       : _paymentDetailsUseCase = paymentDetailsUseCase,
@@ -64,14 +65,14 @@ class PaymentDetailsBloc
   Future<void> _updateNewAccountPaymentPorfile(
       UpdateNewAccountPaymentProfileEvent event,
       Emitter<PaymentDetailsState> emit) async {
-
     cart?.paymentOptions = PaymentOptionsDto(
         creditCard: CreditCardDto(
-            cardHolderName: event.accountPaymentProfile.cardHolderName,
-            cardNumber: event.accountPaymentProfile.cardIdentifier,
-            cardType: event.accountPaymentProfile.cardType,
-            expirationMonth: event.accountPaymentProfile.expirationMonth,
-            expirationYear: event.accountPaymentProfile.expirationYear,));
+      cardHolderName: event.accountPaymentProfile.cardHolderName,
+      cardNumber: event.accountPaymentProfile.cardIdentifier,
+      cardType: event.accountPaymentProfile.cardType,
+      expirationMonth: event.accountPaymentProfile.expirationMonth,
+      expirationYear: event.accountPaymentProfile.expirationYear,
+    ));
 
     accountPaymentProfile = event.accountPaymentProfile;
   }
@@ -150,10 +151,19 @@ class PaymentDetailsBloc
                   tokenExConfiguration = tokenExDto;
                   break;
                 case Failure(errorResponse: final errorResponse):
-                  break;
+                  isCVVFieldOpened = false;
+                  emit(PaymentDetailsLoaded(
+                      isNewCreditCard: false,
+                      tokenExEntity: null,
+                      cardDetails: cardDetails,
+                      showPOField: showPOField,
+                      poTextEditingController: _poNumberController,
+                      cart: cart));
+                  return;
               }
             }
-
+            isCreditCardSectionCompleted = false;
+            isCVVFieldOpened = true;
             var tokenExStyle = TokenExStyleDto(
               baseColor: OptiAppColors.lightGrayTextColor.toString(),
               focusColor: OptiAppColors.primaryColor.toString(),
