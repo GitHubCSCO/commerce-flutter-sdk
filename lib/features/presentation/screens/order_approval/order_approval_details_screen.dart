@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
@@ -102,7 +103,14 @@ class OrderApprovalDetailsPage extends StatelessWidget {
               context,
               LocalizationConstants.orderApproved,
             );
+
             context.pop();
+            context.pop();
+
+            context.read<CartCountCubit>().onCartItemChange();
+            context.read<CartCountCubit>().onSelectCartTab();
+
+            AppRoute.cart.navigate(context);
           }
 
           if (state.status == OrderStatus.addToCartFailure) {
