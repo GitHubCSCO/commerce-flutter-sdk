@@ -139,13 +139,11 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
       pickUpWarehouse: pickUpWarehouse, 
       selectedShippingMethod: selectedShippingMethod);
 
-    if (event.isDefaultEnable) {
-      await _billToShipToUseCase.updateDefaultCustomerIfNeeded(
-          event.isDefaultEnable,
-          isDefaultCustomerSelected,
-          selectedShippingMethod ?? FulfillmentMethodType.Ship,
-          wasShipToUpdated);
-    }
+    await _billToShipToUseCase.updateDefaultCustomerIfNeeded(
+        event.isDefaultEnable,
+        isDefaultCustomerSelected,
+        selectedShippingMethod ?? FulfillmentMethodType.Ship,
+        wasShipToUpdated);
 
     if (patchedSession != null) {
       emit(SaveBillToShipToSuccess());
