@@ -181,7 +181,11 @@ class CartPage extends StatelessWidget {
                                 AppRoute.checkout.navigateBackStack(context,
                                     extra: context.read<CartPageBloc>().cart);
                               },
-                              text: LocalizationConstants.checkout,
+                              text: context
+                                      .read<CartPageBloc>()
+                                      .approvalButtonVisible
+                                  ? LocalizationConstants.checkoutForApproval
+                                  : LocalizationConstants.checkout,
                             ),
                           ],
                         ),

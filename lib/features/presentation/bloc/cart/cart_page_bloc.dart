@@ -172,4 +172,6 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
         )
         .toList();
   }
+
+  bool get approvalButtonVisible => cart?.requiresApproval ?? false;
 }

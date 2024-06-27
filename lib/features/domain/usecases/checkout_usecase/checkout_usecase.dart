@@ -46,4 +46,10 @@ class CheckoutUsecase extends BaseUseCase {
         .getBillToService()
         .postCurrentBillToShipToAsync(shipTo);
   }
+
+  Future<void> removeOrderApprovalCookieIfAvailable() async {
+    await commerceAPIServiceProvider
+        .getClientService()
+        .removeOrderApprovalCookieIfAvailable();
+  }
 }

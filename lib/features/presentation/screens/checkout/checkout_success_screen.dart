@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/converter/discount_value_convertert.dart';
@@ -18,13 +19,16 @@ class CheckoutSuccessEntity {
   final Cart cart;
   final String orderNumber;
   final bool isVmiCheckout;
+  final bool isOrderApproval;
   final ReviewOrderEntity? reviewOrderEntity;
 
-  const CheckoutSuccessEntity(
-      {required this.orderNumber,
-      required this.isVmiCheckout,
-      required this.cart,
-      this.reviewOrderEntity});
+  const CheckoutSuccessEntity({
+    required this.orderNumber,
+    required this.isVmiCheckout,
+    required this.cart,
+    this.reviewOrderEntity,
+    this.isOrderApproval = false,
+  });
 }
 
 class CheckoutSuccessScreen extends StatelessWidget {
@@ -66,7 +70,11 @@ class CheckoutSuccessPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Container(child: _buildOrderSuccessInfoWidget()),
+                  Container(
+                    child: _buildOrderSuccessInfoWidget(
+                      isOrderApproval: checkoutSuccessEntity.isOrderApproval,
+                    ),
+                  ),
                   _buildOrderItemSummaryWidget(),
                   if (checkoutSuccessEntity.reviewOrderEntity != null)
                     ReviewOrderWidget(
@@ -147,7 +155,7 @@ class CheckoutSuccessPage extends StatelessWidget {
     );
   }
 
-  Widget _buildOrderSuccessInfoWidget() {
+  Widget _buildOrderSuccessInfoWidget({bool isOrderApproval = false}) {
     return Container(
       color: Colors.white,
       child: Padding(
@@ -156,31 +164,33 @@ class CheckoutSuccessPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Thanks you for your order!",
+              isOrderApproval
+                  ? SiteMessageConstants.defaultVaLueOrderApprovalOrderPlaced
+                  : "Thank you for your order!",
               style: OptiTextStyles.subtitle,
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Text(
               "We have received your order and have sent you an email confirmation to  ${checkoutSuccessEntity.cart.shipTo?.email}",
               style: OptiTextStyles.bodySmall,
               textAlign: TextAlign.left,
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Text(
               "Order Number ${checkoutSuccessEntity.orderNumber}",
               style: OptiTextStyles.titleLarge,
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Text(
               "Order Placed: ${checkoutSuccessEntity.cart.orderDate}",
               style: OptiTextStyles.body,
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Text(
               "Delivery Method: ${checkoutSuccessEntity.cart.carrier?.description}   ${checkoutSuccessEntity.cart.shipVia?.description}",
               style: OptiTextStyles.body,
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
           ],
         ),
       ),
