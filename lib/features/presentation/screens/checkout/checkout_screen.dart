@@ -327,8 +327,16 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                           .cart
                                           ?.paymentMethod !=
                                       null;
+                                  var isPaymentMethodSelectedasCreditCard =
+                                      context
+                                              .read<CheckoutBloc>()
+                                              .cart
+                                              ?.paymentMethod
+                                              ?.isCreditCard ==
+                                          true;
 
-                                  if (!isPaymentMethodSelectedInCard) {
+                                  if (!isPaymentMethodSelectedInCard ||
+                                      isPaymentMethodSelectedasCreditCard) {
                                     context.read<CheckoutBloc>().add(
                                         SelectPaymentMethodEvent(context
                                             .read<PaymentDetailsBloc>()
