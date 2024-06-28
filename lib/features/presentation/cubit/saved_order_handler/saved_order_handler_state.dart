@@ -8,7 +8,7 @@ enum SavedOrderHandlerStatus {
   failure,
 }
 
-class SavedOrderHandlerState extends Equatable {
+class SavedOrderHandlerState {
   final SavedOrderHandlerStatus status;
   final Cart savedCart;
 
@@ -16,9 +16,6 @@ class SavedOrderHandlerState extends Equatable {
     required this.status,
     required this.savedCart,
   });
-
-  @override
-  List<Object> get props => [status, savedCart];
 
   SavedOrderHandlerState copyWith({
     SavedOrderHandlerStatus? status,

@@ -320,24 +320,19 @@ class CartPage extends StatelessWidget {
             listener: (context, state) {
               if (state.status == SavedOrderHandlerStatus.shouldClearCart) {
                 context.read<CartContentBloc>().add(CartContentClearAllEvent());
-              }
 
-              AppRoute.savedOrderDetails.navigate(
-                context,
-                pathParameters: {
-                  'cartId': context
-                          .read<SavedOrderHandlerCubit>()
-                          .state
-                          .savedCart
-                          .id ??
-                      '',
-                },
-                extra: () {
-                  context
-                      .read<SavedOrderHandlerCubit>()
-                      .shouldRefreshSavedOrder();
-                },
-              );
+                AppRoute.savedOrderDetails.navigate(
+                  context,
+                  pathParameters: {
+                    'cartId': context
+                            .read<SavedOrderHandlerCubit>()
+                            .state
+                            .savedCart
+                            .id ??
+                        '',
+                  },
+                );
+              }
             },
             child: CartLineWidgetList(
               cartLineEntities: context.read<CartPageBloc>().getCartLines(),
@@ -351,10 +346,11 @@ class CartPage extends StatelessWidget {
     return list;
   }
 
-  void _handlePickUpLocationCallBack(BuildContext context, WarehouseEntity wareHouse) {
-    context.read<CartPageBloc>().add(CartPagePickUpLocationChangeEvent(WarehouseEntityMapper().toModel(wareHouse)));
+  void _handlePickUpLocationCallBack(
+      BuildContext context, WarehouseEntity wareHouse) {
+    context.read<CartPageBloc>().add(CartPagePickUpLocationChangeEvent(
+        WarehouseEntityMapper().toModel(wareHouse)));
   }
-
 }
 
 class _buildCartEroorWidget extends StatelessWidget {
