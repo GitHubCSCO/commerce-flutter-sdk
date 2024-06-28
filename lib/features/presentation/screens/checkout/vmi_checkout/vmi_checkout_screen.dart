@@ -165,11 +165,19 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                     : LocalizationConstants.backToCreateOrder),
                               ),
                               const SizedBox(height: 4.0),
-                              PrimaryButton(
-                                onPressed: () {
-                                  _handleSubmitOrderClick(context, state);
-                                },
-                                text: LocalizationConstants.submitOrder,
+                              Visibility(
+                                visible: context
+                                    .watch<CheckoutBloc>()
+                                    .checkoutButtonVisible,
+                                child: PrimaryButton(
+                                  onPressed: () {
+                                    _handleSubmitOrderClick(context, state);
+                                  },
+                                  isEnabled: context
+                                      .watch<CheckoutBloc>()
+                                      .isCheckoutButtonEnabled,
+                                  text: LocalizationConstants.submitOrder,
+                                ),
                               ),
                             ],
                           ),

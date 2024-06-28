@@ -178,18 +178,26 @@ class CartPage extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            PrimaryButton(
-                              onPressed: () {
-                                final currentState =
-                                    context.read<AuthCubit>().state;
-                                handleAuthStatus(context, currentState.status,
-                                    context.read<CartPageBloc>());
-                              },
-                              text: context
-                                      .read<CartPageBloc>()
-                                      .approvalButtonVisible
-                                  ? LocalizationConstants.checkoutForApproval
-                                  : LocalizationConstants.checkout,
+                            Visibility(
+                              visible: context
+                                  .watch<CartPageBloc>()
+                                  .checkoutButtonVisible,
+                              child: PrimaryButton(
+                                isEnabled: context
+                                    .watch<CartPageBloc>()
+                                    .isCheckoutButtonEnabled,
+                                onPressed: () {
+                                  final currentState =
+                                      context.read<AuthCubit>().state;
+                                  handleAuthStatus(context, currentState.status,
+                                      context.read<CartPageBloc>());
+                                },
+                                text: context
+                                        .watch<CartPageBloc>()
+                                        .approvalButtonVisible
+                                    ? LocalizationConstants.checkoutForApproval
+                                    : LocalizationConstants.checkout,
+                              ),
                             ),
                           ],
                         ),
