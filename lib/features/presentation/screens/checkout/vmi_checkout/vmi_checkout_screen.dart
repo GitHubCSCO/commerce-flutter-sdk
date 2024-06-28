@@ -188,7 +188,7 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
 
   void _handleAddressSelectionCallBack(BuildContext context, Object result) {
     if (result is ShipTo) {
-      context.read<CheckoutBloc>().add(UpdateShiptoAddressEvent(result));
+      context.read<CheckoutBloc>().add(AddShiptoAddressEvent(result));
     }
   }
 
