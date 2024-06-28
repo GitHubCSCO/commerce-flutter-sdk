@@ -53,6 +53,12 @@ class CheckoutUsecase extends BaseUseCase {
         .removeOrderApprovalCookieIfAvailable();
   }
 
+  Future<Result<ProductSettings, ErrorResponse>> loadProductSettings() async {
+    return await commerceAPIServiceProvider
+        .getSettingsService()
+        .getProductSettingsAsync();
+  }
+
   Future<bool> hasCheckout() async {
     return await coreServiceProvider.getAppConfigurationService().hasCheckout();
   }

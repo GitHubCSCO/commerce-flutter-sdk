@@ -32,6 +32,8 @@ class CheckoutDataLoaded extends CheckoutState {
   });
 }
 
+class CheckoutNoDataState extends CheckoutState {}
+
 class CheckoutDataFetchFailed extends CheckoutState {
   final String error;
 

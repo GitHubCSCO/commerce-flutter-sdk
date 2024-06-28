@@ -8,9 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CartLineWidgetList extends StatelessWidget {
-  final List<CartLineEntity> cartLineEntities;
 
-  CartLineWidgetList({required this.cartLineEntities});
+  final bool? showClearCart;
+  final List<CartLineEntity> cartLineEntities;
+  final void Function(BuildContext) onCartChangeCallBack;
+
+  CartLineWidgetList({required this.cartLineEntities, required this.onCartChangeCallBack, this.showClearCart});
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +24,7 @@ class CartLineWidgetList extends StatelessWidget {
       if (state is CartContentClearAllSuccessState ||
           state is CartContentItemRemovedSuccessState ||
           state is CartContentQuantityChangedSuccessState) {
-        context.read<CartCountCubit>().loadCurrentCartCount();
-        context.read<CartPageBloc>().add(CartPageLoadEvent());
+        onCartChangeCallBack.call(context);
       }
     }, builder: (context, state) {
       switch (state) {
@@ -30,7 +32,7 @@ class CartLineWidgetList extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CartContentHeaderWidget(cartCount: cartLineEntities.length),
+              CartContentHeaderWidget(cartCount: cartLineEntities.length, showClearCart: showClearCart),
               Column(
                 children: cartLineEntities
                     .map((cartLineEntity) =>

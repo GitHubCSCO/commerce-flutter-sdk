@@ -142,10 +142,12 @@ void _onClickClearAllCart(BuildContext context) {
 }
 
 class CartContentHeaderWidget extends StatelessWidget {
+
+  final bool? showClearCart;
   final int cartCount;
   const CartContentHeaderWidget({
     super.key,
-    required this.cartCount,
+    required this.cartCount, this.showClearCart,
   });
 
   @override
@@ -174,30 +176,33 @@ class CartContentHeaderWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          InkWell(
-            onTap: () {
-              _onClickClearAllCart(context);
-            },
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: SvgPicture.asset(
-                    AssetConstants.cartClearIcon,
-                    fit: BoxFit.fitWidth,
+          Visibility(
+            visible: showClearCart ?? true,
+            child: InkWell(
+              onTap: () {
+                _onClickClearAllCart(context);
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: SvgPicture.asset(
+                      AssetConstants.cartClearIcon,
+                      fit: BoxFit.fitWidth,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 11),
-                Text(
-                  'Clear Cart',
-                  textAlign: TextAlign.center,
-                  style: OptiTextStyles.body,
-                ),
-              ],
+                  const SizedBox(width: 11),
+                  Text(
+                    'Clear Cart',
+                    textAlign: TextAlign.center,
+                    style: OptiTextStyles.body,
+                  ),
+                ],
+              ),
             ),
           ),
         ],

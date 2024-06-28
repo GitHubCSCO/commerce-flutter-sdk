@@ -1,5 +1,8 @@
+import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
+import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -16,6 +19,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   PaymentOptionsDto? selectedPayment;
   Session? session;
   bool hasCheckout = true;
+  ProductSettings? productSettings;
 
   CheckoutBloc({required CheckoutUsecase checkoutUsecase})
       : _checkoutUseCase = checkoutUsecase,
@@ -48,10 +52,18 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
 
     var data = await _checkoutUseCase.getCart(event.cart.id!);
     session ??= _checkoutUseCase.getCurrentSession();
+    var productSettingsResult = await _checkoutUseCase.loadProductSettings();
+    productSettings = productSettingsResult is Success
+        ? (productSettingsResult as Success).value as ProductSettings
+        : null;
 
     switch (data) {
       case Success(value: final cartData):
-        updateCheckoutData(cartData!);
+        if (cartData?.cartLines == null || cartData!.cartLines!.isEmpty) {
+          emit(CheckoutNoDataState());
+          return;
+        }
+        updateCheckoutData(cartData);
 
         final billToAddress = session?.billTo;
         final shipToAddress = session?.shipTo;
@@ -120,6 +132,21 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
             error: errorResponse.errorDescription ?? ''));
         break;
     }
+  }
+
+  List<CartLineEntity> getCartLines() {
+    List<CartLineEntity> cartlines = [];
+    for (var cartLine in cart?.cartLines ?? []) {
+      var cartLineEntity = CartLineEntityMapper().toEntity(cartLine);
+      var shouldShowWarehouseInventoryButton =
+          InventoryUtils.isInventoryPerWarehouseButtonShownAsync(
+              productSettings) &&
+              cartLine.availability.messageType != 0;
+      cartLineEntity = cartLineEntity.copyWith(
+          showInventoryAvailability: shouldShowWarehouseInventoryButton);
+      cartlines.add(cartLineEntity);
+    }
+    return cartlines;
   }
 
   void _onRequestDeliveryDateSelect(
