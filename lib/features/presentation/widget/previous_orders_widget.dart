@@ -24,7 +24,7 @@ class PreviousOrdersWidget extends StatelessWidget {
       if (state is PreviousOrdersInitialState) {
         return Container();
       } else if (state is PreviousOrdersLoadingState) {
-        return const CircularProgressIndicator();
+        return const Center(child: CircularProgressIndicator());
       } else if (state is PreviousOrdersLoadedState) {
         return Container(
           color: Colors.white,
@@ -37,6 +37,16 @@ class PreviousOrdersWidget extends StatelessWidget {
                 child: Text(
                   previousOrdersWidgetEntity.title ?? "",
                   style: OptiTextStyles.titleSmall,
+                ),
+              ),
+              Visibility(
+                visible: state.previousOrdersDataEntity.orders.isEmpty,
+                child: Center(
+                  child: Text(
+                    LocalizationConstants.previousOrdersNotFound,
+                    style: OptiTextStyles.body,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
               Container(
@@ -52,8 +62,9 @@ class PreviousOrdersWidget extends StatelessWidget {
                       onTap: () {
                         var orderEntity =
                             state.previousOrdersDataEntity.orders[index];
-                        AppRoute.orderDetails.navigateBackStack(
+                        AppRoute.vmiOrderDetails.navigateBackStack(
                           context,
+                          extra: true,
                           pathParameters: {
                             'orderNumber':
                                 (orderEntity.webOrderNumber.isNullOrEmpty)
@@ -77,11 +88,11 @@ class PreviousOrdersWidget extends StatelessWidget {
                 child: TertiaryButton(
                     borderColor: OptiAppColors.grayBackgroundColor,
                     backgroundColor: OptiAppColors.grayBackgroundColor,
-                    child: Text(
+                    child: const Text(
                       LocalizationConstants.viewAllOrders,
                     ),
                     onPressed: () {
-                      AppRoute.orderHistory.navigateBackStack(context);
+                      AppRoute.vmiOrderHistory.navigateBackStack(context);
                     }),
               ),
             ],

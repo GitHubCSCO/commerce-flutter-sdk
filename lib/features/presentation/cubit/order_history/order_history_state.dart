@@ -11,6 +11,7 @@ class OrderHistoryState extends Equatable {
   final List<FilterValueViewModel> filterValues;
   final FilterStatus filterStatus;
   final String searchQuery;
+  final bool isFromVMI;
 
   const OrderHistoryState({
     required this.orderEntities,
@@ -23,6 +24,7 @@ class OrderHistoryState extends Equatable {
     required this.temporarySelectedFilterValueIds,
     required this.temporaryShowMyOrdersValue,
     required this.searchQuery,
+    required this.isFromVMI,
   });
 
   @override
@@ -37,6 +39,7 @@ class OrderHistoryState extends Equatable {
         temporarySelectedFilterValueIds,
         temporaryShowMyOrdersValue,
         searchQuery,
+        isFromVMI
       ];
 
   OrderHistoryState copyWith({
@@ -50,8 +53,10 @@ class OrderHistoryState extends Equatable {
     List<FilterValueViewModel>? filterValues,
     FilterStatus? filterStatus,
     String? searchQuery,
+    bool? isFromVMI,
   }) {
     return OrderHistoryState(
+      isFromVMI: isFromVMI ?? this.isFromVMI,
       orderEntities: orderEntities ?? this.orderEntities,
       orderStatus: orderStatus ?? this.orderStatus,
       orderSortOrder: orderSortOrder ?? this.orderSortOrder,

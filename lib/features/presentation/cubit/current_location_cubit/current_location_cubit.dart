@@ -38,4 +38,5 @@ class CurrentLocationCubit extends Cubit<CurrentLocationState> {
     await _currentLocationUseCase
         .saveCurrentVmiLocation(currentLocationDataEntity.vmiLocation!);
   }
+   
 }

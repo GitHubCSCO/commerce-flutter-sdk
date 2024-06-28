@@ -21,6 +21,7 @@ class OrderUsecase extends BaseUseCase {
     OrderSortOrder sortOrder = OrderSortOrder.orderDateDescending,
     bool showMyOrders = false,
     List<String> filterAttributes = const [],
+    bool isFromVMI = false,
     required String searchText,
   }) async {
     final sortOrders = commerceAPIServiceProvider
@@ -29,16 +30,18 @@ class OrderUsecase extends BaseUseCase {
 
     final sortOrdersValue = sortOrders.map((e) => e.value).toList().join(',');
 
-    final result = await commerceAPIServiceProvider.getOrderService().getOrders(
-          OrdersQueryParameters(
-            sort: sortOrdersValue,
-            page: page,
-            pageSize: CoreConstants.defaultPageSize,
-            showMyOrders: showMyOrders,
-            status: filterAttributes.isEmpty ? null : filterAttributes,
-            search: searchText != '' ? searchText : null,
-          ),
-        );
+    final result = await commerceAPIServiceProvider
+        .getOrderService()
+        .getOrders(OrdersQueryParameters(
+          sort: sortOrdersValue,
+          page: page,
+          pageSize: CoreConstants.defaultPageSize,
+          showMyOrders: showMyOrders,
+          status: filterAttributes.isEmpty ? null : filterAttributes,
+          search: searchText != '' ? searchText : null,
+          vmiOrdersOnly: isFromVMI,
+          vmiLocationId: isFromVMI ? getCurrentLocation()?.id : null,
+        ));
 
     switch (result) {
       case Success(value: final value):
@@ -105,7 +108,8 @@ class OrderUsecase extends BaseUseCase {
     }
   }
 
-  Future<bool> checkReorder({
+  Future<bool> checkReorder(
+    bool isFromVMI, {
     OrderSettingsEntity? orderSettings,
     OrderEntity? order,
   }) async {
@@ -119,10 +123,9 @@ class OrderUsecase extends BaseUseCase {
       hasReorder &= (order?.canAddToCart == true);
     }
 
-    /// TODO - check VMI location as well
-    // if (vmiLocation != null) {
-    //   hasReorder = false;
-    // }
+    if (isFromVMI) {
+      hasReorder = false;
+    }
 
     return hasReorder;
   }
@@ -158,5 +161,9 @@ class OrderUsecase extends BaseUseCase {
       case Failure():
         return OrderStatus.failure;
     }
+  }
+
+  VmiLocationModel? getCurrentLocation() {
+    return coreServiceProvider.getVmiService().currentVmiLocation;
   }
 }
