@@ -46,13 +46,11 @@ class SavedOrderPage extends StatelessWidget {
         ],
       ),
       body: BlocListener<SavedOrderHandlerCubit, SavedOrderHandlerState>(
-        listener: (context, state) async {
+        listener: (context, state) {
           if (state.status == SavedOrderHandlerStatus.shouldRefreshSavedOrder ||
               state.status == SavedOrderHandlerStatus.failure) {
-            await context.read<SavedOrderCubit>().loadSavedOrders();
-            if (context.mounted) {
-              context.read<SavedOrderHandlerCubit>().resetState();
-            }
+            context.read<SavedOrderCubit>().initialize();
+            context.read<SavedOrderHandlerCubit>().resetState();
           }
         },
         child: BlocBuilder<SavedOrderCubit, SavedOrderState>(
@@ -187,11 +185,6 @@ class _SavedOrderListWidgetState extends State<_SavedOrderListWidget> {
                   context,
                   pathParameters: {
                     'cartId': widget.savedOrders[index].id ?? '',
-                  },
-                  extra: () {
-                    context
-                        .read<SavedOrderHandlerCubit>()
-                        .shouldRefreshSavedOrder();
                   },
                 );
               },
