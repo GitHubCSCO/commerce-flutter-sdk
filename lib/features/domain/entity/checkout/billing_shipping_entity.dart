@@ -11,6 +11,7 @@ class BillingShippingEntity {
   final CarrierDto? selectedCarrier;
   final ShipViaDto? selectedService;
   final DateTime? requestDeliveryDate;
+  final bool? canChangeShipTo;
 
   BillingShippingEntity(
       {this.billTo,
@@ -21,7 +22,8 @@ class BillingShippingEntity {
       this.cartSettings,
       this.selectedCarrier,
       this.selectedService,
-      this.requestDeliveryDate});
+      this.requestDeliveryDate,
+      this.canChangeShipTo = true});
 
   BillingShippingEntity copyWith(
       {BillTo? billTo,
@@ -32,7 +34,8 @@ class BillingShippingEntity {
       CartSettings? cartSettings,
       CarrierDto? selectedCarrier,
       ShipViaDto? selectedService,
-      DateTime? requestDeliveryDate}) {
+      DateTime? requestDeliveryDate,
+      bool? canChangeShipTo}) {
     return BillingShippingEntity(
       billTo: billTo ?? this.billTo,
       shipTo: shipTo ?? this.shipTo,
@@ -43,6 +46,7 @@ class BillingShippingEntity {
       selectedCarrier: selectedCarrier ?? this.selectedCarrier,
       selectedService: selectedService ?? this.selectedService,
       requestDeliveryDate: requestDeliveryDate ?? this.requestDeliveryDate,
+      canChangeShipTo: canChangeShipTo ?? this.canChangeShipTo,
     );
   }
 }
