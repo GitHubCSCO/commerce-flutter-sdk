@@ -200,7 +200,21 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
     var isCreditCardSectionCompleted =
         context.read<PaymentDetailsBloc>().isCreditCardSectionCompleted;
 
-    if (isPaymentCardType && !isCreditCardSectionCompleted) {
+    var isCVVFieldOpened = context.read<PaymentDetailsBloc>().isCVVFieldOpened;
+
+    var isPaymentMethodSelectedInCard =
+        context.read<CheckoutBloc>().cart?.paymentMethod != null;
+    var isPaymentMethodSelectedasCreditCard =
+        context.read<CheckoutBloc>().cart?.paymentMethod?.isCreditCard == true;
+    print(context.read<PaymentDetailsBloc>().selectedPaymentMethod);
+    if (!isPaymentMethodSelectedInCard || isPaymentMethodSelectedasCreditCard) {
+      context.read<CheckoutBloc>().add(SelectPaymentMethodEvent(
+          context.read<PaymentDetailsBloc>().selectedPaymentMethod!));
+    }
+
+    if (isPaymentCardType &&
+        !isCreditCardSectionCompleted &&
+        isCVVFieldOpened) {
       context.read<TokenExBloc>().add(TokenExValidateEvent());
     } else {
       var poNumber = context.read<PaymentDetailsBloc>().getPONumber();
@@ -230,5 +244,4 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
           ),
         ]);
   }
-
 }
