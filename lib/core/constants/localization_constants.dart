@@ -662,7 +662,7 @@ class LocalizationConstants {
   static const countInventory = "Count Inventory";
   static const createOrder = "Create Order";
   static const enterLocationNote =
-      "Enter a location note by tapping\n %s bellow";
+      "Enter a location note by tapping\n %s below";
   static const editLocationNote = "Edit Location Note";
   static const clearOrder = "Clear Order";
   static const orderContents = "Order Contents";
