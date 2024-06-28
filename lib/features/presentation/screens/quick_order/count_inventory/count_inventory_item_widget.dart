@@ -66,7 +66,7 @@ class CountInventoryItemWidget extends StatelessWidget {
     final count = _buildRow(
         LocalizationConstants.count,
         OptiTextStyles.subtitle,
-        quickOrderItemEntity.vmiBinEntity?.lastCountQty?.toInt().toString() ?? '',
+        quickOrderItemEntity.quantityOrdered.toInt().toString(),
         OptiTextStyles.body);
     final maxCount = _buildRow(
         LocalizationConstants.maxSign,
