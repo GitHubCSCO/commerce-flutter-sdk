@@ -63,4 +63,8 @@ class CartUseCase extends BaseUseCase {
         .getSettingsService()
         .getProductSettingsAsync();
   }
+
+  Future<bool> hasCheckout() async {
+    return await coreServiceProvider.getAppConfigurationService().hasCheckout();
+  }
 }
