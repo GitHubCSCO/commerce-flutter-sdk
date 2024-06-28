@@ -1,5 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
@@ -302,36 +304,45 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     return reversedQuickOrderProductsList;
   }
 
-  List<AddCartLine> getAddCartLines(
-      List<QuickOrderItemEntity> reversedQuickOrderProductsList,
-      Set<String> currentCartProducts) {
-    List<AddCartLine> addCartLines = reversedQuickOrderProductsList.map((x) {
+  List<AddCartLine> getAddCartLines({
+    required ScanningMode scanningMode,
+    required List<QuickOrderItemEntity> reversedQuickOrderProductsList,
+    required Set<String> allCountCartProducts, 
+    required Set<String> currentCartProducts
+  }) {
+    List<AddCartLine> addCartLines = [];
+    
+    for (var x in reversedQuickOrderProductsList) {
       if (scanningMode == ScanningMode.count) {
-        currentCartProducts.add(x.productEntity.id.toString());
-        return AddCartLine(
-          productId: x.productEntity.id,
-          qtyOrdered: (x.vmiBinEntity?.maximumQty ?? 0) - x.quantityOrdered,
-          unitOfMeasure: x.productEntity.selectedUnitOfMeasure,
-          vmiBinId: x.vmiBinEntity!.id,
-          // properties: Properties(),
-        );
+        allCountCartProducts.add(x.productEntity.id.toString());
+        var orderCount = (x.vmiBinEntity?.maximumQty ?? 0) - x.quantityOrdered;
+        if(orderCount > 0){
+          currentCartProducts.add(x.productEntity.id.toString());
+          addCartLines.add(AddCartLine(
+            productId: x.productEntity.id,
+            qtyOrdered: (x.vmiBinEntity?.maximumQty ?? 0) - x.quantityOrdered,
+            unitOfMeasure: x.productEntity.selectedUnitOfMeasure,
+            vmiBinId: x.vmiBinEntity!.id,
+            // properties: Properties(),
+          ));
+        }
       } else if (scanningMode == ScanningMode.create) {
-        return AddCartLine(
+        addCartLines.add(AddCartLine(
           productId: x.productEntity.id,
           qtyOrdered: x.quantityOrdered,
           unitOfMeasure: x.selectedUnitOfMeasure?.unitOfMeasure,
           vmiBinId: x.vmiBinEntity!.id,
           // properties: Properties(),
-        );
+        ));
       } else {
-        return AddCartLine(
+        addCartLines.add(AddCartLine(
           productId: x.productEntity.id,
           qtyOrdered: x.quantityOrdered,
           unitOfMeasure: x.selectedUnitOfMeasure?.unitOfMeasure,
           // properties: Properties(),
-        );
+        ));
       }
-    }).toList();
+    }
 
     return addCartLines;
   }
@@ -364,11 +375,13 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     if (scanningMode == ScanningMode.count ||
         scanningMode == ScanningMode.create) {
       final result = await _quickOrderUseCase.getCart();
-      switch (result) {
-        case Success(value: final data):
+      final cartResult = result.getResultSuccessValue();
+      if(cartResult!=null){
           quickOrderItemList.clear();
-          emit(OrderListNavigateToVmiCheckoutState(data!));
-        case Failure(errorResponse: final errorResponse):
+          emit(OrderListNavigateToVmiCheckoutState(
+            cart: cartResult
+          ));
+      }else{
           emit(OrderListFailedState());
       }
     } else {

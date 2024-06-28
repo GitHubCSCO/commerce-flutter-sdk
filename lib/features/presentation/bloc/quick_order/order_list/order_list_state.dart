@@ -51,7 +51,7 @@ class OrderListNavigateToVmiCheckoutState extends OrderListState {
 
   final Cart cart;
 
-  OrderListNavigateToVmiCheckoutState(this.cart);
+  OrderListNavigateToVmiCheckoutState({required this.cart});
 
   @override
   List<Object?> get props => [];

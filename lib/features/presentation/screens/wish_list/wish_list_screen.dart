@@ -347,42 +347,48 @@ class _WishListItem extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(wishList.name ?? '', style: OptiTextStyles.body),
-                Text(
-                  wishList.description ?? '',
-                  style: OptiTextStyles.bodySmall.copyWith(
-                    color: OptiAppColors.textSecondary,
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    wishList.name ?? '',
+                    style: OptiTextStyles.body,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  _constructListSharingDisplay(),
-                  style: OptiTextStyles.bodySmall.copyWith(
-                    color: OptiAppColors.textSecondary,
+                  Text(
+                    wishList.description ?? '',
+                    style: OptiTextStyles.bodySmall.copyWith(
+                      color: OptiAppColors.textSecondary,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                Text(
-                  LocalizationConstants.updateBy.format(
-                    [
-                      wishList.updatedOn != null
-                          ? DateFormat(CoreConstants.dateFormatString)
-                              .format(wishList.updatedOn!)
-                          : '',
-                      wishList.updatedByDisplayName ?? '',
-                    ],
+                  Text(
+                    _constructListSharingDisplay(),
+                    style: OptiTextStyles.bodySmall.copyWith(
+                      color: OptiAppColors.textSecondary,
+                    ),
                   ),
-                  style: OptiTextStyles.bodySmall.copyWith(
-                    color: OptiAppColors.textSecondary,
-                  ),
-                )
-              ],
+                  Text(
+                    LocalizationConstants.updateBy.format(
+                      [
+                        wishList.updatedOn != null
+                            ? DateFormat(CoreConstants.dateFormatString)
+                                .format(wishList.updatedOn!)
+                            : '',
+                        wishList.updatedByDisplayName ?? '',
+                      ],
+                    ),
+                    style: OptiTextStyles.bodySmall.copyWith(
+                      color: OptiAppColors.textSecondary,
+                    ),
+                  )
+                ],
+              ),
             ),
             if (context
                 .read<WishListCubit>()
