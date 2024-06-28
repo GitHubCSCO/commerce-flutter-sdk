@@ -21,7 +21,8 @@ class BillingShippingWidget extends StatelessWidget {
   final BillingShippingEntity billingShippingEntity;
   final void Function(BuildContext, Object)? onCallBack;
 
-  const BillingShippingWidget({super.key, required this.billingShippingEntity, this.onCallBack});
+  const BillingShippingWidget(
+      {super.key, required this.billingShippingEntity, this.onCallBack});
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +158,8 @@ class BillingShippingWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: ShippingAddressWidget(
-                  visible: billingShippingEntity.shippingMethod == ShippingOption.ship,
+                  visible: billingShippingEntity.shippingMethod ==
+                      ShippingOption.ship,
                   companyName: billingShippingEntity.shipTo?.companyName,
                   fullAddress: billingShippingEntity.shipTo?.fullAddress,
                   countryName: billingShippingEntity.shipTo?.country?.name,
@@ -320,8 +322,8 @@ class BillingShippingWidget extends StatelessWidget {
   }
 
   void _onCarrierSelect(BuildContext context, Object item) {
-    // context.read<CheckoutBloc>().add(SelectCarrierEvent(item as CarrierDto));
-    // context.read<ReviewOrderCubit>().onOrderConfigChange();
+    context.read<CheckoutBloc>().add(SelectCarrierEvent(item as CarrierDto));
+    context.read<ReviewOrderCubit>().onOrderConfigChange();
   }
 
   void _onServiceSelect(BuildContext context, Object item) {
