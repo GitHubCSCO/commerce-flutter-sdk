@@ -9,14 +9,14 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class PickUpLocationUseCase extends BaseUseCase {
   PickUpLocationUseCase() : super();
 
-  Future<List<WarehouseEntity>> getWarehouses() async {
-    // var currentLocation = await getCurrentLocation();
+  Future<List<WarehouseEntity>> getWarehouses(
+     {double? latitude, double? longitude}) async {
     WarehousesQueryParameters param = WarehousesQueryParameters(
         pageSize: 16,
         page: 1,
         sort: "Distance",
-        latitude: 44.981047,
-        longitude: -93.27417,
+        latitude: latitude,
+        longitude: longitude,
         excludeCurrentPickupWarehouse: true,
         onlyPickupWarehouses: true);
 
@@ -54,18 +54,7 @@ class PickUpLocationUseCase extends BaseUseCase {
   Future<LatLng> getCurrentLocation() async {
     var response =
         await coreServiceProvider.getGeoLocationService().getCurrentLocation();
-
-    switch (response) {
-      case Success(value: final data):
-        {
-          return LatLng(data?.latitude, data?.longitude);
-        }
-      case Failure():
-        {
-          return LatLng(0, 0);
-        }
-    }
-    return LatLng(0, 0);
+    return LatLng(response?.latitude ?? 0.0, response?.longitude ?? 0.0);
   }
 
   bool isCloseToLocation(LatLng fromSource, LatLng toSource) {
