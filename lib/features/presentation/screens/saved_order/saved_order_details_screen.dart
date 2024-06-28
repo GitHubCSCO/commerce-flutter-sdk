@@ -12,6 +12,7 @@ import 'package:commerce_flutter_app/features/presentation/components/snackbar_c
 import 'package:commerce_flutter_app/features/presentation/components/two_texts_row.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_details/saved_order_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/cart_order_products_section_widget.dart';
@@ -23,12 +24,10 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class SavedOrderDetailsScreen extends StatelessWidget {
   final String cartId;
-  final void Function() refreshSavedOrders;
 
   const SavedOrderDetailsScreen({
     super.key,
     required this.cartId,
-    required this.refreshSavedOrders,
   });
 
   @override
@@ -36,15 +35,13 @@ class SavedOrderDetailsScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           sl<SavedOrderDetailsCubit>()..loadCart(cartId: cartId),
-      child: OrderDetailsPage(refreshSavedOrders: refreshSavedOrders),
+      child: const OrderDetailsPage(),
     );
   }
 }
 
 class OrderDetailsPage extends StatelessWidget {
-  final void Function() refreshSavedOrders;
-
-  const OrderDetailsPage({super.key, required this.refreshSavedOrders});
+  const OrderDetailsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +65,7 @@ class OrderDetailsPage extends StatelessWidget {
           if (state.status == OrderStatus.addToCartSuccess) {
             Navigator.of(context, rootNavigator: true).pop();
             context.read<CartCountCubit>().onCartItemChange();
-            refreshSavedOrders();
+            context.read<SavedOrderHandlerCubit>().shouldRefreshSavedOrder();
             CustomSnackBar.showSnackBarMessage(
               context,
               SiteMessageConstants.defaultValueAddToCartSuccess,
@@ -86,7 +83,7 @@ class OrderDetailsPage extends StatelessWidget {
 
           if (state.status == OrderStatus.deleteCartSuccess) {
             Navigator.of(context, rootNavigator: true).pop();
-            refreshSavedOrders();
+            context.read<SavedOrderHandlerCubit>().shouldRefreshSavedOrder();
             context.pop();
           }
 

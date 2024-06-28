@@ -317,31 +317,27 @@ class CartPage extends StatelessWidget {
       child: Builder(
         builder: (context) {
           return BlocListener<SavedOrderHandlerCubit, SavedOrderHandlerState>(
-            listener: (context, state) async {
+            listener: (context, state) {
               if (state.status == SavedOrderHandlerStatus.shouldClearCart) {
                 context.read<CartContentBloc>().add(CartContentClearAllEvent());
               }
 
-              AppRoute.savedOrders.navigate(context);
-
-              if (context.mounted) {
-                AppRoute.savedOrderDetails.navigate(
-                  context,
-                  pathParameters: {
-                    'cartId': context
-                            .read<SavedOrderHandlerCubit>()
-                            .state
-                            .savedCart
-                            .id ??
-                        '',
-                  },
-                  extra: () {
-                    context
-                        .read<SavedOrderHandlerCubit>()
-                        .shouldRefreshSavedOrder();
-                  },
-                );
-              }
+              AppRoute.savedOrderDetails.navigate(
+                context,
+                pathParameters: {
+                  'cartId': context
+                          .read<SavedOrderHandlerCubit>()
+                          .state
+                          .savedCart
+                          .id ??
+                      '',
+                },
+                extra: () {
+                  context
+                      .read<SavedOrderHandlerCubit>()
+                      .shouldRefreshSavedOrder();
+                },
+              );
             },
             child: CartLineWidgetList(
               cartLineEntities: context.read<CartPageBloc>().getCartLines(),
