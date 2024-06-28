@@ -22,6 +22,7 @@ class RouteNames {
   static const String settings = 'settings';
   static const String biometricLogin = 'biometricLogin';
   static const String orderHistory = 'orderHistory';
+  static const String vmiOrderHistory = 'vmiOrderHistory';
   static const String quickOrder = 'quickOrder';
   static const String createOrder = 'createOrder';
   static const String countOrder = 'countOrder';
@@ -34,6 +35,7 @@ class RouteNames {
   static const String addToWishList = 'addToWishList';
   static const String forgotPassword = 'forgotPassword';
   static const String orderDetails = 'orderDetails';
+  static const String vmiOrderDetails = 'vmiOrderDetails';
   static const String locationSearch = 'locationSearch';
   static const String vmiLocationNote = 'vmiLocationNote';
   static const String shopBrand = 'shopBrand';
@@ -79,6 +81,8 @@ class RoutePaths {
   static const String biometricLogin = '/${RouteNames.biometricLogin}';
   static const String orderHistory =
       '/${RoutePaths.account}/${RouteNames.orderHistory}';
+  static const String vmiOrderHistory =
+      '/${RoutePaths.vmi}/${RouteNames.vmiOrderHistory}';
   static const String quickOrder = '/${RouteNames.quickOrder}';
   static const String createOrder = '/${RouteNames.createOrder}';
   static const String countOrder = '/${RouteNames.countOrder}';
@@ -94,6 +98,7 @@ class RoutePaths {
   static const String addToWishList = '/${RouteNames.addToWishList}';
   static const String forgotPassword = '/${RouteNames.forgotPassword}';
   static const String orderDetails = '${RoutePaths.orderHistory}/:orderNumber';
+
   static const String shopBrand = '/${RouteNames.shopBrand}';
   static const String shopBrandDetails = '/${RouteNames.shopBrandDetails}';
   static const String brandCategory = '/${RouteNames.brandCategory}';
@@ -164,10 +169,15 @@ enum AppRoute {
       name: RouteNames.forgotPassword, fullPath: RoutePaths.forgotPassword),
   orderDetails(
       name: RouteNames.orderDetails, fullPath: RoutePaths.orderDetails),
+
+  vmiOrderDetails(
+      name: RouteNames.vmiOrderDetails, fullPath: RoutePaths.orderDetails),
   locationSearch(
       name: RouteNames.locationSearch, fullPath: RoutePaths.locationSearch),
   vmilocaitonote(
       name: RouteNames.vmiLocationNote, fullPath: RoutePaths.vmiLocationNote),
+  vmiOrderHistory(
+      name: RouteNames.vmiOrderHistory, fullPath: RoutePaths.vmiOrderHistory),
   billToShipToChange(
       name: RouteNames.billToShipToChange,
       fullPath: RoutePaths.billToShipToChange),
@@ -190,14 +200,14 @@ enum AppRoute {
       fullPath: RoutePaths.savedOrderDetails),
   vmiLocationNote(
       name: RouteNames.vmiLocationNote, fullPath: RoutePaths.vmiLocationNote),
-  shopBrand(
-      name: RouteNames.shopBrand, fullPath: RoutePaths.shopBrand),
+  shopBrand(name: RouteNames.shopBrand, fullPath: RoutePaths.shopBrand),
   shopBrandDetails(
       name: RouteNames.shopBrandDetails, fullPath: RoutePaths.shopBrandDetails),
   brandCategory(
       name: RouteNames.brandCategory, fullPath: RoutePaths.brandCategory),
   brandProductLines(
-        name: RouteNames.brandProductLines, fullPath: RoutePaths.brandProductLines),
+      name: RouteNames.brandProductLines,
+      fullPath: RoutePaths.brandProductLines),
   savedPayments(
       name: RouteNames.savedPayments, fullPath: RoutePaths.savedPayments),
   orderApproval(

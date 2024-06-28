@@ -24,7 +24,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
           ),
         );
 
-  Future<void> loadOrderDetails(String orderNumber) async {
+  Future<void> loadOrderDetails(String orderNumber, {bool? isFromVMI}) async {
     emit(state.copyWith(orderStatus: OrderStatus.loading));
 
     final futureResults = await Future.wait([
@@ -39,6 +39,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       emit(state.copyWith(orderStatus: OrderStatus.failure));
     } else {
       final isReorderVisible = await _orderUsecase.checkReorder(
+        isFromVMI ?? false,
         order: order,
         orderSettings: orderSettings,
       );
