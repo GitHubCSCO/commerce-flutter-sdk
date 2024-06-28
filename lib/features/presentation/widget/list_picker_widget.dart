@@ -172,7 +172,11 @@ class _ListPickerState extends State<ListPicker> {
     } else if (item is ShipViaDto) {
       return item.description!;
     } else if (item is PaymentMethodDto) {
-      return item.description!;
+      if(item.description! != ""){
+        return item.description!;
+      }else {
+        return item.name ?? "";
+      }
     } else if (item is ConfigSectionOptionEntity) {
       return item.description!;
     } else if (item is ProductDetailStyleValue) {
