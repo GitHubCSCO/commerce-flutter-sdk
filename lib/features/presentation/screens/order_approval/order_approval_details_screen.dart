@@ -407,10 +407,20 @@ class _OrderApprovalInfoWidget extends StatelessWidget {
                 fullAddress: '$addressLabel\n$postalCodeLabel',
               ),
               const SizedBox(height: 20),
-              ShippingAddressWidget(
-                companyName: stCompanyNameLabel,
-                fullAddress: '$stAddressLabel\n$stPostalCodeLabel',
-              ),
+              if (context
+                  .watch<OrderApprovalDetailsCubit>()
+                  .isFulfillmentMethodShip)
+                ShippingAddressWidget(
+                  companyName: stCompanyNameLabel,
+                  fullAddress: '$stAddressLabel\n$stPostalCodeLabel',
+                ),
+              if (context
+                  .watch<OrderApprovalDetailsCubit>()
+                  .isFulfillmentMethodPickUp)
+                PickupLocationWidget(
+                  address: stCompanyNameLabel,
+                  city: '$stAddressLabel\n$stPostalCodeLabel',
+                ),
             ],
           ),
         ),
