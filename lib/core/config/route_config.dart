@@ -587,9 +587,7 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.savedOrderDetails.suffix,
     builder: (context, state) {
       final cartId = state.pathParameters['cartId'] ?? '';
-      final refreshSavedOrders = state.extra as void Function();
-      return SavedOrderDetailsScreen(
-          cartId: cartId, refreshSavedOrders: refreshSavedOrders);
+      return SavedOrderDetailsScreen(cartId: cartId);
     },
     parent: savedOrders,
   );

@@ -29,7 +29,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         (event, emit) => _onPaymentMethodSelect(event, emit));
     on<SelectPaymentEvent>((event, emit) => _onPaymentSelect(event, emit));
     on<UpdatePONumberEvent>((event, emit) => _onUpdatePONumber(event, emit));
-    on<UpdateShiptoAddressEvent>((event, emit) => _onUpdateShipTo(event, emit));
+    on<AddShiptoAddressEvent>((event, emit) => _onAddShipTo(event, emit));
+    on<UpdateShiptoAddressEvent>((event, emit) => _onUpdateShipto(event, emit));
   }
 
   void updateCheckoutData(Cart cart) {
@@ -168,8 +169,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     cart?.poNumber = event.poNumber;
   }
 
-  Future<void> _onUpdateShipTo(
-      UpdateShiptoAddressEvent event, Emitter<CheckoutState> emit) async {
+  Future<void> _onAddShipTo(
+      AddShiptoAddressEvent event, Emitter<CheckoutState> emit) async {
     var response =
         await _checkoutUseCase.postCurrentBillToShipToAsync(event.shipTo);
 
@@ -180,4 +181,12 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     session?.shipTo = cart?.shipTo;
     emit(CheckoutShipToAddressAddedState());
   }
+
+  Future<void> _onUpdateShipto(
+      UpdateShiptoAddressEvent event, Emitter<CheckoutState> emit) async {
+    cart?.shipTo = event.shipTo;
+    session?.shipTo = cart?.shipTo;
+    emit(CheckoutShipToAddressAddedState());
+  }
+
 }
