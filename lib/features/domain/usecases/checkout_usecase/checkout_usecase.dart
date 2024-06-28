@@ -52,4 +52,8 @@ class CheckoutUsecase extends BaseUseCase {
         .getClientService()
         .removeOrderApprovalCookieIfAvailable();
   }
+
+  Future<bool> hasCheckout() async {
+    return await coreServiceProvider.getAppConfigurationService().hasCheckout();
+  }
 }
