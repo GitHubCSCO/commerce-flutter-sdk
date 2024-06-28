@@ -170,12 +170,13 @@ class CheckoutSuccessPage extends StatelessWidget {
               style: OptiTextStyles.subtitle,
             ),
             const SizedBox(height: 8.0),
-            Text(
-              "We have received your order and have sent you an email confirmation to  ${checkoutSuccessEntity.cart.shipTo?.email}",
-              style: OptiTextStyles.bodySmall,
-              textAlign: TextAlign.left,
-            ),
-            const SizedBox(height: 8.0),
+            if (isOrderApproval)
+              Text(
+                "We have received your order and have sent you an email confirmation to  ${checkoutSuccessEntity.cart.shipTo?.email}",
+                style: OptiTextStyles.bodySmall,
+                textAlign: TextAlign.left,
+              ),
+            if (isOrderApproval) const SizedBox(height: 8.0),
             Text(
               "Order Number ${checkoutSuccessEntity.orderNumber}",
               style: OptiTextStyles.titleLarge,
