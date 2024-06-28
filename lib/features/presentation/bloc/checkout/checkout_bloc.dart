@@ -18,6 +18,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   ShipViaDto? selectedService;
   PaymentOptionsDto? selectedPayment;
   Session? session;
+  bool hasCheckout = true;
   ProductSettings? productSettings;
 
   CheckoutBloc({required CheckoutUsecase checkoutUsecase})
@@ -46,6 +47,9 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   Future<void> _onCheckoutLoadEvent(
       LoadCheckoutEvent event, Emitter<CheckoutState> emit) async {
     emit(CheckoutLoading());
+
+    hasCheckout = await _checkoutUseCase.hasCheckout();
+
     var data = await _checkoutUseCase.getCart(event.cart.id!);
     session ??= _checkoutUseCase.getCurrentSession();
     var productSettingsResult = await _checkoutUseCase.loadProductSettings();
@@ -216,4 +220,38 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     emit(CheckoutShipToAddressAddedState());
   }
 
+  bool get isCartEmpty =>
+      // ignore: prefer_is_empty
+      cart?.cartLines == null || (cart?.cartLines?.length == 0);
+
+  bool get _hasRestrictedCartLines =>
+      cart?.cartLines != null &&
+      cart!.cartLines!.any((x) => x.isRestricted == true);
+
+  bool get _hasOnlyQuoteRequiredProducts =>
+      (cart?.cartLines != null || cart!.cartLines!.isNotEmpty) &&
+      cart!.cartLines!.every((x) => x.quoteRequired == true);
+
+  bool get _isCartCheckoutDisabled =>
+      cart != null &&
+      ((cart?.canCheckOut != true && cart?.canRequisition != true) ||
+          isCartEmpty ||
+          _hasRestrictedCartLines);
+
+  bool get isCheckoutButtonEnabled {
+    if (cart == null) {
+      return false;
+    }
+
+    /// TODO - check if all required data is entered
+    return !_isCartCheckoutDisabled || !_hasOnlyQuoteRequiredProducts;
+  }
+
+  bool get checkoutButtonVisible {
+    if (cart == null) {
+      return false;
+    }
+
+    return cart?.canCheckOut == true && !isCartEmpty && hasCheckout;
+  }
 }

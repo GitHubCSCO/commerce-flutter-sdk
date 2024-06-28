@@ -13,6 +13,7 @@ part 'cart_page_state.dart';
 class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
   final CartUseCase _cartUseCase;
   Cart? cart;
+  bool hasCheckout = true;
   ProductSettings? productSettings;
   CartPageBloc({required CartUseCase cartUseCase})
       : _cartUseCase = cartUseCase,
@@ -24,6 +25,8 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
   Future<void> _onCurrentCartLoadEvent(
       CartPageLoadEvent event, Emitter<CartPageState> emit) async {
     emit(CartPageLoadingState());
+
+    hasCheckout = await _cartUseCase.hasCheckout();
 
     try {
       var result = await _cartUseCase.loadCurrentCart();
@@ -174,4 +177,38 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
   }
 
   bool get approvalButtonVisible => cart?.requiresApproval ?? false;
+
+  bool get isCartEmpty =>
+      // ignore: prefer_is_empty
+      cart?.cartLines == null || (cart?.cartLines?.length == 0);
+
+  bool get _hasRestrictedCartLines =>
+      cart?.cartLines != null &&
+      cart!.cartLines!.any((x) => x.isRestricted == true);
+
+  bool get _hasOnlyQuoteRequiredProducts =>
+      (cart?.cartLines != null || cart!.cartLines!.isNotEmpty) &&
+      cart!.cartLines!.every((x) => x.quoteRequired == true);
+
+  bool get _isCartCheckoutDisabled =>
+      cart != null &&
+      ((cart?.canCheckOut != true && cart?.canRequisition != true) ||
+          isCartEmpty ||
+          _hasRestrictedCartLines);
+
+  bool get isCheckoutButtonEnabled {
+    if (cart == null) {
+      return false;
+    }
+
+    return !_isCartCheckoutDisabled || !_hasOnlyQuoteRequiredProducts;
+  }
+
+  bool get checkoutButtonVisible {
+    if (cart == null) {
+      return false;
+    }
+
+    return cart?.canCheckOut == true && !isCartEmpty && hasCheckout;
+  }
 }

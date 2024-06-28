@@ -264,7 +264,7 @@ List<NavigationNode> _getNavigationRoot() {
   final orderHistory = createNode(
     name: AppRoute.orderHistory.name,
     path: AppRoute.orderHistory.suffix,
-    builder: (context, state) => const OrderHistoryScreen(),
+    builder: (context, state) => OrderHistoryScreen(),
     parent: account,
   );
 
@@ -312,6 +312,14 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.vmi.suffix,
     builder: (context, state) => const VMIScreen(),
     parent: account,
+  );
+
+  // path: /account/vmi/vmiOrderHistory
+  final vmiOrderHistory = createNode(
+    name: AppRoute.vmiOrderHistory.name,
+    path: AppRoute.vmiOrderHistory.suffix,
+    builder: (context, state) => OrderHistoryScreen(isFromVMI: true),
+    parent: vmi,
   );
 
   // path: /login
@@ -444,9 +452,23 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.orderDetails.suffix,
     builder: (context, state) {
       final orderNumber = state.pathParameters['orderNumber'] ?? '';
-      return OrderDetailsScreen(orderNumber: orderNumber);
+      final isFromVMI = state.extra as bool;
+      return OrderDetailsScreen(orderNumber: orderNumber, isFromVMI: isFromVMI);
     },
     parent: orderHistory,
+  );
+
+
+    // path: /account/orderHistory/:orderNumber
+  final vmiOrderDetails = createNode(
+    name: AppRoute.vmiOrderDetails.name,
+    path: AppRoute.vmiOrderDetails.suffix,
+    builder: (context, state) {
+      final orderNumber = state.pathParameters['orderNumber'] ?? '';
+      final isFromVMI = state.extra as bool;
+      return OrderDetailsScreen(orderNumber: orderNumber, isFromVMI: isFromVMI);
+    },
+    parent: vmi,
   );
 
   // path: /billToShipToChange
@@ -459,15 +481,15 @@ List<NavigationNode> _getNavigationRoot() {
 
   // path: /billToShipToSelection
   final billToShipToSelection = createNode(
-      name: AppRoute.billToShipToSelection.name,
-      path: AppRoute.billToShipToSelection.suffix,
-      builder: (context, state) {
-        final entity = state.extra as BillToShipToAddressSelectionEntity;
-        return BillToShipToAddressSelectionScreen(
-            billToShipToAddressSelectionEntity: entity);
-      },
+    name: AppRoute.billToShipToSelection.name,
+    path: AppRoute.billToShipToSelection.suffix,
+    builder: (context, state) {
+      final entity = state.extra as BillToShipToAddressSelectionEntity;
+      return BillToShipToAddressSelectionScreen(
+          billToShipToAddressSelectionEntity: entity);
+    },
   );
-  
+
   // path: /shopCategory
   final shopCategory = createNode(
     name: AppRoute.shopCategory.name,
@@ -484,11 +506,13 @@ List<NavigationNode> _getNavigationRoot() {
       final categoryTitle = state.pathParameters['categoryTitle'] ?? '';
       final categoryPath = state.pathParameters['categoryPath'] ?? '';
       return SubCategoryScreen(
-          categoryId: categoryId, categoryTitle: categoryTitle, categoryPath: categoryPath);
+          categoryId: categoryId,
+          categoryTitle: categoryTitle,
+          categoryPath: categoryPath);
     },
     parent: null,
   );
-  
+
   // path: /shopBrand
   final shopBrand = createNode(
     name: AppRoute.shopBrand.name,
@@ -516,8 +540,12 @@ List<NavigationNode> _getNavigationRoot() {
       //! TODO caution
       //! TODO we are passing multiple objects through extra using record
       //! TODO either we need to organize this record in a better way or use any other data structure
-      final brandCategory = state.extra as (Brand, BrandCategory?, GetBrandSubCategoriesResult?);
-      return BrandCategoryScreen(brand: brandCategory.$1, brandCategory: brandCategory.$2, brandSubCategories: brandCategory.$3);
+      final brandCategory =
+          state.extra as (Brand, BrandCategory?, GetBrandSubCategoriesResult?);
+      return BrandCategoryScreen(
+          brand: brandCategory.$1,
+          brandCategory: brandCategory.$2,
+          brandSubCategories: brandCategory.$3);
     },
     parent: null,
   );
