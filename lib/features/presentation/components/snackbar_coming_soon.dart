@@ -48,11 +48,11 @@ class CustomSnackBar {
     );
   }
 
-  static void showSnackBarMessage(BuildContext context, String message) {
+  static void showSnackBarMessage(BuildContext context, String message, {int seconds = 1}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        duration: const Duration(seconds: 1),
+        duration: Duration(seconds: seconds),
       ),
     );
   }
