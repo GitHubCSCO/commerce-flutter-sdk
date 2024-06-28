@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
@@ -13,6 +14,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wis
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class CheckoutSuccessEntity {
@@ -158,6 +160,7 @@ class CheckoutSuccessPage extends StatelessWidget {
   Widget _buildOrderSuccessInfoWidget({bool isOrderApproval = false}) {
     return Container(
       color: Colors.white,
+      width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -170,23 +173,25 @@ class CheckoutSuccessPage extends StatelessWidget {
               style: OptiTextStyles.subtitle,
             ),
             const SizedBox(height: 8.0),
-            if (isOrderApproval)
+            if (!isOrderApproval)
               Text(
                 "We have received your order and have sent you an email confirmation to  ${checkoutSuccessEntity.cart.shipTo?.email}",
                 style: OptiTextStyles.bodySmall,
                 textAlign: TextAlign.left,
               ),
-            if (isOrderApproval) const SizedBox(height: 8.0),
+            if (!isOrderApproval) const SizedBox(height: 8.0),
             Text(
               "Order Number ${checkoutSuccessEntity.orderNumber}",
               style: OptiTextStyles.titleLarge,
             ),
             const SizedBox(height: 8.0),
-            Text(
-              "Order Placed: ${checkoutSuccessEntity.cart.orderDate}",
-              style: OptiTextStyles.body,
-            ),
-            const SizedBox(height: 8.0),
+            if (checkoutSuccessEntity.cart.orderDate != null)
+              Text(
+                "Order Placed: ${DateFormat(CoreConstants.dateFormatString).format(checkoutSuccessEntity.cart.orderDate!)}",
+                style: OptiTextStyles.body,
+              ),
+            if (checkoutSuccessEntity.cart.orderDate != null)
+              const SizedBox(height: 8.0),
             Text(
               "Delivery Method: ${checkoutSuccessEntity.cart.carrier?.description}   ${checkoutSuccessEntity.cart.shipVia?.description}",
               style: OptiTextStyles.body,
