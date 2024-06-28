@@ -25,11 +25,13 @@ import 'package:flutter_svg/svg.dart';
 
 class LocationSearchScreen extends StatelessWidget {
   final LocationSearchType locationSearchType;
+  final WarehouseEntity? selectedPickupWarehouse;
   final void Function(CurrentLocationDataEntity)? onVMILocationUpdated;
   final void Function(WarehouseEntity)? onWarehouseLocationSelected;
   const LocationSearchScreen(
       {super.key,
       this.onVMILocationUpdated,
+      this.selectedPickupWarehouse,
       required this.locationSearchType,
       this.onWarehouseLocationSelected});
 
@@ -46,8 +48,9 @@ class LocationSearchScreen extends StatelessWidget {
           BlocProvider<DealerLocationCubit>(
               create: (context) => sl<DealerLocationCubit>()),
           BlocProvider<PickupLocationBloc>(
-              create: (context) =>
-                  sl<PickupLocationBloc>()..add(LoadPickUpLocationsEvent()))
+              create: (context) => sl<PickupLocationBloc>()
+                ..add(LoadPickUpLocationsEvent(
+                    selectedPickupWarehouse: selectedPickupWarehouse)))
         ],
         child: LocationSearchPage(
           onVMILocationUpdated: onVMILocationUpdated,
@@ -61,8 +64,10 @@ class LocationSearchPage extends StatelessWidget {
   final void Function(CurrentLocationDataEntity)? onVMILocationUpdated;
   final void Function(WarehouseEntity)? onWarehouseLocationSelected;
   final LocationSearchType locationSearchType;
+  final WarehouseEntity? selectedPickupWarehouse;
   LocationSearchPage(
       {super.key,
+      this.selectedPickupWarehouse,
       this.onVMILocationUpdated,
       required this.locationSearchType,
       this.onWarehouseLocationSelected});
@@ -154,6 +159,11 @@ class LocationSearchPage extends StatelessWidget {
                       context
                           .read<DealerLocationCubit>()
                           .updateSeachPlaceForDealer(state.searchedLocation);
+                    } else if (locationSearchType ==
+                        LocationSearchType.pickUpLocation) {
+                      context.read<PickupLocationBloc>().add(
+                          LoadSearchedPickUpLocationsEvent(
+                              searchedLocation: state.searchedLocation));
                     }
                   }
                 },
@@ -202,7 +212,10 @@ class LocationSearchPage extends StatelessWidget {
                         return DealerLocationWidget();
                       }
                     case LocationSearchType.pickUpLocation:
-                      return Text("pickUpLocation");
+                      return PickUpLocationScreen(
+                          onWarehouseLocationSelected: (locationData) {
+                        onWarehouseLocationSelected!(locationData);
+                      });
                   }
                 } else if (state is LocationSearchFocusState) {
                   return const Text('LocationSearchFocusState');

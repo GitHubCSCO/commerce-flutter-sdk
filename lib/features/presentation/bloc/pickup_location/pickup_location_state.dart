@@ -21,14 +21,14 @@ class PickUpLocationLoadingState extends PickUpLocationState {
 
 class PickUpLocationLoadedState extends PickUpLocationState {
   List<WarehouseEntity> wareHouselist;
-  LatLong? selectedLocation;
+  WarehouseEntity? selectedWarehouse;
   PickUpLocationLoadedState({
     required this.wareHouselist,
-    this.selectedLocation,
+    this.selectedWarehouse,
   });
 
   @override
-  List<Object?> get props => [wareHouselist, selectedLocation];
+  List<Object?> get props => [wareHouselist, selectedWarehouse];
 }
 
 class PickUpLocationFailureState extends PickUpLocationState {

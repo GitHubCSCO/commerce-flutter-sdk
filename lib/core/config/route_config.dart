@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/credit_card_add_callback_helper.dart';
@@ -365,11 +366,14 @@ List<NavigationNode> _getNavigationRoot() {
       final onVMILocationUpdated = callbackHelper.onSelectVMILocation;
       final onWarehouseLocationSelected =
           callbackHelper.onWarehouseLocationSelected;
+      final WarehouseEntity? selectedPickupWarehouse =
+          callbackHelper.selectedPickupWarehouse;
 
       return LocationSearchScreen(
         onVMILocationUpdated: onVMILocationUpdated,
         locationSearchType: callbackHelper.locationSearchType,
         onWarehouseLocationSelected: onWarehouseLocationSelected,
+        selectedPickupWarehouse: selectedPickupWarehouse,
       );
     },
     parent: null,
@@ -458,8 +462,7 @@ List<NavigationNode> _getNavigationRoot() {
     parent: orderHistory,
   );
 
-
-    // path: /account/orderHistory/:orderNumber
+  // path: /account/orderHistory/:orderNumber
   final vmiOrderDetails = createNode(
     name: AppRoute.vmiOrderDetails.name,
     path: AppRoute.vmiOrderDetails.suffix,
