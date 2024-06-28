@@ -336,6 +336,10 @@ class CartPage extends StatelessWidget {
             },
             child: CartLineWidgetList(
               cartLineEntities: context.read<CartPageBloc>().getCartLines(),
+              onCartChangeCallBack: (context) {
+                context.read<CartCountCubit>().loadCurrentCartCount();
+                context.read<CartPageBloc>().add(CartPageLoadEvent());
+              },
             ),
           );
         },

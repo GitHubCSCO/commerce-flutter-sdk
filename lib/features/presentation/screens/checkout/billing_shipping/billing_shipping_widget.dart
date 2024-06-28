@@ -55,8 +55,8 @@ class BillingShippingWidget extends StatelessWidget {
             i < (billingShippingEntity.carriers?.length ?? 0);
             i++) {
           if (billingShippingEntity.selectedCarrier != null &&
-              billingShippingEntity.selectedCarrier!.id! ==
-                  billingShippingEntity.carriers![i].id!) {
+              billingShippingEntity.selectedCarrier!.id ==
+                  billingShippingEntity.carriers![i].id) {
             selectedCarrierIndex = i;
           }
         }
@@ -68,9 +68,9 @@ class BillingShippingWidget extends StatelessWidget {
                     0);
             i++) {
           if (billingShippingEntity.selectedService != null &&
-              billingShippingEntity.selectedService!.id! ==
+              billingShippingEntity.selectedService!.id ==
                   billingShippingEntity
-                      .carriers?[selectedCarrierIndex].shipVias?[i].id!) {
+                      .carriers?[selectedCarrierIndex].shipVias?[i].id) {
             selectedServiceIndex = i;
           }
         }
