@@ -126,39 +126,38 @@ class ProductPage extends StatelessWidget {
               controller: textEditingController,
             ),
           ),
-          Expanded(
-            child: BlocBuilder<ProductBloc, ProductState>(builder: (context, state) {
-              switch (state) {
-                case ProductInitial():
-                case ProductLoading():
-                  return const Center(child: CircularProgressIndicator());
-                case ProductLoaded():
-                  final productCollectionResult = state.result;
-                  return MultiBlocProvider(
-                    providers: [
-                      BlocProvider<AddToCartCubit>(
-                        create: (context) => sl<AddToCartCubit>(),
-                      ),
-                      BlocProvider(
-                        create: (context) => sl<SearchProductsCubit>()
-                          ..setProductFilter(pageEntity)
-                          ..loadInitialSearchProducts(productCollectionResult),
-                      ),
-                    ],
-                    //TODO from category product list to search product list
-                    //TODO sort and filter does not work properly
-                    //TODO either we should take another look whether to use SearchProductsWidget or introduce a new product list screen
-                    child: SearchProductsWidget(
+          MultiBlocProvider(
+            providers: [
+              BlocProvider<AddToCartCubit>(
+                create: (context) => sl<AddToCartCubit>(),
+              ),
+              BlocProvider(
+                create: (context) => sl<SearchProductsCubit>()
+                  ..setProductFilter(pageEntity),
+              ),
+            ],
+            child: Expanded(
+              child: BlocBuilder<ProductBloc, ProductState>(builder: (context, state) {
+                switch (state) {
+                  case ProductInitial():
+                  case ProductLoading():
+                    return const Center(child: CircularProgressIndicator());
+                  case ProductLoaded():
+                    final productCollectionResult = state.result;
+                    context
+                        .read<SearchProductsCubit>()
+                        .loadInitialSearchProducts(productCollectionResult);
+                    return SearchProductsWidget(
                       onPageChanged: (page) {},
-                    ),
-                  );
-                case ProductFailed():
-                default:
-                  return Center(
-                      child: Text(LocalizationConstants.searchNoResults,
-                          style: OptiTextStyles.body));
-              }
-            }),
+                    );
+                  case ProductFailed():
+                  default:
+                    return Center(
+                        child: Text(LocalizationConstants.searchNoResults,
+                            style: OptiTextStyles.body));
+                }
+              }),
+            ),
           ),
         ],
       ),
