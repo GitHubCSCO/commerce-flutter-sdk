@@ -105,6 +105,7 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                     selectedCarrier: state.selectedCarrier,
                     selectedService: state.selectedService,
                     requestDeliveryDate: state.requestDeliveryDate,
+                    canChangeShipTo: false,
                   );
 
                   return Container(

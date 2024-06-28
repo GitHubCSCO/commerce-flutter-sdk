@@ -17,6 +17,7 @@ import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BillingShippingWidget extends StatelessWidget {
+
   final BillingShippingEntity billingShippingEntity;
   final void Function(BuildContext, Object)? onCallBack;
 
@@ -42,7 +43,7 @@ class BillingShippingWidget extends StatelessWidget {
     list.add(_buildBillingAddress());
 
     if (billingShippingEntity.shippingMethod == ShippingOption.ship) {
-      list.add(_buildShippingAddress(context));
+      list.add(_buildShippingAddress(context, billingShippingEntity.canChangeShipTo ?? true));
 
       if (billingShippingEntity.carriers != null &&
           billingShippingEntity.carriers!.isNotEmpty) {
@@ -130,21 +131,23 @@ class BillingShippingWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildShippingAddress(BuildContext context) {
+  Widget _buildShippingAddress(BuildContext context, bool canChangeAddress) {
     return InkWell(
-      onTap: () async {
-        final selectionEntity = BillToShipToAddressSelectionEntity(
-            selectedBillTo: billingShippingEntity.billTo,
-            selectedShipTo: billingShippingEntity.shipTo,
-            addressType: AddressType.shipTo);
-        final result = await context.pushNamed(
-          AppRoute.billToShipToSelection.name,
-          extra: selectionEntity,
-        );
-        if (result is ShipTo) {
-          onCallBack?.call(context, result);
-        }
-      },
+      onTap: canChangeAddress
+          ? () async {
+              final selectionEntity = BillToShipToAddressSelectionEntity(
+                  selectedBillTo: billingShippingEntity.billTo,
+                  selectedShipTo: billingShippingEntity.shipTo,
+                  addressType: AddressType.shipTo);
+              final result = await context.pushNamed(
+                AppRoute.billToShipToSelection.name,
+                extra: selectionEntity,
+              );
+              if (result is ShipTo) {
+                onCallBack?.call(context, result);
+              }
+            }
+          : null,
       child: Column(
         children: [
           Row(
@@ -160,10 +163,13 @@ class BillingShippingWidget extends StatelessWidget {
                   countryName: billingShippingEntity.shipTo?.country?.name,
                 ),
               ),
-              const Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.grey,
-                size: 20,
+              Visibility(
+                visible: canChangeAddress,
+                child: const Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.grey,
+                  size: 20,
+                ),
               )
             ],
           ),
