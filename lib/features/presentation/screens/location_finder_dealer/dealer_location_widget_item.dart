@@ -27,79 +27,77 @@ class _DealerLocationWidgetItemState extends State<DealerLocationWidgetItem>
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.dealerData.name ?? "",
-                style: OptiTextStyles.subtitle,
-                overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                widget.dealerData.address1 ?? "",
-                style: OptiTextStyles.body,
-                overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                "${widget.dealerData.city}, ${widget.dealerData.state} ${widget.dealerData.postalCode}",
-                style: OptiTextStyles.body,
-                overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                widget.dealerData.phone ?? "",
-                style: OptiTextStyles.body,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 16),
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
-                      child: Text(
-                        LocalizationConstants.hours,
-                        textAlign: TextAlign.center,
-                        style: OptiTextStyles.link,
-                      ),
-                      onTap: () {
-                        setState(() {
-                          _isHoursExpanded = !_isHoursExpanded;
-                        });
-                      },
-                    ),
-                    const SizedBox(width: 16),
-                    InkWell(
-                      child: Text(
-                        LocalizationConstants.directions,
-                        textAlign: TextAlign.center,
-                        style: OptiTextStyles.link,
-                      ),
-                      onTap: () {
-                        _onDirectionsClick(widget.dealerData.latitude ?? 0.0,
-                            widget.dealerData.longitude ?? 0.0);
-                      },
-                    ),
-                    const SizedBox(width: 16),
-                    Text(
-                      "Distance ${widget.dealerData.distance?.toStringAsFixed(2)} Mi",
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.dealerData.name ?? "",
+              style: OptiTextStyles.subtitle,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text(
+              widget.dealerData.address1 ?? "",
+              style: OptiTextStyles.body,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text(
+              "${widget.dealerData.city}, ${widget.dealerData.state} ${widget.dealerData.postalCode}",
+              style: OptiTextStyles.body,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text(
+              widget.dealerData.phone ?? "",
+              style: OptiTextStyles.body,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 16),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    child: Text(
+                      LocalizationConstants.hours,
                       textAlign: TextAlign.center,
-                      style: OptiTextStyles.body,
+                      style: OptiTextStyles.link,
                     ),
-                  ],
-                ),
+                    onTap: () {
+                      setState(() {
+                        _isHoursExpanded = !_isHoursExpanded;
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 16),
+                  InkWell(
+                    child: Text(
+                      LocalizationConstants.directions,
+                      textAlign: TextAlign.center,
+                      style: OptiTextStyles.link,
+                    ),
+                    onTap: () {
+                      _onDirectionsClick(widget.dealerData.latitude ?? 0.0,
+                          widget.dealerData.longitude ?? 0.0);
+                    },
+                  ),
+                  const SizedBox(width: 16),
+                  Text(
+                    "Distance ${widget.dealerData.distance?.toStringAsFixed(2)} Mi",
+                    textAlign: TextAlign.center,
+                    style: OptiTextStyles.body,
+                  ),
+                ],
               ),
-              if (_isHoursExpanded)
-                HtmlWidget(
-                  widget.dealerData.htmlContent ?? "",
-                  textStyle: OptiTextStyles.body,
-                ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Divider(),
-              )
-            ],
-          ),
+            ),
+            if (_isHoursExpanded)
+              HtmlWidget(
+                widget.dealerData.htmlContent ?? "",
+                textStyle: OptiTextStyles.body,
+              ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Divider(),
+            )
+          ],
         ),
       ),
     );
