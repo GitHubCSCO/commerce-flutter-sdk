@@ -94,6 +94,13 @@ class AccountPage extends BaseDynamicContentScreen {
               context.read<CmsCubit>().failedLoading();
           }
         }),
+        BlocListener<AuthCubit, AuthState>(
+          listenWhen: (previous, current) =>
+              authCubitChangeTrigger(previous, current),
+          listener: (context, state) {
+            _reloadAccountPage(context);
+          },
+        ),
       ],
       child: RefreshIndicator(
         onRefresh: () async {
@@ -169,12 +176,7 @@ class _AccountHeader extends StatelessWidget {
           horizontal: AppStyle.defaultHorizontalPadding,
           vertical: AppStyle.defaultVerticalPadding,
         ),
-        child: BlocConsumer<AuthCubit, AuthState>(
-          listenWhen: (previous, current) =>
-              authCubitChangeTrigger(previous, current),
-          listener: (context, state)  {
-             _reloadAccountPage(context);
-          },
+        child: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {
             return BlocListener<DomainCubit, DomainState>(
               listener: (context, state) async {
