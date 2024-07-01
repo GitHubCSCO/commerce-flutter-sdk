@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shipping_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_event.dart';
@@ -14,6 +15,7 @@ import 'package:commerce_flutter_app/features/presentation/components/dialog.dar
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line_list.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/base_checkout.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
@@ -23,6 +25,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/checkout/paym
 import 'package:commerce_flutter_app/features/presentation/widget/product_list_with_basicInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class VmiCheckoutEntity {
@@ -53,15 +56,16 @@ class VmiCheckoutScreen extends StatelessWidget {
             ..add(LoadPaymentDetailsEvent(cart: vmiCheckoutEntity.cart)),
         ),
       ],
-      child: VmiCheckoutPage(scanningMode: vmiCheckoutEntity.scanningMode),
+      child: VmiCheckoutPage(scanningMode: vmiCheckoutEntity.scanningMode, vmiCheckoutEntity: vmiCheckoutEntity),
     );
   }
 }
 
 class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
   final ScanningMode scanningMode;
+  final VmiCheckoutEntity vmiCheckoutEntity;
 
-  VmiCheckoutPage({super.key, required this.scanningMode});
+  VmiCheckoutPage({super.key, required this.scanningMode, required this.vmiCheckoutEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +109,7 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                     selectedCarrier: state.selectedCarrier,
                     selectedService: state.selectedService,
                     requestDeliveryDate: state.requestDeliveryDate,
+                    canChangeShipTo: false,
                   );
 
                   return Container(
@@ -134,16 +139,16 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                     }),
                                 buildOrderNote(),
                                 const SizedBox(height: 8),
-                                ProductListWithBasicInfo(
-                                  totalItemsTitle:
-                                      LocalizationConstants.cartContentsItems,
-                                  list: CartLineListMapper()
-                                          .toEntity(CartLineList(
-                                              cartLines:
-                                                  state.cart.cartLines ?? []))
-                                          .cartLines ??
-                                      [],
-                                ),
+                                BlocProvider<CartContentBloc>(
+                                  create: (context) => sl<CartContentBloc>(),
+                                  child: CartLineWidgetList(
+                                    showClearCart: false,
+                                    cartLineEntities: context.read<CheckoutBloc>().getCartLines(),
+                                    onCartChangeCallBack: (context) {
+                                      context.read<CheckoutBloc>().add(LoadCheckoutEvent(cart: vmiCheckoutEntity.cart));
+                                    },
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -164,11 +169,19 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                     : LocalizationConstants.backToCreateOrder),
                               ),
                               const SizedBox(height: 4.0),
-                              PrimaryButton(
-                                onPressed: () {
-                                  _handleSubmitOrderClick(context, state);
-                                },
-                                text: LocalizationConstants.submitOrder,
+                              Visibility(
+                                visible: context
+                                    .watch<CheckoutBloc>()
+                                    .checkoutButtonVisible,
+                                child: PrimaryButton(
+                                  onPressed: () {
+                                    _handleSubmitOrderClick(context, state);
+                                  },
+                                  isEnabled: context
+                                      .watch<CheckoutBloc>()
+                                      .isCheckoutButtonEnabled,
+                                  text: LocalizationConstants.submitOrder,
+                                ),
                               ),
                             ],
                           ),
@@ -176,6 +189,38 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                       ],
                     ),
                   );
+                case CheckoutNoDataState():
+                  return CustomScrollView(slivers: <Widget>[
+                    SliverFillRemaining(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 50,
+                            padding: const EdgeInsets.all(10),
+                            child: SvgPicture.asset(
+                              "assets/images/cart.svg",
+                              fit: BoxFit.fitWidth,
+                            ),
+                          ),
+                          const Text('There are no items in your cart'),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 32, vertical: 16),
+                            child: TertiaryButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(scanningMode == ScanningMode.count
+                                  ? LocalizationConstants.backToCountInventory
+                                  : LocalizationConstants.backToCreateOrder),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ]);
                 default:
                   return const Center();
               }
@@ -188,7 +233,7 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
 
   void _handleAddressSelectionCallBack(BuildContext context, Object result) {
     if (result is ShipTo) {
-      context.read<CheckoutBloc>().add(UpdateShiptoAddressEvent(result));
+      context.read<CheckoutBloc>().add(AddShiptoAddressEvent(result));
     }
   }
 
@@ -199,7 +244,21 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
     var isCreditCardSectionCompleted =
         context.read<PaymentDetailsBloc>().isCreditCardSectionCompleted;
 
-    if (isPaymentCardType && !isCreditCardSectionCompleted) {
+    var isCVVFieldOpened = context.read<PaymentDetailsBloc>().isCVVFieldOpened;
+
+    var isPaymentMethodSelectedInCard =
+        context.read<CheckoutBloc>().cart?.paymentMethod != null;
+    var isPaymentMethodSelectedasCreditCard =
+        context.read<CheckoutBloc>().cart?.paymentMethod?.isCreditCard == true;
+    print(context.read<PaymentDetailsBloc>().selectedPaymentMethod);
+    if (!isPaymentMethodSelectedInCard || isPaymentMethodSelectedasCreditCard) {
+      context.read<CheckoutBloc>().add(SelectPaymentMethodEvent(
+          context.read<PaymentDetailsBloc>().selectedPaymentMethod!));
+    }
+
+    if (isPaymentCardType &&
+        !isCreditCardSectionCompleted &&
+        isCVVFieldOpened) {
       context.read<TokenExBloc>().add(TokenExValidateEvent());
     } else {
       var poNumber = context.read<PaymentDetailsBloc>().getPONumber();
@@ -229,5 +288,4 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
           ),
         ]);
   }
-
 }

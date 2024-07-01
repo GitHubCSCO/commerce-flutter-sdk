@@ -21,19 +21,22 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:badges/badges.dart' as badges;
 
 class OrderHistoryScreen extends StatelessWidget {
-  const OrderHistoryScreen({super.key});
+  final bool? isFromVMI;
+  OrderHistoryScreen({super.key, this.isFromVMI});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<OrderHistoryCubit>()..loadOrderHistory(),
-      child: OrderHistoryPage(),
+      create: (context) =>
+          sl<OrderHistoryCubit>()..initialize(isFromVMI: isFromVMI ?? false),
+      child: OrderHistoryPage(isFromVMI),
     );
   }
 }
 
 class OrderHistoryPage extends BaseDynamicContentScreen {
-  OrderHistoryPage({super.key});
+  final bool? isFromVMI;
+  OrderHistoryPage(this.isFromVMI, {super.key});
 
   final _textEditingController = TextEditingController();
 
@@ -217,8 +220,9 @@ class __OrderHistoryListWidgetState extends State<_OrderHistoryListWidget> {
               return OrderHistoryListItem(
                 orderEntity: orderEntity,
                 onTap: () {
-                  AppRoute.orderDetails.navigate(
+                  AppRoute.orderDetails.navigateBackStack(
                     context,
+                    extra: context.read<OrderHistoryCubit>().state.isFromVMI,
                     pathParameters: {
                       'orderNumber': (orderEntity.webOrderNumber.isNullOrEmpty)
                           ? (orderEntity.erpOrderNumber ?? '')

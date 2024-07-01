@@ -30,8 +30,18 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
             filterStatus: FilterStatus.unknown,
             temporaryShowMyOrdersValue: false,
             searchQuery: '',
+            isFromVMI: false,
           ),
         );
+
+  void initialize({bool isFromVMI = false}) {
+    emit(
+      state.copyWith(
+        isFromVMI: isFromVMI,
+      ),
+    );
+    loadOrderHistory();
+  }
 
   Future<void> loadFilterValues() async {
     emit(
@@ -73,8 +83,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
     emit(
       state.copyWith(
         temporarySelectedFilterValueIds:
-            Set<String>.from(state.temporarySelectedFilterValueIds)
-              ..remove(id),
+            Set<String>.from(state.temporarySelectedFilterValueIds)..remove(id),
       ),
     );
   }
@@ -131,27 +140,27 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
     );
 
     final result = await _orderUsecase.getOrderHistory(
-      sortOrder: state.orderSortOrder,
-      showMyOrders: state.showMyOrders,
-      filterAttributes: state.selectedFilterValueIds.toList(),
-      searchText: state.searchQuery,
-    );
+        sortOrder: state.orderSortOrder,
+        showMyOrders: state.showMyOrders,
+        filterAttributes: state.selectedFilterValueIds.toList(),
+        searchText: state.searchQuery,
+        isFromVMI: state.isFromVMI);
 
     result != null
         ? emit(
             OrderHistoryState(
-              showMyOrders: state.showMyOrders,
-              selectedFilterValueIds: state.selectedFilterValueIds,
-              orderEntities: result,
-              orderStatus: OrderStatus.success,
-              orderSortOrder: state.orderSortOrder,
-              filterValues: state.filterValues,
-              temporarySelectedFilterValueIds:
-                  state.temporarySelectedFilterValueIds,
-              filterStatus: state.filterStatus,
-              temporaryShowMyOrdersValue: state.temporaryShowMyOrdersValue,
-              searchQuery: state.searchQuery,
-            ),
+                showMyOrders: state.showMyOrders,
+                selectedFilterValueIds: state.selectedFilterValueIds,
+                orderEntities: result,
+                orderStatus: OrderStatus.success,
+                orderSortOrder: state.orderSortOrder,
+                filterValues: state.filterValues,
+                temporarySelectedFilterValueIds:
+                    state.temporarySelectedFilterValueIds,
+                filterStatus: state.filterStatus,
+                temporaryShowMyOrdersValue: state.temporaryShowMyOrdersValue,
+                searchQuery: state.searchQuery,
+                isFromVMI: state.isFromVMI),
           )
         : emit(
             state.copyWith(
@@ -170,12 +179,12 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
 
     emit(state.copyWith(orderStatus: OrderStatus.moreLoading));
     final result = await _orderUsecase.getOrderHistory(
-      page: state.orderEntities.pagination!.page! + 1,
-      sortOrder: state.orderSortOrder,
-      showMyOrders: state.showMyOrders,
-      filterAttributes: state.selectedFilterValueIds.toList(),
-      searchText: state.searchQuery,
-    );
+        page: state.orderEntities.pagination!.page! + 1,
+        sortOrder: state.orderSortOrder,
+        showMyOrders: state.showMyOrders,
+        filterAttributes: state.selectedFilterValueIds.toList(),
+        searchText: state.searchQuery,
+        isFromVMI: state.isFromVMI);
 
     if (result == null) {
       emit(state.copyWith(orderStatus: OrderStatus.moreLoadingFailure));

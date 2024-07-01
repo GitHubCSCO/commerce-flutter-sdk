@@ -5,10 +5,6 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class PreviousOrdersUseCse extends BaseUseCase {
   PreviousOrdersUseCse() : super();
 
-  VmiLocationModel? getCurrentLocation() {
-    return coreServiceProvider.getVmiService().currentVmiLocation;
-  }
-
   Future<LatLong?> getPlaceFromAddresss(Address? address) async {
     return await coreServiceProvider
         .getVmiService()
@@ -49,5 +45,7 @@ class PreviousOrdersUseCse extends BaseUseCase {
     }
   }
 
-
+  VmiLocationModel getCurrentVmiLocation() {
+    return coreServiceProvider.getVmiService().currentVmiLocation!;
+  }
 }

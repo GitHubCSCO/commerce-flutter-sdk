@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/credit_card_add_callback_helper.dart';
@@ -264,7 +265,7 @@ List<NavigationNode> _getNavigationRoot() {
   final orderHistory = createNode(
     name: AppRoute.orderHistory.name,
     path: AppRoute.orderHistory.suffix,
-    builder: (context, state) => const OrderHistoryScreen(),
+    builder: (context, state) => OrderHistoryScreen(),
     parent: account,
   );
 
@@ -314,6 +315,14 @@ List<NavigationNode> _getNavigationRoot() {
     parent: account,
   );
 
+  // path: /account/vmi/vmiOrderHistory
+  final vmiOrderHistory = createNode(
+    name: AppRoute.vmiOrderHistory.name,
+    path: AppRoute.vmiOrderHistory.suffix,
+    builder: (context, state) => OrderHistoryScreen(isFromVMI: true),
+    parent: vmi,
+  );
+
   // path: /login
   final vmiLocationNote = createSeparateRoute(
     name: AppRoute.vmilocaitonote.name,
@@ -357,11 +366,14 @@ List<NavigationNode> _getNavigationRoot() {
       final onVMILocationUpdated = callbackHelper.onSelectVMILocation;
       final onWarehouseLocationSelected =
           callbackHelper.onWarehouseLocationSelected;
+      final WarehouseEntity? selectedPickupWarehouse =
+          callbackHelper.selectedPickupWarehouse;
 
       return LocationSearchScreen(
         onVMILocationUpdated: onVMILocationUpdated,
         locationSearchType: callbackHelper.locationSearchType,
         onWarehouseLocationSelected: onWarehouseLocationSelected,
+        selectedPickupWarehouse: selectedPickupWarehouse,
       );
     },
     parent: null,
@@ -444,9 +456,22 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.orderDetails.suffix,
     builder: (context, state) {
       final orderNumber = state.pathParameters['orderNumber'] ?? '';
-      return OrderDetailsScreen(orderNumber: orderNumber);
+      final isFromVMI = state.extra as bool;
+      return OrderDetailsScreen(orderNumber: orderNumber, isFromVMI: isFromVMI);
     },
     parent: orderHistory,
+  );
+
+  // path: /account/orderHistory/:orderNumber
+  final vmiOrderDetails = createNode(
+    name: AppRoute.vmiOrderDetails.name,
+    path: AppRoute.vmiOrderDetails.suffix,
+    builder: (context, state) {
+      final orderNumber = state.pathParameters['orderNumber'] ?? '';
+      final isFromVMI = state.extra as bool;
+      return OrderDetailsScreen(orderNumber: orderNumber, isFromVMI: isFromVMI);
+    },
+    parent: vmi,
   );
 
   // path: /billToShipToChange
@@ -459,15 +484,15 @@ List<NavigationNode> _getNavigationRoot() {
 
   // path: /billToShipToSelection
   final billToShipToSelection = createNode(
-      name: AppRoute.billToShipToSelection.name,
-      path: AppRoute.billToShipToSelection.suffix,
-      builder: (context, state) {
-        final entity = state.extra as BillToShipToAddressSelectionEntity;
-        return BillToShipToAddressSelectionScreen(
-            billToShipToAddressSelectionEntity: entity);
-      },
+    name: AppRoute.billToShipToSelection.name,
+    path: AppRoute.billToShipToSelection.suffix,
+    builder: (context, state) {
+      final entity = state.extra as BillToShipToAddressSelectionEntity;
+      return BillToShipToAddressSelectionScreen(
+          billToShipToAddressSelectionEntity: entity);
+    },
   );
-  
+
   // path: /shopCategory
   final shopCategory = createNode(
     name: AppRoute.shopCategory.name,
@@ -484,11 +509,13 @@ List<NavigationNode> _getNavigationRoot() {
       final categoryTitle = state.pathParameters['categoryTitle'] ?? '';
       final categoryPath = state.pathParameters['categoryPath'] ?? '';
       return SubCategoryScreen(
-          categoryId: categoryId, categoryTitle: categoryTitle, categoryPath: categoryPath);
+          categoryId: categoryId,
+          categoryTitle: categoryTitle,
+          categoryPath: categoryPath);
     },
     parent: null,
   );
-  
+
   // path: /shopBrand
   final shopBrand = createNode(
     name: AppRoute.shopBrand.name,
@@ -516,8 +543,12 @@ List<NavigationNode> _getNavigationRoot() {
       //! TODO caution
       //! TODO we are passing multiple objects through extra using record
       //! TODO either we need to organize this record in a better way or use any other data structure
-      final brandCategory = state.extra as (Brand, BrandCategory?, GetBrandSubCategoriesResult?);
-      return BrandCategoryScreen(brand: brandCategory.$1, brandCategory: brandCategory.$2, brandSubCategories: brandCategory.$3);
+      final brandCategory =
+          state.extra as (Brand, BrandCategory?, GetBrandSubCategoriesResult?);
+      return BrandCategoryScreen(
+          brand: brandCategory.$1,
+          brandCategory: brandCategory.$2,
+          brandSubCategories: brandCategory.$3);
     },
     parent: null,
   );
@@ -559,9 +590,7 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.savedOrderDetails.suffix,
     builder: (context, state) {
       final cartId = state.pathParameters['cartId'] ?? '';
-      final refreshSavedOrders = state.extra as void Function();
-      return SavedOrderDetailsScreen(
-          cartId: cartId, refreshSavedOrders: refreshSavedOrders);
+      return SavedOrderDetailsScreen(cartId: cartId);
     },
     parent: savedOrders,
   );

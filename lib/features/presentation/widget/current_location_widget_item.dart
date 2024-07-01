@@ -118,9 +118,8 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                   .read<CurrentLocationCubit>()
                   .onLocationSelectEvent(location);
               context.read<CurrentLocationCubit>().onLoadLocationData();
+              
 
-              // ignore: avoid_print
-              print("Location Selected: $location");
             },
             locationSearchType: LocationSearchType.vmi));
   }

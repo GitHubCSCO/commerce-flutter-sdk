@@ -14,11 +14,12 @@ class PreviousOrdersCubit extends Cubit<PreviousOrdersState> {
         super(PreviousOrdersInitialState());
 
   Future<void> loadPreviousOrders() async {
+    emit(PreviousOrdersLoadingState());
     var response = await _previousOrdersUseCse.getPreviousOrders();
     if (response is Success) {
       List<Order> orders = (response as Success).value as List<Order>;
-      List<OrderEntity>? orderEntities = orders.map((order) => OrderEntityMapper.toEntity(order))
-          .toList();
+      List<OrderEntity>? orderEntities =
+          orders.map((order) => OrderEntityMapper.toEntity(order)).toList();
       emit(PreviousOrdersLoadedState(
           previousOrdersDataEntity:
               PreviousOrdersDataEntity(orders: orderEntities)));

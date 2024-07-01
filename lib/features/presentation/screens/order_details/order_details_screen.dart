@@ -16,16 +16,18 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class OrderDetailsScreen extends StatelessWidget {
   final String orderNumber;
+  final bool? isFromVMI;
   const OrderDetailsScreen({
     super.key,
     required this.orderNumber,
+    required this.isFromVMI,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          sl<OrderDetailsCubit>()..loadOrderDetails(orderNumber),
+      create: (context) => sl<OrderDetailsCubit>()
+        ..loadOrderDetails(orderNumber, isFromVMI: isFromVMI),
       child: const OrderDetailsPage(),
     );
   }

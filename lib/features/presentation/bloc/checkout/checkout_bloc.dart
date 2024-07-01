@@ -1,5 +1,8 @@
+import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
+import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -15,6 +18,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   ShipViaDto? selectedService;
   PaymentOptionsDto? selectedPayment;
   Session? session;
+  bool hasCheckout = true;
+  ProductSettings? productSettings;
 
   CheckoutBloc({required CheckoutUsecase checkoutUsecase})
       : _checkoutUseCase = checkoutUsecase,
@@ -29,7 +34,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         (event, emit) => _onPaymentMethodSelect(event, emit));
     on<SelectPaymentEvent>((event, emit) => _onPaymentSelect(event, emit));
     on<UpdatePONumberEvent>((event, emit) => _onUpdatePONumber(event, emit));
-    on<UpdateShiptoAddressEvent>((event, emit) => _onUpdateShipTo(event, emit));
+    on<AddShiptoAddressEvent>((event, emit) => _onAddShipTo(event, emit));
+    on<UpdateShiptoAddressEvent>((event, emit) => _onUpdateShipto(event, emit));
   }
 
   void updateCheckoutData(Cart cart) {
@@ -41,12 +47,23 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   Future<void> _onCheckoutLoadEvent(
       LoadCheckoutEvent event, Emitter<CheckoutState> emit) async {
     emit(CheckoutLoading());
+
+    hasCheckout = await _checkoutUseCase.hasCheckout();
+
     var data = await _checkoutUseCase.getCart(event.cart.id!);
     session ??= _checkoutUseCase.getCurrentSession();
+    var productSettingsResult = await _checkoutUseCase.loadProductSettings();
+    productSettings = productSettingsResult is Success
+        ? (productSettingsResult as Success).value as ProductSettings
+        : null;
 
     switch (data) {
       case Success(value: final cartData):
-        updateCheckoutData(cartData!);
+        if (cartData?.cartLines == null || cartData!.cartLines!.isEmpty) {
+          emit(CheckoutNoDataState());
+          return;
+        }
+        updateCheckoutData(cartData);
 
         final billToAddress = session?.billTo;
         final shipToAddress = session?.shipTo;
@@ -117,6 +134,21 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     }
   }
 
+  List<CartLineEntity> getCartLines() {
+    List<CartLineEntity> cartlines = [];
+    for (var cartLine in cart?.cartLines ?? []) {
+      var cartLineEntity = CartLineEntityMapper().toEntity(cartLine);
+      var shouldShowWarehouseInventoryButton =
+          InventoryUtils.isInventoryPerWarehouseButtonShownAsync(
+              productSettings) &&
+              cartLine.availability.messageType != 0;
+      cartLineEntity = cartLineEntity.copyWith(
+          showInventoryAvailability: shouldShowWarehouseInventoryButton);
+      cartlines.add(cartLineEntity);
+    }
+    return cartlines;
+  }
+
   void _onRequestDeliveryDateSelect(
       RequestDeliveryDateEvent event, Emitter<CheckoutState> emit) {
     requestDeliveryDate = event.dateTime;
@@ -168,8 +200,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     cart?.poNumber = event.poNumber;
   }
 
-  Future<void> _onUpdateShipTo(
-      UpdateShiptoAddressEvent event, Emitter<CheckoutState> emit) async {
+  Future<void> _onAddShipTo(
+      AddShiptoAddressEvent event, Emitter<CheckoutState> emit) async {
     var response =
         await _checkoutUseCase.postCurrentBillToShipToAsync(event.shipTo);
 
@@ -179,5 +211,47 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
 
     session?.shipTo = cart?.shipTo;
     emit(CheckoutShipToAddressAddedState());
+  }
+
+  Future<void> _onUpdateShipto(
+      UpdateShiptoAddressEvent event, Emitter<CheckoutState> emit) async {
+    cart?.shipTo = event.shipTo;
+    session?.shipTo = cart?.shipTo;
+    emit(CheckoutShipToAddressAddedState());
+  }
+
+  bool get isCartEmpty =>
+      // ignore: prefer_is_empty
+      cart?.cartLines == null || (cart?.cartLines?.length == 0);
+
+  bool get _hasRestrictedCartLines =>
+      cart?.cartLines != null &&
+      cart!.cartLines!.any((x) => x.isRestricted == true);
+
+  bool get _hasOnlyQuoteRequiredProducts =>
+      (cart?.cartLines != null || cart!.cartLines!.isNotEmpty) &&
+      cart!.cartLines!.every((x) => x.quoteRequired == true);
+
+  bool get _isCartCheckoutDisabled =>
+      cart != null &&
+      ((cart?.canCheckOut != true && cart?.canRequisition != true) ||
+          isCartEmpty ||
+          _hasRestrictedCartLines);
+
+  bool get isCheckoutButtonEnabled {
+    if (cart == null) {
+      return false;
+    }
+
+    /// TODO - check if all required data is entered
+    return !_isCartCheckoutDisabled || !_hasOnlyQuoteRequiredProducts;
+  }
+
+  bool get checkoutButtonVisible {
+    if (cart == null) {
+      return false;
+    }
+
+    return cart?.canCheckOut == true && !isCartEmpty && hasCheckout;
   }
 }

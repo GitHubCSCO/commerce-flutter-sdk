@@ -104,26 +104,29 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
       '${LocalizationConstants.subtotal} (${state.cart.totalQtyOrdered})';
 
   // body section
-  bool get _checkIfShip => state.cart.fulfillmentMethod == 'Ship';
-  bool get _checkIfPickup => state.cart.fulfillmentMethod == 'Pickup';
+  bool get isFulfillmentMethodShip => state.cart.fulfillmentMethod == 'Ship';
+  bool get isFulfillmentMethodPickUp =>
+      state.cart.fulfillmentMethod == 'PickUp';
 
-  String get shippingAddressTitle => _checkIfShip
+  String get shippingAddressTitle => isFulfillmentMethodShip
       ? LocalizationConstants.shippingAddress
-      : (_checkIfPickup ? LocalizationConstants.pickUpLocation : '');
+      : (isFulfillmentMethodPickUp ? LocalizationConstants.pickUpLocation : '');
 
-  String get shipToCityStatePostalCodeDisplay => _checkIfShip
+  String get shipToCityStatePostalCodeDisplay => isFulfillmentMethodShip
       ? '${state.cart.shipTo?.city}, ${state.cart.shipTo?.state?.name} ${state.cart.shipTo?.postalCode}'
-      : (_checkIfPickup
+      : (isFulfillmentMethodPickUp
           ? '${state.cart.defaultWarehouse?.city}, ${state.cart.defaultWarehouse?.state} ${state.cart.defaultWarehouse?.postalCode}'
           : '');
 
-  String get shippingCompanyTitle => _checkIfShip
+  String get shippingCompanyTitle => isFulfillmentMethodShip
       ? state.cart.shipTo?.companyName ?? ''
-      : (_checkIfPickup ? state.cart.defaultWarehouse?.description ?? '' : '');
+      : (isFulfillmentMethodPickUp
+          ? state.cart.defaultWarehouse?.description ?? ''
+          : '');
 
-  String get shipToAddressLines => _checkIfShip
+  String get shipToAddressLines => isFulfillmentMethodShip
       ? '${state.cart.shipTo?.address1}, ${state.cart.shipTo?.address2}'
-      : (_checkIfPickup
+      : (isFulfillmentMethodPickUp
           ? '${state.cart.defaultWarehouse?.address1}, ${state.cart.defaultWarehouse?.address2}'
           : '');
 

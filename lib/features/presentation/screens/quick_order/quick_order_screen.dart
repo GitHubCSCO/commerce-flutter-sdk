@@ -329,7 +329,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                 ? true
                                                 : false,
                                             onPressed: () {
-                                              _addToCart(context);
+                                              _addToCart(context, widget.scanningMode);
                                             },
                                             child: Text(_getCheckoutButtonTitle(widget.scanningMode)),
                                           ),
@@ -446,14 +446,19 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     );
   }
 
-  Future<void> _addToCart(BuildContext context) async {
+  Future<void> _addToCart(BuildContext context, ScanningMode scanningMode) async {
     var reversedQuickOrderProductsList =
         context.read<OrderListBloc>().getReversedQuickOrderItemEntityList();
     Set<String> currentCartProducts = <String>{};
+    Set<String> allCountCartProducts = <String>{};
 
     List<AddCartLine> addCartLines = context
         .read<OrderListBloc>()
-        .getAddCartLines(reversedQuickOrderProductsList, currentCartProducts);
+        .getAddCartLines( 
+        scanningMode: scanningMode,
+        reversedQuickOrderProductsList: reversedQuickOrderProductsList,
+        allCountCartProducts: allCountCartProducts, 
+        currentCartProducts: currentCartProducts);
 
     if (addCartLines.any((x) => x.qtyOrdered == null || x.qtyOrdered == 0)) {
       displayDialogWidget(
@@ -487,6 +492,14 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
           ]);
     }
 
+    if (allCountCartProducts.isNotEmpty && currentCartProducts.isEmpty)
+    {
+      CustomSnackBar.showSnackBarMessage(
+          context, SiteMessageConstants.defaultAllProductCountExceed, seconds: 2);
+        return;
+    }
+
+
     context.read<OrderListBloc>().deleteExistingCartLine(currentCartProducts);
 
     var addToCartCartLineList =
@@ -503,6 +516,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
         CustomSnackBar.showSnackBarMessage(
             context, SiteMessageConstants.defaultValueProductOutOfStock);
       }
+
       context.read<OrderListBloc>().add(OrderListAddToCartEvent());
     } else {
       CustomSnackBar.showSnackBarMessage(

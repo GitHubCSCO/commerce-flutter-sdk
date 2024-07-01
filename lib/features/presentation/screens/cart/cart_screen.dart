@@ -178,18 +178,26 @@ class CartPage extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            PrimaryButton(
-                              onPressed: () {
-                                final currentState =
-                                    context.read<AuthCubit>().state;
-                                handleAuthStatus(context, currentState.status,
-                                    context.read<CartPageBloc>());
-                              },
-                              text: context
-                                      .read<CartPageBloc>()
-                                      .approvalButtonVisible
-                                  ? LocalizationConstants.checkoutForApproval
-                                  : LocalizationConstants.checkout,
+                            Visibility(
+                              visible: context
+                                  .watch<CartPageBloc>()
+                                  .checkoutButtonVisible,
+                              child: PrimaryButton(
+                                isEnabled: context
+                                    .watch<CartPageBloc>()
+                                    .isCheckoutButtonEnabled,
+                                onPressed: () {
+                                  final currentState =
+                                      context.read<AuthCubit>().state;
+                                  handleAuthStatus(context, currentState.status,
+                                      context.read<CartPageBloc>());
+                                },
+                                text: context
+                                        .watch<CartPageBloc>()
+                                        .approvalButtonVisible
+                                    ? LocalizationConstants.checkoutForApproval
+                                    : LocalizationConstants.checkout,
+                              ),
                             ),
                           ],
                         ),
@@ -317,14 +325,10 @@ class CartPage extends StatelessWidget {
       child: Builder(
         builder: (context) {
           return BlocListener<SavedOrderHandlerCubit, SavedOrderHandlerState>(
-            listener: (context, state) async {
+            listener: (context, state) {
               if (state.status == SavedOrderHandlerStatus.shouldClearCart) {
                 context.read<CartContentBloc>().add(CartContentClearAllEvent());
-              }
 
-              AppRoute.savedOrders.navigate(context);
-
-              if (context.mounted) {
                 AppRoute.savedOrderDetails.navigate(
                   context,
                   pathParameters: {
@@ -335,16 +339,15 @@ class CartPage extends StatelessWidget {
                             .id ??
                         '',
                   },
-                  extra: () {
-                    context
-                        .read<SavedOrderHandlerCubit>()
-                        .shouldRefreshSavedOrder();
-                  },
                 );
               }
             },
             child: CartLineWidgetList(
               cartLineEntities: context.read<CartPageBloc>().getCartLines(),
+              onCartChangeCallBack: (context) {
+                context.read<CartCountCubit>().loadCurrentCartCount();
+                context.read<CartPageBloc>().add(CartPageLoadEvent());
+              },
             ),
           );
         },
@@ -355,10 +358,11 @@ class CartPage extends StatelessWidget {
     return list;
   }
 
-  void _handlePickUpLocationCallBack(BuildContext context, WarehouseEntity wareHouse) {
-    context.read<CartPageBloc>().add(CartPagePickUpLocationChangeEvent(WarehouseEntityMapper().toModel(wareHouse)));
+  void _handlePickUpLocationCallBack(
+      BuildContext context, WarehouseEntity wareHouse) {
+    context.read<CartPageBloc>().add(CartPagePickUpLocationChangeEvent(
+        WarehouseEntityMapper().toModel(wareHouse)));
   }
-
 }
 
 class _buildCartEroorWidget extends StatelessWidget {

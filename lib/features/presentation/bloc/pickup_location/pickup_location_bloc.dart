@@ -1,11 +1,10 @@
-import 'package:commerce_flutter_app/core/models/lat_long.dart';
+import 'package:commerce_flutter_app/core/models/gogole_place.dart';
 import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/pickup_location_usecase/pickup_location_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/pickup_location/pickup_location_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/pickup_location/pickup_location_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class PickupLocationBloc
     extends Bloc<PickUpLocationEvent, PickUpLocationState> {
@@ -14,19 +13,25 @@ class PickupLocationBloc
   GooglePlace? seachPlace;
   List<WarehouseEntity> warehouseList = [];
   WarehouseEntity? selectedWarehouse;
+
   PickupLocationBloc({required PickUpLocationUseCase pickUpLocationUseCase})
       : _pickUpLocationUseCase = pickUpLocationUseCase,
         super(PickUpLocationInitialState()) {
     on<LoadPickUpLocationsEvent>(_onLoadPickUpLocations);
     on<PickUpLocationSelectEvent>(_onPickupLocationSelectEvent);
+    on<LoadSearchedPickUpLocationsEvent>(_onSearchPickUpLocationsEvent);
   }
 
   Future<void> _onLoadPickUpLocations(
       LoadPickUpLocationsEvent event, Emitter<PickUpLocationState> emit) async {
     emit(PickUpLocationLoadingState());
-    var wareHouses = await _pickUpLocationUseCase.getWarehouses();
+    selectedWarehouse = event.selectedPickupWarehouse;
+    var wareHouses = await _pickUpLocationUseCase.getWarehouses(
+        latitude: event.selectedPickupWarehouse?.latitude?.toDouble(),
+        longitude: event.selectedPickupWarehouse?.longitude?.toDouble());
     warehouseList = wareHouses;
-    emit(PickUpLocationLoadedState(wareHouselist: wareHouses));
+    emit(PickUpLocationLoadedState(
+        wareHouselist: wareHouses, selectedWarehouse: selectedWarehouse));
   }
 
   Future<void> _onPickupLocationSelectEvent(PickUpLocationSelectEvent event,
@@ -41,7 +46,18 @@ class PickupLocationBloc
         .removeWhere((warehouse) => warehouse.id == selectedWarehouse?.id);
     warehouseList.insert(0, selectedItem);
     emit(PickUpLocationLoadedState(
-        wareHouselist: warehouseList,
-        selectedLocation: selectedWarehouse?.latLong));
+        wareHouselist: warehouseList, selectedWarehouse: selectedWarehouse));
+  }
+
+  Future<void> _onSearchPickUpLocationsEvent(
+      LoadSearchedPickUpLocationsEvent event,
+      Emitter<PickUpLocationState> emit) async {
+    emit(PickUpLocationLoadingState());
+    seachPlace = event.searchedLocation;
+    var wareHouses = await _pickUpLocationUseCase.getWarehouses(
+        latitude: seachPlace?.latitude, longitude: seachPlace?.longitude);
+    warehouseList = wareHouses;
+    emit(PickUpLocationLoadedState(
+        wareHouselist: wareHouses, selectedWarehouse: selectedWarehouse));
   }
 }

@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/location_note_widget_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
@@ -41,9 +42,24 @@ class LocationNoteWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      state.locationNote,
-                      style: OptiTextStyles.body,
+                    Visibility(
+                      visible: state.locationNote.isNotEmpty,
+                      child: Text(
+                        state.locationNote,
+                        style: OptiTextStyles.body,
+                      ),
+                    ),
+                    Visibility(
+                      visible: context.read<LocationNoteCubit>().isVmiAdmin() &&
+                          state.locationNote.isEmpty,
+                      child: Center(
+                        child: Text(
+                          LocalizationConstants.enterLocationNote
+                              .format([LocalizationConstants.editLocationNote]),
+                          style: OptiTextStyles.body,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
                     Visibility(
                       visible: context.read<LocationNoteCubit>().isVmiAdmin(),

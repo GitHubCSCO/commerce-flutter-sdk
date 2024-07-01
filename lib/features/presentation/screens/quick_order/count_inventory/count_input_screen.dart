@@ -144,32 +144,6 @@ class _CountInputPageState extends State<CountInputPage> {
     );
   }
 
-  Widget _buildSelectableContainer({
-    required String text,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return Expanded(
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            color: isSelected ? OptiAppColors.backgroundWhite : OptiAppColors.backgroundGray,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(
-                text,
-                style: OptiTextStyles.subtitle,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   void _showAlertDialog(String message) {
     displayDialogWidget(context: context, message: message, actions: [
@@ -363,17 +337,11 @@ class _CountInputPageState extends State<CountInputPage> {
       list.add(minCount);
     }
 
-    return Expanded(
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.all(20.0),
       child: Column(
-        children: [
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: list,
-            ),
-          )
-        ],
+        children: list,
       ),
     );
   }

@@ -57,7 +57,7 @@ class PickUpLocationScreen extends StatelessWidget {
                         .map((wareHouse) => PickupLocationLocationWidgetItem(
                               warehouse: wareHouse,
                               isSelectionOn: true,
-                              selectedLocation: state.selectedLocation,
+                              selectedWarehouseid: state.selectedWarehouse?.id,
                             ))
                         .toList(),
                   ),
