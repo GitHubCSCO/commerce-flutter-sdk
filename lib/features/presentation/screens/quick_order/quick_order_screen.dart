@@ -194,10 +194,11 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                               } else if (state is OrderListAddToListFailedState) {
                                 _showAlert(
                                     context,
-                                    message: LocalizationConstants
+                                    '',
+                                    LocalizationConstants
                                         .pleaseSignInBeforeAddingToList);
                               } else if (state is OrderListAddFailedState) {
-                                _showAlert(context, message: state.message);
+                                _showAlert(context, '', state.message);
                               } else if (state is OrderListStyleProductAddState) {
                                 handleStyleProductAdd(state.productEntity);
                               } else if (state is OrderListVmiStyleProductAddState) {
@@ -491,12 +492,13 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
           ]);
     }
 
-    if (allCountCartProducts.isNotEmpty && currentCartProducts.isEmpty) {
-      final icon = _buildWarningIcon();
-      _showAlert(context, icon: icon, title: LocalizationConstants.productCanNotBeReOrdered,
-          message: SiteMessageConstants.defaultAllProductCountExceed);
-      return;
+    if (allCountCartProducts.isNotEmpty && currentCartProducts.isEmpty)
+    {
+      CustomSnackBar.showSnackBarMessage(
+          context, SiteMessageConstants.defaultAllProductCountExceed, seconds: 2);
+        return;
     }
+
 
     context.read<OrderListBloc>().deleteExistingCartLine(currentCartProducts);
 
@@ -504,8 +506,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
         await context.read<OrderListBloc>().addCartLineCollection(addCartLines);
     if (addToCartCartLineList != null) {
       if (addToCartCartLineList.isEmpty) {
-        _showAlert(context, title: LocalizationConstants.quickOrder,
-            message: SiteMessageConstants.defaultValueProductOutOfStock);
+        _showAlert(context, LocalizationConstants.quickOrder,
+            SiteMessageConstants.defaultValueProductOutOfStock);
       }
       if (addToCartCartLineList.length == addCartLines.length) {
         CustomSnackBar.showSnackBarMessage(context,
@@ -522,10 +524,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     }
   }
 
-  void _showAlert(BuildContext context, {Widget? icon, String? title, String? message}) {
+  void _showAlert(BuildContext context, String title, String message) {
     displayDialogWidget(
         context: context,
-        icon: icon,
         title: title,
         message: message,
         actions: [
@@ -627,24 +628,6 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     }
 
     return list;
-  }
-
-  Widget _buildWarningIcon() {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      clipBehavior: Clip.antiAlias,
-      decoration: ShapeDecoration(
-        color: OptiAppColors.invalidColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(999999),
-        ),
-      ),
-      child: const Icon(
-        Icons.warning_amber, // Icon to display
-        color: OptiAppColors.backgroundWhite, // Icon color
-        size: 20, // Icon size
-      ),
-    );
   }
 
   _handleBarcodeValue(BuildContext context, String rawValue) {
