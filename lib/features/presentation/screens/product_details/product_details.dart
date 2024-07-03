@@ -76,40 +76,55 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthCubit, AuthState>(listener: (context, state) {
-      if (state.status == AuthStatus.authenticated) {
-        context
-            .read<ProductDetailsBloc>()
-            .add(FetchProductDetailsEvent(productId, product));
-      }
-    }, child: Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
-                  appBar: AppBar(actions: <Widget>[
-                    BottomMenuWidget(websitePath: product?.productDetailUrl),
-                  ], backgroundColor: Theme.of(context).colorScheme.surface),
-      body: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
-        builder: (_, state) {
-          switch (state) {
-            case ProductDetailsInitial():
-            case ProductDetailsLoading():
-              return const Center(child: CircularProgressIndicator());
-            case ProductDetailsLoaded():
-              return SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: _buildProductDetailsWidgets(
-                        state.productDetailsEntities, context),
-                  ),
-              );
-            case ProductDetailsErrorState():
-              return const Center(child: Text("failure"));
-            default:
-              return const Center(child: Text("failure"));
+    return BlocListener<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state.status == AuthStatus.authenticated) {
+            context
+                .read<ProductDetailsBloc>()
+                .add(FetchProductDetailsEvent(productId, product));
           }
         },
-      ),
-    ));
+        child: Scaffold(
+          backgroundColor: OptiAppColors.backgroundGray,
+          appBar: AppBar(actions: <Widget>[
+            BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
+                builder: (_, state) {
+              switch (state) {
+                case ProductDetailsLoaded():
+                  return BottomMenuWidget(
+                      websitePath: context
+                          .read<ProductDetailsBloc>()
+                          .productDetailDataEntity
+                          .product
+                          ?.productDetailUrl);
+                default:
+                  return Container();
+              }
+            })
+          ], backgroundColor: Theme.of(context).colorScheme.surface),
+          body: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
+            builder: (_, state) {
+              switch (state) {
+                case ProductDetailsInitial():
+                case ProductDetailsLoading():
+                  return const Center(child: CircularProgressIndicator());
+                case ProductDetailsLoaded():
+                  return SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _buildProductDetailsWidgets(
+                          state.productDetailsEntities, context),
+                    ),
+                  );
+                case ProductDetailsErrorState():
+                  return const Center(child: Text("failure"));
+                default:
+                  return const Center(child: Text("failure"));
+              }
+            },
+          ),
+        ));
   }
 
   List<Widget> _buildProductDetailsWidgets(
@@ -172,6 +187,7 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
     }
 
     return Container(
+      width: double.infinity,
       color: Colors.white,
       child: Padding(
           padding: const EdgeInsets.all(20.0),
