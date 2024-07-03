@@ -14,6 +14,7 @@ class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
   LatLng? currentLocation;
   GooglePlace? seachPlace;
   List<CurrentLocationDataEntity> currentLocationDataEntityList = [];
+  List<CurrentLocationDataEntity>? searchedDataEntityList = [];
 
   VMILocationBloc({required VMILocationUseCase vmiLocationUseCase})
       : _vmiLocationUseCase = vmiLocationUseCase,
@@ -22,6 +23,7 @@ class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
     on<LocationSelectEvent>(_onLocationSelectEvent);
     on<UpdateSearchPlaceEvent>(_updateSeachPlace);
     on<SaveVmiLocationEvent>(_saveVMILocationEvent);
+    on<SearchVMILocationFromListEvent>(_onSearchVMIlocationsOnList);
   }
 
   Future<void> _onloadVMILocations(
@@ -47,7 +49,22 @@ class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
 
             currentLocationDataEntityList.add(currentLocationDataEntity);
           }
+          VmiLocationModel? currentVMILocation =
+              _vmiLocationUseCase.getCurrentVMILocation();
+          selectedLocation = CurrentLocationDataEntity(
+              id: currentVMILocation?.id,
+              locationName: currentVMILocation?.name,
+              vmiLocation: currentVMILocation);
 
+          if (selectedLocation != null) {
+            var selectedItem = currentLocationDataEntityList.firstWhere(
+              (location) => location.id == selectedLocation?.id,
+            );
+            currentLocationDataEntityList
+                .removeWhere((location) => location.id == selectedLocation?.id);
+            currentLocationDataEntityList.insert(0, selectedItem);
+          }
+          searchedDataEntityList = null;
           if (seachPlace != null) {
             // currentLocationDataEntityList =
             //     currentLocationDataEntityList.where((entity) {
@@ -56,12 +73,12 @@ class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
             //           entity.latLong!.latitude, entity.latLong!.longitude);
             // }).toList();
             emit(VMILocationLoadedState(
-              currentLocationDataEntityList: currentLocationDataEntityList,
-            ));
+                currentLocationDataEntityList: currentLocationDataEntityList,
+                selectedLocation: selectedLocation));
           } else {
             emit(VMILocationLoadedState(
                 currentLocationDataEntityList: currentLocationDataEntityList,
-                selectedLocation: currentLocationDataEntityList.first));
+                selectedLocation: selectedLocation));
           }
         }
       case Failure():
@@ -84,17 +101,18 @@ class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
 
   Future<void> _onLocationSelectEvent(
       LocationSelectEvent event, Emitter<VMILocationState> emit) async {
+    var dataEntityList =
+        searchedDataEntityList ?? currentLocationDataEntityList;
     seachPlace = null;
     selectedLocation = event.selectedLocation;
     String selectedLocationId = event.selectedLocation.id!;
-    var selectedItem = currentLocationDataEntityList.firstWhere(
+    var selectedItem = dataEntityList.firstWhere(
       (location) => location.id == selectedLocationId,
     );
-    currentLocationDataEntityList
-        .removeWhere((location) => location.id == selectedLocationId);
-    currentLocationDataEntityList.insert(0, selectedItem);
+    dataEntityList.removeWhere((location) => location.id == selectedLocationId);
+    dataEntityList.insert(0, selectedItem);
     emit(VMILocationLoadedState(
-        currentLocationDataEntityList: currentLocationDataEntityList,
+        currentLocationDataEntityList: dataEntityList,
         selectedLocation: selectedLocation));
   }
 
@@ -107,5 +125,19 @@ class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
       SaveVmiLocationEvent event, Emitter<VMILocationState> emit) async {
     await _vmiLocationUseCase
         .saveCurrentVmiLocation(event.selectedLocation.vmiLocation!);
+  }
+
+  Future<void> _onSearchVMIlocationsOnList(SearchVMILocationFromListEvent event,
+      Emitter<VMILocationState> emit) async {
+    emit(VMILocationLoadingState());
+    var searchKey = event.searchKey;
+    var searchResult = currentLocationDataEntityList.where((element) {
+      return element.locationName
+              ?.toLowerCase()
+              .contains(searchKey.toLowerCase()) ??
+          false;
+    }).toList();
+    searchedDataEntityList = searchResult;
+    emit(VMILocationLoadedState(currentLocationDataEntityList: searchResult));
   }
 }

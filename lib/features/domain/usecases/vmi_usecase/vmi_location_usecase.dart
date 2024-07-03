@@ -52,4 +52,8 @@ class VMILocationUseCase extends BaseUseCase {
   Future<void> saveCurrentVmiLocation(VmiLocationModel vmiLocation) async {
     coreServiceProvider.getVmiService().saveCurrentVmiLocation(vmiLocation);
   }
+
+  VmiLocationModel? getCurrentVMILocation() {
+    return coreServiceProvider.getVmiService().currentVmiLocation;
+  }
 }

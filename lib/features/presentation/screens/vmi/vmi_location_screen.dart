@@ -52,19 +52,26 @@ class VMILocationScreen extends StatelessWidget {
             );
           } else if (state is VMILocationLoadedState) {
             return Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const MapWidget(),
-                Expanded(
-                  child: ListView(
-                    controller:
-                        scrollController, // Attach the ScrollController here
-                    children: state.currentLocationDataEntityList
-                        .map((e) => VMICurrentLocationWidgetItem(
-                              locationData: e,
-                              selectedLocation: state.selectedLocation,
-                              isSelectionOn: true,
-                            ))
-                        .toList(),
+                Visibility(
+                    visible: state.currentLocationDataEntityList.isEmpty,
+                    child: const Text("No results found")),
+                Visibility(
+                  visible: state.currentLocationDataEntityList.isNotEmpty,
+                  child: Expanded(
+                    child: ListView(
+                      controller:
+                          scrollController, // Attach the ScrollController here
+                      children: state.currentLocationDataEntityList
+                          .map((e) => VMICurrentLocationWidgetItem(
+                                locationData: e,
+                                selectedLocation: state.selectedLocation,
+                                isSelectionOn: true,
+                              ))
+                          .toList(),
+                    ),
                   ),
                 ),
                 ListInformationBottomSubmitWidget(actions: [
