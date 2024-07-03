@@ -100,8 +100,8 @@ class OrderApprovalPage extends StatelessWidget {
                             shipTo,
                           }) {
                             context.read<OrderApprovalCubit>().applyFilter(
-                                  orderNumber: orderNumber,
-                                  orderTotal: orderTotal,
+                                  orderNumber: orderNumber?.trim(),
+                                  orderTotal: orderTotal?.trim(),
                                   orderTotalOperator: orderTotalOperator,
                                   fromDate: fromDate,
                                   toDate: toDate,
