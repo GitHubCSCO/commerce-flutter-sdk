@@ -15,6 +15,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
 import 'package:flutter/material.dart';
@@ -218,10 +219,8 @@ class SearchPage extends BaseDynamicContentScreen {
                   );
                 case SearchAutoCompleteLoadedState:
                   final autoCompleteResult =
-                  (state as SearchAutoCompleteLoadedState).result!;
-                  return AutoCompleteWidget(
-                      callback: handleAutoCompleteCallback,
-                      autocompleteResult: autoCompleteResult);
+                  (state as SearchAutoCompleteLoadedState).result;
+                  return _buildSearchAutoComplete(autoCompleteResult);
                 case SearchAutoCompleteFailureState:
                   return Center(
                       child: Text(
@@ -255,6 +254,34 @@ class SearchPage extends BaseDynamicContentScreen {
               }
             }),
           ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildSearchAutoComplete(AutocompleteResult? result) {
+    final autoCompleteBrandList = result?.brands;
+    final autoCompleteProductList = result?.products;
+    return ListView(
+      children: [
+        Visibility(
+          visible: autoCompleteBrandList?.isNotEmpty ?? false,
+          child: Column(
+            children: [
+
+              BrandAutoCompleteWidget(
+                  autocompleteBrands: autoCompleteBrandList,
+                  callback: (context, brand) {
+
+                  }),
+            ],
+          ),
+        ),
+        Visibility(
+          visible: autoCompleteProductList?.isNotEmpty ?? false,
+          child: AutoCompleteWidget(
+              callback: handleAutoCompleteCallback,
+              autoCompleteProductList: autoCompleteProductList),
         )
       ],
     );
