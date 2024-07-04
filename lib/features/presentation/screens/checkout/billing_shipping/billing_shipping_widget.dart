@@ -74,7 +74,11 @@ class BillingShippingWidget extends StatelessWidget {
             selectedServiceIndex = i;
           }
         }
-        list.add(_buildAddShippingAddressButton(context));
+
+        if (billingShippingEntity.canChangeShipTo ?? true) {
+          list.add(_buildAddShippingAddressButton(context));
+        }
+
         list.add(_buildShippingMethod(
             billingShippingEntity.carriers!,
             billingShippingEntity.carriers![0].shipVias!,
