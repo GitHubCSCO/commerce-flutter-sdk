@@ -410,33 +410,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                       controller: textEditingController,
                     ),
                   ),
-                  if (state is QuickOrderAutoCompleteInitialState)
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          LocalizationConstants.searchPrompt,
-                          style: OptiTextStyles.body,
-                        ),
-                      ),
-                    )
-                  else if (state is QuickOrderAutoCompleteLoadingState)
-                    const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  else if (state is QuickOrderAutoCompleteLoadedState)
-                    AutoCompleteWidget(
-                      callback: _handleAutoCompleteCallback,
-                      autocompleteResult: (state as QuickOrderAutoCompleteLoadedState).result!,
-                    )
-                  else if (state is QuickOrderAutoCompleteFailureState)
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          (state as QuickOrderAutoCompleteFailureState).error,
-                          style: OptiTextStyles.body,
-                        ),
-                      ),
-                    ),
+                  Expanded(child: _buildAutoCompleteContainer(state)),
                 ],
               );
           }
@@ -444,6 +418,36 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
       ),
     );
   }
+
+  Widget _buildAutoCompleteContainer(QuickOrderAutoCompleteState state) {
+    if (state is QuickOrderAutoCompleteInitialState) {
+      return Center(
+        child: Text(
+          LocalizationConstants.searchPrompt,
+          style: OptiTextStyles.body,
+        ),
+      );
+    } else if (state is QuickOrderAutoCompleteLoadingState) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else if (state is QuickOrderAutoCompleteLoadedState) {
+      return AutoCompleteWidget(
+        callback: _handleAutoCompleteCallback,
+        autocompleteResult: state.result!,
+      );
+    } else if (state is QuickOrderAutoCompleteFailureState) {
+      return Center(
+        child: Text(
+          state.error,
+          style: OptiTextStyles.body,
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
 
   Future<void> _addToCart(BuildContext context, ScanningMode scanningMode) async {
     var reversedQuickOrderProductsList =
