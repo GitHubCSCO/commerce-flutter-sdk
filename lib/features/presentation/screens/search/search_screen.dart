@@ -16,6 +16,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.d
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_auto_complete_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/category/category_auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
 import 'package:flutter/material.dart';
@@ -260,20 +261,46 @@ class SearchPage extends BaseDynamicContentScreen {
   }
 
   Widget _buildSearchAutoComplete(AutocompleteResult? result) {
+    final autoCompleteCategoryList = result?.categories;
     final autoCompleteBrandList = result?.brands;
     final autoCompleteProductList = result?.products;
     return ListView(
       children: [
         Visibility(
+          visible: autoCompleteCategoryList?.isNotEmpty ?? false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+                child: Text(
+                  LocalizationConstants.categories,
+                  style: OptiTextStyles.titleSmall,
+                ),
+              ),
+              CategoryAutoCompleteWidget(
+                  autocompleteCategories: autoCompleteCategoryList,
+                  callback: (context, category) {}),
+              const SizedBox(height: 12),
+            ],
+          ),
+        ),
+        Visibility(
           visible: autoCompleteBrandList?.isNotEmpty ?? false,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+                child: Text(
+                  LocalizationConstants.brands,
+                  style: OptiTextStyles.titleSmall,
+                ),
+              ),
               BrandAutoCompleteWidget(
                   autocompleteBrands: autoCompleteBrandList,
-                  callback: (context, brand) {
-
-                  }),
+                  callback: (context, brand) {}),
+              const SizedBox(height: 12),
             ],
           ),
         ),
