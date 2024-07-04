@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/models/gogole_place.dart';
 import 'package:commerce_flutter_app/core/models/lat_long.dart';
 import 'package:commerce_flutter_app/features/domain/entity/current_location_data_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/vmi_location_list_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_location_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_state.dart';
@@ -15,6 +16,8 @@ class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
   GooglePlace? seachPlace;
   List<CurrentLocationDataEntity> currentLocationDataEntityList = [];
   List<CurrentLocationDataEntity>? searchedDataEntityList = [];
+  Pagination? pagination;
+  VmiLocationListStatus status = VmiLocationListStatus.initial;
 
   VMILocationBloc({required VMILocationUseCase vmiLocationUseCase})
       : _vmiLocationUseCase = vmiLocationUseCase,
@@ -24,73 +27,99 @@ class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
     on<UpdateSearchPlaceEvent>(_updateSeachPlace);
     on<SaveVmiLocationEvent>(_saveVMILocationEvent);
     on<SearchVMILocationFromListEvent>(_onSearchVMIlocationsOnList);
+    on<LoadMoreVMILocationsEvent>(_onLoadMoreVMILocations);
   }
 
   Future<void> _onloadVMILocations(
       LoadVMILocationsEvent event, Emitter<VMILocationState> emit) async {
     emit(VMILocationLoadingState());
 
-    var response = await _vmiLocationUseCase.getVMILocations();
+    var response = await _vmiLocationUseCase.getVMILocations(1);
     // currentLocation = await _vmiLocationUseCase.getCurrentLocation();
     switch (response) {
       case Success(value: final data):
         {
-          for (var vmiLocation in data?.vmiLocations ?? []) {
-            LatLong? latLong;
-            if (vmiLocation != null) {
-              latLong = await _vmiLocationUseCase
-                  .getPlaceFromAddresss(vmiLocation.customer);
-            }
-
-            var currentLocationDataEntity =
-                CurrentLocationDataEntity.fromVmiLocation(vmiLocation);
-            currentLocationDataEntity = currentLocationDataEntity.copyWith(
-                latLong: latLong, id: vmiLocation.id);
-
-            currentLocationDataEntityList.add(currentLocationDataEntity);
-          }
-          VmiLocationModel? currentVMILocation =
-              _vmiLocationUseCase.getCurrentVMILocation();
-          selectedLocation = CurrentLocationDataEntity(
-              id: currentVMILocation?.id,
-              locationName: currentVMILocation?.name,
-              vmiLocation: currentVMILocation);
-
-          if (selectedLocation != null) {
-            var selectedItem = currentLocationDataEntityList.firstWhere(
-              (location) => location.id == selectedLocation?.id,
-            );
-            currentLocationDataEntityList
-                .removeWhere((location) => location.id == selectedLocation?.id);
-            currentLocationDataEntityList.insert(0, selectedItem);
-          }
-          searchedDataEntityList = null;
-          if (seachPlace != null) {
-            // currentLocationDataEntityList =
-            //     currentLocationDataEntityList.where((entity) {
-            //   return entity.latLong != null &&
-            //       isCloseToLocation(
-            //           entity.latLong!.latitude, entity.latLong!.longitude);
-            // }).toList();
-            emit(VMILocationLoadedState(
-                currentLocationDataEntityList: currentLocationDataEntityList,
-                selectedLocation: selectedLocation));
-          } else {
-            emit(VMILocationLoadedState(
-                currentLocationDataEntityList: currentLocationDataEntityList,
-                selectedLocation: selectedLocation));
-          }
+          pagination = data?.pagination;
+          await _loadVMILocationsByPages(data, emit);
         }
       case Failure():
         break;
     }
   }
 
-  bool isCloseToLocation(double latitude, double longitude) {
-    // if (!this.isUserLocationEnabled) {
-    //   return false;
-    // }
+  Future<void> _onLoadMoreVMILocations(
+      LoadMoreVMILocationsEvent event, Emitter<VMILocationState> emit) async {
+    if (pagination?.page == null ||
+        pagination!.page! + 1 > pagination!.numberOfPages! ||
+        status == VmiLocationListStatus.moreLoading) {
+      return;
+    }
+    status = VmiLocationListStatus.moreLoading;
+    emit((state as VMILocationLoadedState).copyWith(status: VmiLocationListStatus.moreLoading));
 
+    var response = await _vmiLocationUseCase.getVMILocations(
+      pagination!.page! + 1,
+    );
+    switch (response) {
+      case Success(value: final data):
+        {
+          pagination = data?.pagination;
+          await _loadVMILocationsByPages(data, emit);
+        }
+      case Failure():
+        break;
+    }
+  }
+
+  Future<void> _loadVMILocationsByPages(
+      GetVmiLocationResult? data, Emitter<VMILocationState> emit) async {
+    for (var vmiLocation in data?.vmiLocations ?? []) {
+      LatLong? latLong;
+      if (vmiLocation != null) {
+        latLong = await _vmiLocationUseCase
+            .getPlaceFromAddresss(vmiLocation.customer);
+      }
+
+      var currentLocationDataEntity =
+          CurrentLocationDataEntity.fromVmiLocation(vmiLocation);
+      currentLocationDataEntity = currentLocationDataEntity.copyWith(
+          latLong: latLong, id: vmiLocation.id);
+
+      currentLocationDataEntityList.add(currentLocationDataEntity);
+    }
+    VmiLocationModel? currentVMILocation =
+        _vmiLocationUseCase.getCurrentVMILocation();
+    selectedLocation = CurrentLocationDataEntity(
+        id: currentVMILocation?.id,
+        locationName: currentVMILocation?.name,
+        vmiLocation: currentVMILocation);
+
+    if (selectedLocation != null) {
+      var selectedItem = currentLocationDataEntityList.firstWhere(
+        (location) => location.id == selectedLocation?.id,
+      );
+      currentLocationDataEntityList
+          .removeWhere((location) => location.id == selectedLocation?.id);
+      currentLocationDataEntityList.insert(0, selectedItem);
+    }
+    searchedDataEntityList = null;
+    if (seachPlace != null) {
+
+      emit(VMILocationLoadedState(
+          currentLocationDataEntityList: currentLocationDataEntityList,
+          selectedLocation: selectedLocation,
+          status: VmiLocationListStatus.loaded));
+      status = VmiLocationListStatus.loaded;
+    } else {
+      emit(VMILocationLoadedState(
+          currentLocationDataEntityList: currentLocationDataEntityList,
+          selectedLocation: selectedLocation,
+          status: VmiLocationListStatus.loaded));
+      status = VmiLocationListStatus.loaded;
+    }
+  }
+
+  bool isCloseToLocation(double latitude, double longitude) {
     var fromSource = LatLng(latitude, longitude);
 
     var currentLocation =
@@ -113,7 +142,8 @@ class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
     dataEntityList.insert(0, selectedItem);
     emit(VMILocationLoadedState(
         currentLocationDataEntityList: dataEntityList,
-        selectedLocation: selectedLocation));
+        selectedLocation: selectedLocation,
+        status: VmiLocationListStatus.itemSelected));
   }
 
   Future<void> _updateSeachPlace(
@@ -138,6 +168,8 @@ class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
           false;
     }).toList();
     searchedDataEntityList = searchResult;
-    emit(VMILocationLoadedState(currentLocationDataEntityList: searchResult));
+    emit(VMILocationLoadedState(
+        currentLocationDataEntityList: searchResult,
+        status: VmiLocationListStatus.loaded));
   }
 }

@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/current_location_data_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/vmi_location_list_status.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_state.dart';
@@ -12,14 +13,50 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class VMILocationScreen extends StatelessWidget {
+class VMILocationScreen extends StatefulWidget {
   final Function(CurrentLocationDataEntity) onLocationSelected;
+
   const VMILocationScreen({super.key, required this.onLocationSelected});
 
   @override
-  Widget build(BuildContext context) {
-    final ScrollController scrollController = ScrollController();
+  _VMILocationScreenState createState() => _VMILocationScreenState();
+}
 
+class _VMILocationScreenState extends State<VMILocationScreen> {
+  final _scrollController = ScrollController();
+
+  void _onScroll() {
+    if (_isBottom) {
+      context.read<VMILocationBloc>().add(LoadMoreVMILocationsEvent());
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) {
+      return false;
+    }
+
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= (maxScroll * 0.9);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
         BlocListener<VMILocationBloc, VMILocationState>(
@@ -30,8 +67,9 @@ class VMILocationScreen extends StatelessWidget {
                 context
                     .read<GMapCubit>()
                     .updateMarkersFromVMI(state.currentLocationDataEntityList);
-                if (scrollController.hasClients) {
-                  scrollController.jumpTo(0);
+                if (_scrollController.hasClients &&
+                    state.status == VmiLocationListStatus.itemSelected) {
+                  _scrollController.jumpTo(0);
                 } // Scroll to the top when new data is loaded
               } else {
                 context.read<GMapCubit>().onSeachPlaceMarked(searchedLocation);
@@ -56,21 +94,35 @@ class VMILocationScreen extends StatelessWidget {
               children: [
                 const MapWidget(),
                 Visibility(
-                    visible: state.currentLocationDataEntityList.isEmpty,
-                    child: const Text("No results found")),
+                  visible: state.currentLocationDataEntityList.isEmpty,
+                  child: const Text("No results found"),
+                ),
                 Visibility(
                   visible: state.currentLocationDataEntityList.isNotEmpty,
                   child: Expanded(
-                    child: ListView(
+                    child: ListView.builder(
+                      itemCount:
+                          state.status == VmiLocationListStatus.moreLoading
+                              ? state.currentLocationDataEntityList.length + 1
+                              : state.currentLocationDataEntityList.length,
                       controller:
-                          scrollController, // Attach the ScrollController here
-                      children: state.currentLocationDataEntityList
-                          .map((e) => VMICurrentLocationWidgetItem(
-                                locationData: e,
-                                selectedLocation: state.selectedLocation,
-                                isSelectionOn: true,
-                              ))
-                          .toList(),
+                          _scrollController, // Attach the ScrollController here
+                      itemBuilder: (context, index) {
+                        if (index >=
+                            state.currentLocationDataEntityList.length) {
+                          return const Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        }
+                        final locationData =
+                            state.currentLocationDataEntityList[index];
+                        return VMICurrentLocationWidgetItem(
+                          locationData: locationData,
+                          selectedLocation: state.selectedLocation,
+                          isSelectionOn: true,
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -84,7 +136,7 @@ class VMILocationScreen extends StatelessWidget {
                         context.read<VMILocationBloc>().add(
                             SaveVmiLocationEvent(
                                 selectedLocation: selectedLocation));
-                        onLocationSelected(selectedLocation);
+                        widget.onLocationSelected(selectedLocation);
                       }
                       context.pop();
                     },

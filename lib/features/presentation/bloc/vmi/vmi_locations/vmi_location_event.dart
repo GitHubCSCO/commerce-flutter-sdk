@@ -5,6 +5,8 @@ abstract class VMILocationEvent {}
 
 class LoadVMILocationsEvent extends VMILocationEvent {}
 
+class LoadMoreVMILocationsEvent extends VMILocationEvent {}
+
 class LocationSelectEvent extends VMILocationEvent {
   final CurrentLocationDataEntity selectedLocation;
   LocationSelectEvent({required this.selectedLocation});
