@@ -10,7 +10,7 @@ class VMILocationUseCase extends BaseUseCase {
   Future<Result<GetVmiLocationResult, ErrorResponse>> getVMILocations(
       int page) async {
     VmiLocationQueryParameters param = VmiLocationQueryParameters(
-      pageSize: 4,
+      pageSize: CoreConstants.defaultPageSize,
       page: page,
       expand: ['customer'],
     );
