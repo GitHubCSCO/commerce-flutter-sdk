@@ -398,9 +398,8 @@ class AddCreditCardPage extends StatelessWidget {
   }
 
   Widget _buildNameField() {
-    return _createInputField(
-        LocalizationConstants.name, LocalizationConstants.name, nameController,
-        validator: (value) {
+    return _createInputField(LocalizationConstants.name,
+        LocalizationConstants.name, nameController, true, validator: (value) {
       if (value == null || value.isEmpty) {
         return SiteMessageConstants.defaultValueAddressNameRequired;
       }
@@ -408,14 +407,15 @@ class AddCreditCardPage extends StatelessWidget {
     });
   }
 
-  Widget _createInputField(
-      String label, hintText, TextEditingController controller,
+  Widget _createInputField(String label, hintText,
+      TextEditingController controller, bool? isRequired,
       {FormFieldValidator<String>? validator}) {
     return Input(
       label: label,
       hintText: hintText,
       controller: controller,
       validator: validator,
+      isRequired: isRequired,
       onTapOutside: (_) {
         FocusManager.instance.primaryFocus?.unfocus();
       },
@@ -545,7 +545,7 @@ class AddCreditCardPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               _createInputField(LocalizationConstants.address,
-                  LocalizationConstants.address, addressController,
+                  LocalizationConstants.address, addressController, true,
                   validator: addCreditCardEntity.isAddNewCreditCard
                       ? (value) {
                           if (value == null || value.isEmpty) {
@@ -586,7 +586,7 @@ class AddCreditCardPage extends StatelessWidget {
                 ],
               ),
               _createInputField(LocalizationConstants.city,
-                  LocalizationConstants.city, cityController,
+                  LocalizationConstants.city, cityController, true,
                   validator: addCreditCardEntity.isAddNewCreditCard
                       ? (value) {
                           if (value == null || value.isEmpty) {
@@ -627,7 +627,7 @@ class AddCreditCardPage extends StatelessWidget {
                 ],
               ),
               _createInputField(LocalizationConstants.postalCode,
-                  LocalizationConstants.postalCode, postalCodeController,
+                  LocalizationConstants.postalCode, postalCodeController, true,
                   validator: addCreditCardEntity.isAddNewCreditCard
                       ? (value) {
                           if (value == null || value.isEmpty) {
@@ -691,10 +691,21 @@ class AddCreditCardPage extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 1,
-                  child: Text(
-                    LocalizationConstants.month,
-                    textAlign: TextAlign.start,
-                    style: OptiTextStyles.body,
+                  child: Row(
+                    children: [
+                      Text(
+                        LocalizationConstants.month,
+                        textAlign: TextAlign.start,
+                        style: OptiTextStyles.body,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '*',
+                        style: TextStyle(
+                          color: Colors.red, // Change the color if needed
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Expanded(
@@ -724,10 +735,21 @@ class AddCreditCardPage extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 1,
-                  child: Text(
-                    LocalizationConstants.year,
-                    textAlign: TextAlign.start,
-                    style: OptiTextStyles.body,
+                  child: Row(
+                    children: [
+                      Text(
+                        LocalizationConstants.year,
+                        textAlign: TextAlign.start,
+                        style: OptiTextStyles.body,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '*',
+                        style: TextStyle(
+                          color: Colors.red, // Change the color if needed
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Expanded(
