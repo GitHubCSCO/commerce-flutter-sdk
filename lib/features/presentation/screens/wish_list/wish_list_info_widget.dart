@@ -77,7 +77,7 @@ class ListDetailsWidget extends StatelessWidget {
         sharedInfoText = LocalizationConstants.sharedWith
             .format([wishList.wishListSharesCount ?? 0]);
       } else if (wishList.isSharedList == true) {
-        sharedInfoText = LocalizationConstants.sharedBy;
+        sharedInfoText = LocalizationConstants.sharedBy.format(['']);
       }
     } else if (wishList.isSharedList != true &&
         (wishList.wishListSharesCount ?? 0) == 0) {
