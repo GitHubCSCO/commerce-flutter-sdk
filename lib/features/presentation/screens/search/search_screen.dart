@@ -156,107 +156,134 @@ class SearchPage extends BaseDynamicContentScreen {
                   }
                 },
               ),
+              BlocListener<SearchBloc, SearchState>(
+                listener: (context, state) {
+                  if (state is AutoCompleteCategoryState) {
+                    AppRoute.shopSubCategory.navigateBackStack(
+                        context,
+                        pathParameters: {
+                          "categoryId": state.category.id.toString(),
+                          "categoryTitle": state.category.shortDescription.toString(),
+                          "categoryPath": state.category.path.toString()
+                        },
+                    );
+                  } else if (state is AutoCompleteBrandState) {
+                    AppRoute.shopBrandDetails.navigateBackStack(
+                      context,
+                      extra: state.brand,
+                    );
+                  } else if (state is AutoCompleteProductListState) {
+                    AppRoute.product.navigateBackStack(context, extra: state.pageEntity);
+                  }
+                },
+              ),
             ],
-            child:
-            BlocBuilder<SearchBloc, SearchState>(builder: (context, state) {
-              switch (state.runtimeType) {
-                case SearchCmsInitialState:
-                  return RefreshIndicator(
-                    onRefresh: () async {
-                      BlocProvider.of<PullToRefreshBloc>(context)
-                          .add(PullToRefreshInitialEvent());
-                    },
-                    child: BlocBuilder<CmsCubit, CmsState>(
-                      builder: (context, state) {
-                        switch (state) {
-                          case CmsInitialState():
-                          case CmsLoadingState():
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          case CmsLoadedState():
-                            return MultiBlocListener(
-                              listeners: [
-                                BlocListener<AuthCubit, AuthState>(
-                                  listener: (context, state) {
-                                    _reloadSearchPage(context);
-                                  },
-                                ),
-                                BlocListener<DomainCubit, DomainState>(
-                                  listener: (context, state) {
-                                    if (state is DomainLoaded) {
-                                      _reloadSearchPage(context);
-                                    }
-                                  },
-                                ),
-                              ],
-                              child: ListView(
-                                padding: EdgeInsets.zero,
-                                children:
-                                buildContentWidgets(state.widgetEntities),
-                              ),
-                            );
-                          default:
-                            return const CustomScrollView(
-                              slivers: <Widget>[
-                                SliverFillRemaining(
-                                  child: Center(
-                                    child: Text(LocalizationConstants
-                                        .errorLoadingSearchLanding),
+            child: BlocBuilder<SearchBloc, SearchState>(
+                buildWhen: (previous, current) =>
+                    current is! AutoCompleteCategoryState ||
+                    current is! AutoCompleteBrandState ||
+                    current is! AutoCompleteProductListState,
+                builder: (context, state) {
+                  switch (state.runtimeType) {
+                    case SearchCmsInitialState:
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          BlocProvider.of<PullToRefreshBloc>(context)
+                              .add(PullToRefreshInitialEvent());
+                        },
+                        child: BlocBuilder<CmsCubit, CmsState>(
+                          builder: (context, state) {
+                            switch (state) {
+                              case CmsInitialState():
+                              case CmsLoadingState():
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              case CmsLoadedState():
+                                return MultiBlocListener(
+                                  listeners: [
+                                    BlocListener<AuthCubit, AuthState>(
+                                      listener: (context, state) {
+                                        _reloadSearchPage(context);
+                                      },
+                                    ),
+                                    BlocListener<DomainCubit, DomainState>(
+                                      listener: (context, state) {
+                                        if (state is DomainLoaded) {
+                                          _reloadSearchPage(context);
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                  child: ListView(
+                                    padding: EdgeInsets.zero,
+                                    children: buildContentWidgets(
+                                        state.widgetEntities),
                                   ),
-                                ),
-                              ],
-                            );
-                        }
-                      },
-                    ),
-                  );
-                case SearchLoadingState:
-                  return const Center(child: CircularProgressIndicator());
-                case SearchAutoCompleteInitialState:
-                  return Center(
-                    child: Text(
-                      LocalizationConstants.searchPrompt,
-                      style: OptiTextStyles.body,
-                    ),
-                  );
-                case SearchAutoCompleteLoadedState:
-                  final autoCompleteResult =
-                  (state as SearchAutoCompleteLoadedState).result;
-                  return _buildSearchAutoComplete(autoCompleteResult);
-                case SearchAutoCompleteFailureState:
-                  return Center(
-                      child: Text(
+                                );
+                              default:
+                                return const CustomScrollView(
+                                  slivers: <Widget>[
+                                    SliverFillRemaining(
+                                      child: Center(
+                                        child: Text(LocalizationConstants
+                                            .errorLoadingSearchLanding),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                            }
+                          },
+                        ),
+                      );
+                    case SearchLoadingState:
+                      return const Center(child: CircularProgressIndicator());
+                    case SearchAutoCompleteInitialState:
+                      return Center(
+                        child: Text(
+                          LocalizationConstants.searchPrompt,
+                          style: OptiTextStyles.body,
+                        ),
+                      );
+                    case SearchAutoCompleteLoadedState:
+                      final autoCompleteResult =
+                          (state as SearchAutoCompleteLoadedState).result;
+                      return _buildSearchAutoComplete(autoCompleteResult);
+                    case SearchAutoCompleteFailureState:
+                      return Center(
+                          child: Text(
                         LocalizationConstants.searchNoResults,
                         style: OptiTextStyles.body,
                       ));
-                case SearchProductsLoadedState:
-                  final productCollectionResult =
-                  (state as SearchProductsLoadedState).result;
-                  return MultiBlocProvider(
-                    providers: [
-                      BlocProvider<AddToCartCubit>(
-                        create: (context) => sl<AddToCartCubit>(),
-                      ),
-                      BlocProvider(
-                        create: (context) => sl<SearchProductsCubit>()..loadInitialSearchProducts(productCollectionResult),
-                      ),
-                    ],
-                    child: SearchProductsWidget(
-                      // productCollectionResult: productCollectionResult,
-                      onPageChanged: (int) {},
-                      productListType: ProductListType.searchProducts,
-                    ),
-                  );
-                case SearchProductsFailureState:
-                  return Center(
-                      child: Text(LocalizationConstants.searchNoResults,
-                          style: OptiTextStyles.body));
-                default:
-                  return const Center(
-                      child: Text(
-                          LocalizationConstants.errorLoadingSearchLanding));
-              }
-            }),
+                    case SearchProductsLoadedState:
+                      final productCollectionResult =
+                          (state as SearchProductsLoadedState).result;
+                      return MultiBlocProvider(
+                        providers: [
+                          BlocProvider<AddToCartCubit>(
+                            create: (context) => sl<AddToCartCubit>(),
+                          ),
+                          BlocProvider(
+                            create: (context) => sl<SearchProductsCubit>()
+                              ..loadInitialSearchProducts(
+                                  productCollectionResult),
+                          ),
+                        ],
+                        child: SearchProductsWidget(
+                          // productCollectionResult: productCollectionResult,
+                          onPageChanged: (int) {},
+                          productListType: ProductListType.searchProducts,
+                        ),
+                      );
+                    case SearchProductsFailureState:
+                      return Center(
+                          child: Text(LocalizationConstants.searchNoResults,
+                              style: OptiTextStyles.body));
+                    default:
+                      return const Center(
+                          child: Text(
+                              LocalizationConstants.errorLoadingSearchLanding));
+                  }
+                }),
           ),
         )
       ],
@@ -283,7 +310,7 @@ class SearchPage extends BaseDynamicContentScreen {
               ),
               CategoryAutoCompleteWidget(
                   autocompleteCategories: autoCompleteCategoryList,
-                  callback: (context, category) {}),
+                  callback: handleAutoCompleteCategoryCallback),
               const SizedBox(height: 12),
             ],
           ),
@@ -302,7 +329,7 @@ class SearchPage extends BaseDynamicContentScreen {
               ),
               BrandAutoCompleteWidget(
                   autocompleteBrands: autoCompleteBrandList,
-                  callback: (context, brand) {}),
+                  callback: handleAutoCompleteBrandCallback),
               const SizedBox(height: 12),
             ],
           ),
@@ -315,6 +342,14 @@ class SearchPage extends BaseDynamicContentScreen {
         )
       ],
     );
+  }
+
+  void handleAutoCompleteCategoryCallback(BuildContext context, AutocompleteCategory category) {
+    context.read<SearchBloc>().add(AutoCompleteCategoryEvent(category));
+  }
+
+  void handleAutoCompleteBrandCallback(BuildContext context, AutocompleteBrand brand) {
+    context.read<SearchBloc>().add(AutoCompleteBrandEvent(brand));
   }
 
   void handleAutoCompleteCallback(BuildContext context, AutocompleteProduct product) {
