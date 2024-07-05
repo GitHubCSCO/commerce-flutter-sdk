@@ -209,9 +209,10 @@ class CategoryCarouselWidget extends StatelessWidget {
                       final brandEntity = BrandEntityMapper().toEntity(brand);
                       final productPageEntity = ProductPageEntity(
                         '', 
-                        ProductParentType.brand,
+                        ProductParentType.brandCategory,
+                        categoryId: brandCategory?.categoryId,
                         brandEntity: brandEntity,
-                        brandEntityId: brandCategory?.brandId, 
+                        brandEntityId: brandCategory?.brandId,
                         brandEntityTitle: brandCategory?.categoryName,
                       );
                       AppRoute.product.navigateBackStack(context, extra: productPageEntity); 

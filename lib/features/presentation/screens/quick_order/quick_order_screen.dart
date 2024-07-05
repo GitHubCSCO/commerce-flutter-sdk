@@ -432,9 +432,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
         child: CircularProgressIndicator(),
       );
     } else if (state is QuickOrderAutoCompleteLoadedState) {
+      final autoCompleteProductList = state.result?.products;
       return AutoCompleteWidget(
         callback: _handleAutoCompleteCallback,
-        autocompleteResult: state.result!,
+        autoCompleteProductList: autoCompleteProductList,
       );
     } else if (state is QuickOrderAutoCompleteFailureState) {
       return Center(
