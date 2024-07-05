@@ -103,7 +103,7 @@ class _BrandCategoryPageState extends State<BrandCategoryPage> {
       final brandEntity = BrandEntityMapper().toEntity(brand);
       final productPageEntity = ProductPageEntity(
         '', 
-        ProductParentType.brand,
+        ProductParentType.brandCategory,
         brandEntity: brandEntity,
         brandEntityId: brandCategory?.brandId, 
         categoryId: brandCategory?.categoryId,

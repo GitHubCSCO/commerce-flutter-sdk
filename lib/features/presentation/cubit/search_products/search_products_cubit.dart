@@ -38,9 +38,22 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
       case ProductParentType.category:
         emit(state.copyWith(selectedCategoryId: entity.category?.id));
         break;
+      case ProductParentType.brandCategory:
+        emit(state.copyWith(
+            selectedCategoryId: entity.categoryId,
+            selectedBrandIds: [entity.brandEntity?.id ?? '']));
+        break;
       case ProductParentType.brand:
+        emit(state.copyWith(selectedBrandIds: [entity.brandEntity?.id ?? entity.brandEntityId ?? '']));
       case ProductParentType.brandProductLine:
-        emit(state.copyWith(selectedBrandIds: [entity.brandEntity?.id ?? '']));
+        emit(
+          state.copyWith(
+            selectedBrandIds: [
+              entity.brandEntity?.id ?? entity.brandEntityId ?? ''
+            ],
+            selectedProductLineIds: [entity.brandProductLine?.id ?? '']
+          ),
+        );
         break;
     }
   }
