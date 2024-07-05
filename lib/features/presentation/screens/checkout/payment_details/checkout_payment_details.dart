@@ -23,11 +23,13 @@ typedef OnCompleteCheckoutPaymentSection = void Function();
 class CheckoutPaymentDetails extends StatelessWidget {
   final Cart cart;
   final OnCompleteCheckoutPaymentSection onCompleteCheckoutPaymentSection;
+  final bool? isVmiCheckout;
 
   CheckoutPaymentDetails({
     Key? key,
     required this.cart,
     required this.onCompleteCheckoutPaymentSection,
+    this.isVmiCheckout
   }) : super(key: key);
 
   PaymentMethodDto? getPaymenmentMedthodDtoFromCart(
@@ -80,7 +82,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AddPromotionWidget(
+                  if (!(isVmiCheckout ?? false)) AddPromotionWidget(
                     shouldShowPromotionList: false,
                     fromCartPage: false,
                   ),
@@ -94,7 +96,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
                   if (state.tokenExEntity != null)
                     _buildTokenExWebView(state, context),
                   if (state.showPOField!) _buildPOField(state, context),
-                  _buildAddPaymentMethodButton(context)
+                  if (!(isVmiCheckout ?? false)) _buildAddPaymentMethodButton(context)
                 ],
               );
             default:
