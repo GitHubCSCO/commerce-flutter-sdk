@@ -22,6 +22,15 @@ class WishListCreateCubit extends Cubit<WishListCreateState> {
     String? description,
     WishListAddToCartCollection? addToCartCollection,
   }) async {
+    if (name.isEmpty) {
+      emit(state.copyWith(status: WishListStatus.listCreateEmptyNameFailure));
+      return;
+    }
+
+    if (name.length > 100) {
+      name = name.substring(0, 100);
+    }
+
     emit(state.copyWith(status: WishListStatus.loading));
 
     final result = addToCartCollection == null

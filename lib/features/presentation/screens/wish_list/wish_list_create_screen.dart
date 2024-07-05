@@ -96,6 +96,20 @@ class _WishListCreatePageState extends State<WishListCreatePage> {
               ],
             );
           }
+
+          if (state.status == WishListStatus.listCreateEmptyNameFailure) {
+            displayDialogWidget(
+              context: context,
+              title: LocalizationConstants.error,
+              message: LocalizationConstants.enterListName,
+              actions: [
+                PlainBlackButton(
+                  child: const Text(LocalizationConstants.oK),
+                  onPressed: () => context.pop(),
+                ),
+              ],
+            );
+          }
         },
         builder: (context, state) => Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
