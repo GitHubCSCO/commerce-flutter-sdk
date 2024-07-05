@@ -41,3 +41,27 @@ class SearchProductsFailureState extends SearchState {
 
 }
 
+class AutoCompleteCategoryState extends SearchState {
+
+  final Category category;
+
+  AutoCompleteCategoryState(this.category);
+
+}
+
+class AutoCompleteBrandState extends SearchState {
+
+  final Brand brand;
+
+  AutoCompleteBrandState(this.brand);
+
+}
+
+class AutoCompleteProductListState extends SearchState {
+
+  final ProductPageEntity pageEntity;
+
+  AutoCompleteProductListState(this.pageEntity);
+
+}
+

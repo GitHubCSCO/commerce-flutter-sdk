@@ -1,4 +1,3 @@
-
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
@@ -10,9 +9,9 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class AutoCompleteWidget extends StatelessWidget {
 
   final Function(BuildContext, AutocompleteProduct) callback;
-  final AutocompleteResult autocompleteResult;
+  final List<AutocompleteProduct>? autoCompleteProductList;
 
-  const AutoCompleteWidget({super.key, required this.callback, required this.autocompleteResult});
+  const AutoCompleteWidget({super.key, required this.callback, this.autoCompleteProductList});
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +23,10 @@ class AutoCompleteWidget extends StatelessWidget {
         endIndent: 16,
         color: Color(0xFFF5F5F5),
       ),
-      itemCount: autocompleteResult.products!.length,
+      itemCount: autoCompleteProductList?.length ?? 0,
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        final autoCompleteProduct = autocompleteResult.products![index];
+        final autoCompleteProduct = autoCompleteProductList![index];
         return InkWell(
           onTap: () {
             callback(context, autoCompleteProduct);
@@ -41,7 +40,6 @@ class AutoCompleteWidget extends StatelessWidget {
 
 class AutoCompleteProductWidget extends StatelessWidget {
 
-  // final Function(BuildContext, AutocompleteProduct) callback;
   final AutocompleteProduct autocompleteProduct;
 
   const AutoCompleteProductWidget(
