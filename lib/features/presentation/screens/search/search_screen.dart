@@ -16,6 +16,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/extra/delayer.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
@@ -55,6 +56,7 @@ class SearchPage extends BaseDynamicContentScreen {
   SearchPage({super.key});
 
   final textEditingController = TextEditingController();
+  final _delayer = Delayer(milliseconds: 500);
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +93,9 @@ class SearchPage extends BaseDynamicContentScreen {
                     }
                   },
                   onChanged: (String searchQuery) {
-                    context.read<SearchBloc>().add(SearchTypingEvent(searchQuery));
+                    _delayer.run(() {
+                      context.read<SearchBloc>().add(SearchTypingEvent(searchQuery));
+                    });
                   },
                   onSubmitted: (String query) {
                     context.read<SearchBloc>().add(SearchSearchEvent());
