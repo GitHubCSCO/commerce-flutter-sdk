@@ -306,7 +306,7 @@ class LocalizationConstants {
   static const results = "%s result(s)";
   static const searchInsteadFor = "Search instead for {0}";
   static const didYouMean = "Did you mean {0}";
-  static const autocompleteCategoryOrBrandCombinedTitle = "{0} in {1}";
+  static const autocompleteCategoryOrBrandCombinedTitle = "%s in %s";
   static const autocompleteSearchCategoryGroupTitle = "Categories";
   static const autocompleteSearchBrandGroupTitle = "Brands";
   static const no = "No";
