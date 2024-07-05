@@ -567,7 +567,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   void _addToList(BuildContext context) {
     if (context.read<OrderListBloc>().quickOrderItemList.isEmpty) {
       CustomSnackBar.showSnackBarMessage(context,
-          SiteMessageConstants.defaultValueAddToCartAllProductsFromList);
+          LocalizationConstants.quickOrderBasketEmpty);
     } else {
       context.read<OrderListBloc>().add(OrderListAddToListEvent());
     }
