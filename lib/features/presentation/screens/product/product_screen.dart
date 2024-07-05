@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
+import 'package:commerce_flutter_app/features/domain/enums/product_list_type.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product/product_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
@@ -21,7 +22,8 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 enum ProductParentType {
   category,
   brand,
-  brandProductLine
+  brandProductLine,
+  brandCategory,
 }
 
 class ProductPageEntity {
@@ -149,6 +151,7 @@ class ProductPage extends StatelessWidget {
                         .loadInitialSearchProducts(productCollectionResult);
                     return SearchProductsWidget(
                       onPageChanged: (page) {},
+                      productListType: _getProductListType(pageEntity),
                     );
                   case ProductFailed():
                   default:
@@ -162,6 +165,20 @@ class ProductPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  ProductListType _getProductListType(ProductPageEntity entity) {
+    if (entity.parentType == ProductParentType.category) {
+      return ProductListType.categoryProducts;
+    } else if (entity.parentType == ProductParentType.brand) {
+      return ProductListType.shopBrandProducts;
+    } else if (entity.parentType == ProductParentType.brandCategory) {
+      return ProductListType.shopBrandCategoryProducts;
+    } else if (entity.parentType == ProductParentType.brandProductLine) {
+      return ProductListType.shopBrandProductLineProducts;
+    } else {
+      return ProductListType.searchProducts;
+    }
   }
 
   String _getTitle(ProductPageEntity entity) {

@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/product_list_type.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
@@ -242,7 +243,9 @@ class SearchPage extends BaseDynamicContentScreen {
                     ],
                     child: SearchProductsWidget(
                       // productCollectionResult: productCollectionResult,
-                      onPageChanged: (int) {},),
+                      onPageChanged: (int) {},
+                      productListType: ProductListType.searchProducts,
+                    ),
                   );
                 case SearchProductsFailureState:
                   return Center(
