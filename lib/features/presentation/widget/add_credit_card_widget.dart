@@ -91,6 +91,7 @@ class AddCreditCardPage extends StatelessWidget {
   final TextEditingController cityController = TextEditingController();
   final TextEditingController postalCodeController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   AddCreditCardPage({
     super.key,
     this.onCreditCardDeleted,
@@ -264,7 +265,7 @@ class AddCreditCardPage extends StatelessWidget {
                 width: 20,
               ),
               Text(
-                "Use as a default card",
+                LocalizationConstants.useAsDefaultCard,
                 style: OptiTextStyles.body,
               ),
             ],
@@ -294,7 +295,7 @@ class AddCreditCardPage extends StatelessWidget {
             width: 20,
           ),
           Text(
-            "Use Billing Address",
+            LocalizationConstants.useBillingAddress,
             style: OptiTextStyles.body,
           ),
         ],
@@ -364,6 +365,8 @@ class AddCreditCardPage extends StatelessWidget {
         context.read<AddCreditCardBloc>().add(
             SavePaymentProfileEvent(accountPaymentProfile: paymentProfile));
       }
+    } else {
+      context.read<CardExpirationCubit>().validateExpirationDate();
     }
   }
 
@@ -400,7 +403,7 @@ class AddCreditCardPage extends StatelessWidget {
   Widget _buildNameField() {
     return _createInputField(LocalizationConstants.name,
         LocalizationConstants.name, nameController, true, validator: (value) {
-      if (value == null || value.isEmpty) {
+      if (nameController.text.isEmpty) {
         return SiteMessageConstants.defaultValueAddressNameRequired;
       }
       return null;
@@ -416,6 +419,9 @@ class AddCreditCardPage extends StatelessWidget {
       controller: controller,
       validator: validator,
       isRequired: isRequired,
+      onChanged: (p0) {
+        _formKey.currentState?.validate();
+      },
       onTapOutside: (_) {
         FocusManager.instance.primaryFocus?.unfocus();
       },
@@ -548,7 +554,7 @@ class AddCreditCardPage extends StatelessWidget {
                   LocalizationConstants.address, addressController, true,
                   validator: addCreditCardEntity.isAddNewCreditCard
                       ? (value) {
-                          if (value == null || value.isEmpty) {
+                          if (addressController.text.isEmpty) {
                             return SiteMessageConstants
                                 .defaultValueAddressRequired;
                           }
@@ -589,7 +595,7 @@ class AddCreditCardPage extends StatelessWidget {
                   LocalizationConstants.city, cityController, true,
                   validator: addCreditCardEntity.isAddNewCreditCard
                       ? (value) {
-                          if (value == null || value.isEmpty) {
+                          if (cityController.text.isEmpty) {
                             return SiteMessageConstants
                                 .defaultValueAddressCityRequired;
                           }
@@ -630,7 +636,7 @@ class AddCreditCardPage extends StatelessWidget {
                   LocalizationConstants.postalCode, postalCodeController, true,
                   validator: addCreditCardEntity.isAddNewCreditCard
                       ? (value) {
-                          if (value == null || value.isEmpty) {
+                          if (postalCodeController.text.isEmpty) {
                             return SiteMessageConstants
                                 .defaultValueAddressZipRequired;
                           }
@@ -674,7 +680,8 @@ class AddCreditCardPage extends StatelessWidget {
     return BlocBuilder<CardExpirationCubit, CardExpirationState>(
         builder: (context, state) {
       if (state is CardExpirationLoadedState ||
-          state is CardExpirationInitialState) {
+          state is CardExpirationInitialState ||
+          state is CardExpirationValidationState) {
         return Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -699,7 +706,7 @@ class AddCreditCardPage extends StatelessWidget {
                         style: OptiTextStyles.body,
                       ),
                       const SizedBox(height: 4),
-                      Text(
+                      const Text(
                         '*',
                         style: TextStyle(
                           color: Colors.red, // Change the color if needed
@@ -717,7 +724,8 @@ class AddCreditCardPage extends StatelessWidget {
                               items: (expirationMonths != null)
                                   ? expirationMonths as List<Object>
                                   : [],
-                              descriptionText: "Select Month",
+                              descriptionText:
+                                  LocalizationConstants.selectMonth,
                               selectedIndex:
                                   getIndexForSelectedExpirationMonths(
                                       expirationMonths,
@@ -730,6 +738,16 @@ class AddCreditCardPage extends StatelessWidget {
                 ),
               ],
             ),
+            Visibility(
+                visible: state is CardExpirationValidationState &&
+                    state.isMonthInvalid,
+                child: Text(
+                  SiteMessageConstants
+                      .defaultValueCreditCardInfoExpirationMonthRequired,
+                  style: TextStyle(
+                    color: Colors.red, // Change the color if needed
+                  ),
+                )),
             Row(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -743,7 +761,7 @@ class AddCreditCardPage extends StatelessWidget {
                         style: OptiTextStyles.body,
                       ),
                       const SizedBox(height: 4),
-                      Text(
+                      const Text(
                         '*',
                         style: TextStyle(
                           color: Colors.red, // Change the color if needed
@@ -761,7 +779,7 @@ class AddCreditCardPage extends StatelessWidget {
                               items: (expirationYears != null)
                                   ? expirationYears as List<Object>
                                   : [],
-                              descriptionText: "Select Year",
+                              descriptionText: LocalizationConstants.selectYear,
                               selectedIndex: getIndexForSelectedExpirationYears(
                                   expirationYears,
                                   context
@@ -773,6 +791,16 @@ class AddCreditCardPage extends StatelessWidget {
                 ),
               ],
             ),
+            Visibility(
+                visible: state is CardExpirationValidationState &&
+                    state.isYearInvalid,
+                child: Text(
+                  SiteMessageConstants
+                      .defaultValueCreditCardInfoExpirationYearRequired,
+                  style: TextStyle(
+                    color: Colors.red, // Change the color if needed
+                  ),
+                )),
           ],
         );
       } else
@@ -784,11 +812,13 @@ class AddCreditCardPage extends StatelessWidget {
     context
         .read<CardExpirationCubit>()
         .onSelectExpirationYear(item as KeyValuePair<int, int>);
+    context.read<CardExpirationCubit>().validateExpirationDate();
   }
 
   void _onMonthSelect(BuildContext context, Object item) {
     context
         .read<CardExpirationCubit>()
         .onSelectExpirationMonth(item as KeyValuePair<String, int>);
+    context.read<CardExpirationCubit>().validateExpirationDate();
   }
 }
