@@ -432,9 +432,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
         child: CircularProgressIndicator(),
       );
     } else if (state is QuickOrderAutoCompleteLoadedState) {
+      final autoCompleteProductList = state.result?.products;
       return AutoCompleteWidget(
         callback: _handleAutoCompleteCallback,
-        autocompleteResult: state.result!,
+        autoCompleteProductList: autoCompleteProductList,
       );
     } else if (state is QuickOrderAutoCompleteFailureState) {
       return Center(
@@ -567,7 +568,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   void _addToList(BuildContext context) {
     if (context.read<OrderListBloc>().quickOrderItemList.isEmpty) {
       CustomSnackBar.showSnackBarMessage(context,
-          SiteMessageConstants.defaultValueAddToCartAllProductsFromList);
+          LocalizationConstants.quickOrderBasketEmpty);
     } else {
       context.read<OrderListBloc>().add(OrderListAddToListEvent());
     }

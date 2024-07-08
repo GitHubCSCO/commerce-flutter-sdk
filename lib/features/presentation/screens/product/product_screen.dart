@@ -183,7 +183,7 @@ class ProductPage extends StatelessWidget {
 
   String _getTitle(ProductPageEntity entity) {
     if (entity.parentType == ProductParentType.category) {
-      return entity.category?.name ?? entity.categoryTitle ?? LocalizationConstants.categories;
+      return entity.category?.shortDescription ?? entity.categoryTitle ?? LocalizationConstants.categories;
     } else if (entity.parentType == ProductParentType.brand) {
       return entity.brandEntity?.name ?? entity.brandEntityTitle ?? LocalizationConstants.brands;
     }else{
