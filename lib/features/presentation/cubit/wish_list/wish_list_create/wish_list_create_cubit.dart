@@ -27,10 +27,6 @@ class WishListCreateCubit extends Cubit<WishListCreateState> {
       return;
     }
 
-    if (name.length > 100) {
-      name = name.substring(0, 100);
-    }
-
     emit(state.copyWith(status: WishListStatus.loading));
 
     final result = addToCartCollection == null

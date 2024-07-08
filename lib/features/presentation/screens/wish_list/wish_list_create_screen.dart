@@ -125,6 +125,7 @@ class _WishListCreatePageState extends State<WishListCreatePage> {
                     children: [
                       ListNameInputWidget(
                         listNameController: _listNameEditingController,
+                        maxLength: 100,
                       ),
                       const SizedBox(height: 32),
                       ListDescriptionInputWidget(

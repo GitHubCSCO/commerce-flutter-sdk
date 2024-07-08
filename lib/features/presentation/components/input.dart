@@ -19,6 +19,7 @@ class Input extends StatefulWidget {
   final void Function(bool hasFocus)? focusListener;
   final Widget? suffixIcon;
   final FormFieldValidator<String>? validator; // Added validator parameter
+  final int? maxLength;
 
   const Input({
     super.key,
@@ -38,6 +39,7 @@ class Input extends StatefulWidget {
     this.focusListener,
     this.suffixIcon,
     this.validator,
+    this.maxLength,
   });
 
   @override
@@ -130,7 +132,7 @@ class _InputState extends State<Input> {
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(AppStyle.borderRadius),
-                boxShadow: _focusNode.hasFocus
+                boxShadow: (_focusNode.hasFocus && widget.maxLength == null)
                     ? const [
                         BoxShadow(
                           color: AppStyle.inputDropShadowColor,
@@ -145,6 +147,7 @@ class _InputState extends State<Input> {
                   _handleChange(value);
                   state.didChange(value); // Notify the form field of the change
                 },
+                maxLength: widget.maxLength,
                 onSubmitted: widget.onSubmitted,
                 controller: widget.controller,
                 obscureText: widget.obscureText,
