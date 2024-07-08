@@ -7,10 +7,11 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class VMILocationUseCase extends BaseUseCase {
   VMILocationUseCase() : super();
 
-  Future<Result<GetVmiLocationResult, ErrorResponse>> getVMILocations() async {
+  Future<Result<GetVmiLocationResult, ErrorResponse>> getVMILocations(
+      int page) async {
     VmiLocationQueryParameters param = VmiLocationQueryParameters(
-      pageSize: 16,
-      page: 1,
+      pageSize: CoreConstants.defaultPageSize,
+      page: page,
       expand: ['customer'],
     );
 
@@ -51,5 +52,9 @@ class VMILocationUseCase extends BaseUseCase {
 
   Future<void> saveCurrentVmiLocation(VmiLocationModel vmiLocation) async {
     coreServiceProvider.getVmiService().saveCurrentVmiLocation(vmiLocation);
+  }
+
+  VmiLocationModel? getCurrentVMILocation() {
+    return coreServiceProvider.getVmiService().currentVmiLocation;
   }
 }
