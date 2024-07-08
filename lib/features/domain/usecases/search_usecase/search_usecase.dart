@@ -102,6 +102,27 @@ class SearchUseCase extends BaseUseCase {
     }
   }
 
+  Future<Result<Category, ErrorResponse>> getCategory(
+      String categoryId) async {
+    return await commerceAPIServiceProvider
+        .getCategoryService()
+        .getCategory(categoryId);
+  }
+
+  Future<Result<List<Category>, ErrorResponse>> getCategoryList(
+      CategoryQueryParameters parameters) async {
+    return await commerceAPIServiceProvider
+        .getCategoryService()
+        .getCategoryList(parameters: parameters);
+  }
+
+  Future<Result<Brand, ErrorResponse>> getBrand(
+      String brandId) async {
+    return await commerceAPIServiceProvider
+        .getBrandService()
+        .getBrand(brandId);
+  }
+
   List<SortOrderAttribute> getAvailableSortOrders({
     required List<SortOption> sortOptions,
   }) {

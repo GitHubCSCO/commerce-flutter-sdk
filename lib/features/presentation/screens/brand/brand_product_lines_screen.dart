@@ -13,7 +13,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BrandProductLinesScreen extends StatelessWidget {
-  Brand brand;
+
+  final Brand brand;
+
   BrandProductLinesScreen({super.key, required this.brand});
 
   @override
@@ -29,6 +31,7 @@ class BrandProductLinesScreen extends StatelessWidget {
 }
 
 class BrandProductLinesPage extends StatefulWidget {
+
   final Brand brand;
 
   BrandProductLinesPage({super.key, required this.brand});
@@ -38,6 +41,7 @@ class BrandProductLinesPage extends StatefulWidget {
 }
 
 class _BrandProductLinesPageState extends State<BrandProductLinesPage> {
+
   bool isGridView = true;
 
   @override
