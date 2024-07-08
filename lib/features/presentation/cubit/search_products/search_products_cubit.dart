@@ -1,5 +1,13 @@
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/search_product_status.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
@@ -30,6 +38,8 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
             selectedCategoryId: '',
             previouslyPurchased: false,
             selectedStockedItems: false,
+            productSettings: null,
+            productPricingEnabled: false,
           ),
         );
 
@@ -59,7 +69,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
   }
 
   void loadInitialSearchProducts(
-      GetProductCollectionResult? productCollectionResult) {
+      GetProductCollectionResult? productCollectionResult) async {
     query = productCollectionResult?.originalQuery;
 
     final sortOptions = productCollectionResult?.pagination?.sortOptions ?? [];
@@ -71,12 +81,19 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
       selectedSortOrderType: productCollectionResult?.pagination?.sortType ?? '',
     );
 
+    final productSettings = (await _searchUseCase.loadProductSettings()).getResultSuccessValue();
+    final productPricingEnabled = await _searchUseCase.getProductPricingEnable();
+
+
+
     emit(
       state.copyWith(
         productEntities: productCollectionResult,
         searchProductStatus: SearchProductStatus.success,
         availableSortOrders: availableSortOrders,
         selectedSortOrder: selectedSortOrder,
+        productSettings: productSettings,
+        productPricingEnabled: productPricingEnabled,
       ),
     );
   }
@@ -124,6 +141,136 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
         searchProductStatus: SearchProductStatus.success,
       ),
     );
+  }
+  Future<List<ProductEntity>> updateProductPricingAndInventoryAvailability(List<Product>? products) async {
+
+    final productPricingEnabled =
+        await _searchUseCase.getProductPricingEnable();
+    final productAvailabilityEnabled = await _searchUseCase.getProductInventoryAvailable();
+
+    final productList = products
+        ?.map((product) => ProductEntityMapper().toEntity(product))
+        .toList() ??
+        [];
+
+    final realTimeResult = await _searchUseCase.getRealtimeSupportType();
+
+    if (productPricingEnabled && realTimeResult != null) {
+      if (realTimeResult == RealTimeSupport.RealTimePricingOnly ||
+          realTimeResult ==
+              RealTimeSupport.RealTimePricingWithInventoryIncluded ||
+          realTimeResult == RealTimeSupport.RealTimePricingAndInventory) {
+        final productPriceParameters = productList
+            .map((product) => ProductPriceQueryParameter(
+          productId: product.id,
+          qtyOrdered: 1,
+          unitOfMeasure: product.unitOfMeasure,
+        )).toList();
+
+        final parameter = RealTimePricingParameters(
+            productPriceParameters: productPriceParameters);
+
+        final pricingResult =
+            await _searchUseCase.getRealTimePricing(parameter);
+
+        switch (pricingResult) {
+          case Success():
+            for (var productEntity in productList) {
+              var matchingPrice = pricingResult.value?.realTimePricingResults
+                  ?.firstWhere((o) => o.productId == productEntity!.id);
+              productEntity?.pricing =
+                  ProductPriceEntityMapper().toEntity(matchingPrice);
+            }
+          case Failure():
+          default:
+        }
+      }
+    }
+
+    if (productAvailabilityEnabled && realTimeResult != null) {
+      if (realTimeResult == RealTimeSupport.NoRealTimePricingAndInventory ||
+          realTimeResult == RealTimeSupport.RealTimePricingAndInventory ||
+          realTimeResult == RealTimeSupport.RealTimePricingWithInventoryIncluded ||
+          realTimeResult == RealTimeSupport.RealTimeInventory) {
+        final inventoryProducts = productList.map((product) => product?.id ?? '').toList();
+        final parameters = RealTimeInventoryParameters(
+          productIds: inventoryProducts,
+        );
+
+        final realTimeInventoryResult = (await _searchUseCase.getRealTimeInventory(parameters)).getResultSuccessValue();
+
+        if (realTimeInventoryResult?.realTimeInventoryResults != null) {
+          for (ProductInventory realTimeInventory in realTimeInventoryResult?.realTimeInventoryResults ?? []) {
+            for (var productEntity in productList) {
+              if (realTimeInventory.productId == productEntity?.id) {
+                var product = productEntity;
+                late AvailabilityEntity? productAvailability;
+                final qtyOnHand = realTimeInventory.qtyOnHand;
+
+                var inventoryAvailability = realTimeInventory.inventoryAvailabilityDtos
+                    ?.singleWhere(
+                        (ia) => ia.unitOfMeasure == product?.unitOfMeasure);
+                if (inventoryAvailability != null) {
+                  productAvailability = AvailabilityEntityMapper().toEntity(inventoryAvailability.availability);
+                } else {
+                  productAvailability = AvailabilityEntityMapper().toEntity(Availability(messageType: 0));
+                }
+
+                product?.productUnitOfMeasures?.forEach((productUnitOfMeasureEntity) {
+                  var unitOfMeasureAvailability = realTimeInventory
+                      .inventoryAvailabilityDtos
+                      ?.singleWhere((i) => i.unitOfMeasure == productUnitOfMeasureEntity.unitOfMeasure);
+
+                  late Availability? availability;
+                  if (unitOfMeasureAvailability != null) {
+                    availability = unitOfMeasureAvailability.availability;
+                  } else {
+                    availability = Availability(messageType: 0);
+                  }
+
+                  productUnitOfMeasureEntity.copyWith(
+                    availability: AvailabilityEntityMapper().toEntity(availability),
+                  );
+                });
+
+                if (product != null && (product.isStyleProductParent ?? false) &&
+                    product.productUnitOfMeasures != null &&
+                    product.selectedUnitOfMeasure != null) {
+                  var productUnitOfMeasure = product.productUnitOfMeasures
+                      ?.singleWhere(
+                          (uom) => uom.unitOfMeasure == product.selectedUnitOfMeasure);
+                  if (productUnitOfMeasure != null &&
+                      productUnitOfMeasure.availability != null) {
+                    productAvailability = productUnitOfMeasure.availability;
+                  }
+                }
+
+                product?.copyWith(
+                    availability: productAvailability,
+                    qtyOnHand: qtyOnHand
+                );
+              }
+            }
+          }
+        } else {
+          for (var product in productList) {
+            final productAvailability = Availability(
+              messageType: 0,
+              message: LocalizationConstants.unableToRetrieveInventory,
+            );
+
+            product?.copyWith(
+              availability: AvailabilityEntityMapper().toEntity(productAvailability),
+            );
+          }
+        }
+      }
+    }
+
+
+
+    return productList;
+
   }
 
   Future<void> sortOrderChanged(SortOrderAttribute sortOrder) async {

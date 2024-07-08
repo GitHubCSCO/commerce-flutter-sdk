@@ -11,6 +11,8 @@ class SearchProductsState extends Equatable {
   final String selectedCategoryId;
   final bool previouslyPurchased;
   final bool selectedStockedItems;
+  final ProductSettings? productSettings;
+  final bool productPricingEnabled;
 
   const SearchProductsState({
     required this.productEntities,
@@ -23,6 +25,8 @@ class SearchProductsState extends Equatable {
     required this.selectedCategoryId,
     required this.previouslyPurchased,
     required this.selectedStockedItems,
+    required this.productSettings,
+    required this.productPricingEnabled,
   });
 
   @override
@@ -37,6 +41,8 @@ class SearchProductsState extends Equatable {
         selectedCategoryId,
         previouslyPurchased,
         selectedStockedItems,
+        productSettings ?? ProductSettings(),
+        productPricingEnabled,
       ];
 
   SearchProductsState copyWith({
@@ -50,6 +56,8 @@ class SearchProductsState extends Equatable {
     String? selectedCategoryId,
     bool? previouslyPurchased,
     bool? selectedStockedItems,
+    ProductSettings? productSettings,
+    bool? productPricingEnabled,
   }) {
     return SearchProductsState(
       productEntities: productEntities ?? this.productEntities,
@@ -64,6 +72,8 @@ class SearchProductsState extends Equatable {
       selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId,
       previouslyPurchased: previouslyPurchased ?? this.previouslyPurchased,
       selectedStockedItems: selectedStockedItems ?? this.selectedStockedItems,
+      productSettings: productSettings ?? this.productSettings,
+      productPricingEnabled: productPricingEnabled ?? this.productPricingEnabled,
     );
   }
 }
