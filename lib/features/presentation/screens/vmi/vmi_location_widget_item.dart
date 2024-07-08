@@ -31,9 +31,9 @@ class VMICurrentLocationWidgetItem extends StatelessWidget with MapDirection {
               children: [
                 Visibility(
                   visible: isSelectionOn,
-                  child: Radio<String>(
-                    value: locationData.id!,
-                    groupValue: selectedLocation!.id,
+                  child: Radio<String?>(
+                    value: locationData.id,
+                    groupValue: selectedLocation?.id,
                     onChanged: (String? value) {
                       context.read<VMILocationBloc>().add(
                           LocationSelectEvent(selectedLocation: locationData));

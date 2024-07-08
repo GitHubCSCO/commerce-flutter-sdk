@@ -19,26 +19,29 @@ class Input extends StatefulWidget {
   final void Function(bool hasFocus)? focusListener;
   final Widget? suffixIcon;
   final FormFieldValidator<String>? validator; // Added validator parameter
+  final bool? isRequired;
+  final int? maxLength;
 
-  const Input({
-    super.key,
-    this.hintText,
-    this.onChanged,
-    this.onSubmitted,
-    this.controller,
-    this.keyboardType,
-    this.onEditingComplete,
-    this.onTap,
-    this.onTapOutside,
-    this.textDirection,
-    this.textInputAction,
-    this.label,
-    this.obscureText = false,
-    this.textAlign = TextAlign.start,
-    this.focusListener,
-    this.suffixIcon,
-    this.validator,
-  });
+  const Input(
+      {super.key,
+      this.hintText,
+      this.onChanged,
+      this.onSubmitted,
+      this.controller,
+      this.keyboardType,
+      this.onEditingComplete,
+      this.onTap,
+      this.onTapOutside,
+      this.textDirection,
+      this.textInputAction,
+      this.label,
+      this.obscureText = false,
+      this.textAlign = TextAlign.start,
+      this.focusListener,
+      this.suffixIcon,
+      this.validator,
+    this.maxLength,
+      this.isRequired = false});
 
   @override
   State<Input> createState() => _InputState();
@@ -119,9 +122,22 @@ class _InputState extends State<Input> {
             if (widget.label != null)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  widget.label!,
-                  style: OptiTextStyles.body,
+                child: Row(
+                  children: [
+                    Text(
+                      widget.label!,
+                      style: OptiTextStyles.body,
+                    ),
+                    const SizedBox(width: 4.0), // Space between text and star
+                    Visibility(
+                        visible: widget.isRequired!,
+                        child: const Text(
+                          '*',
+                          style: TextStyle(
+                            color: Colors.red, // Change the color if needed
+                          ),
+                        )),
+                  ],
                 ),
               ),
             Container(
@@ -130,7 +146,7 @@ class _InputState extends State<Input> {
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(AppStyle.borderRadius),
-                boxShadow: _focusNode.hasFocus
+                boxShadow: (_focusNode.hasFocus && widget.maxLength == null)
                     ? const [
                         BoxShadow(
                           color: AppStyle.inputDropShadowColor,
@@ -145,6 +161,7 @@ class _InputState extends State<Input> {
                   _handleChange(value);
                   state.didChange(value); // Notify the form field of the change
                 },
+                maxLength: widget.maxLength,
                 onSubmitted: widget.onSubmitted,
                 controller: widget.controller,
                 obscureText: widget.obscureText,

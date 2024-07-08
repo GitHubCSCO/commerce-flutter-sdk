@@ -20,7 +20,9 @@ class GMapCubit extends Cubit<GMapState> {
           markerId: MarkerId(location.locationName ?? "")));
     }
     this.markers = markers;
-    emit(GMapMarkesUpdated(markers: markers, focusMarker: markers.first));
+    if(markers.isNotEmpty){
+      emit(GMapMarkesUpdated(markers: markers, focusMarker: markers.first));
+    }
   }
 
   Future<void> updateMarkersFromDealerLocationFinder(

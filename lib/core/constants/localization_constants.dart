@@ -306,7 +306,7 @@ class LocalizationConstants {
   static const results = "%s result(s)";
   static const searchInsteadFor = "Search instead for {0}";
   static const didYouMean = "Did you mean {0}";
-  static const autocompleteCategoryOrBrandCombinedTitle = "{0} in {1}";
+  static const autocompleteCategoryOrBrandCombinedTitle = "%s in %s";
   static const autocompleteSearchCategoryGroupTitle = "Categories";
   static const autocompleteSearchBrandGroupTitle = "Brands";
   static const no = "No";
@@ -342,6 +342,7 @@ class LocalizationConstants {
   static const productsAddToCartSuccess = "Products added to Cart";
   static const cartInvalid = "Cart is null or invalid";
   static const productCanNotBePurchased = "Product cannot be purchased";
+  static const productCanNotBeReOrdered = "Product cannot be re-ordered";
   static const shippingHandling = "Shipping & Handling";
   static const youSaved = "You saved";
   static const promotion = "Promotion";

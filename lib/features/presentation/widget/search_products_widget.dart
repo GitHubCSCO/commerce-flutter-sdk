@@ -24,10 +24,11 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class SearchProductsWidget extends StatefulWidget {
   final Function(int) onPageChanged; // Callback to handle page changes
+  final ProductListType productListType;
 
   const SearchProductsWidget({
     super.key,
-    required this.onPageChanged,
+    required this.onPageChanged, required this.productListType,
   });
 
   @override
@@ -132,7 +133,7 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                               ),
                               SearchProductFilterWidget(
                                 context,
-                                productListType: ProductListType.searchProducts,
+                                productListType: widget.productListType,
                                 badgeCount: context
                                     .watch<SearchProductsCubit>()
                                     .selectedFiltersCount,

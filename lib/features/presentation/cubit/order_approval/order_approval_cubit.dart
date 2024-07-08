@@ -81,8 +81,8 @@ class OrderApprovalCubit extends Cubit<OrderApprovalState> {
     ShipTo? shipTo,
   }) async {
     final newOrderApprovalParameters = OrderApprovalParameters(
-      orderNumber: orderNumber,
-      orderTotal: orderTotal,
+      orderNumber: orderNumber?.trim(),
+      orderTotal: orderTotal?.trim(),
       orderTotalOperator:
           orderTotalOperator != null ? [orderTotalOperator] : null,
       fromDate: fromDate,

@@ -127,6 +127,7 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                 ),
                                 CheckoutPaymentDetails(
                                     cart: context.read<CheckoutBloc>().cart!,
+                                    isVmiCheckout: true,
                                     onCompleteCheckoutPaymentSection: () {
                                       context.read<CheckoutBloc>().add(
                                           SelectPaymentEvent(context

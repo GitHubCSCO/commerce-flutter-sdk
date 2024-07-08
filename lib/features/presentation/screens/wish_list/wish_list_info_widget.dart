@@ -14,10 +14,12 @@ class ListNameInputWidget extends StatelessWidget {
     super.key,
     required this.listNameController,
     this.readOnly = false,
+    this.maxLength,
   });
 
   final TextEditingController listNameController;
   final bool readOnly;
+  final int? maxLength;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,7 @@ class ListNameInputWidget extends StatelessWidget {
         controller: listNameController,
         onTapOutside: (p0) => context.closeKeyboard(),
         onEditingComplete: () => context.closeKeyboard(),
+        maxLength: maxLength,
       ),
     );
   }
@@ -77,7 +80,7 @@ class ListDetailsWidget extends StatelessWidget {
         sharedInfoText = LocalizationConstants.sharedWith
             .format([wishList.wishListSharesCount ?? 0]);
       } else if (wishList.isSharedList == true) {
-        sharedInfoText = LocalizationConstants.sharedBy;
+        sharedInfoText = LocalizationConstants.sharedBy.format(['']);
       }
     } else if (wishList.isSharedList != true &&
         (wishList.wishListSharesCount ?? 0) == 0) {

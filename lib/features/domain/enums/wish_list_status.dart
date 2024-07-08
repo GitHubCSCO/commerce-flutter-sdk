@@ -15,6 +15,7 @@ enum WishListStatus {
   listCreateLoading,
   listCreateSuccess,
   listCreateFailure,
+  listCreateEmptyNameFailure,
 
   listCopyLoading,
   listCopySuccess,

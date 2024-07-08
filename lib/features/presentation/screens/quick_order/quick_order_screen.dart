@@ -194,11 +194,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                               } else if (state is OrderListAddToListFailedState) {
                                 _showAlert(
                                     context,
-                                    '',
-                                    LocalizationConstants
+                                    message: LocalizationConstants
                                         .pleaseSignInBeforeAddingToList);
                               } else if (state is OrderListAddFailedState) {
-                                _showAlert(context, '', state.message);
+                                _showAlert(context, message: state.message);
                               } else if (state is OrderListStyleProductAddState) {
                                 handleStyleProductAdd(state.productEntity);
                               } else if (state is OrderListVmiStyleProductAddState) {
@@ -411,33 +410,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                       controller: textEditingController,
                     ),
                   ),
-                  if (state is QuickOrderAutoCompleteInitialState)
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          LocalizationConstants.searchPrompt,
-                          style: OptiTextStyles.body,
-                        ),
-                      ),
-                    )
-                  else if (state is QuickOrderAutoCompleteLoadingState)
-                    const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  else if (state is QuickOrderAutoCompleteLoadedState)
-                    AutoCompleteWidget(
-                      callback: _handleAutoCompleteCallback,
-                      autocompleteResult: (state as QuickOrderAutoCompleteLoadedState).result!,
-                    )
-                  else if (state is QuickOrderAutoCompleteFailureState)
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          (state as QuickOrderAutoCompleteFailureState).error,
-                          style: OptiTextStyles.body,
-                        ),
-                      ),
-                    ),
+                  Expanded(child: _buildAutoCompleteContainer(state)),
                 ],
               );
           }
@@ -445,6 +418,37 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
       ),
     );
   }
+
+  Widget _buildAutoCompleteContainer(QuickOrderAutoCompleteState state) {
+    if (state is QuickOrderAutoCompleteInitialState) {
+      return Center(
+        child: Text(
+          LocalizationConstants.searchPrompt,
+          style: OptiTextStyles.body,
+        ),
+      );
+    } else if (state is QuickOrderAutoCompleteLoadingState) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else if (state is QuickOrderAutoCompleteLoadedState) {
+      final autoCompleteProductList = state.result?.products;
+      return AutoCompleteWidget(
+        callback: _handleAutoCompleteCallback,
+        autoCompleteProductList: autoCompleteProductList,
+      );
+    } else if (state is QuickOrderAutoCompleteFailureState) {
+      return Center(
+        child: Text(
+          state.error,
+          style: OptiTextStyles.body,
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
 
   Future<void> _addToCart(BuildContext context, ScanningMode scanningMode) async {
     var reversedQuickOrderProductsList =
@@ -492,13 +496,12 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
           ]);
     }
 
-    if (allCountCartProducts.isNotEmpty && currentCartProducts.isEmpty)
-    {
-      CustomSnackBar.showSnackBarMessage(
-          context, SiteMessageConstants.defaultAllProductCountExceed, seconds: 2);
-        return;
+    if (allCountCartProducts.isNotEmpty && currentCartProducts.isEmpty) {
+      final icon = _buildWarningIcon();
+      _showAlert(context, icon: icon, title: LocalizationConstants.productCanNotBeReOrdered,
+          message: SiteMessageConstants.defaultAllProductCountExceed);
+      return;
     }
-
 
     context.read<OrderListBloc>().deleteExistingCartLine(currentCartProducts);
 
@@ -506,8 +509,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
         await context.read<OrderListBloc>().addCartLineCollection(addCartLines);
     if (addToCartCartLineList != null) {
       if (addToCartCartLineList.isEmpty) {
-        _showAlert(context, LocalizationConstants.quickOrder,
-            SiteMessageConstants.defaultValueProductOutOfStock);
+        _showAlert(context, title: LocalizationConstants.quickOrder,
+            message: SiteMessageConstants.defaultValueProductOutOfStock);
       }
       if (addToCartCartLineList.length == addCartLines.length) {
         CustomSnackBar.showSnackBarMessage(context,
@@ -524,9 +527,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     }
   }
 
-  void _showAlert(BuildContext context, String title, String message) {
+  void _showAlert(BuildContext context, {Widget? icon, String? title, String? message}) {
     displayDialogWidget(
         context: context,
+        icon: icon,
         title: title,
         message: message,
         actions: [
@@ -564,7 +568,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   void _addToList(BuildContext context) {
     if (context.read<OrderListBloc>().quickOrderItemList.isEmpty) {
       CustomSnackBar.showSnackBarMessage(context,
-          SiteMessageConstants.defaultValueAddToCartAllProductsFromList);
+          LocalizationConstants.quickOrderBasketEmpty);
     } else {
       context.read<OrderListBloc>().add(OrderListAddToListEvent());
     }
@@ -628,6 +632,24 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     }
 
     return list;
+  }
+
+  Widget _buildWarningIcon() {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      clipBehavior: Clip.antiAlias,
+      decoration: ShapeDecoration(
+        color: OptiAppColors.invalidColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(999999),
+        ),
+      ),
+      child: const Icon(
+        Icons.warning_amber, // Icon to display
+        color: OptiAppColors.backgroundWhite, // Icon color
+        size: 20, // Icon size
+      ),
+    );
   }
 
   _handleBarcodeValue(BuildContext context, String rawValue) {
