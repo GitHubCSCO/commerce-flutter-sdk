@@ -119,10 +119,28 @@ class CartPaymentSummaryWidget extends StatelessWidget {
           ]);
 
     TextStyle textStyle = OptiTextStyles.body;
-    return paymentSummaryEntity.isCustomerOrderApproval ? Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Text(title, style: textStyle),
-    ) : null;
+    return paymentSummaryEntity.isCustomerOrderApproval
+        ? Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.warning,
+                  color: Colors.amber[400],
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  title,
+                  style: textStyle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.start,
+                ),
+              ],
+            ),
+          )
+        : null;
   }
 
   Widget? _buildSubTotal() {
