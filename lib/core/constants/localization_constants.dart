@@ -703,4 +703,9 @@ class LocalizationConstants {
 
   // saved payments
   static const noSavedPaymentsFound = "No saved payments found.";
+
+
+  // misc
+  static const invalidUrl = "Invalid url.";
+  static const failedToLoadUrl = "Failed to load url.";
 }
