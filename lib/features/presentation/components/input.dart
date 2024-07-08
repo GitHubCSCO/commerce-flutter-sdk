@@ -19,26 +19,27 @@ class Input extends StatefulWidget {
   final void Function(bool hasFocus)? focusListener;
   final Widget? suffixIcon;
   final FormFieldValidator<String>? validator; // Added validator parameter
+  final bool? isRequired;
 
-  const Input({
-    super.key,
-    this.hintText,
-    this.onChanged,
-    this.onSubmitted,
-    this.controller,
-    this.keyboardType,
-    this.onEditingComplete,
-    this.onTap,
-    this.onTapOutside,
-    this.textDirection,
-    this.textInputAction,
-    this.label,
-    this.obscureText = false,
-    this.textAlign = TextAlign.start,
-    this.focusListener,
-    this.suffixIcon,
-    this.validator,
-  });
+  const Input(
+      {super.key,
+      this.hintText,
+      this.onChanged,
+      this.onSubmitted,
+      this.controller,
+      this.keyboardType,
+      this.onEditingComplete,
+      this.onTap,
+      this.onTapOutside,
+      this.textDirection,
+      this.textInputAction,
+      this.label,
+      this.obscureText = false,
+      this.textAlign = TextAlign.start,
+      this.focusListener,
+      this.suffixIcon,
+      this.validator,
+      this.isRequired = false});
 
   @override
   State<Input> createState() => _InputState();
@@ -119,9 +120,22 @@ class _InputState extends State<Input> {
             if (widget.label != null)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  widget.label!,
-                  style: OptiTextStyles.body,
+                child: Row(
+                  children: [
+                    Text(
+                      widget.label!,
+                      style: OptiTextStyles.body,
+                    ),
+                    const SizedBox(width: 4.0), // Space between text and star
+                    Visibility(
+                        visible: widget.isRequired!,
+                        child: const Text(
+                          '*',
+                          style: TextStyle(
+                            color: Colors.red, // Change the color if needed
+                          ),
+                        )),
+                  ],
                 ),
               ),
             Container(

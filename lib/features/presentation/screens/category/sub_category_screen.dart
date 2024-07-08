@@ -81,7 +81,7 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
           //TODO what if id and name is null, we need to take care of that
           pathParameters: {
             "categoryId": category.id.toString(),
-            "categoryTitle": category.name.toString(),
+            "categoryTitle": category.shortDescription.toString(),
             "categoryPath": category.path.toString()
           });
     }else{

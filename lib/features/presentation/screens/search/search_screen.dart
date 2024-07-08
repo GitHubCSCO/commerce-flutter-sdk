@@ -16,6 +16,9 @@ import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/extra/delayer.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_auto_complete_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/category/category_auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +56,7 @@ class SearchPage extends BaseDynamicContentScreen {
   SearchPage({super.key});
 
   final textEditingController = TextEditingController();
+  final _delayer = Delayer(milliseconds: 500);
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +93,9 @@ class SearchPage extends BaseDynamicContentScreen {
                     }
                   },
                   onChanged: (String searchQuery) {
-                    context.read<SearchBloc>().add(SearchTypingEvent(searchQuery));
+                    _delayer.run(() {
+                      context.read<SearchBloc>().add(SearchTypingEvent(searchQuery));
+                    });
                   },
                   onSubmitted: (String query) {
                     context.read<SearchBloc>().add(SearchSearchEvent());
@@ -154,113 +160,200 @@ class SearchPage extends BaseDynamicContentScreen {
                   }
                 },
               ),
+              BlocListener<SearchBloc, SearchState>(
+                listener: (context, state) {
+                  if (state is AutoCompleteCategoryState) {
+                    AppRoute.shopSubCategory.navigateBackStack(
+                        context,
+                        pathParameters: {
+                          "categoryId": state.category.id.toString(),
+                          "categoryTitle": state.category.shortDescription.toString(),
+                          "categoryPath": state.category.path.toString()
+                        },
+                    );
+                  } else if (state is AutoCompleteBrandState) {
+                    AppRoute.shopBrandDetails.navigateBackStack(
+                      context,
+                      extra: state.brand,
+                    );
+                  } else if (state is AutoCompleteProductListState) {
+                    AppRoute.product.navigateBackStack(context, extra: state.pageEntity);
+                  }
+                },
+              ),
             ],
-            child:
-            BlocBuilder<SearchBloc, SearchState>(builder: (context, state) {
-              switch (state.runtimeType) {
-                case SearchCmsInitialState:
-                  return RefreshIndicator(
-                    onRefresh: () async {
-                      BlocProvider.of<PullToRefreshBloc>(context)
-                          .add(PullToRefreshInitialEvent());
-                    },
-                    child: BlocBuilder<CmsCubit, CmsState>(
-                      builder: (context, state) {
-                        switch (state) {
-                          case CmsInitialState():
-                          case CmsLoadingState():
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          case CmsLoadedState():
-                            return MultiBlocListener(
-                              listeners: [
-                                BlocListener<AuthCubit, AuthState>(
-                                  listener: (context, state) {
-                                    _reloadSearchPage(context);
-                                  },
-                                ),
-                                BlocListener<DomainCubit, DomainState>(
-                                  listener: (context, state) {
-                                    if (state is DomainLoaded) {
-                                      _reloadSearchPage(context);
-                                    }
-                                  },
-                                ),
-                              ],
-                              child: ListView(
-                                padding: EdgeInsets.zero,
-                                children:
-                                buildContentWidgets(state.widgetEntities),
-                              ),
-                            );
-                          default:
-                            return const CustomScrollView(
-                              slivers: <Widget>[
-                                SliverFillRemaining(
-                                  child: Center(
-                                    child: Text(LocalizationConstants
-                                        .errorLoadingSearchLanding),
+            child: BlocBuilder<SearchBloc, SearchState>(
+                buildWhen: (previous, current) =>
+                    current is! AutoCompleteCategoryState ||
+                    current is! AutoCompleteBrandState ||
+                    current is! AutoCompleteProductListState,
+                builder: (context, state) {
+                  switch (state.runtimeType) {
+                    case SearchCmsInitialState:
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          BlocProvider.of<PullToRefreshBloc>(context)
+                              .add(PullToRefreshInitialEvent());
+                        },
+                        child: BlocBuilder<CmsCubit, CmsState>(
+                          builder: (context, state) {
+                            switch (state) {
+                              case CmsInitialState():
+                              case CmsLoadingState():
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              case CmsLoadedState():
+                                return MultiBlocListener(
+                                  listeners: [
+                                    BlocListener<AuthCubit, AuthState>(
+                                      listener: (context, state) {
+                                        _reloadSearchPage(context);
+                                      },
+                                    ),
+                                    BlocListener<DomainCubit, DomainState>(
+                                      listener: (context, state) {
+                                        if (state is DomainLoaded) {
+                                          _reloadSearchPage(context);
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                  child: ListView(
+                                    padding: EdgeInsets.zero,
+                                    children: buildContentWidgets(
+                                        state.widgetEntities),
                                   ),
-                                ),
-                              ],
-                            );
-                        }
-                      },
-                    ),
-                  );
-                case SearchLoadingState:
-                  return const Center(child: CircularProgressIndicator());
-                case SearchAutoCompleteInitialState:
-                  return Center(
-                    child: Text(
-                      LocalizationConstants.searchPrompt,
-                      style: OptiTextStyles.body,
-                    ),
-                  );
-                case SearchAutoCompleteLoadedState:
-                  final autoCompleteResult =
-                  (state as SearchAutoCompleteLoadedState).result!;
-                  return AutoCompleteWidget(
-                      callback: handleAutoCompleteCallback,
-                      autocompleteResult: autoCompleteResult);
-                case SearchAutoCompleteFailureState:
-                  return Center(
-                      child: Text(
+                                );
+                              default:
+                                return const CustomScrollView(
+                                  slivers: <Widget>[
+                                    SliverFillRemaining(
+                                      child: Center(
+                                        child: Text(LocalizationConstants
+                                            .errorLoadingSearchLanding),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                            }
+                          },
+                        ),
+                      );
+                    case SearchLoadingState:
+                      return const Center(child: CircularProgressIndicator());
+                    case SearchAutoCompleteInitialState:
+                      return Center(
+                        child: Text(
+                          LocalizationConstants.searchPrompt,
+                          style: OptiTextStyles.body,
+                        ),
+                      );
+                    case SearchAutoCompleteLoadedState:
+                      final autoCompleteResult =
+                          (state as SearchAutoCompleteLoadedState).result;
+                      return _buildSearchAutoComplete(autoCompleteResult);
+                    case SearchAutoCompleteFailureState:
+                      return Center(
+                          child: Text(
                         LocalizationConstants.searchNoResults,
                         style: OptiTextStyles.body,
                       ));
-                case SearchProductsLoadedState:
-                  final productCollectionResult =
-                  (state as SearchProductsLoadedState).result;
-                  return MultiBlocProvider(
-                    providers: [
-                      BlocProvider<AddToCartCubit>(
-                        create: (context) => sl<AddToCartCubit>(),
-                      ),
-                      BlocProvider(
-                        create: (context) => sl<SearchProductsCubit>()..loadInitialSearchProducts(productCollectionResult),
-                      ),
-                    ],
-                    child: SearchProductsWidget(
-                      // productCollectionResult: productCollectionResult,
-                      onPageChanged: (int) {},
-                      productListType: ProductListType.searchProducts,
-                    ),
-                  );
-                case SearchProductsFailureState:
-                  return Center(
-                      child: Text(LocalizationConstants.searchNoResults,
-                          style: OptiTextStyles.body));
-                default:
-                  return const Center(
-                      child: Text(
-                          LocalizationConstants.errorLoadingSearchLanding));
-              }
-            }),
+                    case SearchProductsLoadedState:
+                      final productCollectionResult =
+                          (state as SearchProductsLoadedState).result;
+                      return MultiBlocProvider(
+                        providers: [
+                          BlocProvider<AddToCartCubit>(
+                            create: (context) => sl<AddToCartCubit>(),
+                          ),
+                          BlocProvider(
+                            create: (context) => sl<SearchProductsCubit>()
+                              ..loadInitialSearchProducts(
+                                  productCollectionResult),
+                          ),
+                        ],
+                        child: SearchProductsWidget(
+                          // productCollectionResult: productCollectionResult,
+                          onPageChanged: (int) {},
+                          productListType: ProductListType.searchProducts,
+                        ),
+                      );
+                    case SearchProductsFailureState:
+                      return Center(
+                          child: Text(LocalizationConstants.searchNoResults,
+                              style: OptiTextStyles.body));
+                    default:
+                      return const Center(
+                          child: Text(
+                              LocalizationConstants.errorLoadingSearchLanding));
+                  }
+                }),
           ),
         )
       ],
     );
+  }
+
+  Widget _buildSearchAutoComplete(AutocompleteResult? result) {
+    final autoCompleteCategoryList = result?.categories;
+    final autoCompleteBrandList = result?.brands;
+    final autoCompleteProductList = result?.products;
+    return ListView(
+      children: [
+        Visibility(
+          visible: autoCompleteCategoryList?.isNotEmpty ?? false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+                child: Text(
+                  LocalizationConstants.categories,
+                  style: OptiTextStyles.titleSmall,
+                ),
+              ),
+              CategoryAutoCompleteWidget(
+                  autocompleteCategories: autoCompleteCategoryList,
+                  callback: handleAutoCompleteCategoryCallback),
+              const SizedBox(height: 12),
+            ],
+          ),
+        ),
+        Visibility(
+          visible: autoCompleteBrandList?.isNotEmpty ?? false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+                child: Text(
+                  LocalizationConstants.brands,
+                  style: OptiTextStyles.titleSmall,
+                ),
+              ),
+              BrandAutoCompleteWidget(
+                  autocompleteBrands: autoCompleteBrandList,
+                  callback: handleAutoCompleteBrandCallback),
+              const SizedBox(height: 12),
+            ],
+          ),
+        ),
+        Visibility(
+          visible: autoCompleteProductList?.isNotEmpty ?? false,
+          child: AutoCompleteWidget(
+              callback: handleAutoCompleteCallback,
+              autoCompleteProductList: autoCompleteProductList),
+        )
+      ],
+    );
+  }
+
+  void handleAutoCompleteCategoryCallback(BuildContext context, AutocompleteCategory category) {
+    context.read<SearchBloc>().add(AutoCompleteCategoryEvent(category));
+  }
+
+  void handleAutoCompleteBrandCallback(BuildContext context, AutocompleteBrand brand) {
+    context.read<SearchBloc>().add(AutoCompleteBrandEvent(brand));
   }
 
   void handleAutoCompleteCallback(BuildContext context, AutocompleteProduct product) {

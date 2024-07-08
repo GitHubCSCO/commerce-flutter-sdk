@@ -124,7 +124,11 @@ class LocationSearchPage extends StatelessWidget {
                         context
                             .read<LocationSearchBloc>()
                             .add(LocationSeachHistoryLoadEvent());
-                      } else {}
+                      } else {
+                        context.read<LocationSearchBloc>().add(
+                            LocationSearchLoadEvent(
+                                searchQuery: "", pageType: ""));
+                      }
                     },
                     onChanged: (String searchQuery) {},
                     onSubmitted: (String query) {
@@ -164,6 +168,12 @@ class LocationSearchPage extends StatelessWidget {
                       context.read<PickupLocationBloc>().add(
                           LoadSearchedPickUpLocationsEvent(
                               searchedLocation: state.searchedLocation));
+                    }
+                  } else if (state is LocationSearchFailureState) {
+                    if (locationSearchType == LocationSearchType.vmi) {
+                      context.read<VMILocationBloc>().add(
+                          SearchVMILocationFromListEvent(
+                              searchKey: textEditingController.text));
                     }
                   }
                 },
@@ -220,7 +230,16 @@ class LocationSearchPage extends StatelessWidget {
                 } else if (state is LocationSearchFocusState) {
                   return const Text('LocationSearchFocusState');
                 } else if (state is LocationSearchFailureState) {
-                  return Center(child: const Text('No Location Found'));
+                  if (locationSearchType == LocationSearchType.vmi) {
+                    return VMILocationScreen(
+                      onLocationSelected:
+                          (CurrentLocationDataEntity locationData) {
+                        onVMILocationUpdated!(locationData);
+                      },
+                    );
+                  } else {
+                    return Center(child: const Text('No results found'));
+                  }
                 } else if (state is LocationSearchHistoryLoadedState) {
                   return (state.searchHistory.length == 0)
                       ? const Text("No History Found")
