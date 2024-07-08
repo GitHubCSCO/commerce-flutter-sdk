@@ -7,6 +7,7 @@ class CardExpirationCubit extends Cubit<CardExpirationState> {
   CardExpirationCubit() : super(CardExpirationInitialState());
   KeyValuePair<String, int>? selectedExpirationMonth;
   KeyValuePair<int, int>? selectedExpirationYear;
+
   Future<void> onLoadCardExpirarionData(
     AddCreditCardEntity addCreditCardEntity,
     List<KeyValuePair<int, int>>? expirationYears,
@@ -42,4 +43,10 @@ class CardExpirationCubit extends Cubit<CardExpirationState> {
     selectedExpirationYear = year;
     emit(CardExpirationLoadedState());
   }
+
+  void validateExpirationDate() {
+    emit(CardExpirationValidationState(
+        selectedExpirationMonth == null, selectedExpirationYear == null));
+  }
+
 }
