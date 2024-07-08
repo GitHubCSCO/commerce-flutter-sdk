@@ -7,3 +7,10 @@ class CardExpirationInitialState extends CardExpirationState {}
 class CardExpirationLoadingState extends CardExpirationState {}
 
 class CardExpirationLoadedState extends CardExpirationState {}
+
+class CardExpirationValidationState extends CardExpirationState {
+  final bool isMonthInvalid;
+  final bool isYearInvalid;
+
+  CardExpirationValidationState(this.isMonthInvalid, this.isYearInvalid);
+}

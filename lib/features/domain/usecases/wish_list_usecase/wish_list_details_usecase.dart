@@ -11,7 +11,6 @@ import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WishListDetailsUsecase extends WishListUsecase {
-
   Future<WishListEntity?> loadWishList(String wishListId) async {
     final result =
         await commerceAPIServiceProvider.getWishListService().getWishList(
@@ -206,9 +205,15 @@ class WishListDetailsUsecase extends WishListUsecase {
             ? WishListStatus.listAddToCartSuccess
             : WishListStatus.listAddToCartFailure;
       case Failure(errorResponse: final errorResponse):
-        switch (errorResponse.message) {
-          case 'Cloudflare gateway timeout':
-          case 'Connection timeout':
+        final exception = errorResponse.exception;
+        if (exception == null) {
+          return WishListStatus.listAddToCartFailure;
+        }
+
+        switch ((exception as ServerException).exceptionType) {
+          case ServerExceptionType.cloudflareGatewayTimeout:
+          case ServerExceptionType.requestTimeout:
+          case ServerExceptionType.serviceUnavailable:
             return WishListStatus.listAddToCartFailureTimeOut;
           default:
             return WishListStatus.listAddToCartFailure;

@@ -25,3 +25,19 @@ class SearchSearchEvent extends SearchEvent {}
 
 class SearchCloseEvent extends SearchEvent {}
 
+class AutoCompleteCategoryEvent extends SearchEvent {
+
+  final AutocompleteCategory category;
+
+  AutoCompleteCategoryEvent(this.category);
+
+}
+
+class AutoCompleteBrandEvent extends SearchEvent {
+
+  final AutocompleteBrand brand;
+
+  AutoCompleteBrandEvent(this.brand);
+
+}
+

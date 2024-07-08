@@ -146,6 +146,14 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                 CustomSnackBar.showWishListAddToCartError(context);
               }
 
+              if (state.status == WishListStatus.listAddToCartFailureTimeOut) {
+                CustomSnackBar.showSnackBarMessage(
+                  context,
+                  LocalizationConstants.addWishListToCartTimeoutCheckCartAgain,
+                  seconds: 3,
+                );
+              }
+
               if (state.status ==
                   WishListStatus.listAddToCartFailureOutOfStock) {
                 displayDialogWidget(

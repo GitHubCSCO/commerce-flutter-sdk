@@ -75,7 +75,7 @@ class _CategoryPageState extends State<CategoryPage> {
         //TODO because if category title is long or does have special character it mmight or might not work properly
           pathParameters: {
             "categoryId": category.id.toString(),
-            "categoryTitle": category.name.toString(),
+            "categoryTitle": category.shortDescription.toString(),
             "categoryPath": category.path.toString()
           });
     }else{
