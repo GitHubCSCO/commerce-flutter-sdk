@@ -117,7 +117,7 @@ void _showOrderApprovalFilterWidget(
               ),
               const SizedBox(height: 45),
               Text(
-                LocalizationConstants.customer,
+                LocalizationConstants.customer.toUpperCase(),
                 style: OptiTextStyles.subtitle,
               ),
               const SizedBox(height: 10),
@@ -127,7 +127,7 @@ void _showOrderApprovalFilterWidget(
               ),
               const SizedBox(height: 45),
               Text(
-                LocalizationConstants.orderTotal,
+                LocalizationConstants.orderTotal.toUpperCase(),
                 style: OptiTextStyles.subtitle,
               ),
               const SizedBox(height: 10),
@@ -138,7 +138,7 @@ void _showOrderApprovalFilterWidget(
               ),
               const SizedBox(height: 45),
               Text(
-                LocalizationConstants.dateRange,
+                LocalizationConstants.dateRange.toUpperCase(),
                 style: OptiTextStyles.subtitle,
               ),
               _FilterDatePickerWidget(
@@ -219,7 +219,6 @@ class _FilterOrderTotalWidgetState extends State<_FilterOrderTotalWidget> {
         children: [
           Input(
             controller: orderNumberController,
-            label: 'Order Number',
             hintText: LocalizationConstants.orderNumberSign,
           ),
         ],

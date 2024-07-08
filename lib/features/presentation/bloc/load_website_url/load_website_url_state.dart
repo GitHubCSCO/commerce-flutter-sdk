@@ -13,6 +13,11 @@ class LoadWebsiteUrlLoadedState extends LoadWebsiteUrlState {
   const LoadWebsiteUrlLoadedState({required this.authorizedURL});
 }
 
+class LoadCustomUrlLoadedState extends LoadWebsiteUrlState {
+  final String customURL;
+  const LoadCustomUrlLoadedState({required this.customURL});
+}
+
 class LoadWebsiteUrlFailureState extends LoadWebsiteUrlState {
   final String error;
 

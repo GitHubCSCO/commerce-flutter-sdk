@@ -119,6 +119,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                           bool isEnable = context.read<BillToShipToBloc>().saveButtonEnable(
                               fulfillmentMethodType: type);
                           setState(() {
+                            _isSwitched = false;
                             _isSaveEnable = isEnable;
                           });
                         },
@@ -256,6 +257,9 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                           .toEntity(wareHouse ?? Warehouse()),
                       onSelectVMILocation: (location) {},
                       onWarehouseLocationSelected: (wareHouse) {
+                        setState(() {
+                          _isSwitched = false;
+                        });
                         context.read<BillToShipToBloc>().add(PickUpUpdateEvent(
                             WarehouseEntityMapper().toModel(wareHouse)));
                       },
@@ -353,10 +357,16 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
       extra: selectionEntity,
     );
 
-    if (result is BillTo) {
-      context.read<BillToShipToBloc>().add(BillToUpdateEvent(result));
-    } else if (result is ShipTo) {
-      context.read<BillToShipToBloc>().add(ShipToUpdateEvent(result));
+    if (result != null) {
+      setState(() {
+        _isSwitched = false;
+      });
+
+      if (result is BillTo) {
+        context.read<BillToShipToBloc>().add(BillToUpdateEvent(result));
+      } else if (result is ShipTo) {
+        context.read<BillToShipToBloc>().add(ShipToUpdateEvent(result));
+      }
     }
   }
 

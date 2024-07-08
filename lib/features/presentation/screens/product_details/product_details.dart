@@ -1,5 +1,7 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
@@ -24,8 +26,11 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/produc_details_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_event.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/style_trait_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_add_to_cart_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_general_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_pricing_widget.dart';
@@ -76,40 +81,112 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthCubit, AuthState>(listener: (context, state) {
-      if (state.status == AuthStatus.authenticated) {
-        context
-            .read<ProductDetailsBloc>()
-            .add(FetchProductDetailsEvent(productId, product));
-      }
-    }, child: Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
-                  appBar: AppBar(actions: <Widget>[
-                    BottomMenuWidget(websitePath: product?.productDetailUrl),
-                  ], backgroundColor: Theme.of(context).colorScheme.surface),
-      body: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
-        builder: (_, state) {
-          switch (state) {
-            case ProductDetailsInitial():
-            case ProductDetailsLoading():
-              return const Center(child: CircularProgressIndicator());
-            case ProductDetailsLoaded():
-              return SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: _buildProductDetailsWidgets(
-                        state.productDetailsEntities, context),
-                  ),
-              );
-            case ProductDetailsErrorState():
-              return const Center(child: Text("failure"));
-            default:
-              return const Center(child: Text("failure"));
+    return BlocListener<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state.status == AuthStatus.authenticated) {
+            context
+                .read<ProductDetailsBloc>()
+                .add(FetchProductDetailsEvent(productId, product));
           }
         },
+        child: Scaffold(
+          backgroundColor: OptiAppColors.backgroundGray,
+          appBar: AppBar(actions: <Widget>[
+            BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
+                builder: (_, state) {
+              switch (state) {
+                case ProductDetailsLoaded():
+                  return BottomMenuWidget(
+                      toolMenuList: [
+                        ToolMenu(
+                            title: LocalizationConstants.addToList,
+                            action: () {
+                              final currentState =
+                                  context.read<AuthCubit>().state;
+                              handleAuthStatusInProductDetails(
+                                  context,
+                                  currentState.status,
+                                  context.read<ProductDetailsBloc>());
+                            }),
+                      ],
+                      websitePath: context
+                          .read<ProductDetailsBloc>()
+                          .productDetailDataEntity
+                          .product
+                          ?.productDetailUrl);
+                default:
+                  return Container();
+              }
+            })
+          ], backgroundColor: Theme.of(context).colorScheme.surface),
+          body: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
+            builder: (_, state) {
+              switch (state) {
+                case ProductDetailsInitial():
+                case ProductDetailsLoading():
+                  return const Center(child: CircularProgressIndicator());
+                case ProductDetailsLoaded():
+                  return SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _buildProductDetailsWidgets(
+                          state.productDetailsEntities, context),
+                    ),
+                  );
+                case ProductDetailsErrorState():
+                  return const Center(child: Text("failure"));
+                default:
+                  return const Center(child: Text("failure"));
+              }
+            },
+          ),
+        ));
+  }
+
+  void handleAuthStatusInProductDetails(BuildContext context, AuthStatus status,
+      ProductDetailsBloc productDetailsBloc) {
+    if (status == AuthStatus.authenticated) {
+      navigateToCheckout(context, productDetailsBloc);
+    } else {
+      showSignInDialog(context);
+    }
+  }
+
+  void navigateToCheckout(
+      BuildContext context, ProductDetailsBloc productDetailsBloc) {
+    final addCartLineForWishList =
+        productDetailsBloc.getAddCartLineForWistlist();
+    WishListCallbackHelper.addItemsToWishList(
+      context,
+      addToCartCollection: WishListAddToCartCollection(
+        wishListLines: addCartLineForWishList,
       ),
-    ));
+      onAddedToCart: null,
+    );
+  }
+
+  void showSignInDialog(BuildContext context) {
+    displayDialogWidget(
+      context: context,
+      title: LocalizationConstants.notSignedIn,
+      message: LocalizationConstants.pleaseSignInBeforeAddingToList,
+      actions: [
+        DialogPlainButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text(LocalizationConstants.cancel),
+        ),
+        DialogPlainButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            AppRoute.login.navigateBackStack(context);
+          },
+          child: const Text(LocalizationConstants.signIn),
+        ),
+      ],
+    );
   }
 
   List<Widget> _buildProductDetailsWidgets(
@@ -172,6 +249,7 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
     }
 
     return Container(
+      width: double.infinity,
       color: Colors.white,
       child: Padding(
           padding: const EdgeInsets.all(20.0),

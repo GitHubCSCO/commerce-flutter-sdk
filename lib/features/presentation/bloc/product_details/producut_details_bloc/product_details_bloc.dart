@@ -28,6 +28,14 @@ class ProductDetailsBloc
     on<FetchProductDetailsEvent>(_fetchProductDetails);
     on<StyleTraitSelectedEvent>(_onStyleTraitSelected);
   }
+  List<AddCartLine> getAddCartLineForWistlist() {
+    var cartLineOfProduct = AddCartLine(
+      productId: productDetailDataEntity.product?.id,
+      qtyOrdered: productDetailDataEntity.product?.qtyOrdered,
+      unitOfMeasure: productDetailDataEntity.product?.unitOfMeasure,
+    );
+    return [cartLineOfProduct];
+  }
 
   Future<void> _loadSettings() async {
     var futures = [
