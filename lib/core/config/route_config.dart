@@ -14,6 +14,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/routing/route_
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_category_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_product_lines_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_approval/order_approval_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
@@ -593,6 +594,14 @@ List<NavigationNode> _getNavigationRoot() {
       return SavedOrderDetailsScreen(cartId: cartId);
     },
     parent: savedOrders,
+  );
+
+  // path: /account/myQuote
+  final myQuote = createNode(
+    name: AppRoute.myQuote.name,
+    path: AppRoute.myQuote.suffix,
+    builder: (context, state) => const QuoteScreen(),
+    parent: account,
   );
 
   // path: /account/orderApproval
