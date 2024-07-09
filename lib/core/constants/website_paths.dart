@@ -9,4 +9,5 @@ class WebsitePaths {
   static const orderApprovalDetailsWebsitePath = 'redirectto/OrderApprovalDetailPage?cartId=%s';
   static const brandsWebsitePath = 'redirectto/BrandsPage';
   static const accountWebsitePath = 'redirectto/myaccountpage';
+  static const invoiceHistoryWebsitePath = 'redirectto/InvoicesPage';
 }
