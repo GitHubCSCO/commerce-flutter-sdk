@@ -1,7 +1,9 @@
 part of 'search_products_cubit.dart';
 
 class SearchProductsState extends Equatable {
-  final GetProductCollectionResult? productEntities;
+  final String? originalQuery;
+  final List<ProductEntity>? productEntities;
+  final PaginationEntity? paginationEntity;
   final SearchProductStatus searchProductStatus;
   final List<SortOrderAttribute> availableSortOrders;
   final SortOrderAttribute selectedSortOrder;
@@ -15,7 +17,9 @@ class SearchProductsState extends Equatable {
   final bool productPricingEnabled;
 
   const SearchProductsState({
+    required this.originalQuery,
     required this.productEntities,
+    required this.paginationEntity,
     required this.searchProductStatus,
     required this.availableSortOrders,
     required this.selectedSortOrder,
@@ -31,7 +35,8 @@ class SearchProductsState extends Equatable {
 
   @override
   List<Object> get props => [
-        productEntities ?? GetProductCollectionResult(),
+        originalQuery ?? '',
+        productEntities ?? [],
         searchProductStatus,
         availableSortOrders,
         selectedSortOrder,
@@ -46,7 +51,9 @@ class SearchProductsState extends Equatable {
       ];
 
   SearchProductsState copyWith({
-    GetProductCollectionResult? productEntities,
+    String? originalQuery,
+    List<ProductEntity>? productEntities,
+    PaginationEntity? paginationEntity,
     SearchProductStatus? searchProductStatus,
     List<SortOrderAttribute>? availableSortOrders,
     SortOrderAttribute? selectedSortOrder,
@@ -60,7 +67,9 @@ class SearchProductsState extends Equatable {
     bool? productPricingEnabled,
   }) {
     return SearchProductsState(
+      originalQuery: originalQuery ?? this.originalQuery,
       productEntities: productEntities ?? this.productEntities,
+      paginationEntity: paginationEntity ?? this.paginationEntity,
       searchProductStatus: searchProductStatus ?? this.searchProductStatus,
       availableSortOrders: availableSortOrders ?? this.availableSortOrders,
       selectedSortOrder: selectedSortOrder ?? this.selectedSortOrder,

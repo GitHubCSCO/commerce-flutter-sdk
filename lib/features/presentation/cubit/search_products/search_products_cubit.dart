@@ -1,13 +1,11 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
-import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
+import 'package:commerce_flutter_app/core/mixins/realtime_pricing_inventory_update_mixin.dart';
+import 'package:commerce_flutter_app/features/domain/entity/pagination_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/search_product_status.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/pagination_entity_mapper.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
@@ -16,15 +14,21 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 part 'search_products_state.dart';
 
-class SearchProductsCubit extends Cubit<SearchProductsState> {
+class SearchProductsCubit extends Cubit<SearchProductsState> with RealtimePricingInventoryUpdateMixin {
   final SearchUseCase _searchUseCase;
+  final PricingInventoryUseCase _pricingInventoryUseCase;
   String? query;
 
-  SearchProductsCubit({required SearchUseCase searchUseCase})
+  SearchProductsCubit(
+      {required SearchUseCase searchUseCase,
+      required PricingInventoryUseCase pricingInventoryUseCase})
       : _searchUseCase = searchUseCase,
+        _pricingInventoryUseCase = pricingInventoryUseCase,
         super(
           SearchProductsState(
+            originalQuery: '',
             productEntities: null,
+            paginationEntity: null,
             searchProductStatus: SearchProductStatus.initial,
             availableSortOrders: const [],
             selectedSortOrder: SortOrderAttribute(
@@ -81,16 +85,17 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
       selectedSortOrderType: productCollectionResult?.pagination?.sortType ?? '',
     );
 
-    final productSettings = (await _searchUseCase.loadProductSettings()).getResultSuccessValue();
-    final productPricingEnabled = await _searchUseCase.getProductPricingEnable();
+    final productSettings = (await _pricingInventoryUseCase.loadProductSettings()).getResultSuccessValue();
+    final productPricingEnabled = await _pricingInventoryUseCase.getProductPricingEnable();
 
-    final products = await updateProductPricingAndInventoryAvailability(productCollectionResult?.products);
-
-    productCollectionResult?.products = products;
+    final productEntities = await updateProductPricingAndInventoryAvailability(
+        _pricingInventoryUseCase, productCollectionResult?.products);
 
     emit(
       state.copyWith(
-        productEntities: productCollectionResult,
+        originalQuery: query,
+        productEntities: productEntities,
+        paginationEntity: PaginationEntityMapper.toEntity(productCollectionResult?.pagination ?? Pagination()),
         searchProductStatus: SearchProductStatus.success,
         availableSortOrders: availableSortOrders,
         selectedSortOrder: selectedSortOrder,
@@ -101,17 +106,17 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
   }
 
   Future<void> loadMoreSearchProducts() async {
-    if (state.productEntities?.pagination?.page == null ||
-        (state.productEntities?.pagination?.page ?? 0) + 1 >
-            state.productEntities!.pagination!.numberOfPages! ||
+    if (state.paginationEntity?.page == null ||
+        (state.paginationEntity?.page ?? 0) + 1 >
+            (state.paginationEntity?.numberOfPages ?? 0) ||
         state.searchProductStatus == SearchProductStatus.moreLoading) {
       return;
     }
 
     emit(state.copyWith(searchProductStatus: SearchProductStatus.moreLoading));
     final result = await _searchUseCase.loadSearchProductsResults(
-      state.productEntities?.originalQuery ?? '',
-      (state.productEntities?.pagination?.page ?? 0) + 1,
+      state.originalQuery ?? '',
+      (state.paginationEntity?.page ?? 0) + 1,
       selectedSortOrder: state.selectedSortOrder,
       selectedAttributeValueIds: state.selectedAttributeValueIds,
       selectedBrandIds: state.selectedBrandIds,
@@ -127,163 +132,22 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
       return;
     }
 
-    final products = await updateProductPricingAndInventoryAvailability(state.productEntities?.products);
-
     switch (result) {
       case Success(value: final data):
-        products?.addAll(data?.products ?? []);
-        state.productEntities?.products = products;
-        state.productEntities?.pagination = data?.pagination;
-      case Failure():
-    }
-
-    emit(
-      state.copyWith(
-        productEntities: state.productEntities,
-        searchProductStatus: SearchProductStatus.success,
-      ),
-    );
-  }
-
-  Future<List<Product>> updateProductPricingAndInventoryAvailability(List<Product>? products) async {
-
-    final productPricingEnabled =
-        await _searchUseCase.getProductPricingEnable();
-    final productAvailabilityEnabled = await _searchUseCase.getProductInventoryAvailable();
-
-    final productList = products
-        ?.map((product) => ProductEntityMapper().toEntity(product))
-        .toList() ??
-        [];
-
-    final realTimeResult = await _searchUseCase.getRealtimeSupportType();
-
-    if (productPricingEnabled && realTimeResult != null) {
-      if (realTimeResult == RealTimeSupport.RealTimePricingOnly ||
-          realTimeResult ==
-              RealTimeSupport.RealTimePricingWithInventoryIncluded ||
-          realTimeResult == RealTimeSupport.RealTimePricingAndInventory) {
-        final productPriceParameters = productList
-            .map((product) => ProductPriceQueryParameter(
-          productId: product.id,
-          qtyOrdered: 1,
-          unitOfMeasure: product.unitOfMeasure,
-        )).toList();
-
-        final parameter = RealTimePricingParameters(
-            productPriceParameters: productPriceParameters);
-
-        final pricingResult =
-            await _searchUseCase.getRealTimePricing(parameter);
-
-        switch (pricingResult) {
-          case Success():
-            for (var productEntity in productList) {
-              var matchingPrice = pricingResult.value?.realTimePricingResults
-                  ?.firstWhere((o) => o.productId == productEntity!.id);
-              productEntity?.pricing =
-                  ProductPriceEntityMapper().toEntity(matchingPrice);
-            }
-          case Failure():
-          default:
-        }
-      }
-    }
-
-    if (productAvailabilityEnabled && realTimeResult != null) {
-      if (realTimeResult == RealTimeSupport.NoRealTimePricingAndInventory ||
-          realTimeResult == RealTimeSupport.RealTimePricingAndInventory ||
-          realTimeResult == RealTimeSupport.RealTimePricingWithInventoryIncluded ||
-          realTimeResult == RealTimeSupport.RealTimeInventory) {
-        final inventoryProducts = productList.map((product) => product?.id ?? '').toList();
-        final parameters = RealTimeInventoryParameters(
-          productIds: inventoryProducts,
+        final productEntities = await updateProductPricingAndInventoryAvailability(
+            _pricingInventoryUseCase, data?.products);
+        state.productEntities?.addAll(productEntities);
+        emit(
+          state.copyWith(
+            productEntities: state.productEntities,
+            paginationEntity: PaginationEntityMapper.toEntity(data?.pagination ?? Pagination()),
+            searchProductStatus: SearchProductStatus.success,
+          ),
         );
-
-        final realTimeInventoryResult = (await _searchUseCase.getRealTimeInventory(parameters)).getResultSuccessValue();
-
-        if (realTimeInventoryResult?.realTimeInventoryResults != null) {
-          for (ProductInventory realTimeInventory in realTimeInventoryResult?.realTimeInventoryResults ?? []) {
-            for (var productEntity in productList) {
-              if (realTimeInventory.productId == productEntity?.id) {
-                var product = productEntity;
-                late AvailabilityEntity? productAvailability;
-                final qtyOnHand = realTimeInventory.qtyOnHand;
-
-                var inventoryAvailability = realTimeInventory.inventoryAvailabilityDtos
-                    ?.singleWhere(
-                        (ia) => ia.unitOfMeasure == product?.unitOfMeasure);
-                if (inventoryAvailability != null) {
-                  productAvailability = AvailabilityEntityMapper().toEntity(inventoryAvailability.availability);
-                } else {
-                  productAvailability = AvailabilityEntityMapper().toEntity(Availability(messageType: 0));
-                }
-
-                product?.productUnitOfMeasures?.forEach((productUnitOfMeasureEntity) {
-                  var unitOfMeasureAvailability = realTimeInventory
-                      .inventoryAvailabilityDtos
-                      ?.singleWhere((i) => i.unitOfMeasure == productUnitOfMeasureEntity.unitOfMeasure);
-
-                  late Availability? availability;
-                  if (unitOfMeasureAvailability != null) {
-                    availability = unitOfMeasureAvailability.availability;
-                  } else {
-                    availability = Availability(messageType: 0);
-                  }
-
-                  productUnitOfMeasureEntity.copyWith(
-                    availability: AvailabilityEntityMapper().toEntity(availability),
-                  );
-                });
-
-                if (product != null && (product.isStyleProductParent ?? false) &&
-                    product.productUnitOfMeasures != null &&
-                    product.selectedUnitOfMeasure != null) {
-                  var productUnitOfMeasure = product.productUnitOfMeasures
-                      ?.singleWhere(
-                          (uom) => uom.unitOfMeasure == product.selectedUnitOfMeasure);
-                  if (productUnitOfMeasure != null &&
-                      productUnitOfMeasure.availability != null) {
-                    productAvailability = productUnitOfMeasure.availability;
-                  }
-                }
-
-                product.availability = productAvailability;
-
-                // product = product.copyWith(
-                //     availability: productAvailability,
-                //     qtyOnHand: qtyOnHand
-                // );
-                //
-                // final List<Product> dafaf = [];
-                // dafaf.add(ProductEntityMapper().toModel(product));
-              }
-            }
-          }
-        } else {
-          for (var product in productList) {
-            final productAvailability = Availability(
-              messageType: 0,
-              message: LocalizationConstants.unableToRetrieveInventory,
-            );
-
-            product.availability = AvailabilityEntityMapper().toEntity(productAvailability);
-            // product?.copyWith(
-            //   availability: AvailabilityEntityMapper().toEntity(productAvailability),
-            // );
-          }
-        }
-      }
+      case Failure():
+        emit(state.copyWith(
+            searchProductStatus: SearchProductStatus.moreLoadingFailure));
     }
-
-    final List<Product> list = [];
-
-    for (var product in productList) {
-      list.add(ProductEntityMapper().toModel(product));
-    }
-
-    return list;
-
   }
 
   Future<void> sortOrderChanged(SortOrderAttribute sortOrder) async {
@@ -297,7 +161,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
 
   Future<void> _loadSearchProducts() async {
     final result = await _searchUseCase.loadSearchProductsResults(
-      state.productEntities?.originalQuery ?? '',
+      state.originalQuery ?? '',
       1,
       selectedSortOrder: state.selectedSortOrder,
       selectedAttributeValueIds: state.selectedAttributeValueIds,
@@ -326,9 +190,13 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
           selectedSortOrderType: data.pagination?.sortType ?? '',
         );
 
+        final productEntities = await updateProductPricingAndInventoryAvailability(
+            _pricingInventoryUseCase, data.products);
+
         emit(
           state.copyWith(
-            productEntities: data,
+            productEntities: productEntities,
+            paginationEntity: PaginationEntityMapper.toEntity(data.pagination ?? Pagination()),
             searchProductStatus: SearchProductStatus.success,
             availableSortOrders: availableSortOrders,
             selectedSortOrder: selectedSortOrder,

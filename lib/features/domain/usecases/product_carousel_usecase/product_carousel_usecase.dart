@@ -1,7 +1,9 @@
+import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductCarouselUseCase extends BaseUseCase {
@@ -34,10 +36,24 @@ class ProductCarouselUseCase extends BaseUseCase {
   }
 
   Future<bool> getProductPricingEnable() async {
-    // need to implement
-    var productPricingPresentationEnabledResult = Future.value(true);
-    bool productPricingPresentationEnabled = await productPricingPresentationEnabledResult;
+    var productPricingEnabledResult = await coreServiceProvider.getAppConfigurationService().productPricingEnabled();
+    bool productPricingPresentationEnabled = productPricingEnabledResult ?? false;
     return productPricingPresentationEnabled;
+  }
+
+  Future<bool> getProductInventoryAvailable() async {
+    final productSettings = (await loadProductSettings()).getResultSuccessValue();
+    return productSettings?.showInventoryAvailability ?? false;
+  }
+
+  Future<Result<ProductSettings, ErrorResponse>> loadProductSettings() async {
+    return await commerceAPIServiceProvider
+        .getSettingsService()
+        .getProductSettingsAsync();
+  }
+
+  Future<RealTimeSupport?> getRealtimeSupportType() async {
+    return await coreServiceProvider.getAppConfigurationService().getRealtimeSupportType();
   }
 
   Future<Result<GetRealTimePricingResult, ErrorResponse>?> getRealTimePricing(RealTimePricingParameters parameter) async {
@@ -51,6 +67,10 @@ class ProductCarouselUseCase extends BaseUseCase {
       default:
         return null;
     }
+  }
+
+  Future<Result<GetRealTimeInventoryResult, ErrorResponse>> getRealTimeInventory(RealTimeInventoryParameters parameter) async {
+    return await commerceAPIServiceProvider.getRealTimeInventoryService().getProductRealTimeInventory(parameters: parameter);
   }
 
   Future<Result<List<ProductEntity>, ErrorResponse>>

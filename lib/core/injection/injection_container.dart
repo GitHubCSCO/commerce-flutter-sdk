@@ -56,6 +56,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_us
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/warehouse_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/previous_orders_usecase/previous_orders_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_list_filter_usecase/product_list_filter_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/promo_code_usecase/promo_code_usecase.dart';
@@ -283,10 +284,14 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => SearchUseCase())
     ..registerFactory(() => AddToCartCubit(addToCartUsecase: sl()))
     ..registerFactory(() => AddToCartUsecase())
-    ..registerFactory(() => SearchProductsCubit(searchUseCase: sl()))
+    ..registerFactory(() =>
+      SearchProductsCubit(searchUseCase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(
         () => ProductListFilterCubit(productListFilterUsecase: sl()))
     ..registerFactory(() => ProductListFilterUsecase())
+
+    //pricing and inventory
+    ..registerFactory(() => PricingInventoryUseCase())
 
     //product
     ..registerFactory(() => ProductBloc(searchUseCase: sl()))

@@ -11,7 +11,6 @@ import 'package:commerce_flutter_app/features/domain/enums/search_product_status
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
@@ -98,31 +97,34 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            state.productEntities?.originalQuery==null ? 
-                            LocalizationConstants.results.format(
-                              [
-                                (state.productEntities?.pagination
-                                            ?.totalItemCount ==
-                                        0)
-                                    ? LocalizationConstants.no
-                                    : state.productEntities?.pagination
-                                        ?.totalItemCount
-                              ],
-                            )
-                            :
-                            LocalizationConstants.resultsFor.format(
-                              [
-                                (state.productEntities?.pagination
-                                            ?.totalItemCount ==
-                                        0)
-                                    ? LocalizationConstants.no
-                                    : state.productEntities?.pagination
-                                        ?.totalItemCount,
-                                state.productEntities?.originalQuery
-                              ],
+                          Visibility(
+                            visible: state.originalQuery != null && state.originalQuery!.isNotEmpty,
+                            child: Text(
+                              state.originalQuery==null ?
+                              LocalizationConstants.results.format(
+                                [
+                                  (state.paginationEntity
+                                              ?.totalItemCount ==
+                                          0)
+                                      ? LocalizationConstants.no
+                                      : state.paginationEntity
+                                          ?.totalItemCount
+                                ],
+                              )
+                              :
+                              LocalizationConstants.resultsFor.format(
+                                [
+                                  (state.paginationEntity
+                                              ?.totalItemCount ==
+                                          0)
+                                      ? LocalizationConstants.no
+                                      : state.paginationEntity
+                                          ?.totalItemCount,
+                                  state.originalQuery
+                                ],
+                              ),
+                              style: OptiTextStyles.header3,
                             ),
-                            style: OptiTextStyles.header3,
                           ),
                           Row(
                             mainAxisSize: MainAxisSize.min,
@@ -144,7 +146,7 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                                     .selectedFiltersCount,
                                 previouslyPurchased: state.previouslyPurchased,
                                 searchText:
-                                    state.productEntities?.originalQuery,
+                                    state.originalQuery,
                                 selectedAttributeValueIds:
                                     state.selectedAttributeValueIds,
                                 selectedBrandIds: state.selectedBrandIds,
@@ -174,12 +176,12 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                         ),
                         itemCount: state.searchProductStatus ==
                                 SearchProductStatus.moreLoading
-                            ? (state.productEntities?.products?.length ?? 0) + 1
-                            : state.productEntities?.products?.length ?? 0,
+                            ? (state.productEntities?.length ?? 0) + 1
+                            : state.productEntities?.length ?? 0,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           if (index >=
-                                  (state.productEntities?.products?.length ??
+                                  (state.productEntities?.length ??
                                       0) &&
                               state.searchProductStatus ==
                                   SearchProductStatus.moreLoading) {
@@ -190,9 +192,9 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                           }
 
                           final product =
-                              state.productEntities?.products![index];
+                              state.productEntities![index];
                           return SearchProductWidget(
-                            product: ProductEntityMapper().toEntity(product!),
+                            product: product,
                             productSettings: state.productSettings,
                             pricingEnable: state.productPricingEnabled,
                           );
