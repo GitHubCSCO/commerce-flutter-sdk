@@ -12,8 +12,8 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 mixin RealtimePricingInventoryUpdateMixin {
 
   Future<List<ProductEntity>> updateProductPricingAndInventoryAvailability(
-      PricingInventoryUseCase pricingInventoryUseCase,
-      List<Product>? products) async {
+      PricingInventoryUseCase pricingInventoryUseCase, List<Product>? products,
+      {bool onlyPricing = false}) async {
     final productPricingEnabled =
     await pricingInventoryUseCase.getProductPricingEnable();
     final productAvailabilityEnabled = await pricingInventoryUseCase.getProductInventoryAvailable();
@@ -57,7 +57,7 @@ mixin RealtimePricingInventoryUpdateMixin {
       }
     }
 
-    if (productAvailabilityEnabled && realTimeResult != null) {
+    if (!onlyPricing & productAvailabilityEnabled && realTimeResult != null) {
       if (realTimeResult == RealTimeSupport.NoRealTimePricingAndInventory ||
           realTimeResult == RealTimeSupport.RealTimePricingAndInventory ||
           realTimeResult == RealTimeSupport.RealTimePricingWithInventoryIncluded ||

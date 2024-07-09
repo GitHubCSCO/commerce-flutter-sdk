@@ -271,7 +271,8 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => CmsCubit(
         actionLinkUseCase: sl(),
         productCarouselUseCase: sl(),
-        searchHistoryUseCase: sl()))
+        searchHistoryUseCase: sl(),
+        pricingInventoryUseCase: sl()))
 
     //shop
     ..registerFactory(() => ShopPageBloc(shopUseCase: sl()))
@@ -416,7 +417,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => LoadWebsiteUrlBloc(platformUsecase: sl()))
 
     //product carousel
-    ..registerFactory(() => ProductCarouselCubit(productCarouselUseCase: sl()))
+    ..registerFactory(() => ProductCarouselCubit(pricingInventoryUseCase: sl()))
     ..registerFactory(() => ProductCarouselUseCase())
 
     // product details
