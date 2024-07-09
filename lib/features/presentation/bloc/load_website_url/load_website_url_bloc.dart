@@ -1,5 +1,7 @@
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/platform_usecase/platform_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 part 'load_website_url_event.dart';
 part 'load_website_url_state.dart';
@@ -11,6 +13,22 @@ class LoadWebsiteUrlBloc extends Bloc<LoadWebsiteUrlEvent, LoadWebsiteUrlState> 
       : _platformUsecase = platformUsecase,
         super(LoadWebsiteUrlInitialState()) {
     on<LoadWebsiteUrlLoadEvent>(_onLoadWebsiteUrlLoadEvent);
+    on<LoadCustomUrlLoadEvent>(_onLoadCustomUrlLoadEvent);
+  }
+
+  Future<void> _onLoadCustomUrlLoadEvent(
+      LoadCustomUrlLoadEvent event, Emitter<LoadWebsiteUrlState> emit) async {
+    emit(LoadWebsiteUrlInitialState());
+    if(event.customUrl?.isNullOrEmpty == true){
+      emit(LoadWebsiteUrlFailureState(LocalizationConstants.invalidUrl));
+    }else{
+      var result = await _platformUsecase.getAuthorizedCustomUrl(event.customUrl!);
+      if(result!=null){
+        emit(LoadCustomUrlLoadedState(customURL: result));
+      }else{
+        emit(LoadWebsiteUrlFailureState(LocalizationConstants.invalidUrl));
+      }
+    }
   }
 
   Future<void> _onLoadWebsiteUrlLoadEvent(
@@ -20,7 +38,7 @@ class LoadWebsiteUrlBloc extends Bloc<LoadWebsiteUrlEvent, LoadWebsiteUrlState> 
     if(result!=null){
       emit(LoadWebsiteUrlLoadedState(authorizedURL: result));
     }else{
-      emit(LoadWebsiteUrlFailureState('Failed to load url'));
+      emit(LoadWebsiteUrlFailureState(LocalizationConstants.failedToLoadUrl));
     }
   }
 }

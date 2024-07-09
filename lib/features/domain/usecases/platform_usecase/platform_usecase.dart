@@ -6,4 +6,8 @@ class PlatformUseCase extends BaseUseCase {
     return await commerceAPIServiceProvider.getWebsiteService().getAuthorizedURL(path);
   }
 
+  Future<String?> getAuthorizedCustomUrl(String path) async {
+    return await commerceAPIServiceProvider.getWebsiteService().getAuthorizedURL(path);
+  }
+
 }

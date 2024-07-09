@@ -8,3 +8,10 @@ class LoadWebsiteUrlLoadEvent extends LoadWebsiteUrlEvent {
     required this.redirectUrl,
   });
 }
+
+class LoadCustomUrlLoadEvent extends LoadWebsiteUrlEvent {
+  String? customUrl;
+  LoadCustomUrlLoadEvent({
+    required this.customUrl,
+  });
+}
