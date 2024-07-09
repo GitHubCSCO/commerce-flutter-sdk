@@ -45,6 +45,18 @@ class BaseActionItemWidget extends StatelessWidget {
         return "assets/images/icon_view_account.svg";
       case ActionType.search:
         return "assets/images/icon_search.svg";
+      case ActionType.savedOrders:
+        return "assets/images/icon_saved_order.svg";
+      case ActionType.orderApproval:
+        return "assets/images/icon_order_approval.svg";
+      case ActionType.invoices:
+        return "assets/images/icon_invoice_history.svg";
+      case ActionType.savedPayments:
+        return "assets/images/icon_saved_payments.svg";
+      case ActionType.vmi:
+        return "assets/images/icon_vmi.svg";
+      case ActionType.quotes:
+        return "assets/images/icon_quotes.svg";
       default:
         return "assets/images/icon_view_account.svg";
     }
