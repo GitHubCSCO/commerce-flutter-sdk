@@ -84,7 +84,9 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
     final productSettings = (await _searchUseCase.loadProductSettings()).getResultSuccessValue();
     final productPricingEnabled = await _searchUseCase.getProductPricingEnable();
 
+    final products = await updateProductPricingAndInventoryAvailability(productCollectionResult?.products);
 
+    productCollectionResult?.products = products;
 
     emit(
       state.copyWith(
@@ -125,7 +127,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
       return;
     }
 
-    final products = state.productEntities?.products;
+    final products = await updateProductPricingAndInventoryAvailability(state.productEntities?.products);
 
     switch (result) {
       case Success(value: final data):
@@ -142,7 +144,8 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
       ),
     );
   }
-  Future<List<ProductEntity>> updateProductPricingAndInventoryAvailability(List<Product>? products) async {
+
+  Future<List<Product>> updateProductPricingAndInventoryAvailability(List<Product>? products) async {
 
     final productPricingEnabled =
         await _searchUseCase.getProductPricingEnable();
@@ -245,10 +248,15 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
                   }
                 }
 
-                product?.copyWith(
-                    availability: productAvailability,
-                    qtyOnHand: qtyOnHand
-                );
+                product.availability = productAvailability;
+
+                // product = product.copyWith(
+                //     availability: productAvailability,
+                //     qtyOnHand: qtyOnHand
+                // );
+                //
+                // final List<Product> dafaf = [];
+                // dafaf.add(ProductEntityMapper().toModel(product));
               }
             }
           }
@@ -259,17 +267,22 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
               message: LocalizationConstants.unableToRetrieveInventory,
             );
 
-            product?.copyWith(
-              availability: AvailabilityEntityMapper().toEntity(productAvailability),
-            );
+            product.availability = AvailabilityEntityMapper().toEntity(productAvailability);
+            // product?.copyWith(
+            //   availability: AvailabilityEntityMapper().toEntity(productAvailability),
+            // );
           }
         }
       }
     }
 
+    final List<Product> list = [];
 
+    for (var product in productList) {
+      list.add(ProductEntityMapper().toModel(product));
+    }
 
-    return productList;
+    return list;
 
   }
 

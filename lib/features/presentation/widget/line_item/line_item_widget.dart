@@ -106,8 +106,6 @@ class LineItemWidget extends StatelessWidget {
             productId: productId,
             erpNumber: productNumber,
             unitOfMeasure: unitOfMeasure,
-            
-            
           ),
           LineItemQuantityGroupWidget(
             qtyOrdered: qtyOrdered,

@@ -356,7 +356,17 @@ class SearchProductWidget extends StatelessWidget {
     );
   }
 
-  bool _showWarehouseInventory() =>
-      InventoryUtils.isInventoryPerWarehouseButtonShownAsync(productSettings);
+  bool _showWarehouseInventory() {
+    var warehouseInventoryButtonEnabled = InventoryUtils.isInventoryPerWarehouseButtonShownAsync(productSettings);
+    var showWarehouseInventoryButton = false;
+
+    if (!(product.isConfigured ?? false) || (product.isFixedConfiguration ?? false) && !(product.isStyleProductParent ?? false)) {
+      if (product.availability != null && !(product.availability?.requiresRealTimeInventory ?? false) && (product.availability?.messageType ?? 0) != 0) {
+        showWarehouseInventoryButton = (product.trackInventory ?? false) && warehouseInventoryButtonEnabled;
+      }
+    }
+
+    return showWarehouseInventoryButton;
+  }
 
 }
