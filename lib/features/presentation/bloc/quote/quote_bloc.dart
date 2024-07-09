@@ -1,12 +1,39 @@
+import 'package:commerce_flutter_app/features/domain/enums/quote_page_type.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
   final QuoteUsecase _quoteUsecase;
 
   QuoteBloc({required QuoteUsecase quoteUsecase})
       : _quoteUsecase = quoteUsecase,
-        super(QuoteInitial());
+        super(QuoteInitial()) {
+    on<QuoteLoadEvent>((event, emit) => _onQuoteLoadEvent(event, emit));
+  }
+
+  Future<void> _onQuoteLoadEvent(
+      QuoteLoadEvent event, Emitter<QuoteState> emit) async {
+    emit(QuoteLoading());
+
+    event.quoteParameters ??= QuoteQueryParameters(
+      pageSize: 16,
+      expand: ['saleslist'],
+    );
+    var result = await _quoteUsecase.getQuotes(event.quoteParameters!);
+    switch (result) {
+      case Success(value: final data):
+        emit(QuoteLoaded(
+            quotePageType: QuotePageType.pending, quotes: data?.quotes ?? []));
+        break;
+      case Failure(errorResponse: final errorResponse):
+        emit(QuoteFailed(
+            error: errorResponse.errorDescription ?? '',
+            quotePageType: QuotePageType.pending));
+        break;
+      default:
+    }
+  }
 }

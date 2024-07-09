@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/features/domain/enums/quote_page_type.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 abstract class QuoteState {}
@@ -7,17 +8,15 @@ class QuoteInitial extends QuoteState {}
 class QuoteLoading extends QuoteState {}
 
 class QuoteLoaded extends QuoteState {
-  final bool isActiveJob;
-  final JobQuoteResult jobQuoteResult;
-  final QuoteResult quoteResult;
+  final QuotePageType quotePageType;
+  final List<QuoteDto>? quotes;
   QuoteLoaded(
-      {required this.isActiveJob,
-      required this.jobQuoteResult,
-      required this.quoteResult});
+      {required this.quotePageType,
+      required this.quotes});
 }
 
 class QuoteFailed extends QuoteState {
   final String error;
-
-  QuoteFailed(this.error);
+  final QuotePageType quotePageType;
+  QuoteFailed({required this.error, required this.quotePageType});
 }

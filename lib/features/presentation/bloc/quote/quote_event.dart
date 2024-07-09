@@ -1,9 +1,27 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:equatable/equatable.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-abstract class QuoteEvent {}
+import 'package:commerce_flutter_app/features/domain/enums/quote_page_type.dart';
+
+abstract class QuoteEvent extends Equatable {}
 
 class QuoteLoadEvent extends QuoteEvent {
-  final QuoteQueryParameters QuoteParameters;
+  final QuotePageType quotePageType;
+  QuoteQueryParameters? quoteParameters;
 
-  QuoteLoadEvent({required this.QuoteParameters});
+  QuoteLoadEvent({required this.quoteParameters, required this.quotePageType});
+
+  @override
+  List<Object?> get props => [quotePageType, quoteParameters];
+
+  QuoteLoadEvent copyWith({
+    QuotePageType? quotePageType,
+    QuoteQueryParameters? quoteParameters,
+  }) {
+    return QuoteLoadEvent(
+      quotePageType: quotePageType ?? this.quotePageType,
+      quoteParameters: quoteParameters ?? this.quoteParameters,
+    );
+  }
 }
