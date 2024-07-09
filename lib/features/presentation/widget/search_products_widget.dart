@@ -284,6 +284,7 @@ class SearchProductWidget extends StatelessWidget {
                       color: OptiAppColors.textDisabledColor,
                     ),
                   ),
+                  _getInfoWidget(),
                   const SizedBox(height: 4),
                   LineItemPricingWidget(
                     discountMessage: product.pricing?.getDiscountValue(),
@@ -355,6 +356,72 @@ class SearchProductWidget extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _getInfoWidget() {
+    List<Widget> list = [];
+
+    final myPart = _buildRow(
+        LocalizationConstants.myPartNumberSign,
+        OptiTextStyles.bodySmall,
+        product.customerName ??
+            '',
+        OptiTextStyles.bodyExtraSmall);
+    final mfg = _buildRow(
+        LocalizationConstants.mFGNumberSign,
+        OptiTextStyles.bodySmall,
+        product.manufacturerItem ??
+            '',
+        OptiTextStyles.bodyExtraSmall);
+
+    final pack = _buildRow(
+        LocalizationConstants.packSign,
+        OptiTextStyles.bodySmall,
+        product.packDescription ??
+            '',
+        OptiTextStyles.bodyExtraSmall);
+
+    if (myPart != null) {
+      list.add(myPart);
+    }
+    if (mfg != null) {
+      list.add(mfg);
+    }
+    if (pack != null) {
+      list.add(pack);
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: list,
+    );
+  }
+
+  Widget? _buildRow(String title, TextStyle titleTextStyle, String body,
+      TextStyle bodyTextStyle) {
+    if (title.isEmpty || body.isEmpty) {
+      return null;
+    }
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: const EdgeInsets.only(right: 8),
+          child: Text(
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.start,
+            style: titleTextStyle,
+          ),
+        ),
+        Text(
+          body,
+          textAlign: TextAlign.start,
+          style: bodyTextStyle,
+        )
+      ],
     );
   }
 

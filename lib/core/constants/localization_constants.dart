@@ -257,6 +257,7 @@ class LocalizationConstants {
   static const myPartNumberSign = "My Part #";
   static const mFGNumberSign = "MFG #";
   static const packDescription = "Pack";
+  static const packSign = "Pack #";
   static const selectSomething = "Select";
   static const documents = "Documents";
   static const recommendedProducts = "Recommended Products";
