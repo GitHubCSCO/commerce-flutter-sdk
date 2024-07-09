@@ -569,6 +569,11 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           networkService: sl(),
         ))
+    ..registerLazySingleton<IInvoiceService>(() => InvoiceService(
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
     ..registerSingletonAsync<IDeviceService>(() async {
       final service = DeviceService();
       await service.init();
