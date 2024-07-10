@@ -5,7 +5,9 @@ import 'package:commerce_flutter_app/core/constants/site_message_constants.dart'
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/enums/invoice_sort_order.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/invoice_history/invoice_history_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,7 +64,7 @@ class InvoiceHistoryPage extends StatelessWidget {
                     height: 50,
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           state.invoiceCollectionModel.pagination
@@ -71,6 +73,23 @@ class InvoiceHistoryPage extends StatelessWidget {
                               ? '${state.invoiceCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.invoices}'
                               : '',
                           style: OptiTextStyles.header3,
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SortToolMenu(
+                              availableSortOrders: InvoiceSortOrder.values,
+                              onSortOrderChanged:
+                                  (SortOrderAttribute sortOrder) async {
+                                await context
+                                    .read<InvoiceHistoryCubit>()
+                                    .changeSortOrder(
+                                      sortOrder as InvoiceSortOrder,
+                                    );
+                              },
+                              selectedSortOrder: state.invoiceSortOrder,
+                            )
+                          ],
                         ),
                       ],
                     ),

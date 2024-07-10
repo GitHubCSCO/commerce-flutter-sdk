@@ -13,11 +13,13 @@ class InvoiceHistoryState extends Equatable {
   final InvoiceStatus status;
   final GetInvoiceResult invoiceCollectionModel;
   final InvoiceQueryParameters invoiceQueryParameters;
+  final InvoiceSortOrder invoiceSortOrder;
 
   const InvoiceHistoryState({
     required this.status,
     required this.invoiceCollectionModel,
     required this.invoiceQueryParameters,
+    required this.invoiceSortOrder,
   });
 
   @override
@@ -25,12 +27,14 @@ class InvoiceHistoryState extends Equatable {
         status,
         invoiceCollectionModel,
         invoiceQueryParameters,
+        invoiceSortOrder,
       ];
 
   InvoiceHistoryState copyWith({
     InvoiceStatus? status,
     GetInvoiceResult? invoiceCollectionModel,
     InvoiceQueryParameters? invoiceQueryParameters,
+    InvoiceSortOrder? invoiceSortOrder,
   }) {
     return InvoiceHistoryState(
       status: status ?? this.status,
@@ -38,6 +42,7 @@ class InvoiceHistoryState extends Equatable {
           invoiceCollectionModel ?? this.invoiceCollectionModel,
       invoiceQueryParameters:
           invoiceQueryParameters ?? this.invoiceQueryParameters,
+      invoiceSortOrder: invoiceSortOrder ?? this.invoiceSortOrder,
     );
   }
 }

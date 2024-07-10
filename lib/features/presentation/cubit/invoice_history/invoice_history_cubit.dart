@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
+import 'package:commerce_flutter_app/features/domain/enums/invoice_sort_order.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/invoice_usecase/invoice_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,8 +21,23 @@ class InvoiceHistoryCubit extends Cubit<InvoiceHistoryState> {
               pageSize: CoreConstants.defaultPageSize,
               customerSequence: '-1',
             ),
+            invoiceSortOrder: InvoiceSortOrder.invoiceDateDescending,
           ),
         );
+
+  Future<void> changeSortOrder(InvoiceSortOrder invoiceSortOrder) async {
+    final newQueryParameters = state.invoiceQueryParameters;
+    newQueryParameters.sort = invoiceSortOrder.value;
+
+    emit(
+      state.copyWith(
+        invoiceSortOrder: invoiceSortOrder,
+        invoiceQueryParameters: newQueryParameters,
+      ),
+    );
+
+    await loadInvoiceHistory();
+  }
 
   Future<void> loadInvoiceHistory() async {
     final newQueryParameters = state.invoiceQueryParameters;
