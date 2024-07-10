@@ -112,6 +112,7 @@ class InvoiceHistoryCubit extends Cubit<InvoiceHistoryState> {
     DateTime? fromDate,
     DateTime? toDate,
     ShipTo? shipTo,
+    String? customerSequence,
   }) async {
     final newInvoiceQueryParameter = state.invoiceQueryParameters;
     newInvoiceQueryParameter.invoiceNumber = invoiceNumber;
@@ -121,7 +122,7 @@ class InvoiceHistoryCubit extends Cubit<InvoiceHistoryState> {
     newInvoiceQueryParameter.fromDate = fromDate;
     newInvoiceQueryParameter.toDate = toDate;
     newInvoiceQueryParameter.shipTo = shipTo;
-    newInvoiceQueryParameter.customerSequence = shipTo?.customerSequence;
+    newInvoiceQueryParameter.customerSequence = customerSequence;
 
     emit(
       state.copyWith(

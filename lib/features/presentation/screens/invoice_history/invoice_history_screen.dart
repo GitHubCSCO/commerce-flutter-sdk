@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/domain/enums/invoice_sort_order.da
 import 'package:commerce_flutter_app/features/presentation/cubit/invoice_history/invoice_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/invoice_history_filter_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -88,7 +89,35 @@ class InvoiceHistoryPage extends StatelessWidget {
                                     );
                               },
                               selectedSortOrder: state.invoiceSortOrder,
-                            )
+                            ),
+                            const SizedBox(width: 10),
+                            InvoiceHistoryFilterWidget(
+                              invoiceQueryParameters:
+                                  state.invoiceQueryParameters,
+                              hasFilter:
+                                  context.read<InvoiceHistoryCubit>().hasFilter,
+                              onApply: ({
+                                showOpenOnly,
+                                invoiceNumber,
+                                poNumber,
+                                orderNumber,
+                                shipTo,
+                                fromDate,
+                                toDate,
+                                customerSequence,
+                              }) {
+                                context.read<InvoiceHistoryCubit>().applyFilter(
+                                      showOpenOnly: showOpenOnly,
+                                      invoiceNumber: invoiceNumber,
+                                      poNumber: poNumber,
+                                      orderNumber: orderNumber,
+                                      shipTo: shipTo,
+                                      fromDate: fromDate,
+                                      toDate: toDate,
+                                      customerSequence: customerSequence,
+                                    );
+                              },
+                            ),
                           ],
                         ),
                       ],

@@ -29,7 +29,11 @@ class InvoiceHistoryFilterCubit extends Cubit<InvoiceHistoryFilterState> {
   }
 
   void reset() {
-    emit(InvoiceHistoryFilterState());
+    emit(
+      InvoiceHistoryFilterState(
+        billTo: state.billTo,
+      ),
+    );
   }
 
   void setInvoiceNumber(String? invoiceNumber) {
@@ -44,10 +48,12 @@ class InvoiceHistoryFilterCubit extends Cubit<InvoiceHistoryFilterState> {
     emit(newState);
   }
 
-  void setShowOpenOnly(bool? showOpenOnly) {
-    var newState = state.copyWith();
-    newState.showOpenOnly = showOpenOnly ?? false;
-    emit(newState);
+  void toggleShowMyOrders() {
+    emit(
+      state.copyWith(
+        showOpenOnly: !state.showOpenOnly,
+      ),
+    );
   }
 
   void setOrderNumber(String? orderNumber) {
@@ -71,12 +77,7 @@ class InvoiceHistoryFilterCubit extends Cubit<InvoiceHistoryFilterState> {
   void setShipTo(ShipTo? shipTo) {
     var newState = state.copyWith();
     newState.shipTo = shipTo;
-    emit(newState);
-  }
-
-  void setCustomerSequence(String? customerSequence) {
-    var newState = state.copyWith();
-    newState.customerSequence = customerSequence;
+    newState.customerSequence = shipTo?.customerSequence;
     emit(newState);
   }
 }
