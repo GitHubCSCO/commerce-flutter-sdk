@@ -9,7 +9,19 @@ class InvoiceUseCase extends BaseUseCase {
     final result = await commerceAPIServiceProvider
         .getInvoiceService()
         .getInvoices(parameters: invoiceQueryParameters);
-    
+
     return result.getResultSuccessValue();
+  }
+
+  Future<BillTo?> getBillToAddress() async {
+    var session = commerceAPIServiceProvider
+        .getSessionService()
+        .getCachedCurrentSession();
+    session ??= (await commerceAPIServiceProvider
+            .getSessionService()
+            .getCurrentSession())
+        .getResultSuccessValue();
+
+    return session?.billTo;
   }
 }
