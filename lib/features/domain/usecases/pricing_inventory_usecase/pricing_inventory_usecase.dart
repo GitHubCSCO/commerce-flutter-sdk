@@ -16,6 +16,10 @@ class PricingInventoryUseCase extends BaseUseCase {
         .getProductSettingsAsync();
   }
 
+  bool getHidePricingEnable() {
+    return coreServiceProvider.getAppConfigurationService().hidePricingEnable ?? false;
+  }
+
   Future<bool> getProductPricingEnable() async {
     var productPricingEnabledResult = await coreServiceProvider.getAppConfigurationService().productPricingEnabled();
     bool productPricingPresentationEnabled = productPricingEnabledResult ?? false;

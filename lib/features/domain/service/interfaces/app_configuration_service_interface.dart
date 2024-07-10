@@ -44,9 +44,9 @@ abstract class IAppConfigurationService {
 
   String? get firebaseIOSBundleId;
 
-  bool? get showHidePricingEnable;
+  bool? get hidePricingEnable;
 
-  bool? get showHideInventoryEnable;
+  bool? get hideInventoryEnable;
 
   Future loadRemoteSettings();
 

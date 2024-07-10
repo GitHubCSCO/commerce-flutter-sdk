@@ -7,7 +7,7 @@ class ShowHidePricingInventoryUseCase extends BaseUseCase {
   }
 
   bool getHidePricingEnable() {
-    return coreServiceProvider.getAppConfigurationService().showHidePricingEnable ?? false;
+    return coreServiceProvider.getAppConfigurationService().hidePricingEnable ?? false;
   }
 
   void setHideInventoryEnable(bool enable) {
@@ -15,7 +15,7 @@ class ShowHidePricingInventoryUseCase extends BaseUseCase {
   }
 
   bool getHideInventoryEnable() {
-    return coreServiceProvider.getAppConfigurationService().showHidePricingEnable ?? false;
+    return coreServiceProvider.getAppConfigurationService().hidePricingEnable ?? false;
   }
 
 }
