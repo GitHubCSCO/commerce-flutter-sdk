@@ -44,6 +44,10 @@ abstract class IAppConfigurationService {
 
   String? get firebaseIOSBundleId;
 
+  bool? get showHidePricingEnable;
+
+  bool? get showHideInventoryEnable;
+
   Future loadRemoteSettings();
 
   Future<bool> hasWillCall();
@@ -64,4 +68,9 @@ abstract class IAppConfigurationService {
   Future<RealTimeSupport?> getRealtimeSupportType();
 
   Future<bool> isSignInRequired();
+
+  void setHidePricingEnable(bool enable);
+
+  void setHideInventoryEnable(bool enable);
+
 }

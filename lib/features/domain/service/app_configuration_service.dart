@@ -434,4 +434,21 @@ class AppConfigurationService extends ServiceBase
   @override
   // TODO: implement hasCheckoutConfiguration
   bool get hasCheckoutConfiguration => throw UnimplementedError();
+
+  @override
+  bool? showHideInventoryEnable;
+
+  @override
+  bool? showHidePricingEnable;
+
+  @override
+  void setHideInventoryEnable(bool enable) {
+    showHideInventoryEnable = enable;
+  }
+
+  @override
+  void setHidePricingEnable(bool enable) {
+    showHidePricingEnable = enable;
+  }
+
 }
