@@ -59,9 +59,8 @@ class ProductCarouselItemWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: OptiTextStyles.bodySmall),
           ),
-          Visibility(
-            visible: !hidePricingEnable,
-            child: Visibility(
+          if (!hidePricingEnable)
+            Visibility(
               visible: isLoading,
               replacement: Column(
                 children: [
@@ -82,7 +81,6 @@ class ProductCarouselItemWidget extends StatelessWidget {
                 ),
               ),
             ),
-          )
         ],
       ),
     );

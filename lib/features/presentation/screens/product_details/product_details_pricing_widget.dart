@@ -39,12 +39,16 @@ class ProductDetailsPricingWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildDiscountMessageSection(context),
-              _buildPricingSection(context),
-              _buildQuantityPricingSection(context),
-              _buildInventorySection(context),
-              // _buildInventorySection(context),
-              // For "View Availability by Warehouse"
-              _buildInventoryAvailabilitySection(context)
+              if (!(productDetailsPricingEntity.hidePricing ?? false)) ...{
+                _buildPricingSection(context),
+                _buildQuantityPricingSection(context),
+              },
+              if (!(productDetailsPricingEntity.hideInventory ?? false)) ...{
+                _buildInventorySection(context),
+                // _buildInventorySection(context),
+                // For "View Availability by Warehouse"
+                _buildInventoryAvailabilitySection(context)
+              },
             ],
           ),
         ),
