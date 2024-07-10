@@ -63,6 +63,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecas
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/order_pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/quick_order_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/request_quote_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/remote_config/remote_config_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/saved_order/saved_order_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/saved_payments_usecase/saved_payments_usecase.dart';
@@ -100,6 +101,8 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/auto_complete/quick_order_auto_complete_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/quote/request_quote/request_quote_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/quote/request_quote_selection/request_quote_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/remote_config/remote_config_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
@@ -305,6 +308,13 @@ Future<void> initInjectionContainer() async {
     // my quote
     ..registerFactory(() => QuoteBloc(quoteUsecase: sl()))
     ..registerFactory(() => QuoteUsecase())
+
+    // request quote
+    ..registerFactory(() => RequestQuoteBloc(requestQuoteUsecase: sl()))
+    ..registerFactory(() => RequestQuoteUsecase())
+
+    // request quote selection
+    ..registerFactory(() => RequestQuoteSelectionBloc())
 
     //shop category
     ..registerFactory(() => CategoryBloc(categoryUseCase: sl()))

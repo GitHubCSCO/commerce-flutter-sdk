@@ -5,40 +5,41 @@ import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_d
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BrandUseCase extends BaseUseCase {
-
   static const int numberOfInitiallyVisibleCategories = 10;
   static const int numberOfInitiallyVisibleProductLines = 10;
 
-  Future<Result<GetBrandSubCategoriesResult, ErrorResponse>> getBrandCategorySubCategories(
-    BrandCategoriesQueryParameter brandCategoriesQueryParameter
-  ) {
+  Future<Result<GetBrandSubCategoriesResult, ErrorResponse>>
+      getBrandCategorySubCategories(
+          BrandCategoriesQueryParameter brandCategoriesQueryParameter) {
     return commerceAPIServiceProvider
-                .getBrandService()
-                .getBrandCategorySubCategories(brandCategoriesQueryParameter);
+        .getBrandService()
+        .getBrandCategorySubCategories(brandCategoriesQueryParameter);
   }
 
   Future<Result<BrandAlphabetResult, ErrorResponse>> getAlphabet() async {
-    return commerceAPIServiceProvider
-                .getBrandService()
-                .getAlphabetAsync();
+    return commerceAPIServiceProvider.getBrandService().getAlphabetAsync();
   }
 
   Future<Result<GetBrandsResult, ErrorResponse>> getBrands(String name) async {
-    final parameters = BrandsQueryParameters(
-      startsWith: name
-    );
+    final parameters = BrandsQueryParameters(startsWith: name);
 
-    final result = await commerceAPIServiceProvider.getBrandService().getBrands(parameters);
+    final result = await commerceAPIServiceProvider
+        .getBrandService()
+        .getBrands(parameters);
     return result;
   }
 
-  Future<Result<List<AutocompleteBrand>, ErrorResponse>> getAutoCompleteBrands(String searchQuery) async {
-    final result = await commerceAPIServiceProvider.getAutocompleteService().getAutocompleteBrands(searchQuery);
+  Future<Result<List<AutocompleteBrand>, ErrorResponse>> getAutoCompleteBrands(
+      String searchQuery) async {
+    final result = await commerceAPIServiceProvider
+        .getAutocompleteService()
+        .getAutocompleteBrands(searchQuery);
     return result;
   }
 
   Future<Result<Brand, ErrorResponse>> getBrand(String id) async {
-    final result = await commerceAPIServiceProvider.getBrandService().getBrand(id);
+    final result =
+        await commerceAPIServiceProvider.getBrandService().getBrand(id);
     return result;
   }
 
@@ -58,15 +59,18 @@ class BrandUseCase extends BaseUseCase {
   }
 
   Future<List<BrandProductLine>?> _getBrandProductLines(Brand brand) async {
-      final productLinesQueryParameters = ProductLinesQueryParameters(
-        brandId: brand.id,
-        page: 1,
-        pageSize: numberOfInitiallyVisibleProductLines,
-      );
-      final brandProductLinesResultResponse = await commerceAPIServiceProvider.getBrandService().getBrandProductLines(productLinesQueryParameters);
-      final brandProductLines = brandProductLinesResultResponse.getResultSuccessValue();
+    final productLinesQueryParameters = ProductLinesQueryParameters(
+      brandId: brand.id,
+      page: 1,
+      pageSize: numberOfInitiallyVisibleProductLines,
+    );
+    final brandProductLinesResultResponse = await commerceAPIServiceProvider
+        .getBrandService()
+        .getBrandProductLines(productLinesQueryParameters);
+    final brandProductLines =
+        brandProductLinesResultResponse.getResultSuccessValue();
 
-      return brandProductLines?.productLines; 
+    return brandProductLines?.productLines;
   }
 
   Future<BrandDetailsEntity> getBrandDetails(Brand brand) async {
@@ -76,8 +80,11 @@ class BrandUseCase extends BaseUseCase {
       expand: ['htmlcontent', 'topsellerproducts'],
     );
 
-    final brandInfosResponse = await commerceAPIServiceProvider.getBrandService().getBrand(brand.id ?? '', brandParameters: brandQueryParameters);
-    final brandEntity = BrandEntityMapper().toEntity(brandInfosResponse.getResultSuccessValue());
+    final brandInfosResponse = await commerceAPIServiceProvider
+        .getBrandService()
+        .getBrand(brand.id ?? '', brandParameters: brandQueryParameters);
+    final brandEntity =
+        BrandEntityMapper.toEntity(brandInfosResponse.getResultSuccessValue());
     detailsEntity.brandEntity = brandEntity;
 
     detailsEntity.brandCategories = await _getBrandCategories(brand);

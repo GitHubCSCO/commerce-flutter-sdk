@@ -1,19 +1,22 @@
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_state.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_header_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CartLineWidgetList extends StatelessWidget {
-
   final bool? showClearCart;
   final List<CartLineEntity> cartLineEntities;
   final void Function(BuildContext) onCartChangeCallBack;
 
-  CartLineWidgetList({required this.cartLineEntities, required this.onCartChangeCallBack, this.showClearCart});
+  CartLineWidgetList(
+      {required this.cartLineEntities,
+      required this.onCartChangeCallBack,
+      this.showClearCart});
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +35,28 @@ class CartLineWidgetList extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CartContentHeaderWidget(cartCount: cartLineEntities.length, showClearCart: showClearCart),
+              CartContentHeaderWidget(
+                  cartCount: cartLineEntities.length,
+                  showClearCart: showClearCart),
               Column(
                 children: cartLineEntities
-                    .map((cartLineEntity) =>
-                        CartLineWidget(cartLineEntity: cartLineEntity))
+                    .map((cartLineEntity) => CartLineWidget(
+                          cartLineEntity: cartLineEntity,
+                          onCartLineRemovedCallback: (cartLineEntity) {
+                            context.read<CartContentBloc>().add(
+                                CartContentRemoveEvent(
+                                    cartLine: CartLineEntityMapper
+                                        .toModel(cartLineEntity)));
+                          },
+                          onCartQuantityChangedCallback: (quantity) {
+                            context.read<CartContentBloc>().add(
+                                  CartContentQuantityChangedEvent(
+                                    cartLineEntity: cartLineEntity.copyWith(
+                                        qtyOrdered: quantity),
+                                  ),
+                                );
+                          },
+                        ))
                     .toList(),
               ),
             ],

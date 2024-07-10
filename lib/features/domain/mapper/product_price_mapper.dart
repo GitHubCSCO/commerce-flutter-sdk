@@ -3,7 +3,7 @@ import 'package:commerce_flutter_app/features/domain/mapper/break_price_mapper.d
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductPriceEntityMapper {
-  ProductPriceEntity toEntity(ProductPrice? model) => ProductPriceEntity(
+  static ProductPriceEntity toEntity(ProductPrice? model) => ProductPriceEntity(
         productId: model?.productId,
         isOnSale: model?.isOnSale,
         requiresRealTimePrice: model?.requiresRealTimePrice,
@@ -49,7 +49,7 @@ class ProductPriceEntityMapper {
             .toList(),
       );
 
-  ProductPrice toModel(ProductPriceEntity entity) => ProductPrice(
+  static ProductPrice toModel(ProductPriceEntity entity) => ProductPrice(
         productId: entity.productId,
         isOnSale: entity.isOnSale,
         requiresRealTimePrice: entity.requiresRealTimePrice,

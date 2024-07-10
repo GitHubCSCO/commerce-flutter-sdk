@@ -46,7 +46,7 @@ class ProductEntityMapper {
         mediumImagePath: model.mediumImagePath,
         largeImagePath: model.largeImagePath,
         pricing: model.pricing != null
-            ? ProductPriceEntityMapper().toEntity(model.pricing)
+            ? ProductPriceEntityMapper.toEntity(model.pricing)
             : null,
         currencySymbol: model.currencySymbol,
         qtyOnHand: model.qtyOnHand,
@@ -118,10 +118,10 @@ class ProductEntityMapper {
         numberInCart: model.numberInCart,
         qtyOrdered: model.qtyOrdered,
         availability: model.availability != null
-            ? AvailabilityEntityMapper().toEntity(model.availability)
+            ? AvailabilityEntityMapper.toEntity(model.availability)
             : null,
         styleTraits: model.styleTraits
-            ?.map((e) => StyleTraitEntityMapper().toEntity(e))
+            ?.map((e) => StyleTraitEntityMapper.toEntity(e))
             .toList(),
         styledProducts: model.styledProducts
             ?.map((e) => StyledProductEntityMapper().toEntity(e))
@@ -142,24 +142,24 @@ class ProductEntityMapper {
             ?.map((e) => ProductEntityMapper().toEntity(e))
             .toList(),
         productUnitOfMeasures: model.productUnitOfMeasures
-            ?.map((e) => ProductUnitOfMeasureEntityMapper().toEntity(e))
+            ?.map((e) => ProductUnitOfMeasureEntityMapper.toEntity(e))
             .toList(),
         productImages: model.productImages
-            ?.map((e) => ProductImageEntityMapper().toEntity(e))
+            ?.map((e) => ProductImageEntityMapper.toEntity(e))
             .toList(),
         score: model.score,
         searchBoost: model.searchBoost,
         salePriceLabel: model.salePriceLabel,
         productSubscription: model.productSubscription != null
-            ? ProductSubscriptionEntityMapper()
-                .toEntity(model.productSubscription)
+            ? ProductSubscriptionEntityMapper.toEntity(
+                model.productSubscription)
             : null,
         replacementProductId: model.replacementProductId,
         warehouses: model.warehouses
             ?.map((e) => InventoryWarehouseEntityMapper().toEntity(e))
             .toList(),
         brand: model.brand != null
-            ? BrandEntityMapper().toEntity(model.brand)
+            ? BrandEntityMapper.toEntity(model.brand)
             : null,
         productNumber: model.productNumber,
         customerProductNumber: model.customerProductNumber,
@@ -174,28 +174,28 @@ class ProductEntityMapper {
         variantTypeId: model.variantTypeId,
         cantBuy: model.cantBuy,
         productLine: model.productLine != null
-            ? ProductLineEntityMapper().toEntity(model.productLine)
+            ? ProductLineEntityMapper.toEntity(model.productLine)
             : null,
         unitOfMeasures: model.unitOfMeasures
-            ?.map((e) => ProductUnitOfMeasureEntityMapper().toEntity(e))
+            ?.map((e) => ProductUnitOfMeasureEntityMapper.toEntity(e))
             .toList(),
         scoreExplanation: model.scoreExplanation != null
-            ? ScoreExplanationEntityMapper().toEntity(model.scoreExplanation)
+            ? ScoreExplanationEntityMapper.toEntity(model.scoreExplanation)
             : null,
         detail: model.detail != null
-            ? ProductDetailEntityMapper().toEntity(model.detail)
+            ? ProductDetailEntityMapper.toEntity(model.detail)
             : null,
         content: model.content != null
             ? ProductContentEntityMapper().toEntity(model.content)
             : null,
         images: model.images
-            ?.map((e) => ProductImageEntityMapper().toEntity(e))
+            ?.map((e) => ProductImageEntityMapper.toEntity(e))
             .toList(),
         variantTraits: model.variantTraits
-            ?.map((e) => StyleTraitEntityMapper().toEntity(e))
+            ?.map((e) => StyleTraitEntityMapper.toEntity(e))
             .toList(),
         childTraitValues: model.childTraitValues
-            ?.map((e) => ChildTraitValueEntityMapper().toEntity(e))
+            ?.map((e) => ChildTraitValueEntityMapper.toEntity(e))
             .toList(),
       );
 
@@ -216,7 +216,8 @@ class ProductEntityMapper {
         mediumImagePath: entity.mediumImagePath,
         largeImagePath: entity.largeImagePath,
         pricing: entity.pricing != null
-            ? ProductPriceEntityMapper().toModel(entity.pricing ?? ProductPriceEntity())
+            ? ProductPriceEntityMapper.toModel(
+                entity.pricing ?? ProductPriceEntity())
             : null,
         currencySymbol: entity.currencySymbol,
         qtyOnHand: entity.qtyOnHand,
@@ -288,10 +289,11 @@ class ProductEntityMapper {
         numberInCart: entity.numberInCart,
         qtyOrdered: entity.qtyOrdered,
         availability: entity.availability != null
-            ? AvailabilityEntityMapper().toModel(entity.availability ?? AvailabilityEntity())
+            ? AvailabilityEntityMapper.toModel(
+                entity.availability ?? AvailabilityEntity())
             : null,
         styleTraits: entity.styleTraits
-            ?.map((e) => StyleTraitEntityMapper().toModel(e))
+            ?.map((e) => StyleTraitEntityMapper.toModel(e))
             .toList(),
         styledProducts: entity.styledProducts
             ?.map((e) => StyledProductEntityMapper().toModel(e))
@@ -312,24 +314,24 @@ class ProductEntityMapper {
             ?.map((e) => ProductEntityMapper().toModel(e))
             .toList(),
         productUnitOfMeasures: entity.productUnitOfMeasures
-            ?.map((e) => ProductUnitOfMeasureEntityMapper().toModel(e))
+            ?.map((e) => ProductUnitOfMeasureEntityMapper.toModel(e))
             .toList(),
         productImages: entity.productImages
-            ?.map((e) => ProductImageEntityMapper().toModel(e))
+            ?.map((e) => ProductImageEntityMapper.toModel(e))
             .toList(),
         score: entity.score,
         searchBoost: entity.searchBoost,
         salePriceLabel: entity.salePriceLabel,
         productSubscription: entity.productSubscription != null
-            ? ProductSubscriptionEntityMapper()
-                .toModel(entity.productSubscription ?? ProductSubscriptionEntity())
+            ? ProductSubscriptionEntityMapper.toModel(
+                entity.productSubscription ?? ProductSubscriptionEntity())
             : null,
         replacementProductId: entity.replacementProductId,
         warehouses: entity.warehouses
             ?.map((e) => InventoryWarehouseEntityMapper().toModel(e))
             .toList(),
         brand: entity.brand != null
-            ? BrandEntityMapper().toModel(entity.brand ?? BrandEntity())
+            ? BrandEntityMapper.toModel(entity.brand ?? BrandEntity())
             : null,
         productNumber: entity.productNumber,
         customerProductNumber: entity.customerProductNumber,
@@ -344,28 +346,33 @@ class ProductEntityMapper {
         variantTypeId: entity.variantTypeId,
         cantBuy: entity.cantBuy,
         productLine: entity.productLine != null
-            ? ProductLineEntityMapper().toModel(entity.productLine ?? ProductLineEntity())
+            ? ProductLineEntityMapper.toModel(
+                entity.productLine ?? ProductLineEntity())
             : null,
         unitOfMeasures: entity.unitOfMeasures
-            ?.map((e) => ProductUnitOfMeasureEntityMapper().toModel(e ?? ProductUnitOfMeasureEntity()))
+            ?.map((e) => ProductUnitOfMeasureEntityMapper.toModel(
+                e ?? ProductUnitOfMeasureEntity()))
             .toList(),
         scoreExplanation: entity.scoreExplanation != null
-            ? ScoreExplanationEntityMapper().toModel(entity.scoreExplanation ?? ScoreExplanationEntity())
+            ? ScoreExplanationEntityMapper.toModel(
+                entity.scoreExplanation ?? ScoreExplanationEntity())
             : null,
         detail: entity.detail != null
-            ? ProductDetailEntityMapper().toModel(entity.detail ?? ProductDetailEntity())
+            ? ProductDetailEntityMapper.toModel(
+                entity.detail ?? ProductDetailEntity())
             : null,
         content: entity.content != null
-            ? ProductContentEntityMapper().toModel(entity.content ?? ProductContentEntity())
+            ? ProductContentEntityMapper()
+                .toModel(entity.content ?? ProductContentEntity())
             : null,
         images: entity.images
-            ?.map((e) => ProductImageEntityMapper().toModel(e))
+            ?.map((e) => ProductImageEntityMapper.toModel(e))
             .toList(),
         variantTraits: entity.variantTraits
-            ?.map((e) => StyleTraitEntityMapper().toModel(e))
+            ?.map((e) => StyleTraitEntityMapper.toModel(e))
             .toList(),
         childTraitValues: entity.childTraitValues
-            ?.map((e) => ChildTraitValueEntityMapper().toModel(e))
+            ?.map((e) => ChildTraitValueEntityMapper.toModel(e))
             .toList(),
       );
 }

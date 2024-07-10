@@ -113,7 +113,7 @@ class WishListDetailsUsecase extends WishListUsecase {
 
           return line.copyWith(
             pricing: realTimePrice != null
-                ? ProductPriceEntityMapper().toEntity(realTimePrice)
+                ? ProductPriceEntityMapper.toEntity(realTimePrice)
                 : line.pricing,
           );
         }).toList();
@@ -174,8 +174,8 @@ class WishListDetailsUsecase extends WishListUsecase {
             }
 
             return line.copyWith(
-              availability: AvailabilityEntityMapper()
-                  .toEntity(inventoryAvailablility.availability),
+              availability: AvailabilityEntityMapper.toEntity(
+                  inventoryAvailablility.availability),
             );
           },
         ).toList();

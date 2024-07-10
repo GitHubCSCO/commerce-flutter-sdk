@@ -181,6 +181,18 @@ class CartPage extends StatelessWidget {
                             Visibility(
                               visible: context
                                   .watch<CartPageBloc>()
+                                  .canSubmitForQuote,
+                              child: PrimaryButton(
+                                onPressed: () {
+                                  AppRoute.requestQuote
+                                      .navigateBackStack(context);
+                                },
+                                text: LocalizationConstants.submitForQuote,
+                              ),
+                            ),
+                            Visibility(
+                              visible: context
+                                  .watch<CartPageBloc>()
                                   .checkoutButtonVisible,
                               child: PrimaryButton(
                                 isEnabled: context
@@ -361,7 +373,7 @@ class CartPage extends StatelessWidget {
   void _handlePickUpLocationCallBack(
       BuildContext context, WarehouseEntity wareHouse) {
     context.read<CartPageBloc>().add(CartPagePickUpLocationChangeEvent(
-        WarehouseEntityMapper().toModel(wareHouse)));
+        WarehouseEntityMapper.toModel(wareHouse)));
   }
 }
 

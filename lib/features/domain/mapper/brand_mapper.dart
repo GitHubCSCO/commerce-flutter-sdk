@@ -3,7 +3,7 @@ import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart'
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BrandEntityMapper {
-  BrandEntity toEntity(Brand? model) => BrandEntity(
+  static BrandEntity toEntity(Brand? model) => BrandEntity(
         id: model?.id,
         name: model?.name,
         manufacturer: model?.manufacturer,
@@ -21,7 +21,7 @@ class BrandEntityMapper {
             .toList(),
       );
 
-  Brand toModel(BrandEntity entity) => Brand(
+  static Brand toModel(BrandEntity entity) => Brand(
         id: entity.id,
         name: entity.name,
         manufacturer: entity.manufacturer,
@@ -41,7 +41,8 @@ class BrandEntityMapper {
 }
 
 class BrandAlphabetEntityMapper {
-  BrandAlphabetEntity toEntity(BrandAlphabet? model) => BrandAlphabetEntity(
+  static BrandAlphabetEntity toEntity(BrandAlphabet? model) =>
+      BrandAlphabetEntity(
         letter: model?.letter,
         count: model?.count,
       );

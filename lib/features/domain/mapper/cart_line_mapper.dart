@@ -9,28 +9,28 @@ import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class AddCartLineMapper {
-  AddCartLineEntity toEntity(AddCartLine? model) => AddCartLineEntity(
+  static AddCartLineEntity toEntity(AddCartLine? model) => AddCartLineEntity(
         productId: model?.productId,
         qtyOrdered: model?.qtyOrdered,
         unitOfMeasure: model?.unitOfMeasure,
         notes: model?.notes,
         vmiBinId: model?.vmiBinId,
         sectionOptions: model?.sectionOptions
-            ?.map((e) => SectionOptionEntityMapper().toEntity(e))
+            ?.map((e) => SectionOptionEntityMapper.toEntity(e))
             .toList(),
       );
 }
 
 class CartLineListMapper {
-  CartLineListEntity toEntity(CartLineList model) => CartLineListEntity(
+  static CartLineListEntity toEntity(CartLineList model) => CartLineListEntity(
         cartLines: model.cartLines
-            ?.map((e) => CartLineEntityMapper().toEntity(e))
+            ?.map((e) => CartLineEntityMapper.toEntity(e))
             .toList(),
       );
 }
 
 class CartLineEntityMapper {
-  CartLineEntity toEntity(CartLine model) => CartLineEntity(
+  static CartLineEntity toEntity(CartLine model) => CartLineEntity(
         productUri: model.productUri,
         id: model.id,
         productId: model.productId,
@@ -51,7 +51,7 @@ class CartLineEntityMapper {
         qtyPerBaseUnitOfMeasure: model.qtyPerBaseUnitOfMeasure,
         costCode: model.costCode,
         qtyLeft: model.qtyLeft,
-        pricing: ProductPriceEntityMapper().toEntity(model.pricing),
+        pricing: ProductPriceEntityMapper.toEntity(model.pricing),
         isPromotionItem: model.isPromotionItem,
         isDiscounted: model.isDiscounted,
         isFixedConfiguration: model.isFixedConfiguration,
@@ -59,7 +59,7 @@ class CartLineEntityMapper {
         breakPrices: model.breakPrices
             ?.map((e) => BreakPriceEntityMapper().toEntity(e))
             .toList(),
-        availability: AvailabilityEntityMapper().toEntity(model.availability),
+        availability: AvailabilityEntityMapper.toEntity(model.availability),
         qtyOnHand: model.qtyOnHand,
         canAddToCart: model.canAddToCart,
         isQtyAdjusted: model.isQtyAdjusted,
@@ -67,21 +67,20 @@ class CartLineEntityMapper {
         canBackOrder: model.canBackOrder,
         salePriceLabel: model.salePriceLabel,
         isSubscription: model.isSubscription,
-        productSubscription: ProductSubscriptionEntityMapper()
-            .toEntity(model.productSubscription),
+        productSubscription:
+            ProductSubscriptionEntityMapper.toEntity(model.productSubscription),
         isRestricted: model.isRestricted,
         isActive: model.isActive,
-        brand: BrandEntityMapper().toEntity(model.brand),
+        brand: BrandEntityMapper.toEntity(model.brand),
         status: model.status,
         notes: model.notes,
         vmiBinId: model.vmiBinId,
         sectionOptions: model.sectionOptions
-            ?.map((e) => SectionOptionEntityMapper().toEntity(e))
+            ?.map((e) => SectionOptionEntityMapper.toEntity(e))
             .toList(),
-    
       );
 
-  CartLine toModel(CartLineEntity entity) => CartLine(
+  static CartLine toModel(CartLineEntity entity) => CartLine(
         productUri: entity.productUri,
         id: entity.id,
         line: entity.line,
@@ -101,8 +100,8 @@ class CartLineEntityMapper {
         qtyPerBaseUnitOfMeasure: entity.qtyPerBaseUnitOfMeasure,
         costCode: entity.costCode,
         qtyLeft: entity.qtyLeft,
-        pricing: ProductPriceEntityMapper()
-            .toModel(entity.pricing ?? ProductPriceEntity()),
+        pricing: ProductPriceEntityMapper.toModel(
+            entity.pricing ?? ProductPriceEntity()),
         isPromotionItem: entity.isPromotionItem,
         isDiscounted: entity.isDiscounted,
         isFixedConfiguration: entity.isFixedConfiguration,
@@ -110,8 +109,8 @@ class CartLineEntityMapper {
         breakPrices: entity.breakPrices
             ?.map((e) => BreakPriceEntityMapper().toModel(e))
             .toList(),
-        availability: AvailabilityEntityMapper()
-            .toModel(entity.availability ?? AvailabilityEntity()),
+        availability: AvailabilityEntityMapper.toModel(
+            entity.availability ?? AvailabilityEntity()),
         qtyOnHand: entity.qtyOnHand,
         canAddToCart: entity.canAddToCart,
         isQtyAdjusted: entity.isQtyAdjusted,
@@ -119,23 +118,25 @@ class CartLineEntityMapper {
         canBackOrder: entity.canBackOrder,
         salePriceLabel: entity.salePriceLabel,
         isSubscription: entity.isSubscription,
-        productSubscription: ProductSubscriptionEntityMapper()
-            .toModel(entity.productSubscription ?? ProductSubscriptionEntity()),
+        productSubscription: ProductSubscriptionEntityMapper.toModel(
+            entity.productSubscription ?? ProductSubscriptionEntity()),
         isRestricted: entity.isRestricted,
         isActive: entity.isActive,
-        brand: BrandEntityMapper().toModel(entity.brand ?? BrandEntity()),
+        brand: BrandEntityMapper.toModel(entity.brand ?? BrandEntity()),
         status: entity.status,
       );
 }
 
 class SectionOptionEntityMapper {
-  SectionOptionEntity toEntity(SectionOptionDto model) => SectionOptionEntity(
+  static SectionOptionEntity toEntity(SectionOptionDto model) =>
+      SectionOptionEntity(
         sectionOptionId: model.sectionOptionId,
         sectionName: model.sectionName,
         optionName: model.optionName,
       );
 
-  SectionOptionDto toModel(SectionOptionEntity entity) => SectionOptionDto(
+  static SectionOptionDto toModel(SectionOptionEntity entity) =>
+      SectionOptionDto(
         sectionOptionId: entity.sectionOptionId,
         sectionName: entity.sectionName,
         optionName: entity.optionName,
@@ -143,7 +144,7 @@ class SectionOptionEntityMapper {
 }
 
 class ProductSubscriptionEntityMapper {
-  ProductSubscriptionEntity toEntity(ProductSubscriptionDto? model) =>
+  static ProductSubscriptionEntity toEntity(ProductSubscriptionDto? model) =>
       ProductSubscriptionEntity(
         subscriptionAddToInitialOrder: model?.subscriptionAddToInitialOrder,
         subscriptionAllMonths: model?.subscriptionAllMonths,
@@ -166,7 +167,7 @@ class ProductSubscriptionEntityMapper {
         subscriptionTotalCycles: model?.subscriptionTotalCycles,
       );
 
-  ProductSubscriptionDto toModel(ProductSubscriptionEntity entity) =>
+  static ProductSubscriptionDto toModel(ProductSubscriptionEntity entity) =>
       ProductSubscriptionDto(
         subscriptionAddToInitialOrder: entity.subscriptionAddToInitialOrder,
         subscriptionAllMonths: entity.subscriptionAllMonths,

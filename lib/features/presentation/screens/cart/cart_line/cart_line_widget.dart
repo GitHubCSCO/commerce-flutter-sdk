@@ -21,8 +21,16 @@ import 'package:flutter_svg/svg.dart';
 
 class CartLineWidget extends StatelessWidget {
   final CartLineEntity cartLineEntity;
-
-  const CartLineWidget({super.key, required this.cartLineEntity});
+  final bool? showRemoveButton;
+  final void Function(int quantity) onCartQuantityChangedCallback;
+  final void Function(CartLineEntity) onCartLineRemovedCallback;
+  const CartLineWidget({
+    super.key,
+    required this.cartLineEntity,
+    required this.onCartQuantityChangedCallback,
+    required this.onCartLineRemovedCallback,
+    this.showRemoveButton = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +45,8 @@ class CartLineWidget extends StatelessWidget {
           children: [
             _buildProductImage(),
             _buildProductDetails(context),
-            _buildRemoveButton(context),
+            Visibility(
+                visible: showRemoveButton!, child: _buildRemoveButton(context)),
           ],
         ),
       ),
@@ -85,11 +94,7 @@ class CartLineWidget extends StatelessWidget {
                 return;
               }
 
-              context.read<CartContentBloc>().add(
-                    CartContentQuantityChangedEvent(
-                      cartLineEntity: cartLineEntity.copyWith(qtyOrdered: qty),
-                    ),
-                  );
+              onCartQuantityChangedCallback(qty);
             },
             subtotalPriceText: cartLineEntity.updateSubtotalPriceValueText(),
           ),
@@ -101,8 +106,7 @@ class CartLineWidget extends StatelessWidget {
   Widget _buildRemoveButton(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.read<CartContentBloc>().add(CartContentRemoveEvent(
-            cartLine: CartLineEntityMapper().toModel(cartLineEntity)));
+        onCartLineRemovedCallback(cartLineEntity);
       },
       child: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -114,98 +118,6 @@ class CartLineWidget extends StatelessWidget {
             fit: BoxFit.fitWidth,
           ),
         ),
-      ),
-    );
-  }
-}
-
-void _onClickClearAllCart(BuildContext context) {
-  displayDialogWidget(
-      context: context,
-      title: "",
-      message: LocalizationConstants.clearAllItemsInCart,
-      actions: [
-        DialogPlainButton(
-          onPressed: () {
-            context.read<CartContentBloc>().add(CartContentClearAllEvent());
-            Navigator.of(context).pop();
-          },
-          child: const Text(LocalizationConstants.remove),
-        ),
-        DialogPlainButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text(LocalizationConstants.cancel),
-        ),
-      ]);
-}
-
-class CartContentHeaderWidget extends StatelessWidget {
-
-  final bool? showClearCart;
-  final int cartCount;
-  const CartContentHeaderWidget({
-    super.key,
-    required this.cartCount, this.showClearCart,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 430,
-      height: 62,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: 'Cart ',
-                  style: OptiTextStyles.titleLarge,
-                ),
-                TextSpan(
-                  text: '($cartCount ${cartCount == 1 ? 'Item' : 'Items'})',
-                  style: OptiTextStyles.subtitle,
-                )
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          Visibility(
-            visible: showClearCart ?? true,
-            child: InkWell(
-              onTap: () {
-                _onClickClearAllCart(context);
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: SvgPicture.asset(
-                      AssetConstants.cartClearIcon,
-                      fit: BoxFit.fitWidth,
-                    ),
-                  ),
-                  const SizedBox(width: 11),
-                  Text(
-                    'Clear Cart',
-                    textAlign: TextAlign.center,
-                    style: OptiTextStyles.body,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

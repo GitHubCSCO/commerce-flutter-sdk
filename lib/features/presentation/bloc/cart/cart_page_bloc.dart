@@ -82,7 +82,8 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
   }
 
   Future<void> _onCartPagePickUpLocationChangeEvent(
-      CartPagePickUpLocationChangeEvent event, Emitter<CartPageState> emit) async {
+      CartPagePickUpLocationChangeEvent event,
+      Emitter<CartPageState> emit) async {
     await _cartUseCase.patchPickUpLocation(event.wareHouse);
     add(CartPageLoadEvent());
   }
@@ -152,7 +153,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
   List<CartLineEntity> getCartLines() {
     List<CartLineEntity> cartlines = [];
     for (var cartLine in cart?.cartLines ?? []) {
-      var cartLineEntity = CartLineEntityMapper().toEntity(cartLine);
+      var cartLineEntity = CartLineEntityMapper.toEntity(cartLine);
       var shouldShowWarehouseInventoryButton =
           InventoryUtils.isInventoryPerWarehouseButtonShownAsync(
                   productSettings) &&
@@ -210,5 +211,15 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
     }
 
     return cart?.canCheckOut == true && !isCartEmpty && hasCheckout;
+  }
+
+  bool get canSubmitForQuote {
+    if (cart == null) {
+      return false;
+    }
+
+    return cart?.canRequestQuote == true &&
+        cart?.isAwaitingApproval == false &&
+        !isCartEmpty;
   }
 }

@@ -184,10 +184,10 @@ class OrderLineEntityMapper {
   static OrderLineEntity toEntity(OrderLine orderLine) => OrderLineEntity(
         altText: orderLine.altText,
         availability: orderLine.availability != null
-            ? AvailabilityEntityMapper().toEntity(orderLine.availability)
+            ? AvailabilityEntityMapper.toEntity(orderLine.availability)
             : null,
         brand: orderLine.brand != null
-            ? BrandEntityMapper().toEntity(orderLine.brand)
+            ? BrandEntityMapper.toEntity(orderLine.brand)
             : null,
         canAddToCart: orderLine.canAddToCart,
         canAddToWishlist: orderLine.canAddToWishlist,
@@ -233,7 +233,7 @@ class OrderLineEntityMapper {
         rmaQtyRequested: orderLine.rmaQtyRequested,
         salePriceLabel: orderLine.salePriceLabel,
         sectionOptions: orderLine.sectionOptions
-            ?.map((e) => SectionOptionEntityMapper().toEntity(e))
+            ?.map((e) => SectionOptionEntityMapper.toEntity(e))
             .toList(),
         shortDescription: orderLine.shortDescription,
         status: orderLine.status,
@@ -267,11 +267,11 @@ class OrderLineEntityMapper {
   static OrderLine toModel(OrderLineEntity entity) => OrderLine(
         altText: entity.altText,
         availability: entity.availability != null
-            ? AvailabilityEntityMapper()
-                .toModel(entity.availability ?? const AvailabilityEntity())
+            ? AvailabilityEntityMapper.toModel(
+                entity.availability ?? const AvailabilityEntity())
             : null,
         brand: entity.brand != null
-            ? BrandEntityMapper().toModel(entity.brand ?? const BrandEntity())
+            ? BrandEntityMapper.toModel(entity.brand ?? const BrandEntity())
             : null,
         canAddToCart: entity.canAddToCart,
         canAddToWishlist: entity.canAddToWishlist,
@@ -317,7 +317,7 @@ class OrderLineEntityMapper {
         rmaQtyRequested: entity.rmaQtyRequested,
         salePriceLabel: entity.salePriceLabel,
         sectionOptions: entity.sectionOptions
-            ?.map((e) => SectionOptionEntityMapper().toModel(e))
+            ?.map((e) => SectionOptionEntityMapper.toModel(e))
             .toList(),
         shortDescription: entity.shortDescription,
         status: entity.status,
