@@ -67,17 +67,20 @@ class CartLineWidget extends StatelessWidget {
             manufacturerItem: cartLineEntity.manufacturerItem,
             productNumber: cartLineEntity.getProductNumber(),
           ),
-          LineItemPricingWidget(
-              discountMessage: cartLineEntity.pricing?.getDiscountValue(),
-              priceValueText: cartLineEntity.updatePriceValueText(),
-              unitOfMeasureValueText:
-                  cartLineEntity.updateUnitOfMeasureValueText(),
-              availabilityText: cartLineEntity.availability?.message,
-              productId: cartLineEntity.productId,
-              erpNumber: cartLineEntity.erpNumber,
-              unitOfMeasure: cartLineEntity.baseUnitOfMeasure,
-              showViewAvailabilityByWarehouse:
-                  cartLineEntity.showInventoryAvailability ?? false),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0, 10.0),
+            child: LineItemPricingWidget(
+                discountMessage: cartLineEntity.pricing?.getDiscountValue(),
+                priceValueText: cartLineEntity.updatePriceValueText(),
+                unitOfMeasureValueText:
+                    cartLineEntity.updateUnitOfMeasureValueText(),
+                availabilityText: cartLineEntity.availability?.message,
+                productId: cartLineEntity.productId,
+                erpNumber: cartLineEntity.erpNumber,
+                unitOfMeasure: cartLineEntity.baseUnitOfMeasure,
+                showViewAvailabilityByWarehouse:
+                    cartLineEntity.showInventoryAvailability ?? false),
+          ),
           LineItemQuantityGroupWidget(
             qtyOrdered: cartLineEntity.qtyOrdered?.toInt().toString(),
             onQtyChanged: (int? qty) {
