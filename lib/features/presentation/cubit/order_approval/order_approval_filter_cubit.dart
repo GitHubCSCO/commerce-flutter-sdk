@@ -28,7 +28,11 @@ class OrderApprovalFilterCubit extends Cubit<OrderApprovalFilterState> {
   }
 
   void reset() {
-    emit(OrderApprovalFilterState());
+    emit(
+      OrderApprovalFilterState(
+        billTo: state.billTo,
+      ),
+    );
   }
 
   void setOrderNumber(String? orderNumber) {
