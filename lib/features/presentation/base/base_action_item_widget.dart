@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/config/log_config.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
@@ -86,7 +87,7 @@ class BaseActionItemWidget extends StatelessWidget {
       case ActionType.forceCrash:
         return "Force Crash";
       case ActionType.toggleLogging:
-      // return Logger.IsAllLogsEnabled ? "Disable logging" : "Enable logging";
+      return LogConfig.isAllLogsEnabled ? "Disable logging" : "Enable logging";
       case ActionType.invoices:
         return LocalizationConstants.invoiceHistory;
       case ActionType.savedPayments:

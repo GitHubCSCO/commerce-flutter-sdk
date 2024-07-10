@@ -163,6 +163,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_information/wish_list_information_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:commerce_flutter_app/services/secure_storage_service.dart';
+import 'package:commerce_flutter_app/services/tracking_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -465,44 +466,50 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<ICoreServiceProvider>(() => CoreServiceProvider())
 
     //services
+    ..registerLazySingleton<ITrackingService>(() => TrackingService())
     ..registerLazySingleton<IRealTimePricingService>(() =>
         RealTimePricingService(
-            clientService: sl(), cacheService: sl(), networkService: sl()))
+            clientService: sl(), cacheService: sl(), networkService: sl(), trackingService: sl(),))
     ..registerLazySingleton<IRealTimeInventoryService>(() =>
         RealTimeInventoryService(
-            clientService: sl(), cacheService: sl(), networkService: sl()))
+            clientService: sl(), cacheService: sl(), networkService: sl(), trackingService: sl(),))
     ..registerLazySingleton<IWebsiteService>(() => WebsiteService(
         clientService: sl(),
         sessionService: sl(),
         cacheService: sl(),
-        networkService: sl()))
+        networkService: sl(),
+        trackingService: sl(),))
     ..registerLazySingleton<IProductService>(() => ProductService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
+          trackingService: sl(),
         ))
     ..registerLazySingleton<IAuthenticationService>(() => AuthenticationService(
           sessionService: sl(),
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
+          trackingService: sl(),
         ))
     ..registerLazySingleton<ISessionService>(() => SessionService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
+          trackingService: sl(),
         ))
     ..registerLazySingleton<IContentConfigurationService>(
         () => ContentConfigurationService(commerceAPIServiceProvider: sl()))
     ..registerLazySingleton<IBiometricAuthenticationService>(
         () => BiometricAuthenticationService(commerceAPIServiceProvider: sl()))
     ..registerLazySingleton<IMobileContentService>(() => MobileContentService(
-        cacheService: sl(), networkService: sl(), clientService: sl()))
+        cacheService: sl(), networkService: sl(), clientService: sl(), trackingService: sl(),))
     ..registerLazySingleton<IMobileSpireContentService>(
         () => MobileSpireContentService(
               clientService: sl(),
               cacheService: sl(),
               networkService: sl(),
+              trackingService: sl(),
             ))
     ..registerLazySingleton<ISearchHistoryService>(
         () => SearchHistoryService(commerceAPIServiceProvider: sl()))
@@ -519,6 +526,7 @@ Future<void> initInjectionContainer() async {
           cacheService: sl(),
           clientService: sl(),
           networkService: sl(),
+          trackingService: sl(),
         ))
     ..registerLazySingleton<IAdminClientService>(() => AdminClientService(
           localStorageService: sl(),
@@ -528,46 +536,54 @@ Future<void> initInjectionContainer() async {
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
+          trackingService: sl(),
         ))
     ..registerLazySingleton<IAutocompleteService>(() => AutoCompleteService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
+          trackingService: sl(),
         ))
     ..registerLazySingleton<ICatalogpagesService>(() => CatalogpagesService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
+          trackingService: sl(),
         ))
     ..registerLazySingleton<IWarehouseService>(() => WarehouseService(
-        clientService: sl(), cacheService: sl(), networkService: sl()))
+        clientService: sl(), cacheService: sl(), networkService: sl(), trackingService: sl(),))
     ..registerLazySingleton<ICartService>(() => CartService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
+          trackingService: sl(),
         ))
     ..registerLazySingleton<IDealerService>(() => DealerService(
-        clientService: sl(), cacheService: sl(), networkService: sl()))
+        clientService: sl(), cacheService: sl(), networkService: sl(), trackingService: sl(),))
     ..registerLazySingleton<IVmiLocationsService>(() => VMILocationService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
+          trackingService: sl(),
         ))
     ..registerLazySingleton<IVmiService>(() => VMIService(
         commerceAPIServiceProvider: sl(),
         coreServiceProvider: sl(),
         clientService: sl(),
         cacheService: sl(),
-        networkService: sl()))
+        networkService: sl(),
+        trackingService: sl(),))
     ..registerLazySingleton<IOrderService>(() => OrderService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
+          trackingService: sl(),
         ))
     ..registerLazySingleton<IBillToService>(() => BillToService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
+          trackingService: sl(),
         ))
     ..registerSingletonAsync<IDeviceService>(() async {
       final service = DeviceService();
@@ -579,7 +595,8 @@ Future<void> initInjectionContainer() async {
           commerceAPIServiceProvider: sl(),
           clientService: sl(),
           cacheService: sl(),
-          networkService: sl());
+          networkService: sl(),
+          trackingService: sl(),);
       await service.init();
       return service;
     })
@@ -624,16 +641,19 @@ Future<void> initInjectionContainer() async {
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
+          trackingService: sl(),
         ))
     ..registerLazySingleton<ICategoryService>(() => CategoryService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
+          trackingService: sl(),
         ))
     ..registerLazySingleton<IBrandService>(() => BrandService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
+          trackingService: sl(),
         ));
 
   await sl.allReady();

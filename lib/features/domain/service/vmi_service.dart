@@ -18,7 +18,8 @@ class VMIService extends ServiceBase implements IVmiService {
       required ICoreServiceProvider coreServiceProvider,
       required super.clientService,
       required super.cacheService,
-      required super.networkService})
+      required super.networkService,
+      required super.trackingService,})
       : _commerceAPIServiceProvider = commerceAPIServiceProvider,
         _coreServiceProvider = coreServiceProvider;
   @override

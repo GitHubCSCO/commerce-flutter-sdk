@@ -213,6 +213,7 @@ class AppConfigurationService extends ServiceBase
     required super.clientService,
     required super.cacheService,
     required super.networkService,
+    required super.trackingService,
   }) : _commerceAPIServiceProvider = commerceAPIServiceProvider;
 
   Future<void> init() async {
