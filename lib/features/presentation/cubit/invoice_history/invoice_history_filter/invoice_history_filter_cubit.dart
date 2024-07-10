@@ -28,10 +28,10 @@ class InvoiceHistoryFilterCubit extends Cubit<InvoiceHistoryFilterState> {
     emit(newState);
   }
 
-  void reset() {
+  Future<void> reset() async {
     emit(
       InvoiceHistoryFilterState(
-        billTo: state.billTo,
+        billTo: await _invoiceUseCase.getBillToAddress(),
       ),
     );
   }
