@@ -368,7 +368,10 @@ Future<void> initInjectionContainer() async {
 
     //quickOrder
     ..registerFactory(() => OrderListBloc(
-        quickOrderUseCase: sl(), scanningMode: ScanningMode.quick))
+          quickOrderUseCase: sl(),
+          pricingInventoryUseCase: sl(),
+          scanningMode: ScanningMode.quick,
+        ))
     ..registerFactory(() => QuickOrderUseCase())
     ..registerFactory(() => QuickOrderAutoCompleteBloc(
         searchUseCase: sl(), scanningMode: ScanningMode.quick))
