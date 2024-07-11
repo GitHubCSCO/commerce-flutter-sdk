@@ -238,35 +238,35 @@ class _InvoiceInfoSection extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (cubit.invoiceDateValue.isNotEmpty) ...[
+          if (!cubit.invoiceDateValue.isNullorWhitespace) ...[
             _TextEntries(
               title: cubit.invoiceDate,
               value: cubit.invoiceDateValue,
             ),
             const SizedBox(height: 10),
           ],
-          if (cubit.invoiceDueDateValue.isNotEmpty) ...[
+          if (!cubit.invoiceDueDateValue.isNullorWhitespace) ...[
             _TextEntries(
               title: cubit.invoiceDueDate,
               value: cubit.invoiceDueDateValue,
             ),
             const SizedBox(height: 10),
           ],
-          if (cubit.termsValue.isNotEmpty) ...[
+          if (!cubit.termsValue.isNullorWhitespace) ...[
             _TextEntries(
               title: cubit.terms,
               value: cubit.termsValue,
             ),
             const SizedBox(height: 10),
           ],
-          if (cubit.poNumberValue.isNotEmpty) ...[
+          if (!cubit.poNumberValue.isNullorWhitespace) ...[
             _TextEntries(
               title: cubit.poNumber,
               value: cubit.poNumberValue,
             ),
             const SizedBox(height: 10),
           ],
-          if (cubit.status.isNotEmpty) ...[
+          if (!cubit.statusValue.isNullorWhitespace) ...[
             _TextEntries(
               title: cubit.status,
               value: cubit.statusValue,
@@ -279,25 +279,25 @@ class _InvoiceInfoSection extends StatelessWidget {
             title: cubit.billingAddress,
             value: cubit.billCompany,
           ),
-          if (cubit.billLineOne.isNotEmpty) ...[
+          if (!cubit.billLineOne.isNullorWhitespace) ...[
             _TextEntries(
               title: '',
               value: cubit.billLineOne,
             ),
           ],
-          if (cubit.billLineTwo.isNotEmpty) ...[
+          if (!cubit.billLineTwo.isNullorWhitespace) ...[
             _TextEntries(
               title: '',
               value: cubit.billLineTwo,
             ),
           ],
-          if (cubit.billFormat.isNotEmpty) ...[
+          if (!cubit.billFormat.isNullorWhitespace) ...[
             _TextEntries(
               title: '',
               value: cubit.billFormat,
             ),
           ],
-          if (cubit.billCountry.isNotEmpty) ...[
+          if (!cubit.billCountry.isNullorWhitespace) ...[
             _TextEntries(
               title: '',
               value: cubit.billCountry,
@@ -310,25 +310,25 @@ class _InvoiceInfoSection extends StatelessWidget {
             title: cubit.shippingAddress,
             value: cubit.shipCompany,
           ),
-          if (cubit.shipLineOne.isNotEmpty) ...[
+          if (!cubit.shipLineOne.isNullorWhitespace) ...[
             _TextEntries(
               title: '',
               value: cubit.shipLineOne,
             ),
           ],
-          if (cubit.shipLineTwo.isNotEmpty) ...[
+          if (!cubit.shipLineTwo.isNullorWhitespace) ...[
             _TextEntries(
               title: '',
               value: cubit.shipLineTwo,
             ),
           ],
-          if (cubit.shipFormat.isNotEmpty) ...[
+          if (!cubit.shipFormat.isNullorWhitespace) ...[
             _TextEntries(
               title: '',
               value: cubit.shipFormat,
             ),
           ],
-          if (cubit.shipCountry.isNotEmpty) ...[
+          if (!cubit.shipCountry.isNullorWhitespace) ...[
             _TextEntries(
               title: '',
               value: cubit.shipCountry,
@@ -337,7 +337,7 @@ class _InvoiceInfoSection extends StatelessWidget {
           const SizedBox(height: 10),
 
           // Shipping Method
-          if (cubit.shippingMethod.isNotEmpty) ...[
+          if (!cubit.shippingMethod.isNullorWhitespace) ...[
             _TextEntries(
               title: cubit.shippingMethodTitle,
               value: cubit.shippingMethod,
@@ -346,7 +346,7 @@ class _InvoiceInfoSection extends StatelessWidget {
           ],
 
           // Order Notes
-          if (cubit.orderNotes.isNotEmpty) ...[
+          if (!cubit.orderNotes.isNullorWhitespace) ...[
             _TextEntries(
               title: cubit.orderNotesTitle,
               value: cubit.orderNotes,
