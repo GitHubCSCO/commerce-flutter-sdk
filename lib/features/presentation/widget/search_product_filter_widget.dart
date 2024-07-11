@@ -107,18 +107,8 @@ class SearchProductFilterWidget extends StatelessWidget {
                 },
                 onReset: () {
                   context.read<ProductListFilterCubit>().initialize(
-                        productsParameters: ProductsQueryParameters(
-                          page: 1,
-                          pageSize: 16,
-                          expand: ["pricing", "facets", "brand"],
-                          attributeValueIds: const [],
-                          brandIds: const [],
-                          productLineIds: const [],
-                          categoryId: null,
-                          previouslyPurchasedProducts: false,
-                          stockedItemsOnly: false,
-                          query: searchText,
-                        ),
+                        productsParameters:
+                            _getProductsQueryParameters(productListType),
                         productListType: productListType,
                       );
                 },
@@ -142,6 +132,43 @@ class SearchProductFilterWidget extends StatelessWidget {
       }),
     );
   }
+
+  ProductsQueryParameters _getProductsQueryParameters(ProductListType productListType) {
+    String? selectedCategoryId;
+    List<String>? selectedBrandIds;
+    List<String>? selectedProductLineIds;
+
+    switch (productListType) {
+      case ProductListType.categoryProducts:
+        selectedCategoryId = this.selectedCategoryId;
+        break;
+      case ProductListType.shopBrandCategoryProducts:
+        selectedCategoryId = this.selectedCategoryId;
+        selectedBrandIds = this.selectedBrandIds;
+        break;
+      case ProductListType.shopBrandProducts:
+        selectedBrandIds = this.selectedBrandIds;
+      case ProductListType.shopBrandProductLineProducts:
+        selectedBrandIds = this.selectedBrandIds;
+        selectedProductLineIds = this.selectedProductLineIds;
+        break;
+      default:
+    }
+
+    return ProductsQueryParameters(
+      page: 1,
+      pageSize: 16,
+      expand: ["pricing", "facets", "brand"],
+      attributeValueIds: const [],
+      brandIds: selectedBrandIds,
+      productLineIds: selectedProductLineIds,
+      categoryId: selectedCategoryId,
+      previouslyPurchasedProducts: false,
+      stockedItemsOnly: false,
+      query: searchText,
+    );
+  }
+
 }
 
 void _showProductFilterWidget(
