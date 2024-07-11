@@ -329,7 +329,7 @@ class SiteMessageConstants {
       "Your order has been submitted for approval.\nThank you.";
 
   static String get defaultAllProductCountExceed => 
-      "Products cannot be reordered, counts meet or exceed their max quantities.";
+      "Counts meet or exceeds their max available quantity.";
   static String get defaultSomeProductCountExceed => 
       "Some products not been added to checkout as they exceed max qty count.";
 
