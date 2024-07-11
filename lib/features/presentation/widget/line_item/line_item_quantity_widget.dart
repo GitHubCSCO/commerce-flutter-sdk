@@ -35,7 +35,7 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
                     max: CoreConstants.maximumOrderQuantity,
                     initialtText: qtyOrdered,
                     shouldShowIncrementDecermentIcon: false,
-                    onChanged: onQtyChanged,
+                    onSubmitted: onQtyChanged,
                   )
                 : Column(
                     children: [

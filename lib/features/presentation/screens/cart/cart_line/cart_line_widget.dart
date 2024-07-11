@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
@@ -22,15 +23,18 @@ import 'package:flutter_svg/svg.dart';
 class CartLineWidget extends StatelessWidget {
   final CartLineEntity cartLineEntity;
   final bool? showRemoveButton;
+  final Widget? moreButtonWidget;
+  final void Function()? onShowMoreButtonClickedCallback;
   final void Function(int quantity) onCartQuantityChangedCallback;
   final void Function(CartLineEntity) onCartLineRemovedCallback;
-  const CartLineWidget({
-    super.key,
-    required this.cartLineEntity,
-    required this.onCartQuantityChangedCallback,
-    required this.onCartLineRemovedCallback,
-    this.showRemoveButton = true,
-  });
+  const CartLineWidget(
+      {super.key,
+      required this.cartLineEntity,
+      required this.onCartQuantityChangedCallback,
+      required this.onCartLineRemovedCallback,
+      this.onShowMoreButtonClickedCallback,
+      this.showRemoveButton = true,
+      this.moreButtonWidget});
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +51,12 @@ class CartLineWidget extends StatelessWidget {
             _buildProductDetails(context),
             Visibility(
                 visible: showRemoveButton!, child: _buildRemoveButton(context)),
+            Visibility(
+                visible: moreButtonWidget != null,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: moreButtonWidget ?? Container(),
+                ))
           ],
         ),
       ),

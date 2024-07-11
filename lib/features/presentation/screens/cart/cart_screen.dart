@@ -184,8 +184,9 @@ class CartPage extends StatelessWidget {
                                   .canSubmitForQuote,
                               child: PrimaryButton(
                                 onPressed: () {
-                                  AppRoute.requestQuote
-                                      .navigateBackStack(context);
+                                  AppRoute.requestQuote.navigateBackStack(
+                                      context,
+                                      extra: state.cart);
                                 },
                                 text: LocalizationConstants.submitForQuote,
                               ),

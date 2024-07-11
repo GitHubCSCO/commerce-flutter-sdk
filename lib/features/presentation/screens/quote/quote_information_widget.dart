@@ -1,0 +1,76 @@
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/date_time_extension.dart';
+import 'package:flutter/material.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+
+class QuoteInformationWidget extends StatelessWidget {
+  final QuoteDto? quoteDto;
+
+  const QuoteInformationWidget({super.key, required this.quoteDto});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          DetailRow(
+              label: LocalizationConstants.salesRep,
+              value: quoteDto?.salespersonName ?? ''),
+          DetailRow(
+              label: LocalizationConstants.user,
+              value: quoteDto?.userName ?? ''),
+          DetailRow(
+              label: LocalizationConstants.status,
+              value: quoteDto?.statusDisplay ?? ''),
+          DetailRow(
+              label: LocalizationConstants.dateSubmitted,
+              value: quoteDto?.orderDate
+                      ?.formatDate(format: CoreConstants.dateFormatString) ??
+                  ''),
+          DetailRow(
+              label: LocalizationConstants.customer,
+              value: quoteDto?.customerName ?? ''),
+          DetailRow(
+            label: LocalizationConstants.shippingAddress,
+            value: quoteDto?.shipToFullAddress ?? '',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class DetailRow extends StatelessWidget {
+  final String label;
+  final String value;
+
+  DetailRow({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 7.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(value, textAlign: TextAlign.end),
+          ),
+        ],
+      ),
+    );
+  }
+}

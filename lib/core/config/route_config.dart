@@ -14,6 +14,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/routing/route_
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_category_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_product_lines_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_approval/order_approval_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_confirmation_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/request_quote_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_details_screen.dart';
@@ -59,6 +60,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wis
 import 'package:commerce_flutter_app/features/presentation/widget/add_credit_card_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/add_shipping_address_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -609,7 +611,17 @@ List<NavigationNode> _getNavigationRoot() {
   final requestQuote = createNode(
     name: AppRoute.requestQuote.name,
     path: AppRoute.requestQuote.suffix,
-    builder: (context, state) => const RequestQuoteWidgetScreen(),
+    builder: (context, state) =>
+        RequestQuoteWidgetScreen(cart: state.extra as Cart),
+    parent: null,
+  );
+
+  // path: /quote Confirmation
+  final quoteConfirmation = createNode(
+    name: AppRoute.quoteConfirmation.name,
+    path: AppRoute.quoteConfirmation.suffix,
+    builder: (context, state) =>
+        QuoteConfirmationScreen(quote: state.extra as QuoteDto),
     parent: null,
   );
 
@@ -667,6 +679,7 @@ List<NavigationNode> _getNavigationRoot() {
     topLevelProductDetails,
     addCreditCard,
     addShippingAddress,
-    requestQuote
+    requestQuote,
+    quoteConfirmation
   ];
 }
