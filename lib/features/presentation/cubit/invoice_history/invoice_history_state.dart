@@ -1,14 +1,5 @@
 part of 'invoice_history_cubit.dart';
 
-enum InvoiceStatus {
-  initial,
-  loading,
-  moreLoading,
-  success,
-  failure,
-  moreLoadingFailure,
-}
-
 class InvoiceHistoryState extends Equatable {
   final InvoiceStatus status;
   final GetInvoiceResult invoiceCollectionModel;

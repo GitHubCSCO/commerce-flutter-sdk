@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/features/domain/enums/invoice_sort_order.dart';
+import 'package:commerce_flutter_app/features/domain/enums/invoice_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/invoice_usecase/invoice_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
