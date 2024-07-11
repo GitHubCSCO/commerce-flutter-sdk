@@ -18,6 +18,8 @@ class SearchProductsCubit extends Cubit<SearchProductsState> with RealtimePricin
   final SearchUseCase _searchUseCase;
   final PricingInventoryUseCase _pricingInventoryUseCase;
   String? query;
+  bool? hidePricingEnable;
+  bool? hideInventoryEnable;
 
   SearchProductsCubit(
       {required SearchUseCase searchUseCase,
@@ -87,20 +89,27 @@ class SearchProductsCubit extends Cubit<SearchProductsState> with RealtimePricin
 
     final productSettings = (await _pricingInventoryUseCase.loadProductSettings()).getResultSuccessValue();
     final productPricingEnabled = await _pricingInventoryUseCase.getProductPricingEnable();
+    hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
+    hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
 
-    final productEntities = await updateProductPricingAndInventoryAvailability(
-        _pricingInventoryUseCase, productCollectionResult?.products);
+    List<ProductEntity> productEntities =
+        await updateProductPricingAndInventoryAvailability(
+            _pricingInventoryUseCase, productCollectionResult?.products,
+            hidePricing: hidePricingEnable, hideInventory: hideInventoryEnable);
 
     emit(
       state.copyWith(
         originalQuery: query,
         productEntities: productEntities,
-        paginationEntity: PaginationEntityMapper.toEntity(productCollectionResult?.pagination ?? Pagination()),
+        paginationEntity: PaginationEntityMapper.toEntity(
+            productCollectionResult?.pagination ?? Pagination()),
         searchProductStatus: SearchProductStatus.success,
         availableSortOrders: availableSortOrders,
         selectedSortOrder: selectedSortOrder,
         productSettings: productSettings,
         productPricingEnabled: productPricingEnabled,
+        hidePricingEnabled: hidePricingEnable,
+        hideInventoryEnabled: hideInventoryEnable,
       ),
     );
   }
@@ -134,8 +143,11 @@ class SearchProductsCubit extends Cubit<SearchProductsState> with RealtimePricin
 
     switch (result) {
       case Success(value: final data):
-        final productEntities = await updateProductPricingAndInventoryAvailability(
-            _pricingInventoryUseCase, data?.products);
+        final productEntities =
+            await updateProductPricingAndInventoryAvailability(
+                _pricingInventoryUseCase, data?.products,
+                hidePricing: hidePricingEnable,
+                hideInventory: hideInventoryEnable);
         state.productEntities?.addAll(productEntities);
         emit(
           state.copyWith(
@@ -190,8 +202,11 @@ class SearchProductsCubit extends Cubit<SearchProductsState> with RealtimePricin
           selectedSortOrderType: data.pagination?.sortType ?? '',
         );
 
-        final productEntities = await updateProductPricingAndInventoryAvailability(
-            _pricingInventoryUseCase, data.products);
+        final productEntities =
+            await updateProductPricingAndInventoryAvailability(
+                _pricingInventoryUseCase, data.products,
+                hidePricing: hidePricingEnable,
+                hideInventory: hideInventoryEnable);
 
         emit(
           state.copyWith(
