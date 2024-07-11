@@ -207,4 +207,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
 
   List<OrderSortOrder> get availableSortOrders =>
       _orderUsecase.availableSortOrders;
+
+  String? get vmiLocationId =>
+      _orderUsecase.getCurrentLocation()?.id;
 }
