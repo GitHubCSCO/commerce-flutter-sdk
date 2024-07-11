@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 class OptiAppColors {
+  
   static const Color backgroundWhite = Color(0xFFFFFFFF);
   static const Color textPrimary = Color(0xFF222222);
   static const Color textSecondary = Color(0xFF707070);
@@ -15,7 +16,7 @@ class OptiAppColors {
 
   static const optiTextPrimaryColor = Color(0xFF080736);
   static const defaultPrimaryColor = Color(0xFF0037FF);
-  static const primaryColor = defaultPrimaryColor;
+  static var primaryColor = defaultPrimaryColor;
   static const headerTextColor = Color(0xFFFFFFFF);
   static const cursorColor = Color(0xFF7F7F7F);
   static const denyTextColor = Color(0xFFF76368);
@@ -75,5 +76,13 @@ class OptiAppColors {
 
   static String colorToHex(Color color) {
     return '#${color.value.toRadixString(16).substring(2)}';
+  }
+
+  static Color colorFromHexString(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF$hexColor"; // add alpha if it's not provided
+    }
+    return Color(int.parse(hexColor, radix: 16));
   }
 }
