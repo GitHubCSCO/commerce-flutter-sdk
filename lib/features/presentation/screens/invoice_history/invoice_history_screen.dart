@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
@@ -246,7 +247,14 @@ class _InvoiceItem extends StatelessWidget {
     const balanceTitle = LocalizationConstants.balance;
 
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        AppRoute.invoiceDetail.navigateBackStack(
+          context,
+          pathParameters: {
+            'invoiceNumber': invoiceNumber,
+          },
+        );
+      },
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: 16,
