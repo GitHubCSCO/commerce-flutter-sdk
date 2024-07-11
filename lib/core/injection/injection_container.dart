@@ -130,6 +130,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/date_selection/
 import 'package:commerce_flutter_app/features/presentation/cubit/deaker_location_finder/dealer_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/invoice_history/invoice_detail/invoice_detail_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/invoice_history/invoice_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/invoice_history/invoice_history_filter/invoice_history_filter_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/location_note/location_note_cubit.dart';
@@ -270,6 +271,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => InvoiceUseCase())
     ..registerFactory(() => InvoiceHistoryCubit(invoiceUseCase: sl()))
     ..registerFactory(() => InvoiceHistoryFilterCubit(invoiceUseCase: sl()))
+    ..registerFactory(() => InvoiceDetailCubit(invoiceUseCase: sl()))
 
     //Pull to refresh
     ..registerFactory(() => PullToRefreshBloc())

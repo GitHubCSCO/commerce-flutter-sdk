@@ -24,4 +24,18 @@ class InvoiceUseCase extends BaseUseCase {
 
     return session?.billTo;
   }
+
+  Future<Invoice?> loadInvoice({
+    required String? invoiceId,
+  }) async {
+    final result =
+        await commerceAPIServiceProvider.getInvoiceService().getInvoice(
+              InvoiceDetailParameter(
+                invoiceNumber: invoiceId,
+                expand: ['invoicelines', 'shipments'],
+              ),
+            );
+
+    return result.getResultSuccessValue();
+  }
 }
