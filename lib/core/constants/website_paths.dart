@@ -10,4 +10,5 @@ class WebsitePaths {
   static const brandsWebsitePath = 'redirectto/BrandsPage';
   static const accountWebsitePath = 'redirectto/myaccountpage';
   static const invoiceHistoryWebsitePath = 'redirectto/InvoicesPage';
+  static const invoiceDetailWebsitePath = 'redirectto/InvoiceDetailPage?invoiceNumber=%s';
 }

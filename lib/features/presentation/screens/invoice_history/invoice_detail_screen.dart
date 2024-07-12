@@ -1,11 +1,14 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/website_paths.dart';
+import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_app/features/domain/enums/invoice_status.dart';
 import 'package:commerce_flutter_app/features/presentation/components/two_texts_row.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/invoice_history/invoice_detail/invoice_detail_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,7 +51,13 @@ class InvoiceDetailPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: OptiAppColors.backgroundWhite,
         centerTitle: false,
-        actions: const [],
+        actions: [
+          BottomMenuWidget(
+            websitePath: WebsitePaths.invoiceDetailWebsitePath.format(
+              [invoiceNumber],
+            ),
+          ),
+        ],
         title: Text(invoiceNumber),
       ),
       body: BlocConsumer<InvoiceDetailCubit, InvoiceDetailState>(
