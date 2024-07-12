@@ -33,26 +33,6 @@ class ProductCarouselUseCase extends BaseUseCase {
     }
   }
 
-  Future<bool> getProductPricingEnable() async {
-    // need to implement
-    var productPricingPresentationEnabledResult = Future.value(true);
-    bool productPricingPresentationEnabled = await productPricingPresentationEnabledResult;
-    return productPricingPresentationEnabled;
-  }
-
-  Future<Result<GetRealTimePricingResult, ErrorResponse>?> getRealTimePricing(RealTimePricingParameters parameter) async {
-    var getProductRealTimePricesResponse = await commerceAPIServiceProvider.getRealTimePricingService().getProductRealTimePrices(parameter);
-    var pricingResult = getProductRealTimePricesResponse;
-    switch (pricingResult) {
-      case Success(value: final data):
-        return Success(data);
-      case Failure(errorResponse: final errorResponse):
-        return Failure(errorResponse);
-      default:
-        return null;
-    }
-  }
-
   Future<Result<List<ProductEntity>, ErrorResponse>>
       _getFeaturedCategoryProducts(
           ProductCarouselWidgetEntity productCarouselWidgetEntity) async {

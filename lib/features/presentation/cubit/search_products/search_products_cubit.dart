@@ -1,4 +1,10 @@
+import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_app/core/mixins/realtime_pricing_inventory_update_mixin.dart';
+import 'package:commerce_flutter_app/features/domain/entity/pagination_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/search_product_status.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/pagination_entity_mapper.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
 import 'package:equatable/equatable.dart';
@@ -8,15 +14,21 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 part 'search_products_state.dart';
 
-class SearchProductsCubit extends Cubit<SearchProductsState> {
+class SearchProductsCubit extends Cubit<SearchProductsState> with RealtimePricingInventoryUpdateMixin {
   final SearchUseCase _searchUseCase;
+  final PricingInventoryUseCase _pricingInventoryUseCase;
   String? query;
 
-  SearchProductsCubit({required SearchUseCase searchUseCase})
+  SearchProductsCubit(
+      {required SearchUseCase searchUseCase,
+      required PricingInventoryUseCase pricingInventoryUseCase})
       : _searchUseCase = searchUseCase,
+        _pricingInventoryUseCase = pricingInventoryUseCase,
         super(
           SearchProductsState(
+            originalQuery: '',
             productEntities: null,
+            paginationEntity: null,
             searchProductStatus: SearchProductStatus.initial,
             availableSortOrders: const [],
             selectedSortOrder: SortOrderAttribute(
@@ -30,6 +42,8 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
             selectedCategoryId: '',
             previouslyPurchased: false,
             selectedStockedItems: false,
+            productSettings: null,
+            productPricingEnabled: false,
           ),
         );
 
@@ -59,7 +73,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
   }
 
   void loadInitialSearchProducts(
-      GetProductCollectionResult? productCollectionResult) {
+      GetProductCollectionResult? productCollectionResult) async {
     query = productCollectionResult?.originalQuery;
 
     final sortOptions = productCollectionResult?.pagination?.sortOptions ?? [];
@@ -71,28 +85,38 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
       selectedSortOrderType: productCollectionResult?.pagination?.sortType ?? '',
     );
 
+    final productSettings = (await _pricingInventoryUseCase.loadProductSettings()).getResultSuccessValue();
+    final productPricingEnabled = await _pricingInventoryUseCase.getProductPricingEnable();
+
+    final productEntities = await updateProductPricingAndInventoryAvailability(
+        _pricingInventoryUseCase, productCollectionResult?.products);
+
     emit(
       state.copyWith(
-        productEntities: productCollectionResult,
+        originalQuery: query,
+        productEntities: productEntities,
+        paginationEntity: PaginationEntityMapper.toEntity(productCollectionResult?.pagination ?? Pagination()),
         searchProductStatus: SearchProductStatus.success,
         availableSortOrders: availableSortOrders,
         selectedSortOrder: selectedSortOrder,
+        productSettings: productSettings,
+        productPricingEnabled: productPricingEnabled,
       ),
     );
   }
 
   Future<void> loadMoreSearchProducts() async {
-    if (state.productEntities?.pagination?.page == null ||
-        (state.productEntities?.pagination?.page ?? 0) + 1 >
-            state.productEntities!.pagination!.numberOfPages! ||
+    if (state.paginationEntity?.page == null ||
+        (state.paginationEntity?.page ?? 0) + 1 >
+            (state.paginationEntity?.numberOfPages ?? 0) ||
         state.searchProductStatus == SearchProductStatus.moreLoading) {
       return;
     }
 
     emit(state.copyWith(searchProductStatus: SearchProductStatus.moreLoading));
     final result = await _searchUseCase.loadSearchProductsResults(
-      state.productEntities?.originalQuery ?? '',
-      (state.productEntities?.pagination?.page ?? 0) + 1,
+      state.originalQuery ?? '',
+      (state.paginationEntity?.page ?? 0) + 1,
       selectedSortOrder: state.selectedSortOrder,
       selectedAttributeValueIds: state.selectedAttributeValueIds,
       selectedBrandIds: state.selectedBrandIds,
@@ -108,22 +132,22 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
       return;
     }
 
-    final products = state.productEntities?.products;
-
     switch (result) {
       case Success(value: final data):
-        products?.addAll(data?.products ?? []);
-        state.productEntities?.products = products;
-        state.productEntities?.pagination = data?.pagination;
+        final productEntities = await updateProductPricingAndInventoryAvailability(
+            _pricingInventoryUseCase, data?.products);
+        state.productEntities?.addAll(productEntities);
+        emit(
+          state.copyWith(
+            productEntities: state.productEntities,
+            paginationEntity: PaginationEntityMapper.toEntity(data?.pagination ?? Pagination()),
+            searchProductStatus: SearchProductStatus.success,
+          ),
+        );
       case Failure():
+        emit(state.copyWith(
+            searchProductStatus: SearchProductStatus.moreLoadingFailure));
     }
-
-    emit(
-      state.copyWith(
-        productEntities: state.productEntities,
-        searchProductStatus: SearchProductStatus.success,
-      ),
-    );
   }
 
   Future<void> sortOrderChanged(SortOrderAttribute sortOrder) async {
@@ -137,7 +161,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
 
   Future<void> _loadSearchProducts() async {
     final result = await _searchUseCase.loadSearchProductsResults(
-      state.productEntities?.originalQuery ?? '',
+      state.originalQuery ?? '',
       1,
       selectedSortOrder: state.selectedSortOrder,
       selectedAttributeValueIds: state.selectedAttributeValueIds,
@@ -166,9 +190,13 @@ class SearchProductsCubit extends Cubit<SearchProductsState> {
           selectedSortOrderType: data.pagination?.sortType ?? '',
         );
 
+        final productEntities = await updateProductPricingAndInventoryAvailability(
+            _pricingInventoryUseCase, data.products);
+
         emit(
           state.copyWith(
-            productEntities: data,
+            productEntities: productEntities,
+            paginationEntity: PaginationEntityMapper.toEntity(data.pagination ?? Pagination()),
             searchProductStatus: SearchProductStatus.success,
             availableSortOrders: availableSortOrders,
             selectedSortOrder: selectedSortOrder,

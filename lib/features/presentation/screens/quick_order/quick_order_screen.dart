@@ -511,6 +511,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
       if (addToCartCartLineList.isEmpty) {
         _showAlert(context, title: LocalizationConstants.quickOrder,
             message: SiteMessageConstants.defaultValueProductOutOfStock);
+        return;
       }
       if (addToCartCartLineList.length == addCartLines.length) {
         CustomSnackBar.showSnackBarMessage(context,
@@ -518,6 +519,14 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
       } else {
         CustomSnackBar.showSnackBarMessage(
             context, SiteMessageConstants.defaultValueProductOutOfStock);
+      }
+
+      if (scanningMode == ScanningMode.count || scanningMode == ScanningMode.create){
+        if (allCountCartProducts.isNotEmpty && currentCartProducts.isNotEmpty && allCountCartProducts.length != currentCartProducts.length)
+        {
+          CustomSnackBar.showSnackBarMessage(
+                    context, SiteMessageConstants.defaultSomeProductCountExceed, seconds: 3);
+        }
       }
 
       context.read<OrderListBloc>().add(OrderListAddToCartEvent());

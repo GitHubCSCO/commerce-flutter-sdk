@@ -173,6 +173,12 @@ class BaseActionItemWidget extends StatelessWidget {
         return () {
           AppRoute.orderApproval.navigateBackStack(context);
         };
+      case ActionType.custom:
+        return () {
+          context.read<LoadWebsiteUrlBloc>().add(LoadCustomUrlLoadEvent(
+            customUrl: actionLink.url
+          ));
+        };
       case ActionType.invoices:
         return () {
           AppRoute.invoiceHistory.navigateBackStack(context);

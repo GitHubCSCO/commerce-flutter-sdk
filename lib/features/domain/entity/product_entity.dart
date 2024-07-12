@@ -104,7 +104,7 @@ class ProductEntity extends Equatable {
   final bool? requiresRealTimeInventory;
   final num? numberInCart;
   final num? qtyOrdered;
-  final AvailabilityEntity? availability;
+  AvailabilityEntity? availability;
   final List<StyleTraitEntity>? styleTraits;
   final List<StyledProductEntity>? styledProducts;
   final List<AttributeTypeEntity>? attributeTypes;

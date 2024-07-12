@@ -8,10 +8,8 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/load_website_url/load_website_url_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
@@ -19,6 +17,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_c
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 Future<void> _reloadAccountPageWithAuthStatus(BuildContext context) async {
@@ -49,7 +48,6 @@ class AccountScreen extends StatelessWidget {
       BlocProvider<PullToRefreshBloc>(
           create: (context) => sl<PullToRefreshBloc>()),
       BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
-      BlocProvider<LoadWebsiteUrlBloc>(create: (context) => sl<LoadWebsiteUrlBloc>()),
       BlocProvider<AccountPageBloc>(
           create: (context) =>
               sl<AccountPageBloc>()..add(AccountPageLoadEvent())),
@@ -71,18 +69,6 @@ class AccountPage extends BaseDynamicContentScreen {
             }
           },
         ),
-        BlocListener<LoadWebsiteUrlBloc, LoadWebsiteUrlState>(
-            listener: (context, state) {
-          switch (state) {
-            case LoadWebsiteUrlLoadedState():
-              launchUrlString(state.authorizedURL);
-            case LoadWebsiteUrlFailureState():
-              CustomSnackBar.showSnackBarMessage(
-                context,
-                "Failed load url",
-              );
-          }
-        }),
         BlocListener<AccountPageBloc, AccountPageState>(
             listener: (context, state) {
           switch (state) {
@@ -134,8 +120,34 @@ class AccountPage extends BaseDynamicContentScreen {
                       const _AccountHeader(),
                       const SizedBox(height: AppStyle.defaultVerticalPadding),
                       ...buildContentWidgets(state.widgetEntities),
+                      if(context.read<AccountPageBloc>().getPrivacyPolicyUrl().isNullOrEmpty == false)
                       Padding(
-                        padding: const EdgeInsets.all(15.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            launchUrlString(context.read<AccountPageBloc>().getPrivacyPolicyUrl()!);
+                          },
+                          child: Text(
+                            LocalizationConstants.privacyPolicy,
+                            style: OptiTextStyles.linkMedium,
+                          ),
+                        ),
+                      ),
+                      if(context.read<AccountPageBloc>().getTermsOfUseUrll().isNullOrEmpty == false)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            launchUrlString(context.read<AccountPageBloc>().getTermsOfUseUrll()!);
+                          },
+                          child: Text(
+                            LocalizationConstants.termsOfUse,
+                            style: OptiTextStyles.linkMedium,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
                         child: Text(
                             context
                                 .read<AccountPageBloc>()

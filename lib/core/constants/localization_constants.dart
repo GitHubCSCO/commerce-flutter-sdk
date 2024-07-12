@@ -257,6 +257,7 @@ class LocalizationConstants {
   static const myPartNumberSign = "My Part #";
   static const mFGNumberSign = "MFG #";
   static const packDescription = "Pack";
+  static const packSign = "Pack #";
   static const selectSomething = "Select";
   static const documents = "Documents";
   static const recommendedProducts = "Recommended Products";
@@ -703,4 +704,9 @@ class LocalizationConstants {
 
   // saved payments
   static const noSavedPaymentsFound = "No saved payments found.";
+
+
+  // misc
+  static const invalidUrl = "Invalid url.";
+  static const failedToLoadUrl = "Failed to load url.";
 }
