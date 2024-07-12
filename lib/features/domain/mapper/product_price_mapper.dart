@@ -28,10 +28,10 @@ class ProductPriceEntityMapper {
         vatAmount: model?.vatAmount,
         vatAmountDisplay: model?.vatAmountDisplay,
         unitListBreakPrices: model?.unitListBreakPrices
-            ?.map((e) => BreakPriceEntityMapper().toEntity(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toEntity(e))
             .toList(),
         unitRegularBreakPrices: model?.unitRegularBreakPrices
-            ?.map((e) => BreakPriceEntityMapper().toEntity(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toEntity(e))
             .toList(),
         regularPrice: model?.regularPrice,
         regularPriceDisplay: model?.regularPriceDisplay,
@@ -42,10 +42,10 @@ class ProductPriceEntityMapper {
         extendedActualPrice: model?.extendedActualPrice,
         extendedActualPriceDisplay: model?.extendedActualPriceDisplay,
         regularBreakPrices: model?.regularBreakPrices
-            ?.map((e) => BreakPriceEntityMapper().toEntity(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toEntity(e))
             .toList(),
         actualBreakPrices: model?.actualBreakPrices
-            ?.map((e) => BreakPriceEntityMapper().toEntity(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toEntity(e))
             .toList(),
       );
 
@@ -74,10 +74,10 @@ class ProductPriceEntityMapper {
         vatAmount: entity.vatAmount,
         vatAmountDisplay: entity.vatAmountDisplay,
         unitListBreakPrices: entity.unitListBreakPrices
-            ?.map((e) => BreakPriceEntityMapper().toModel(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toModel(e))
             .toList(),
         unitRegularBreakPrices: entity.unitRegularBreakPrices
-            ?.map((e) => BreakPriceEntityMapper().toModel(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toModel(e))
             .toList(),
         regularPrice: entity.regularPrice,
         regularPriceDisplay: entity.regularPriceDisplay,
@@ -88,10 +88,10 @@ class ProductPriceEntityMapper {
         extendedActualPrice: entity.extendedActualPrice,
         extendedActualPriceDisplay: entity.extendedActualPriceDisplay,
         regularBreakPrices: entity.regularBreakPrices
-            ?.map((e) => BreakPriceEntityMapper().toModel(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toModel(e))
             .toList(),
         actualBreakPrices: entity.actualBreakPrices
-            ?.map((e) => BreakPriceEntityMapper().toModel(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toModel(e))
             .toList(),
       );
 }

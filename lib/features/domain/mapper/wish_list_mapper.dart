@@ -87,7 +87,7 @@ class WishListLineEntityMapper {
             ? AvailabilityEntityMapper.toEntity(wishListLine.availability!)
             : null,
         breakPrices: wishListLine.breakPrices
-            ?.map((e) => BreakPriceEntityMapper().toEntity(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toEntity(e))
             .toList(),
         unitOfMeasure: wishListLine.unitOfMeasure,
         unitOfMeasureDisplay: wishListLine.unitOfMeasureDisplay,
@@ -138,11 +138,10 @@ class WishListLineEntityMapper {
         canBackOrder: wishListLineEntity.canBackOrder,
         trackInventory: wishListLineEntity.trackInventory,
         availability: wishListLineEntity.availability != null
-            ? AvailabilityEntityMapper
-                .toModel(wishListLineEntity.availability!)
+            ? AvailabilityEntityMapper.toModel(wishListLineEntity.availability!)
             : null,
         breakPrices: wishListLineEntity.breakPrices
-            ?.map((e) => BreakPriceEntityMapper().toModel(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toModel(e))
             .toList(),
         unitOfMeasure: wishListLineEntity.unitOfMeasure,
         unitOfMeasureDisplay: wishListLineEntity.unitOfMeasureDisplay,

@@ -57,7 +57,7 @@ class CartLineEntityMapper {
         isFixedConfiguration: model.isFixedConfiguration,
         quoteRequired: model.quoteRequired,
         breakPrices: model.breakPrices
-            ?.map((e) => BreakPriceEntityMapper().toEntity(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toEntity(e))
             .toList(),
         availability: AvailabilityEntityMapper.toEntity(model.availability),
         qtyOnHand: model.qtyOnHand,
@@ -107,7 +107,7 @@ class CartLineEntityMapper {
         isFixedConfiguration: entity.isFixedConfiguration,
         quoteRequired: entity.quoteRequired,
         breakPrices: entity.breakPrices
-            ?.map((e) => BreakPriceEntityMapper().toModel(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toModel(e))
             .toList(),
         availability: AvailabilityEntityMapper.toModel(
             entity.availability ?? AvailabilityEntity()),

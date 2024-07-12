@@ -1,12 +1,12 @@
-class BreakPriceEntity {
+class BreakPriceDTOEntity {
   final num? breakQty;
   final num? breakPrice;
   final String? breakPriceDisplay;
   final String? savingsMessage;
   final num? breakPriceWithVat;
   final String? breakPriceWithVatDisplay;
-  
-  BreakPriceEntity({
+
+  BreakPriceDTOEntity({
     this.breakQty,
     this.breakPrice,
     this.breakPriceDisplay,
@@ -15,7 +15,7 @@ class BreakPriceEntity {
     this.breakPriceWithVatDisplay,
   });
 
-  BreakPriceEntity copyWith({
+  BreakPriceDTOEntity copyWith({
     num? breakQty,
     num? breakPrice,
     String? breakPriceDisplay,
@@ -23,7 +23,7 @@ class BreakPriceEntity {
     num? breakPriceWithVat,
     String? breakPriceWithVatDisplay,
   }) {
-    return BreakPriceEntity(
+    return BreakPriceDTOEntity(
       breakQty: breakQty ?? this.breakQty,
       breakPrice: breakPrice ?? this.breakPrice,
       breakPriceDisplay: breakPriceDisplay ?? this.breakPriceDisplay,

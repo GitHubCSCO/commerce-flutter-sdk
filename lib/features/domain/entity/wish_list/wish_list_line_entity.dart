@@ -29,7 +29,7 @@ class WishListLineEntity extends Equatable {
   final bool? canBackOrder;
   final bool? trackInventory;
   final AvailabilityEntity? availability;
-  final List<BreakPriceEntity>? breakPrices;
+  final List<BreakPriceDTOEntity>? breakPrices;
   final String? unitOfMeasure;
   final String? unitOfMeasureDisplay;
   final String? unitOfMeasureDescription;
@@ -164,7 +164,7 @@ class WishListLineEntity extends Equatable {
     bool? canBackOrder,
     bool? trackInventory,
     AvailabilityEntity? availability,
-    List<BreakPriceEntity>? breakPrices,
+    List<BreakPriceDTOEntity>? breakPrices,
     String? unitOfMeasure,
     String? unitOfMeasureDisplay,
     String? unitOfMeasureDescription,
