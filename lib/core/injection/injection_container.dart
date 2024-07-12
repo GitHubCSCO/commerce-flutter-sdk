@@ -43,6 +43,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/p
 import 'package:commerce_flutter_app/features/domain/usecases/curent_location_usecase/current_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/dealer_location_usecase/dealer_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/language_usecase/language_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/location_note_usecase/location_note_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/location_search_usecase/location_search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/forgot_password_usecase.dart';
@@ -92,6 +93,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/category/categor
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/language/language_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/load_website_url/load_website_url_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/pickup_location/pickup_location_bloc.dart';
@@ -179,8 +181,12 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton(() => getRouter())
 
     //auth
-    ..registerFactory(() => AuthCubit(authUsecase: sl()))
+    ..registerFactory(() => AuthCubit(authUsecase: sl(), languageUsecase: sl()))
     ..registerFactory(() => AuthUsecase())
+
+    //language
+    ..registerFactory(() => LanguageBloc(languageUsecase: sl()))
+    ..registerLazySingleton(() => LanguageUsecase())
 
     //biometric options
     ..registerFactory(() => BiometricOptionsCubit(biometricUsecase: sl()))
