@@ -1,18 +1,23 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_app/features/domain/enums/invoice_status.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/two_texts_row.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/bottom_menu_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/invoice_history/invoice_detail/invoice_detail_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class InvoiceDetailScreen extends StatelessWidget {
   final String invoiceNumber;
@@ -24,14 +29,47 @@ class InvoiceDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<InvoiceDetailCubit>()
-        ..loadInvoiceDetails(
-          invoiceNumber: invoiceNumber,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => sl<InvoiceDetailCubit>()
+            ..loadInvoiceDetails(
+              invoiceNumber: invoiceNumber,
+            ),
         ),
-      child: InvoiceDetailPage(
-        invoiceNumber: invoiceNumber,
-      ),
+        BlocProvider(
+          create: (context) => sl<BottomMenuCubit>(), // for print path
+        ),
+      ],
+      child: Builder(builder: (context) {
+        return BlocListener<BottomMenuCubit, BottomMenuState>(
+          // for determining the print path
+          listener: (context, state) {
+            switch (state) {
+              case BottomMenuWebsiteUrlLoaded():
+                launchUrlString(state.url);
+                break;
+              case BottomMenuWebsiteUrlFailed():
+                displayDialogWidget(
+                  context: context,
+                  title: LocalizationConstants.error,
+                  message: SiteMessageConstants
+                      .defaultMobileAppAlertCommunicationError,
+                  actions: [
+                    DialogPlainButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text(LocalizationConstants.oK),
+                    ),
+                  ],
+                );
+                break;
+            }
+          },
+          child: InvoiceDetailPage(
+            invoiceNumber: invoiceNumber,
+          ),
+        );
+      }),
     );
   }
 }
@@ -56,6 +94,17 @@ class InvoiceDetailPage extends StatelessWidget {
             websitePath: WebsitePaths.invoiceDetailWebsitePath.format(
               [invoiceNumber],
             ),
+            toolMenuList: [
+              ToolMenu(
+                title: LocalizationConstants.print,
+                action: () {
+                  context.read<BottomMenuCubit>().loadWebsiteUrl(
+                        PrintPaths.invoiceDetailPrintPath
+                            .format([invoiceNumber]),
+                      );
+                },
+              ),
+            ],
           ),
         ],
         title: Text(invoiceNumber),

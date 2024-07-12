@@ -12,3 +12,7 @@ class WebsitePaths {
   static const invoiceHistoryWebsitePath = 'redirectto/InvoicesPage';
   static const invoiceDetailWebsitePath = 'redirectto/InvoiceDetailPage?invoiceNumber=%s';
 }
+
+class PrintPaths {
+  static const invoiceDetailPrintPath = 'Invoice/GetPdf?invoiceNumber=%s';
+}
