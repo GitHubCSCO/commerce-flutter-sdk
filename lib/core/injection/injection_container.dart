@@ -13,9 +13,11 @@ import 'package:commerce_flutter_app/features/domain/service/interfaces/content_
 import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/device_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/geo_location_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/localization_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/location_search_history_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/search_history_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/vmi_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/localization_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/location_search_history_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/network_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/search_history_service.dart';
@@ -574,6 +576,14 @@ Future<void> initInjectionContainer() async {
       await service.init();
       return service;
     })
+    ..registerLazySingleton<ITranslationService>(() => TranslationService(
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+    ))
+    ..registerLazySingleton<ILocalizationService>(() => LocalizationService(
+          commerceAPIServiceProvider: sl(),
+    ))
     ..registerSingletonAsync<IAppConfigurationService>(() async {
       final service = AppConfigurationService(
           commerceAPIServiceProvider: sl(),
