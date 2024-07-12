@@ -340,6 +340,7 @@ class CmsUseCase extends BaseUseCase {
     } else if (pageWidget.translatableFields?.links != null) {
       var titles = pageWidget.translatableFields?.links as Map<String, dynamic>;
       titles.forEach((key, value) {
+        print("$key");
         if (currentSession?.language != null &&
             currentSession?.language?.id == key) {
           var pageLinks =
@@ -357,6 +358,7 @@ class CmsUseCase extends BaseUseCase {
           }
         }
       });
+      var aa = titles.length;
     }
     actionsWidget = actionsWidget.copyWith(
       id: pageWidget.id,

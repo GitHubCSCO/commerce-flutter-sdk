@@ -93,7 +93,7 @@ class BiometricLoginPage extends StatelessWidget {
               AppRoute.account.navigate(context);
             },
             child: Text(
-              LocalizationConstants.cancel,
+              LocalizationConstants.cancel.localized(),
               style: OptiTextStyles.subtitle.copyWith(
                 color: Theme.of(context).primaryColor,
               ),
@@ -151,7 +151,7 @@ class BiometricLoginPage extends StatelessWidget {
                   const SizedBox(height: 200),
                   state is BiometricControllerChangeSuccessEnabled
                       ? PrimaryButton(
-                          text: LocalizationConstants.continueText,
+                          text: LocalizationConstants.continueText.localized(),
                           onPressed: () async {
                             AppRoute.account.navigate(context);
                           },

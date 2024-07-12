@@ -109,7 +109,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
             color: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
             child: Input(
-              hintText: LocalizationConstants.search,
+              hintText: LocalizationConstants.search.localized(),
               suffixIcon: IconButton(
                 icon: SvgPicture.asset(
                   AssetConstants.iconClear,
@@ -149,7 +149,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
               if (state.status == WishListStatus.listAddToCartFailureTimeOut) {
                 CustomSnackBar.showSnackBarMessage(
                   context,
-                  LocalizationConstants.addWishListToCartTimeoutCheckCartAgain,
+                  LocalizationConstants.addWishListToCartTimeoutCheckCartAgain.localized(),
                   seconds: 3,
                 );
               }
@@ -158,8 +158,8 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                   WishListStatus.listAddToCartFailureOutOfStock) {
                 displayDialogWidget(
                   context: context,
-                  title: LocalizationConstants.productsOutOfStock,
-                  message: LocalizationConstants.productsOutOfStockMessage,
+                  title: LocalizationConstants.productsOutOfStock.localized(),
+                  message: LocalizationConstants.productsOutOfStockMessage.localized(),
                   actions: [
                     TextButton(
                       onPressed: () {
@@ -168,7 +168,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                             .addWishListToCart(ignoreOutOfStock: true);
                         Navigator.of(context).pop();
                       },
-                      child: const Text(LocalizationConstants.oK),
+                      child: Text(LocalizationConstants.oK.localized()),
                     )
                   ],
                 );
@@ -177,7 +177,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
               if (state.status == WishListStatus.errorModification) {
                 displayDialogWidget(
                   context: context,
-                  title: LocalizationConstants.error,
+                  title: LocalizationConstants.error.localized(),
                   message: SiteMessageConstants
                       .defaultMobileAppAlertCommunicationError,
                   actions: [
@@ -185,7 +185,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: const Text(LocalizationConstants.oK),
+                      child: Text(LocalizationConstants.oK.localized()),
                     )
                   ],
                 );
@@ -214,7 +214,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
               if (state.status == WishListStatus.listUpdateSuccess) {
                 CustomSnackBar.showSnackBarMessage(
                   context,
-                  LocalizationConstants.listSaved,
+                  LocalizationConstants.listSaved.localized(),
                 );
                 if (widget.onWishListUpdated != null) {
                   widget.onWishListUpdated!();
@@ -224,7 +224,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
               if (state.status == WishListStatus.listUpdateFailure) {
                 CustomSnackBar.showSnackBarMessage(
                   context,
-                  LocalizationConstants.renameFailed,
+                  LocalizationConstants.renameFailed.localized(),
                 );
               }
 
@@ -236,7 +236,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                 Navigator.of(context, rootNavigator: true).pop();
                 CustomSnackBar.showSnackBarMessage(
                   context,
-                  LocalizationConstants.listDeleted,
+                  LocalizationConstants.listDeleted.localized(),
                 );
                 if (widget.onWishListDeleted != null) {
                   widget.onWishListDeleted!();
@@ -249,13 +249,13 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                 Navigator.of(context, rootNavigator: true).pop();
                 displayDialogWidget(
                   context: context,
-                  title: LocalizationConstants.error,
+                  title: LocalizationConstants.error.localized(),
                   actions: [
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: const Text(LocalizationConstants.oK),
+                      child: Text(LocalizationConstants.oK.localized()),
                     )
                   ],
                 );
@@ -265,7 +265,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                 Navigator.of(context, rootNavigator: true).pop();
                 CustomSnackBar.showSnackBarMessage(
                   context,
-                  LocalizationConstants.listCopied,
+                  LocalizationConstants.listCopied.localized(),
                 );
 
                 if (widget.onWishListUpdated != null) {
@@ -281,7 +281,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                 Navigator.of(context, rootNavigator: true).pop();
                 CustomSnackBar.showSnackBarMessage(
                   context,
-                  LocalizationConstants.copyFailed,
+                  LocalizationConstants.copyFailed.localized(),
                 );
               }
 
@@ -296,7 +296,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
               if (state.status == WishListStatus.listLeaveFailure) {
                 displayDialogWidget(
                   context: context,
-                  title: LocalizationConstants.error,
+                  title: LocalizationConstants.error.localized(),
                   message: SiteMessageConstants
                       .defaultMobileAppAlertCommunicationError,
                   actions: [
@@ -304,7 +304,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: const Text(LocalizationConstants.oK),
+                      child: Text(LocalizationConstants.oK.localized()),
                     )
                   ],
                 );
@@ -316,8 +316,8 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                 return const Expanded(
                     child: Center(child: CircularProgressIndicator()));
               } else if (state.status == WishListStatus.failure) {
-                return const Expanded(
-                    child: Center(child: Text(LocalizationConstants.error)));
+                return Expanded(
+                    child: Center(child: Text(LocalizationConstants.error.localized())));
               } else if (context.read<WishListDetailsCubit>().emptyWishList) {
                 return Expanded(
                   child: Center(
@@ -388,7 +388,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                               .read<WishListDetailsCubit>()
                               .addWishListToCart();
                         },
-                        text: LocalizationConstants.addListToCart,
+                        text: LocalizationConstants.addListToCart.localized(),
                       ),
                     ),
                   ],
@@ -517,7 +517,7 @@ class _OptionsMenu extends StatelessWidget {
           ),
           toolMenuList: [
             ToolMenu(
-              title: LocalizationConstants.listInformation,
+              title: LocalizationConstants.listInformation.localized(),
               action: () {
                 AppRoute.wishListInfo.navigateBackStack(
                   context,
@@ -540,13 +540,13 @@ class _OptionsMenu extends StatelessWidget {
             if (state.wishList.isSharedList != true &&
                 state.wishList.isAutogenerated != true)
               ToolMenu(
-                title: LocalizationConstants.rename,
+                title: LocalizationConstants.rename.localized(),
                 action: () {
                   displayInputDialog(
                     context: context,
-                    title: LocalizationConstants.rename,
-                    hintText: LocalizationConstants.enterListName,
-                    confirmText: LocalizationConstants.save,
+                    title: LocalizationConstants.rename.localized(),
+                    hintText: LocalizationConstants.enterListName.localized(),
+                    confirmText: LocalizationConstants.save.localized(),
                     existingValue: state.wishList.name ?? '',
                     onSubmit: (text) {
                       context.read<WishListDetailsCubit>().renameWishList(text);
@@ -558,12 +558,12 @@ class _OptionsMenu extends StatelessWidget {
                 state.wishList.isSharedList == true &&
                 state.wishList.shareOption != "AllCustomerUsers")
               ToolMenu(
-                title: LocalizationConstants.leave,
+                title: LocalizationConstants.leave.localized(),
                 action: () {
                   displayDialogWidget(
                     context: context,
-                    title: LocalizationConstants.leaveList,
-                    message: LocalizationConstants.leaveSpecificList.format(
+                    title: LocalizationConstants.leaveList.localized(),
+                    message: LocalizationConstants.leaveSpecificList.localized().format(
                       [state.wishList.name ?? ''],
                     ),
                     actions: [
@@ -571,14 +571,14 @@ class _OptionsMenu extends StatelessWidget {
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        child: const Text(LocalizationConstants.cancel),
+                        child: Text(LocalizationConstants.cancel.localized()),
                       ),
                       TextButton(
                         onPressed: () {
                           context.read<WishListDetailsCubit>().leaveWishList();
                           Navigator.of(context).pop();
                         },
-                        child: const Text(LocalizationConstants.leave),
+                        child: Text(LocalizationConstants.leave.localized()),
                       ),
                     ],
                   );
@@ -588,7 +588,7 @@ class _OptionsMenu extends StatelessWidget {
                 .read<WishListDetailsCubit>()
                 .canDeleteWishList(wishList: state.wishList))
               ToolMenu(
-                title: LocalizationConstants.delete,
+                title: LocalizationConstants.delete.localized(),
                 action: () {
                   displayWishListDeleteWidget(
                     wishList: state.wishList,
@@ -600,12 +600,12 @@ class _OptionsMenu extends StatelessWidget {
                 },
               ),
             ToolMenu(
-              title: LocalizationConstants.copy,
+              title: LocalizationConstants.copy.localized(),
               action: () {
                 displayInputDialog(
                   context: context,
-                  title: LocalizationConstants.copyList,
-                  hintText: LocalizationConstants.enterListName,
+                  title: LocalizationConstants.copyList.localized(),
+                  hintText: LocalizationConstants.enterListName.localized(),
                   onSubmit: (name) async {
                     await context
                         .read<WishListDetailsCubit>()

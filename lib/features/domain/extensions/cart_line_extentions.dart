@@ -15,7 +15,7 @@ extension CartLineExtensions on CartLineEntity? {
       priceValueText = this!.pricing!.unitNetPriceDisplay ?? "";
     } else {
       if (this!.quoteRequired != null && this!.quoteRequired!) {
-        return LocalizationConstants.requiresQuote.toString();
+        return LocalizationConstants.requiresQuote.localized().toString();
       } else {
         priceValueText = this!.pricing.getPriceValue() ?? "";
       }
@@ -35,7 +35,7 @@ extension CartLineExtensions on CartLineEntity? {
       subtotalValueText = this!.pricing!.extendedUnitNetPriceDisplay ?? "";
     } else {
       if (this!.quoteRequired != null && this!.quoteRequired!) {
-        return LocalizationConstants.requiresQuote.toString();
+        return LocalizationConstants.requiresQuote.localized().toString();
       } else {
         subtotalValueText = this!.pricing.getSubtotalValue() ?? "";
       }

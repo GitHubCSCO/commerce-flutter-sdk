@@ -65,7 +65,7 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
             color: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
             child: Input(
-              hintText: LocalizationConstants.search,
+              hintText: LocalizationConstants.search.localized(),
               suffixIcon: IconButton(
                 icon: SvgPicture.asset(
                   AssetConstants.iconClear,
@@ -331,12 +331,12 @@ void _showOrderHistoryFilter(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FilterOptionSwitch(
-                label: LocalizationConstants.showMyOrdersOnly,
+                label: LocalizationConstants.showMyOrdersOnly.localized(),
                 value: state.temporaryShowMyOrdersValue,
                 onChanged: (_) => onShowMyOrdersToggled(),
               ),
               FilterOptionsChip(
-                label: LocalizationConstants.status,
+                label: LocalizationConstants.status.localized(),
                 values: state.filterValues,
                 selectedValueIds: state.temporarySelectedFilterValueIds,
                 onSelectionIdAdded: onStatusValueAdded,

@@ -70,7 +70,7 @@ class SearchPage extends BaseDynamicContentScreen {
             children: [
               Expanded(
                 child: Input(
-                  hintText: LocalizationConstants.search,
+                  hintText: LocalizationConstants.search.localized(),
                   suffixIcon: IconButton(
                     icon: SvgPicture.asset(
                       AssetConstants.iconClear,
@@ -225,12 +225,12 @@ class SearchPage extends BaseDynamicContentScreen {
                                   ),
                                 );
                               default:
-                                return const CustomScrollView(
+                                return CustomScrollView(
                                   slivers: <Widget>[
                                     SliverFillRemaining(
                                       child: Center(
                                         child: Text(LocalizationConstants
-                                            .errorLoadingSearchLanding),
+                                            .errorLoadingSearchLanding.localized()),
                                       ),
                                     ),
                                   ],
@@ -244,7 +244,7 @@ class SearchPage extends BaseDynamicContentScreen {
                     case SearchAutoCompleteInitialState:
                       return Center(
                         child: Text(
-                          LocalizationConstants.searchPrompt,
+                          LocalizationConstants.searchPrompt.localized(),
                           style: OptiTextStyles.body,
                         ),
                       );
@@ -255,7 +255,7 @@ class SearchPage extends BaseDynamicContentScreen {
                     case SearchAutoCompleteFailureState:
                       return Center(
                           child: Text(
-                        LocalizationConstants.searchNoResults,
+                        LocalizationConstants.searchNoResults.localized(),
                         style: OptiTextStyles.body,
                       ));
                     case SearchProductsLoadedState:
@@ -279,12 +279,12 @@ class SearchPage extends BaseDynamicContentScreen {
                       );
                     case SearchProductsFailureState:
                       return Center(
-                          child: Text(LocalizationConstants.searchNoResults,
+                          child: Text(LocalizationConstants.searchNoResults.localized(),
                               style: OptiTextStyles.body));
                     default:
-                      return const Center(
+                      return Center(
                           child: Text(
-                              LocalizationConstants.errorLoadingSearchLanding));
+                              LocalizationConstants.errorLoadingSearchLanding.localized()));
                   }
                 }),
           ),
@@ -307,7 +307,7 @@ class SearchPage extends BaseDynamicContentScreen {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
                 child: Text(
-                  LocalizationConstants.categories,
+                  LocalizationConstants.categories.localized(),
                   style: OptiTextStyles.titleSmall,
                 ),
               ),
@@ -326,7 +326,7 @@ class SearchPage extends BaseDynamicContentScreen {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
                 child: Text(
-                  LocalizationConstants.brands,
+                  LocalizationConstants.brands.localized(),
                   style: OptiTextStyles.titleSmall,
                 ),
               ),

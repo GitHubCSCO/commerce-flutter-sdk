@@ -102,7 +102,7 @@ class LocationSearchPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: Input(
-                    hintText: LocalizationConstants.search,
+                    hintText: LocalizationConstants.search.localized(),
                     suffixIcon: IconButton(
                       icon: SvgPicture.asset(
                         AssetConstants.iconClear,

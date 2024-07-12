@@ -92,25 +92,25 @@ class NavBarPage extends StatelessWidget {
         0,
         AssetConstants.shopIcon,
         AssetConstants.shopSelectedIcon,
-        LocalizationConstants.shopTitle,
+        LocalizationConstants.shopTitle.localized(),
       ),
       _buildBottomNavigationBarItem(
         1,
         AssetConstants.searchIcon,
         AssetConstants.searchSelectedIcon,
-        LocalizationConstants.searchLandingTitle,
+        LocalizationConstants.searchLandingTitle.localized(),
       ),
       _buildBottomNavigationBarItem(
         2,
         AssetConstants.accountIcon,
         AssetConstants.accountSelectedIcon,
-        LocalizationConstants.account,
+        LocalizationConstants.account.localized(),
       ),
       _buildBottomNavigationBarItem(
         3,
         AssetConstants.cartIcon,
         AssetConstants.cartSelectedIcon,
-        LocalizationConstants.cart,
+        LocalizationConstants.cart.localized(),
       ),
     ];
   }

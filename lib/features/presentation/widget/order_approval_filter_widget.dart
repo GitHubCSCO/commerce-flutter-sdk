@@ -117,7 +117,7 @@ void _showOrderApprovalFilterWidget(
               ),
               const SizedBox(height: 45),
               Text(
-                LocalizationConstants.customer.toUpperCase(),
+                LocalizationConstants.customer.localized().toUpperCase(),
                 style: OptiTextStyles.subtitle,
               ),
               const SizedBox(height: 10),
@@ -127,7 +127,7 @@ void _showOrderApprovalFilterWidget(
               ),
               const SizedBox(height: 45),
               Text(
-                LocalizationConstants.orderTotal.toUpperCase(),
+                LocalizationConstants.orderTotal.localized().toUpperCase(),
                 style: OptiTextStyles.subtitle,
               ),
               const SizedBox(height: 10),
@@ -138,11 +138,11 @@ void _showOrderApprovalFilterWidget(
               ),
               const SizedBox(height: 45),
               Text(
-                LocalizationConstants.dateRange.toUpperCase(),
+                LocalizationConstants.dateRange.localized().toUpperCase(),
                 style: OptiTextStyles.subtitle,
               ),
               _FilterDatePickerWidget(
-                title: LocalizationConstants.from,
+                title: LocalizationConstants.from.localized(),
                 selectedDate: state.fromDate,
                 onSelectDate: (innerContext, date) {
                   context.read<OrderApprovalFilterCubit>().setFromDate(date);
@@ -150,7 +150,7 @@ void _showOrderApprovalFilterWidget(
               ),
               const SizedBox(height: 10),
               _FilterDatePickerWidget(
-                title: LocalizationConstants.to,
+                title: LocalizationConstants.to.localized(),
                 selectedDate: state.toDate,
                 onSelectDate: (innerContext, date) {
                   context.read<OrderApprovalFilterCubit>().setToDate(date);
@@ -219,7 +219,7 @@ class _FilterOrderTotalWidgetState extends State<_FilterOrderTotalWidget> {
         children: [
           Input(
             controller: orderNumberController,
-            hintText: LocalizationConstants.orderNumberSign,
+            hintText: LocalizationConstants.orderNumberSign.localized(),
           ),
         ],
       ),
@@ -359,7 +359,7 @@ class _FilterTotalAmountWidgetState extends State<_FilterTotalAmountWidget> {
         children: [
           Input(
             controller: orderTotalController,
-            hintText: LocalizationConstants.enterAmount,
+            hintText: LocalizationConstants.enterAmount.localized(),
             keyboardType: TextInputType.number,
             onTapOutside: (p0) => FocusManager.instance.primaryFocus?.unfocus(),
           ),
@@ -446,7 +446,7 @@ class _FilterShipToPickerWidget extends StatelessWidget {
         children: [
           shipTo == null
               ? Text(
-                  LocalizationConstants.selectShipToAddress,
+                  LocalizationConstants.selectShipToAddress.localized(),
                   style: OptiTextStyles.body,
                 )
               : Column(

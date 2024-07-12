@@ -103,7 +103,7 @@ class ProductPage extends StatelessWidget {
             padding:
             const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
             child: Input(
-              hintText: LocalizationConstants.search,
+              hintText: LocalizationConstants.search.localized(),
               suffixIcon: IconButton(
                 icon: SvgPicture.asset(
                   AssetConstants.iconClear,
@@ -156,7 +156,7 @@ class ProductPage extends StatelessWidget {
                   case ProductFailed():
                   default:
                     return Center(
-                        child: Text(LocalizationConstants.searchNoResults,
+                        child: Text(LocalizationConstants.searchNoResults.localized(),
                             style: OptiTextStyles.body));
                 }
               }),
@@ -183,9 +183,9 @@ class ProductPage extends StatelessWidget {
 
   String _getTitle(ProductPageEntity entity) {
     if (entity.parentType == ProductParentType.category) {
-      return entity.category?.shortDescription ?? entity.categoryTitle ?? LocalizationConstants.categories;
+      return entity.category?.shortDescription ?? entity.categoryTitle ?? LocalizationConstants.categories.localized();
     } else if (entity.parentType == ProductParentType.brand) {
-      return entity.brandEntity?.name ?? entity.brandEntityTitle ?? LocalizationConstants.brands;
+      return entity.brandEntity?.name ?? entity.brandEntityTitle ?? LocalizationConstants.brands.localized();
     }else{
       return entity.pageTitle ?? "Product list";
     }

@@ -51,9 +51,9 @@ void main() {
       },
       expect: () => [
         LoginLoadingState(),
-        const LoginFailureState(
-          message: LocalizationConstants.incorrectLoginOrPassword,
-          buttonText: LocalizationConstants.dismiss,
+        LoginFailureState(
+          message: LocalizationConstants.incorrectLoginOrPassword.localized(),
+          buttonText: LocalizationConstants.dismiss.localized(),
         ),
       ],
     );

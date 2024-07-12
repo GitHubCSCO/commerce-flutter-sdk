@@ -46,9 +46,9 @@ class AddCreditCardScreen extends StatelessWidget {
 
   String getTitle() {
     if (addCreditCardEntity.isAddNewCreditCard) {
-      return LocalizationConstants.addCreditCard;
+      return LocalizationConstants.addCreditCard.localized();
     } else {
-      return LocalizationConstants.editCreditCard;
+      return LocalizationConstants.editCreditCard.localized();
     }
   }
 
@@ -265,7 +265,7 @@ class AddCreditCardPage extends StatelessWidget {
                 width: 20,
               ),
               Text(
-                LocalizationConstants.useAsDefaultCard,
+                LocalizationConstants.useAsDefaultCard.localized(),
                 style: OptiTextStyles.body,
               ),
             ],
@@ -295,7 +295,7 @@ class AddCreditCardPage extends StatelessWidget {
             width: 20,
           ),
           Text(
-            LocalizationConstants.useBillingAddress,
+            LocalizationConstants.useBillingAddress.localized(),
             style: OptiTextStyles.body,
           ),
         ],
@@ -401,8 +401,8 @@ class AddCreditCardPage extends StatelessWidget {
   }
 
   Widget _buildNameField() {
-    return _createInputField(LocalizationConstants.name,
-        LocalizationConstants.name, nameController, true, validator: (value) {
+    return _createInputField(LocalizationConstants.name.localized(),
+        LocalizationConstants.name.localized(), nameController, true, validator: (value) {
       if (nameController.text.isEmpty) {
         return SiteMessageConstants.defaultValueAddressNameRequired;
       }
@@ -434,7 +434,7 @@ class AddCreditCardPage extends StatelessWidget {
   Widget _buildContinueButtonWidget(BuildContext context) {
     return ListInformationBottomSubmitWidget(actions: [
       PrimaryButton(
-        text: LocalizationConstants.save,
+        text: LocalizationConstants.save.localized(),
         onPressed: () {
           getInputData(context);
         },
@@ -445,24 +445,24 @@ class AddCreditCardPage extends StatelessWidget {
   Widget _buildDeleteButtonWidget(BuildContext context) {
     return ListInformationBottomSubmitWidget(actions: [
       TertiaryButton(
-        child: Text(LocalizationConstants.delete),
+        child: Text(LocalizationConstants.delete.localized()),
         onPressed: () {
           if (addCreditCardEntity.accountPaymentProfile != null) {
             showDialog(
               context: context,
               builder: (BuildContext alertContext) {
                 return AlertDialog(
-                  title: Text(LocalizationConstants.delete),
-                  content: Text(LocalizationConstants.deleteCard),
+                  title: Text(LocalizationConstants.delete.localized()),
+                  content: Text(LocalizationConstants.deleteCard.localized()),
                   actions: <Widget>[
                     TextButton(
-                      child: Text(LocalizationConstants.cancel),
+                      child: Text(LocalizationConstants.cancel.localized()),
                       onPressed: () {
                         Navigator.of(alertContext).pop(); // Dismiss the dialog
                       },
                     ),
                     TextButton(
-                      child: Text(LocalizationConstants.delete),
+                      child: Text(LocalizationConstants.delete.localized()),
                       onPressed: () {
                         context.read<AddCreditCardBloc>().add(
                             DeletCreditCardEvent(
@@ -479,7 +479,7 @@ class AddCreditCardPage extends StatelessWidget {
         },
       ),
       PrimaryButton(
-        text: LocalizationConstants.save,
+        text: LocalizationConstants.save.localized(),
         onPressed: () {
           getInputData(context);
         },
@@ -545,13 +545,13 @@ class AddCreditCardPage extends StatelessWidget {
             children: [
               _buildToggleSwitchForBillingAddress(context),
               Text(
-                LocalizationConstants.billingAddress,
+                LocalizationConstants.billingAddress.localized(),
                 textAlign: TextAlign.center,
                 style: OptiTextStyles.subtitle,
               ),
               const SizedBox(height: 20),
-              _createInputField(LocalizationConstants.address,
-                  LocalizationConstants.address, addressController, true,
+              _createInputField(LocalizationConstants.address.localized(),
+                  LocalizationConstants.address.localized(), addressController, true,
                   validator: addCreditCardEntity.isAddNewCreditCard
                       ? (value) {
                           if (addressController.text.isEmpty) {
@@ -567,7 +567,7 @@ class AddCreditCardPage extends StatelessWidget {
                   Expanded(
                     flex: 1,
                     child: Text(
-                      LocalizationConstants.selectCountry,
+                      LocalizationConstants.selectCountry.localized(),
                       textAlign: TextAlign.start,
                       style: OptiTextStyles.body,
                     ),
@@ -584,15 +584,15 @@ class AddCreditCardPage extends StatelessWidget {
                                     context
                                         .read<BillingAddressCubit>()
                                         .selectedCountry),
-                                descriptionText: LocalizationConstants.country,
+                                descriptionText: LocalizationConstants.country.localized(),
                                 callback: _onCountrySelect)),
                       ],
                     ),
                   ),
                 ],
               ),
-              _createInputField(LocalizationConstants.city,
-                  LocalizationConstants.city, cityController, true,
+              _createInputField(LocalizationConstants.city.localized(),
+                  LocalizationConstants.city.localized(), cityController, true,
                   validator: addCreditCardEntity.isAddNewCreditCard
                       ? (value) {
                           if (cityController.text.isEmpty) {
@@ -608,7 +608,7 @@ class AddCreditCardPage extends StatelessWidget {
                   Expanded(
                     flex: 1,
                     child: Text(
-                      LocalizationConstants.selectState,
+                      LocalizationConstants.selectState.localized(),
                       textAlign: TextAlign.start,
                       style: OptiTextStyles.body,
                     ),
@@ -625,15 +625,15 @@ class AddCreditCardPage extends StatelessWidget {
                                     context
                                         .read<BillingAddressCubit>()
                                         .selectedState),
-                                descriptionText: LocalizationConstants.state,
+                                descriptionText: LocalizationConstants.state.localized(),
                                 callback: _onStateSelect)),
                       ],
                     ),
                   ),
                 ],
               ),
-              _createInputField(LocalizationConstants.postalCode,
-                  LocalizationConstants.postalCode, postalCodeController, true,
+              _createInputField(LocalizationConstants.postalCode.localized(),
+                  LocalizationConstants.postalCode.localized(), postalCodeController, true,
                   validator: addCreditCardEntity.isAddNewCreditCard
                       ? (value) {
                           if (postalCodeController.text.isEmpty) {
@@ -688,7 +688,7 @@ class AddCreditCardPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              LocalizationConstants.cardExpirationDate,
+              LocalizationConstants.cardExpirationDate.localized(),
               textAlign: TextAlign.center,
               style: OptiTextStyles.subtitle,
             ),
@@ -701,7 +701,7 @@ class AddCreditCardPage extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        LocalizationConstants.month,
+                        LocalizationConstants.month.localized(),
                         textAlign: TextAlign.start,
                         style: OptiTextStyles.body,
                       ),
@@ -725,7 +725,7 @@ class AddCreditCardPage extends StatelessWidget {
                                   ? expirationMonths as List<Object>
                                   : [],
                               descriptionText:
-                                  LocalizationConstants.selectMonth,
+                                  LocalizationConstants.selectMonth.localized(),
                               selectedIndex:
                                   getIndexForSelectedExpirationMonths(
                                       expirationMonths,
@@ -756,7 +756,7 @@ class AddCreditCardPage extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        LocalizationConstants.year,
+                        LocalizationConstants.year.localized(),
                         textAlign: TextAlign.start,
                         style: OptiTextStyles.body,
                       ),
@@ -779,7 +779,7 @@ class AddCreditCardPage extends StatelessWidget {
                               items: (expirationYears != null)
                                   ? expirationYears as List<Object>
                                   : [],
-                              descriptionText: LocalizationConstants.selectYear,
+                              descriptionText: LocalizationConstants.selectYear.localized(),
                               selectedIndex: getIndexForSelectedExpirationYears(
                                   expirationYears,
                                   context

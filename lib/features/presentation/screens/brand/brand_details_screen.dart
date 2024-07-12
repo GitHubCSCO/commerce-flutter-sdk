@@ -151,7 +151,7 @@ class BrandInfoWidget extends StatelessWidget {
                 final productPageEntity = ProductPageEntity('', ProductParentType.brand, brandEntity: brandEntity);
                 AppRoute.product.navigateBackStack(context, extra: productPageEntity);
               },
-              text: LocalizationConstants.shopAllBrandProducts,
+              text: LocalizationConstants.shopAllBrandProducts.localized(),
             ),
           )
         ],
@@ -182,7 +182,7 @@ class CategoryCarouselWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: Text(
-              LocalizationConstants.shopByCategory,
+              LocalizationConstants.shopByCategory.localized(),
               style: OptiTextStyles.titleLarge,
             ),
           ),
@@ -255,7 +255,7 @@ class CategoryCarouselWidget extends StatelessWidget {
                   );
                   // CustomSnackBar.showComingSoonSnackBar(context);
               },
-              child: const Text(LocalizationConstants.shopAllBrandCategories),
+              child: Text(LocalizationConstants.shopAllBrandCategories.localized()),
             ),
           ),
         ],
@@ -348,7 +348,7 @@ class BrandProductLinesWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: Text(
-              LocalizationConstants.shopProductLines,
+              LocalizationConstants.shopProductLines.localized(),
               style: OptiTextStyles.titleLarge,
             ),
           ),
@@ -389,7 +389,7 @@ class BrandProductLinesWidget extends StatelessWidget {
                     extra: brand
                   );
               },
-              child: const Text(LocalizationConstants.shopAllBrandProductLines),
+              child: Text(LocalizationConstants.shopAllBrandProductLines.localized()),
             ),
           ),
         ],
@@ -481,7 +481,7 @@ class TopSellerProductsWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: Text(
-              LocalizationConstants.topSellers,
+              LocalizationConstants.topSellers.localized(),
               style: OptiTextStyles.titleLarge,
             ),
           ),

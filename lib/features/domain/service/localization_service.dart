@@ -109,7 +109,7 @@ class LocalizationService implements ILocalizationService {
     int count = 0;
     int maxLength = _commerceAPIServiceProvider.getTranslationService().getMaxLengthOfTranslationText();
     var sbFieldValue = StringBuffer();
-    for (var k in LocalizationKeywords.values) {
+    for (var k in LocalizationConstants.values) {
       count++;
       if(sbFieldValue.length + k.keyword.length >= maxLength){
         //remove the last character ',' from string buffer

@@ -53,52 +53,52 @@ class BaseActionItemWidget extends StatelessWidget {
   String getActionTitle(ActionLinkEntity actionLink) {
     switch (actionLink.type) {
       case ActionType.categories:
-        return LocalizationConstants.shopCategories;
+        return LocalizationConstants.shopCategories.localized();
       case ActionType.brands:
-        return LocalizationConstants.shopBrands;
+        return LocalizationConstants.shopBrands.localized();
       case ActionType.quickOrder:
-        return LocalizationConstants.quickOrder;
+        return LocalizationConstants.quickOrder.localized();
       case ActionType.orderHistory:
-        return LocalizationConstants.orders;
+        return LocalizationConstants.orders.localized();
       case ActionType.showHidePricing:
-        return LocalizationConstants.showHidePricing;
+        return LocalizationConstants.showHidePricing.localized();
       case ActionType.showHideInventory:
-        return LocalizationConstants.showHideInventory;
+        return LocalizationConstants.showHideInventory.localized();
       case ActionType.orderApproval:
-        return LocalizationConstants.orderApproval;
+        return LocalizationConstants.orderApproval.localized();
       case ActionType.lists:
-        return LocalizationConstants.lists;
+        return LocalizationConstants.lists.localized();
       case ActionType.savedOrders:
-        return LocalizationConstants.savedOrders;
+        return LocalizationConstants.savedOrders.localized();
       case ActionType.locationFinder:
-        return LocalizationConstants.locationFinder;
+        return LocalizationConstants.locationFinder.localized();
       case ActionType.settings:
-        return LocalizationConstants.settings;
+        return LocalizationConstants.settings.localized();
       case ActionType.changeCustomer:
-        // return this.hasWillCall ? LocalizationConstants.ChangeCustomerWillCall : LocalizationConstants.ChangeCustomer;
-        return LocalizationConstants.changeCustomerWillCall;
+        // return this.hasWillCall ? LocalizationConstants.ChangeCustomerWillCall.localized() : LocalizationConstants.ChangeCustomer.localized();
+        return LocalizationConstants.changeCustomerWillCall.localized();
       case ActionType.signOut:
-        return LocalizationConstants.signOut;
+        return LocalizationConstants.signOut.localized();
       case ActionType.viewAccountOnWebsite:
-        return LocalizationConstants.viewAccountOnWebsite;
+        return LocalizationConstants.viewAccountOnWebsite.localized();
       case ActionType.search:
-        return LocalizationConstants.search;
+        return LocalizationConstants.search.localized();
       case ActionType.forceCrash:
         return "Force Crash";
       case ActionType.toggleLogging:
       // return Logger.IsAllLogsEnabled ? "Disable logging" : "Enable logging";
       case ActionType.invoices:
-        return LocalizationConstants.invoiceHistory;
+        return LocalizationConstants.invoiceHistory.localized();
       case ActionType.savedPayments:
-        return LocalizationConstants.mySavedPayments;
+        return LocalizationConstants.mySavedPayments.localized();
       case ActionType.quotes:
-        return LocalizationConstants.myQuotes;
+        return LocalizationConstants.myQuotes.localized();
       case ActionType.vmi:
-        return LocalizationConstants.vendorManagedInventory;
+        return LocalizationConstants.vendorManagedInventory.localized();
       case ActionType.countInventory:
-        return LocalizationConstants.countInventory;
+        return LocalizationConstants.countInventory.localized();
       case ActionType.createOrder:
-        return LocalizationConstants.createOrder;
+        return LocalizationConstants.createOrder.localized();
       case ActionType.custom:
         return actionLink.text!;
       case ActionType.unknown:
@@ -195,20 +195,20 @@ class BaseActionItemWidget extends StatelessWidget {
   void signOut(BuildContext context) {
     displayDialogWidget(
         context: context,
-        title: LocalizationConstants.signOut,
+        title: LocalizationConstants.signOut.localized(),
         actions: [
           DialogPlainButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text(LocalizationConstants.cancel),
+            child: Text(LocalizationConstants.cancel.localized()),
           ),
           DialogPlainButton(
             onPressed: () {
               Navigator.of(context).pop();
               context.read<LogoutCubit>().logout();
             },
-            child: const Text(LocalizationConstants.oK),
+            child: Text(LocalizationConstants.oK.localized()),
           ),
         ]);
   }

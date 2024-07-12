@@ -100,8 +100,8 @@ class SortToolMenu extends StatelessWidget {
           title: Text('Sort by...', style: OptiTextStyles.bodySmall),
           actions: _getToolMenuWidgets(context, displayOptionsList),
           cancelButton: CupertinoActionSheetAction(
-            child: const Text(
-              LocalizationConstants.cancel,
+            child: Text(
+              LocalizationConstants.cancel.localized(),
               style: TextStyle(color: Colors.blue),
             ),
             onPressed: () => Navigator.pop(context),
