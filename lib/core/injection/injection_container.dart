@@ -62,6 +62,8 @@ import 'package:commerce_flutter_app/features/domain/usecases/promo_code_usecase
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/count_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/order_pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/quick_order_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_communication_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_details_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/request_quote_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/remote_config/remote_config_usecase.dart';
@@ -101,6 +103,8 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/auto_complete/quick_order_auto_complete_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_communication/quote_communication_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_details/quote_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/request_quote/request_quote_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/request_quote_selection/request_quote_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
@@ -315,6 +319,15 @@ Future<void> initInjectionContainer() async {
 
     // request quote selection
     ..registerFactory(() => RequestQuoteSelectionBloc())
+
+    //quote details
+    ..registerFactory(() => QuoteDetailsBloc(quoteDetailsUsecase: sl()))
+    ..registerFactory(() => QuoteDetailsUsecase())
+
+    // quote communication
+    ..registerFactory(
+        () => QuoteCommunicationBloc(quoteCommunicationUsecase: sl()))
+    ..registerFactory(() => QuoteCommunicationUsecase())
 
     //shop category
     ..registerFactory(() => CategoryBloc(categoryUseCase: sl()))

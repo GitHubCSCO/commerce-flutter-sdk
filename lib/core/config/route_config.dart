@@ -14,7 +14,9 @@ import 'package:commerce_flutter_app/features/presentation/helper/routing/route_
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_category_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_product_lines_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_approval/order_approval_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_communication_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_confirmation_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/request_quote_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_details_screen.dart';
@@ -625,6 +627,24 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
+  // path: /quote Details
+  final quoteDetails = createNode(
+    name: AppRoute.quoteDetails.name,
+    path: AppRoute.quoteDetails.suffix,
+    builder: (context, state) =>
+        QuoteDetailsScreen(quoteDto: state.extra as QuoteDto),
+    parent: null,
+  );
+
+  // path: /quote quoteCommunication
+  final quoteCommunication = createNode(
+    name: AppRoute.quoteCommunication.name,
+    path: AppRoute.quoteCommunication.suffix,
+    builder: (context, state) =>
+        QuoteCommunicationScreen(quoteDto: state.extra as QuoteDto),
+    parent: null,
+  );
+
   // path: /account/orderApproval
   final orderApproval = createNode(
     name: AppRoute.orderApproval.name,
@@ -680,6 +700,8 @@ List<NavigationNode> _getNavigationRoot() {
     addCreditCard,
     addShippingAddress,
     requestQuote,
-    quoteConfirmation
+    quoteConfirmation,
+    quoteDetails,
+    quoteCommunication
   ];
 }

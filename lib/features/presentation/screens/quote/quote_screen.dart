@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/date_time_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
@@ -94,16 +95,22 @@ class _QuotePageState extends State<QuotePage> {
         scrollDirection: Axis.vertical,
         itemCount: quotes?.length ?? 0,
         itemBuilder: (context, index) {
-          return QuoteItemWidget(
-            typeDisplay: quotes![index].typeDisplay ?? '',
-            quoteNumber: quotes[index].quoteNumber ?? '',
-            companyName: quotes[index].customerName ?? '',
-            address: quotes[index].shipToFullAddress ?? '',
-            status: quotes[index].status ?? '',
-            requestDate:
-                quotes[index].orderDate.formatDate(format: 'MM/dd/yyyy'),
-            expiryDate:
-                quotes[index].expirationDate.formatDate(format: 'MM/dd/yyyy'),
+          return InkWell(
+            onTap: () {
+              AppRoute.quoteDetails
+                  .navigateBackStack(context, extra: quotes[index]);
+            },
+            child: QuoteItemWidget(
+              typeDisplay: quotes![index].typeDisplay ?? '',
+              quoteNumber: quotes[index].quoteNumber ?? '',
+              companyName: quotes[index].customerName ?? '',
+              address: quotes[index].shipToFullAddress ?? '',
+              status: quotes[index].status ?? '',
+              requestDate:
+                  quotes[index].orderDate.formatDate(format: 'MM/dd/yyyy'),
+              expiryDate:
+                  quotes[index].expirationDate.formatDate(format: 'MM/dd/yyyy'),
+            ),
           );
         },
       ),
