@@ -335,7 +335,8 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => BrandProductLinesUseCase())
 
     //cart
-    ..registerFactory(() => CartPageBloc(cartUseCase: sl()))
+    ..registerFactory(
+        () => CartPageBloc(cartUseCase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => CartUseCase())
     ..registerFactory(() => CartShippingSelectionBloc(shippingUseCase: sl()))
     ..registerFactory(() => CartShippingUseCase())
