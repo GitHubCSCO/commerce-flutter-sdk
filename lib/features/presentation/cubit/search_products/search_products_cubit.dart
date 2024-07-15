@@ -74,6 +74,8 @@ class SearchProductsCubit extends Cubit<SearchProductsState> with RealtimePricin
 
   void loadInitialSearchProducts(
       GetProductCollectionResult? productCollectionResult) async {
+    emit(state.copyWith(searchProductStatus: SearchProductStatus.loading));
+
     query = productCollectionResult?.originalQuery;
 
     final sortOptions = productCollectionResult?.pagination?.sortOptions ?? [];
