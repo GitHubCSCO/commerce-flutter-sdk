@@ -7,7 +7,7 @@ class BillToShipToAddressSelectionUseCase extends BaseUseCase {
     final parameters = BillTosQueryParameters(
       filter: searchQuery,
       page: currentPage,
-      exclude: ['excludeshowall']
+      exclude: ['excludeshowall','showall'] //excludeshowall seem to be not working but showall in exclude seem to be working, keeping both
     );
 
     return await commerceAPIServiceProvider.getBillToService().getBillTosAsync(parameters: parameters);
@@ -17,7 +17,7 @@ class BillToShipToAddressSelectionUseCase extends BaseUseCase {
     final parameters = ShipTosQueryParameters(
         filter: searchQuery,
         page: currentPage,
-        exclude: ['excludeshowall']
+        exclude: ['excludeshowall','showall'] //excludeshowall seem to be not working but showall in exclude seem to be working, keeping both
     );
 
     return await commerceAPIServiceProvider.getBillToService().getShipTosAsync(billToId, parameters: parameters);

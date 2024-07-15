@@ -17,6 +17,8 @@ import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_c
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 Future<void> _reloadAccountPageWithAuthStatus(BuildContext context) async {
   final currentState = context.read<AuthCubit>().state;
@@ -118,8 +120,34 @@ class AccountPage extends BaseDynamicContentScreen {
                       const _AccountHeader(),
                       const SizedBox(height: AppStyle.defaultVerticalPadding),
                       ...buildContentWidgets(state.widgetEntities),
+                      if(context.read<AccountPageBloc>().getPrivacyPolicyUrl().isNullOrEmpty == false)
                       Padding(
-                        padding: const EdgeInsets.all(15.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            launchUrlString(context.read<AccountPageBloc>().getPrivacyPolicyUrl()!);
+                          },
+                          child: Text(
+                            LocalizationConstants.privacyPolicy,
+                            style: OptiTextStyles.linkMedium,
+                          ),
+                        ),
+                      ),
+                      if(context.read<AccountPageBloc>().getTermsOfUseUrll().isNullOrEmpty == false)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            launchUrlString(context.read<AccountPageBloc>().getTermsOfUseUrll()!);
+                          },
+                          child: Text(
+                            LocalizationConstants.termsOfUse,
+                            style: OptiTextStyles.linkMedium,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
                         child: Text(
                             context
                                 .read<AccountPageBloc>()

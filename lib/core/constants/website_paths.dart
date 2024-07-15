@@ -9,4 +9,12 @@ class WebsitePaths {
   static const orderApprovalDetailsWebsitePath = 'redirectto/OrderApprovalDetailPage?cartId=%s';
   static const brandsWebsitePath = 'redirectto/BrandsPage';
   static const accountWebsitePath = 'redirectto/myaccountpage';
+  static const ordersPath = 'redirectto/OrdersPage';
+  static const vmiOrdersPath = 'redirectto/VmiOrdersPage?customerSequence=-1&vmiLocationId=%s';
+  static const invoiceHistoryWebsitePath = 'redirectto/InvoicesPage';
+  static const invoiceDetailWebsitePath = 'redirectto/InvoiceDetailPage?invoiceNumber=%s';
+}
+
+class PrintPaths {
+  static const invoiceDetailPrintPath = 'Invoice/GetPdf?invoiceNumber=%s';
 }
