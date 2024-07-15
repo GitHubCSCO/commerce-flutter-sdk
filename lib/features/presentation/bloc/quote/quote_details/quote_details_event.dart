@@ -1,3 +1,6 @@
 abstract class QuoteDetailsEvent {}
 
-class LoadQuoteDetailsEvent extends QuoteDetailsEvent {}
+class LoadQuoteDetailsDataEvent extends QuoteDetailsEvent {
+  final String quoteId;
+  LoadQuoteDetailsDataEvent({required this.quoteId});
+}

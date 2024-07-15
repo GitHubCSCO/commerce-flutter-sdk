@@ -79,9 +79,7 @@ class _TabSwitchWidgetState extends State<TabSwitchWidget> {
           ),
         ),
         const SizedBox(height: 8.0),
-        SizedBox(
-          child: selectedIndex == 0 ? widget.tabWidget0 : widget.tabWidget1,
-        )
+        selectedIndex == 0 ? widget.tabWidget0 : widget.tabWidget1
       ],
     );
   }

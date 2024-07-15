@@ -1,6 +1,87 @@
 import 'package:commerce_flutter_app/features/domain/entity/pricing_rfq_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/brand_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/break_price_mapper.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+
+class QuoteLineEntityMapper {
+  static QuoteLineEntity toEntity(QuoteLine? model) => QuoteLineEntity(
+        
+        pricingRfq: model?.pricingRfq != null
+            ? PricingRfqEntityMapper.toEntity(model?.pricingRfq ?? PricingRfq())
+            : null,
+        maxQty: model?.maxQty,
+        altText: model?.altText,
+        availability: model?.availability != null
+            ? AvailabilityEntityMapper.toEntity(model?.availability)
+            : null,
+        baseUnitOfMeasure: model?.baseUnitOfMeasure,
+        baseUnitOfMeasureDisplay: model?.baseUnitOfMeasureDisplay,
+        brand: model?.brand != null
+            ? BrandEntityMapper.toEntity(model?.brand)
+            : null,
+        breakPrices: model?.breakPrices
+            ?.map(
+                (breakPrice) => BreakPriceDtoEntityMapper.toEntity(breakPrice))
+            .toList(),
+        canAddToCart: model?.canAddToCart,
+        canBackOrder: model?.canBackOrder,
+        costCode: model?.costCode,
+        customerName: model?.customerName,
+        erpNumber: model?.erpNumber,
+        hasInsufficientInventory: model?.hasInsufficientInventory,
+        id: model?.id,
+        isActive: model?.isActive,
+        isDiscounted: model?.isDiscounted,
+        isFixedConfiguration: model?.isFixedConfiguration,
+        isPromotionItem: model?.isPromotionItem,
+        isQtyAdjusted: model?.isQtyAdjusted,
+        isRestricted: model?.isRestricted,
+        isSubscription: model?.isSubscription,
+        line: model?.line,
+        manufacturerItem: model?.manufacturerItem,
+        notes: model?.notes,
+        pricing: model?.pricing != null
+            ? ProductPriceEntityMapper.toEntity(model?.pricing)
+            : null,
+        productId: model?.productId,
+        productName: model?.productName,
+        productSubscription: model?.productSubscription != null
+            ? ProductSubscriptionEntityMapper.toEntity(
+                model?.productSubscription)
+            : null,
+        productUri: model?.productUri,
+        qtyLeft: model?.qtyLeft,
+        qtyOnHand: model?.qtyOnHand,
+        qtyOrdered: model?.qtyOrdered,
+        qtyPerBaseUnitOfMeasure: model?.qtyPerBaseUnitOfMeasure,
+        quoteRequired: model?.quoteRequired,
+        requisitionId: model?.requisitionId,
+        salePriceLabel: model?.salePriceLabel,
+        sectionOptions: model?.sectionOptions
+            ?.map((sectionOption) =>
+                SectionOptionEntityMapper.toEntity(sectionOption))
+            .toList(),
+        shortDescription: model?.shortDescription,
+        smallImagePath: model?.smallImagePath,
+        status: model?.status,
+        unitOfMeasure: model?.unitOfMeasure,
+        unitOfMeasureDescription: model?.unitOfMeasureDescription,
+        unitOfMeasureDisplay: model?.unitOfMeasureDisplay,
+        vmiBinId: model?.vmiBinId,
+      );
+
+  static QuoteLine? toModel(QuoteLineEntity entity) => QuoteLine(
+        pricingRfq: entity.pricingRfq != null
+            ? PricingRfqEntityMapper.toModel(
+                entity.pricingRfq ?? PricingRfqEntity())
+            : null,
+        maxQty: entity.maxQty,
+      );
+}
 
 class PricingRfqEntityMapper {
   static PricingRfqEntity toEntity(PricingRfq model) => PricingRfqEntity(

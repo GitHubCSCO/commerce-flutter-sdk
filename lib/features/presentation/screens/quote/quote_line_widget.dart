@@ -1,5 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
@@ -10,6 +12,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/line_item/line
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_quantity_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_title_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/view_quote_line_break_price_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -88,8 +91,20 @@ class QuoteLineWidget extends StatelessWidget {
               productId: quoteLineEntity.productId,
               erpNumber: quoteLineEntity.erpNumber,
               unitOfMeasure: quoteLineEntity.baseUnitOfMeasure,
-              showViewAvailabilityByWarehouse:
-                  quoteLineEntity.showInventoryAvailability ?? false),
+              showViewAvailabilityByWarehouse: false),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20.0, 0, 10, 15),
+            child: GestureDetector(
+              onTap: () {
+                viewQuoteLineBreakPricingWidget(
+                    context, quoteLineEntity.quoteLinePricingBreakList ?? []);
+              },
+              child: Text(
+                LocalizationConstants.viewQuotedPricing,
+                style: OptiTextStyles.link,
+              ),
+            ),
+          ),
           LineItemQuantityGroupWidget(
             qtyOrdered: quoteLineEntity.qtyOrdered?.toInt().toString(),
             onQtyChanged: (int? qty) {

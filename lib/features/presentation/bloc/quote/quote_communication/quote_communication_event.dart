@@ -7,3 +7,10 @@ class LoadQuoteQummunicationMessagesEvent extends QuoteCommunicationEvent {
 
   LoadQuoteQummunicationMessagesEvent(this.quoteDto);
 }
+
+class QuoteAddMessageEvent extends QuoteCommunicationEvent {
+  final String message;
+  final QuoteDto quoteDto;
+
+  QuoteAddMessageEvent({required this.message, required this.quoteDto});
+}

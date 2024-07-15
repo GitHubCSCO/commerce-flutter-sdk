@@ -1,16 +1,13 @@
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/date_time_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/quote_page_type.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_state.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_item_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/tab_switch_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -46,6 +43,7 @@ class _QuotePageState extends State<QuotePage> {
         title: Text('Quote'),
       ),
       body: TabSwitchWidget(
+      
         tabTitle0: LocalizationConstants.pending,
         tabTitle1: LocalizationConstants.activeJobs,
         tabWidget0: BlocBuilder<QuoteBloc, QuoteState>(builder: (_, state) {
@@ -121,5 +119,3 @@ class _QuotePageState extends State<QuotePage> {
     return Container();
   }
 }
-
-class AppColors {}
