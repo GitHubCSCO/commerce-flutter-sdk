@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
@@ -286,7 +287,7 @@ class _CountInputPageState extends State<CountInputPage> {
     final part = _buildRow(
         LocalizationConstants.partNumberSign,
         OptiTextStyles.subtitle,
-        widget.countInventoryEntity.vmiBinEntity.productEntity?.productNumber ??
+        widget.countInventoryEntity.vmiBinEntity.productEntity?.getProductNumber() ??
             '',
         OptiTextStyles.body);
     final myPart = _buildRow(

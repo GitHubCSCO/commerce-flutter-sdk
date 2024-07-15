@@ -2,7 +2,9 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
+import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
@@ -13,6 +15,7 @@ import 'package:commerce_flutter_app/features/presentation/components/filter.dar
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/order_history_list_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,11 +43,18 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
 
   final _textEditingController = TextEditingController();
 
+  late final String websitePath;
+
   @override
   Widget build(BuildContext context) {
+    var vmlLocationId = context.read<OrderHistoryCubit>().vmiLocationId;
+    websitePath = isFromVMI == true ? WebsitePaths.vmiOrdersPath.format([vmlLocationId ?? '']) : WebsitePaths.ordersPath;
     return Scaffold(
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
+        actions: <Widget>[
+          BottomMenuWidget(websitePath: websitePath),
+        ],
         backgroundColor: OptiAppColors.backgroundWhite,
         title: const Text('My Orders'),
         centerTitle: false,

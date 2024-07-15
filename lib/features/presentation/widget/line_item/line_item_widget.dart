@@ -1,5 +1,7 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_image_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
@@ -7,6 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/line_item/line
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class LineItemWidget extends StatelessWidget {
   final String? productId;
@@ -28,7 +31,7 @@ class LineItemWidget extends StatelessWidget {
   final void Function()? onAddToCart;
   final void Function()? onDelete;
   final String? unitOfMeasure;
-
+  final String? lineNotes;
 
   const LineItemWidget({
     super.key,
@@ -49,7 +52,9 @@ class LineItemWidget extends StatelessWidget {
     this.canAddToCart = false,
     this.isDeleteButtonVisible = false,
     this.onAddToCart,
-    this.onDelete, this.unitOfMeasure,
+    this.onDelete,
+    this.unitOfMeasure,
+    this.lineNotes,
   });
 
   @override
@@ -73,6 +78,10 @@ class LineItemWidget extends StatelessWidget {
   }
 
   void _navigateToProductDetails(BuildContext context) {
+    if (productId == null) {
+      return;
+    }
+
     AppRoute.productDetails.navigateBackStack(
       context,
       pathParameters: {"productId": productId.toString()},
@@ -106,14 +115,25 @@ class LineItemWidget extends StatelessWidget {
             productId: productId,
             erpNumber: productNumber,
             unitOfMeasure: unitOfMeasure,
-            
-            
           ),
           LineItemQuantityGroupWidget(
             qtyOrdered: qtyOrdered,
             subtotalPriceText: subtotalPriceText,
             canEdit: canEditQty,
           ),
+          if (!lineNotes.isNullOrEmpty) ...[
+            const SizedBox(height: 10),
+            Text(
+              '${LocalizationConstants.itemNote}: ${lineNotes!}',
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+                fontStyle: FontStyle.italic,
+                color: OptiAppColors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: 20),
+          ]
         ],
       ),
     );

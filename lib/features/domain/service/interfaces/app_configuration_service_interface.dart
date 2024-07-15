@@ -44,7 +44,7 @@ abstract class IAppConfigurationService {
 
   String? get firebaseIOSBundleId;
 
-  Future loadRemoteSettings();
+  Future<void> loadRemoteSettings();
 
   Future<bool> hasWillCall();
 
