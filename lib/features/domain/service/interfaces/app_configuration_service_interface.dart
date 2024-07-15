@@ -44,11 +44,11 @@ abstract class IAppConfigurationService {
 
   String? get firebaseIOSBundleId;
 
+  Future<void> loadRemoteSettings();
+
   bool? get hidePricingEnable;
 
   bool? get hideInventoryEnable;
-
-  Future loadRemoteSettings();
 
   Future<bool> hasWillCall();
 

@@ -144,7 +144,9 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
 
   String get poValue => state.cart.poNumber ?? '';
 
-  String get statusValue => state.cart.approverReason ?? '';
+  String get statusValue => state.cart.status ?? '';
+
+  String get approverReason => state.cart.approverReason ?? '';
 
   // footer section
   bool get hasApprover => state.cart.hasApprover == true;
