@@ -250,11 +250,13 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => LogoutUsecase())
 
     //order history
-    ..registerFactory(() => OrderHistoryCubit(orderUsecase: sl()))
+    ..registerFactory(() =>
+        OrderHistoryCubit(orderUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => OrderUsecase())
 
     //order details
-    ..registerFactory(() => OrderDetailsCubit(orderUsercase: sl()))
+    ..registerFactory(() =>
+        OrderDetailsCubit(orderUsercase: sl(), pricingInventoryUseCase: sl()))
 
     //saved order
     ..registerFactory(() => SavedOrderCubit(savedOrderUsecase: sl()))

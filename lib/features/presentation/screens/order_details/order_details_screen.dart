@@ -168,9 +168,13 @@ class OrderDetailsPage extends StatelessWidget {
                           totalTitle:
                               context.watch<OrderDetailsCubit>().totalTitle,
                           itemCount: state.order.orderLines?.length,
+                          hidePricingEnable: state.hidePricingEnable,
+                          hideInventoryEnable: state.hideInventoryEnable,
                         ),
                         OrderProductsSectionWidget(
                           orderLines: state.order.orderLines ?? [],
+                          hidePricingEnable: state.hidePricingEnable,
+                          hideInventoryEnable: state.hideInventoryEnable,
                         ),
                       ],
                     ),

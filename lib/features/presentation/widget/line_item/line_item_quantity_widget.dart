@@ -40,6 +40,7 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
                     onChanged: onQtyChanged,
                   )
                 : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         LocalizationConstants.qTY,
