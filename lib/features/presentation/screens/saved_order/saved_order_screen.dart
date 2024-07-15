@@ -188,6 +188,7 @@ class _SavedOrderListWidgetState extends State<_SavedOrderListWidget> {
                   },
                 );
               },
+              hidePricingEnable: state.hidePricingEnable,
             );
           },
           separatorBuilder: (context, index) => const Divider(
@@ -205,11 +206,13 @@ class _SavedOrderListWidgetState extends State<_SavedOrderListWidget> {
 
 class _SavedOrderItem extends StatelessWidget {
   final Cart cart;
+  final bool? hidePricingEnable;
   final void Function()? onTap;
 
   const _SavedOrderItem({
     required this.cart,
     this.onTap,
+    this.hidePricingEnable,
   });
 
   @override
@@ -241,10 +244,13 @@ class _SavedOrderItem extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            Text(
-              cart.orderSubTotalDisplay ?? '',
-              style: OptiTextStyles.bodySmall.copyWith(
-                color: OptiAppColors.textSecondary,
+            Visibility(
+              visible: !(hidePricingEnable ?? false),
+              child: Text(
+                cart.orderSubTotalDisplay ?? '',
+                style: OptiTextStyles.bodySmall.copyWith(
+                  color: OptiAppColors.textSecondary,
+                ),
               ),
             ),
           ],

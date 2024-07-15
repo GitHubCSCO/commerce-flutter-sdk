@@ -5,12 +5,14 @@ class SavedOrderState extends Equatable {
   final CartSortOrder sortOrder;
   final CartSettings cartSettings;
   final CartCollectionModel cartCollectionModel;
+  final bool? hidePricingEnable;
 
   const SavedOrderState({
     required this.status,
     required this.sortOrder,
     required this.cartSettings,
     required this.cartCollectionModel,
+    this.hidePricingEnable,
   });
 
   @override
@@ -19,6 +21,7 @@ class SavedOrderState extends Equatable {
         sortOrder,
         cartSettings,
         cartCollectionModel,
+        hidePricingEnable ?? false,
       ];
 
   SavedOrderState copyWith({
@@ -26,12 +29,14 @@ class SavedOrderState extends Equatable {
     CartSortOrder? sortOrder,
     CartSettings? cartSettings,
     CartCollectionModel? cartCollectionModel,
+    bool? hidePricingEnable,
   }) {
     return SavedOrderState(
       status: status ?? this.status,
       sortOrder: sortOrder ?? this.sortOrder,
       cartSettings: cartSettings ?? this.cartSettings,
       cartCollectionModel: cartCollectionModel ?? this.cartCollectionModel,
+      hidePricingEnable: hidePricingEnable ?? this.hidePricingEnable,
     );
   }
 }
