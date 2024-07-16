@@ -57,6 +57,10 @@ class BaseActionItemWidget extends StatelessWidget {
         return "assets/images/icon_vmi.svg";
       case ActionType.quotes:
         return "assets/images/icon_quotes.svg";
+      case ActionType.showHidePricing:
+        return "assets/images/icon_hide_pricing.svg";
+      case ActionType.showHideInventory:
+        return "assets/images/icon_hide_inventory.svg";
       default:
         return "assets/images/icon_view_account.svg";
     }
