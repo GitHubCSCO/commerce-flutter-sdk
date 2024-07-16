@@ -19,7 +19,7 @@ class SavedPaymentsScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: OptiAppColors.backgroundWhite,
-          title: const Text(LocalizationConstants.mySavedPayments),
+          title: Text(LocalizationConstants.mySavedPayments.localized()),
           centerTitle: false,
         ),
         body: MultiBlocProvider(providers: [
@@ -48,7 +48,7 @@ class SavedPaymentPage extends StatelessWidget {
               child: state.accountPaymentProfiles != null &&
                       state.accountPaymentProfiles!.isEmpty
                   ? Center(
-                      child: Text(LocalizationConstants.noSavedPaymentsFound,
+                      child: Text(LocalizationConstants.noSavedPaymentsFound.localized(),
                           style: OptiTextStyles.body),
                     )
                   : ListView(
@@ -71,7 +71,7 @@ class SavedPaymentPage extends StatelessWidget {
                                 .loadSavedPayments();
                           }));
                 },
-                text: LocalizationConstants.addCreditCard,
+                text: LocalizationConstants.addCreditCard.localized(),
               ),
             ),
           ],

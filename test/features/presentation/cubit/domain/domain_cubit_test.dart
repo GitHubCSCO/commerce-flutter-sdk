@@ -70,8 +70,8 @@ void main() {
       expect: () => [
         DomainOperationInProgress(),
         DomainOperationFailedInvalid(
-          LocalizationConstants.invalidDomain,
-          LocalizationConstants.domainWebsiteNotResponding,
+          LocalizationConstants.invalidDomain.localized(),
+          LocalizationConstants.domainWebsiteNotResponding.localized(),
         ),
       ],
     );
@@ -89,8 +89,8 @@ void main() {
       expect: () => [
         DomainOperationInProgress(),
         DomainOperationFailedMobileAppDisabled(
-          LocalizationConstants.mobileAppDisabled,
-          LocalizationConstants.mobileAppDisabledDescription,
+          LocalizationConstants.mobileAppDisabled.localized(),
+          LocalizationConstants.mobileAppDisabledDescription.localized(),
         ),
       ],
     );

@@ -18,7 +18,7 @@ class CountInventoryCubit extends Cubit<CountInventoryState> {
     int qty = convertStringToInt(qtyStr);
 
     if (qty <= 0) {
-      emit(CountInventoryAlert(LocalizationConstants.quantityIsRequired));
+      emit(CountInventoryAlert(LocalizationConstants.quantityIsRequired.localized()));
     } else {
       final result = await _countInventoryUseCase.saveBinCount(vmiBinEntity, qty);
       switch (result) {
@@ -28,12 +28,12 @@ class CountInventoryCubit extends Cubit<CountInventoryState> {
             if (countModel != null) {
               emit(CountInventorySuccess(qty));
             } else {
-              emit(CountInventoryAlert(LocalizationConstants.failed));
+              emit(CountInventoryAlert(LocalizationConstants.failed.localized()));
             }
           }
         case Failure(errorResponse: final errorResponse):
           {
-            emit(CountInventoryAlert(errorResponse.message ?? LocalizationConstants.failed));
+            emit(CountInventoryAlert(errorResponse.message ?? LocalizationConstants.failed.localized()));
           }
       }
     }

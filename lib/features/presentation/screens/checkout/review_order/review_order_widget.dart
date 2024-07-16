@@ -69,7 +69,7 @@ class ReviewOrderWidget extends StatelessWidget {
       children: [
         const SizedBox(height: 12),
         Text(
-          LocalizationConstants.billingAddress,
+          LocalizationConstants.billingAddress.localized(),
           textAlign: TextAlign.start,
           style: OptiTextStyles.subtitle,
         ),
@@ -116,7 +116,7 @@ class ReviewOrderWidget extends StatelessWidget {
         children: [
           const SizedBox(height: 12),
           Text(
-            LocalizationConstants.shippingAddress,
+            LocalizationConstants.shippingAddress.localized(),
             textAlign: TextAlign.start,
             style: OptiTextStyles.subtitle,
           ),
@@ -158,7 +158,7 @@ class ReviewOrderWidget extends StatelessWidget {
             children: [
               const SizedBox(height: 12),
               Text(
-                LocalizationConstants.pickUpLocation,
+                LocalizationConstants.pickUpLocation.localized(),
                 textAlign: TextAlign.start,
                 style: OptiTextStyles.subtitle,
               ),
@@ -201,7 +201,7 @@ class ReviewOrderWidget extends StatelessWidget {
       children: [
         const SizedBox(height: 12),
         Text(
-          LocalizationConstants.shippingMethod,
+          LocalizationConstants.shippingMethod.localized(),
           textAlign: TextAlign.center,
           style: OptiTextStyles.subtitle,
         ),
@@ -212,7 +212,7 @@ class ReviewOrderWidget extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Text(
-                LocalizationConstants.carrier,
+                LocalizationConstants.carrier.localized(),
                 textAlign: TextAlign.start,
                 style: OptiTextStyles.body,
               ),
@@ -233,7 +233,7 @@ class ReviewOrderWidget extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Text(
-                LocalizationConstants.service,
+                LocalizationConstants.service.localized(),
                 textAlign: TextAlign.start,
                 style: OptiTextStyles.body,
               ),
@@ -270,7 +270,7 @@ class ReviewOrderWidget extends StatelessWidget {
         children: [
           const SizedBox(height: 12),
           Text(
-            LocalizationConstants.requestDeliveryDate,
+            LocalizationConstants.requestDeliveryDate.localized(),
             textAlign: TextAlign.center,
             style: OptiTextStyles.subtitle,
           ),
@@ -295,7 +295,7 @@ class ReviewOrderWidget extends StatelessWidget {
       children: [
         const SizedBox(height: 12),
         Text(
-          LocalizationConstants.paymentMethod,
+          LocalizationConstants.paymentMethod.localized(),
           textAlign: TextAlign.center,
           style: OptiTextStyles.subtitle,
         ),

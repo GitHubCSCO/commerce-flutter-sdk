@@ -99,7 +99,7 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
                   return BottomMenuWidget(
                       toolMenuList: [
                         ToolMenu(
-                            title: LocalizationConstants.addToList,
+                            title: LocalizationConstants.addToList.localized(),
                             action: () {
                               final currentState =
                                   context.read<AuthCubit>().state;
@@ -169,21 +169,21 @@ class ProductDetailsPage extends BaseDynamicContentScreen {
   void showSignInDialog(BuildContext context) {
     displayDialogWidget(
       context: context,
-      title: LocalizationConstants.notSignedIn,
-      message: LocalizationConstants.pleaseSignInBeforeAddingToList,
+      title: LocalizationConstants.notSignedIn.localized(),
+      message: LocalizationConstants.pleaseSignInBeforeAddingToList.localized(),
       actions: [
         DialogPlainButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text(LocalizationConstants.cancel),
+          child: Text(LocalizationConstants.cancel.localized()),
         ),
         DialogPlainButton(
           onPressed: () {
             Navigator.of(context).pop();
             AppRoute.login.navigateBackStack(context);
           },
-          child: const Text(LocalizationConstants.signIn),
+          child: Text(LocalizationConstants.signIn.localized()),
         ),
       ],
     );

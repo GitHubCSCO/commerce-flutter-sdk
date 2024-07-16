@@ -99,7 +99,7 @@ class AutoCompleteProductWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  LocalizationConstants.itemNumber
+                  LocalizationConstants.itemNumber.localized()
                       .format([autocompleteProduct.erpNumber ?? '']),
                   style: OptiTextStyles.bodySmall.copyWith(
                     color: OptiAppColors.textDisabledColor,

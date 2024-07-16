@@ -11,7 +11,7 @@ void displayWishListDeleteWidget({
 }) {
   displayDialogWidget(
     context: context,
-    message: LocalizationConstants.deleteSpecificList.format(
+    message: LocalizationConstants.deleteSpecificList.localized().format(
       [wishList.name ?? ''],
     ),
     actions: [
@@ -19,14 +19,14 @@ void displayWishListDeleteWidget({
         onPressed: () {
           Navigator.of(context).pop();
         },
-        child: const Text(LocalizationConstants.cancel),
+        child: Text(LocalizationConstants.cancel.localized()),
       ),
       TextButton(
         onPressed: () {
           onDelete();
           Navigator.of(context).pop();
         },
-        child: const Text(LocalizationConstants.oK),
+        child: Text(LocalizationConstants.oK.localized()),
       ),
     ],
   );

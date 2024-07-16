@@ -20,13 +20,13 @@ class LoadWebsiteUrlBloc extends Bloc<LoadWebsiteUrlEvent, LoadWebsiteUrlState> 
       LoadCustomUrlLoadEvent event, Emitter<LoadWebsiteUrlState> emit) async {
     emit(LoadWebsiteUrlInitialState());
     if(event.customUrl?.isNullOrEmpty == true){
-      emit(LoadWebsiteUrlFailureState(LocalizationConstants.invalidUrl));
+      emit(LoadWebsiteUrlFailureState(LocalizationConstants.invalidUrl.localized()));
     }else{
       var result = await _platformUsecase.getAuthorizedCustomUrl(event.customUrl!);
       if(result!=null){
         emit(LoadCustomUrlLoadedState(customURL: result));
       }else{
-        emit(LoadWebsiteUrlFailureState(LocalizationConstants.invalidUrl));
+        emit(LoadWebsiteUrlFailureState(LocalizationConstants.invalidUrl.localized()));
       }
     }
   }
@@ -38,7 +38,7 @@ class LoadWebsiteUrlBloc extends Bloc<LoadWebsiteUrlEvent, LoadWebsiteUrlState> 
     if(result!=null){
       emit(LoadWebsiteUrlLoadedState(authorizedURL: result));
     }else{
-      emit(LoadWebsiteUrlFailureState(LocalizationConstants.failedToLoadUrl));
+      emit(LoadWebsiteUrlFailureState(LocalizationConstants.failedToLoadUrl.localized()));
     }
   }
 }

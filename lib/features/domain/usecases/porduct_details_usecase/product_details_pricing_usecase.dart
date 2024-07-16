@@ -183,7 +183,7 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
     } else {
       var newProductAvailability = Availability(
         messageType: 0,
-        message: LocalizationConstants.unableToRetrieveInventory,
+        message: LocalizationConstants.unableToRetrieveInventory.localized(),
       );
       if (styledProduct != null) {
         styledProduct = styledProduct.copyWith(

@@ -52,7 +52,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          LocalizationConstants.changeCustomerWillCall,
+          LocalizationConstants.changeCustomerWillCall.localized(),
           style: OptiTextStyles.titleLarge,
         ),
         backgroundColor: Colors.white,
@@ -64,7 +64,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                LocalizationConstants.cancel,
+                LocalizationConstants.cancel.localized(),
                 style: OptiTextStyles.subtitleLink,
               ),
             ),
@@ -99,8 +99,8 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                       _buildBillToWidget(state.billToAddress),
                       const SizedBox(height: 20.0),
                       TabSwitchWidget(
-                        tabTitle0: LocalizationConstants.ship,
-                        tabTitle1: LocalizationConstants.pickUp,
+                        tabTitle0: LocalizationConstants.ship.localized(),
+                        tabTitle1: LocalizationConstants.pickUp.localized(),
                         tabWidget0: _buildShipToWidget(
                             state.billToAddress, state.shipToAddress),
                         tabWidget1: _buildPickUpWidget(state.billToAddress,
@@ -130,7 +130,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                         child: Row(
                           children: [
                             Expanded(
-                              child: Text(LocalizationConstants.setAsDefault,
+                              child: Text(LocalizationConstants.setAsDefault.localized(),
                                   style: OptiTextStyles.body),
                             ),
                             Switch(
@@ -145,7 +145,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                       ),
                       ListInformationBottomSubmitWidget(actions: [
                         PrimaryButton(
-                          text: LocalizationConstants.save,
+                          text: LocalizationConstants.save.localized(),
                           isEnabled: _isSaveEnable,
                           onPressed: () {
                             context
@@ -159,11 +159,11 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                 );
               case BillToShipToFailed():
               default:
-                return const CustomScrollView(
+                return CustomScrollView(
                   slivers: <Widget>[
                     SliverFillRemaining(
                       child: Center(
-                        child: Text(LocalizationConstants.error),
+                        child: Text(LocalizationConstants.error.localized()),
                       ),
                     ),
                   ],
@@ -293,7 +293,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
               children: [
                 InkWell(
                   child: Text(
-                    LocalizationConstants.hours,
+                    LocalizationConstants.hours.localized(),
                     textAlign: TextAlign.center,
                     style: OptiTextStyles.link,
                   ),
@@ -304,7 +304,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                 const SizedBox(width: 16),
                 InkWell(
                   child: Text(
-                    LocalizationConstants.directions,
+                    LocalizationConstants.directions.localized(),
                     textAlign: TextAlign.center,
                     style: OptiTextStyles.link,
                   ),
@@ -331,7 +331,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
               children: [
                 Expanded(
                   child: ShippingAddressWidget(
-                    title: LocalizationConstants.recipientAddress,
+                    title: LocalizationConstants.recipientAddress.localized(),
                     companyName: recipientAddress?.companyName,
                     fullAddress: recipientAddress?.fullAddress,
                     countryName: recipientAddress?.country?.name,
@@ -373,14 +373,14 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
   void _onHoursClick(BuildContext context, Warehouse? warehouse) {
     displayDialogWidget(
         context: context,
-        title: LocalizationConstants.hours,
+        title: LocalizationConstants.hours.localized(),
         message: warehouse!.hours,
         actions: [
           DialogPlainButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text(LocalizationConstants.oK),
+            child: Text(LocalizationConstants.oK.localized()),
           ),
         ]);
   }

@@ -40,7 +40,7 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
                 : Column(
                     children: [
                       Text(
-                        LocalizationConstants.qTY,
+                        LocalizationConstants.qTY.localized(),
                         style: OptiTextStyles.bodySmall,
                       ),
                       Text(

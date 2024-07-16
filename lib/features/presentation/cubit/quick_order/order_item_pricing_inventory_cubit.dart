@@ -21,7 +21,7 @@ class OrderItemPricingInventoryCubit extends Cubit<OrderItemPricingInventoryStat
     var product = quickOrderItemEntity.productEntity;
 
     if (product.quoteRequired ?? false) {
-      quickOrderItemEntity.priceValueText = LocalizationConstants.requiresQuote;
+      quickOrderItemEntity.priceValueText = LocalizationConstants.requiresQuote.localized();
       emit(OrderItemPricingInventoryLoaded());
       return;
     }

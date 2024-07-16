@@ -125,7 +125,7 @@ class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
                 fit: BoxFit.fitWidth,
                 color: Colors.white,
               ),
-              text: LocalizationConstants.addToCart,
+              text: LocalizationConstants.addToCart.localized(),
               onPressed:
                   widget.detailsAddToCartEntity.addToCartButtonEnabled == true
                       ? () {
@@ -243,8 +243,8 @@ class AddToCartNotSignedInWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return PrimaryButton(
       text: productPricingEnabled
-          ? LocalizationConstants.signInForAddToCart
-          : LocalizationConstants.signInForPricing,
+          ? LocalizationConstants.signInForAddToCart.localized()
+          : LocalizationConstants.signInForPricing.localized(),
       onPressed: () {
         AppRoute.login.navigateBackStack(context);
       },

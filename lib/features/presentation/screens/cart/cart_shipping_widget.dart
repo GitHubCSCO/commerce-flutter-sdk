@@ -29,7 +29,7 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
         Container(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
           child: Text(
-            LocalizationConstants.shipping,
+            LocalizationConstants.shipping.localized(),
             style: OptiTextStyles.titleLarge,
           ),
         ),
@@ -59,7 +59,7 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                     children: [
                       Expanded(
                         child: RadioListTile<ShippingOption>(
-                          title: const Text(LocalizationConstants.ship),
+                          title: Text(LocalizationConstants.ship.localized()),
                           value: ShippingOption.ship,
                           groupValue: shippingOption,
                           onChanged: (value) {
@@ -71,7 +71,7 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                       ),
                       Expanded(
                         child: RadioListTile<ShippingOption>(
-                          title: const Text(LocalizationConstants.pickUp),
+                          title: Text(LocalizationConstants.pickUp.localized()),
                           value: ShippingOption.pickUp,
                           groupValue: shippingOption,
                           onChanged: (value) {
@@ -109,7 +109,7 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  LocalizationConstants.pickUpLocation,
+                                  LocalizationConstants.pickUpLocation.localized(),
                                   textAlign: TextAlign.center,
                                   style: OptiTextStyles.subtitle,
                                 ),
@@ -155,7 +155,7 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                         children: [
                           InkWell(
                             child: Text(
-                              LocalizationConstants.hours,
+                              LocalizationConstants.hours.localized(),
                               textAlign: TextAlign.center,
                               style: OptiTextStyles.link,
                             ),
@@ -166,7 +166,7 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                           const SizedBox(width: 16),
                           InkWell(
                             child: Text(
-                              LocalizationConstants.directions,
+                              LocalizationConstants.directions.localized(),
                               textAlign: TextAlign.center,
                               style: OptiTextStyles.link,
                             ),
@@ -204,14 +204,14 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
   void _onHoursClick(BuildContext context) {
     displayDialogWidget(
         context: context,
-        title: LocalizationConstants.hours,
+        title: LocalizationConstants.hours.localized(),
         message: shippingEntity.warehouse!.hours,
         actions: [
           DialogPlainButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text(LocalizationConstants.oK),
+            child: Text(LocalizationConstants.oK.localized()),
           ),
         ]);
   }

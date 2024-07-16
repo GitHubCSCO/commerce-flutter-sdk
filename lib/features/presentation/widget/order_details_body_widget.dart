@@ -170,43 +170,43 @@ class OrderInformationWidget extends StatelessWidget {
           children: [
             if (orderNumber != null)
               TwoTextsRow(
-                label: LocalizationConstants.orderNumberSign,
+                label: LocalizationConstants.orderNumberSign.localized(),
                 value: orderNumber!,
                 textStyle: OptiTextStyles.subtitle,
               ),
             if (webOrderNumber != null)
               TwoTextsRow(
-                label: LocalizationConstants.webOrderNumberSign,
+                label: LocalizationConstants.webOrderNumberSign.localized(),
                 value: webOrderNumber!,
                 textStyle: OptiTextStyles.body,
               ),
             if (orderDate != null)
               TwoTextsRow(
-                label: LocalizationConstants.orderDate,
+                label: LocalizationConstants.orderDate.localized(),
                 value: orderDate!,
                 textStyle: OptiTextStyles.body,
               ),
             if (orderStatus != null)
               TwoTextsRow(
-                label: LocalizationConstants.orderStatus,
+                label: LocalizationConstants.orderStatus.localized(),
                 value: orderStatus!,
                 textStyle: OptiTextStyles.body,
               ),
             if (poNumber != null)
               TwoTextsRow(
-                label: LocalizationConstants.pONumberSign,
+                label: LocalizationConstants.pONumberSign.localized(),
                 value: poNumber!,
                 textStyle: OptiTextStyles.body,
               ),
             if (shippingMethod != null)
               TwoTextsRow(
-                label: LocalizationConstants.shippingMethod,
+                label: LocalizationConstants.shippingMethod.localized(),
                 value: shippingMethod!,
                 textStyle: OptiTextStyles.body,
               ),
             if (terms != null)
               TwoTextsRow(
-                label: LocalizationConstants.terms,
+                label: LocalizationConstants.terms.localized(),
                 value: terms!,
                 textStyle: OptiTextStyles.body,
               ),
@@ -323,7 +323,7 @@ class OrderProductsSectionWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                LocalizationConstants.products,
+                LocalizationConstants.products.localized(),
                 style: OptiTextStyles.titleLarge,
               ),
               const SizedBox(width: 8),
@@ -432,7 +432,7 @@ class OrderPaymentSectionWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)
               .copyWith(bottom: 8),
           child: Text(
-            LocalizationConstants.orderSummary,
+            LocalizationConstants.orderSummary.localized(),
             style: OptiTextStyles.titleLarge,
           ),
         ),
