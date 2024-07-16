@@ -40,16 +40,17 @@ class LineItemPricingWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildDiscountMessageSection(
-              context,
-              discountMessage: discountMessage,
-            ),
-            if (!(hidePricingEnable ?? false))
+            if (!(hidePricingEnable ?? false)) ...{
+              _buildDiscountMessageSection(
+                context,
+                discountMessage: discountMessage,
+              ),
               _buildPricingSection(
                 context,
                 priceValueText: priceValueText,
                 unitOfMeasureValueText: unitOfMeasureValueText,
               ),
+            },
             if (!(hideInventoryEnable ?? false)) ...{
               availabilityText != null
                   ? _buildInventorySection(

@@ -240,16 +240,16 @@ class OrderProductPricingWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Visibility(
-            //add showhide pricing logic
-            visible: orderItemEntity.discountValueText?.isNotEmpty ?? false,
-            child: Text(
-              orderItemEntity.discountValueText ?? '',
-              style: OptiTextStyles.bodySmall,
-              textAlign: TextAlign.left,
+          if (!(orderItemEntity.hidePricingEnable ?? false)) ...{
+            Visibility(
+              //add showhide pricing logic
+              visible: orderItemEntity.discountValueText?.isNotEmpty ?? false,
+              child: Text(
+                orderItemEntity.discountValueText ?? '',
+                style: OptiTextStyles.bodySmall,
+                textAlign: TextAlign.left,
+              ),
             ),
-          ),
-          if (!(orderItemEntity.hidePricingEnable ?? false))
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -268,6 +268,7 @@ class OrderProductPricingWidget extends StatelessWidget {
                 ),
               ],
             ),
+          },
           if (!(orderItemEntity.hideInventoryEnable ?? false) ||
               orderItemEntity.showInventoryAvailability == null)
             Text(

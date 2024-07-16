@@ -38,8 +38,8 @@ class ProductDetailsPricingWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildDiscountMessageSection(context),
               if (!(productDetailsPricingEntity.hidePricing ?? false)) ...{
+                _buildDiscountMessageSection(context),
                 _buildPricingSection(context),
                 _buildQuantityPricingSection(context),
               },
