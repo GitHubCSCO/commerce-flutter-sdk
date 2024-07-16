@@ -1,7 +1,7 @@
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_carousel/product_carousel_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -9,10 +9,11 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 part 'product_carousel_state.dart';
 
 class ProductCarouselCubit extends Cubit<ProductCarouselState> {
-  final ProductCarouselUseCase _productCarouselUseCase;
+  final PricingInventoryUseCase _pricingInventoryUseCase;
 
-  ProductCarouselCubit({required ProductCarouselUseCase productCarouselUseCase})
-      : _productCarouselUseCase = productCarouselUseCase,
+  ProductCarouselCubit(
+      {required PricingInventoryUseCase pricingInventoryUseCase})
+      : _pricingInventoryUseCase = pricingInventoryUseCase,
         super(ProductCarouselInitialState());
 
   Future<void> getCarouselProducts(
@@ -25,20 +26,20 @@ class ProductCarouselCubit extends Cubit<ProductCarouselState> {
         isPricingLoading: true));
 
     final productPricingEnabled =
-        await _productCarouselUseCase.getProductPricingEnable();
+        await _pricingInventoryUseCase.getProductPricingEnable();
+
     final productList = widgetEntity.productCarouselList
             ?.map((productCarousel) => productCarousel.product)
             .toList() ??
         [];
 
-    if (productPricingEnabled) {
-      final realTimeResult = RealTimeSupport.RealTimePricingOnly;
+    final realTimeResult = await _pricingInventoryUseCase.getRealtimeSupportType();
 
-      if (realTimeResult != null &&
-          (realTimeResult == RealTimeSupport.RealTimePricingOnly ||
+    if (productPricingEnabled && realTimeResult != null) {
+      if (realTimeResult == RealTimeSupport.RealTimePricingOnly ||
               realTimeResult ==
                   RealTimeSupport.RealTimePricingWithInventoryIncluded ||
-              realTimeResult == RealTimeSupport.RealTimePricingAndInventory)) {
+              realTimeResult == RealTimeSupport.RealTimePricingAndInventory) {
         final productPriceParameters = productList
             .map((product) => ProductPriceQueryParameter(
                   productId: product!.id,
@@ -51,7 +52,7 @@ class ProductCarouselCubit extends Cubit<ProductCarouselState> {
             productPriceParameters: productPriceParameters);
 
         final pricingResult =
-            await _productCarouselUseCase.getRealTimePricing(parameter);
+            await _pricingInventoryUseCase.getRealTimePricing(parameter);
 
         switch (pricingResult) {
           case Success():
@@ -66,6 +67,7 @@ class ProductCarouselCubit extends Cubit<ProductCarouselState> {
         }
       }
     }
+
     emit(ProductCarouselLoadedState(
         productCarouselList: widgetEntity.productCarouselList!,
         isPricingLoading: false));

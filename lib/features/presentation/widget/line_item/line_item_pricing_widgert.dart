@@ -33,42 +33,39 @@ class LineItemPricingWidget extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 5.0),
       child: Container(
         color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0, 10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildDiscountMessageSection(
-                context,
-                discountMessage: discountMessage,
-              ),
-              _buildPricingSection(
-                context,
-                priceValueText: priceValueText,
-                unitOfMeasureValueText: unitOfMeasureValueText,
-              ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildDiscountMessageSection(
+              context,
+              discountMessage: discountMessage,
+            ),
+            _buildPricingSection(
+              context,
+              priceValueText: priceValueText,
+              unitOfMeasureValueText: unitOfMeasureValueText,
+            ),
 
-              availabilityText != null
-                  ? _buildInventorySection(
-                      context,
-                      availabilityText: availabilityText,
-                    )
-                  : Container(),
-              // _buildInventorySection(context),
-              // For "View Availability by Warehouse"
-              if (showViewAvailabilityByWarehouse)
-                GestureDetector(
-                  onTap: () {
-                    viewWarehouseWidget(context, productId, erpNumber ?? "",
-                        unitOfMeasure ?? "");
-                  },
-                  child: Text(
-                    "View Availability by Warehouse",
-                    style: OptiTextStyles.link,
-                  ),
+            availabilityText != null
+                ? _buildInventorySection(
+                    context,
+                    availabilityText: availabilityText,
+                  )
+                : Container(),
+            // _buildInventorySection(context),
+            // For "View Availability by Warehouse"
+            if (showViewAvailabilityByWarehouse)
+              GestureDetector(
+                onTap: () {
+                  viewWarehouseWidget(context, productId, erpNumber ?? "",
+                      unitOfMeasure ?? "");
+                },
+                child: Text(
+                  "View Availability by Warehouse",
+                  style: OptiTextStyles.link,
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     );

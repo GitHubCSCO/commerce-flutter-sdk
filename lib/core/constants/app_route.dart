@@ -55,6 +55,8 @@ class RouteNames {
   static const String savedPayments = 'savedPayments';
   static const String orderApproval = 'orderApproval';
   static const String orderApprovalDetails = 'orderApprovalDetails';
+  static const String invoiceHistory = 'invoiceHistory';
+  static const String invoiceDetail = 'invoiceDetail';
   static const String myQuote = 'myQuote';
   static const String requestQuote = 'requestQuote';
   static const String quoteConfirmation = 'quoteConfirmation';
@@ -126,6 +128,10 @@ class RoutePaths {
       '${RoutePaths.account}/${RouteNames.orderApproval}';
   static const String orderApprovalDetails =
       '${RoutePaths.orderApproval}/:cartId';
+  static const String invoiceHistory =
+      '${RoutePaths.account}/${RouteNames.invoiceHistory}';
+  static const String invoiceDetail =
+      '${RoutePaths.invoiceHistory}/:invoiceNumber';
   static const String myQuote = '${RoutePaths.account}/${RouteNames.myQuote}';
   static const String requestQuote = '/${RouteNames.requestQuote}';
   static const String quoteConfirmation = '/${RouteNames.quoteConfirmation}';
@@ -225,6 +231,14 @@ enum AppRoute {
   orderApprovalDetails(
       name: RouteNames.orderApprovalDetails,
       fullPath: RoutePaths.orderApprovalDetails),
+  invoiceHistory(
+    name: RouteNames.invoiceHistory,
+    fullPath: RoutePaths.invoiceHistory,
+  ),
+  invoiceDetail(
+    name: RouteNames.invoiceDetail,
+    fullPath: RoutePaths.invoiceDetail,
+  ),
   requestQuote(
       name: RouteNames.requestQuote, fullPath: RoutePaths.requestQuote),
   myQuote(name: RouteNames.myQuote, fullPath: RoutePaths.myQuote),
