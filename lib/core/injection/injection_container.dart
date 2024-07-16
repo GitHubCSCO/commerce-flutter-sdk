@@ -268,9 +268,12 @@ Future<void> initInjectionContainer() async {
 
     //order approval
     ..registerFactory(() => OrderApprovalUseCase())
-    ..registerFactory(() => OrderApprovalCubit(orderApprovalUseCase: sl()))
-    ..registerFactory(
-        () => OrderApprovalDetailsCubit(orderApprovalUseCase: sl()))
+    ..registerFactory(() =>
+      OrderApprovalCubit(
+          orderApprovalUseCase: sl(), pricingInventoryUseCase: sl()))
+    ..registerFactory(() =>
+          OrderApprovalDetailsCubit(
+              orderApprovalUseCase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(
         () => OrderApprovalFilterCubit(orderApprovalUseCase: sl()))
     ..registerFactory(() => OrderApprovalHandlerCubit())
