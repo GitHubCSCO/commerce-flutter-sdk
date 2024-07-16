@@ -27,8 +27,12 @@ class OrderApprovalFilterCubit extends Cubit<OrderApprovalFilterState> {
     emit(newState);
   }
 
-  void reset() {
-    emit(OrderApprovalFilterState());
+  Future<void> reset() async {
+    emit(
+      OrderApprovalFilterState(
+        billTo: await _orderApprovalUseCase.getBillToAddress(),
+      ),
+    );
   }
 
   void setOrderNumber(String? orderNumber) {
