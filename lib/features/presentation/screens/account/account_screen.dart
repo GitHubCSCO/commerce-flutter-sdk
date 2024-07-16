@@ -133,12 +133,12 @@ class AccountPage extends BaseDynamicContentScreen {
                           ),
                         ),
                       ),
-                      if(context.read<AccountPageBloc>().getTermsOfUseUrll().isNullOrEmpty == false)
+                      if(context.read<AccountPageBloc>().getTermsOfUseUrl().isNullOrEmpty == false)
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
                         child: GestureDetector(
                           onTap: () {
-                            launchUrlString(context.read<AccountPageBloc>().getTermsOfUseUrll()!);
+                            launchUrlString(context.read<AccountPageBloc>().getTermsOfUseUrl()!);
                           },
                           child: Text(
                             LocalizationConstants.termsOfUse.localized(),

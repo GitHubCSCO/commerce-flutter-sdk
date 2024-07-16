@@ -185,7 +185,7 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton(() => getRouter())
 
     //auth
-    ..registerFactory(() => AuthCubit(authUsecase: sl(), languageUsecase: sl()))
+    ..registerFactory(() => AuthCubit(authUsecase: sl()))
     ..registerFactory(() => AuthUsecase())
 
     //language
@@ -207,7 +207,8 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => DomainUsecase())
 
     //domain redirect
-    ..registerFactory(() => DomainRedirectCubit(domainUsecase: sl()))
+    ..registerFactory(
+        () => DomainRedirectCubit(domainUsecase: sl(), languageUsecase: sl()))
 
     // vmi
     ..registerFactory(() => VMIPageBloc(vmiMainUseCase: sl()))

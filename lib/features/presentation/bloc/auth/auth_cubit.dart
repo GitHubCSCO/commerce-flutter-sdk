@@ -1,6 +1,5 @@
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/language_usecase/language_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -8,17 +7,14 @@ part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final AuthUsecase _authUsecase;
-  final LanguageUsecase? _languageUsecase;
 
-  AuthCubit({required AuthUsecase authUsecase, LanguageUsecase? languageUsecase})
+  AuthCubit({required AuthUsecase authUsecase})
       : _authUsecase = authUsecase,
-        _languageUsecase = languageUsecase,
         super(const AuthState(status: AuthStatus.unknown));
 
   Future<void> loadAuthenticationState() async {
     final isAuthenticated = await _authUsecase.isAuthenticated();
     //load as soon as we know auth status and it is safe to call get current session
-    await _languageUsecase?.loadCurrentLanguage();
     if (isAuthenticated) {
       authenticated();
     } else {

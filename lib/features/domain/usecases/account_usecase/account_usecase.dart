@@ -32,4 +32,10 @@ class AccountUseCase extends CmsUseCase {
 
   String? get userName =>
       commerceAPIServiceProvider.getAccountService().currentAccount?.userName;
+
+  String? get privacyPolicyUrl =>
+      coreServiceProvider.getAppConfigurationService().privacyPolicyUrl;
+
+  String? get termsOfUseUrl =>
+      coreServiceProvider.getAppConfigurationService().termsOfUseUrl;
 }
