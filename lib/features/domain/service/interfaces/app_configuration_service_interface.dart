@@ -12,6 +12,8 @@ abstract class IAppConfigurationService {
 
   String? get tokenExIFrameUrl;
 
+  String? get checkoutUrlConfiguration;
+
   bool? get hasOrderHistory;
 
   bool? get viewOnWebsiteEnabled;

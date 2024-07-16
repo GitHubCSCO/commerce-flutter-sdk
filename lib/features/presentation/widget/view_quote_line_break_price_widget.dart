@@ -15,7 +15,7 @@ void viewQuoteLineBreakPricingWidget(
         scrollable: true,
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
-        title: Text(LocalizationConstants.quantityPricing,
+        title: Text(LocalizationConstants.quotedPricing,
             style: OptiTextStyles.titleLarge),
         content: Padding(
           padding: const EdgeInsets.all(8.0),

@@ -17,3 +17,17 @@ class QuoteDetailsFailedState extends QuoteDetailsState {
   final String error;
   QuoteDetailsFailedState({required this.error});
 }
+
+class QuoteDeletionSuccessState extends QuoteDetailsState {}
+
+class QuoteDeletionFailedState extends QuoteDetailsState {}
+
+class QuoteSubmissionSuccessState extends QuoteDetailsState {}
+
+class QuoteSubmissionFailedState extends QuoteDetailsState {}
+
+class QuoteAcceptSuccessState extends QuoteDetailsState {}
+
+class QuoteAcceptFailedState extends QuoteDetailsState {}
+
+class QuoteAcceptUnauthorizedState extends QuoteDetailsState {}

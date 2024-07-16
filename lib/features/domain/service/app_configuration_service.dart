@@ -15,6 +15,8 @@ class Configuration {
 
   String? SandboxDomain;
 
+  String? CheckoutUrlConfiguration;
+
   bool? HasCheckoutConfiguration;
 
   String? CheckoutUrl;
@@ -38,27 +40,27 @@ class Configuration {
   String? FirebaseIOSStorageBucket;
   String? FirebaseIOSBundleId;
 
-  Configuration({
-    this.ShouldUseStaticDomain,
-    this.Domain,
-    this.SandboxDomain,
-    this.HasCheckoutConfiguration,
-    this.CheckoutUrl,
-    this.ViewOnWebsiteEnabled,
-    this.StartingCategoryForBrowsing,
-    this.CustomHideCheckoutOrderNotes,
-    this.FirebaseAndroidApiKey,
-    this.FirebaseAndroidAppId,
-    this.FirebaseAndroidMessagingSenderId,
-    this.FirebaseAndroidProjectId,
-    this.FirebaseAndroidStorageBucket,
-    this.FirebaseIOSApiKey,
-    this.FirebaseIOSAppId,
-    this.FirebaseIOSMessagingSenderId,
-    this.FirebaseIOSProjectId,
-    this.FirebaseIOSStorageBucket,
-    this.FirebaseIOSBundleId,
-  });
+  Configuration(
+      {this.ShouldUseStaticDomain,
+      this.Domain,
+      this.SandboxDomain,
+      this.HasCheckoutConfiguration,
+      this.CheckoutUrl,
+      this.ViewOnWebsiteEnabled,
+      this.StartingCategoryForBrowsing,
+      this.CustomHideCheckoutOrderNotes,
+      this.FirebaseAndroidApiKey,
+      this.FirebaseAndroidAppId,
+      this.FirebaseAndroidMessagingSenderId,
+      this.FirebaseAndroidProjectId,
+      this.FirebaseAndroidStorageBucket,
+      this.FirebaseIOSApiKey,
+      this.FirebaseIOSAppId,
+      this.FirebaseIOSMessagingSenderId,
+      this.FirebaseIOSProjectId,
+      this.FirebaseIOSStorageBucket,
+      this.FirebaseIOSBundleId,
+      this.CheckoutUrlConfiguration});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -151,6 +153,10 @@ class Configuration {
 class AppConfigurationService extends ServiceBase
     implements IAppConfigurationService {
   final ICommerceAPIServiceProvider _commerceAPIServiceProvider;
+
+  @override
+  String? checkoutUrlConfiguration;
+
   @override
   String? termsOfUseUrl;
 
@@ -228,6 +234,7 @@ class AppConfigurationService extends ServiceBase
     termsOfUseUrl = configuration.CheckoutUrl;
     privacyPolicyUrl = configuration.CheckoutUrl;
     customHideCheckoutOrderNotes = configuration.CustomHideCheckoutOrderNotes;
+    checkoutUrlConfiguration = configuration.CheckoutUrl;
 
     firebaseAndroidApiKey = configuration.FirebaseAndroidApiKey;
     firebaseAndroidAppId = configuration.FirebaseAndroidAppId;
@@ -275,9 +282,17 @@ class AppConfigurationService extends ServiceBase
   }
 
   @override
-  Future<String> checkoutUrl() {
-    // TODO: implement checkoutUrl
-    throw UnimplementedError();
+  Future<String> checkoutUrl() async {
+    var mobileSettingsResponse = await _commerceAPIServiceProvider
+        .getSettingsService()
+        .getMobileAppSettingAsync();
+    MobileAppSettings? mobileSettings = (mobileSettingsResponse is Success)
+        ? (mobileSettingsResponse as Success).value as MobileAppSettings
+        : null;
+    if (mobileSettings != null) {
+      return mobileSettings.checkoutUrl ?? '';
+    }
+    return checkoutUrlConfiguration ?? '';
   }
 
   @override
@@ -367,25 +382,29 @@ class AppConfigurationService extends ServiceBase
   @override
   Future<bool> hasWillCall() async {
     var result = await _commerceAPIServiceProvider
-      .getSettingsService()
-      .getAccountSettingsAsync();
+        .getSettingsService()
+        .getAccountSettingsAsync();
     AccountSettings? accountSettings =
         result is Success ? (result as Success).value as AccountSettings : null;
     var hasWillCall = false;
 
-    if (accountSettings != null)
-    {
-        hasWillCall |= accountSettings.enableWarehousePickup == true;
+    if (accountSettings != null) {
+      hasWillCall |= accountSettings.enableWarehousePickup == true;
     }
 
-    if (hasWillCall)
-    {   
-        Session? session = _commerceAPIServiceProvider.getSessionService().getCachedCurrentSession();
-        if(session==null){
-          var sessionResult = await _commerceAPIServiceProvider.getSessionService().getCurrentSession();
-          session = sessionResult is Success ? (sessionResult as Success).value as Session : null;
-        }
-        hasWillCall &= session?.pickUpWarehouse != null;
+    if (hasWillCall) {
+      Session? session = _commerceAPIServiceProvider
+          .getSessionService()
+          .getCachedCurrentSession();
+      if (session == null) {
+        var sessionResult = await _commerceAPIServiceProvider
+            .getSessionService()
+            .getCurrentSession();
+        session = sessionResult is Success
+            ? (sessionResult as Success).value as Session
+            : null;
+      }
+      hasWillCall &= session?.pickUpWarehouse != null;
     }
 
     return hasWillCall;

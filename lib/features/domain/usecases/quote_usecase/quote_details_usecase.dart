@@ -13,4 +13,39 @@ class QuoteDetailsUsecase extends BaseUseCase {
         .getSettingsService()
         .getProductSettingsAsync();
   }
+
+  Future<Result<Session, ErrorResponse>> getCurrentSession() async {
+    return await commerceAPIServiceProvider
+        .getSessionService()
+        .getCurrentSession();
+  }
+
+  Future<Result<bool, ErrorResponse>> deleteQuote(String quoteId) async {
+    return await commerceAPIServiceProvider
+        .getQuoteService()
+        .deleteQuote(quoteId);
+  }
+
+  Future<Result<QuoteDto, ErrorResponse>> submitQuote(QuoteDto quoteDto) async {
+    return await commerceAPIServiceProvider
+        .getQuoteService()
+        .submitQuote(quoteDto);
+  }
+
+  Future<Result<bool, ErrorResponse>> isAuthenticatedAsync() async {
+    return await commerceAPIServiceProvider
+        .getAuthenticationService()
+        .isAuthenticatedAsync();
+  }
+
+  Future<Result<Cart, ErrorResponse>> getCurrentCart(
+      CartQueryParameters parameters) async {
+    return await commerceAPIServiceProvider
+        .getCartService()
+        .getCurrentCart(parameters);
+  }
+
+  Future<String> getCheckoutUrl() async {
+    return await coreServiceProvider.getAppConfigurationService().checkoutUrl();
+  }
 }

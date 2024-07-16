@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.da
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_details/quote_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_details/quote_details_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_details/quote_details_state.dart';
+import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_information_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_line_widget.dart';
@@ -55,19 +56,60 @@ class QuoteDetailsPage extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             } else if (state is QuoteDetailsLoadedState) {
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _buildQuoteMessageWidget(context, state.quoteDto),
-                    QuoteInformationWidget(quoteDto: state.quoteDto),
-                    _buildQuoteLinesWidget(context, state.quoteLines),
-                  ],
-                ),
+              return Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          _buildQuoteMessageWidget(context, state.quoteDto),
+                          QuoteInformationWidget(quoteDto: state.quoteDto),
+                          _buildQuoteLinesWidget(context, state.quoteLines),
+                          _buildButtonsWidget(context, state.quoteDto)
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+                    child: Visibility(
+                      visible: true,
+                      child: PrimaryButton(
+                        onPressed: () {},
+                        text: LocalizationConstants.acceptSalesQuote,
+                      ),
+                    ),
+                  ),
+                ],
               );
             } else {
               return Container();
             }
           }),
+    );
+  }
+
+  Widget _buildButtonsWidget(BuildContext context, QuoteDto? quoteDto) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+      clipBehavior: Clip.antiAlias,
+      decoration: const BoxDecoration(color: Colors.white),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TertiaryBlackButton(
+            child: const Text(
+              LocalizationConstants.quoteAll,
+            ),
+            onPressed: () {},
+          ),
+          const SizedBox(width: 16),
+          TertiaryBlackButton(
+            child: const Text(LocalizationConstants.deleteSalesQuote),
+            onPressed: () {},
+          ),
+        ],
+      ),
     );
   }
 
@@ -77,10 +119,10 @@ class QuoteDetailsPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
           child: Text(
             '${quoteLineEntities.length} ${quoteLineEntities.length == 1 ? "product" : "products"}',
-            style: OptiTextStyles.body,
+            style: OptiTextStyles.bodyFade,
           ),
         ),
         Column(
