@@ -326,7 +326,7 @@ class FilterShipToPickerWidget extends StatelessWidget {
         children: [
           shipTo == null
               ? Text(
-                  LocalizationConstants.selectShipToAddress,
+                  LocalizationConstants.selectShipToAddress.localized(),
                   style: OptiTextStyles.body,
                 )
               : Column(

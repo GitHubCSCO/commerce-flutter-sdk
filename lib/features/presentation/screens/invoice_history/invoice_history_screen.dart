@@ -38,7 +38,7 @@ class InvoiceHistoryPage extends StatelessWidget {
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         backgroundColor: OptiAppColors.backgroundWhite,
-        title: const Text(LocalizationConstants.invoiceHistory),
+        title: Text(LocalizationConstants.invoiceHistory.localized()),
         centerTitle: false,
         actions: [
           BottomMenuWidget(
@@ -244,7 +244,7 @@ class _InvoiceItem extends StatelessWidget {
         '${LocalizationConstants.due} ${invoice.dueDate != null ? DateFormat(CoreConstants.dateFormatString).format(invoice.dueDate!) : ''}';
     final stCompany = invoice.stCompanyName ?? '';
     final balance = invoice.currentBalanceDisplay ?? '';
-    const balanceTitle = LocalizationConstants.balance;
+    final balanceTitle = LocalizationConstants.balance.localized();
 
     return InkWell(
       onTap: () {

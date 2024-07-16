@@ -109,7 +109,7 @@ void _showInvoiceHistoryFilter(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FilterOptionSwitch(
-                label: LocalizationConstants.openInvoicesOnly,
+                label: LocalizationConstants.openInvoicesOnly.localized(),
                 value: state.showOpenOnly,
                 onChanged: (_) => context
                     .read<InvoiceHistoryFilterCubit>()
@@ -120,7 +120,7 @@ void _showInvoiceHistoryFilter(
                 existingValue: state.invoiceNumber,
                 onChanged:
                     context.read<InvoiceHistoryFilterCubit>().setInvoiceNumber,
-                hintText: LocalizationConstants.invoiceNumber,
+                hintText: LocalizationConstants.invoiceNumber.localized(),
                 onListen: (context, state, textController) {
                   if (state.invoiceNumber != textController.text) {
                     textController.text = state.invoiceNumber ?? '';
@@ -135,7 +135,7 @@ void _showInvoiceHistoryFilter(
                 existingValue: state.poNumber,
                 onChanged:
                     context.read<InvoiceHistoryFilterCubit>().setPoNumber,
-                hintText: LocalizationConstants.pONumber,
+                hintText: LocalizationConstants.pONumber.localized(),
                 onListen: (context, state, textController) {
                   if (state.poNumber != textController.text) {
                     textController.text = state.poNumber ?? '';
@@ -150,7 +150,7 @@ void _showInvoiceHistoryFilter(
                 existingValue: state.orderNumber,
                 onChanged:
                     context.read<InvoiceHistoryFilterCubit>().setOrderNumber,
-                hintText: LocalizationConstants.orderNumber,
+                hintText: LocalizationConstants.orderNumber.localized(),
                 onListen: (context, state, textController) {
                   if (state.orderNumber != textController.text) {
                     textController.text = state.orderNumber ?? '';
@@ -162,7 +162,7 @@ void _showInvoiceHistoryFilter(
               ),
               const SizedBox(height: 45),
               Text(
-                LocalizationConstants.shipToAddress.toUpperCase(),
+                LocalizationConstants.shipToAddress.localized().toUpperCase(),
                 style: OptiTextStyles.subtitle,
               ),
               const SizedBox(height: 10),
@@ -174,11 +174,11 @@ void _showInvoiceHistoryFilter(
               ),
               const SizedBox(height: 45),
               Text(
-                LocalizationConstants.dateRange.toUpperCase(),
+                LocalizationConstants.dateRange.localized().toUpperCase(),
                 style: OptiTextStyles.subtitle,
               ),
               FilterDatePickerWidget(
-                title: LocalizationConstants.from,
+                title: LocalizationConstants.from.localized(),
                 selectedDate: state.fromDate,
                 onSelectDate: (innerContext, date) {
                   context.read<InvoiceHistoryFilterCubit>().setFromDate(date);
@@ -186,7 +186,7 @@ void _showInvoiceHistoryFilter(
               ),
               const SizedBox(height: 10),
               FilterDatePickerWidget(
-                title: LocalizationConstants.to,
+                title: LocalizationConstants.to.localized(),
                 selectedDate: state.toDate,
                 onSelectDate: (innerContext, date) {
                   context.read<InvoiceHistoryFilterCubit>().setToDate(date);
