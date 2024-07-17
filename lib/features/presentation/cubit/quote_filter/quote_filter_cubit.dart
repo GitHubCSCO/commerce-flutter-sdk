@@ -52,7 +52,7 @@ class QuoteFilterCubit extends Cubit<QuoteFilterState> {
   }) async {
     emit(state.copyWith(quoteFilterStatus: QuoteFilterStatus.loading));
 
-    session ??= await _quoteUsecase.getSession();
+    session = await _quoteUsecase.getSession();
 
     var newState = state.copyWith();
     newState.billTo = quoteQueryParameters.billTo;

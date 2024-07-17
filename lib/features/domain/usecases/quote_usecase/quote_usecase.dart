@@ -1,4 +1,3 @@
-import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -13,9 +12,23 @@ class QuoteUsecase extends BaseUseCase {
   }
 
   Future<Session?> getSession() async {
-    final result = await commerceAPIServiceProvider
+    final result = commerceAPIServiceProvider
+        .getSessionService()
+        .getCachedCurrentSession();
+
+    if (result != null) {
+      return result;
+    }
+
+    final response = await commerceAPIServiceProvider
         .getSessionService()
         .getCurrentSession();
-    return result.getResultSuccessValue();
+
+    switch (response) {
+      case Success(value: final session):
+        return session;
+      case Failure():
+        return null;
+    }
   }
 }
