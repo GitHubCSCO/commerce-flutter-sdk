@@ -3,7 +3,9 @@ import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart'
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class SelectionUsecase extends BaseUseCase {
-  Future<List<CatalogTypeDto>?> getUsersList() async {
+  Future<List<CatalogTypeDto>?> getUsersList({
+    required bool removeMyself,
+  }) async {
     final result =
         await commerceAPIServiceProvider.getAccountService().getAccountsAsync();
     final currentAccountId =
@@ -14,7 +16,8 @@ class SelectionUsecase extends BaseUseCase {
         return null;
       case Success(value: final accounts):
         return (accounts?.accounts ?? [])
-            .whereNot((account) => account.id == currentAccountId)
+            .whereNot(
+                (account) => removeMyself && account.id == currentAccountId)
             .map((account) {
           return CatalogTypeDto(
             id: account.id,

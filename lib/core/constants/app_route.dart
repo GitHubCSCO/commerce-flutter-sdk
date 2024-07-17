@@ -62,6 +62,7 @@ class RouteNames {
   static const String quoteConfirmation = 'quoteConfirmation';
   static const String quoteDetails = 'quoteDetails';
   static const String quoteCommunication = 'quoteCommunication';
+  static const String userSelection = 'userSelection';
 }
 
 class RoutePaths {
@@ -137,6 +138,7 @@ class RoutePaths {
   static const String quoteConfirmation = '/${RouteNames.quoteConfirmation}';
   static const String quoteDetails = '/${RouteNames.quoteDetails}';
   static const String quoteCommunication = '/${RouteNames.quoteCommunication}';
+  static const String userSelection = '/${RouteNames.userSelection}';
 }
 
 enum AppRoute {
@@ -250,7 +252,12 @@ enum AppRoute {
 
   quoteCommunication(
       name: RouteNames.quoteCommunication,
-      fullPath: RoutePaths.quoteCommunication);
+      fullPath: RoutePaths.quoteCommunication),
+
+  userSelection(
+    name: RouteNames.userSelection,
+    fullPath: RoutePaths.userSelection,
+  );
 
   const AppRoute({
     required this.name,

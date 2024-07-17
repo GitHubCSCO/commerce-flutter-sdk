@@ -43,6 +43,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/order_details
 import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/saved_payments/saved_payments_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/selection/user_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_location_note.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/add_to_wish_list_screen.dart';
@@ -63,6 +64,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/welcome/welco
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_details/wish_list_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/add_credit_card_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/add_shipping_address_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/selection_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -687,6 +689,16 @@ List<NavigationNode> _getNavigationRoot() {
     parent: orderApproval,
   );
 
+  final userSelection = createNode(
+    name: AppRoute.userSelection.name,
+    path: AppRoute.userSelection.suffix,
+    builder: (context, state) {
+      final parameter = state.extra as CatalogTypeSelectingParameter;
+      return UserSelectionScreen(parameter: parameter);
+    },
+    parent: null,
+  );
+
   return [
     root,
     navbarRoot,
@@ -723,6 +735,7 @@ List<NavigationNode> _getNavigationRoot() {
     requestQuote,
     quoteConfirmation,
     quoteDetails,
-    quoteCommunication
+    quoteCommunication,
+    userSelection,
   ];
 }

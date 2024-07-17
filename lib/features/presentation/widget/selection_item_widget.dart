@@ -1,5 +1,16 @@
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+
+class CatalogTypeSelectingParameter {
+  final CatalogTypeDto? currentItem;
+  final bool removeMyself;
+
+  CatalogTypeSelectingParameter({
+    required this.currentItem,
+    required this.removeMyself,
+  });
+}
 
 class SelectionItemWidget extends StatelessWidget {
   final Object item;

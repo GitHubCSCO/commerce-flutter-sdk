@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
@@ -5,9 +6,11 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quote_filter/quote_filter_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/selection_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -136,6 +139,31 @@ void _showQuoteFilter(
               FilterBillToPickerWidget(
                 billTo: state.billTo,
                 onBillToSelected: context.read<QuoteFilterCubit>().setBillTo,
+              ),
+              const SizedBox(height: 45),
+              Text(
+                LocalizationConstants.user.toUpperCase(),
+                style: OptiTextStyles.subtitle,
+              ),
+              const SizedBox(height: 15),
+              FilterItemPickerWidget(
+                item: state.user,
+                onItemSelected: (user) {
+                  context
+                      .read<QuoteFilterCubit>()
+                      .setUser(user as CatalogTypeDto);
+                },
+                selectedLabel: state.user?.title ?? '',
+                defaultLabel: LocalizationConstants.selectUser,
+                onTap: () async {
+                  return await context.pushNamed(
+                    AppRoute.userSelection.name,
+                    extra: CatalogTypeSelectingParameter(
+                      currentItem: state.user,
+                      removeMyself: false,
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 45),
               Text(

@@ -538,3 +538,51 @@ class FilterBillToPickerWidget extends StatelessWidget {
     );
   }
 }
+
+class FilterItemPickerWidget extends StatelessWidget {
+  final Object? item;
+  final String? selectedLabel;
+  final String defaultLabel;
+  final void Function(Object?) onItemSelected;
+  final Future<Object?> Function() onTap;
+
+  const FilterItemPickerWidget({
+    super.key,
+    required this.item,
+    required this.onItemSelected,
+    required this.selectedLabel,
+    required this.defaultLabel,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        final result = await onTap();
+        if (result != null && context.mounted) {
+          onItemSelected(result);
+        }
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          item == null
+              ? Text(
+                  defaultLabel,
+                  style: OptiTextStyles.body,
+                )
+              : Text(
+                  selectedLabel ?? '',
+                  style: OptiTextStyles.titleSmall,
+                ),
+          const Icon(
+            Icons.arrow_forward_ios,
+            color: Colors.grey,
+            size: 16,
+          ),
+        ],
+      ),
+    );
+  }
+}
