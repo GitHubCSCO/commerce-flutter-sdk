@@ -49,21 +49,9 @@ class QuoteFilterWidget extends StatelessWidget {
             child: IconButton(
               padding: const EdgeInsets.all(10),
               onPressed: () {
-                final currentState = context.read<QuoteFilterCubit>().state;
                 context.read<QuoteFilterCubit>().initialize(
                       quoteQueryParameters: quoteQueryParameters,
                     );
-
-                bool shouldShowRequestedDateError =
-                    currentState.fromDate != null &&
-                        currentState.toDate != null &&
-                        currentState.fromDate!.isAfter(currentState.toDate!);
-
-                bool shouldShowExpireDateError =
-                    currentState.expireFromDate != null &&
-                        currentState.expireToDate != null &&
-                        currentState.expireFromDate!
-                            .isAfter(currentState.expireToDate!);
 
                 _showQuoteFilter(
                   context,
@@ -71,6 +59,19 @@ class QuoteFilterWidget extends StatelessWidget {
                     context.read<QuoteFilterCubit>().reset();
                   },
                   onApply: () {
+                    final currentState = context.read<QuoteFilterCubit>().state;
+
+                    bool shouldShowRequestedDateError = currentState.fromDate !=
+                            null &&
+                        currentState.toDate != null &&
+                        currentState.fromDate!.isAfter(currentState.toDate!);
+
+                    bool shouldShowExpireDateError =
+                        currentState.expireFromDate != null &&
+                            currentState.expireToDate != null &&
+                            currentState.expireFromDate!
+                                .isAfter(currentState.expireToDate!);
+
                     if (shouldShowRequestedDateError) {
                       displayDialogWidget(
                         context: context,
