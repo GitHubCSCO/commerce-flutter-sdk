@@ -109,7 +109,6 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
               },
               icon: Icon(
                 cameraFlash ? Icons.flash_on : Icons.flash_off,
-                color: Colors.black,
               )),
           _buildAppBarMenu(),
         ],
@@ -156,7 +155,6 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                     children: [
                                       const Icon(
                                         Icons.search,
-                                        color: Colors.grey,
                                       ),
                                       const SizedBox(width: 8),
                                       Expanded(

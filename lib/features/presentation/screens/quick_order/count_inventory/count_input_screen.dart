@@ -85,7 +85,6 @@ class _CountInputPageState extends State<CountInputPage> {
               },
               icon: const Icon(
                 Icons.close,
-                color: Colors.black,
               ),
             ),
           ],

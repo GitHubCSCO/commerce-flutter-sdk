@@ -133,7 +133,6 @@ class _CameraViewState extends State<CameraView> {
                     child: const Icon(
                       Icons.close,
                       size: 20,
-                      color: Colors.black,
                     ),
                   ),
                 ),
@@ -181,7 +180,6 @@ class _CameraViewState extends State<CameraView> {
                     child: Icon(
                       cameraFlash ? Icons.flash_on : Icons.flash_off,
                       size: 20,
-                      color: Colors.black,
                     ),
                   ),
                 ),

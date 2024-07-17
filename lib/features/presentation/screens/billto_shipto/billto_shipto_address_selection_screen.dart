@@ -233,7 +233,6 @@ class BillToShipToListItem extends StatelessWidget {
                 padding: const EdgeInsets.all(7),
                 child: const Icon(
                   Icons.radio_button_checked,
-                  color: Colors.black,
                   size: 20,
                 ),
               ),

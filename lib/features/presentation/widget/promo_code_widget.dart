@@ -43,7 +43,7 @@ class PromoCodeWidget extends StatelessWidget {
               onTap: () {
                 // Add your onTap code here
               },
-              child: Icon(Icons.close),
+              child: const Icon(Icons.close),
             ),
           ],
         ),
