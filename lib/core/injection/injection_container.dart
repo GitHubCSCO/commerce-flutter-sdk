@@ -166,6 +166,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_han
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_details/saved_order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_payments/saved_payments_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/selection/sales_rep_selection/sales_rep_selection_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/selection/user_selection/user_selection_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/vmi_location_note/vmi_location_note_cubit.dart';
@@ -338,6 +339,9 @@ Future<void> initInjectionContainer() async {
     // select user
     ..registerFactory(() => UserSelectionCubit(selectionUsecase: sl()))
     ..registerFactory(() => SelectionUsecase())
+
+    // select sales rep
+    ..registerFactory(() => SalesRepSelectionCubit(selectionUsecase: sl()))
 
     // request quote
     ..registerFactory(() => RequestQuoteBloc(requestQuoteUsecase: sl()))
