@@ -1,11 +1,14 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/date_time_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/quote_page_type.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_state.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_filter_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_item_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/tab_switch_widget.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuoteScreen extends StatelessWidget {
-  const QuoteScreen({Key? key}) : super(key: key);
+  const QuoteScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,7 @@ class QuoteScreen extends StatelessWidget {
       create: (context) => sl<QuoteBloc>()
         ..add(QuoteLoadEvent(
             quotePageType: QuotePageType.pending, quoteParameters: null)),
-      child: QuotePage(),
+      child: const QuotePage(),
     );
   }
 }
@@ -30,53 +33,89 @@ class QuotePage extends StatefulWidget {
   const QuotePage({super.key});
 
   @override
-  _QuotePageState createState() => _QuotePageState();
+  QuotePageState createState() => QuotePageState();
 }
 
-class _QuotePageState extends State<QuotePage> {
+class QuotePageState extends State<QuotePage> {
   int selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Quote'),
+        backgroundColor: OptiAppColors.backgroundWhite,
+        title: const Text(LocalizationConstants.quotes),
+        centerTitle: false,
       ),
-      body: TabSwitchWidget(
-      
-        tabTitle0: LocalizationConstants.pending,
-        tabTitle1: LocalizationConstants.activeJobs,
-        tabWidget0: BlocBuilder<QuoteBloc, QuoteState>(builder: (_, state) {
-          if (state is QuoteFailed) {
-            return const Center(
-              child: Text("No data found"),
-            );
-          } else if (state is QuoteLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is QuoteLoaded) {
-            return _buildPendingQuotesWidget(state.quotes, context);
-          } else {
-            return Container();
-          }
-        }),
-        tabWidget1:
-            BlocBuilder<QuoteBloc, QuoteState>(builder: (context, state) {
-          return _buildActiveJobsWidget();
-        }),
-        selectedIndex: selectedIndex,
-        onTabSelectionChange: (index) {
-          setState(() {
-            selectedIndex = index;
-          });
-          final type =
-              index == 1 ? QuotePageType.activejobs : QuotePageType.pending;
+      body: Column(
+        children: [
+          Container(
+            height: 50,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  context.watch<QuoteBloc>().state is QuoteLoaded
+                      ? '${(context.watch<QuoteBloc>().state as QuoteLoaded).quotes?.length ?? 0} Quotes'
+                      : '',
+                  style: OptiTextStyles.header3,
+                ),
+                QuoteFilterWidget(
+                  quoteQueryParameters: context.watch<QuoteBloc>().parameter
+                      ,
+                  hasFilter: false,
+                  onApply: (parameter) {
+                    context.read<QuoteBloc>().add(
+                          QuoteLoadEvent(
+                            quotePageType: QuotePageType.pending,
+                            quoteParameters: parameter,
+                          ),
+                        );
+                  },
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: TabSwitchWidget(
+              tabTitle0: LocalizationConstants.pending,
+              tabTitle1: LocalizationConstants.activeJobs,
+              tabWidget0:
+                  BlocBuilder<QuoteBloc, QuoteState>(builder: (_, state) {
+                if (state is QuoteFailed) {
+                  return const Center(
+                    child: Text("No data found"),
+                  );
+                } else if (state is QuoteLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is QuoteLoaded) {
+                  return _buildPendingQuotesWidget(state.quotes, context);
+                } else {
+                  return Container();
+                }
+              }),
+              tabWidget1:
+                  BlocBuilder<QuoteBloc, QuoteState>(builder: (context, state) {
+                return _buildActiveJobsWidget();
+              }),
+              selectedIndex: selectedIndex,
+              onTabSelectionChange: (index) {
+                setState(() {
+                  selectedIndex = index;
+                });
+                final type = index == 1
+                    ? QuotePageType.activejobs
+                    : QuotePageType.pending;
 
-          context
-              .read<QuoteBloc>()
-              .add(QuoteLoadEvent(quotePageType: type, quoteParameters: null));
-        },
+                context.read<QuoteBloc>().add(
+                    QuoteLoadEvent(quotePageType: type, quoteParameters: null));
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

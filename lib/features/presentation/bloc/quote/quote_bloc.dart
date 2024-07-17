@@ -8,6 +8,11 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
   final QuoteUsecase _quoteUsecase;
 
+  QuoteQueryParameters parameter = QuoteQueryParameters(
+    pageSize: 16,
+    expand: ['saleslist'],
+  );
+
   QuoteBloc({required QuoteUsecase quoteUsecase})
       : _quoteUsecase = quoteUsecase,
         super(QuoteInitial()) {
@@ -18,11 +23,9 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
       QuoteLoadEvent event, Emitter<QuoteState> emit) async {
     emit(QuoteLoading());
 
-    event.quoteParameters ??= QuoteQueryParameters(
-      pageSize: 16,
-      expand: ['saleslist'],
-    );
-    var result = await _quoteUsecase.getQuotes(event.quoteParameters!);
+    parameter = event.quoteParameters ?? parameter;
+
+    var result = await _quoteUsecase.getQuotes(parameter);
     switch (result) {
       case Success(value: final data):
         emit(QuoteLoaded(
