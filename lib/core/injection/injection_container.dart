@@ -306,7 +306,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => AddToCartCubit(addToCartUsecase: sl()))
     ..registerFactory(() => AddToCartUsecase())
     ..registerFactory(() =>
-      SearchProductsCubit(searchUseCase: sl(), pricingInventoryUseCase: sl()))
+        SearchProductsCubit(searchUseCase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(
         () => ProductListFilterCubit(productListFilterUsecase: sl()))
     ..registerFactory(() => ProductListFilterUsecase())
@@ -331,7 +331,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => QuoteUsecase())
 
     // quote filter
-    ..registerFactory(() => QuoteFilterCubit())
+    ..registerFactory(() => QuoteFilterCubit(quoteUseCase: sl()))
 
     // request quote
     ..registerFactory(() => RequestQuoteBloc(requestQuoteUsecase: sl()))
