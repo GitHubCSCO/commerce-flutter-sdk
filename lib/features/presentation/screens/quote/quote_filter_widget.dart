@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
@@ -68,7 +69,8 @@ class QuoteFilterWidget extends StatelessWidget {
                         expireToDate: currentState.expireToDate,
                         quoteNumber: currentState.quoteNumber,
                         page: quoteQueryParameters.page,
-                        pageSize: quoteQueryParameters.pageSize,
+                        pageSize: quoteQueryParameters.pageSize ??
+                            CoreConstants.defaultPageSize,
                         salesRepNumber: currentState.salesRepNumber,
                         selectedSalesRep: currentState.salesRep,
                         selectedUser: currentState.user,

@@ -1,6 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_details/quote_details_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -74,11 +73,11 @@ class QuoteFilterCubit extends Cubit<QuoteFilterState> {
       ...[
         (
           LocalizationConstants.requested,
-          QuoteStatus.QuoteRequested.toString(),
+          'QuoteRequested',
         ),
         (
           LocalizationConstants.proposed,
-          QuoteStatus.QuoteProposed.toString(),
+          'QuoteProposed',
         ),
       ],
     ];
@@ -88,13 +87,13 @@ class QuoteFilterCubit extends Cubit<QuoteFilterState> {
         1,
         (
           LocalizationConstants.created,
-          QuoteStatus.QuoteCreated.toString(),
+          'QuoteCreated',
         ),
       );
       statuses.add(
         (
           LocalizationConstants.rejected,
-          QuoteStatus.QuoteRejected.toString(),
+          'QuoteRejected',
         ),
       );
     }
@@ -186,7 +185,6 @@ class QuoteFilterCubit extends Cubit<QuoteFilterState> {
     newState.statuses =
         statusItem.$2 != statuses.first.$2 ? [statusItem.$2] : null;
 
-    newState.statuses = [status];
     emit(newState);
   }
 
@@ -201,7 +199,6 @@ class QuoteFilterCubit extends Cubit<QuoteFilterState> {
     newState.typeIndex = types.indexOf(typeItem);
     newState.types = typeItem.$2 != types.first.$2 ? [typeItem.$2] : null;
 
-    newState.types = [type];
     emit(newState);
   }
 
