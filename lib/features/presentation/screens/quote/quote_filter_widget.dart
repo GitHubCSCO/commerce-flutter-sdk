@@ -17,7 +17,9 @@ import 'package:badges/badges.dart' as badges;
 class QuoteFilterWidget extends StatelessWidget {
   final QuoteQueryParameters quoteQueryParameters;
   final bool hasFilter;
-  final void Function() onApply;
+  final void Function(
+    QuoteQueryParameters quoteQueryParameter,
+  ) onApply;
 
   const QuoteFilterWidget({
     super.key,
@@ -53,7 +55,30 @@ class QuoteFilterWidget extends StatelessWidget {
                   onReset: () {
                     context.read<QuoteFilterCubit>().reset();
                   },
-                  onApply: () {},
+                  onApply: () {
+                    final currentState = context.read<QuoteFilterCubit>().state;
+                    onApply(
+                      QuoteQueryParameters(
+                        billTo: currentState.billTo,
+                        customerId: currentState.customerId,
+                        expand: quoteQueryParameters.expand,
+                        fromDate: currentState.fromDate,
+                        toDate: currentState.toDate,
+                        expireFromDate: currentState.expireFromDate,
+                        expireToDate: currentState.expireToDate,
+                        quoteNumber: currentState.quoteNumber,
+                        page: quoteQueryParameters.page,
+                        pageSize: quoteQueryParameters.pageSize,
+                        salesRepNumber: currentState.salesRepNumber,
+                        selectedSalesRep: currentState.salesRep,
+                        selectedUser: currentState.user,
+                        statuses: currentState.statuses,
+                        types: currentState.types,
+                        sort: quoteQueryParameters.sort,
+                        userId: currentState.userId,
+                      ),
+                    );
+                  },
                 );
               },
               icon: SvgPicture.asset(
