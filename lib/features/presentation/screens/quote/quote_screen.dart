@@ -43,7 +43,6 @@ class _QuotePageState extends State<QuotePage> {
         title: Text('Quote'),
       ),
       body: TabSwitchWidget(
-      
         tabTitle0: LocalizationConstants.pending,
         tabTitle1: LocalizationConstants.activeJobs,
         tabWidget0: BlocBuilder<QuoteBloc, QuoteState>(builder: (_, state) {
@@ -61,8 +60,7 @@ class _QuotePageState extends State<QuotePage> {
             return Container();
           }
         }),
-        tabWidget1:
-            BlocBuilder<QuoteBloc, QuoteState>(builder: (context, state) {
+        tabWidget1: BlocBuilder<QuoteBloc, QuoteState>(builder: (_, state) {
           return _buildActiveJobsWidget();
         }),
         selectedIndex: selectedIndex,

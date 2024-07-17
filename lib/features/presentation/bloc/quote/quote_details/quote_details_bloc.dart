@@ -1,3 +1,5 @@
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/quote_line_mapper.dart';
@@ -21,6 +23,8 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
   ProductSettings? productSettings;
   Session? session;
   QuoteDto? quoteDto;
+  Cart? cart;
+  QuoteSettings? quoteSettings;
 
   QuoteDetailsBloc({required QuoteDetailsUsecase quoteDetailsUsecase})
       : _quoteDetailsUsecase = quoteDetailsUsecase,
@@ -30,10 +34,13 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
     on<DeleteQuoteEvent>(_onDeleteSalesQuoteEvent);
     on<SubmitQuoteEvent>(_onSubmitQuoteEvent);
     on<AcceptQuoteEvent>(_onAcceptQuoteEvent);
+    on<ProceedToCheckoutEvent>(_onProceedToCheckoutEvent);
+    on<ExpirationDateSelectEvent>(_onSelectExpirationDate);
   }
 
   Future<void> _onLoadQuoteDetailsInitialEvent(
       QuoteDetailsInitEvent event, Emitter<QuoteDetailsState> emit) async {
+    emit(QuoteDetailsLoadingState());
     var sessionResponse = await _quoteDetailsUsecase.getCurrentSession();
     session = sessionResponse is Success
         ? (sessionResponse as Success).value as Session
@@ -43,6 +50,13 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
     productSettings = productSettingsResult is Success
         ? (productSettingsResult as Success).value as ProductSettings
         : null;
+    var quoteSettingsResult = await _quoteDetailsUsecase.getQuoteSettings();
+
+    quoteSettings = quoteSettingsResult is Success
+        ? (quoteSettingsResult as Success).value as QuoteSettings
+        : null;
+
+    emit(QuoteDetailsInitializationSuccessState());
   }
 
   Future<void> _onLoadQuoteDetailsDataEvent(
@@ -81,15 +95,73 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
     if (isAuthenticated == true) {
       var checkoutUrl = await _quoteDetailsUsecase.getCheckoutUrl();
       if (checkoutUrl.isNullOrEmpty) {
+        var cartLinesParameters = CartQueryParameters(
+          expand: ['cartlines'],
+        );
+        var currentCartResponse =
+            await _quoteDetailsUsecase.getCurrentCart(cartLinesParameters);
+        Cart? currentCart = currentCartResponse is Success
+            ? (currentCartResponse as Success).value as Cart
+            : null;
+        cart = currentCart;
+        if (currentCart != null &&
+            currentCart.cartLines != null &&
+            currentCart.cartLines!.isNotEmpty) {
+          emit(QuoteAcceptMessageShowState());
+        } else {
+          emit(QuoteAcceptMessageBypassState());
+        }
       } else {}
     } else {}
   }
 
+  Future<void> _onProceedToCheckoutEvent(
+      ProceedToCheckoutEvent event, Emitter<QuoteDetailsState> emit) async {
+    emit(QuoteAcceptedCheckoutState(cart: quoteDto as Cart?));
+  }
+
+  Future<void> _onSelectExpirationDate(
+      ExpirationDateSelectEvent event, Emitter<QuoteDetailsState> emit) async {
+    quoteDto?.expirationDate = event.expirationDate;
+  }
+
   Future<void> _onSubmitQuoteEvent(
       SubmitQuoteEvent event, Emitter<QuoteDetailsState> emit) async {
+    var quoteDto = event.quoteDto;
+
+    if (isSalesPerson) {
+      if (quoteDto.expirationDate == null) {
+        var expirationMsgResponse = await _quoteDetailsUsecase.getSiteMessage(
+            SiteMessageConstants.nameRfqNoExpirationDate,
+            SiteMessageConstants.defaultValueRfqNoExpirationDate);
+        var expirationMsg = expirationMsgResponse is Success
+            ? (expirationMsgResponse as Success).value as String
+            : SiteMessageConstants.defaultValueRfqNoExpirationDate;
+        emit(ExpirationDateRequiredState(message: expirationMsg));
+        return;
+      }
+
+      if (quoteDto.expirationDate != null &&
+          quoteDto.expirationDate!.isBefore(DateTime.now())) {
+        var pastExpirationDateMessageResponse =
+            await _quoteDetailsUsecase.getSiteMessage(
+                SiteMessageConstants.nameRfqPastExpirationDate,
+                SiteMessageConstants.defaultValueRfqPastExpirationDate);
+        var pastExpirationDateMessage =
+            pastExpirationDateMessageResponse is Success
+                ? (pastExpirationDateMessageResponse as Success).value as String
+                : SiteMessageConstants.defaultValueRfqPastExpirationDate;
+
+        emit(PastExpirationDateState(message: pastExpirationDateMessage));
+        return;
+      }
+
+      quoteDto.status = "QuoteProposed";
+    }
+
     emit(QuoteDetailsLoadingState());
-    var submitQuoteResponse =
-        await _quoteDetailsUsecase.submitQuote(event.quoteDto);
+
+    var submitQuoteResponse = await _quoteDetailsUsecase.submitQuote(quoteDto);
     switch (submitQuoteResponse) {
       case Success(value: final data):
         if (data != null) {
@@ -183,6 +255,13 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
     return quoteLinePricingEntityList;
   }
 
+  int get quoteExpireDays {
+    if (quoteSettings != null) {
+      return quoteSettings!.quoteExpireDays ?? 0;
+    }
+    return 0;
+  }
+
   bool get isSalesPerson => session != null && session?.isSalesPerson == true;
 
   bool expirationDateIsGreaterThanCurrentDate() {
@@ -194,22 +273,100 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
         quoteDto!.expirationDate!.isAtSameMomentAs(DateTime.now());
   }
 
+  bool get canBeSubmittedOrDeleted {
+    if (compareStatus(QuoteStatus.QuoteProposed)) {
+      return !isSalesPerson &&
+          quoteDto?.status != null &&
+          compareStatus(QuoteStatus.QuoteProposed);
+    } else if (compareStatus(QuoteStatus.QuoteRequested) || isSalesPerson) {
+      return isSalesPerson &&
+          quoteDto?.status != null &&
+          !compareStatus(QuoteStatus.QuoteProposed);
+    }
+
+    return isSalesPerson && quoteDto != null && (quoteDto!.isEditable == true);
+  }
+
+  String get getSubmitTitle {
+    if (compareStatus(QuoteStatus.QuoteProposed)) {
+      return LocalizationConstants.acceptSalesQuote;
+    } else if (compareStatus(QuoteStatus.QuoteRequested) || isSalesPerson) {
+      return LocalizationConstants.submitSalesQuote;
+    }
+    return "";
+  }
+
+  String get acceptedTitle {
+    if (compareStatus(QuoteStatus.QuoteProposed)) {
+      return LocalizationConstants.acceptSalesQuote;
+    } else if (compareStatus(QuoteStatus.QuoteRequested) || isSalesPerson) {
+      return LocalizationConstants.quoteAll;
+    }
+
+    return "";
+  }
+
+  String get declineTile {
+    if (compareStatus(QuoteStatus.QuoteProposed)) {
+      return LocalizationConstants.declineSalesQuote;
+    } else if (compareStatus(QuoteStatus.QuoteRequested) || isSalesPerson) {
+      return LocalizationConstants.deleteSalesQuote;
+    }
+
+    return "";
+  }
+
   bool get canBeAccepted {
     var expirationDateIsValid = expirationDateIsGreaterThanCurrentDate();
-    return !isSalesPerson &&
-        quoteDto?.status != null &&
-        (quoteDto!.status!.toLowerCase() ==
-                QuoteStatus.QuoteProposed.toString().toLowerCase() ||
-            quoteDto!.status == QuoteStatus.AwaitingApproval.toString()) &&
-        expirationDateIsValid;
+
+    if (compareStatus(QuoteStatus.QuoteProposed)) {
+      return false;
+    } else if (compareStatus(QuoteStatus.QuoteRequested) || isSalesPerson) {
+      return isSalesPerson &&
+          quoteDto?.status != null &&
+          !compareStatus(QuoteStatus.QuoteProposed);
+    }
+
+    return false;
   }
 
   bool get canBeDeclined {
     var expirationDateIsValid = expirationDateIsGreaterThanCurrentDate();
-    return !isSalesPerson &&
+
+    if (compareStatus(QuoteStatus.QuoteProposed)) {
+      return !isSalesPerson &&
+          quoteDto?.status != null &&
+          compareStatus(QuoteStatus.QuoteProposed) &&
+          expirationDateIsValid;
+    } else if (compareStatus(QuoteStatus.QuoteRequested) || isSalesPerson) {
+      return isSalesPerson &&
+          quoteDto?.status != null &&
+          !compareStatus(QuoteStatus.QuoteProposed);
+    }
+
+    return false;
+  }
+
+  String getEnumValueName(QuoteStatus status) {
+    return status.toString().split('.').last.toString().toLowerCase();
+  }
+
+  bool compareStatus(QuoteStatus status) {
+    return quoteDto?.status != null &&
+        quoteDto!.status?.toLowerCase() == getEnumValueName(status);
+  }
+
+  bool get shouldShowExpirationDate {
+    return isSalesPerson &&
         quoteDto?.status != null &&
-        quoteDto!.status!.toLowerCase() ==
-            QuoteStatus.QuoteProposed.toString().toLowerCase() &&
-        expirationDateIsValid;
+        compareStatus(QuoteStatus.QuoteRequested);
+  }
+
+  bool get isQuoteProposed {
+    return compareStatus(QuoteStatus.QuoteProposed);
+  }
+
+  bool get isQuoteRequested {
+    return compareStatus(QuoteStatus.QuoteRequested);
   }
 }

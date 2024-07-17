@@ -45,7 +45,21 @@ class QuoteDetailsUsecase extends BaseUseCase {
         .getCurrentCart(parameters);
   }
 
+  Future<Result<QuoteSettings, ErrorResponse>> getQuoteSettings() async {
+    return await commerceAPIServiceProvider
+        .getSettingsService()
+        .getQuoteSettingAsync();
+  }
+
   Future<String> getCheckoutUrl() async {
     return await coreServiceProvider.getAppConfigurationService().checkoutUrl();
+  }
+
+  Future<String> getSiteMessage(
+      String messageName, String? defaultMessage) async {
+    var result = await commerceAPIServiceProvider
+        .getWebsiteService()
+        .getSiteMessage(messageName, defaultMessage: defaultMessage);
+    return result is Success ? (result as Success).value : defaultMessage;
   }
 }

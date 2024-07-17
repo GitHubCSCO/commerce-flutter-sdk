@@ -19,7 +19,11 @@ class SubmitQuoteEvent extends QuoteDetailsEvent {
   SubmitQuoteEvent({required this.quoteDto});
 }
 
-class AcceptQuoteEvent extends QuoteDetailsEvent {
-  final String quoteId;
-  AcceptQuoteEvent({required this.quoteId});
+class AcceptQuoteEvent extends QuoteDetailsEvent {}
+
+class ProceedToCheckoutEvent extends QuoteDetailsEvent {}
+
+class ExpirationDateSelectEvent extends QuoteDetailsEvent {
+  final DateTime expirationDate;
+  ExpirationDateSelectEvent({required this.expirationDate});
 }

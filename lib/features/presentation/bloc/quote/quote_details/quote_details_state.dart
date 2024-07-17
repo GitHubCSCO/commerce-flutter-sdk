@@ -7,6 +7,8 @@ class QuoteDetailsInitialState extends QuoteDetailsState {}
 
 class QuoteDetailsLoadingState extends QuoteDetailsState {}
 
+class QuoteDetailsInitializationSuccessState extends QuoteDetailsState {}
+
 class QuoteDetailsLoadedState extends QuoteDetailsState {
   final QuoteDto quoteDto;
   final List<QuoteLineEntity> quoteLines;
@@ -31,3 +33,22 @@ class QuoteAcceptSuccessState extends QuoteDetailsState {}
 class QuoteAcceptFailedState extends QuoteDetailsState {}
 
 class QuoteAcceptUnauthorizedState extends QuoteDetailsState {}
+
+class QuoteAcceptMessageShowState extends QuoteDetailsState {}
+
+class QuoteAcceptMessageBypassState extends QuoteDetailsState {}
+
+class QuoteAcceptedCheckoutState extends QuoteDetailsState {
+  final Cart? cart;
+  QuoteAcceptedCheckoutState({required this.cart});
+}
+
+class ExpirationDateRequiredState extends QuoteDetailsState {
+  final String message;
+  ExpirationDateRequiredState({required this.message});
+}
+
+class PastExpirationDateState extends QuoteDetailsState {
+  final String message;
+  PastExpirationDateState({required this.message});
+}

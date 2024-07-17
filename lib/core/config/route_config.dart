@@ -14,6 +14,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/routing/route_
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_category_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_product_lines_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_approval/order_approval_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_all_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_communication_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_confirmation_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_details_screen.dart';
@@ -645,6 +646,15 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
+  // path: Quote All
+  final quoteAll = createNode(
+    name: AppRoute.quoteAll.name,
+    path: AppRoute.quoteAll.suffix,
+    builder: (context, state) =>
+        QuoteAllScreen(quoteDto: state.extra as QuoteDto),
+    parent: null,
+  );
+
   // path: /account/orderApproval
   final orderApproval = createNode(
     name: AppRoute.orderApproval.name,
@@ -702,6 +712,7 @@ List<NavigationNode> _getNavigationRoot() {
     requestQuote,
     quoteConfirmation,
     quoteDetails,
-    quoteCommunication
+    quoteCommunication,
+    quoteAll
   ];
 }

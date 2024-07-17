@@ -48,7 +48,8 @@ class CustomSnackBar {
     );
   }
 
-  static void showSnackBarMessage(BuildContext context, String message, {int seconds = 1}) {
+  static void showSnackBarMessage(BuildContext context, String message,
+      {int seconds = 1}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -170,6 +171,24 @@ class CustomSnackBar {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text("Failed to Change Customer"),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showSuccesss(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Success"),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static void showFailure(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Failure"),
         duration: Duration(seconds: 1),
       ),
     );
