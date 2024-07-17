@@ -2,8 +2,6 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-final lightTheme = _getTheme();
-
 const _primary = Color.fromRGBO(0, 55, 255, 1);
 const _secondary = Colors.amber;
 
@@ -41,7 +39,7 @@ final _lightColorScheme = ColorScheme(
   outline: _divider,
 );
 
-ThemeData _getTheme() {
+ThemeData getTheme() {
   final colorScheme = _lightColorScheme;
 
   final buttonShape = RoundedRectangleBorder(
@@ -64,6 +62,9 @@ ThemeData _getTheme() {
       color: _divider,
       space: 1,
       thickness: 0.5,
+    ),
+    iconTheme: IconThemeData(
+      color: OptiAppColors.primaryColor
     ),
     // chipTheme: ChipThemeData(
     //   labelStyle: textTheme.labelSmall,
@@ -109,9 +110,14 @@ ThemeData _getTheme() {
     //   groupAlignment: 0,
     // ),
     appBarTheme: AppBarTheme(
-        titleTextStyle: OptiTextStyles.titleLarge,
-        color: _background,
-        surfaceTintColor: _background),
+      titleTextStyle: OptiTextStyles.titleLarge,
+      color: _background,
+      surfaceTintColor: _background,
+      iconTheme: IconThemeData(
+        color: OptiAppColors.primaryColor, // Set the AppBar icon color here
+      ),
+
+    ),
     // dialogTheme: DialogTheme(
     //   backgroundColor: colorScheme.background,
     //   surfaceTintColor: colorScheme.background,
