@@ -57,6 +57,7 @@ class QuickOrderScreen extends StatelessWidget {
           create: (context) {
             return OrderListBloc(
               quickOrderUseCase: sl(),
+              pricingInventoryUseCase: sl(),
               scanningMode: _scanningMode,
             )..add(OrderListLoadEvent());
           },
@@ -213,6 +214,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                 current is OrderListFailedState,
                             builder: (context, state) {
                               subTotal = context.read<OrderListBloc>().calculateSubtotal();
+                              final hidePricingEnable = context.read<OrderListBloc>().hidePricingEnable();
                               return Expanded(
                                 child: Column(
                                   children: [
@@ -314,11 +316,13 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                     ),
                                                   ),
                                                 ),
-                                                Text(
-                                                  subTotal,
-                                                  textAlign: TextAlign.start,
-                                                  style: OptiTextStyles.subtitle,
-                                                )
+                                                if (!hidePricingEnable)
+                                                  Text(
+                                                    subTotal,
+                                                    textAlign: TextAlign.start,
+                                                    style:
+                                                        OptiTextStyles.subtitle,
+                                                  )
                                               ],
                                             ),
                                           ),

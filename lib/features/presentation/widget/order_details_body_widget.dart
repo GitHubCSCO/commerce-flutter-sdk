@@ -47,6 +47,9 @@ class OrderDetailsBodyWidget extends StatelessWidget {
   final List<PromotionItem>? promotions;
   final int? itemCount;
 
+  final bool? hidePricingEnable;
+  final bool? hideInventoryEnable;
+
   const OrderDetailsBodyWidget({
     super.key,
     this.orderNumber,
@@ -80,6 +83,8 @@ class OrderDetailsBodyWidget extends StatelessWidget {
     this.totalTitle,
     this.promotions,
     this.itemCount,
+    this.hidePricingEnable,
+    this.hideInventoryEnable,
   });
 
   @override
@@ -109,22 +114,23 @@ class OrderDetailsBodyWidget extends StatelessWidget {
             fullAddress: shippingFullAddress,
             countryName: shippingCountryName,
           ),
-        OrderPaymentSectionWidget(
-          discount: discount,
-          discountTitle: discountTitle,
-          otherCharges: otherCharges,
-          otherChargesTitle: otherChargesTitle,
-          promotions: promotions,
-          shippingHandling: shippingHandling,
-          shippingHandlingTitle: shippingHandlingTitle,
-          subtotal: subtotal,
-          subtotalTitle: subtotalTitle,
-          tax: tax,
-          taxTitle: taxTitle,
-          total: total,
-          totalTitle: totalTitle,
-          itemCount: itemCount,
-        ),
+        if (!(hidePricingEnable ?? false))
+          OrderPaymentSectionWidget(
+            discount: discount,
+            discountTitle: discountTitle,
+            otherCharges: otherCharges,
+            otherChargesTitle: otherChargesTitle,
+            promotions: promotions,
+            shippingHandling: shippingHandling,
+            shippingHandlingTitle: shippingHandlingTitle,
+            subtotal: subtotal,
+            subtotalTitle: subtotalTitle,
+            tax: tax,
+            taxTitle: taxTitle,
+            total: total,
+            totalTitle: totalTitle,
+            itemCount: itemCount,
+          ),
         if (isPickupLocationVisible)
           OrderPickupLocationWidget(
             address: pickupLocationAddress,
@@ -303,10 +309,14 @@ class OrderPickupLocationWidget extends StatelessWidget {
 
 class OrderProductsSectionWidget extends StatelessWidget {
   final List<OrderLineEntity> orderLines;
+  final bool? hidePricingEnable;
+  final bool? hideInventoryEnable;
 
   const OrderProductsSectionWidget({
     super.key,
     required this.orderLines,
+    this.hidePricingEnable,
+    this.hideInventoryEnable,
   });
 
   @override
@@ -358,6 +368,8 @@ class OrderProductsSectionWidget extends StatelessWidget {
               canEditQty: false,
               showViewAvailabilityByWarehouse: false,
               showViewQuantityPricing: false,
+              hidePricingEnable: hidePricingEnable,
+              hideInventoryEnable: hideInventoryEnable,
             );
           },
           separatorBuilder: (context, index) => const Divider(height: 1),

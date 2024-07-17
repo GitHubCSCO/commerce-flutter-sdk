@@ -151,28 +151,29 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        _OrderApprovalHeaderWidget(
-                          subtotalTitleLabel: context
-                              .watch<OrderApprovalDetailsCubit>()
-                              .subtotalTitle,
-                          subtotalValueLabel: context
-                              .watch<OrderApprovalDetailsCubit>()
-                              .subtotalValue,
-                          estimatedTaxValueLabel: context
-                              .watch<OrderApprovalDetailsCubit>()
-                              .taxValue,
-                          estimatedShippingTitleLabel:
-                              LocalizationConstants.shippingHandling.localized(),
-                          estimatedShippingValueLabel: context
-                              .watch<OrderApprovalDetailsCubit>()
-                              .shippingValue,
-                          estiamatedTotalTitleLabel:
-                              LocalizationConstants.total.localized(),
-                          estimatedTotalValueLabel: context
-                              .watch<OrderApprovalDetailsCubit>()
-                              .totalValue,
-                          estitamatedTaxTitleLabel: LocalizationConstants.tax.localized(),
-                        ),
+                        if (!(state.hidePricingEnable ?? false))
+                          _OrderApprovalHeaderWidget(
+                            subtotalTitleLabel: context
+                                .watch<OrderApprovalDetailsCubit>()
+                                .subtotalTitle,
+                            subtotalValueLabel: context
+                                .watch<OrderApprovalDetailsCubit>()
+                                .subtotalValue,
+                            estimatedTaxValueLabel: context
+                                .watch<OrderApprovalDetailsCubit>()
+                                .taxValue,
+                            estimatedShippingTitleLabel:
+                                LocalizationConstants.shippingHandling.localized(),
+                            estimatedShippingValueLabel: context
+                                .watch<OrderApprovalDetailsCubit>()
+                                .shippingValue,
+                            estiamatedTotalTitleLabel:
+                                LocalizationConstants.total.localized(),
+                            estimatedTotalValueLabel: context
+                                .watch<OrderApprovalDetailsCubit>()
+                                .totalValue,
+                            estitamatedTaxTitleLabel: LocalizationConstants.tax.localized(),
+                          ),
                         _OrderApprovalInfoWidget(
                           orderStatusLabel: LocalizationConstants.status.localized(),
                           orderStatusValueLabel: context
@@ -209,6 +210,8 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                           cartLines: context
                               .read<OrderApprovalDetailsCubit>()
                               .getCartLines(),
+                          hidePricingEnable: state.hidePricingEnable,
+                          hideInventoryEnable: state.hideInventoryEnable,
                         ),
                       ],
                     ),

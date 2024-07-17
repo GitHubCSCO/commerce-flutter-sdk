@@ -32,6 +32,8 @@ class LineItemWidget extends StatelessWidget {
   final void Function()? onDelete;
   final String? unitOfMeasure;
   final String? lineNotes;
+  final bool? hidePricingEnable;
+  final bool? hideInventoryEnable;
 
   const LineItemWidget({
     super.key,
@@ -55,6 +57,8 @@ class LineItemWidget extends StatelessWidget {
     this.onDelete,
     this.unitOfMeasure,
     this.lineNotes,
+    this.hidePricingEnable,
+    this.hideInventoryEnable,
   });
 
   @override
@@ -105,21 +109,27 @@ class LineItemWidget extends StatelessWidget {
             manufacturerItem: manufacturerItem,
             productNumber: productNumber,
           ),
-          LineItemPricingWidget(
-            discountMessage: discountMessage,
-            priceValueText: priceValueText,
-            unitOfMeasureValueText: unitOfMeasureValueText,
-            availabilityText: availabilityText,
-            showViewQuantityPricing: showViewQuantityPricing,
-            showViewAvailabilityByWarehouse: showViewAvailabilityByWarehouse,
-            productId: productId,
-            erpNumber: productNumber,
-            unitOfMeasure: unitOfMeasure,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0, 10.0),
+            child: LineItemPricingWidget(
+              discountMessage: discountMessage,
+              priceValueText: priceValueText,
+              unitOfMeasureValueText: unitOfMeasureValueText,
+              availabilityText: availabilityText,
+              showViewQuantityPricing: showViewQuantityPricing,
+              showViewAvailabilityByWarehouse: showViewAvailabilityByWarehouse,
+              productId: productId,
+              erpNumber: productNumber,
+              unitOfMeasure: unitOfMeasure,
+              hidePricingEnable: hidePricingEnable,
+              hideInventoryEnable: hideInventoryEnable,
+            ),
           ),
           LineItemQuantityGroupWidget(
             qtyOrdered: qtyOrdered,
             subtotalPriceText: subtotalPriceText,
             canEdit: canEditQty,
+            hidePricingEnable: hidePricingEnable,
           ),
           if (!lineNotes.isNullOrEmpty) ...[
             const SizedBox(height: 10),

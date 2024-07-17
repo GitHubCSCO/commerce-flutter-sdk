@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.d
 import 'package:commerce_flutter_app/features/domain/entity/settings/order_settings_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/order_usecase/order_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
@@ -13,8 +14,11 @@ part 'order_details_state.dart';
 
 class OrderDetailsCubit extends Cubit<OrderDetailsState> {
   final OrderUsecase _orderUsecase;
-  OrderDetailsCubit({required OrderUsecase orderUsercase})
+  final PricingInventoryUseCase _pricingInventoryUseCase;
+
+  OrderDetailsCubit({required OrderUsecase orderUsercase, required PricingInventoryUseCase pricingInventoryUseCase})
       : _orderUsecase = orderUsercase,
+        _pricingInventoryUseCase = pricingInventoryUseCase,
         super(
           const OrderDetailsState(
             order: OrderEntity(),
@@ -44,6 +48,9 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
         orderSettings: orderSettings,
       );
 
+      final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
+      final hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
+
       if (order.orderPromotions != null || order.orderPromotions!.isNotEmpty) {
         final promotionAdjustedOrder = order.copyWith(
           orderPromotions: order.orderPromotions!.map((promotion) {
@@ -64,6 +71,8 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
             orderSettings: orderSettings,
             orderStatus: OrderStatus.success,
             isReorderViewVisible: isReorderVisible,
+            hidePricingEnable: hidePricingEnable,
+            hideInventoryEnable: hideInventoryEnable
           ),
         );
 
@@ -76,6 +85,8 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
           orderSettings: orderSettings,
           orderStatus: OrderStatus.success,
           isReorderViewVisible: isReorderVisible,
+          hidePricingEnable: hidePricingEnable,
+          hideInventoryEnable: hideInventoryEnable,
         ),
       );
     }

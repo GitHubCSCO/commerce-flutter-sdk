@@ -189,11 +189,12 @@ class ProductDetailsAddCartRow extends StatelessWidget {
           Expanded(
               flex: 1,
               child: ProductDetailsAddCartTtitleSubTitleColumn('U/M', 'E/A')),
-          Expanded(
-            flex: 3,
-            child: ProductDetailsAddCartTtitleSubTitleColumn(
-                'Subtotal', detailsAddToCartEntity.subtotalValueText ?? ''),
-          ),
+          if (!(detailsAddToCartEntity.hidePricing ?? false))
+            Expanded(
+              flex: 3,
+              child: ProductDetailsAddCartTtitleSubTitleColumn(
+                  'Subtotal', detailsAddToCartEntity.subtotalValueText ?? ''),
+            ),
         ],
       ),
     );

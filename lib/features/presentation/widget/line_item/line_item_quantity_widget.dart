@@ -12,6 +12,7 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
   final String? subtotalPriceText;
   final bool canEdit;
   final bool realTimeLoading;
+  final bool? hidePricingEnable;
 
   const LineItemQuantityGroupWidget({
     super.key,
@@ -20,12 +21,13 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
     this.subtotalPriceText,
     this.canEdit = true,
     this.realTimeLoading = false,
+    this.hidePricingEnable,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20.0),
+      padding: const EdgeInsets.only(left: 20.0, bottom: 20.0),
       child: Row(
         children: [
           Expanded(
@@ -38,6 +40,7 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
                     onChanged: onQtyChanged,
                   )
                 : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         LocalizationConstants.qTY.localized(),
@@ -51,11 +54,18 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
                   ),
           ),
           // LineItemSubtotalColumnWidget(title: 'U/M', value: 'E/A'),
-          LineItemSubtotalColumnWidget(
-            title: 'Subtotal',
-            value: subtotalPriceText ?? '',
-            realTimeLoading: realTimeLoading,
-          ),
+          if (!(hidePricingEnable ?? false)) ...{
+            LineItemSubtotalColumnWidget(
+              title: 'Subtotal',
+              value: subtotalPriceText ?? '',
+              realTimeLoading: realTimeLoading,
+            ),
+          }
+          else ...{
+            const Expanded(
+              flex: 2, child: Center(),
+            ),
+          }
         ],
       ),
     );

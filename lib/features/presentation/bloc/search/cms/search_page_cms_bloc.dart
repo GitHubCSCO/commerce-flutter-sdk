@@ -17,6 +17,7 @@ class SearchPageCmsBloc extends Bloc<SearchPageCmsEvent, SearchPageCmsState> {
 
   Future<void> _onSearchPageLoadEvent(
       SearchPageCmsLoadEvent event, Emitter<SearchPageCmsState> emit) async {
+    emit(SearchPageCmsLoadingState());
     var result = await _searchUseCase.loadData();
     switch (result) {
       case Success(value: final data):

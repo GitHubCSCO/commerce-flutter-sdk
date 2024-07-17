@@ -121,11 +121,14 @@ class OrderDetailsPage extends StatelessWidget {
                           subtotalText: context
                               .watch<SavedOrderDetailsCubit>()
                               .orderSubTotalDisplay,
+                          hidePricingEnable: state.hidePricingEnable,
                         ),
                         CartOrderProductsSectionWidget(
                           cartLines: context
                               .read<SavedOrderDetailsCubit>()
                               .getCartLines(),
+                          hidePricingEnable: state.hidePricingEnable,
+                          hideInventoryEnable: state.hideInventoryEnable,
                         ),
                       ],
                     ),
@@ -189,12 +192,14 @@ class _SavedOrderInfoWidget extends StatelessWidget {
   final String? orderDateText;
   final int? subTotalCount;
   final String? subtotalText;
+  final bool? hidePricingEnable;
 
   const _SavedOrderInfoWidget({
     this.shipToText,
     this.orderDateText,
     this.subTotalCount,
     this.subtotalText,
+    this.hidePricingEnable,
   });
 
   @override
@@ -214,7 +219,7 @@ class _SavedOrderInfoWidget extends StatelessWidget {
             ),
             const SizedBox(height: 20),
           ],
-          if (!subtotalText.isNullOrEmpty) ...[
+          if (!(hidePricingEnable ?? false) && !subtotalText.isNullOrEmpty) ...[
             TwoTextsRow(
               label:
                   '${LocalizationConstants.subtotal.localized()} (${subTotalCount ?? 0})',

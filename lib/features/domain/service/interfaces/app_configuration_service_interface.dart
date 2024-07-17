@@ -46,6 +46,10 @@ abstract class IAppConfigurationService {
 
   Future<void> loadRemoteSettings();
 
+  bool? get hidePricingEnable;
+
+  bool? get hideInventoryEnable;
+
   Future<bool> hasWillCall();
 
   Future<bool> hasCheckout();
@@ -64,4 +68,9 @@ abstract class IAppConfigurationService {
   Future<RealTimeSupport?> getRealtimeSupportType();
 
   Future<bool> isSignInRequired();
+
+  void setHidePricingEnable(bool enable);
+
+  void setHideInventoryEnable(bool enable);
+
 }

@@ -197,6 +197,8 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                             product: product,
                             productSettings: state.productSettings,
                             pricingEnable: state.productPricingEnabled,
+                            hidePricingEnable: state.hidePricingEnabled,
+                            hideInventoryEnable: state.hideInventoryEnabled,
                           );
                         },
                       ),
@@ -213,8 +215,16 @@ class SearchProductWidget extends StatelessWidget {
   final ProductEntity product;
   final ProductSettings? productSettings;
   final bool? pricingEnable;
+  final bool? hidePricingEnable;
+  final bool? hideInventoryEnable;
 
-  const SearchProductWidget({super.key, required this.product, required this.productSettings, required this.pricingEnable});
+  const SearchProductWidget(
+      {super.key,
+      required this.product,
+      required this.productSettings,
+      required this.pricingEnable,
+      this.hidePricingEnable,
+      this.hideInventoryEnable});
 
   @override
   Widget build(BuildContext context) {
@@ -295,6 +305,8 @@ class SearchProductWidget extends StatelessWidget {
                     erpNumber: product.erpNumber,
                     unitOfMeasure: product.unitOfMeasure,
                     showViewAvailabilityByWarehouse: _showWarehouseInventory(),
+                    hidePricingEnable: hidePricingEnable,
+                    hideInventoryEnable: hideInventoryEnable,
                   ),
                 ],
               ),

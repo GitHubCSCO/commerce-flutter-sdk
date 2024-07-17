@@ -4,11 +4,13 @@ class OrderApprovalState extends Equatable {
   final OrderStatus status;
   final GetOrderApprovalCollectionResult orderApprovalCollectionModel;
   final OrderApprovalParameters orderApprovalParameters;
+  final bool? hidePricingEnable;
 
   const OrderApprovalState({
     required this.status,
     required this.orderApprovalCollectionModel,
     required this.orderApprovalParameters,
+    this.hidePricingEnable,
   });
 
   @override
@@ -16,12 +18,14 @@ class OrderApprovalState extends Equatable {
         status,
         orderApprovalCollectionModel,
         orderApprovalParameters,
+        hidePricingEnable ?? false
       ];
 
   OrderApprovalState copyWith({
     OrderStatus? status,
     GetOrderApprovalCollectionResult? orderApprovalCollectionModel,
     OrderApprovalParameters? orderApprovalParameters,
+    bool? hidePricingEnable,
   }) {
     return OrderApprovalState(
       status: status ?? this.status,
@@ -29,6 +33,7 @@ class OrderApprovalState extends Equatable {
           orderApprovalCollectionModel ?? this.orderApprovalCollectionModel,
       orderApprovalParameters:
           orderApprovalParameters ?? this.orderApprovalParameters,
+      hidePricingEnable: hidePricingEnable ?? this.hidePricingEnable,
     );
   }
 }

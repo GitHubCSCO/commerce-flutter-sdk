@@ -288,8 +288,13 @@ class ProductDetailsUseCase extends BaseUseCase {
   }
 
   ProductDetailsPriceEntity makeProductDetailsPriceEntity() {
-    return const ProductDetailsPriceEntity(
-        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsPrice);
+    final hidePricingEnable = coreServiceProvider.getAppConfigurationService().hidePricingEnable;
+    final hideInventoryEnable = coreServiceProvider.getAppConfigurationService().hideInventoryEnable;
+    return ProductDetailsPriceEntity(
+      detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsPrice,
+      hidePricing: hidePricingEnable,
+      hideInventory: hideInventoryEnable,
+    );
   }
 
   bool shouldAddConfigSection(ProductEntity product) {

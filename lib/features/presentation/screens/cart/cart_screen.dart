@@ -129,6 +129,8 @@ class CartPage extends StatelessWidget {
                               state.promotions,
                               state.isCustomerOrderApproval,
                               state.shippingMethod,
+                              state.hidePricingEnable,
+                              state.hideInventoryEnable,
                               context),
                         ),
                       ),
@@ -294,6 +296,8 @@ class CartPage extends StatelessWidget {
       PromotionCollectionModel promotions,
       bool isCustomerOrderApproval,
       String shippingMethod,
+      bool? hidePricingEnable,
+      bool? hideInventoryEnable,
       BuildContext context) {
     List<Widget> list = [];
 
@@ -309,8 +313,10 @@ class CartPage extends StatelessWidget {
                 ? ShippingOption.pickUp
                 : ShippingOption.ship));
 
-    list.add(
-        CartPaymentSummaryWidget(paymentSummaryEntity: paymentSummaryEntity));
+    if (!(hidePricingEnable ?? false)) {
+      list.add(
+          CartPaymentSummaryWidget(paymentSummaryEntity: paymentSummaryEntity));
+    }
     list.add(BlocProvider<CartShippingSelectionBloc>(
       create: (context) => sl<CartShippingSelectionBloc>()
         ..add(CartShippingOptionDefaultEvent(shippingEntity.shippingMethod!)),
@@ -348,6 +354,8 @@ class CartPage extends StatelessWidget {
                 context.read<CartCountCubit>().loadCurrentCartCount();
                 context.read<CartPageBloc>().add(CartPageLoadEvent());
               },
+              hidePricingEnable: hidePricingEnable,
+              hideInventoryEnable: hideInventoryEnable,
             ),
           );
         },
