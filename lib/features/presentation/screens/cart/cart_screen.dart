@@ -16,6 +16,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_conten
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
@@ -72,6 +73,13 @@ class CartPage extends StatelessWidget {
           BlocListener<PullToRefreshBloc, PullToRefreshState>(
             listener: (context, state) {
               if (state is PullToRefreshLoadState) {
+                _reloadCartPage(context);
+              }
+            },
+          ),
+          BlocListener<RootBloc, RootState>(
+            listener: (context, state) {
+              if (state is RootPricingInventoryReload) {
                 _reloadCartPage(context);
               }
             },

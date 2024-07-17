@@ -4,4 +4,4 @@ abstract class RootState {}
 
 class RootInitial extends RootState {}
 
-class RootReload extends RootState {}
+class RootPricingInventoryReload extends RootState {}

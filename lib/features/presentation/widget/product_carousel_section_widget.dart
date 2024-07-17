@@ -63,9 +63,10 @@ class ProductCarouselSectionWidget extends StatelessWidget {
                             );
                           },
                           child: ProductCarouselItemWidget(
-                              productCarousel: productCarousel,
-                              isLoading: isLoading,
-                          hidePricingEnable: hidePricingEnable ?? false),
+                            productCarousel: productCarousel,
+                            isLoading: isLoading,
+                            hidePricingEnable: hidePricingEnable ?? false,
+                          ),
                         );
                       },
                     ),

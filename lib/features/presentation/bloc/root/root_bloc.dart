@@ -5,8 +5,8 @@ part 'root_state.dart';
 
 class RootBloc extends Bloc<RootEvent, RootState> {
   RootBloc() : super(RootInitial()) {
-    on<RootReloadEvent>((event, emit) {
-      emit(RootReload());
+    on<RootHidePricingInventoryEvent>((event, emit) {
+      emit(RootPricingInventoryReload());
     });
   }
 }
