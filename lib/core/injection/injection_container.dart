@@ -106,6 +106,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/auto
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/remote_config/remote_config_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
@@ -183,6 +184,9 @@ Future<void> initInjectionContainer() async {
   sl
     //router
     ..registerLazySingleton(() => getRouter())
+
+    //root
+    ..registerFactory(() => RootBloc())
 
     //auth
     ..registerFactory(() => AuthCubit(authUsecase: sl()))
@@ -460,7 +464,6 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => StyleTraitCubit(styleTraitsUseCase: sl()))
 
     // warehouse inventory
-
     ..registerFactory(
         () => WarehouseInventoryCubit(warehouseInventoryUsecase: sl()))
     ..registerFactory(() => WarehouseInventoryUsecase())
