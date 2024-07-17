@@ -62,9 +62,8 @@ class QuotePageState extends State<QuotePage> {
                   style: OptiTextStyles.header3,
                 ),
                 QuoteFilterWidget(
-                  quoteQueryParameters: context.watch<QuoteBloc>().parameter
-                      ,
-                  hasFilter: false,
+                  quoteQueryParameters: context.watch<QuoteBloc>().parameter,
+                  hasFilter: context.watch<QuoteBloc>().hasFilter,
                   onApply: (parameter) {
                     context.read<QuoteBloc>().add(
                           QuoteLoadEvent(

@@ -39,4 +39,16 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
       default:
     }
   }
+
+  bool get hasFilter =>
+      (!parameter.quoteNumber.isNullOrEmpty) ||
+      (!parameter.customerId.isNullOrEmpty) ||
+      (!parameter.userId.isNullOrEmpty) ||
+      (!parameter.salesRepNumber.isNullOrEmpty) ||
+      ((parameter.statuses?.length ?? 0) > 0) ||
+      ((parameter.types?.length ?? 0) > 0) ||
+      parameter.fromDate != null ||
+      parameter.toDate != null ||
+      parameter.expireFromDate != null ||
+      parameter.expireToDate != null;
 }
