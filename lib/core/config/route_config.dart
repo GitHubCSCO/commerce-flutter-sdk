@@ -43,6 +43,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/order_details
 import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/saved_payments/saved_payments_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/selection/sales_rep_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/selection/user_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_location_note.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_screen.dart';
@@ -699,6 +700,16 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
+  final salesRepSelection = createNode(
+    name: AppRoute.salesRepSelection.name,
+    path: AppRoute.salesRepSelection.suffix,
+    builder: (context, state) {
+      final parameter = state.extra as CatalogTypeSelectingParameter;
+      return SalesRepSelectionScreen(parameter: parameter);
+    },
+    parent: null,
+  );
+
   return [
     root,
     navbarRoot,
@@ -737,5 +748,6 @@ List<NavigationNode> _getNavigationRoot() {
     quoteDetails,
     quoteCommunication,
     userSelection,
+    salesRepSelection,
   ];
 }

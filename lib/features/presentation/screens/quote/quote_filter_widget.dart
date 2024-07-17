@@ -141,31 +141,58 @@ void _showQuoteFilter(
                 onBillToSelected: context.read<QuoteFilterCubit>().setBillTo,
               ),
               const SizedBox(height: 45),
-              Text(
-                LocalizationConstants.user.toUpperCase(),
-                style: OptiTextStyles.subtitle,
-              ),
-              const SizedBox(height: 15),
-              FilterItemPickerWidget(
-                item: state.user,
-                onItemSelected: (user) {
-                  context
-                      .read<QuoteFilterCubit>()
-                      .setUser(user as CatalogTypeDto);
-                },
-                selectedLabel: state.user?.title ?? '',
-                defaultLabel: LocalizationConstants.selectUser,
-                onTap: () async {
-                  return await context.pushNamed(
-                    AppRoute.userSelection.name,
-                    extra: CatalogTypeSelectingParameter(
-                      currentItem: state.user,
-                      removeMyself: false,
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 45),
+              if (state.isSalesPerson) ...[
+                Text(
+                  LocalizationConstants.user.toUpperCase(),
+                  style: OptiTextStyles.subtitle,
+                ),
+                const SizedBox(height: 15),
+                FilterItemPickerWidget(
+                  item: state.user,
+                  onItemSelected: (user) {
+                    context
+                        .read<QuoteFilterCubit>()
+                        .setUser(user as CatalogTypeDto);
+                  },
+                  selectedLabel: state.user?.title ?? '',
+                  defaultLabel: LocalizationConstants.selectUser,
+                  onTap: () async {
+                    return await context.pushNamed(
+                      AppRoute.userSelection.name,
+                      extra: CatalogTypeSelectingParameter(
+                        currentItem: state.user,
+                        removeMyself: false,
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 45),
+                Text(
+                  LocalizationConstants.salesRep.toUpperCase(),
+                  style: OptiTextStyles.subtitle,
+                ),
+                const SizedBox(height: 15),
+                FilterItemPickerWidget(
+                  item: state.salesRep,
+                  onItemSelected: (salesRep) {
+                    context
+                        .read<QuoteFilterCubit>()
+                        .setSalesRep(salesRep as CatalogTypeDto);
+                  },
+                  selectedLabel: state.salesRep?.title ?? '',
+                  defaultLabel: LocalizationConstants.selectSalesRep,
+                  onTap: () async {
+                    return await context.pushNamed(
+                      AppRoute.salesRepSelection.name,
+                      extra: CatalogTypeSelectingParameter(
+                        currentItem: state.salesRep,
+                        removeMyself: false,
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 45),
+              ],
               Text(
                 LocalizationConstants.requestedDateRange.toUpperCase(),
                 style: OptiTextStyles.subtitle,
