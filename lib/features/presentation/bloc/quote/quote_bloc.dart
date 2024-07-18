@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/enums/quote_page_type.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_event.dart';
@@ -23,20 +24,52 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
       QuoteLoadEvent event, Emitter<QuoteState> emit) async {
     emit(QuoteLoading());
 
-    parameter = event.quoteParameters ?? parameter;
+    switch (event.quotePageType) {
+      case QuotePageType.pending:
+        parameter = event.quoteParameters ?? parameter;
 
-    var result = await _quoteUsecase.getQuotes(parameter);
-    switch (result) {
-      case Success(value: final data):
-        emit(QuoteLoaded(
-            quotePageType: QuotePageType.pending, quotes: data?.quotes ?? []));
+        var result = await _quoteUsecase.getQuotes(parameter);
+        switch (result) {
+          case Success(value: final data):
+            emit(QuoteLoaded(
+                quotePageType: QuotePageType.pending,
+                quotes: data?.quotes ?? []));
+            break;
+          case Failure(errorResponse: final errorResponse):
+            emit(QuoteFailed(
+                error: errorResponse.errorDescription ?? '',
+                quotePageType: QuotePageType.pending));
+            break;
+        }
         break;
-      case Failure(errorResponse: final errorResponse):
-        emit(QuoteFailed(
-            error: errorResponse.errorDescription ?? '',
-            quotePageType: QuotePageType.pending));
+
+      case QuotePageType.activejobs:
+        var result = await _quoteUsecase.getJobQuotes();
+        switch (result) {
+          case Success(value: final data):
+            emit(JobQuoteLoaded(
+                quotePageType: QuotePageType.activejobs,
+                jobQuotes: data?.jobQuotes ?? []));
+            break;
+          case Failure(errorResponse: final errorResponse):
+            emit(QuoteFailed(
+                error: errorResponse.errorDescription ?? '',
+                quotePageType: QuotePageType.activejobs));
+            break;
+        }
         break;
-      default:
+    }
+  }
+
+  String get title {
+    if (state is QuoteLoaded) {
+      final length = ((state as QuoteLoaded).quotes ?? []).length;
+      return '$length ${length == 1 ? LocalizationConstants.quote : LocalizationConstants.quotes}';
+    } else if (state is JobQuoteLoaded) {
+      final length = ((state as JobQuoteLoaded).jobQuotes ?? []).length;
+      return '$length ${length == 1 ? LocalizationConstants.jobQuote : LocalizationConstants.jobQuotes}';
+    } else {
+      return '';
     }
   }
 

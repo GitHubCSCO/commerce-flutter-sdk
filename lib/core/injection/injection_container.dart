@@ -634,6 +634,8 @@ Future<void> initInjectionContainer() async {
     })
     ..registerLazySingleton<IQuoteService>(() => QuoteService(
         clientService: sl(), cacheService: sl(), networkService: sl()))
+    ..registerLazySingleton<IJobQuoteService>(() => JobQuoteService(
+        clientService: sl(), cacheService: sl(), networkService: sl()))
     ..registerSingletonAsync<IAppConfigurationService>(() async {
       final service = AppConfigurationService(
           commerceAPIServiceProvider: sl(),

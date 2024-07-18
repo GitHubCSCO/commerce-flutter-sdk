@@ -15,6 +15,13 @@ class QuoteLoaded extends QuoteState {
       required this.quotes});
 }
 
+class JobQuoteLoaded extends QuoteState {
+  final QuotePageType quotePageType;
+  final List<JobQuoteDto>? jobQuotes;
+
+  JobQuoteLoaded({required this.quotePageType, required this.jobQuotes});
+}
+
 class QuoteFailed extends QuoteState {
   final String error;
   final QuotePageType quotePageType;

@@ -31,4 +31,8 @@ class QuoteUsecase extends BaseUseCase {
         return null;
     }
   }
+
+  Future<Result<JobQuoteResult, ErrorResponse>> getJobQuotes() {
+    return commerceAPIServiceProvider.getJobQuoteService().getJobQuotes();
+  }
 }
