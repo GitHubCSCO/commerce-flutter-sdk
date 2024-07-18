@@ -77,6 +77,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/search_history_use
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_cms_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/selection_usecase/selection_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_location_note_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_location_usecase.dart';
@@ -162,12 +163,18 @@ import 'package:commerce_flutter_app/features/presentation/cubit/product_carouse
 import 'package:commerce_flutter_app/features/presentation/cubit/product_list_filter/product_list_filter_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
+<<<<<<< HEAD
 import 'package:commerce_flutter_app/features/presentation/cubit/quote/quote_all_cubit.dart';
+=======
+import 'package:commerce_flutter_app/features/presentation/cubit/quote_filter/quote_filter_cubit.dart';
+>>>>>>> story/ICM-4636-flutter
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order/saved_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_details/saved_order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_payments/saved_payments_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/selection/sales_rep_selection/sales_rep_selection_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/selection/user_selection/user_selection_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/vmi_location_note/vmi_location_note_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_add_to/wish_list_add_to_cubit.dart';
@@ -309,7 +316,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => AddToCartCubit(addToCartUsecase: sl()))
     ..registerFactory(() => AddToCartUsecase())
     ..registerFactory(() =>
-      SearchProductsCubit(searchUseCase: sl(), pricingInventoryUseCase: sl()))
+        SearchProductsCubit(searchUseCase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(
         () => ProductListFilterCubit(productListFilterUsecase: sl()))
     ..registerFactory(() => ProductListFilterUsecase())
@@ -332,6 +339,16 @@ Future<void> initInjectionContainer() async {
     // my quote
     ..registerFactory(() => QuoteBloc(quoteUsecase: sl()))
     ..registerFactory(() => QuoteUsecase())
+
+    // quote filter
+    ..registerFactory(() => QuoteFilterCubit(quoteUseCase: sl()))
+
+    // select user
+    ..registerFactory(() => UserSelectionCubit(selectionUsecase: sl()))
+    ..registerFactory(() => SelectionUsecase())
+
+    // select sales rep
+    ..registerFactory(() => SalesRepSelectionCubit(selectionUsecase: sl()))
 
     // request quote
     ..registerFactory(() => RequestQuoteBloc(requestQuoteUsecase: sl()))
@@ -631,6 +648,8 @@ Future<void> initInjectionContainer() async {
       return service;
     })
     ..registerLazySingleton<IQuoteService>(() => QuoteService(
+        clientService: sl(), cacheService: sl(), networkService: sl()))
+    ..registerLazySingleton<IJobQuoteService>(() => JobQuoteService(
         clientService: sl(), cacheService: sl(), networkService: sl()))
     ..registerSingletonAsync<IAppConfigurationService>(() async {
       final service = AppConfigurationService(

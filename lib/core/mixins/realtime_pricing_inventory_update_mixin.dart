@@ -89,13 +89,10 @@ mixin RealtimePricingInventoryUpdateMixin {
                     realTimeInventory.inventoryAvailabilityDtos?.singleWhere(
                         (ia) => ia.unitOfMeasure == product.unitOfMeasure,
                         orElse: () => InventoryAvailability());
-                if (inventoryAvailability != null &&
-                    inventoryAvailability.availability != null) {
-                  productAvailability = AvailabilityEntityMapper.toEntity(
-                      inventoryAvailability.availability);
+                if (inventoryAvailability != null && inventoryAvailability.availability != null) {
+                  productAvailability = AvailabilityEntityMapper.toEntity(inventoryAvailability.availability);
                 } else {
-                  productAvailability = AvailabilityEntityMapper.toEntity(
-                      Availability(messageType: 0));
+                  productAvailability = AvailabilityEntityMapper.toEntity(Availability(messageType: 0));
                 }
 
                 product.productUnitOfMeasures
@@ -117,8 +114,7 @@ mixin RealtimePricingInventoryUpdateMixin {
                   }
 
                   productUnitOfMeasureEntity.copyWith(
-                    availability:
-                        AvailabilityEntityMapper.toEntity(availability),
+                    availability: AvailabilityEntityMapper.toEntity(availability),
                   );
                 });
 
@@ -148,8 +144,7 @@ mixin RealtimePricingInventoryUpdateMixin {
               message: LocalizationConstants.unableToRetrieveInventory,
             );
 
-            product.availability =
-                AvailabilityEntityMapper.toEntity(productAvailability);
+            product.availability = AvailabilityEntityMapper.toEntity(productAvailability);
           }
         }
       }

@@ -10,4 +10,29 @@ class QuoteUsecase extends BaseUseCase {
         .getQuoteService()
         .getQuotes(quoteQueryParameters: parameter);
   }
+
+  Future<Session?> getSession() async {
+    final result = commerceAPIServiceProvider
+        .getSessionService()
+        .getCachedCurrentSession();
+
+    if (result != null) {
+      return result;
+    }
+
+    final response = await commerceAPIServiceProvider
+        .getSessionService()
+        .getCurrentSession();
+
+    switch (response) {
+      case Success(value: final session):
+        return session;
+      case Failure():
+        return null;
+    }
+  }
+
+  Future<Result<JobQuoteResult, ErrorResponse>> getJobQuotes() {
+    return commerceAPIServiceProvider.getJobQuoteService().getJobQuotes();
+  }
 }

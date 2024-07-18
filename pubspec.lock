@@ -1117,7 +1117,7 @@ packages:
     description:
       path: "."
       ref: develop
-      resolved-ref: c704deefd9095a0bcc3faa46417c6320770e9a4f
+      resolved-ref: "3d306c699e6882b1a115aaf22323f35920cf924d"
       url: "git@github.com:InsiteSoftware/commerce-dart-sdk.git"
     source: git
     version: "0.1.1"

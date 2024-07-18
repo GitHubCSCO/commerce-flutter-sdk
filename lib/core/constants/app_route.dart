@@ -55,6 +55,8 @@ class RouteNames {
   static const String savedPayments = 'savedPayments';
   static const String orderApproval = 'orderApproval';
   static const String orderApprovalDetails = 'orderApprovalDetails';
+  static const String invoiceHistory = 'invoiceHistory';
+  static const String invoiceDetail = 'invoiceDetail';
   static const String myQuote = 'myQuote';
   static const String requestQuote = 'requestQuote';
   static const String quoteConfirmation = 'quoteConfirmation';
@@ -62,8 +64,8 @@ class RouteNames {
   static const String quoteCommunication = 'quoteCommunication';
   static const String quoteAll = 'quoteAll';
   static const String quotePricing = 'quotePricing';
-  static const String invoiceHistory = 'invoiceHistory';
-  static const String invoiceDetail = 'invoiceDetail';
+  static const String userSelection = 'userSelection';
+  static const String salesRepSelection = 'salesRepSelection';
 }
 
 class RoutePaths {
@@ -130,6 +132,10 @@ class RoutePaths {
       '${RoutePaths.account}/${RouteNames.orderApproval}';
   static const String orderApprovalDetails =
       '${RoutePaths.orderApproval}/:cartId';
+  static const String invoiceHistory =
+      '${RoutePaths.account}/${RouteNames.invoiceHistory}';
+  static const String invoiceDetail =
+      '${RoutePaths.invoiceHistory}/:invoiceNumber';
   static const String myQuote = '${RoutePaths.account}/${RouteNames.myQuote}';
   static const String requestQuote = '/${RouteNames.requestQuote}';
   static const String quoteConfirmation = '/${RouteNames.quoteConfirmation}';
@@ -137,10 +143,8 @@ class RoutePaths {
   static const String quoteCommunication = '/${RouteNames.quoteCommunication}';
   static const String quoteAll = '/${RouteNames.quoteAll}';
   static const String quotePricing = '/${RouteNames.quotePricing}';
-  static const String invoiceHistory =
-      '${RoutePaths.account}/${RouteNames.invoiceHistory}';
-  static const String invoiceDetail =
-      '${RoutePaths.invoiceHistory}/:invoiceNumber';
+  static const String userSelection = '/${RouteNames.userSelection}';
+  static const String salesRepSelection = '/${RouteNames.salesRepSelection}';
 }
 
 enum AppRoute {
@@ -235,6 +239,14 @@ enum AppRoute {
   orderApprovalDetails(
       name: RouteNames.orderApprovalDetails,
       fullPath: RoutePaths.orderApprovalDetails),
+  invoiceHistory(
+    name: RouteNames.invoiceHistory,
+    fullPath: RoutePaths.invoiceHistory,
+  ),
+  invoiceDetail(
+    name: RouteNames.invoiceDetail,
+    fullPath: RoutePaths.invoiceDetail,
+  ),
   requestQuote(
       name: RouteNames.requestQuote, fullPath: RoutePaths.requestQuote),
   myQuote(name: RouteNames.myQuote, fullPath: RoutePaths.myQuote),
@@ -249,13 +261,14 @@ enum AppRoute {
   quoteAll(name: RouteNames.quoteAll, fullPath: RoutePaths.quoteAll),
   quotePricing(
       name: RouteNames.quotePricing, fullPath: RoutePaths.quotePricing),
-  invoiceHistory(
-    name: RouteNames.invoiceHistory,
-    fullPath: RoutePaths.invoiceHistory,
+
+  userSelection(
+    name: RouteNames.userSelection,
+    fullPath: RoutePaths.userSelection,
   ),
-  invoiceDetail(
-    name: RouteNames.invoiceDetail,
-    fullPath: RoutePaths.invoiceDetail,
+  salesRepSelection(
+    name: RouteNames.salesRepSelection,
+    fullPath: RoutePaths.salesRepSelection,
   );
 
   const AppRoute({

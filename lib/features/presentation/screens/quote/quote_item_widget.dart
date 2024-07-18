@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuoteItemWidget extends StatelessWidget {
   final String typeDisplay;
@@ -12,7 +13,7 @@ class QuoteItemWidget extends StatelessWidget {
   final String expiryDate;
 
   const QuoteItemWidget({
-    Key? key,
+    super.key,
     required this.typeDisplay,
     required this.quoteNumber,
     required this.companyName,
@@ -20,7 +21,7 @@ class QuoteItemWidget extends StatelessWidget {
     required this.status,
     required this.requestDate,
     required this.expiryDate,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,8 @@ class QuoteItemWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(typeDisplay, style: OptiTextStyles.bodyFade),
+                if (!typeDisplay.isNullOrEmpty)
+                  Text(typeDisplay, style: OptiTextStyles.bodyFade),
                 Text(
                   quoteNumber,
                   style: TextStyle(
@@ -44,7 +46,7 @@ class QuoteItemWidget extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
                 Text(companyName, style: OptiTextStyles.body),
                 Text(
                   address,
@@ -55,16 +57,16 @@ class QuoteItemWidget extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: 16.0),
+          const SizedBox(width: 16.0),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 Text(
                   status,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.grey,
                   ),
                 ),
@@ -72,7 +74,7 @@ class QuoteItemWidget extends StatelessWidget {
                   visible: requestDate.isNotEmpty,
                   child: Text(
                     'Requested $requestDate',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.grey,
                     ),
                   ),
@@ -81,7 +83,7 @@ class QuoteItemWidget extends StatelessWidget {
                   visible: expiryDate.isNotEmpty,
                   child: Text(
                     'Expires $expiryDate',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.grey,
                     ),
                   ),
