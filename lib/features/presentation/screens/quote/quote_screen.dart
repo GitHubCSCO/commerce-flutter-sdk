@@ -179,8 +179,12 @@ class QuotePageState extends State<QuotePage> {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              // AppRoute.jobQuoteDetails
-              //     .navigateBackStack(context, extra: jobQuotes[index]);
+              AppRoute.jobQuoteDetails.navigateBackStack(
+                context,
+                pathParameters: {
+                  'jobQuoteId': jobQuotes?[index].id ?? '',
+                },
+              );
             },
             child: QuoteItemWidget(
               typeDisplay: '',

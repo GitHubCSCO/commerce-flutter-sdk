@@ -17,6 +17,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_p
 import 'package:commerce_flutter_app/features/presentation/screens/invoice_history/invoice_detail_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/invoice_history/invoice_history_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_approval/order_approval_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quote/job_quote_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_all_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_communication_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_confirmation_screen.dart';
@@ -729,6 +730,16 @@ List<NavigationNode> _getNavigationRoot() {
       return SalesRepSelectionScreen(parameter: parameter);
     },
     parent: null,
+  );
+
+  final jobQuoteDetails = createNode(
+    name: AppRoute.jobQuoteDetails.name,
+    path: AppRoute.jobQuoteDetails.suffix,
+    builder: (context, state) {
+      final jobQuoteId = state.pathParameters['jobQuoteId'] ?? '';
+      return JobQuoteDetailsScreen(jobQuoteId: jobQuoteId);
+    },
+    parent: myQuote,
   );
 
   return [

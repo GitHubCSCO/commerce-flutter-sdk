@@ -66,6 +66,7 @@ class RouteNames {
   static const String quotePricing = 'quotePricing';
   static const String userSelection = 'userSelection';
   static const String salesRepSelection = 'salesRepSelection';
+  static const String jobQuoteDetails = 'jobQuoteDetails';
 }
 
 class RoutePaths {
@@ -145,6 +146,7 @@ class RoutePaths {
   static const String quotePricing = '/${RouteNames.quotePricing}';
   static const String userSelection = '/${RouteNames.userSelection}';
   static const String salesRepSelection = '/${RouteNames.salesRepSelection}';
+  static const String jobQuoteDetails = '${RoutePaths.myQuote}/:jobQuoteId';
 }
 
 enum AppRoute {
@@ -269,6 +271,10 @@ enum AppRoute {
   salesRepSelection(
     name: RouteNames.salesRepSelection,
     fullPath: RoutePaths.salesRepSelection,
+  ),
+  jobQuoteDetails(
+    name: RouteNames.jobQuoteDetails,
+    fullPath: RoutePaths.jobQuoteDetails,
   );
 
   const AppRoute({
