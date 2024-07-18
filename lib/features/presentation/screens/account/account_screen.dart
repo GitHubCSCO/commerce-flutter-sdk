@@ -129,7 +129,7 @@ class AccountPage extends BaseDynamicContentScreen {
                           },
                           child: Text(
                             LocalizationConstants.privacyPolicy.localized(),
-                            style: OptiTextStyles.linkMedium,
+                            style: OptiTextStyles.subtitleHighlight,
                           ),
                         ),
                       ),
@@ -142,7 +142,7 @@ class AccountPage extends BaseDynamicContentScreen {
                           },
                           child: Text(
                             LocalizationConstants.termsOfUse.localized(),
-                            style: OptiTextStyles.linkMedium,
+                            style: OptiTextStyles.subtitleHighlight,
                           ),
                         ),
                       ),

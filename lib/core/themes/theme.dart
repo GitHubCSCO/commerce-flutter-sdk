@@ -242,6 +242,9 @@ class OptiTextStyles {
         ),
       );
 
+  static TextStyle get titleLargeHighLight =>
+      titleLarge.copyWith(color: OptiAppColors.primaryColor);
+
   static TextStyle get titleSmall => _getInterFontStyle(
         const TextStyle(
           fontSize: 16,
@@ -266,13 +269,8 @@ class OptiTextStyles {
         ),
       );
 
-  static TextStyle get subtitleLink => _getInterFontStyle(
-        const TextStyle(
-          fontSize: 14,
-          color: linkColor,
-          fontWeight: titleWeight,
-        ),
-      );
+  static TextStyle get subtitleHighlight =>
+      subtitle.copyWith(color: OptiAppColors.primaryColor);
 
   // Body
   static TextStyle get body => _getInterFontStyle(
@@ -318,17 +316,12 @@ class OptiTextStyles {
   static TextStyle get link => _getInterFontStyle(
         const TextStyle(
           fontSize: 12,
-          color: _primary,
           fontWeight: linkWeight,
-        ),
+        ).copyWith(color: OptiAppColors.primaryColor),
       );
-  static TextStyle get linkMedium => _getInterFontStyle(
-        const TextStyle(
-          fontSize: 15,
-          color: _primary,
-          fontWeight: linkWeight,
-        ),
-      );
+
+  static TextStyle get linkMedium =>
+      link.copyWith(fontSize: 15, color: OptiAppColors.primaryColor);
 
   static TextStyle get badgesStyle => _getInterFontStyle(
         const TextStyle(

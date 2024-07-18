@@ -65,7 +65,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 LocalizationConstants.cancel.localized(),
-                style: OptiTextStyles.subtitleLink,
+                style: OptiTextStyles.subtitleHighlight,
               ),
             ),
           ),
