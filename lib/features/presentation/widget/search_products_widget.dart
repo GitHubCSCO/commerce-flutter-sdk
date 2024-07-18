@@ -20,9 +20,9 @@ import 'package:commerce_flutter_app/features/presentation/cubit/search_products
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_product_filter_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -354,8 +354,8 @@ class SearchProductWidget extends StatelessWidget {
                                   color: const Color(0xFFF5F5F5),
                                   borderRadius: BorderRadius.circular(32),
                                 ),
-                                child: SvgPicture.asset(
-                                  AssetConstants.addToCart,
+                                child: const SvgAssetImage(
+                                  assetName: AssetConstants.addToCart,
                                   fit: BoxFit.fitWidth,
                                 ),
                               ),

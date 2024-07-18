@@ -21,9 +21,9 @@ import 'package:commerce_flutter_app/features/presentation/screens/checkout/bill
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class VmiCheckoutEntity {
@@ -198,8 +198,8 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                             width: 50,
                             height: 50,
                             padding: const EdgeInsets.all(10),
-                            child: SvgPicture.asset(
-                              "assets/images/cart.svg",
+                            child: const SvgAssetImage(
+                              assetName: "assets/images/cart.svg",
                               fit: BoxFit.fitWidth,
                             ),
                           ),

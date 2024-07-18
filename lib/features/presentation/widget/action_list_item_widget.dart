@@ -5,9 +5,9 @@ import 'package:commerce_flutter_app/features/presentation/base/base_action_item
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/show_hide/inventory/show_hide_inventory_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/show_hide/pricing/show_hide_pricing_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class ActionListItemWidget extends BaseActionItemWidget {
   final ActionLinkEntity action;
@@ -29,8 +29,8 @@ class ActionListItemWidget extends BaseActionItemWidget {
               padding: const EdgeInsets.all(2),
               width: 24,
               height: 24,
-              child: SvgPicture.asset(
-                getActionIconPath(action),
+              child: SvgAssetImage(
+                assetName: getActionIconPath(action),
                 semanticsLabel: 'Action item icon',
                 fit: BoxFit.contain,
               ),

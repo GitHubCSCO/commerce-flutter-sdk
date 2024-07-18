@@ -123,7 +123,7 @@ class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
               leadingIcon: SvgPicture.asset(
                 AssetConstants.productDeatilsAddToCartIcon,
                 fit: BoxFit.fitWidth,
-                color: Colors.white,
+                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
               ),
               text: LocalizationConstants.addToCart.localized(),
               onPressed:

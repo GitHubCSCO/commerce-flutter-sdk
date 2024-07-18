@@ -9,9 +9,9 @@ import 'package:commerce_flutter_app/features/domain/enums/device_authentication
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_controller/biometric_controller_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class BiometricLoginScreen extends StatelessWidget {
   const BiometricLoginScreen({
@@ -191,8 +191,8 @@ class _BiometricIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.asset(
-      iconPath.replaceAll('{0}', enabled ? 'enabled' : 'disabled'),
+    return SvgAssetImage(
+      assetName: iconPath.replaceAll('{0}', enabled ? 'enabled' : 'disabled'),
       width: 80,
       height: 80,
     );

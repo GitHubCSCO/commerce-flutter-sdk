@@ -7,8 +7,8 @@ import 'package:commerce_flutter_app/features/presentation/widget/line_item/line
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_quantity_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_title_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class LineItemWidget extends StatelessWidget {
@@ -159,11 +159,11 @@ class LineItemWidget extends StatelessWidget {
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 15).copyWith(left: 15),
-              child: SizedBox(
+              child: const SizedBox(
                 width: 30,
                 height: 30,
-                child: SvgPicture.asset(
-                  AssetConstants.wishListLineAddToCartIcon,
+                child: SvgAssetImage(
+                  assetName: AssetConstants.wishListLineAddToCartIcon,
                   fit: BoxFit.fitWidth,
                 ),
               ),
@@ -175,11 +175,11 @@ class LineItemWidget extends StatelessWidget {
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 15).copyWith(left: 15),
-              child: SizedBox(
+              child: const SizedBox(
                 width: 30,
                 height: 30,
-                child: SvgPicture.asset(
-                  AssetConstants.cartItemRemoveIcon,
+                child: SvgAssetImage(
+                  assetName: AssetConstants.cartItemRemoveIcon,
                   fit: BoxFit.fitWidth,
                 ),
               ),

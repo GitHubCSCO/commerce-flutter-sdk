@@ -21,6 +21,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_a
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -72,8 +73,8 @@ class SearchPage extends BaseDynamicContentScreen {
                 child: Input(
                   hintText: LocalizationConstants.search.localized(),
                   suffixIcon: IconButton(
-                    icon: SvgPicture.asset(
-                      AssetConstants.iconClear,
+                    icon: const SvgAssetImage(
+                      assetName: AssetConstants.iconClear,
                       semanticsLabel: 'search query clear icon',
                       fit: BoxFit.fitWidth,
                     ),
@@ -104,8 +105,8 @@ class SearchPage extends BaseDynamicContentScreen {
                 ),
               ),
               IconButton(
-                icon: SvgPicture.asset(
-                  AssetConstants.iconBarcodeScan,
+                icon: const SvgAssetImage(
+                  assetName: AssetConstants.iconBarcodeScan,
                   semanticsLabel: 'barcode scan icon',
                   fit: BoxFit.fitWidth,
                 ),

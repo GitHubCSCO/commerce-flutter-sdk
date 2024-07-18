@@ -8,9 +8,9 @@ import 'package:commerce_flutter_app/features/presentation/components/input.dart
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_filter_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -74,10 +74,10 @@ class OrderApprovalFilterWidget extends StatelessWidget {
                   },
                 );
               },
-              icon: SvgPicture.asset(
+              icon: const SvgAssetImage(
                 height: 20,
                 width: 20,
-                AssetConstants.filterIcon,
+                assetName: AssetConstants.filterIcon,
                 semanticsLabel: 'filter icon',
                 fit: BoxFit.fitWidth,
               ),

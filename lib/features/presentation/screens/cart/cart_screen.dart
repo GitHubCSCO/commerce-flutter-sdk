@@ -29,9 +29,9 @@ import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_lin
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_payment_summary_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 void _reloadCartPage(BuildContext context) {
@@ -224,8 +224,8 @@ class CartPage extends StatelessWidget {
                             width: 50,
                             height: 50,
                             padding: const EdgeInsets.all(10),
-                            child: SvgPicture.asset(
-                              "assets/images/cart.svg",
+                            child: const SvgAssetImage(
+                              assetName: "assets/images/cart.svg",
                               fit: BoxFit.fitWidth,
                             ),
                           ),
@@ -401,8 +401,8 @@ class _buildCartEroorWidget extends StatelessWidget {
               width: 50,
               height: 50,
               padding: const EdgeInsets.all(10),
-              child: SvgPicture.asset(
-                AssetConstants.cartErrorIcon,
+              child: const SvgAssetImage(
+                assetName: AssetConstants.cartErrorIcon,
                 fit: BoxFit.fitWidth,
                 color: Colors.white,
               ),
