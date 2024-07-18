@@ -47,36 +47,6 @@ class QuotePageState extends State<QuotePage> {
         title: const Text(LocalizationConstants.quotes),
         centerTitle: false,
       ),
-<<<<<<< HEAD
-      body: TabSwitchWidget(
-        tabTitle0: LocalizationConstants.pending,
-        tabTitle1: LocalizationConstants.activeJobs,
-        tabWidget0: BlocBuilder<QuoteBloc, QuoteState>(builder: (_, state) {
-          if (state is QuoteFailed) {
-            return const Center(
-              child: Text("No data found"),
-            );
-          } else if (state is QuoteLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is QuoteLoaded) {
-            return _buildPendingQuotesWidget(state.quotes, context);
-          } else {
-            return Container();
-          }
-        }),
-        tabWidget1: BlocBuilder<QuoteBloc, QuoteState>(builder: (_, state) {
-          return _buildActiveJobsWidget();
-        }),
-        selectedIndex: selectedIndex,
-        onTabSelectionChange: (index) {
-          setState(() {
-            selectedIndex = index;
-          });
-          final type =
-              index == 1 ? QuotePageType.activejobs : QuotePageType.pending;
-=======
       body: Column(
         children: [
           Container(
@@ -150,7 +120,6 @@ class QuotePageState extends State<QuotePage> {
                 final type = index == 1
                     ? QuotePageType.activejobs
                     : QuotePageType.pending;
->>>>>>> story/ICM-4636-flutter
 
                 context.read<QuoteBloc>().add(
                     QuoteLoadEvent(quotePageType: type, quoteParameters: null));
