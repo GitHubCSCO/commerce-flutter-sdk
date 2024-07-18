@@ -41,7 +41,7 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
           if (data != null && data.isNotEmpty) {
             emit(BrandAutoCompleteLoaded(data));
           } else {
-            emit(BrandAutoCompleteFailed(error: LocalizationConstants.noResultFoundMessage ?? ''));
+            emit(BrandAutoCompleteFailed(error: LocalizationConstants.noResultFoundMessage.localized() ?? ''));
           }
         case Failure(errorResponse: final errorResponse):
           emit(BrandAutoCompleteFailed(error: errorResponse.errorDescription ?? ''));

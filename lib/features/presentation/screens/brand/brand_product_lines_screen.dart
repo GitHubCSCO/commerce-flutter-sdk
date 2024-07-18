@@ -49,7 +49,7 @@ class _BrandProductLinesPageState extends State<BrandProductLinesPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            LocalizationConstants.allBrandProductLines, style: OptiTextStyles.titleLarge),
+            LocalizationConstants.allBrandProductLines.localized(), style: OptiTextStyles.titleLarge),
         actions: [
           BottomMenuWidget(isViewOnWebsiteEnable: false,
               toolMenuList: _getToolMenu(context)),
@@ -97,7 +97,7 @@ class _BrandProductLinesPageState extends State<BrandProductLinesPage> {
   List<ToolMenu> _getToolMenu(BuildContext context) {
     List<ToolMenu> list = [];
     list.add(ToolMenu(
-        title: LocalizationConstants.listView,
+        title: LocalizationConstants.listView.localized(),
         action: () {
           setState(() {
             isGridView = false;
@@ -105,7 +105,7 @@ class _BrandProductLinesPageState extends State<BrandProductLinesPage> {
         }
     ));
     list.add(ToolMenu(
-        title: LocalizationConstants.gridView,
+        title: LocalizationConstants.gridView.localized(),
         action: () {
           setState(() {
             isGridView = true;

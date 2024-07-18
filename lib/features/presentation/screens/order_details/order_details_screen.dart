@@ -49,7 +49,7 @@ class OrderDetailsPage extends StatelessWidget {
         title: context.watch<OrderDetailsCubit>().state.orderStatus ==
                 OrderStatus.success
             ? Text(context.watch<OrderDetailsCubit>().orderNumber ?? '')
-            : const Text(LocalizationConstants.orderDetails),
+            : Text(LocalizationConstants.orderDetails.localized()),
       ),
       body: BlocConsumer<OrderDetailsCubit, OrderDetailsState>(
         listener: (context, state) {
@@ -184,7 +184,7 @@ class OrderDetailsPage extends StatelessWidget {
                   OrderBottomSectionWidget(
                     actions: [
                       PrimaryButton(
-                        text: LocalizationConstants.reorder,
+                        text: LocalizationConstants.reorder.localized(),
                         onPressed: () {
                           confirmDialog(
                             context: context,
@@ -194,8 +194,8 @@ class OrderDetailsPage extends StatelessWidget {
                                   .reorderAllProducts();
                             },
                             message:
-                                LocalizationConstants.addOrderContentToCart,
-                            confirmText: LocalizationConstants.reorder,
+                                LocalizationConstants.addOrderContentToCart.localized(),
+                            confirmText: LocalizationConstants.reorder.localized(),
                           );
                         },
                       ),

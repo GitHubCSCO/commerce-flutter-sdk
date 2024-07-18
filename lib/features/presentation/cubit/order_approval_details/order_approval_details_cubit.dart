@@ -110,7 +110,7 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
   String get taxValue => state.cart.totalTaxDisplay ?? '';
   String get totalValue => state.cart.orderGrandTotalDisplay ?? '';
   String get subtotalTitle =>
-      '${LocalizationConstants.subtotal} (${state.cart.totalQtyOrdered})';
+      '${LocalizationConstants.subtotal.localized()} (${state.cart.totalQtyOrdered})';
 
   // body section
   bool get isFulfillmentMethodShip => state.cart.fulfillmentMethod == 'Ship';
@@ -118,8 +118,8 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
       state.cart.fulfillmentMethod == 'PickUp';
 
   String get shippingAddressTitle => isFulfillmentMethodShip
-      ? LocalizationConstants.shippingAddress
-      : (isFulfillmentMethodPickUp ? LocalizationConstants.pickUpLocation : '');
+      ? LocalizationConstants.shippingAddress.localized()
+      : (isFulfillmentMethodPickUp ? LocalizationConstants.pickUpLocation.localized() : '');
 
   String get shipToCityStatePostalCodeDisplay => isFulfillmentMethodShip
       ? '${state.cart.shipTo?.city}, ${state.cart.shipTo?.state?.name} ${state.cart.shipTo?.postalCode}'

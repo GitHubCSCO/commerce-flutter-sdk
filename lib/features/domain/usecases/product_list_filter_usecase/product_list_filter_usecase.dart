@@ -132,7 +132,7 @@ class ProductListFilterUsecase extends BaseUseCase {
           values: [
             FilterValueViewModel(
               id: 'PreviouslyPurchased',
-              title: LocalizationConstants.previouslyPurchased,
+              title: LocalizationConstants.previouslyPurchased.localized(),
               isSelected: isFilteringByPreviouslyPurchased,
               facetType: FacetType.previouslyPurchased,
             ),
@@ -158,12 +158,12 @@ class ProductListFilterUsecase extends BaseUseCase {
           values: [
             FilterValueViewModel(
               id: 'StockedItems',
-              title: LocalizationConstants.stockedItemsOnly,
+              title: LocalizationConstants.stockedItemsOnly.localized(),
               isSelected: isFilteringByStockedItems,
               facetType: FacetType.stockedItemsFacet,
             ),
           ],
-          title: LocalizationConstants.stockedItems,
+          title: LocalizationConstants.stockedItems.localized(),
         ),
       ];
     }
@@ -201,7 +201,7 @@ class ProductListFilterUsecase extends BaseUseCase {
                 )
                 .toList() ??
             [],
-        title: LocalizationConstants.categories,
+        title: LocalizationConstants.categories.localized(),
       ),
     ];
   }
@@ -237,7 +237,7 @@ class ProductListFilterUsecase extends BaseUseCase {
                 )
                 .toList() ??
             [],
-        title: LocalizationConstants.brand,
+        title: LocalizationConstants.brand.localized(),
       ),
     ];
   }
@@ -265,7 +265,7 @@ class ProductListFilterUsecase extends BaseUseCase {
                 )
                 .toList() ??
             [],
-        title: LocalizationConstants.productLine,
+        title: LocalizationConstants.productLine.localized(),
       ),
     ];
   }

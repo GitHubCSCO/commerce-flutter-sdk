@@ -16,6 +16,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_conten
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
@@ -63,7 +64,7 @@ class CartPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
-        title: const Text(LocalizationConstants.cart),
+        title: Text(LocalizationConstants.cart.localized()),
         backgroundColor: Colors.white,
         actions: [BottomMenuWidget(websitePath: websitePath)],
       ),
@@ -72,6 +73,13 @@ class CartPage extends StatelessWidget {
           BlocListener<PullToRefreshBloc, PullToRefreshState>(
             listener: (context, state) {
               if (state is PullToRefreshLoadState) {
+                _reloadCartPage(context);
+              }
+            },
+          ),
+          BlocListener<RootBloc, RootState>(
+            listener: (context, state) {
+              if (state is RootPricingInventoryReload) {
                 _reloadCartPage(context);
               }
             },
@@ -147,8 +155,8 @@ class CartPage extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: TertiaryBlackButton(
-                                    child: const Text(
-                                      LocalizationConstants.addAllToList,
+                                    child: Text(
+                                      LocalizationConstants.addAllToList.localized(),
                                     ),
                                     onPressed: () {
                                       final addCartLines = context
@@ -168,8 +176,8 @@ class CartPage extends StatelessWidget {
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: TertiaryBlackButton(
-                                    child: const Text(
-                                        LocalizationConstants.saveOrder),
+                                    child: Text(
+                                        LocalizationConstants.saveOrder.localized()),
                                     onPressed: () {
                                       context
                                           .read<SavedOrderHandlerCubit>()
@@ -197,8 +205,8 @@ class CartPage extends StatelessWidget {
                                 text: context
                                         .watch<CartPageBloc>()
                                         .approvalButtonVisible
-                                    ? LocalizationConstants.checkoutForApproval
-                                    : LocalizationConstants.checkout,
+                                    ? LocalizationConstants.checkoutForApproval.localized()
+                                    : LocalizationConstants.checkout.localized(),
                               ),
                             ),
                           ],
@@ -236,11 +244,11 @@ class CartPage extends StatelessWidget {
                     ),
                   ]);
                 default:
-                  return const CustomScrollView(
+                  return CustomScrollView(
                     slivers: <Widget>[
                       SliverFillRemaining(
                         child: Center(
-                          child: Text(LocalizationConstants.errorLoadingCart),
+                          child: Text(LocalizationConstants.errorLoadingCart.localized()),
                         ),
                       ),
                     ],
@@ -269,21 +277,21 @@ class CartPage extends StatelessWidget {
   void showSignInDialog(BuildContext context) {
     displayDialogWidget(
       context: context,
-      title: LocalizationConstants.notSignedIn,
-      message: LocalizationConstants.pleaseSignInCheckout,
+      title: LocalizationConstants.notSignedIn.localized(),
+      message: LocalizationConstants.pleaseSignInCheckout.localized(),
       actions: [
         DialogPlainButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text(LocalizationConstants.cancel),
+          child: Text(LocalizationConstants.cancel.localized()),
         ),
         DialogPlainButton(
           onPressed: () {
             Navigator.of(context).pop();
             AppRoute.login.navigateBackStack(context);
           },
-          child: const Text(LocalizationConstants.signIn),
+          child: Text(LocalizationConstants.signIn.localized()),
         ),
       ],
     );

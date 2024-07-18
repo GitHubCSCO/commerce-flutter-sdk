@@ -13,9 +13,11 @@ import 'package:commerce_flutter_app/features/domain/service/interfaces/content_
 import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/device_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/geo_location_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/localization_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/location_search_history_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/search_history_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/vmi_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/localization_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/location_search_history_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/network_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/search_history_service.dart';
@@ -41,6 +43,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/p
 import 'package:commerce_flutter_app/features/domain/usecases/curent_location_usecase/current_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/dealer_location_usecase/dealer_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/language_usecase/language_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/invoice_usecase/invoice_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/location_note_usecase/location_note_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/location_search_usecase/location_search_usecase.dart';
@@ -92,6 +95,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/category/categor
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/language/language_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/show_hide/pricing/show_hide_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/load_website_url/load_website_url_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
@@ -104,6 +108,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/auto
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/remote_config/remote_config_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
@@ -183,9 +188,16 @@ Future<void> initInjectionContainer() async {
     //router
     ..registerLazySingleton(() => getRouter())
 
+    //root
+    ..registerFactory(() => RootBloc())
+
     //auth
     ..registerFactory(() => AuthCubit(authUsecase: sl()))
     ..registerFactory(() => AuthUsecase())
+
+    //language
+    ..registerFactory(() => LanguageBloc(languageUsecase: sl()))
+    ..registerLazySingleton(() => LanguageUsecase())
 
     //biometric options
     ..registerFactory(() => BiometricOptionsCubit(biometricUsecase: sl()))
@@ -202,7 +214,8 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => DomainUsecase())
 
     //domain redirect
-    ..registerFactory(() => DomainRedirectCubit(domainUsecase: sl()))
+    ..registerFactory(
+        () => DomainRedirectCubit(domainUsecase: sl(), languageUsecase: sl()))
 
     // vmi
     ..registerFactory(() => VMIPageBloc(vmiMainUseCase: sl()))
@@ -607,6 +620,14 @@ Future<void> initInjectionContainer() async {
       await service.init();
       return service;
     })
+    ..registerLazySingleton<ITranslationService>(() => TranslationService(
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+    ))
+    ..registerLazySingleton<ILocalizationService>(() => LocalizationService(
+          commerceAPIServiceProvider: sl(),
+    ))
     ..registerSingletonAsync<IAppConfigurationService>(() async {
       final service = AppConfigurationService(
           commerceAPIServiceProvider: sl(),

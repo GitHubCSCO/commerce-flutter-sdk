@@ -64,7 +64,7 @@ class VmiLocationNotePage extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Input(
-                        label: LocalizationConstants.locationNote,
+                        label: LocalizationConstants.locationNote.localized(),
                         controller: noteDescriptionController,
                         onTapOutside: (p0) => context.closeKeyboard(),
                         onEditingComplete: () => context.closeKeyboard(),
@@ -73,13 +73,13 @@ class VmiLocationNotePage extends StatelessWidget {
                   ),
                   ListInformationBottomSubmitWidget(actions: [
                     SecondaryButton(
-                      child: const Text(LocalizationConstants.cancel),
+                      child: Text(LocalizationConstants.cancel.localized()),
                       onPressed: () {
                         Navigator.pop(context);
                       },
                     ),
                     PrimaryButton(
-                      text: LocalizationConstants.save,
+                      text: LocalizationConstants.save.localized(),
                       onPressed: () {
                         context.read<VMILocationNoteCubit>().saveLocationNote(
                               noteDescriptionController.text,

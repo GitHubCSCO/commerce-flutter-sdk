@@ -93,11 +93,11 @@ class VMIPage extends BaseDynamicContentScreen {
                       children: buildContentWidgets(state.widgetEntities),
                     ));
               default:
-                return const CustomScrollView(
+                return CustomScrollView(
                   slivers: <Widget>[
                     SliverFillRemaining(
                       child: Center(
-                        child: Text(LocalizationConstants.errorLoadingShop),
+                        child: Text(LocalizationConstants.errorLoadingShop.localized()),
                       ),
                     ),
                   ],

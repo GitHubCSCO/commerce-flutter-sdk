@@ -9,7 +9,7 @@ mixin BaseCheckout {
 
   AppBar buildAppBar(BuildContext context) {
     return AppBar(
-      title: const Text(LocalizationConstants.checkout),
+      title: Text(LocalizationConstants.checkout.localized()),
       backgroundColor: Colors.white,
       actions: <Widget>[
         InkWell(
@@ -19,7 +19,7 @@ mixin BaseCheckout {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              LocalizationConstants.cancel,
+              LocalizationConstants.cancel.localized(),
               style: OptiTextStyles.subtitleLink,
             ),
           ),
@@ -51,10 +51,10 @@ mixin BaseCheckout {
     var info = '';
 
     if (promotions != null && promotions.length > 1) {
-      info = LocalizationConstants.promoCodesMore
+      info = LocalizationConstants.promoCodesMore.localized()
           .format([lastPromotion?.name, promotions.length - 1]);
     } else {
-      info = LocalizationConstants.promoCodes.format([lastPromotion?.name]);
+      info = LocalizationConstants.promoCodes.localized().format([lastPromotion?.name]);
     }
 
     var amount = promotions?.fold(
@@ -80,7 +80,7 @@ mixin BaseCheckout {
           _buildRow(promotionInfo, promotionValue, OptiTextStyles.bodyFade)!);
     }
 
-    list.add(_buildRow(LocalizationConstants.subtotal,
+    list.add(_buildRow(LocalizationConstants.subtotal.localized(),
         cart.orderGrandTotalDisplay ?? '', OptiTextStyles.subtitle)!);
 
     return Container(
@@ -96,7 +96,7 @@ mixin BaseCheckout {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Input(
-        label: LocalizationConstants.orderNotes,
+        label: LocalizationConstants.orderNotes.localized(),
         controller: _notesController,
       ),
     );

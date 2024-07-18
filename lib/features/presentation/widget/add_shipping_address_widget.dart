@@ -26,7 +26,7 @@ class AddShippingAddressScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: OptiAppColors.backgroundWhite,
-          title: const Text(LocalizationConstants.shippingAddress),
+          title: Text(LocalizationConstants.shippingAddress.localized()),
           centerTitle: false,
         ),
         body: MultiBlocProvider(
@@ -119,44 +119,44 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
       AddShippingAddtessLoadedState state, BuildContext context) {
     List<Widget> list = [];
     list.add(_createInputField(
-        LocalizationConstants.firstName,
-        LocalizationConstants.firstName,
+        LocalizationConstants.firstName.localized(),
+        LocalizationConstants.firstName.localized(),
         firstNameController, validator: (value) {
       if (value == null || value.isEmpty) {
         return 'First Name cannot be empty';
       }
       return null;
     }));
-    list.add(_createInputField(LocalizationConstants.lastName,
-        LocalizationConstants.lastName, lastNameController, validator: (value) {
+    list.add(_createInputField(LocalizationConstants.lastName.localized(),
+        LocalizationConstants.lastName.localized(), lastNameController, validator: (value) {
       if (value == null || value.isEmpty) {
         return 'Last Name cannot be empty';
       }
       return null;
     }));
-    list.add(_createInputField(LocalizationConstants.companyName,
-        LocalizationConstants.companyName, companyNameController));
+    list.add(_createInputField(LocalizationConstants.companyName.localized(),
+        LocalizationConstants.companyName.localized(), companyNameController));
 
     list.add(_addCountryWidget(context, state));
 
     list.add(_createInputField(
-        LocalizationConstants.addressOne,
-        LocalizationConstants.addressOne,
+        LocalizationConstants.addressOne.localized(),
+        LocalizationConstants.addressOne.localized(),
         addressOneController, validator: (value) {
       if (value == null || value.isEmpty) {
         return 'Address Line 1 cannot be empty';
       }
       return null;
     }));
-    list.add(_createInputField(LocalizationConstants.addressTwo,
-        LocalizationConstants.addressTwo, addressTwoController));
-    list.add(_createInputField(LocalizationConstants.addressThree,
-        LocalizationConstants.addressThree, addressThreeController));
-    list.add(_createInputField(LocalizationConstants.addressFour,
-        LocalizationConstants.addressFour, addressFourController));
+    list.add(_createInputField(LocalizationConstants.addressTwo.localized(),
+        LocalizationConstants.addressTwo.localized(), addressTwoController));
+    list.add(_createInputField(LocalizationConstants.addressThree.localized(),
+        LocalizationConstants.addressThree.localized(), addressThreeController));
+    list.add(_createInputField(LocalizationConstants.addressFour.localized(),
+        LocalizationConstants.addressFour.localized(), addressFourController));
     list.add(_createInputField(
-        LocalizationConstants.postalCode,
-        LocalizationConstants.postalCode,
+        LocalizationConstants.postalCode.localized(),
+        LocalizationConstants.postalCode.localized(),
         postalCodeController, validator: (value) {
       if (value == null || value.isEmpty) {
         return 'Postal Code cannot be empty';
@@ -164,7 +164,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
       return null;
     }));
     list.add(_createInputField(
-        LocalizationConstants.city, LocalizationConstants.city, cityController,
+        LocalizationConstants.city.localized(), LocalizationConstants.city.localized(), cityController,
         validator: (value) {
       if (value == null || value.isEmpty) {
         return 'City cannot be empty';
@@ -174,11 +174,11 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
 
     list.add(_addStateWidget(context, state));
 
-    list.add(_createInputField(LocalizationConstants.email,
-        LocalizationConstants.email, emailController,
+    list.add(_createInputField(LocalizationConstants.email.localized(),
+        LocalizationConstants.email.localized(), emailController,
         validator: validateEmail));
-    list.add(_createInputField(LocalizationConstants.phoneNumber,
-        LocalizationConstants.phoneNumber, phonenumberController,
+    list.add(_createInputField(LocalizationConstants.phoneNumber.localized(),
+        LocalizationConstants.phoneNumber.localized(), phonenumberController,
         validator: validatePhoneNumber));
     return list;
   }
@@ -186,7 +186,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
   Widget _buildContinueButtonWidget(BuildContext context) {
     return ListInformationBottomSubmitWidget(actions: [
       PrimaryButton(
-        text: LocalizationConstants.continueText,
+        text: LocalizationConstants.continueText.localized(),
         onPressed: () {
           if (_formKey.currentState?.validate() ?? false) {
             // Collect all data
@@ -264,7 +264,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
         Expanded(
           flex: 1,
           child: Text(
-            LocalizationConstants.selectCountry,
+            LocalizationConstants.selectCountry.localized(),
             textAlign: TextAlign.start,
             style: OptiTextStyles.body,
           ),
@@ -281,7 +281,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
                           context
                               .read<AddShippingAddressCubit>()
                               .selectedCountry),
-                      descriptionText: LocalizationConstants.country,
+                      descriptionText: LocalizationConstants.country.localized(),
                       callback: _onCountrySelect)),
             ],
           ),
@@ -298,7 +298,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
         Expanded(
           flex: 1,
           child: Text(
-            LocalizationConstants.selectState,
+            LocalizationConstants.selectState.localized(),
             textAlign: TextAlign.start,
             style: OptiTextStyles.body,
           ),
@@ -315,7 +315,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
                           context
                               .read<AddShippingAddressCubit>()
                               .selectedState),
-                      descriptionText: LocalizationConstants.state,
+                      descriptionText: LocalizationConstants.state.localized(),
                       callback: _onStateSelect)),
             ],
           ),

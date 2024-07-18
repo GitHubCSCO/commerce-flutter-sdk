@@ -86,7 +86,7 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                         .orderNumber ??
                     '',
               )
-            : const Text(LocalizationConstants.orderApproval),
+            : Text(LocalizationConstants.orderApproval.localized()),
       ),
       body: BlocConsumer<OrderApprovalDetailsCubit, OrderApprovalDetailsState>(
         listener: (context, state) {
@@ -101,7 +101,7 @@ class OrderApprovalDetailsPage extends StatelessWidget {
             refreshOrderApprovals();
             CustomSnackBar.showSnackBarMessage(
               context,
-              LocalizationConstants.orderApproved,
+              LocalizationConstants.orderApproved.localized(),
             );
 
             context.read<CartCountCubit>().onSelectCartTab();
@@ -122,7 +122,7 @@ class OrderApprovalDetailsPage extends StatelessWidget {
             refreshOrderApprovals();
             CustomSnackBar.showSnackBarMessage(
               context,
-              LocalizationConstants.orderDeleted,
+              LocalizationConstants.orderDeleted.localized(),
             );
             context.pop();
           }
@@ -163,27 +163,27 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                                 .watch<OrderApprovalDetailsCubit>()
                                 .taxValue,
                             estimatedShippingTitleLabel:
-                                LocalizationConstants.shippingHandling,
+                                LocalizationConstants.shippingHandling.localized(),
                             estimatedShippingValueLabel: context
                                 .watch<OrderApprovalDetailsCubit>()
                                 .shippingValue,
                             estiamatedTotalTitleLabel:
-                                LocalizationConstants.total,
+                                LocalizationConstants.total.localized(),
                             estimatedTotalValueLabel: context
                                 .watch<OrderApprovalDetailsCubit>()
                                 .totalValue,
-                            estitamatedTaxTitleLabel: LocalizationConstants.tax,
+                            estitamatedTaxTitleLabel: LocalizationConstants.tax.localized(),
                           ),
                         _OrderApprovalInfoWidget(
-                          orderStatusLabel: LocalizationConstants.status,
+                          orderStatusLabel: LocalizationConstants.status.localized(),
                           orderStatusValueLabel: context
                               .watch<OrderApprovalDetailsCubit>()
                               .statusValue,
-                          poTitleLabel: LocalizationConstants.pONumberSign,
+                          poTitleLabel: LocalizationConstants.pONumberSign.localized(),
                           poValueLabel: context
                               .watch<OrderApprovalDetailsCubit>()
                               .poValue,
-                          orderDateValueLabel: LocalizationConstants.orderDate,
+                          orderDateValueLabel: LocalizationConstants.orderDate.localized(),
                           orderDateTitleLabel: context
                               .watch<OrderApprovalDetailsCubit>()
                               .orderDateValue,
@@ -223,11 +223,11 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                   child: OrderBottomSectionWidget(
                     actions: [
                       SecondaryButton(
-                        child: const Text(LocalizationConstants.deleteOrder),
+                        child: Text(LocalizationConstants.deleteOrder.localized()),
                         onPressed: () {
                           confirmDialog(
                             context: context,
-                            message: '${LocalizationConstants.deleteOrder}?',
+                            message: '${LocalizationConstants.deleteOrder.localized()}?',
                             onConfirm: () async {
                               await context
                                   .read<OrderApprovalDetailsCubit>()
@@ -237,7 +237,7 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                         },
                       ),
                       PrimaryButton(
-                        text: LocalizationConstants.approveOrder,
+                        text: LocalizationConstants.approveOrder.localized(),
                         isEnabled: context
                             .watch<OrderApprovalDetailsCubit>()
                             .isApprovedButtonEnabled,
@@ -378,7 +378,7 @@ class _OrderApprovalInfoWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)
               .copyWith(bottom: 8),
           child: Text(
-            LocalizationConstants.orderInformation,
+            LocalizationConstants.orderInformation.localized(),
             style: OptiTextStyles.titleLarge,
           ),
         ),

@@ -57,7 +57,7 @@ class _DealerLocationWidgetItemState extends State<DealerLocationWidgetItem>
                 children: [
                   InkWell(
                     child: Text(
-                      LocalizationConstants.hours,
+                      LocalizationConstants.hours.localized(),
                       textAlign: TextAlign.center,
                       style: OptiTextStyles.link,
                     ),
@@ -70,7 +70,7 @@ class _DealerLocationWidgetItemState extends State<DealerLocationWidgetItem>
                   const SizedBox(width: 16),
                   InkWell(
                     child: Text(
-                      LocalizationConstants.directions,
+                      LocalizationConstants.directions.localized(),
                       textAlign: TextAlign.center,
                       style: OptiTextStyles.link,
                     ),

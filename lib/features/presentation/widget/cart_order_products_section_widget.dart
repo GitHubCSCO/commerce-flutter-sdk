@@ -35,7 +35,7 @@ class CartOrderProductsSectionWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                LocalizationConstants.products,
+                LocalizationConstants.products.localized(),
                 style: OptiTextStyles.titleLarge,
               ),
               const SizedBox(width: 8),

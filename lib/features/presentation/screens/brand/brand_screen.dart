@@ -44,7 +44,7 @@ class BrandPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            LocalizationConstants.brands, style: OptiTextStyles.titleLarge),
+            LocalizationConstants.brands.localized(), style: OptiTextStyles.titleLarge),
         actions: [
           BottomMenuWidget(websitePath: websitePath),
         ],
@@ -55,7 +55,7 @@ class BrandPage extends StatelessWidget {
             padding:
             const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
             child: Input(
-              hintText: LocalizationConstants.search,
+              hintText: LocalizationConstants.search.localized(),
               suffixIcon: IconButton(
                 icon: SvgPicture.asset(
                   AssetConstants.iconClear,
@@ -139,7 +139,7 @@ class BrandPage extends StatelessWidget {
                       callback: _handleAutoCompleteCallback);
                 case BrandAutoCompleteFailed():
                   return Center(
-                      child: Text(LocalizationConstants.noResultFoundMessage,
+                      child: Text(LocalizationConstants.noResultFoundMessage.localized(),
                           style: OptiTextStyles.body));
                 default:
                   return const Center();

@@ -136,20 +136,20 @@ void _onClickClearAllCart(BuildContext context) {
   displayDialogWidget(
       context: context,
       title: "",
-      message: LocalizationConstants.clearAllItemsInCart,
+      message: LocalizationConstants.clearAllItemsInCart.localized(),
       actions: [
         DialogPlainButton(
           onPressed: () {
             context.read<CartContentBloc>().add(CartContentClearAllEvent());
             Navigator.of(context).pop();
           },
-          child: const Text(LocalizationConstants.remove),
+          child: Text(LocalizationConstants.remove.localized()),
         ),
         DialogPlainButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text(LocalizationConstants.cancel),
+          child: Text(LocalizationConstants.cancel.localized()),
         ),
       ]);
 }

@@ -49,7 +49,7 @@ class OrderApprovalPage extends StatelessWidget {
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         backgroundColor: OptiAppColors.backgroundWhite,
-        title: const Text(LocalizationConstants.orderApproval),
+        title: Text(LocalizationConstants.orderApproval.localized()),
         centerTitle: false,
         actions: [
           BottomMenuWidget(
@@ -84,7 +84,7 @@ class OrderApprovalPage extends StatelessWidget {
                           state.orderApprovalCollectionModel.pagination
                                       ?.totalItemCount !=
                                   null
-                              ? '${state.orderApprovalCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.orders}'
+                              ? '${state.orderApprovalCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.orders.localized()}'
                               : '',
                           style: OptiTextStyles.header3,
                         ),

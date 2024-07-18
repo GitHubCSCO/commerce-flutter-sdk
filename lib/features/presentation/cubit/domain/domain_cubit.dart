@@ -43,16 +43,16 @@ class DomainCubit extends Cubit<DomainState> {
       case DomainChangeStatus.failedInvalidDomain:
         emit(
           DomainOperationFailedInvalid(
-            LocalizationConstants.invalidDomain,
-            LocalizationConstants.domainWebsiteNotResponding,
+            LocalizationConstants.invalidDomain.localized(),
+            LocalizationConstants.domainWebsiteNotResponding.localized(),
           ),
         );
         break;
       case DomainChangeStatus.failedMobileAppDisabled:
         emit(
           DomainOperationFailedMobileAppDisabled(
-            LocalizationConstants.mobileAppDisabled,
-            LocalizationConstants.mobileAppDisabledDescription,
+            LocalizationConstants.mobileAppDisabled.localized(),
+            LocalizationConstants.mobileAppDisabledDescription.localized(),
           ),
         );
         break;

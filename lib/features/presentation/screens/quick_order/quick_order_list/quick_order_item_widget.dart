@@ -161,7 +161,7 @@ class OrderProductTitleWidget extends StatelessWidget {
                       false,
                   child: Row(children: [
                     Text(
-                      LocalizationConstants.myPartNumberSign,
+                      LocalizationConstants.myPartNumberSign.localized(),
                       style: OptiTextStyles.bodySmallHighlight,
                       textAlign: TextAlign.left,
                     ),
@@ -181,7 +181,7 @@ class OrderProductTitleWidget extends StatelessWidget {
                       false,
                   child: Row(children: [
                     Text(
-                      LocalizationConstants.mFGNumberSign,
+                      LocalizationConstants.mFGNumberSign.localized(),
                       style: OptiTextStyles.bodySmallHighlight,
                       textAlign: TextAlign.left,
                     ),
@@ -334,7 +334,7 @@ class OrderProductQuantityGroupWidget extends StatelessWidget {
                     );
                   case OrderItemPricingInventoryLoaded:
                     return OrderProductSubTitleColumn(
-                        LocalizationConstants.subtotal,
+                        LocalizationConstants.subtotal.localized(),
                         quickOrderItemEntity.extendedPriceValueText ?? '');
                   case OrderItemPricingInventoryFailed:
                   default:

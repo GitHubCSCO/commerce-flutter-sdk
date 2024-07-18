@@ -128,7 +128,7 @@ class _VMILocationScreenState extends State<VMILocationScreen> {
                 ),
                 ListInformationBottomSubmitWidget(actions: [
                   PrimaryButton(
-                    text: LocalizationConstants.selectLocation,
+                    text: LocalizationConstants.selectLocation.localized(),
                     onPressed: () async {
                       var selectedLocation =
                           context.read<VMILocationBloc>().selectedLocation;

@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_type_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_action_item_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/show_hide/inventory/show_hide_inventory_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/show_hide/pricing/show_hide_pricing_bloc.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +70,7 @@ class ActionListItemWidget extends BaseActionItemWidget {
                           value: toggle,
                           onChanged: (value) {
                             context.read<ShowHidePricingBloc>().add(ShowHidePricingToggled(value));
+                            context.read<RootBloc>().add(RootHidePricingInventoryEvent());
                           },
                         );
                       }
@@ -81,6 +83,7 @@ class ActionListItemWidget extends BaseActionItemWidget {
                             value: toggle,
                             onChanged: (value) {
                               context.read<ShowHideInventoryBloc>().add(ShowHideInventoryToggled(value));
+                              context.read<RootBloc>().add(RootHidePricingInventoryEvent());
                             },
                           );
                         }

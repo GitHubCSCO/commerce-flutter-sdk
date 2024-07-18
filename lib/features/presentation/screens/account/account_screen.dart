@@ -109,7 +109,7 @@ class AccountPage extends BaseDynamicContentScreen {
                           backgroundColor:
                               Theme.of(context).colorScheme.surface,
                           title: Text(
-                            LocalizationConstants.account,
+                            LocalizationConstants.account.localized(),
                             style: OptiTextStyles.titleLarge,
                           ),
                           centerTitle: false,
@@ -128,20 +128,20 @@ class AccountPage extends BaseDynamicContentScreen {
                             launchUrlString(context.read<AccountPageBloc>().getPrivacyPolicyUrl()!);
                           },
                           child: Text(
-                            LocalizationConstants.privacyPolicy,
+                            LocalizationConstants.privacyPolicy.localized(),
                             style: OptiTextStyles.linkMedium,
                           ),
                         ),
                       ),
-                      if(context.read<AccountPageBloc>().getTermsOfUseUrll().isNullOrEmpty == false)
+                      if(context.read<AccountPageBloc>().getTermsOfUseUrl().isNullOrEmpty == false)
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
                         child: GestureDetector(
                           onTap: () {
-                            launchUrlString(context.read<AccountPageBloc>().getTermsOfUseUrll()!);
+                            launchUrlString(context.read<AccountPageBloc>().getTermsOfUseUrl()!);
                           },
                           child: Text(
-                            LocalizationConstants.termsOfUse,
+                            LocalizationConstants.termsOfUse.localized(),
                             style: OptiTextStyles.linkMedium,
                           ),
                         ),
@@ -158,11 +158,11 @@ class AccountPage extends BaseDynamicContentScreen {
                   ),
                 );
               default:
-                return const CustomScrollView(
+                return CustomScrollView(
                   slivers: <Widget>[
                     SliverFillRemaining(
                       child: Center(
-                        child: Text(LocalizationConstants.errorLoadingAccount),
+                        child: Text(LocalizationConstants.errorLoadingAccount.localized()),
                       ),
                     ),
                   ],
@@ -273,7 +273,7 @@ class _AccountLoggedOutHeader extends StatelessWidget {
         ),
         const SizedBox(height: AppStyle.defaultVerticalPadding),
         PrimaryButton(
-          text: LocalizationConstants.signIn,
+          text: LocalizationConstants.signIn.localized(),
           onPressed: () {
             AppRoute.login.navigateBackStack(context);
           },

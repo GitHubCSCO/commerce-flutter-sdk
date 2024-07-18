@@ -22,7 +22,7 @@ void viewWarehouseWidget(BuildContext context, String? id, String productNumber,
         scrollable: true,
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
-        title: Text(LocalizationConstants.warehouseInventory,
+        title: Text(LocalizationConstants.warehouseInventory.localized(),
             style: OptiTextStyles.titleLarge),
         content: Padding(
           padding: const EdgeInsets.all(8.0),

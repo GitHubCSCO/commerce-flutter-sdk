@@ -30,7 +30,7 @@ extension ProductExtensions on ProductEntity? {
       subtotalValueText = this!.pricing!.extendedUnitNetPriceDisplay ?? "";
     } else {
       if (this!.quoteRequired != null && this!.quoteRequired!) {
-        return LocalizationConstants.requiresQuote.toString();
+        return LocalizationConstants.requiresQuote.localized().toString();
       } else {
         subtotalValueText = this!.pricing.getSubtotalValue() ?? "";
       }
@@ -41,7 +41,7 @@ extension ProductExtensions on ProductEntity? {
 
   String updatePriceValueText(bool? productPricingEnabled) {
     if (this != null && (this!.quoteRequired ?? false)) {
-      return LocalizationConstants.requiresQuote;
+      return LocalizationConstants.requiresQuote.localized();
     }
 
     final priceDisplay =

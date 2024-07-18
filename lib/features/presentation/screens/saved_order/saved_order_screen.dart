@@ -37,7 +37,7 @@ class SavedOrderPage extends StatelessWidget {
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         backgroundColor: OptiAppColors.backgroundWhite,
-        title: const Text(LocalizationConstants.savedOrders),
+        title: Text(LocalizationConstants.savedOrders.localized()),
         centerTitle: false,
         actions: [
           BottomMenuWidget(
@@ -83,7 +83,7 @@ class SavedOrderPage extends StatelessWidget {
                                             ?.totalItemCount ??
                                         0) !=
                                     0)
-                                ? '${state.cartCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.orders}'
+                                ? '${state.cartCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.orders.localized()}'
                                 : '',
                             style: OptiTextStyles.header3,
                           ),
@@ -105,8 +105,8 @@ class SavedOrderPage extends StatelessWidget {
                               savedOrders:
                                   state.cartCollectionModel.carts ?? [],
                             )
-                          : const Center(
-                              child: Text(LocalizationConstants.noSavedOrders),
+                          : Center(
+                              child: Text(LocalizationConstants.noSavedOrders.localized()),
                             ),
                     ),
                   ],

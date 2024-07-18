@@ -132,7 +132,7 @@ mixin RealtimePricingInventoryUpdateMixin {
           for (var product in productList) {
             final productAvailability = Availability(
               messageType: 0,
-              message: LocalizationConstants.unableToRetrieveInventory,
+              message: LocalizationConstants.unableToRetrieveInventory.localized(),
             );
 
             product.availability = AvailabilityEntityMapper().toEntity(productAvailability);

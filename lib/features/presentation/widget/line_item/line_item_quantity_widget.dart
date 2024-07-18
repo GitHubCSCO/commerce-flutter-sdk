@@ -43,7 +43,7 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        LocalizationConstants.qTY,
+                        LocalizationConstants.qTY.localized(),
                         style: OptiTextStyles.bodySmall,
                       ),
                       Text(

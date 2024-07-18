@@ -54,15 +54,15 @@ class InvoiceDetailCubit extends Cubit<InvoiceDetailState> {
       '';
 
   // Invoice Information
-  String get invoiceDate => LocalizationConstants.invoiceDate;
-  String get invoiceDueDate => LocalizationConstants.invoiceDueDate;
-  String get terms => LocalizationConstants.terms;
-  String get poNumber => LocalizationConstants.pONumber;
-  String get status => LocalizationConstants.status;
-  String get billingAddress => LocalizationConstants.billingAddress;
-  String get shippingAddress => LocalizationConstants.shippingAddress;
-  String get shippingMethodTitle => LocalizationConstants.shippingMethod;
-  String get orderNotesTitle => LocalizationConstants.orderNotes;
+  String get invoiceDate => LocalizationConstants.invoiceDate.localized();
+  String get invoiceDueDate => LocalizationConstants.invoiceDueDate.localized();
+  String get terms => LocalizationConstants.terms.localized();
+  String get poNumber => LocalizationConstants.pONumber.localized();
+  String get status => LocalizationConstants.status.localized();
+  String get billingAddress => LocalizationConstants.billingAddress.localized();
+  String get shippingAddress => LocalizationConstants.shippingAddress.localized();
+  String get shippingMethodTitle => LocalizationConstants.shippingMethod.localized();
+  String get orderNotesTitle => LocalizationConstants.orderNotes.localized();
 
   String get invoiceDateValue => state.invoice.invoiceDate != null
       ? DateFormat(CoreConstants.dateFormatString)
@@ -92,9 +92,9 @@ class InvoiceDetailCubit extends Cubit<InvoiceDetailState> {
   String get orderNotes => state.invoice.notes ?? '';
 
   // Summary Section
-  String get subtotalTitle => LocalizationConstants.subtotal;
+  String get subtotalTitle => LocalizationConstants.subtotal.localized();
   String get subtotalValue => state.invoice.productTotalDisplay ?? '';
-  String get taxTitle => LocalizationConstants.tax;
+  String get taxTitle => LocalizationConstants.tax.localized();
   String get taxValue => (state.invoice.invoiceHistoryTaxes == null ||
           state.invoice.invoiceHistoryTaxes!.isEmpty)
       ? state.invoice.taxAmountDisplay ?? ''
@@ -102,12 +102,12 @@ class InvoiceDetailCubit extends Cubit<InvoiceDetailState> {
           .map((e) => e.taxAmount)
           .reduce((a, b) => (a ?? 0) + (b ?? 0))
           .toString();
-  String get shippingTitle => LocalizationConstants.shipping;
+  String get shippingTitle => LocalizationConstants.shipping.localized();
   String get shippingValue => state.invoice.shippingAndHandlingDisplay ?? '';
-  String get discountTitle => LocalizationConstants.discounts;
+  String get discountTitle => LocalizationConstants.discounts.localized();
   String get discountValue => state.invoice.discountAmountDisplay ?? '';
-  String get totalTitle => LocalizationConstants.total;
+  String get totalTitle => LocalizationConstants.total.localized();
   String get totalValue => state.invoice.invoiceTotalDisplay ?? '';
-  String get otherChargesTitle => LocalizationConstants.otherCharges;
+  String get otherChargesTitle => LocalizationConstants.otherCharges.localized();
   String get otherChargesValue => state.invoice.otherChargesDisplay ?? '';
 }

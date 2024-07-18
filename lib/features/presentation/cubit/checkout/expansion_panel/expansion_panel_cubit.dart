@@ -9,11 +9,11 @@ part 'expansion_panel_state.dart';
 class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
   List<ExpansionPanelItem> list = [
     ExpansionPanelItem(
-        headerValue: LocalizationConstants.billingShipping, isExpanded: true),
+        headerValue: LocalizationConstants.billingShipping.localized(), isExpanded: true),
     ExpansionPanelItem(
-        headerValue: LocalizationConstants.paymentDetails, isExpanded: false),
+        headerValue: LocalizationConstants.paymentDetails.localized(), isExpanded: false),
     ExpansionPanelItem(
-        headerValue: LocalizationConstants.reviewOrder, isExpanded: false)
+        headerValue: LocalizationConstants.reviewOrder.localized(), isExpanded: false)
   ];
 
   int expansionIndex = 0;
@@ -25,7 +25,7 @@ class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
 
   ExpansionPanelCubit() : super(ExpansionPanelInitialState()) {
     _continueButtonController = StreamController<String>.broadcast();
-    _continueButtonController.add(LocalizationConstants.continueText);
+    _continueButtonController.add(LocalizationConstants.continueText.localized());
   }
 
   void initialize(int numberOfPanels) {
@@ -49,9 +49,9 @@ class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
       emit(ExpansionPanelChangeState(list: list));
       _updateButtonText(expansionIndex == (numberOfPanels == 2 ? 1 : 2)
           ? (numberOfPanels == 2
-              ? LocalizationConstants.submitForApproval
-              : LocalizationConstants.placeOrder)
-          : LocalizationConstants.continueText);
+              ? LocalizationConstants.submitForApproval.localized()
+              : LocalizationConstants.placeOrder.localized())
+          : LocalizationConstants.continueText.localized());
     }
   }
 
@@ -70,9 +70,9 @@ class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
     emit(ExpansionPanelChangeState(list: list));
     _updateButtonText(expansionIndex == (numberOfPanels == 2 ? 1 : 2)
         ? (numberOfPanels == 2
-            ? LocalizationConstants.submitForApproval
-            : LocalizationConstants.placeOrder)
-        : LocalizationConstants.continueText);
+            ? LocalizationConstants.submitForApproval.localized()
+            : LocalizationConstants.placeOrder.localized())
+        : LocalizationConstants.continueText.localized());
   }
 
   void _updateButtonText(String text) {

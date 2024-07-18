@@ -46,9 +46,9 @@ class DomainWelcomeScreen extends StatelessWidget {
             onPressed: () {
               context.pop();
             },
-            child: const Text(
-              LocalizationConstants.cancel,
-              style: TextStyle(color: Colors.black),
+            child: Text(
+              LocalizationConstants.cancel.localized(),
+              style: const TextStyle(color: Colors.black),
             ),
           ),
         ],
@@ -105,8 +105,8 @@ class _DomainPageState extends State<DomainPage> {
                 }
               },
             ),
-            const Text(
-              LocalizationConstants.existingCustomers,
+            Text(
+              LocalizationConstants.existingCustomers.localized(),
               style: WelcomeStyle.welcomeCardHeaderStyle,
             ),
             const SizedBox(height: 8.0),
@@ -166,7 +166,7 @@ class _DomainPageState extends State<DomainPage> {
                   }
                 : null,
             isEnabled: _textEditingController.text.isNotEmpty,
-            text: LocalizationConstants.useECommerceWebsite,
+            text: LocalizationConstants.useECommerceWebsite.localized(),
           );
         }
       },
@@ -184,7 +184,7 @@ class _DomainPageState extends State<DomainPage> {
             onPressed: () {
               context.pop();
             },
-            child: const Text(LocalizationConstants.oK),
+            child: Text(LocalizationConstants.oK.localized()),
           ),
         ],
       ),
@@ -194,7 +194,7 @@ class _DomainPageState extends State<DomainPage> {
   Widget _buildTextInput(BuildContext context) {
     return Input(
       controller: _textEditingController,
-      hintText: LocalizationConstants.enterDomainHint,
+      hintText: LocalizationConstants.enterDomainHint.localized(),
       onTapOutside: (p0) => context.closeKeyboard(),
       label: 'Enter Storefront URL',
     );
