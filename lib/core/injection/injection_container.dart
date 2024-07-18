@@ -107,6 +107,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/auto_complete/quick_order_auto_complete_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/quote/job_quote_details/job_quote_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_communication/quote_communication_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_details/quote_details_bloc.dart';
@@ -357,6 +358,9 @@ Future<void> initInjectionContainer() async {
     //quote details
     ..registerFactory(() => QuoteDetailsBloc(quoteDetailsUsecase: sl()))
     ..registerFactory(() => QuoteDetailsUsecase())
+
+    // job quote details
+    ..registerFactory(() => JobQuoteDetailsCubit(quoteDetailsUsecase: sl()))
 
     // quote communication
     ..registerFactory(
