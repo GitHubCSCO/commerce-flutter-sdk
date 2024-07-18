@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/saved_order/saved_order_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -8,9 +9,13 @@ part 'saved_order_state.dart';
 
 class SavedOrderCubit extends Cubit<SavedOrderState> {
   final SavedOrderUsecase _savedOrderUsecase;
+  final PricingInventoryUseCase _pricingInventoryUseCase;
 
-  SavedOrderCubit({required SavedOrderUsecase savedOrderUsecase})
+  SavedOrderCubit(
+      {required SavedOrderUsecase savedOrderUsecase,
+      required PricingInventoryUseCase pricingInventoryUseCase})
       : _savedOrderUsecase = savedOrderUsecase,
+        _pricingInventoryUseCase = pricingInventoryUseCase,
         super(
           SavedOrderState(
             status: OrderStatus.initial,
@@ -51,10 +56,13 @@ class SavedOrderCubit extends Cubit<SavedOrderState> {
       return;
     }
 
+    final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
+
     emit(
       state.copyWith(
         status: OrderStatus.success,
         cartCollectionModel: result,
+        hidePricingEnable: hidePricingEnable,
       ),
     );
   }

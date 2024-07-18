@@ -14,6 +14,8 @@ class CartPageLoadedState extends CartPageState {
   final bool isCustomerOrderApproval;
   final String shippingMethod;
   String cartWarningMsg;
+  bool? hidePricingEnable;
+  bool? hideInventoryEnable;
 
   CartPageLoadedState(
       {required this.cart,
@@ -22,7 +24,9 @@ class CartPageLoadedState extends CartPageState {
       required this.isCustomerOrderApproval,
       required this.cartSettings,
       required this.shippingMethod,
-      this.cartWarningMsg = ""});
+      this.cartWarningMsg = "",
+      this.hidePricingEnable,
+      this.hideInventoryEnable});
 }
 
 class CartPageNoDataState extends CartPageState {}

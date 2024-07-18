@@ -18,10 +18,11 @@ class ProductCarouselSectionWidget extends StatelessWidget {
       builder: (context, state) {
         switch (state.runtimeType) {
           case ProductCarouselLoadedState:
-            final isLoading =
-                (state as ProductCarouselLoadedState).isPricingLoading;
-            final productCarouselList =
-                (state as ProductCarouselLoadedState).productCarouselList;
+            final carouselState = state as ProductCarouselLoadedState;
+            final isLoading = carouselState.isPricingLoading;
+            final hidePricingEnable = carouselState.hidePricingEnable;
+            final productCarouselList = carouselState.productCarouselList;
+
             if (productCarouselList.isEmpty) {
               return SizedBox();
             } else {
@@ -63,7 +64,8 @@ class ProductCarouselSectionWidget extends StatelessWidget {
                           },
                           child: ProductCarouselItemWidget(
                               productCarousel: productCarousel,
-                              isLoading: isLoading),
+                              isLoading: isLoading,
+                          hidePricingEnable: hidePricingEnable ?? false),
                         );
                       },
                     ),

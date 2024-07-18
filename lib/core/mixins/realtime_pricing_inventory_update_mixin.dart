@@ -14,7 +14,7 @@ mixin RealtimePricingInventoryUpdateMixin {
 
   Future<List<ProductEntity>> updateProductPricingAndInventoryAvailability(
       PricingInventoryUseCase pricingInventoryUseCase, List<Product>? products,
-      {bool onlyPricing = false}) async {
+      {bool? hidePricing, bool? hideInventory}) async {
     final productPricingEnabled =
     await pricingInventoryUseCase.getProductPricingEnable();
     final productAvailabilityEnabled = await pricingInventoryUseCase.getProductInventoryAvailable();
@@ -26,7 +26,7 @@ mixin RealtimePricingInventoryUpdateMixin {
 
     final realTimeResult = await pricingInventoryUseCase.getRealtimeSupportType();
 
-    if (productPricingEnabled && realTimeResult != null) {
+    if (!(hidePricing ?? false) && productPricingEnabled && realTimeResult != null) {
       if (realTimeResult == RealTimeSupport.RealTimePricingOnly ||
           realTimeResult ==
               RealTimeSupport.RealTimePricingWithInventoryIncluded ||
@@ -58,7 +58,7 @@ mixin RealtimePricingInventoryUpdateMixin {
       }
     }
 
-    if (!onlyPricing & productAvailabilityEnabled && realTimeResult != null) {
+    if (!(hideInventory ?? false) & productAvailabilityEnabled && realTimeResult != null) {
       if (realTimeResult == RealTimeSupport.NoRealTimePricingAndInventory ||
           realTimeResult == RealTimeSupport.RealTimePricingAndInventory ||
           realTimeResult == RealTimeSupport.RealTimePricingWithInventoryIncluded ||

@@ -205,6 +205,7 @@ class __OrderApprovalListWidgetState extends State<_OrderApprovalListWidget> {
                   },
                 );
               },
+              hidePricingEnable: state.hidePricingEnable,
             );
           },
           separatorBuilder: (context, index) => const Divider(
@@ -222,11 +223,13 @@ class __OrderApprovalListWidgetState extends State<_OrderApprovalListWidget> {
 
 class _OrderApprovalItem extends StatelessWidget {
   final Cart cart;
+  final bool? hidePricingEnable;
   final void Function()? onTap;
 
   const _OrderApprovalItem({
     required this.cart,
     this.onTap,
+    this.hidePricingEnable,
   });
 
   @override
@@ -272,9 +275,12 @@ class _OrderApprovalItem extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  cart.orderGrandTotalDisplay ?? '',
-                  style: OptiTextStyles.bodySmallHighlight,
+                Visibility(
+                  visible: !(hidePricingEnable ?? false),
+                  child: Text(
+                    cart.orderGrandTotalDisplay ?? '',
+                    style: OptiTextStyles.bodySmallHighlight,
+                  ),
                 ),
                 Text(
                   cart.approverReason ?? '',

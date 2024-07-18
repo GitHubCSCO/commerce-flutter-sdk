@@ -22,6 +22,8 @@ class QuickOrderItemEntity {
   String? selectedUnitOfMeasureTitle;
   String? selectedUnitOfMeasureValueText;
   String? discountValueText;
+  bool? hidePricingEnable;
+  bool? hideInventoryEnable;
 
   //need to add SelectedUnitOfMeasure
 

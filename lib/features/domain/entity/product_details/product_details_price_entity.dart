@@ -6,8 +6,8 @@ import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_us
 
 class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
   final bool? productPricingEnabled;
-  final bool? showHidePricing;
-  final bool? showHideInventory;
+  final bool? hidePricing;
+  final bool? hideInventory;
   final bool? showInventoryAvailability;
   final String? discountMessage;
   final AvailabilityEntity? availability;
@@ -24,8 +24,8 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
 
   const ProductDetailsPriceEntity(
       {this.productPricingEnabled,
-      this.showHidePricing,
-      this.showHideInventory,
+      this.hidePricing,
+      this.hideInventory,
       this.showInventoryAvailability,
       this.discountMessage,
       this.availability,
@@ -43,8 +43,8 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
   @override
   ProductDetailsPriceEntity copyWith(
       {bool? productPricingEnabled,
-      bool? showHidePricing,
-      bool? showHideInventory,
+      bool? hidePricing,
+      bool? hideInventory,
       bool? showInventoryAvailability,
       String? discountMessage,
       AvailabilityEntity? availability,
@@ -62,8 +62,8 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
     return ProductDetailsPriceEntity(
       productPricingEnabled:
           productPricingEnabled ?? this.productPricingEnabled,
-      showHidePricing: showHidePricing ?? this.showHidePricing,
-      showHideInventory: showHideInventory ?? this.showHideInventory,
+      hidePricing: hidePricing ?? this.hidePricing,
+      hideInventory: hideInventory ?? this.hideInventory,
       showInventoryAvailability:
           showInventoryAvailability ?? this.showInventoryAvailability,
       discountMessage: discountMessage ?? this.discountMessage,
@@ -87,8 +87,8 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
   @override
   List<Object?> get props => [
         productPricingEnabled,
-        showHidePricing,
-        showHideInventory,
+        hidePricing,
+        hideInventory,
         showInventoryAvailability,
         discountMessage,
         availability,

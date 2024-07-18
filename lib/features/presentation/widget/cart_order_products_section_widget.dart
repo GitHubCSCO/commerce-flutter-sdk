@@ -11,10 +11,14 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class CartOrderProductsSectionWidget extends StatelessWidget {
   final List<CartLineEntity> cartLines;
+  final bool? hidePricingEnable;
+  final bool? hideInventoryEnable;
 
   const CartOrderProductsSectionWidget({
     super.key,
     required this.cartLines,
+    this.hidePricingEnable,
+    this.hideInventoryEnable,
   });
 
   @override
@@ -64,6 +68,8 @@ class CartOrderProductsSectionWidget extends StatelessWidget {
                   cartLineEntity.showInventoryAvailability ?? false,
               showViewQuantityPricing: false,
               unitOfMeasure: cartLineEntity.baseUnitOfMeasure,
+              hidePricingEnable: hidePricingEnable,
+              hideInventoryEnable: hideInventoryEnable,
             );
           },
           separatorBuilder: (context, index) => const Divider(height: 1),

@@ -9,9 +9,10 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 class ProductCarouselItemWidget extends StatelessWidget {
   final ProductCarouselEntity productCarousel;
   final bool isLoading;
+  final bool hidePricingEnable;
 
   const ProductCarouselItemWidget(
-      {super.key, required this.productCarousel, required this.isLoading});
+      {super.key, required this.productCarousel, required this.isLoading, required this.hidePricingEnable});
 
   @override
   Widget build(BuildContext context) {
@@ -58,23 +59,28 @@ class ProductCarouselItemWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: OptiTextStyles.bodySmall),
           ),
-          if (isLoading) ...{
-            Container(
-              alignment: Alignment.bottomLeft,
-              child: LoadingAnimationWidget.prograssiveDots(
-                color: OptiAppColors.iconPrimary,
-                size: 30,
+          if (!hidePricingEnable)
+            Visibility(
+              visible: isLoading,
+              replacement: Column(
+                children: [
+                  const SizedBox(height: 8),
+                  Text(
+                    '${productCarousel.product.updatePriceValueText(productCarousel.productPricingEnabled)} ${productCarousel.product.updateUnitOfMeasure(productCarousel.productPricingEnabled)}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: OptiTextStyles.bodySmallHighlight,
+                  ),
+                ],
+              ),
+              child: Container(
+                alignment: Alignment.bottomLeft,
+                child: LoadingAnimationWidget.prograssiveDots(
+                  color: OptiAppColors.iconPrimary,
+                  size: 30,
+                ),
               ),
             ),
-          } else ...{
-            const SizedBox(height: 8),
-            Text(
-              '${productCarousel.product.updatePriceValueText(productCarousel.productPricingEnabled)} ${productCarousel.product.updateUnitOfMeasure(productCarousel.productPricingEnabled)}',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: OptiTextStyles.bodySmallHighlight,
-            ),
-          },
         ],
       ),
     );

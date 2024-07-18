@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/features/domain/entity/order/get_order_coll
 import 'package:commerce_flutter_app/features/domain/enums/filter_status.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/order_usecase/order_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -11,9 +12,13 @@ part 'order_history_state.dart';
 
 class OrderHistoryCubit extends Cubit<OrderHistoryState> {
   final OrderUsecase _orderUsecase;
+  final PricingInventoryUseCase _pricingInventoryUseCase;
 
-  OrderHistoryCubit({required OrderUsecase orderUsecase})
+  OrderHistoryCubit(
+      {required OrderUsecase orderUsecase,
+      required PricingInventoryUseCase pricingInventoryUseCase})
       : _orderUsecase = orderUsecase,
+        _pricingInventoryUseCase = pricingInventoryUseCase,
         super(
           const OrderHistoryState(
             showMyOrders: false,
@@ -146,6 +151,8 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
         searchText: state.searchQuery,
         isFromVMI: state.isFromVMI);
 
+    final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
+
     result != null
         ? emit(
             OrderHistoryState(
@@ -160,7 +167,8 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
                 filterStatus: state.filterStatus,
                 temporaryShowMyOrdersValue: state.temporaryShowMyOrdersValue,
                 searchQuery: state.searchQuery,
-                isFromVMI: state.isFromVMI),
+                isFromVMI: state.isFromVMI,
+                hidePricingEnable: hidePricingEnable),
           )
         : emit(
             state.copyWith(

@@ -150,6 +150,7 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
                         ),
                         _OrderHistoryListWidget(
                           orderEntities: state.orderEntities.orders ?? [],
+                          hidePricingEnable: state.hidePricingEnable,
                         ),
                       ],
                     ),
@@ -164,9 +165,13 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
 }
 
 class _OrderHistoryListWidget extends StatefulWidget {
-  const _OrderHistoryListWidget({required this.orderEntities});
 
   final List<OrderEntity> orderEntities;
+  final bool? hidePricingEnable;
+
+  const _OrderHistoryListWidget(
+      {required this.orderEntities,
+      this.hidePricingEnable});
 
   @override
   State<_OrderHistoryListWidget> createState() =>
@@ -240,6 +245,7 @@ class __OrderHistoryListWidgetState extends State<_OrderHistoryListWidget> {
                     },
                   );
                 },
+                hidePricingEnable: widget.hidePricingEnable,
               );
             },
             separatorBuilder: (context, index) {

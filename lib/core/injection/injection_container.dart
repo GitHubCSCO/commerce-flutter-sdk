@@ -72,6 +72,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/sea
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/show_hide_pricing_inventory_usecase/show_hide_pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_location_note_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_main_usecase.dart';
@@ -91,6 +92,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/category/categor
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/show_hide/pricing/show_hide_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/load_website_url/load_website_url_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/pickup_location/pickup_location_bloc.dart';
@@ -105,6 +107,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/remote_config/re
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/show_hide/inventory/show_hide_inventory_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_main/vmi_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
@@ -247,23 +250,30 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => LogoutUsecase())
 
     //order history
-    ..registerFactory(() => OrderHistoryCubit(orderUsecase: sl()))
+    ..registerFactory(() =>
+        OrderHistoryCubit(orderUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => OrderUsecase())
 
     //order details
-    ..registerFactory(() => OrderDetailsCubit(orderUsercase: sl()))
+    ..registerFactory(() =>
+        OrderDetailsCubit(orderUsercase: sl(), pricingInventoryUseCase: sl()))
 
     //saved order
-    ..registerFactory(() => SavedOrderCubit(savedOrderUsecase: sl()))
+    ..registerFactory(() =>
+        SavedOrderCubit(savedOrderUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => SavedOrderUsecase())
-    ..registerFactory(() => SavedOrderDetailsCubit(savedOrderUsecase: sl()))
+    ..registerFactory(() => SavedOrderDetailsCubit(
+          savedOrderUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => SavedOrderHandlerCubit(savedOrderUsecase: sl()))
 
     //order approval
     ..registerFactory(() => OrderApprovalUseCase())
-    ..registerFactory(() => OrderApprovalCubit(orderApprovalUseCase: sl()))
-    ..registerFactory(
-        () => OrderApprovalDetailsCubit(orderApprovalUseCase: sl()))
+    ..registerFactory(() =>
+      OrderApprovalCubit(
+          orderApprovalUseCase: sl(), pricingInventoryUseCase: sl()))
+    ..registerFactory(() =>
+          OrderApprovalDetailsCubit(
+              orderApprovalUseCase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(
         () => OrderApprovalFilterCubit(orderApprovalUseCase: sl()))
     ..registerFactory(() => OrderApprovalHandlerCubit())
@@ -332,7 +342,8 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => BrandProductLinesUseCase())
 
     //cart
-    ..registerFactory(() => CartPageBloc(cartUseCase: sl()))
+    ..registerFactory(
+        () => CartPageBloc(cartUseCase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => CartUseCase())
     ..registerFactory(() => CartShippingSelectionBloc(shippingUseCase: sl()))
     ..registerFactory(() => CartShippingUseCase())
@@ -375,7 +386,10 @@ Future<void> initInjectionContainer() async {
 
     //quickOrder
     ..registerFactory(() => OrderListBloc(
-        quickOrderUseCase: sl(), scanningMode: ScanningMode.quick))
+          quickOrderUseCase: sl(),
+          pricingInventoryUseCase: sl(),
+          scanningMode: ScanningMode.quick,
+        ))
     ..registerFactory(() => QuickOrderUseCase())
     ..registerFactory(() => QuickOrderAutoCompleteBloc(
         searchUseCase: sl(), scanningMode: ScanningMode.quick))
@@ -451,13 +465,17 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => StyleTraitCubit(styleTraitsUseCase: sl()))
 
     // warehouse inventory
-
     ..registerFactory(
         () => WarehouseInventoryCubit(warehouseInventoryUsecase: sl()))
     ..registerFactory(() => WarehouseInventoryUsecase())
 
     //carousel
     ..registerFactory(() => CarouselIndicatorCubit())
+
+    //show/hide pricing inventory
+    ..registerLazySingleton(() => ShowHidePricingBloc(showHidePricingInventoryUseCase: sl()))
+    ..registerLazySingleton(() => ShowHideInventoryBloc(showHidePricingInventoryUseCase: sl()))
+    ..registerFactory(() => ShowHidePricingInventoryUseCase())
 
     //action link
     // ..registerFactory(() => ActionLinkCubit(actionLinkUseCase: sl()))
