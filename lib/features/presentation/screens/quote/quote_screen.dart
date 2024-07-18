@@ -65,7 +65,9 @@ class QuotePageState extends State<QuotePage> {
                   onApply: (parameter) {
                     context.read<QuoteBloc>().add(
                           QuoteLoadEvent(
-                            quotePageType: QuotePageType.pending,
+                            quotePageType: selectedIndex == 1
+                                ? QuotePageType.activejobs
+                                : QuotePageType.pending,
                             quoteParameters: parameter,
                           ),
                         );

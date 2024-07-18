@@ -24,10 +24,10 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
       QuoteLoadEvent event, Emitter<QuoteState> emit) async {
     emit(QuoteLoading());
 
+    parameter = event.quoteParameters ?? parameter;
+
     switch (event.quotePageType) {
       case QuotePageType.pending:
-        parameter = event.quoteParameters ?? parameter;
-
         var result = await _quoteUsecase.getQuotes(parameter);
         switch (result) {
           case Success(value: final data):
