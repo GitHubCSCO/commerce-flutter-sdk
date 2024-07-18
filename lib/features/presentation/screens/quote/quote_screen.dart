@@ -56,9 +56,7 @@ class QuotePageState extends State<QuotePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  context.watch<QuoteBloc>().state is QuoteLoaded
-                      ? '${(context.watch<QuoteBloc>().state as QuoteLoaded).quotes?.length ?? 0} Quotes'
-                      : '',
+                  context.watch<QuoteBloc>().title,
                   style: OptiTextStyles.header3,
                 ),
                 QuoteFilterWidget(
@@ -98,7 +96,19 @@ class QuotePageState extends State<QuotePage> {
               }),
               tabWidget1:
                   BlocBuilder<QuoteBloc, QuoteState>(builder: (context, state) {
-                return _buildActiveJobsWidget();
+                if (state is QuoteFailed) {
+                  return const Center(
+                    child: Text("No data found"),
+                  );
+                } else if (state is QuoteLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is JobQuoteLoaded) {
+                  return _buildActiveJobsWidget(state.jobQuotes, context);
+                } else {
+                  return Container();
+                }
               }),
               selectedIndex: selectedIndex,
               onTabSelectionChange: (index) {
@@ -153,7 +163,41 @@ class QuotePageState extends State<QuotePage> {
     );
   }
 
-  Widget _buildActiveJobsWidget() {
-    return Container();
+  Widget _buildActiveJobsWidget(
+      List<JobQuoteDto>? jobQuotes, BuildContext context) {
+    return Expanded(
+      child: ListView.separated(
+        separatorBuilder: (context, index) => const Divider(
+          color: Colors.grey,
+        ),
+        shrinkWrap: true,
+        // physics: const NeverScrollableScrollPhysics(),
+        scrollDirection: Axis.vertical,
+        itemCount: jobQuotes?.length ?? 0,
+        itemBuilder: (context, index) {
+          return InkWell(
+            onTap: () {
+              // AppRoute.jobQuoteDetails
+              //     .navigateBackStack(context, extra: jobQuotes[index]);
+            },
+            child: QuoteItemWidget(
+              typeDisplay: '',
+              quoteNumber: jobQuotes?[index].jobName ?? '',
+              companyName: jobQuotes?[index].customerName ?? '',
+              address: jobQuotes?[index].shipToFullAddress ?? '',
+              status: jobQuotes?[index].status ?? '',
+              requestDate: jobQuotes?[index].orderDate != null
+                  ? jobQuotes![index].orderDate.formatDate(format: 'MM/dd/yyyy')
+                  : '',
+              expiryDate: jobQuotes?[index].expirationDate != null
+                  ? jobQuotes![index]
+                      .expirationDate!
+                      .formatDate(format: 'MM/dd/yyyy')
+                  : '',
+            ),
+          );
+        },
+      ),
+    );
   }
 }
