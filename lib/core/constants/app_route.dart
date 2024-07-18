@@ -61,6 +61,7 @@ class RouteNames {
   static const String quoteDetails = 'quoteDetails';
   static const String quoteCommunication = 'quoteCommunication';
   static const String quoteAll = 'quoteAll';
+  static const String quotePricing = 'quotePricing';
 }
 
 class RoutePaths {
@@ -133,6 +134,7 @@ class RoutePaths {
   static const String quoteDetails = '/${RouteNames.quoteDetails}';
   static const String quoteCommunication = '/${RouteNames.quoteCommunication}';
   static const String quoteAll = '/${RouteNames.quoteAll}';
+  static const String quotePricing = '/${RouteNames.quotePricing}';
 }
 
 enum AppRoute {
@@ -238,7 +240,9 @@ enum AppRoute {
   quoteCommunication(
       name: RouteNames.quoteCommunication,
       fullPath: RoutePaths.quoteCommunication),
-  quoteAll(name: RouteNames.quoteAll, fullPath: RoutePaths.quoteAll);
+  quoteAll(name: RouteNames.quoteAll, fullPath: RoutePaths.quoteAll),
+  quotePricing(
+      name: RouteNames.quotePricing, fullPath: RoutePaths.quotePricing);
 
   const AppRoute({
     required this.name,

@@ -65,6 +65,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecas
 import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_all_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_communication_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_details_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_pricing_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/request_quote_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/remote_config/remote_config_usecase.dart';
@@ -106,6 +107,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/orde
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_communication/quote_communication_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_details/quote_details_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_pricing/quote_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/request_quote/request_quote_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/request_quote_selection/request_quote_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
@@ -334,6 +336,10 @@ Future<void> initInjectionContainer() async {
     // quote all
     ..registerFactory(() => QuoteAllCubit(quoteAllUsecase: sl()))
     ..registerFactory(() => QuoteAllUsecase())
+
+    // quote pricing
+    ..registerFactory(() => QuotePricingBloc(quotePricingUsecase: sl()))
+    ..registerFactory(() => QuotePricingUsecase())
 
     //shop category
     ..registerFactory(() => CategoryBloc(categoryUseCase: sl()))

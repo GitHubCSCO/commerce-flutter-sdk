@@ -290,6 +290,7 @@ class QuoteDetailsPage extends StatelessWidget {
           children: quoteLineEntities
               .map((quoteLineEntity) => QuoteLineWidget(
                   quoteLineEntity: quoteLineEntity,
+                  showViewBreakPricing: true,
                   showRemoveButton: false,
                   moreButtonWidget:
                       _buildMenuButtonForQuoteLine(context, quoteLineEntity),
@@ -319,7 +320,12 @@ class QuoteDetailsPage extends StatelessWidget {
       BuildContext context, QuoteLineEntity quoteLineEntity) {
     List<ToolMenu> list = [];
     list.add(ToolMenu(title: LocalizationConstants.lineNotes, action: () {}));
-    list.add(ToolMenu(title: LocalizationConstants.delete, action: () {}));
+    list.add(ToolMenu(
+        title: LocalizationConstants.quote,
+        action: () {
+          AppRoute.quotePricing
+              .navigateBackStack(context, extra: quoteLineEntity);
+        }));
     return list;
   }
 

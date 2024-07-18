@@ -19,6 +19,8 @@ import 'package:flutter_svg/svg.dart';
 class QuoteLineWidget extends StatelessWidget {
   final QuoteLineEntity quoteLineEntity;
   final bool? showRemoveButton;
+  final bool? showViewBreakPricing;
+  final bool? showQuantityAndSubtotalField;
   final Widget? moreButtonWidget;
   final void Function()? onShowMoreButtonClickedCallback;
   final void Function(int quantity) onCartQuantityChangedCallback;
@@ -30,6 +32,8 @@ class QuoteLineWidget extends StatelessWidget {
       required this.onCartLineRemovedCallback,
       this.onShowMoreButtonClickedCallback,
       this.showRemoveButton = true,
+      this.showViewBreakPricing = false,
+      this.showQuantityAndSubtotalField = true,
       this.moreButtonWidget});
 
   @override
@@ -92,29 +96,35 @@ class QuoteLineWidget extends StatelessWidget {
               erpNumber: quoteLineEntity.erpNumber,
               unitOfMeasure: quoteLineEntity.baseUnitOfMeasure,
               showViewAvailabilityByWarehouse: false),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 0, 10, 15),
-            child: GestureDetector(
-              onTap: () {
-                viewQuoteLineBreakPricingWidget(
-                    context, quoteLineEntity.quoteLinePricingBreakList ?? []);
-              },
-              child: Text(
-                LocalizationConstants.viewQuotedPricing,
-                style: OptiTextStyles.link,
+          Visibility(
+            visible: showViewBreakPricing!,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20.0, 0, 10, 15),
+              child: GestureDetector(
+                onTap: () {
+                  viewQuoteLineBreakPricingWidget(
+                      context, quoteLineEntity.quoteLinePricingBreakList ?? []);
+                },
+                child: Text(
+                  LocalizationConstants.viewQuotedPricing,
+                  style: OptiTextStyles.link,
+                ),
               ),
             ),
           ),
-          LineItemQuantityGroupWidget(
-            qtyOrdered: quoteLineEntity.qtyOrdered?.toInt().toString(),
-            onQtyChanged: (int? qty) {
-              if (qty == null) {
-                return;
-              }
+          Visibility(
+            visible: showQuantityAndSubtotalField!,
+            child: LineItemQuantityGroupWidget(
+              qtyOrdered: quoteLineEntity.qtyOrdered?.toInt().toString(),
+              onQtyChanged: (int? qty) {
+                if (qty == null) {
+                  return;
+                }
 
-              onCartQuantityChangedCallback(qty);
-            },
-            subtotalPriceText: quoteLineEntity.updateSubtotalPriceValueText(),
+                onCartQuantityChangedCallback(qty);
+              },
+              subtotalPriceText: quoteLineEntity.updateSubtotalPriceValueText(),
+            ),
           ),
         ],
       ),

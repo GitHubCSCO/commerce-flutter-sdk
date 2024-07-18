@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
@@ -18,6 +19,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_a
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_communication_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_confirmation_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_pricing_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/request_quote_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_details_screen.dart';
@@ -655,6 +657,15 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
+  // path: Quote Pricing
+  final quotePricing = createNode(
+    name: AppRoute.quotePricing.name,
+    path: AppRoute.quotePricing.suffix,
+    builder: (context, state) =>
+        QuotePricingScreen(quoteLineEntity: state.extra as QuoteLineEntity),
+    parent: null,
+  );
+
   // path: /account/orderApproval
   final orderApproval = createNode(
     name: AppRoute.orderApproval.name,
@@ -713,6 +724,7 @@ List<NavigationNode> _getNavigationRoot() {
     quoteConfirmation,
     quoteDetails,
     quoteCommunication,
-    quoteAll
+    quoteAll,
+    quotePricing
   ];
 }
