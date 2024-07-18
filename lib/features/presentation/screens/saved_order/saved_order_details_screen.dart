@@ -137,7 +137,7 @@ class OrderDetailsPage extends StatelessWidget {
                 OrderBottomSectionWidget(
                   actions: [
                     SecondaryButton(
-                      child: Text(LocalizationConstants.deleteSavedOrder.localized()),
+                      text: LocalizationConstants.deleteSavedOrder.localized(),
                       onPressed: () {
                         confirmDialog(
                           context: context,

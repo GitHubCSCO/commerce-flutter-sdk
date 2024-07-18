@@ -223,7 +223,7 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                   child: OrderBottomSectionWidget(
                     actions: [
                       SecondaryButton(
-                        child: Text(LocalizationConstants.deleteOrder.localized()),
+                        text: LocalizationConstants.deleteOrder.localized(),
                         onPressed: () {
                           confirmDialog(
                             context: context,

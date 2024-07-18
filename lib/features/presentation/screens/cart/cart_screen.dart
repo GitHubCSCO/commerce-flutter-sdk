@@ -155,9 +155,7 @@ class CartPage extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: TertiaryBlackButton(
-                                    child: Text(
-                                      LocalizationConstants.addAllToList.localized(),
-                                    ),
+                                    text: LocalizationConstants.addAllToList.localized(),
                                     onPressed: () {
                                       final addCartLines = context
                                           .read<CartPageBloc>()
@@ -176,8 +174,7 @@ class CartPage extends StatelessWidget {
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: TertiaryBlackButton(
-                                    child: Text(
-                                        LocalizationConstants.saveOrder.localized()),
+                                    text: LocalizationConstants.saveOrder.localized(),
                                     onPressed: () {
                                       context
                                           .read<SavedOrderHandlerCubit>()
@@ -236,7 +233,7 @@ class CartPage extends StatelessWidget {
                               onPressed: () {
                                 AppRoute.shop.navigate(context);
                               },
-                              child: const Text('Continue Shopping'),
+                              text: LocalizationConstants.continueShopping.localized(),
                             ),
                           )
                         ],

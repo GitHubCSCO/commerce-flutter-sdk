@@ -118,12 +118,10 @@ class _MultipleSelectionOptionChipState<T>
                               showAll = false;
                             });
                           },
-                          child: Text(
-                            'See less',
-                            style: OptiTextStyles.bodySmallHighlight.copyWith(
-                              color: OptiAppColors.primaryColor,
-                            ),
+                          style: OptiTextStyles.bodySmallHighlight.copyWith(
+                            color: OptiAppColors.primaryColor,
                           ),
+                          text: 'See less',
                         )
                       : PlainButton(
                           onPressed: () {
@@ -131,12 +129,10 @@ class _MultipleSelectionOptionChipState<T>
                               showAll = true;
                             });
                           },
-                          child: Text(
-                            'See more',
-                            style: OptiTextStyles.bodySmallHighlight.copyWith(
-                              color: OptiAppColors.primaryColor,
-                            ),
+                          style: OptiTextStyles.bodySmallHighlight.copyWith(
+                            color: OptiAppColors.primaryColor,
                           ),
+                          text: 'See more',
                         ))
                   : const SizedBox.shrink(),
             ],

@@ -163,9 +163,9 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                child: Text(scanningMode == ScanningMode.count
+                                text: scanningMode == ScanningMode.count
                                     ? LocalizationConstants.backToCountInventory.localized()
-                                    : LocalizationConstants.backToCreateOrder.localized()),
+                                    : LocalizationConstants.backToCreateOrder.localized(),
                               ),
                               const SizedBox(height: 4.0),
                               Visibility(
@@ -211,9 +211,9 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text(scanningMode == ScanningMode.count
+                              text: scanningMode == ScanningMode.count
                                   ? LocalizationConstants.backToCountInventory.localized()
-                                  : LocalizationConstants.backToCreateOrder.localized()),
+                                  : LocalizationConstants.backToCreateOrder.localized(),
                             ),
                           ),
                         ],

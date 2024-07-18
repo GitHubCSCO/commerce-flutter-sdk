@@ -86,9 +86,7 @@ class AddPromotionWidget extends StatelessWidget {
                         TertiaryButton(
                             borderColor: OptiAppColors.grayBackgroundColor,
                             backgroundColor: OptiAppColors.grayBackgroundColor,
-                            child: Text(
-                              LocalizationConstants.apply.localized(),
-                            ),
+                            text: LocalizationConstants.apply.localized(),
                             onPressed: () {
                               context
                                   .read<PromoCodeCubit>()
@@ -104,9 +102,7 @@ class AddPromotionWidget extends StatelessWidget {
                       child: TertiaryButton(
                           borderColor: OptiAppColors.grayBackgroundColor,
                           backgroundColor: OptiAppColors.grayBackgroundColor,
-                          child: Text(
-                            LocalizationConstants.addDiscount.localized(),
-                          ),
+                          text: LocalizationConstants.addDiscount.localized(),
                           onPressed: () {
                             context
                                 .read<PromoCodeCubit>()

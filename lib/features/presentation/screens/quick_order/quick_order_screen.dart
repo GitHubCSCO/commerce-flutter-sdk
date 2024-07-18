@@ -333,7 +333,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                             onPressed: () {
                                               _addToCart(context, widget.scanningMode);
                                             },
-                                            child: Text(_getCheckoutButtonTitle(widget.scanningMode)),
+                                            text: _getCheckoutButtonTitle(widget.scanningMode),
                                           ),
                                           const SizedBox(height: 4),
                                           PrimaryButton(

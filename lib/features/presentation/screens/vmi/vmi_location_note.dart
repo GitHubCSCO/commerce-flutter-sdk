@@ -73,7 +73,7 @@ class VmiLocationNotePage extends StatelessWidget {
                   ),
                   ListInformationBottomSubmitWidget(actions: [
                     SecondaryButton(
-                      child: Text(LocalizationConstants.cancel.localized()),
+                      text: LocalizationConstants.cancel.localized(),
                       onPressed: () {
                         Navigator.pop(context);
                       },

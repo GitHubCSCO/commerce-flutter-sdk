@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
@@ -92,12 +93,10 @@ class BiometricLoginPage extends StatelessWidget {
             onPressed: () {
               AppRoute.account.navigate(context);
             },
-            child: Text(
-              LocalizationConstants.cancel.localized(),
-              style: OptiTextStyles.subtitle.copyWith(
-                color: Theme.of(context).primaryColor,
-              ),
+            style: OptiTextStyles.subtitle.copyWith(
+              color: OptiAppColors.primaryColor,
             ),
+            text: LocalizationConstants.cancel.localized(),
           ),
         ],
         automaticallyImplyLeading: false,
@@ -168,7 +167,7 @@ class BiometricLoginPage extends StatelessWidget {
                   state is BiometricControllerChangeSuccessEnabled
                       ? const SizedBox.shrink()
                       : PlainButton(
-                          child: const Text('No Thanks'),
+                          text: 'No Thanks',
                           onPressed: () {
                             AppRoute.account.navigate(context);
                           },

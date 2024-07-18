@@ -145,7 +145,7 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                       message: LocalizationConstants.enterListName.localized(),
                       actions: [
                         PlainButton(
-                          child: Text(LocalizationConstants.oK.localized()),
+                          text: LocalizationConstants.oK.localized(),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
