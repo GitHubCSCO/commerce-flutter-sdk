@@ -62,6 +62,8 @@ class RouteNames {
   static const String quoteCommunication = 'quoteCommunication';
   static const String quoteAll = 'quoteAll';
   static const String quotePricing = 'quotePricing';
+  static const String invoiceHistory = 'invoiceHistory';
+  static const String invoiceDetail = 'invoiceDetail';
 }
 
 class RoutePaths {
@@ -135,6 +137,10 @@ class RoutePaths {
   static const String quoteCommunication = '/${RouteNames.quoteCommunication}';
   static const String quoteAll = '/${RouteNames.quoteAll}';
   static const String quotePricing = '/${RouteNames.quotePricing}';
+  static const String invoiceHistory =
+      '${RoutePaths.account}/${RouteNames.invoiceHistory}';
+  static const String invoiceDetail =
+      '${RoutePaths.invoiceHistory}/:invoiceNumber';
 }
 
 enum AppRoute {
@@ -242,7 +248,15 @@ enum AppRoute {
       fullPath: RoutePaths.quoteCommunication),
   quoteAll(name: RouteNames.quoteAll, fullPath: RoutePaths.quoteAll),
   quotePricing(
-      name: RouteNames.quotePricing, fullPath: RoutePaths.quotePricing);
+      name: RouteNames.quotePricing, fullPath: RoutePaths.quotePricing),
+  invoiceHistory(
+    name: RouteNames.invoiceHistory,
+    fullPath: RoutePaths.invoiceHistory,
+  ),
+  invoiceDetail(
+    name: RouteNames.invoiceDetail,
+    fullPath: RoutePaths.invoiceDetail,
+  );
 
   const AppRoute({
     required this.name,

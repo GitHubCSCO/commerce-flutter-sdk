@@ -19,6 +19,7 @@ class AccountPageBloc extends Bloc<AccountPageEvent, AccountPageState> {
       AccountPageLoadEvent event, Emitter<AccountPageState> emit) async {
     emit(AccountPageLoadingState());
     var result = await _accountUseCase.loadData();
+    await _accountUseCase.coreServiceProvider.getAppConfigurationService().loadRemoteSettings();
     switch (result) {
       case Success(value: final data):
         emit(AccountPageLoadedState(pageWidgets: data ?? []));
@@ -29,5 +30,17 @@ class AccountPageBloc extends Bloc<AccountPageEvent, AccountPageState> {
 
   String getAppVersionAndBuildNumber() {
     return _accountUseCase.getAppVersionAndBuildNumber!;
+  }
+
+  String? getPrivacyPolicyUrl() {
+    return _accountUseCase.coreServiceProvider
+                .getAppConfigurationService()
+                .privacyPolicyUrl;
+  }
+  
+  String? getTermsOfUseUrll() {
+    return _accountUseCase.coreServiceProvider
+                .getAppConfigurationService()
+                .termsOfUseUrl;
   }
 }

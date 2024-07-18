@@ -179,6 +179,10 @@ class BaseActionItemWidget extends StatelessWidget {
               .read<LoadWebsiteUrlBloc>()
               .add(LoadCustomUrlLoadEvent(customUrl: actionLink.url));
         };
+      case ActionType.invoices:
+        return () {
+          AppRoute.invoiceHistory.navigateBackStack(context);
+        };
       case ActionType.viewAccountOnWebsite:
         return () {
           context.read<LoadWebsiteUrlBloc>().add(LoadWebsiteUrlLoadEvent(

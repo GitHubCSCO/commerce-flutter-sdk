@@ -8,9 +8,9 @@ import 'package:commerce_flutter_app/features/domain/entity/content_management/w
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_carousel/product_carousel_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/product_carousel_usecase/product_carousel_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/location_note_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -20,14 +20,17 @@ class CmsCubit extends Cubit<CmsState> {
   final ActionLinkUseCase _actionLinkUseCase;
   final ProductCarouselUseCase _productCarouselUseCase;
   final SearchHistoryUseCase _searchHistoryUseCase;
+  final PricingInventoryUseCase _pricingInventoryUseCase;
 
   CmsCubit(
       {required ActionLinkUseCase actionLinkUseCase,
       required ProductCarouselUseCase productCarouselUseCase,
-      required SearchHistoryUseCase searchHistoryUseCase})
+      required SearchHistoryUseCase searchHistoryUseCase,
+      required PricingInventoryUseCase pricingInventoryUseCase})
       : _actionLinkUseCase = actionLinkUseCase,
         _productCarouselUseCase = productCarouselUseCase,
         _searchHistoryUseCase = searchHistoryUseCase,
+        _pricingInventoryUseCase = pricingInventoryUseCase,
         super(CmsInitialState());
 
   void loading() {
@@ -85,7 +88,7 @@ class CmsCubit extends Cubit<CmsState> {
           switch (result) {
             case Success():
               final productPricingEnabled =
-                  await _productCarouselUseCase.getProductPricingEnable();
+                  await _pricingInventoryUseCase.getProductPricingEnable();
               final productList = result.value ?? [];
               if (productList.isEmpty) {
                 return null;

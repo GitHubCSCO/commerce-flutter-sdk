@@ -14,6 +14,8 @@ import 'package:commerce_flutter_app/features/presentation/helper/routing/naviga
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_category_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_product_lines_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/invoice_history/invoice_detail_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/invoice_history/invoice_history_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_approval/order_approval_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_all_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_communication_screen.dart';
@@ -664,6 +666,25 @@ List<NavigationNode> _getNavigationRoot() {
     builder: (context, state) =>
         QuotePricingScreen(quoteLineEntity: state.extra as QuoteLineEntity),
     parent: null,
+  );
+
+  // path: /account/invoiceHistory
+  final invoiceHistory = createNode(
+    name: AppRoute.invoiceHistory.name,
+    path: AppRoute.invoiceHistory.suffix,
+    builder: (context, state) => const InvoiceHistoryScreen(),
+    parent: account,
+  );
+
+  // path: /account/invoiceHistory/:invoiceNumber
+  final invoiceDetail = createNode(
+    name: AppRoute.invoiceDetail.name,
+    path: AppRoute.invoiceDetail.suffix,
+    builder: (context, state) {
+      final invoiceNumber = state.pathParameters['invoiceNumber'] ?? '';
+      return InvoiceDetailScreen(invoiceNumber: invoiceNumber);
+    },
+    parent: invoiceHistory,
   );
 
   // path: /account/orderApproval

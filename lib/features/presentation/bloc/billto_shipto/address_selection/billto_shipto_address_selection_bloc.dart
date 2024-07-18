@@ -47,7 +47,6 @@ class BilltoShiptoAddressSelectionBloc extends Bloc<BilltoShiptoAddressSelection
 
     switch (result) {
       case Success(value: final data):
-        data?.shipTos?.removeWhere((model) => model.label?.toLowerCase() == 'show all');
         emit(BilltoShiptoAddressSelectionLoaded(list: data?.shipTos));
       case Failure(errorResponse: final error):
         emit(BilltoShiptoAddressSelectionFailed());

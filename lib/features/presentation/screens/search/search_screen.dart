@@ -273,7 +273,6 @@ class SearchPage extends BaseDynamicContentScreen {
                           ),
                         ],
                         child: SearchProductsWidget(
-                          // productCollectionResult: productCollectionResult,
                           onPageChanged: (int) {},
                           productListType: ProductListType.searchProducts,
                         ),
