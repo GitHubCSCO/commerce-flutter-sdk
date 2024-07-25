@@ -27,8 +27,12 @@ class OrderApprovalFilterCubit extends Cubit<OrderApprovalFilterState> {
     emit(newState);
   }
 
-  void reset() {
-    emit(OrderApprovalFilterState());
+  Future<void> reset() async {
+    emit(
+      OrderApprovalFilterState(
+        billTo: await _orderApprovalUseCase.getBillToAddress(),
+      ),
+    );
   }
 
   void setOrderNumber(String? orderNumber) {
@@ -67,10 +71,10 @@ class OrderApprovalFilterCubit extends Cubit<OrderApprovalFilterState> {
     emit(newState);
   }
 
-  List<String> get orderTotalOperators => const [
-        LocalizationConstants.selectTotalType,
-        LocalizationConstants.greaterThan,
-        LocalizationConstants.lessThan,
-        LocalizationConstants.equalTo,
+  List<String> get orderTotalOperators => [
+        LocalizationConstants.selectTotalType.localized(),
+        LocalizationConstants.greaterThan.localized(),
+        LocalizationConstants.lessThan.localized(),
+        LocalizationConstants.equalTo.localized(),
       ];
 }

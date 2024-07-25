@@ -29,9 +29,9 @@ class LoginCubit extends Cubit<LoginState> {
         final fullSession = (await loginUsecase.getCurrentSession()).getResultSuccessValue();
         if (fullSession == null) {
           emit(
-            const LoginFailureState(
-              title: LocalizationConstants.errorCommunicatingWithTheServer,
-              buttonText: LocalizationConstants.dismiss,
+            LoginFailureState(
+              title: LocalizationConstants.errorCommunicatingWithTheServer.localized(),
+              buttonText: LocalizationConstants.dismiss.localized(),
             ),
           );
           return;
@@ -56,9 +56,9 @@ class LoginCubit extends Cubit<LoginState> {
         final billToResultResponse = (await loginUsecase.getBillTo(parameters)).getResultSuccessValue();
         if (billToResultResponse == null) {
           emit(
-            const LoginFailureState(
-              title: LocalizationConstants.errorCommunicatingWithTheServer,
-              buttonText: LocalizationConstants.dismiss,
+            LoginFailureState(
+              title: LocalizationConstants.errorCommunicatingWithTheServer.localized(),
+              buttonText: LocalizationConstants.dismiss.localized(),
             ),
           );
           return;
@@ -86,31 +86,31 @@ class LoginCubit extends Cubit<LoginState> {
             title: SiteMessageConstants.defaultMobileAppAlertNoInternet,
             message:
                 SiteMessageConstants.defaultMobileAppAlertNoInternetDescription,
-            buttonText: LocalizationConstants.dismiss,
+            buttonText: LocalizationConstants.dismiss.localized(),
           ),
         );
         break;
       case LoginStatus.loginErrorUnsuccessful:
         emit(
-          const LoginFailureState(
-            title: LocalizationConstants.incorrectLoginOrPassword,
-            buttonText: LocalizationConstants.dismiss,
+          LoginFailureState(
+            title: LocalizationConstants.incorrectLoginOrPassword.localized(),
+            buttonText: LocalizationConstants.dismiss.localized(),
           ),
         );
         break;
       case LoginStatus.loginErrorUnknown:
         emit(
-          const LoginFailureState(
-            title: LocalizationConstants.unableToGetCurrentSession,
-            buttonText: LocalizationConstants.dismiss,
+          LoginFailureState(
+            title: LocalizationConstants.unableToGetCurrentSession.localized(),
+            buttonText: LocalizationConstants.dismiss.localized(),
           ),
         );
         break;
       case LoginStatus.loginFailed:
         emit(
-          const LoginFailureState(
-            title: LocalizationConstants.authenticationFailed,
-            buttonText: LocalizationConstants.oK,
+          LoginFailureState(
+            title: LocalizationConstants.authenticationFailed.localized(),
+            buttonText: LocalizationConstants.oK.localized(),
           ),
         );
         break;
@@ -131,39 +131,39 @@ class LoginCubit extends Cubit<LoginState> {
             title: SiteMessageConstants.defaultMobileAppAlertNoInternet,
             message:
                 SiteMessageConstants.defaultMobileAppAlertNoInternetDescription,
-            buttonText: LocalizationConstants.dismiss,
+            buttonText: LocalizationConstants.dismiss.localized(),
           ),
         );
         break;
       case LoginStatus.loginErrorUnsuccessful:
         emit(
-          const LoginFailureState(
-            title: LocalizationConstants.incorrectLoginOrPassword,
-            buttonText: LocalizationConstants.dismiss,
+          LoginFailureState(
+            title: LocalizationConstants.incorrectLoginOrPassword.localized(),
+            buttonText: LocalizationConstants.dismiss.localized(),
           ),
         );
         break;
       case LoginStatus.loginErrorUnknown:
         emit(
-          const LoginFailureState(
-            title: LocalizationConstants.unableToGetCurrentSession,
-            buttonText: LocalizationConstants.dismiss,
+          LoginFailureState(
+            title: LocalizationConstants.unableToGetCurrentSession.localized(),
+            buttonText: LocalizationConstants.dismiss.localized(),
           ),
         );
         break;
       case LoginStatus.loginFailed:
         emit(
-          const LoginFailureState(
-            title: LocalizationConstants.authenticationFailed,
-            buttonText: LocalizationConstants.oK,
+          LoginFailureState(
+            title: LocalizationConstants.authenticationFailed.localized(),
+            buttonText: LocalizationConstants.oK.localized(),
           ),
         );
         break;
       default:
         emit(
-          const LoginFailureState(
-            title: LocalizationConstants.authenticationFailed,
-            buttonText: LocalizationConstants.oK,
+          LoginFailureState(
+            title: LocalizationConstants.authenticationFailed.localized(),
+            buttonText: LocalizationConstants.oK.localized(),
           ),
         );
     }

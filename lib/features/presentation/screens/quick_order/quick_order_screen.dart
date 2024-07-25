@@ -57,6 +57,7 @@ class QuickOrderScreen extends StatelessWidget {
           create: (context) {
             return OrderListBloc(
               quickOrderUseCase: sl(),
+              pricingInventoryUseCase: sl(),
               scanningMode: _scanningMode,
             )..add(OrderListLoadEvent());
           },
@@ -160,7 +161,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                       const SizedBox(width: 8),
                                       Expanded(
                                         child: Text(
-                                          LocalizationConstants.search,
+                                          LocalizationConstants.search.localized(),
                                           style: OptiTextStyles.bodyFade,
                                         ),
                                       ),
@@ -195,7 +196,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                 _showAlert(
                                     context,
                                     message: LocalizationConstants
-                                        .pleaseSignInBeforeAddingToList);
+                                        .pleaseSignInBeforeAddingToList.localized());
                               } else if (state is OrderListAddFailedState) {
                                 _showAlert(context, message: state.message);
                               } else if (state is OrderListStyleProductAddState) {
@@ -213,6 +214,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                 current is OrderListFailedState,
                             builder: (context, state) {
                               subTotal = context.read<OrderListBloc>().calculateSubtotal();
+                              final hidePricingEnable = context.read<OrderListBloc>().hidePricingEnable();
                               return Expanded(
                                 child: Column(
                                   children: [
@@ -257,7 +259,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                         ),
                                                         const SizedBox(width: 8),
                                                         Text(
-                                                          LocalizationConstants.clear,
+                                                          LocalizationConstants.clear.localized(),
                                                           style:
                                                           OptiTextStyles.bodyFade,
                                                         ),
@@ -302,22 +304,25 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                               .isNotEmpty)
                                                           ? LocalizationConstants
                                                           .listTotalProducts
+                                                          .localized()
                                                           .format([
                                                         state.quickOrderItemList
                                                             .length
                                                       ])
                                                           : LocalizationConstants
-                                                          .listTotal,
+                                                          .listTotal.localized(),
                                                       textAlign: TextAlign.start,
                                                       style: OptiTextStyles.subtitle,
                                                     ),
                                                   ),
                                                 ),
-                                                Text(
-                                                  subTotal,
-                                                  textAlign: TextAlign.start,
-                                                  style: OptiTextStyles.subtitle,
-                                                )
+                                                if (!hidePricingEnable)
+                                                  Text(
+                                                    subTotal,
+                                                    textAlign: TextAlign.start,
+                                                    style:
+                                                        OptiTextStyles.subtitle,
+                                                  )
                                               ],
                                             ),
                                           ),
@@ -344,8 +349,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                 ? OptiAppColors.buttonDarkRedBackgroudColor
                                                 : AppStyle.primary500,
                                             text: canProcess
-                                                ? LocalizationConstants.cancel
-                                                : LocalizationConstants.tapToScan,
+                                                ? LocalizationConstants.cancel.localized()
+                                                : LocalizationConstants.tapToScan.localized(),
                                           ),
                                         ],
                                       ),
@@ -368,7 +373,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                     padding:
                         const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                     child: Input(
-                      hintText: LocalizationConstants.search,
+                      hintText: LocalizationConstants.search.localized(),
                       suffixIcon: IconButton(
                         icon: SvgPicture.asset(
                           AssetConstants.iconClear,
@@ -423,7 +428,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     if (state is QuickOrderAutoCompleteInitialState) {
       return Center(
         child: Text(
-          LocalizationConstants.searchPrompt,
+          LocalizationConstants.searchPrompt.localized(),
           style: OptiTextStyles.body,
         ),
       );
@@ -467,8 +472,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     if (addCartLines.any((x) => x.qtyOrdered == null || x.qtyOrdered == 0)) {
       displayDialogWidget(
           context: context,
-          title: LocalizationConstants.removeItem,
-          message: LocalizationConstants.removeItemInfoMessage,
+          title: LocalizationConstants.removeItem.localized(),
+          message: LocalizationConstants.removeItemInfoMessage.localized(),
           actions: [
             DialogPlainButton(
               onPressed: () {
@@ -479,7 +484,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                 }
                 Navigator.of(context).pop();
               },
-              child: const Text(LocalizationConstants.remove),
+              child: Text(LocalizationConstants.remove.localized()),
             ),
             DialogPlainButton(
               onPressed: () {
@@ -491,14 +496,14 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                 }
                 Navigator.of(context).pop();
               },
-              child: const Text(LocalizationConstants.cancel),
+              child: Text(LocalizationConstants.cancel.localized()),
             ),
           ]);
     }
 
     if (allCountCartProducts.isNotEmpty && currentCartProducts.isEmpty) {
       final icon = _buildWarningIcon();
-      _showAlert(context, icon: icon, title: LocalizationConstants.productCanNotBeReOrdered,
+      _showAlert(context, icon: icon, title: LocalizationConstants.productCanNotBeReOrdered.localized(),
           message: SiteMessageConstants.defaultAllProductCountExceed);
       return;
     }
@@ -509,8 +514,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
         await context.read<OrderListBloc>().addCartLineCollection(addCartLines);
     if (addToCartCartLineList != null) {
       if (addToCartCartLineList.isEmpty) {
-        _showAlert(context, title: LocalizationConstants.quickOrder,
+        _showAlert(context, title: LocalizationConstants.quickOrder.localized(),
             message: SiteMessageConstants.defaultValueProductOutOfStock);
+        return;
       }
       if (addToCartCartLineList.length == addCartLines.length) {
         CustomSnackBar.showSnackBarMessage(context,
@@ -518,6 +524,14 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
       } else {
         CustomSnackBar.showSnackBarMessage(
             context, SiteMessageConstants.defaultValueProductOutOfStock);
+      }
+
+      if (scanningMode == ScanningMode.count || scanningMode == ScanningMode.create){
+        if (allCountCartProducts.isNotEmpty && currentCartProducts.isNotEmpty && allCountCartProducts.length != currentCartProducts.length)
+        {
+          CustomSnackBar.showSnackBarMessage(
+                    context, SiteMessageConstants.defaultSomeProductCountExceed, seconds: 3);
+        }
       }
 
       context.read<OrderListBloc>().add(OrderListAddToCartEvent());
@@ -538,7 +552,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text(LocalizationConstants.oK),
+            child: Text(LocalizationConstants.oK.localized()),
           ),
         ]);
   }
@@ -547,20 +561,20 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     displayDialogWidget(
         context: context,
         title: "",
-        message: LocalizationConstants.removeAllProducts,
+        message: LocalizationConstants.removeAllProducts.localized(),
         actions: [
           DialogPlainButton(
             onPressed: () {
               context.read<OrderListBloc>().add(OrderListRemoveEvent());
               Navigator.of(context).pop();
             },
-            child: const Text(LocalizationConstants.remove),
+            child: Text(LocalizationConstants.remove.localized()),
           ),
           DialogPlainButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text(LocalizationConstants.cancel),
+            child: Text(LocalizationConstants.cancel.localized()),
           ),
         ]);
   }
@@ -568,7 +582,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   void _addToList(BuildContext context) {
     if (context.read<OrderListBloc>().quickOrderItemList.isEmpty) {
       CustomSnackBar.showSnackBarMessage(context,
-          LocalizationConstants.quickOrderBasketEmpty);
+          LocalizationConstants.quickOrderBasketEmpty.localized());
     } else {
       context.read<OrderListBloc>().add(OrderListAddToListEvent());
     }
@@ -614,18 +628,18 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
 
     if (widget.scanningMode == ScanningMode.count) {
       list.add(ToolMenu(
-          title: LocalizationConstants.clearHistory,
+          title: LocalizationConstants.clearHistory.localized(),
           action: () {
             _clearAllCart(context);
           }));
     } else if (widget.scanningMode == ScanningMode.quick) {
       list.add(ToolMenu(
-          title: LocalizationConstants.addToList,
+          title: LocalizationConstants.addToList.localized(),
           action: () {
             _addToList(context);
           }));
       list.add(ToolMenu(
-          title: LocalizationConstants.removeAllProducts,
+          title: LocalizationConstants.removeAllProducts.localized(),
           action: () {
             _clearAllCart(context);
           }));
@@ -701,31 +715,31 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
 
   String _getTitle(ScanningMode scanningMode) {
     if (scanningMode == ScanningMode.count) {
-      return LocalizationConstants.countInventory;
+      return LocalizationConstants.countInventory.localized();
     } else if (scanningMode == ScanningMode.create) {
-      return LocalizationConstants.createOrder;
+      return LocalizationConstants.createOrder.localized();
     } else {
-      return LocalizationConstants.quickOrder;
+      return LocalizationConstants.quickOrder.localized();
     }
   }
 
   String _getContentTitle(ScanningMode scanningMode) {
     if (scanningMode == ScanningMode.count) {
-      return LocalizationConstants.countHistory;
+      return LocalizationConstants.countHistory.localized();
     } else if (scanningMode == ScanningMode.create) {
-      return LocalizationConstants.orderContents;
+      return LocalizationConstants.orderContents.localized();
     } else {
-      return LocalizationConstants.quickOrderContents;
+      return LocalizationConstants.quickOrderContents.localized();
     }
   }
 
   String _getCheckoutButtonTitle(ScanningMode scanningMode) {
     if (scanningMode == ScanningMode.count) {
-      return LocalizationConstants.checkout;
+      return LocalizationConstants.checkout.localized();
     } else if (scanningMode == ScanningMode.create) {
-      return LocalizationConstants.checkout;
+      return LocalizationConstants.checkout.localized();
     } else {
-      return LocalizationConstants.addToCartAndCheckout;
+      return LocalizationConstants.addToCartAndCheckout.localized();
     }
   }
 

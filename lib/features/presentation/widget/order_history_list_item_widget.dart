@@ -6,14 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class OrderHistoryListItem extends StatelessWidget {
+
+  final OrderEntity orderEntity;
+  final bool? hidePricingEnable;
+  final void Function()? onTap;
+
   const OrderHistoryListItem({
     super.key,
     required this.orderEntity,
     this.onTap,
+    this.hidePricingEnable,
   });
-
-  final OrderEntity orderEntity;
-  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +69,12 @@ class OrderHistoryListItem extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  orderEntity.orderGrandTotalDisplay ?? '',
-                  style: OptiTextStyles.bodySmallHighlight,
+                Visibility(
+                  visible: !(hidePricingEnable ?? false),
+                  child: Text(
+                    orderEntity.orderGrandTotalDisplay ?? '',
+                    style: OptiTextStyles.bodySmallHighlight,
+                  ),
                 ),
                 Text(
                   orderEntity.statusDisplay ?? '',

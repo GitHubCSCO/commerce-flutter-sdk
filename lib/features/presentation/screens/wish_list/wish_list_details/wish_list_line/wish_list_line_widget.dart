@@ -50,13 +50,13 @@ class WishListLineWidget extends StatelessWidget {
           displayDialogWidget(
             context: context,
             message:
-                '${errorMessage ?? ''} ${LocalizationConstants.removeItemFromTheList}',
+                '${errorMessage ?? ''} ${LocalizationConstants.removeItemFromTheList.localized()}',
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text(LocalizationConstants.cancel),
+                child: Text(LocalizationConstants.cancel.localized()),
               ),
               TextButton(
                 onPressed: () {
@@ -65,7 +65,7 @@ class WishListLineWidget extends StatelessWidget {
                       );
                   Navigator.of(context).pop();
                 },
-                child: const Text(LocalizationConstants.oK),
+                child: Text(LocalizationConstants.oK.localized()),
               ),
             ],
           );

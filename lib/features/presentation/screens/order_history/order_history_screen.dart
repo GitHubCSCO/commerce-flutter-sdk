@@ -2,7 +2,9 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
+import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
@@ -13,6 +15,7 @@ import 'package:commerce_flutter_app/features/presentation/components/filter.dar
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/order_history_list_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,11 +43,18 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
 
   final _textEditingController = TextEditingController();
 
+  late final String websitePath;
+
   @override
   Widget build(BuildContext context) {
+    var vmlLocationId = context.read<OrderHistoryCubit>().vmiLocationId;
+    websitePath = isFromVMI == true ? WebsitePaths.vmiOrdersPath.format([vmlLocationId ?? '']) : WebsitePaths.ordersPath;
     return Scaffold(
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
+        actions: <Widget>[
+          BottomMenuWidget(websitePath: websitePath),
+        ],
         backgroundColor: OptiAppColors.backgroundWhite,
         title: const Text('My Orders'),
         centerTitle: false,
@@ -55,7 +65,7 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
             color: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
             child: Input(
-              hintText: LocalizationConstants.search,
+              hintText: LocalizationConstants.search.localized(),
               suffixIcon: IconButton(
                 icon: SvgPicture.asset(
                   AssetConstants.iconClear,
@@ -140,6 +150,7 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
                         ),
                         _OrderHistoryListWidget(
                           orderEntities: state.orderEntities.orders ?? [],
+                          hidePricingEnable: state.hidePricingEnable,
                         ),
                       ],
                     ),
@@ -154,9 +165,13 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
 }
 
 class _OrderHistoryListWidget extends StatefulWidget {
-  const _OrderHistoryListWidget({required this.orderEntities});
 
   final List<OrderEntity> orderEntities;
+  final bool? hidePricingEnable;
+
+  const _OrderHistoryListWidget(
+      {required this.orderEntities,
+      this.hidePricingEnable});
 
   @override
   State<_OrderHistoryListWidget> createState() =>
@@ -230,6 +245,7 @@ class __OrderHistoryListWidgetState extends State<_OrderHistoryListWidget> {
                     },
                   );
                 },
+                hidePricingEnable: widget.hidePricingEnable,
               );
             },
             separatorBuilder: (context, index) {
@@ -321,12 +337,12 @@ void _showOrderHistoryFilter(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FilterOptionSwitch(
-                label: LocalizationConstants.showMyOrdersOnly,
+                label: LocalizationConstants.showMyOrdersOnly.localized(),
                 value: state.temporaryShowMyOrdersValue,
                 onChanged: (_) => onShowMyOrdersToggled(),
               ),
               FilterOptionsChip(
-                label: LocalizationConstants.status,
+                label: LocalizationConstants.status.localized(),
                 values: state.filterValues,
                 selectedValueIds: state.temporarySelectedFilterValueIds,
                 onSelectionIdAdded: onStatusValueAdded,

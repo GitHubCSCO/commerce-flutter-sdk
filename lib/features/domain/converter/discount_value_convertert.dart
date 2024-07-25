@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class DiscountValueConverter {
   String? convert(dynamic value) {
@@ -13,22 +14,21 @@ class DiscountValueConverter {
       unitListPriceDisplay = value.unitListPriceDisplay;
       unitListPrice = value.unitListPrice as double?;
       unitNetPrice = value.unitNetPrice as double?;
-    }
-    else if (value is OrderLineEntity) {
+    } else if (value is OrderLineEntity) {
       unitListPriceDisplay = value.unitListPriceDisplay;
       unitListPrice = value.unitListPrice as double?;
       unitNetPrice = value.unitNetPrice as double?;
-    // } else if (value is InvoiceLine) {
-    //   var savingsAmount = value.discountAmount;
-    //   var discountMessage =
-    //       "${LocalizationConstants.keyword.regularPrice.localized()}: ${value.unitPriceDisplay}";
-    //   if (value.discountPercent > 0) {
-    //     var savingPercent = (value.discountPercent).round();
-    //     discountMessage +=
-    //         ", ${LocalizationConstants.keyword.youSave.localized()} ${CoreConstants.currencySymbol}${savingsAmount.toStringAsFixed(2)} ($savingPercent%)";
-    //   }
+    } else if (value is InvoiceLine) {
+      var savingsAmount = value.discountAmount;
+      var discountMessage =
+          "${LocalizationConstants.regularPrice}: ${value.unitPriceDisplay}";
+      if ((value.discountPercent ?? 0) > 0) {
+        var savingPercent = (value.discountPercent ?? 0).round();
+        discountMessage +=
+            ", ${LocalizationConstants.youSave} ${CoreConstants.currencySymbol}${savingsAmount?.toStringAsFixed(2)} ($savingPercent%)";
+      }
 
-    //   return discountMessage;
+      return discountMessage;
     }
 
     if (unitListPriceDisplay != null &&
@@ -38,7 +38,7 @@ class DiscountValueConverter {
       var savingPercent =
           ((unitListPrice - unitNetPrice) / unitListPrice * 100).round();
       var discountMessage =
-          "${LocalizationConstants.regularPrice}: $unitListPriceDisplay, ${LocalizationConstants.youSave} ${CoreConstants.currencySymbol}${savingsAmount.toStringAsFixed(2)} ($savingPercent%)";
+          "${LocalizationConstants.regularPrice.localized()}: $unitListPriceDisplay, ${LocalizationConstants.youSave.localized()} ${CoreConstants.currencySymbol}${savingsAmount.toStringAsFixed(2)} ($savingPercent%)";
       return discountMessage;
     }
 

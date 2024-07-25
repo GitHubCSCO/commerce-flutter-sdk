@@ -26,7 +26,7 @@ class ListNameInputWidget extends StatelessWidget {
     return AbsorbPointer(
       absorbing: readOnly,
       child: Input(
-        label: LocalizationConstants.listName,
+        label: LocalizationConstants.listName.localized(),
         controller: listNameController,
         onTapOutside: (p0) => context.closeKeyboard(),
         onEditingComplete: () => context.closeKeyboard(),
@@ -53,7 +53,7 @@ class ListDescriptionInputWidget extends StatelessWidget {
       child: SizedBox(
         height: 100,
         child: Input(
-          label: LocalizationConstants.descriptionOptional,
+          label: LocalizationConstants.descriptionOptional.localized(),
           controller: listDescriptionController,
           onTapOutside: (p0) => context.closeKeyboard(),
           onEditingComplete: () => context.closeKeyboard(),
@@ -77,14 +77,14 @@ class ListDetailsWidget extends StatelessWidget {
         (wishList.wishListSharesCount ?? 0) > 0) {
       if ((wishList.wishListSharesCount ?? 0) > 0 &&
           wishList.isSharedList != true) {
-        sharedInfoText = LocalizationConstants.sharedWith
+        sharedInfoText = LocalizationConstants.sharedWith.localized()
             .format([wishList.wishListSharesCount ?? 0]);
       } else if (wishList.isSharedList == true) {
-        sharedInfoText = LocalizationConstants.sharedBy.format(['']);
+        sharedInfoText = LocalizationConstants.sharedBy.localized().format(['']);
       }
     } else if (wishList.isSharedList != true &&
         (wishList.wishListSharesCount ?? 0) == 0) {
-      sharedInfoText = LocalizationConstants.private;
+      sharedInfoText = LocalizationConstants.private.localized();
     }
 
     return sharedInfoText;
@@ -98,13 +98,13 @@ class ListDetailsWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          LocalizationConstants.listDetails,
+          LocalizationConstants.listDetails.localized(),
           style: OptiTextStyles.titleLarge,
         ),
         const SizedBox(height: 32),
         _ListDetailsPropertiesRow(
-          title: LocalizationConstants.listUpdated,
-          value: LocalizationConstants.updateOnBy.format(
+          title: LocalizationConstants.listUpdated.localized(),
+          value: LocalizationConstants.updateOnBy.localized().format(
             [
               wishList.updatedOn != null
                   ? DateFormat(CoreConstants.dateFormatString)
@@ -116,14 +116,14 @@ class ListDetailsWidget extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         _ListDetailsPropertiesRow(
-          title: LocalizationConstants.usersShared,
+          title: LocalizationConstants.usersShared.localized(),
           value: _sharedInfoText,
         ),
         const SizedBox(height: 16),
         _ListDetailsPropertiesRow(
-          title: LocalizationConstants.products,
+          title: LocalizationConstants.products.localized(),
           value:
-              LocalizationConstants.items.format([wishList.wishListLinesCount]),
+              LocalizationConstants.items.localized().format([wishList.wishListLinesCount]),
         ),
       ],
     );

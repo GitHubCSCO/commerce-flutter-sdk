@@ -63,8 +63,8 @@ class _BillToShipToAddressSelectionPageState
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.selectionEntity.addressType == AddressType.billTo
-            ? LocalizationConstants.selectBillingAddress
-            : LocalizationConstants.selectShippingAddress),
+            ? LocalizationConstants.selectBillingAddress.localized()
+            : LocalizationConstants.selectShippingAddress.localized()),
         backgroundColor: OptiAppColors.backgroundWhite,
       ),
       body: Column(
@@ -74,7 +74,7 @@ class _BillToShipToAddressSelectionPageState
             padding:
                 const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: Input(
-              hintText: LocalizationConstants.search,
+              hintText: LocalizationConstants.search.localized(),
               suffixIcon: IconButton(
                 icon: SvgPicture.asset(
                   AssetConstants.iconClear,
@@ -145,11 +145,11 @@ class _BillToShipToAddressSelectionPageState
                     );
                   case BilltoShiptoAddressSelectionFailed():
                   default:
-                    return const CustomScrollView(
+                    return CustomScrollView(
                       slivers: <Widget>[
                         SliverFillRemaining(
                           child: Center(
-                            child: Text(LocalizationConstants.error),
+                            child: Text(LocalizationConstants.error.localized()),
                           ),
                         ),
                       ],

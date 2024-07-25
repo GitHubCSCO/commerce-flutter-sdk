@@ -1,9 +1,15 @@
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/features/domain/enums/address_type.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/date_picker_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:go_router/go_router.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class FilterValueViewModel {
   FilterValueViewModel({
@@ -118,7 +124,7 @@ void showFilterModalSheet(
                             vertical: 10,
                           ),
                           child: Text(
-                            LocalizationConstants.filter,
+                            LocalizationConstants.filter.localized(),
                             style: OptiTextStyles.titleLarge,
                           ),
                         ),
@@ -151,7 +157,7 @@ void showFilterModalSheet(
                           height: 48,
                           child: SecondaryButton(
                             onPressed: onReset,
-                            child: const Text(LocalizationConstants.reset),
+                            child: Text(LocalizationConstants.reset.localized()),
                           ),
                         ),
                       ),
@@ -161,7 +167,7 @@ void showFilterModalSheet(
                         width: 176,
                         height: 48,
                         child: PrimaryButton(
-                          text: LocalizationConstants.apply,
+                          text: LocalizationConstants.apply.localized(),
                           onPressed: () {
                             onApply();
                             Navigator.pop(innerContext);
@@ -280,6 +286,124 @@ class FilterOptionSwitch extends StatelessWidget {
         Switch(
           value: value,
           onChanged: onChanged,
+        ),
+      ],
+    );
+  }
+}
+
+class FilterShipToPickerWidget extends StatelessWidget {
+  final ShipTo? shipTo;
+  final BillTo? billTo;
+  final void Function(ShipTo?) onShipToSelected;
+
+  const FilterShipToPickerWidget({
+    super.key,
+    required this.shipTo,
+    required this.billTo,
+    required this.onShipToSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        final result = await context.pushNamed(
+          AppRoute.billToShipToSelection.name,
+          extra: BillToShipToAddressSelectionEntity(
+            addressType: AddressType.shipTo,
+            selectedShipTo: shipTo,
+            selectedBillTo: billTo,
+          ),
+        );
+
+        if (result != null && result is ShipTo && context.mounted) {
+          onShipToSelected(result);
+        }
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          shipTo == null
+              ? Text(
+                  LocalizationConstants.selectShipToAddress.localized(),
+                  style: OptiTextStyles.body,
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      shipTo?.companyName ?? '',
+                      style: OptiTextStyles.titleSmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      shipTo?.address1 ?? '',
+                      style: OptiTextStyles.body,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      '${shipTo?.city ?? ''}, ${shipTo?.state?.abbreviation ?? ''} ${shipTo?.postalCode ?? ''}',
+                      style: OptiTextStyles.body,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+          const Icon(
+            Icons.arrow_forward_ios,
+            color: Colors.grey,
+            size: 16,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class FilterDatePickerWidget extends StatelessWidget {
+  final DateTime? selectedDate;
+  final String title;
+  final void Function(BuildContext context, DateTime) onSelectDate;
+
+  const FilterDatePickerWidget({
+    required this.selectedDate,
+    required this.onSelectDate,
+    required this.title,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+          flex: 1,
+          child: Text(
+            title,
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: Row(
+            children: [
+              Expanded(
+                child: DatePickerWidget(
+                  key: UniqueKey(),
+                  minDate: DateTime(1970),
+                  maxDate: null,
+                  selectedDateTime: selectedDate,
+                  callback: onSelectDate,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

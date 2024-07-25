@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/features/domain/service/interfaces/biometri
 import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/device_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/geo_location_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/localization_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/location_search_history_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/search_history_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/tracking_service_interface.dart';
@@ -17,7 +18,7 @@ abstract class ICoreServiceProvider {
   IGeoLocationService getGeoLocationService();
   // IHapticFeedbackService getHapticFeedbackService();
   // IKeyboardService getKeyboardService();
-  // ILocalizationService getLocalizationService();
+  ILocalizationService getLocalizationService();
   ILocationSearchHistoryService getLocationSearchHistoryService();
   // ILocatorService getLocatorService();
   // IMapService getMapService();

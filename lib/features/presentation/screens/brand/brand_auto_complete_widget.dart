@@ -58,7 +58,7 @@ class AutoCompleteBrandWidget extends StatelessWidget {
     final productLine = autoCompleteBrand.productLineName ?? '';
     final title = autoCompleteBrand.title ?? '';
     if (productLine.isNotEmpty && title.isNotEmpty) {
-      return LocalizationConstants.autocompleteCategoryOrBrandCombinedTitle.format([productLine, title]);
+      return LocalizationConstants.autocompleteCategoryOrBrandCombinedTitle.localized().format([productLine, title]);
     } else {
       return title;
     }

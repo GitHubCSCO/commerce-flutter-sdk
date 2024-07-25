@@ -21,8 +21,14 @@ import 'package:flutter_svg/svg.dart';
 
 class CartLineWidget extends StatelessWidget {
   final CartLineEntity cartLineEntity;
+  final bool? hidePricingEnable;
+  final bool? hideInventoryEnable;
 
-  const CartLineWidget({super.key, required this.cartLineEntity});
+  const CartLineWidget(
+      {super.key,
+      required this.cartLineEntity,
+      this.hidePricingEnable,
+      this.hideInventoryEnable});
 
   @override
   Widget build(BuildContext context) {
@@ -70,16 +76,19 @@ class CartLineWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0, 10.0),
             child: LineItemPricingWidget(
-                discountMessage: cartLineEntity.pricing?.getDiscountValue(),
-                priceValueText: cartLineEntity.updatePriceValueText(),
-                unitOfMeasureValueText:
-                    cartLineEntity.updateUnitOfMeasureValueText(),
-                availabilityText: cartLineEntity.availability?.message,
-                productId: cartLineEntity.productId,
-                erpNumber: cartLineEntity.erpNumber,
-                unitOfMeasure: cartLineEntity.baseUnitOfMeasure,
-                showViewAvailabilityByWarehouse:
-                    cartLineEntity.showInventoryAvailability ?? false),
+              discountMessage: cartLineEntity.pricing?.getDiscountValue(),
+              priceValueText: cartLineEntity.updatePriceValueText(),
+              unitOfMeasureValueText:
+                  cartLineEntity.updateUnitOfMeasureValueText(),
+              availabilityText: cartLineEntity.availability?.message,
+              productId: cartLineEntity.productId,
+              erpNumber: cartLineEntity.erpNumber,
+              unitOfMeasure: cartLineEntity.baseUnitOfMeasure,
+              showViewAvailabilityByWarehouse:
+                  cartLineEntity.showInventoryAvailability ?? false,
+              hidePricingEnable: hidePricingEnable,
+              hideInventoryEnable: hideInventoryEnable,
+            ),
           ),
           LineItemQuantityGroupWidget(
             qtyOrdered: cartLineEntity.qtyOrdered?.toInt().toString(),
@@ -95,6 +104,7 @@ class CartLineWidget extends StatelessWidget {
                   );
             },
             subtotalPriceText: cartLineEntity.updateSubtotalPriceValueText(),
+            hidePricingEnable: hidePricingEnable,
           ),
         ],
       ),
@@ -126,20 +136,20 @@ void _onClickClearAllCart(BuildContext context) {
   displayDialogWidget(
       context: context,
       title: "",
-      message: LocalizationConstants.clearAllItemsInCart,
+      message: LocalizationConstants.clearAllItemsInCart.localized(),
       actions: [
         DialogPlainButton(
           onPressed: () {
             context.read<CartContentBloc>().add(CartContentClearAllEvent());
             Navigator.of(context).pop();
           },
-          child: const Text(LocalizationConstants.remove),
+          child: Text(LocalizationConstants.remove.localized()),
         ),
         DialogPlainButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text(LocalizationConstants.cancel),
+          child: Text(LocalizationConstants.cancel.localized()),
         ),
       ]);
 }

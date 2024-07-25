@@ -22,6 +22,8 @@ class QuickOrderItemEntity {
   String? selectedUnitOfMeasureTitle;
   String? selectedUnitOfMeasureValueText;
   String? discountValueText;
+  bool? hidePricingEnable;
+  bool? hideInventoryEnable;
 
   //need to add SelectedUnitOfMeasure
 
@@ -50,10 +52,10 @@ class QuickOrderItemEntity {
         selectedUnitOfMeasureValueText = uomText;
       } else {
         priceValueText = (productEntity.quoteRequired!)
-            ? LocalizationConstants.requiresQuote
+            ? LocalizationConstants.requiresQuote.localized()
             : pricing.getPriceValue(); // Assuming getPriceValue() returns a string
         extendedPriceValueText = (productEntity.quoteRequired!)
-            ? LocalizationConstants.requiresQuote
+            ? LocalizationConstants.requiresQuote.localized()
             : pricing.getSubtotalValue(); // Assuming getSubtotalValue() returns a string
         selectedUnitOfMeasureValueText = pricing.getUnitOfMeasure(uomText ?? ''); // Assuming getUnitOfMeasure() returns a string
       }

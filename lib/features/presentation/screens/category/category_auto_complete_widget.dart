@@ -58,7 +58,7 @@ class AutoCompleteCategoryWidget extends StatelessWidget {
     final title = autoCompleteCategory.title ?? '';
     final subTitle = autoCompleteCategory.subtitle ?? '';
     if (title.isNotEmpty && subTitle.isNotEmpty) {
-      return LocalizationConstants.autocompleteCategoryOrBrandCombinedTitle.format([title, subTitle]);
+      return LocalizationConstants.autocompleteCategoryOrBrandCombinedTitle.localized().format([title, subTitle]);
     } else {
       return title;
     }

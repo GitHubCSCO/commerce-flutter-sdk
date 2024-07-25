@@ -48,7 +48,11 @@ abstract class IAppConfigurationService {
 
   String? get appCenterSecretAndroid;
 
-  Future loadRemoteSettings();
+  Future<void> loadRemoteSettings();
+
+  bool? get hidePricingEnable;
+
+  bool? get hideInventoryEnable;
 
   Future<bool> hasWillCall();
 
@@ -68,4 +72,8 @@ abstract class IAppConfigurationService {
   Future<RealTimeSupport?> getRealtimeSupportType();
 
   Future<bool> isSignInRequired();
+
+  void setHidePricingEnable(bool enable);
+
+  void setHideInventoryEnable(bool enable);
 }

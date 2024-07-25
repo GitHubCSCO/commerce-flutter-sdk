@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/order_approval_usecase/order_approval_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -8,9 +9,13 @@ part 'order_approval_state.dart';
 
 class OrderApprovalCubit extends Cubit<OrderApprovalState> {
   final OrderApprovalUseCase _orderApprovalUseCase;
+  final PricingInventoryUseCase _pricingInventoryUseCase;
 
-  OrderApprovalCubit({required OrderApprovalUseCase orderApprovalUseCase})
+  OrderApprovalCubit(
+      {required OrderApprovalUseCase orderApprovalUseCase,
+      required PricingInventoryUseCase pricingInventoryUseCase})
       : _orderApprovalUseCase = orderApprovalUseCase,
+        _pricingInventoryUseCase = pricingInventoryUseCase,
         super(
           OrderApprovalState(
             status: OrderStatus.initial,
@@ -32,10 +37,13 @@ class OrderApprovalCubit extends Cubit<OrderApprovalState> {
       return;
     }
 
+    final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
+
     emit(
       state.copyWith(
         status: OrderStatus.success,
         orderApprovalCollectionModel: result,
+        hidePricingEnable: hidePricingEnable
       ),
     );
   }

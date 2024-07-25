@@ -38,4 +38,12 @@ class AccountPageBloc extends Bloc<AccountPageEvent, AccountPageState> {
   String getAppVersionAndBuildNumber() {
     return _accountUseCase.getAppVersionAndBuildNumber!;
   }
+
+  String? getPrivacyPolicyUrl() {
+    return _accountUseCase.privacyPolicyUrl;
+  }
+  
+  String? getTermsOfUseUrl() {
+    return _accountUseCase.termsOfUseUrl;
+  }
 }

@@ -23,7 +23,7 @@ class SearchHistorySectionWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
               searchHistoryWidgetEntity.title ??
-                  LocalizationConstants.searchHistory,
+                  LocalizationConstants.searchHistory.localized(),
               style: OptiTextStyles.titleLarge,
             ),
           ),

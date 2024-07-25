@@ -128,4 +128,9 @@ class DomainUsecase extends BaseUseCase {
 
     return DomainChangeStatus.success;
   }
+
+  Future<void> loadRemoteSettings() async {
+    await coreServiceProvider.getAppConfigurationService().loadRemoteSettings();
+  }
+
 }

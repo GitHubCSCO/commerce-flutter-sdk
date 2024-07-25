@@ -1,21 +1,16 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/enums/address_type.dart';
 import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_filter_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/date_picker_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -117,17 +112,19 @@ void _showOrderApprovalFilterWidget(
               ),
               const SizedBox(height: 45),
               Text(
-                LocalizationConstants.customer.toUpperCase(),
+                LocalizationConstants.customer.localized().toUpperCase(),
                 style: OptiTextStyles.subtitle,
               ),
               const SizedBox(height: 10),
-              _FilterShipToPickerWidget(
+              FilterShipToPickerWidget(
                 shipTo: state.shipTo,
                 billTo: state.billTo,
+                onShipToSelected:
+                    context.read<OrderApprovalFilterCubit>().setShipTo,
               ),
               const SizedBox(height: 45),
               Text(
-                LocalizationConstants.orderTotal.toUpperCase(),
+                LocalizationConstants.orderTotal.localized().toUpperCase(),
                 style: OptiTextStyles.subtitle,
               ),
               const SizedBox(height: 10),
@@ -138,19 +135,19 @@ void _showOrderApprovalFilterWidget(
               ),
               const SizedBox(height: 45),
               Text(
-                LocalizationConstants.dateRange.toUpperCase(),
+                LocalizationConstants.dateRange.localized().toUpperCase(),
                 style: OptiTextStyles.subtitle,
               ),
-              _FilterDatePickerWidget(
-                title: LocalizationConstants.from,
+              FilterDatePickerWidget(
+                title: LocalizationConstants.from.localized(),
                 selectedDate: state.fromDate,
                 onSelectDate: (innerContext, date) {
                   context.read<OrderApprovalFilterCubit>().setFromDate(date);
                 },
               ),
               const SizedBox(height: 10),
-              _FilterDatePickerWidget(
-                title: LocalizationConstants.to,
+              FilterDatePickerWidget(
+                title: LocalizationConstants.to.localized(),
                 selectedDate: state.toDate,
                 onSelectDate: (innerContext, date) {
                   context.read<OrderApprovalFilterCubit>().setToDate(date);
@@ -219,7 +216,7 @@ class _FilterOrderTotalWidgetState extends State<_FilterOrderTotalWidget> {
         children: [
           Input(
             controller: orderNumberController,
-            hintText: LocalizationConstants.orderNumberSign,
+            hintText: LocalizationConstants.orderNumberSign.localized(),
           ),
         ],
       ),
@@ -359,124 +356,9 @@ class _FilterTotalAmountWidgetState extends State<_FilterTotalAmountWidget> {
         children: [
           Input(
             controller: orderTotalController,
-            hintText: LocalizationConstants.enterAmount,
+            hintText: LocalizationConstants.enterAmount.localized(),
             keyboardType: TextInputType.number,
             onTapOutside: (p0) => FocusManager.instance.primaryFocus?.unfocus(),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _FilterDatePickerWidget extends StatelessWidget {
-  final DateTime? selectedDate;
-  final String title;
-  final void Function(BuildContext context, DateTime) onSelectDate;
-
-  const _FilterDatePickerWidget({
-    required this.selectedDate,
-    required this.onSelectDate,
-    required this.title,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Expanded(
-          flex: 1,
-          child: Text(
-            title,
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: Row(
-            children: [
-              Expanded(
-                child: DatePickerWidget(
-                  key: UniqueKey(),
-                  minDate: DateTime(1970),
-                  maxDate: null,
-                  selectedDateTime: selectedDate,
-                  callback: onSelectDate,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _FilterShipToPickerWidget extends StatelessWidget {
-  final ShipTo? shipTo;
-  final BillTo? billTo;
-
-  const _FilterShipToPickerWidget({
-    required this.shipTo,
-    required this.billTo,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () async {
-        final result = await context.pushNamed(
-          AppRoute.billToShipToSelection.name,
-          extra: BillToShipToAddressSelectionEntity(
-            addressType: AddressType.shipTo,
-            selectedShipTo: shipTo,
-            selectedBillTo: billTo,
-          ),
-        );
-
-        if (result != null && result is ShipTo && context.mounted) {
-          context.read<OrderApprovalFilterCubit>().setShipTo(result);
-        }
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          shipTo == null
-              ? Text(
-                  LocalizationConstants.selectShipToAddress,
-                  style: OptiTextStyles.body,
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      shipTo?.companyName ?? '',
-                      style: OptiTextStyles.titleSmall,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      shipTo?.address1 ?? '',
-                      style: OptiTextStyles.body,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      '${shipTo?.city ?? ''}, ${shipTo?.state?.abbreviation ?? ''} ${shipTo?.postalCode ?? ''}',
-                      style: OptiTextStyles.body,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-          const Icon(
-            Icons.arrow_forward_ios,
-            color: Colors.grey,
-            size: 16,
           ),
         ],
       ),

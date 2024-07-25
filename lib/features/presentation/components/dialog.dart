@@ -137,7 +137,7 @@ void displayInputDialog({
   String? hintText,
   required void Function(String) onSubmit,
   bool obscureText = false,
-  String confirmText = LocalizationConstants.oK,
+  String? confirmText,
   String existingValue = '',
 }) {
   showDialog(
@@ -148,7 +148,7 @@ void displayInputDialog({
         hintText: hintText,
         onSubmit: onSubmit,
         obscureText: obscureText,
-        confirmText: confirmText,
+        confirmText: confirmText ?? LocalizationConstants.oK.localized(),
         existingValue: existingValue,
       );
     },
@@ -208,7 +208,7 @@ class _InputDialogState extends State<_InputDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text(LocalizationConstants.cancel),
+          child: Text(LocalizationConstants.cancel.localized()),
         ),
         TextButton(
           onPressed: () {
@@ -246,8 +246,8 @@ void confirmDialog({
   String? title,
   String? message,
   required void Function() onConfirm,
-  String confirmText = LocalizationConstants.oK,
-  String cancelText = LocalizationConstants.cancel,
+  String? confirmText,
+  String? cancelText,
   bool highlightConfirm = false,
 }) {
   displayDialogWidget(
@@ -257,7 +257,7 @@ void confirmDialog({
     actions: [
       DialogPlainButton(
         onPressed: () => Navigator.of(context).pop(),
-        child: Text(cancelText),
+        child: Text(cancelText ?? LocalizationConstants.cancel.localized()),
       ),
       highlightConfirm
           ? DialogHighlightButton(
@@ -265,14 +265,14 @@ void confirmDialog({
                 onConfirm();
                 Navigator.of(context).pop();
               },
-              child: Text(confirmText),
+              child: Text(confirmText ?? LocalizationConstants.oK.localized()),
             )
           : DialogPlainButton(
               onPressed: () {
                 onConfirm();
                 Navigator.of(context).pop();
               },
-              child: Text(confirmText),
+              child: Text(confirmText ?? LocalizationConstants.oK.localized()),
             ),
     ],
   );

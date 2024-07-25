@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/saved_order/saved_order_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -13,11 +14,14 @@ part 'saved_order_details_state.dart';
 
 class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
   final SavedOrderUsecase _savedOrderUsecase;
+  final PricingInventoryUseCase _pricingInventoryUseCase;
   ProductSettings? productSettings;
 
   SavedOrderDetailsCubit({
     required SavedOrderUsecase savedOrderUsecase,
+    required PricingInventoryUseCase pricingInventoryUseCase
   })  : _savedOrderUsecase = savedOrderUsecase,
+        _pricingInventoryUseCase = pricingInventoryUseCase,
         super(
           SavedOrderDetailsState(
             cart: Cart(),
@@ -37,10 +41,15 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
     final cart = await _savedOrderUsecase.loadCart(cartId: cartId);
 
     if (cart != null) {
+      final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
+      final hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
+
       emit(
         state.copyWith(
           cart: cart,
           status: OrderStatus.success,
+          hidePricingEnable: hidePricingEnable,
+          hideInventoryEnable: hideInventoryEnable
         ),
       );
     } else {

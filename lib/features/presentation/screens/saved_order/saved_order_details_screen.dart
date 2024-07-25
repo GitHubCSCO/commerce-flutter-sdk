@@ -53,7 +53,7 @@ class OrderDetailsPage extends StatelessWidget {
         actions: const [
           _OptionsMenu(),
         ],
-        title: const Text(LocalizationConstants.savedOrderDetails),
+        title: Text(LocalizationConstants.savedOrderDetails.localized()),
       ),
       body: BlocConsumer<SavedOrderDetailsCubit, SavedOrderDetailsState>(
         listener: (context, state) {
@@ -121,11 +121,14 @@ class OrderDetailsPage extends StatelessWidget {
                           subtotalText: context
                               .watch<SavedOrderDetailsCubit>()
                               .orderSubTotalDisplay,
+                          hidePricingEnable: state.hidePricingEnable,
                         ),
                         CartOrderProductsSectionWidget(
                           cartLines: context
                               .read<SavedOrderDetailsCubit>()
                               .getCartLines(),
+                          hidePricingEnable: state.hidePricingEnable,
+                          hideInventoryEnable: state.hideInventoryEnable,
                         ),
                       ],
                     ),
@@ -134,12 +137,12 @@ class OrderDetailsPage extends StatelessWidget {
                 OrderBottomSectionWidget(
                   actions: [
                     SecondaryButton(
-                      child: const Text(LocalizationConstants.deleteSavedOrder),
+                      child: Text(LocalizationConstants.deleteSavedOrder.localized()),
                       onPressed: () {
                         confirmDialog(
                           context: context,
                           message: LocalizationConstants
-                              .deleteSavedOrderConfirmMessage,
+                              .deleteSavedOrderConfirmMessage.localized(),
                           onConfirm: () async {
                             await context
                                 .read<SavedOrderDetailsCubit>()
@@ -149,7 +152,7 @@ class OrderDetailsPage extends StatelessWidget {
                       },
                     ),
                     PrimaryButton(
-                      text: LocalizationConstants.placeSavedOrder,
+                      text: LocalizationConstants.placeSavedOrder.localized(),
                       onPressed: () async {
                         await context
                             .read<SavedOrderDetailsCubit>()
@@ -189,12 +192,14 @@ class _SavedOrderInfoWidget extends StatelessWidget {
   final String? orderDateText;
   final int? subTotalCount;
   final String? subtotalText;
+  final bool? hidePricingEnable;
 
   const _SavedOrderInfoWidget({
     this.shipToText,
     this.orderDateText,
     this.subTotalCount,
     this.subtotalText,
+    this.hidePricingEnable,
   });
 
   @override
@@ -208,16 +213,16 @@ class _SavedOrderInfoWidget extends StatelessWidget {
         children: [
           if (!orderDateText.isNullOrEmpty) ...[
             TwoTextsRow(
-              label: LocalizationConstants.orderDate,
+              label: LocalizationConstants.orderDate.localized(),
               value: orderDateText!,
               textStyle: OptiTextStyles.subtitle,
             ),
             const SizedBox(height: 20),
           ],
-          if (!subtotalText.isNullOrEmpty) ...[
+          if (!(hidePricingEnable ?? false) && !subtotalText.isNullOrEmpty) ...[
             TwoTextsRow(
               label:
-                  '${LocalizationConstants.subtotal} (${subTotalCount ?? 0})',
+                  '${LocalizationConstants.subtotal.localized()} (${subTotalCount ?? 0})',
               value: subtotalText!,
               textStyle: OptiTextStyles.subtitle,
             ),

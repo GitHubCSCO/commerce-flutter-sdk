@@ -2,7 +2,10 @@
 
 import 'dart:convert';
 
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_app/core/extensions/url_string_extension.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/app_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:flutter/services.dart';
@@ -420,9 +423,14 @@ class AppConfigurationService extends ServiceBase
   }
 
   @override
-  Future loadRemoteSettings() {
-    // TODO: implement loadRemoteSettings
-    throw UnimplementedError();
+  Future<void> loadRemoteSettings() async {
+    var getWebsiteResult = await _commerceAPIServiceProvider.getWebsiteService().getWebsite();
+    var websiteSettings = getWebsiteResult.getResultSuccessValue();
+    if(websiteSettings!=null){
+      OptiAppColors.primaryColor = websiteSettings.mobilePrimaryColor!=null ? OptiAppColors.colorFromHexString(websiteSettings.mobilePrimaryColor!) : OptiAppColors.defaultPrimaryColor;
+      privacyPolicyUrl = websiteSettings.mobilePrivacyPolicyUrl?.makeValidUrl();
+      termsOfUseUrl = websiteSettings.mobileTermsOfUseUrl?.makeValidUrl();
+    }
   }
 
   @override
@@ -456,4 +464,21 @@ class AppConfigurationService extends ServiceBase
   @override
   // TODO: implement hasCheckoutConfiguration
   bool get hasCheckoutConfiguration => throw UnimplementedError();
+
+  @override
+  bool? hideInventoryEnable;
+
+  @override
+  bool? hidePricingEnable;
+
+  @override
+  void setHideInventoryEnable(bool enable) {
+    hideInventoryEnable = enable;
+  }
+
+  @override
+  void setHidePricingEnable(bool enable) {
+    hidePricingEnable = enable;
+  }
+
 }
