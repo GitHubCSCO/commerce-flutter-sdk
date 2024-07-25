@@ -47,6 +47,8 @@ dependencies:
   location: ^6.0.2
   firebase_remote_config: ^5.0.3
   firebase_analytics: ^11.2.0
+  appcenter_analytics:
+    path: ./appcenter_analytics
 
 
 dev_dependencies:
