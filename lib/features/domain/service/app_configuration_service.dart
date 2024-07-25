@@ -38,6 +38,9 @@ class Configuration {
   String? FirebaseIOSStorageBucket;
   String? FirebaseIOSBundleId;
 
+  String? AppCenterSecretiOS;
+  String? AppCenterSecretAndroid;
+
   Configuration({
     this.ShouldUseStaticDomain,
     this.Domain,
@@ -58,6 +61,8 @@ class Configuration {
     this.FirebaseIOSProjectId,
     this.FirebaseIOSStorageBucket,
     this.FirebaseIOSBundleId,
+    this.AppCenterSecretiOS,
+    this.AppCenterSecretAndroid,
   });
 
   Map<String, dynamic> toMap() {
@@ -81,6 +86,8 @@ class Configuration {
       'FirebaseIOSProjectId': FirebaseIOSProjectId,
       'FirebaseIOSStorageBucket': FirebaseIOSStorageBucket,
       'FirebaseIOSBundleId': FirebaseIOSBundleId,
+      'AppCenterSecretiOS': AppCenterSecretiOS,
+      'AppCenterSecretAndroid': AppCenterSecretAndroid,
     };
   }
 
@@ -138,6 +145,12 @@ class Configuration {
           : null,
       FirebaseIOSBundleId: map['FirebaseIOSBundleId'] != null
           ? map['FirebaseIOSBundleId'] as String
+          : null,
+      AppCenterSecretiOS: map['AppCenterSecretiOS'] != null
+          ? map['AppCenterSecretiOS'] as String
+          : null,
+      AppCenterSecretAndroid: map['AppCenterSecretAndroid'] != null
+          ? map['AppCenterSecretAndroid'] as String
           : null,
     );
   }
@@ -208,12 +221,17 @@ class AppConfigurationService extends ServiceBase
   @override
   String? firebaseIOSBundleId;
 
+  @override
+  String? appCenterSecretiOS;
+
+  @override
+  String? appCenterSecretAndroid;
+
   AppConfigurationService({
     required ICommerceAPIServiceProvider commerceAPIServiceProvider,
     required super.clientService,
     required super.cacheService,
     required super.networkService,
-    required super.trackingService,
   }) : _commerceAPIServiceProvider = commerceAPIServiceProvider;
 
   Future<void> init() async {
@@ -243,6 +261,9 @@ class AppConfigurationService extends ServiceBase
     firebaseIOSProjectId = configuration.FirebaseIOSProjectId;
     firebaseIOSStorageBucket = configuration.FirebaseIOSStorageBucket;
     firebaseIOSBundleId = configuration.FirebaseIOSBundleId;
+
+    appCenterSecretiOS = configuration.AppCenterSecretiOS;
+    appCenterSecretAndroid = configuration.AppCenterSecretAndroid;
   }
 
   static const String _tokenExConfigurationUrl = "/api/v1/tokenexconfig";

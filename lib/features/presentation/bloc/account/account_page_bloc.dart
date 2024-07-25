@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -19,9 +20,10 @@ class AccountPageBloc extends Bloc<AccountPageEvent, AccountPageState> {
   Future<void> _onAccountPageLoadEvent(
       AccountPageLoadEvent event, Emitter<AccountPageState> emit) async {
     emit(AccountPageLoadingState());
-    
-    await _accountUseCase.commerceAPIServiceProvider.getTrackingService().trackEvent(AnalyticsEvent(
-      AnalyticsConstants.eventViewScreen, AnalyticsConstants.screenNameAccount
+
+    await _accountUseCase.trackEvent(AnalyticsEvent(
+      AnalyticsConstants.eventViewScreen,
+      AnalyticsConstants.screenNameAccount,
     ));
 
     var result = await _accountUseCase.loadData();
