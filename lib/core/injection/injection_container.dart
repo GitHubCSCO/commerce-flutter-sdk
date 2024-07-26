@@ -508,10 +508,12 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<ICoreServiceProvider>(() => CoreServiceProvider())
 
     //services
-    ..registerLazySingleton<ITrackingService>(() => CompositeTrackerService([
-          FirebaseTrackingService(),
-          AppCenterTrackingService(),
-        ]))
+    ..registerLazySingleton<ITrackingService>(() => CompositeTrackingService(
+          trackers: [
+            FirebaseTrackingService(),
+            AppCenterTrackingService(),
+          ],
+        ))
     ..registerLazySingleton<IRealTimePricingService>(
         () => RealTimePricingService(
               clientService: sl(),
