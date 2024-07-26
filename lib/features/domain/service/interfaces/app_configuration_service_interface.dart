@@ -44,6 +44,10 @@ abstract class IAppConfigurationService {
 
   String? get firebaseIOSBundleId;
 
+  String? get appCenterSecretiOS;
+
+  String? get appCenterSecretAndroid;
+
   Future<void> loadRemoteSettings();
 
   bool? get hidePricingEnable;
@@ -72,5 +76,4 @@ abstract class IAppConfigurationService {
   void setHidePricingEnable(bool enable);
 
   void setHideInventoryEnable(bool enable);
-
 }

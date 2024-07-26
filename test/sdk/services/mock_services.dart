@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/tracking_service_interface.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -76,6 +77,8 @@ class MockWarehouseService extends Mock implements IWarehouseService {}
 class MockWebsiteService extends Mock implements IWebsiteService {}
 
 class MockWishListService extends Mock implements IWishListService {}
+
+class MockTrackingService extends Mock implements ITrackingService {}
 
 class MockContentConfigurationService extends Mock
     implements IContentConfigurationService {}
