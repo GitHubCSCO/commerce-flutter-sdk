@@ -52,13 +52,13 @@ class InvoiceDetailScreen extends StatelessWidget {
               case BottomMenuWebsiteUrlFailed():
                 displayDialogWidget(
                   context: context,
-                  title: LocalizationConstants.error,
+                  title: LocalizationConstants.error.localized(),
                   message: SiteMessageConstants
                       .defaultMobileAppAlertCommunicationError,
                   actions: [
                     DialogPlainButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: const Text(LocalizationConstants.oK),
+                      child: Text(LocalizationConstants.oK.localized()),
                     ),
                   ],
                 );
@@ -96,7 +96,7 @@ class InvoiceDetailPage extends StatelessWidget {
             ),
             toolMenuList: [
               ToolMenu(
-                title: LocalizationConstants.print,
+                title: LocalizationConstants.print.localized(),
                 action: () {
                   context.read<BottomMenuCubit>().loadWebsiteUrl(
                         PrintPaths.invoiceDetailPrintPath
@@ -156,7 +156,7 @@ class _InvoicePaymentSummarySection extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)
               .copyWith(bottom: 8),
           child: Text(
-            LocalizationConstants.orderSummary,
+            LocalizationConstants.orderSummary.localized(),
             style: OptiTextStyles.titleLarge,
           ),
         ),
@@ -230,7 +230,7 @@ class _InvoiceProductsSectionWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                LocalizationConstants.products,
+                LocalizationConstants.products.localized(),
                 style: OptiTextStyles.titleLarge,
               ),
               const SizedBox(width: 8),
@@ -252,7 +252,7 @@ class _InvoiceProductsSectionWidget extends StatelessWidget {
                   invoiceLine.shortDescription ?? invoiceLine.description,
               productNumber: invoiceLine.productErpNumber,
               manufacturerItem: !invoiceLine.manufacturerItem.isNullOrEmpty
-                  ? LocalizationConstants.mFGNumberSign +
+                  ? LocalizationConstants.mFGNumberSign.localized() +
                       (invoiceLine.manufacturerItem ?? '')
                   : null,
               discountMessage: DiscountValueConverter().convert(invoiceLine),

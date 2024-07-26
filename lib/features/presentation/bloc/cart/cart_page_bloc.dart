@@ -1,9 +1,12 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/fullfillment_method_type.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -12,11 +15,13 @@ part 'cart_page_state.dart';
 
 class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
   final CartUseCase _cartUseCase;
+  final PricingInventoryUseCase _pricingInventoryUseCase;
   Cart? cart;
   bool hasCheckout = true;
   ProductSettings? productSettings;
-  CartPageBloc({required CartUseCase cartUseCase})
+  CartPageBloc({required CartUseCase cartUseCase, required PricingInventoryUseCase pricingInventoryUseCase})
       : _cartUseCase = cartUseCase,
+        _pricingInventoryUseCase = pricingInventoryUseCase,
         super(CartPageInitialState()) {
     on<CartPageLoadEvent>(_onCurrentCartLoadEvent);
     on<CartPagePickUpLocationChangeEvent>(_onCartPagePickUpLocationChangeEvent);
@@ -25,6 +30,11 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
   Future<void> _onCurrentCartLoadEvent(
       CartPageLoadEvent event, Emitter<CartPageState> emit) async {
     emit(CartPageLoadingState());
+
+    await _cartUseCase.trackEvent(AnalyticsEvent(
+      AnalyticsConstants.eventViewScreen,
+      AnalyticsConstants.screenNameCart,
+    ));
 
     hasCheckout = await _cartUseCase.hasCheckout();
 
@@ -56,14 +66,20 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
           var settingResult = await _cartUseCase.loadCartSetting();
           switch (settingResult) {
             case Success(value: final setting):
+              final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
+              final hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
+
               emit(CartPageLoadedState(
-                  cart: data!,
-                  warehouse: wareHouse!,
-                  promotions: promotionCollection!,
-                  isCustomerOrderApproval: isCustomerOrderApproval,
-                  cartSettings: setting!,
-                  shippingMethod: shippingMethod ?? '',
-                  cartWarningMsg: cartWarningMsg));
+                cart: data!,
+                warehouse: wareHouse!,
+                promotions: promotionCollection!,
+                isCustomerOrderApproval: isCustomerOrderApproval,
+                cartSettings: setting!,
+                shippingMethod: shippingMethod ?? '',
+                cartWarningMsg: cartWarningMsg,
+                hidePricingEnable: hidePricingEnable,
+                hideInventoryEnable: hideInventoryEnable,
+              ));
               break;
             case Failure(errorResponse: final errorResponse):
               emit(CartPageFailureState(
@@ -82,7 +98,8 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
   }
 
   Future<void> _onCartPagePickUpLocationChangeEvent(
-      CartPagePickUpLocationChangeEvent event, Emitter<CartPageState> emit) async {
+      CartPagePickUpLocationChangeEvent event,
+      Emitter<CartPageState> emit) async {
     await _cartUseCase.patchPickUpLocation(event.wareHouse);
     add(CartPageLoadEvent());
   }

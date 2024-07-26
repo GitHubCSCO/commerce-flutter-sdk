@@ -5,12 +5,16 @@ class OrderDetailsState extends Equatable {
   final OrderStatus orderStatus;
   final bool isReorderViewVisible;
   final OrderSettingsEntity orderSettings;
+  final bool? hidePricingEnable;
+  final bool? hideInventoryEnable;
 
   const OrderDetailsState({
     required this.order,
     required this.isReorderViewVisible,
     required this.orderStatus,
     required this.orderSettings,
+    this.hidePricingEnable,
+    this.hideInventoryEnable
   });
 
   @override
@@ -19,6 +23,8 @@ class OrderDetailsState extends Equatable {
         orderStatus,
         isReorderViewVisible,
         orderSettings,
+        hidePricingEnable ?? false,
+        hideInventoryEnable ?? false
       ];
 
   OrderDetailsState copyWith({
@@ -26,12 +32,16 @@ class OrderDetailsState extends Equatable {
     OrderStatus? orderStatus,
     bool? isReorderViewVisible,
     OrderSettingsEntity? orderSettings,
+    bool? hidePricingEnable,
+    bool? hideInventoryEnable,
   }) {
     return OrderDetailsState(
       order: order ?? this.order,
       orderStatus: orderStatus ?? this.orderStatus,
       isReorderViewVisible: isReorderViewVisible ?? this.isReorderViewVisible,
       orderSettings: orderSettings ?? this.orderSettings,
+      hidePricingEnable: hidePricingEnable ?? this.hidePricingEnable,
+      hideInventoryEnable: hideInventoryEnable ?? this.hideInventoryEnable,
     );
   }
 }

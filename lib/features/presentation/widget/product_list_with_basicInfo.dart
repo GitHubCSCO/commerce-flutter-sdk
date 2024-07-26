@@ -131,7 +131,7 @@ class ProductListItemWithBasicInfo extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  LocalizationConstants.itemNumber
+                  LocalizationConstants.itemNumber.localized()
                       .format([productNumber ?? '']),
                   style: OptiTextStyles.bodySmall.copyWith(
                     color: OptiAppColors.textDisabledColor,

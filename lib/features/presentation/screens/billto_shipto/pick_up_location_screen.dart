@@ -64,7 +64,7 @@ class PickUpLocationScreen extends StatelessWidget {
                 ),
                 ListInformationBottomSubmitWidget(actions: [
                   PrimaryButton(
-                    text: LocalizationConstants.selectLocation,
+                    text: LocalizationConstants.selectLocation.localized(),
                     onPressed: () async {
                       var selectedLocation =
                           context.read<PickupLocationBloc>().selectedWarehouse;

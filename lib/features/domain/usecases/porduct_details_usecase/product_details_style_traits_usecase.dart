@@ -126,10 +126,10 @@ class ProductDetailsStyleTraitsUseCase {
     return ProductDetailStyleValue(
         styleValue: StyleValueEntity(
             styleTraitId: styleTrait.id,
-            valueDisplay: LocalizationConstants.selectSomething +
+            valueDisplay: LocalizationConstants.selectSomething.localized() +
                 styleTrait.nameDisplay!),
         displayName:
-            LocalizationConstants.selectSomething + styleTrait.nameDisplay!,
+            LocalizationConstants.selectSomething.localized() + styleTrait.nameDisplay!,
         isAvailable: true);
   }
 

@@ -42,7 +42,7 @@ class CheckoutSuccessScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(LocalizationConstants.orderConfirmation),
+          title: Text(LocalizationConstants.orderConfirmation.localized()),
         ),
         body: MultiBlocProvider(
           providers: [
@@ -90,8 +90,8 @@ class CheckoutSuccessPage extends StatelessWidget {
           ListInformationBottomSubmitWidget(actions: [
             PrimaryButton(
               text: checkoutSuccessEntity.isVmiCheckout
-                  ? LocalizationConstants.backToVmiHome
-                  : LocalizationConstants.continueShopping,
+                  ? LocalizationConstants.backToVmiHome.localized()
+                  : LocalizationConstants.continueShopping.localized(),
               onPressed: () async {
                 if (checkoutSuccessEntity.isVmiCheckout) {
                   AppRoute.vmi.navigate(context);
@@ -117,7 +117,7 @@ class CheckoutSuccessPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Text(
-              "${LocalizationConstants.orderSummary} ($itemCount $itemText)",
+              "${LocalizationConstants.orderSummary.localized()} ($itemCount $itemText)",
               textAlign: TextAlign.start,
               style: OptiTextStyles.subtitle,
             ),

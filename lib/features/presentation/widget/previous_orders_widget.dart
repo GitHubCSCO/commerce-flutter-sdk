@@ -43,7 +43,7 @@ class PreviousOrdersWidget extends StatelessWidget {
                 visible: state.previousOrdersDataEntity.orders.isEmpty,
                 child: Center(
                   child: Text(
-                    LocalizationConstants.previousOrdersNotFound,
+                    LocalizationConstants.previousOrdersNotFound.localized(),
                     style: OptiTextStyles.body,
                     textAlign: TextAlign.center,
                   ),
@@ -88,8 +88,8 @@ class PreviousOrdersWidget extends StatelessWidget {
                 child: TertiaryButton(
                     borderColor: OptiAppColors.grayBackgroundColor,
                     backgroundColor: OptiAppColors.grayBackgroundColor,
-                    child: const Text(
-                      LocalizationConstants.viewAllOrders,
+                    child: Text(
+                      LocalizationConstants.viewAllOrders.localized(),
                     ),
                     onPressed: () {
                       AppRoute.vmiOrderHistory.navigateBackStack(context);

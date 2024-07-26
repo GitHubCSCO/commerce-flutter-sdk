@@ -65,7 +65,7 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
             color: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
             child: Input(
-              hintText: LocalizationConstants.search,
+              hintText: LocalizationConstants.search.localized(),
               suffixIcon: IconButton(
                 icon: SvgPicture.asset(
                   AssetConstants.iconClear,
@@ -150,6 +150,7 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
                         ),
                         _OrderHistoryListWidget(
                           orderEntities: state.orderEntities.orders ?? [],
+                          hidePricingEnable: state.hidePricingEnable,
                         ),
                       ],
                     ),
@@ -164,9 +165,13 @@ class OrderHistoryPage extends BaseDynamicContentScreen {
 }
 
 class _OrderHistoryListWidget extends StatefulWidget {
-  const _OrderHistoryListWidget({required this.orderEntities});
 
   final List<OrderEntity> orderEntities;
+  final bool? hidePricingEnable;
+
+  const _OrderHistoryListWidget(
+      {required this.orderEntities,
+      this.hidePricingEnable});
 
   @override
   State<_OrderHistoryListWidget> createState() =>
@@ -240,6 +245,7 @@ class __OrderHistoryListWidgetState extends State<_OrderHistoryListWidget> {
                     },
                   );
                 },
+                hidePricingEnable: widget.hidePricingEnable,
               );
             },
             separatorBuilder: (context, index) {
@@ -331,12 +337,12 @@ void _showOrderHistoryFilter(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FilterOptionSwitch(
-                label: LocalizationConstants.showMyOrdersOnly,
+                label: LocalizationConstants.showMyOrdersOnly.localized(),
                 value: state.temporaryShowMyOrdersValue,
                 onChanged: (_) => onShowMyOrdersToggled(),
               ),
               FilterOptionsChip(
-                label: LocalizationConstants.status,
+                label: LocalizationConstants.status.localized(),
                 values: state.filterValues,
                 selectedValueIds: state.temporarySelectedFilterValueIds,
                 onSelectionIdAdded: onStatusValueAdded,

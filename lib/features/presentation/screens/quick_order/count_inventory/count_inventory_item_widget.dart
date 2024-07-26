@@ -44,37 +44,37 @@ class CountInventoryItemWidget extends StatelessWidget {
     List<Widget> list = [];
 
     final part = _buildRow(
-        LocalizationConstants.partNumberSign,
+        LocalizationConstants.partNumberSign.localized(),
         OptiTextStyles.subtitle,
         quickOrderItemEntity.productEntity.getProductNumber(),
         OptiTextStyles.body);
     final myPart = _buildRow(
-        LocalizationConstants.myPartNumberSign,
+        LocalizationConstants.myPartNumberSign.localized(),
         OptiTextStyles.subtitle,
         quickOrderItemEntity.productEntity.customerName ?? '',
         OptiTextStyles.body);
     final mfg = _buildRow(
-        LocalizationConstants.mFGNumberSign,
+        LocalizationConstants.mFGNumberSign.localized(),
         OptiTextStyles.subtitle,
         quickOrderItemEntity.productEntity.manufacturerItem ?? '',
         OptiTextStyles.body);
     final bin = _buildRow(
-        LocalizationConstants.binSign,
+        LocalizationConstants.binSign.localized(),
         OptiTextStyles.subtitle,
         quickOrderItemEntity.vmiBinEntity?.binNumber ?? '',
         OptiTextStyles.body);
     final count = _buildRow(
-        LocalizationConstants.count,
+        LocalizationConstants.count.localized(),
         OptiTextStyles.subtitle,
         quickOrderItemEntity.quantityOrdered.toInt().toString(),
         OptiTextStyles.body);
     final maxCount = _buildRow(
-        LocalizationConstants.maxSign,
+        LocalizationConstants.maxSign.localized(),
         OptiTextStyles.subtitle,
         quickOrderItemEntity.vmiBinEntity?.maximumQty?.toInt().toString() ?? '',
         OptiTextStyles.body);
     final minCount = _buildRow(
-        LocalizationConstants.minSign,
+        LocalizationConstants.minSign.localized(),
         OptiTextStyles.subtitle,
         quickOrderItemEntity.vmiBinEntity?.minimumQty?.toInt().toString() ?? '',
         OptiTextStyles.body);
@@ -211,12 +211,12 @@ class OrderVmiProductTitleWidget extends StatelessWidget {
   List<ToolMenu> _buildToolMenu(BuildContext context) {
     List<ToolMenu> list = [];
     list.add(ToolMenu(
-        title: LocalizationConstants.newCount,
+        title: LocalizationConstants.newCount.localized(),
         action: () {
           callback(context, orderItemEntity, OrderCallBackType.newCount);
         }));
     list.add(ToolMenu(
-        title: LocalizationConstants.remove,
+        title: LocalizationConstants.remove.localized(),
         action: () {
           callback(context, orderItemEntity, OrderCallBackType.itemDelete);
         }));

@@ -205,11 +205,11 @@ class ProductDetailsUseCase extends BaseUseCase {
         genralInfoEntity.copyWith(productInformationWasUpdated: true);
 
     genralInfoEntity = genralInfoEntity.copyWith(
-        myPartNumberTitle: LocalizationConstants.myPartNumberSign);
+        myPartNumberTitle: LocalizationConstants.myPartNumberSign.localized());
     genralInfoEntity = genralInfoEntity.copyWith(
-        mFGNumberTitle: LocalizationConstants.myPartNumberSign);
+        mFGNumberTitle: LocalizationConstants.myPartNumberSign.localized());
     genralInfoEntity = genralInfoEntity.copyWith(
-        packDescriptionTitle: LocalizationConstants.packDescription);
+        packDescriptionTitle: LocalizationConstants.packDescription.localized());
 
     return genralInfoEntity;
   }
@@ -265,7 +265,7 @@ class ProductDetailsUseCase extends BaseUseCase {
     if (product.crossSells != null && product.crossSells!.isNotEmpty) {
       var porductCarouselWidget = ProductCarouselWidgetEntity(
           carouselType: ProductCarouselType.webCrossSells,
-          title: LocalizationConstants.recommendedProducts);
+          title: LocalizationConstants.recommendedProducts.localized());
 
       final List<ProductCarouselEntity> productCarouselList = [];
       for (var crosSell in product.crossSells!) {
@@ -288,8 +288,13 @@ class ProductDetailsUseCase extends BaseUseCase {
   }
 
   ProductDetailsPriceEntity makeProductDetailsPriceEntity() {
-    return const ProductDetailsPriceEntity(
-        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsPrice);
+    final hidePricingEnable = coreServiceProvider.getAppConfigurationService().hidePricingEnable;
+    final hideInventoryEnable = coreServiceProvider.getAppConfigurationService().hideInventoryEnable;
+    return ProductDetailsPriceEntity(
+      detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsPrice,
+      hidePricing: hidePricingEnable,
+      hideInventory: hideInventoryEnable,
+    );
   }
 
   bool shouldAddConfigSection(ProductEntity product) {
@@ -352,7 +357,7 @@ class ProductDetailsUseCase extends BaseUseCase {
       var option = ConfigSectionOptionEntity(
           sectionName: configSection.sectionName,
           description:
-              "${LocalizationConstants.selectSomething} ${configSection.sectionName!}");
+              "${LocalizationConstants.selectSomething.localized()} ${configSection.sectionName!}");
       product.configurationDto!.sections![index].options!.insert(0, option);
     }
     return ProductDetailsStandardConfigurationEntity(

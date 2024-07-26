@@ -218,7 +218,7 @@ class BillingShippingWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          LocalizationConstants.shippingMethod,
+          LocalizationConstants.shippingMethod.localized(),
           textAlign: TextAlign.center,
           style: OptiTextStyles.subtitle,
         ),
@@ -229,7 +229,7 @@ class BillingShippingWidget extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Text(
-                LocalizationConstants.carrier,
+                LocalizationConstants.carrier.localized(),
                 textAlign: TextAlign.start,
                 style: OptiTextStyles.body,
               ),
@@ -254,7 +254,7 @@ class BillingShippingWidget extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Text(
-                LocalizationConstants.service,
+                LocalizationConstants.service.localized(),
                 textAlign: TextAlign.start,
                 style: OptiTextStyles.body,
               ),
@@ -285,7 +285,7 @@ class BillingShippingWidget extends StatelessWidget {
       children: [
         const SizedBox(height: 12),
         Text(
-          LocalizationConstants.requestDeliveryDateOptional,
+          LocalizationConstants.requestDeliveryDateOptional.localized(),
           textAlign: TextAlign.center,
           style: OptiTextStyles.subtitle,
         ),
@@ -296,7 +296,7 @@ class BillingShippingWidget extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Text(
-                LocalizationConstants.date,
+                LocalizationConstants.date.localized(),
                 textAlign: TextAlign.start,
                 style: OptiTextStyles.body,
               ),
@@ -376,7 +376,7 @@ class ShippingAddressWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title != null ? title! : LocalizationConstants.shippingAddress,
+            title != null ? title! : LocalizationConstants.shippingAddress.localized(),
             textAlign: TextAlign.start,
             style: OptiTextStyles.subtitle,
           ),
@@ -385,7 +385,7 @@ class ShippingAddressWidget extends StatelessWidget {
               fullAddress.isNullOrEmpty &&
               countryName.isNullOrEmpty)
             Text(
-              LocalizationConstants.selectShippingAddress,
+              LocalizationConstants.selectShippingAddress.localized(),
               textAlign: TextAlign.start,
               style: OptiTextStyles.bodyFade,
             ),
@@ -444,7 +444,7 @@ class BillingAddressWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          LocalizationConstants.billingAddress,
+          LocalizationConstants.billingAddress.localized(),
           textAlign: TextAlign.start,
           style: OptiTextStyles.subtitle,
         ),
@@ -515,7 +515,7 @@ class PickupLocationWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          LocalizationConstants.pickUpLocation,
+          LocalizationConstants.pickUpLocation.localized(),
           textAlign: TextAlign.start,
           style: OptiTextStyles.subtitle,
         ),
@@ -525,7 +525,7 @@ class PickupLocationWidget extends StatelessWidget {
             city.isNullOrEmpty &&
             phone.isNullOrEmpty)
           Text(
-            LocalizationConstants.selectPickUpLocation,
+            LocalizationConstants.selectPickUpLocation.localized(),
             textAlign: TextAlign.start,
             style: OptiTextStyles.bodyFade,
           ),

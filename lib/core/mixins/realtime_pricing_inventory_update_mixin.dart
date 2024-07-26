@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
@@ -13,7 +14,7 @@ mixin RealtimePricingInventoryUpdateMixin {
 
   Future<List<ProductEntity>> updateProductPricingAndInventoryAvailability(
       PricingInventoryUseCase pricingInventoryUseCase, List<Product>? products,
-      {bool onlyPricing = false}) async {
+      {bool? hidePricing, bool? hideInventory}) async {
     final productPricingEnabled =
     await pricingInventoryUseCase.getProductPricingEnable();
     final productAvailabilityEnabled = await pricingInventoryUseCase.getProductInventoryAvailable();
@@ -25,7 +26,7 @@ mixin RealtimePricingInventoryUpdateMixin {
 
     final realTimeResult = await pricingInventoryUseCase.getRealtimeSupportType();
 
-    if (productPricingEnabled && realTimeResult != null) {
+    if (!(hidePricing ?? false) && productPricingEnabled && realTimeResult != null) {
       if (realTimeResult == RealTimeSupport.RealTimePricingOnly ||
           realTimeResult ==
               RealTimeSupport.RealTimePricingWithInventoryIncluded ||
@@ -57,7 +58,7 @@ mixin RealtimePricingInventoryUpdateMixin {
       }
     }
 
-    if (!onlyPricing & productAvailabilityEnabled && realTimeResult != null) {
+    if (!(hideInventory ?? false) & productAvailabilityEnabled && realTimeResult != null) {
       if (realTimeResult == RealTimeSupport.NoRealTimePricingAndInventory ||
           realTimeResult == RealTimeSupport.RealTimePricingAndInventory ||
           realTimeResult == RealTimeSupport.RealTimePricingWithInventoryIncluded ||
@@ -77,22 +78,27 @@ mixin RealtimePricingInventoryUpdateMixin {
                 late AvailabilityEntity? productAvailability;
                 final qtyOnHand = realTimeInventory.qtyOnHand;
 
-                var inventoryAvailability = realTimeInventory.inventoryAvailabilityDtos
-                    ?.singleWhere(
-                        (ia) => ia.unitOfMeasure == product.unitOfMeasure);
-                if (inventoryAvailability != null) {
+                var inventoryAvailability =
+                    realTimeInventory.inventoryAvailabilityDtos?.singleWhere(
+                        (ia) => ia.unitOfMeasure == product.unitOfMeasure,
+                        orElse: () => InventoryAvailability());
+                if (inventoryAvailability != null && inventoryAvailability.availability != null) {
                   productAvailability = AvailabilityEntityMapper().toEntity(inventoryAvailability.availability);
                 } else {
                   productAvailability = AvailabilityEntityMapper().toEntity(Availability(messageType: 0));
                 }
 
                 product.productUnitOfMeasures?.forEach((productUnitOfMeasureEntity) {
-                  var unitOfMeasureAvailability = realTimeInventory
-                      .inventoryAvailabilityDtos
-                      ?.singleWhere((i) => i.unitOfMeasure == productUnitOfMeasureEntity.unitOfMeasure);
+                  var unitOfMeasureAvailability =
+                      realTimeInventory.inventoryAvailabilityDtos?.singleWhere(
+                    (i) =>
+                        i.unitOfMeasure ==
+                        productUnitOfMeasureEntity.unitOfMeasure,
+                    orElse: () => InventoryAvailability(),
+                  );
 
                   late Availability? availability;
-                  if (unitOfMeasureAvailability != null) {
+                  if (unitOfMeasureAvailability != null && unitOfMeasureAvailability.availability != null) {
                     availability = unitOfMeasureAvailability.availability;
                   } else {
                     availability = Availability(messageType: 0);
@@ -106,9 +112,12 @@ mixin RealtimePricingInventoryUpdateMixin {
                 if ((product.isStyleProductParent ?? false) &&
                     product.productUnitOfMeasures != null &&
                     product.selectedUnitOfMeasure != null) {
-                  var productUnitOfMeasure = product.productUnitOfMeasures
-                      ?.singleWhere(
-                          (uom) => uom.unitOfMeasure == product.selectedUnitOfMeasure);
+                  var productUnitOfMeasure =
+                      product.productUnitOfMeasures?.singleWhere(
+                    (uom) => uom.unitOfMeasure == product.selectedUnitOfMeasure,
+                    orElse: () => const ProductUnitOfMeasureEntity(),
+                  );
+
                   if (productUnitOfMeasure != null &&
                       productUnitOfMeasure.availability != null) {
                     productAvailability = productUnitOfMeasure.availability;
@@ -123,7 +132,7 @@ mixin RealtimePricingInventoryUpdateMixin {
           for (var product in productList) {
             final productAvailability = Availability(
               messageType: 0,
-              message: LocalizationConstants.unableToRetrieveInventory,
+              message: LocalizationConstants.unableToRetrieveInventory.localized(),
             );
 
             product.availability = AvailabilityEntityMapper().toEntity(productAvailability);

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:commerce_flutter_app/core/config/analytics_config.dart';
 import 'package:commerce_flutter_app/core/extensions/firebase_options_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class RemoteConfigUsecase extends BaseUseCase {
@@ -13,18 +13,18 @@ class RemoteConfigUsecase extends BaseUseCase {
     final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
     // Using zero duration to force fetching from remote server.
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 10),
-        minimumFetchInterval: Duration.zero,
+      fetchTimeout: const Duration(seconds: 10),
+      minimumFetchInterval: Duration.zero,
     ));
     await remoteConfig.fetchAndActivate();
   }
 
   Future<List<Map<String, String>>> fetchDebugCredential(String domain) async {
-    if(sl<FirebaseOptions>().isValid()){
+    if (sl<AnalyticsConfig>().firebaseOptions?.isValid() == true) {
       await _syncRemoteConfig();
       final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
       final String jsonString = remoteConfig.getString('debug_credentials');
-      
+
       if (jsonString.isEmpty) {
         return List.empty();
       }
@@ -44,13 +44,13 @@ class RemoteConfigUsecase extends BaseUseCase {
       });
 
       return result;
-    }else{
+    } else {
       return List.empty();
     }
   }
 
   Future<Map<String, String>> fetchDebugDomains() async {
-    if(sl<FirebaseOptions>().isValid()){
+    if (sl<AnalyticsConfig>().firebaseOptions?.isValid() == true) {
       await _syncRemoteConfig();
       final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
       final String jsonString = remoteConfig.getString('debug_credentials');
@@ -69,7 +69,7 @@ class RemoteConfigUsecase extends BaseUseCase {
       });
 
       return resultMap;
-    }else{
+    } else {
       return {};
     }
   }

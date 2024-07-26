@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.d
 import 'package:commerce_flutter_app/features/domain/entity/settings/order_settings_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/order_usecase/order_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
@@ -13,8 +14,11 @@ part 'order_details_state.dart';
 
 class OrderDetailsCubit extends Cubit<OrderDetailsState> {
   final OrderUsecase _orderUsecase;
-  OrderDetailsCubit({required OrderUsecase orderUsercase})
+  final PricingInventoryUseCase _pricingInventoryUseCase;
+
+  OrderDetailsCubit({required OrderUsecase orderUsercase, required PricingInventoryUseCase pricingInventoryUseCase})
       : _orderUsecase = orderUsercase,
+        _pricingInventoryUseCase = pricingInventoryUseCase,
         super(
           const OrderDetailsState(
             order: OrderEntity(),
@@ -44,6 +48,9 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
         orderSettings: orderSettings,
       );
 
+      final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
+      final hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
+
       if (order.orderPromotions != null || order.orderPromotions!.isNotEmpty) {
         final promotionAdjustedOrder = order.copyWith(
           orderPromotions: order.orderPromotions!.map((promotion) {
@@ -52,7 +59,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
                   ? ('- ${promotion.amountDisplay!}')
                   : null,
               name: promotion.name != null
-                  ? '${LocalizationConstants.promotion} : ${promotion.name}'
+                  ? '${LocalizationConstants.promotion.localized()} : ${promotion.name}'
                   : null,
             );
           }).toList(),
@@ -64,6 +71,8 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
             orderSettings: orderSettings,
             orderStatus: OrderStatus.success,
             isReorderViewVisible: isReorderVisible,
+            hidePricingEnable: hidePricingEnable,
+            hideInventoryEnable: hideInventoryEnable
           ),
         );
 
@@ -76,6 +85,8 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
           orderSettings: orderSettings,
           orderStatus: OrderStatus.success,
           isReorderViewVisible: isReorderVisible,
+          hidePricingEnable: hidePricingEnable,
+          hideInventoryEnable: hideInventoryEnable,
         ),
       );
     }
@@ -129,8 +140,8 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
 
   String? get requestedDeliveryDateTitle => _requestedDeliveryDateVisible
       ? (state.order.fulfillmentMethod == 'PickUp'
-          ? LocalizationConstants.requestPickUpDate
-          : LocalizationConstants.requestDeliveryDate)
+          ? LocalizationConstants.requestPickUpDate.localized()
+          : LocalizationConstants.requestDeliveryDate.localized())
       : null;
 
   String? get requestedDeliveryDate => _requestedDeliveryDateVisible
@@ -193,18 +204,18 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       (!state.order.stCountry.isNullOrEmpty ? '${state.order.stCountry}' : '');
 
   // Subtotal
-  String? get subTotalTitle => LocalizationConstants.subtotalItems;
+  String? get subTotalTitle => LocalizationConstants.subtotalItems.localized();
 
   String? get subTotalValue => state.order.orderSubTotalDisplay;
 
-  String? get discountTitle => LocalizationConstants.discounts;
+  String? get discountTitle => LocalizationConstants.discounts.localized();
 
   String? get discountValue => (state.order.orderDiscountAmount == null ||
           state.order.orderDiscountAmount! == 0)
       ? ''
       : '-${state.order.orderDiscountAmountDisplay}';
 
-  String? get shippingHandlingTitle => LocalizationConstants.shippingHandling;
+  String? get shippingHandlingTitle => LocalizationConstants.shippingHandling.localized();
 
   num get _shippingHandlingValue =>
       (state.order.shippingCharges ?? 0) + (state.order.handlingCharges ?? 0);
@@ -212,18 +223,18 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       ? ''
       : '${CoreConstants.currencySymbol}${_shippingHandlingValue.toStringAsFixed(2)}';
 
-  String? get otherChargesTitle => LocalizationConstants.otherCharges;
+  String? get otherChargesTitle => LocalizationConstants.otherCharges.localized();
 
   String? get otherChargesValue =>
       (state.order.otherCharges == null || state.order.otherCharges! == 0)
           ? ''
           : state.order.otherChargesDisplay;
 
-  String? get taxTitle => LocalizationConstants.tax;
+  String? get taxTitle => LocalizationConstants.tax.localized();
 
   String? get taxValue => state.order.totalTaxDisplay;
 
-  String? get totalTitle => LocalizationConstants.total;
+  String? get totalTitle => LocalizationConstants.total.localized();
 
   String? get totalValue => state.order.orderGrandTotalDisplay;
 }

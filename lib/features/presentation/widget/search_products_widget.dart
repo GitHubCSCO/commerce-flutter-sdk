@@ -101,23 +101,23 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                             visible: state.originalQuery != null && state.originalQuery!.isNotEmpty,
                             child: Text(
                               state.originalQuery==null ?
-                              LocalizationConstants.results.format(
+                              LocalizationConstants.results.localized().format(
                                 [
                                   (state.paginationEntity
                                               ?.totalItemCount ==
                                           0)
-                                      ? LocalizationConstants.no
+                                      ? LocalizationConstants.no.localized()
                                       : state.paginationEntity
                                           ?.totalItemCount
                                 ],
                               )
                               :
-                              LocalizationConstants.resultsFor.format(
+                              LocalizationConstants.resultsFor.localized().format(
                                 [
                                   (state.paginationEntity
                                               ?.totalItemCount ==
                                           0)
-                                      ? LocalizationConstants.no
+                                      ? LocalizationConstants.no.localized()
                                       : state.paginationEntity
                                           ?.totalItemCount,
                                   state.originalQuery
@@ -197,6 +197,8 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                             product: product,
                             productSettings: state.productSettings,
                             pricingEnable: state.productPricingEnabled,
+                            hidePricingEnable: state.hidePricingEnabled,
+                            hideInventoryEnable: state.hideInventoryEnabled,
                           );
                         },
                       ),
@@ -213,8 +215,16 @@ class SearchProductWidget extends StatelessWidget {
   final ProductEntity product;
   final ProductSettings? productSettings;
   final bool? pricingEnable;
+  final bool? hidePricingEnable;
+  final bool? hideInventoryEnable;
 
-  const SearchProductWidget({super.key, required this.product, required this.productSettings, required this.pricingEnable});
+  const SearchProductWidget(
+      {super.key,
+      required this.product,
+      required this.productSettings,
+      required this.pricingEnable,
+      this.hidePricingEnable,
+      this.hideInventoryEnable});
 
   @override
   Widget build(BuildContext context) {
@@ -278,7 +288,7 @@ class SearchProductWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    LocalizationConstants.itemNumber
+                    LocalizationConstants.itemNumber.localized()
                         .format([product.erpNumber ?? '']),
                     style: OptiTextStyles.bodySmall.copyWith(
                       color: OptiAppColors.textDisabledColor,
@@ -295,6 +305,8 @@ class SearchProductWidget extends StatelessWidget {
                     erpNumber: product.erpNumber,
                     unitOfMeasure: product.unitOfMeasure,
                     showViewAvailabilityByWarehouse: _showWarehouseInventory(),
+                    hidePricingEnable: hidePricingEnable,
+                    hideInventoryEnable: hideInventoryEnable,
                   ),
                 ],
               ),
@@ -363,20 +375,20 @@ class SearchProductWidget extends StatelessWidget {
     List<Widget> list = [];
 
     final myPart = _buildRow(
-        LocalizationConstants.myPartNumberSign,
+        LocalizationConstants.myPartNumberSign.localized(),
         OptiTextStyles.bodySmall,
         product.customerName ??
             '',
         OptiTextStyles.bodyExtraSmall);
     final mfg = _buildRow(
-        LocalizationConstants.mFGNumberSign,
+        LocalizationConstants.mFGNumberSign.localized(),
         OptiTextStyles.bodySmall,
         product.manufacturerItem ??
             '',
         OptiTextStyles.bodyExtraSmall);
 
     final pack = _buildRow(
-        LocalizationConstants.packSign,
+        LocalizationConstants.packSign.localized(),
         OptiTextStyles.bodySmall,
         product.packDescription ??
             '',

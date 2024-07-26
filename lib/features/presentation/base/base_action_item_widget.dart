@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/config/log_config.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
@@ -45,6 +46,22 @@ class BaseActionItemWidget extends StatelessWidget {
         return "assets/images/icon_view_account.svg";
       case ActionType.search:
         return "assets/images/icon_search.svg";
+      case ActionType.savedOrders:
+        return "assets/images/icon_saved_order.svg";
+      case ActionType.orderApproval:
+        return "assets/images/icon_order_approval.svg";
+      case ActionType.invoices:
+        return "assets/images/icon_invoice_history.svg";
+      case ActionType.savedPayments:
+        return "assets/images/icon_saved_payments.svg";
+      case ActionType.vmi:
+        return "assets/images/icon_vmi.svg";
+      case ActionType.quotes:
+        return "assets/images/icon_quotes.svg";
+      case ActionType.showHidePricing:
+        return "assets/images/icon_hide_pricing.svg";
+      case ActionType.showHideInventory:
+        return "assets/images/icon_hide_inventory.svg";
       default:
         return "assets/images/icon_view_account.svg";
     }
@@ -53,52 +70,52 @@ class BaseActionItemWidget extends StatelessWidget {
   String getActionTitle(ActionLinkEntity actionLink) {
     switch (actionLink.type) {
       case ActionType.categories:
-        return LocalizationConstants.shopCategories;
+        return LocalizationConstants.shopCategories.localized();
       case ActionType.brands:
-        return LocalizationConstants.shopBrands;
+        return LocalizationConstants.shopBrands.localized();
       case ActionType.quickOrder:
-        return LocalizationConstants.quickOrder;
+        return LocalizationConstants.quickOrder.localized();
       case ActionType.orderHistory:
-        return LocalizationConstants.orders;
+        return LocalizationConstants.orders.localized();
       case ActionType.showHidePricing:
-        return LocalizationConstants.showHidePricing;
+        return LocalizationConstants.showHidePricing.localized();
       case ActionType.showHideInventory:
-        return LocalizationConstants.showHideInventory;
+        return LocalizationConstants.showHideInventory.localized();
       case ActionType.orderApproval:
-        return LocalizationConstants.orderApproval;
+        return LocalizationConstants.orderApproval.localized();
       case ActionType.lists:
-        return LocalizationConstants.lists;
+        return LocalizationConstants.lists.localized();
       case ActionType.savedOrders:
-        return LocalizationConstants.savedOrders;
+        return LocalizationConstants.savedOrders.localized();
       case ActionType.locationFinder:
-        return LocalizationConstants.locationFinder;
+        return LocalizationConstants.locationFinder.localized();
       case ActionType.settings:
-        return LocalizationConstants.settings;
+        return LocalizationConstants.settings.localized();
       case ActionType.changeCustomer:
-        // return this.hasWillCall ? LocalizationConstants.ChangeCustomerWillCall : LocalizationConstants.ChangeCustomer;
-        return LocalizationConstants.changeCustomerWillCall;
+        // return this.hasWillCall ? LocalizationConstants.ChangeCustomerWillCall.localized() : LocalizationConstants.ChangeCustomer.localized();
+        return LocalizationConstants.changeCustomerWillCall.localized();
       case ActionType.signOut:
-        return LocalizationConstants.signOut;
+        return LocalizationConstants.signOut.localized();
       case ActionType.viewAccountOnWebsite:
-        return LocalizationConstants.viewAccountOnWebsite;
+        return LocalizationConstants.viewAccountOnWebsite.localized();
       case ActionType.search:
-        return LocalizationConstants.search;
+        return LocalizationConstants.search.localized();
       case ActionType.forceCrash:
         return "Force Crash";
       case ActionType.toggleLogging:
-      // return Logger.IsAllLogsEnabled ? "Disable logging" : "Enable logging";
+      return LogConfig.isAllLogsEnabled ? "Disable logging" : "Enable logging";
       case ActionType.invoices:
-        return LocalizationConstants.invoiceHistory;
+        return LocalizationConstants.invoiceHistory.localized();
       case ActionType.savedPayments:
-        return LocalizationConstants.mySavedPayments;
+        return LocalizationConstants.mySavedPayments.localized();
       case ActionType.quotes:
-        return LocalizationConstants.myQuotes;
+        return LocalizationConstants.myQuotes.localized();
       case ActionType.vmi:
-        return LocalizationConstants.vendorManagedInventory;
+        return LocalizationConstants.vendorManagedInventory.localized();
       case ActionType.countInventory:
-        return LocalizationConstants.countInventory;
+        return LocalizationConstants.countInventory.localized();
       case ActionType.createOrder:
-        return LocalizationConstants.createOrder;
+        return LocalizationConstants.createOrder.localized();
       case ActionType.custom:
         return actionLink.text!;
       case ActionType.unknown:
@@ -199,20 +216,20 @@ class BaseActionItemWidget extends StatelessWidget {
   void signOut(BuildContext context) {
     displayDialogWidget(
         context: context,
-        title: LocalizationConstants.signOut,
+        title: LocalizationConstants.signOut.localized(),
         actions: [
           DialogPlainButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text(LocalizationConstants.cancel),
+            child: Text(LocalizationConstants.cancel.localized()),
           ),
           DialogPlainButton(
             onPressed: () {
               Navigator.of(context).pop();
               context.read<LogoutCubit>().logout();
             },
-            child: const Text(LocalizationConstants.oK),
+            child: Text(LocalizationConstants.oK.localized()),
           ),
         ]);
   }
