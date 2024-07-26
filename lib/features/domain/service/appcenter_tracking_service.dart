@@ -1,7 +1,6 @@
 import 'package:appcenter_analytics/appcenter_analytics.dart';
 import 'package:commerce_flutter_app/core/config/analytics_config.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/tracking_service_interface.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -11,30 +10,31 @@ class AppCenterTrackingService implements ITrackingService {
   late IAccountService accountService;
   late AnalyticsConfig analyticsConfig;
 
-  Future<bool> _initialize() async {
-    sessionService = sl<ISessionService>();
-    accountService = sl<IAccountService>();
-    analyticsConfig = sl<AnalyticsConfig>();
-    return analyticsConfig.appCenterSecret.isNullOrEmpty == false;
-  }
+  AppCenterTrackingService({
+    required this.sessionService,
+    required this.accountService,
+    required this.analyticsConfig,
+  });
+
+  bool get isEnabled => analyticsConfig.appCenterSecret.isNullOrEmpty == false;
 
   @override
   Future<void> forceCrash() async {
-    if (await _initialize()) {
+    if (isEnabled) {
       AppCenterCrashes.generateTestCrash();
     }
   }
 
   @override
   Future<void> setUserID(String userId) async {
-    if (await _initialize()) {
+    if (isEnabled) {
       AppCenter.setUserId(userId: userId);
     }
   }
 
   @override
   Future<void> trackEvent(AnalyticsEvent analyticsEvent) async {
-    if (await _initialize()) {
+    if (isEnabled) {
       var result = await sessionService.getCachedOrCurrentSession();
       var session = result.getResultSuccessValue();
       if (session != null && session.isAuthenticated == true) {
@@ -68,7 +68,7 @@ class AppCenterTrackingService implements ITrackingService {
   @override
   Future<void> trackError(dynamic e,
       {StackTrace? trace, Map<String, String>? reason}) async {
-    if (await _initialize()) {
+    if (isEnabled) {
       if (e is ErrorResponse) {
         AppCenterCrashes.trackException(
             message: e.extractErrorMessage() ?? e.exception.toString(),

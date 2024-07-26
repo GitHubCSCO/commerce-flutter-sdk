@@ -1,7 +1,6 @@
 import 'package:commerce_flutter_app/core/config/analytics_config.dart';
 import 'package:commerce_flutter_app/core/extensions/firebase_options_extension.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/tracking_service_interface.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -12,37 +11,40 @@ class FirebaseTrackingService implements ITrackingService {
   late ISessionService sessionService;
   late IAccountService accountService;
   late AnalyticsConfig analyticsConfig;
+
   late FirebaseAnalytics analytics;
   late FirebaseCrashlytics crashlytics;
 
-  Future<bool> _initialize() async {
-    sessionService = sl<ISessionService>();
-    accountService = sl<IAccountService>();
-    analyticsConfig = sl<AnalyticsConfig>();
+  FirebaseTrackingService({
+    required this.sessionService,
+    required this.accountService,
+    required this.analyticsConfig,
+  }) {
     if (analyticsConfig.firebaseOptions?.isValid() == true) {
       analytics = FirebaseAnalytics.instance;
       crashlytics = FirebaseCrashlytics.instance;
     }
-    return analyticsConfig.firebaseOptions?.isValid() == true;
   }
+
+  bool get isEnabled => analyticsConfig.firebaseOptions?.isValid() == true;
 
   @override
   Future<void> forceCrash() async {
-    if (await _initialize()) {
+    if (isEnabled) {
       crashlytics.crash();
     }
   }
 
   @override
   Future<void> setUserID(String userId) async {
-    if (await _initialize()) {
+    if (isEnabled) {
       analytics.setUserId(id: userId);
     }
   }
 
   @override
   Future<void> trackEvent(AnalyticsEvent analyticsEvent) async {
-    if (await _initialize()) {
+    if (isEnabled) {
       var result = await sessionService.getCachedOrCurrentSession();
       var session = result.getResultSuccessValue();
       if (session != null && session.isAuthenticated == true) {
@@ -77,7 +79,7 @@ class FirebaseTrackingService implements ITrackingService {
   @override
   Future<void> trackError(dynamic e,
       {StackTrace? trace, Map<String, String>? reason}) async {
-    if (await _initialize()) {
+    if (isEnabled) {
       if (e is ErrorResponse) {
         await crashlytics.recordError(e.exception, trace,
             reason: e.extractErrorMessage());
