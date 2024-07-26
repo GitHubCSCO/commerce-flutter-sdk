@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
@@ -11,6 +12,7 @@ import 'package:commerce_flutter_app/features/presentation/components/input.dart
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_line_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 class QuotePricingScreen extends StatelessWidget {
   final QuoteLineEntity? quoteLineEntity;
@@ -34,7 +36,11 @@ class QuotePricingPage extends StatelessWidget {
           title: const Text(LocalizationConstants.quote),
           actions: [
             InkWell(
-              onTap: () {},
+              onTap: () {
+                context
+                    .read<QuotePricingBloc>()
+                    .add(ApplyQuoteLinePricingEvent());
+              },
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Text(
@@ -59,6 +65,12 @@ class QuotePricingPage extends StatelessWidget {
                 content: Text(state.message),
               ));
             }
+          } else if (state is QuoteLinePricingApplySuccessState) {
+            Navigator.pop(context);
+          } else if (state is QuoteLinePricingApplyFailureState) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(LocalizationConstants.failed),
+            ));
           }
         }, builder: (context, state) {
           if (state is QuotePricingLoadingState) {
@@ -106,15 +118,17 @@ class QuotePricingPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           TertiaryBlackButton(
-            child: Text(LocalizationConstants.addPriceBreak),
+            child: const Text(LocalizationConstants.addPriceBreak),
             onPressed: () {
               context.read<QuotePricingBloc>().add(AddQuotePriceBreakEvent());
             },
           ),
           const SizedBox(width: 16),
           TertiaryBlackButton(
-            child: Text(LocalizationConstants.reset),
-            onPressed: () {},
+            child: const Text(LocalizationConstants.reset),
+            onPressed: () {
+              context.read<QuotePricingBloc>().add(ResetQuotePriceBreakEvent());
+            },
           ),
         ],
       ),
@@ -178,7 +192,7 @@ class PriceBreakwidget extends StatelessWidget {
                 onSubmitted: (p0) {
                   context.read<QuotePricingBloc>().add(
                       QuoteStartQuantityUpdateEvent(
-                          startQuantity: p0, index: index));
+                          startQuantity: p0, id: index));
                 },
                 onTapOutside: (_) {
                   FocusManager.instance.primaryFocus?.unfocus();
@@ -201,8 +215,7 @@ class PriceBreakwidget extends StatelessWidget {
                 controller: endQtycontroller,
                 onSubmitted: (p0) {
                   context.read<QuotePricingBloc>().add(
-                      QuoteEndQuantityUpdateEvent(
-                          endQuantity: p0, index: index));
+                      QuoteEndQuantityUpdateEvent(endQuantity: p0, id: index));
                 },
                 onTapOutside: (_) {
                   FocusManager.instance.primaryFocus?.unfocus();
@@ -220,7 +233,7 @@ class PriceBreakwidget extends StatelessWidget {
                 onSubmitted: (p0) {
                   context
                       .read<QuotePricingBloc>()
-                      .add(QuotePriceUpdateEvent(price: p0, index: index));
+                      .add(QuotePriceUpdateEvent(price: p0, id: index));
                 },
                 onTapOutside: (_) {
                   FocusManager.instance.primaryFocus?.unfocus();
@@ -230,6 +243,24 @@ class PriceBreakwidget extends StatelessWidget {
                 },
               ),
             ),
+            InkWell(
+              onTap: () {
+                context
+                    .read<QuotePricingBloc>()
+                    .add(QuotePiricngBreakDeletionEvent(id: index));
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: SvgPicture.asset(
+                    AssetConstants.cartItemRemoveIcon,
+                    fit: BoxFit.fitWidth,
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),

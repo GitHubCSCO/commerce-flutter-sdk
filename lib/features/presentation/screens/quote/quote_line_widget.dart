@@ -38,36 +38,26 @@ class QuoteLineWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => _navigateToProductDetails(context),
-      child: Container(
-        color: Colors.white,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildProductImage(),
-            _buildProductDetails(context),
-            Visibility(
-                visible: showRemoveButton!, child: _buildRemoveButton(context)),
-            Visibility(
-                visible: moreButtonWidget != null,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: moreButtonWidget ?? Container(),
-                ))
-          ],
-        ),
+    return Container(
+      color: Colors.white,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildProductImage(),
+          _buildProductDetails(context),
+          Visibility(
+              visible: showRemoveButton!, child: _buildRemoveButton(context)),
+          Visibility(
+              visible: moreButtonWidget != null,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                child: moreButtonWidget ?? Container(),
+              ))
+        ],
       ),
     );
-  }
-
-  void _navigateToProductDetails(BuildContext context) {
-    var productId = quoteLineEntity.productId;
-    AppRoute.productDetails.navigateBackStack(context,
-        pathParameters: {"productId": productId.toString()},
-        extra: ProductEntity());
   }
 
   Widget _buildProductImage() {

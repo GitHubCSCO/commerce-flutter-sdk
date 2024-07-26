@@ -23,3 +23,7 @@ class QuotePriceBreakValidationState extends QuotePricingState {
   QuotePriceBreakValidationState(
       {required this.isValid, required this.message});
 }
+
+class QuoteLinePricingApplySuccessState extends QuotePricingState {}
+
+class QuoteLinePricingApplyFailureState extends QuotePricingState {}
