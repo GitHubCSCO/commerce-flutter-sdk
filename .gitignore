@@ -126,3 +126,4 @@ google-play.json
 *.p8
 macos/*
 linux/*
+firebase_options.dart
