@@ -18,8 +18,6 @@ class AppStyle {
   static const double textFieldDefaultHorizontalPadding = 8;
 
   static const double disabledButtonOpacity = 0.4;
-
-  static const Color inputDropShadowColor = Color.fromRGBO(179, 195, 255, 1);
   static const double inputDropShadowSpreadRadius = 3;
 
   static const double defaultHorizontalPadding = 20;
