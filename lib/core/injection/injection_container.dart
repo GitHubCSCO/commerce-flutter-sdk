@@ -1,10 +1,14 @@
+import 'package:commerce_flutter_app/core/config/analytics_config.dart';
 import 'package:commerce_flutter_app/core/config/route_config.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/domain/service/app_configuration_service.dart';
+import 'package:commerce_flutter_app/features/domain/service/appcenter_tracking_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/biometric_authentication_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/commerce_api_service_provider.dart';
+import 'package:commerce_flutter_app/features/domain/service/composite_tracking_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/content_configuration_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/core_service_provider.dart';
+import 'package:commerce_flutter_app/features/domain/service/firebase_tracking_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/geo_location_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/app_configuration_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/device_service.dart';
@@ -16,6 +20,7 @@ import 'package:commerce_flutter_app/features/domain/service/interfaces/geo_loca
 import 'package:commerce_flutter_app/features/domain/service/interfaces/localization_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/location_search_history_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/search_history_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/tracking_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/vmi_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/localization_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/location_search_history_service.dart';
@@ -75,7 +80,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/sea
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/show_hide_pricing_inventory_usecase/show_hide_pricing_inventory_usecse.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/show_hide_pricing_inventory_usecase/show_hide_pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_location_note_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_main_usecase.dart';
@@ -177,9 +182,6 @@ import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:commerce_flutter_app/services/secure_storage_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart'
-    show defaultTargetPlatform, TargetPlatform;
 
 final sl = GetIt.instance;
 
@@ -319,7 +321,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => AddToCartCubit(addToCartUsecase: sl()))
     ..registerFactory(() => AddToCartUsecase())
     ..registerFactory(() =>
-      SearchProductsCubit(searchUseCase: sl(), pricingInventoryUseCase: sl()))
+        SearchProductsCubit(searchUseCase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(
         () => ProductListFilterCubit(productListFilterUsecase: sl()))
     ..registerFactory(() => ProductListFilterUsecase())
@@ -506,17 +508,38 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<ICoreServiceProvider>(() => CoreServiceProvider())
 
     //services
-    ..registerLazySingleton<IRealTimePricingService>(() =>
-        RealTimePricingService(
-            clientService: sl(), cacheService: sl(), networkService: sl()))
-    ..registerLazySingleton<IRealTimeInventoryService>(() =>
-        RealTimeInventoryService(
-            clientService: sl(), cacheService: sl(), networkService: sl()))
+    ..registerLazySingleton<ITrackingService>(() => CompositeTrackingService(
+          trackers: [
+            FirebaseTrackingService(
+              sessionService: sl(),
+              accountService: sl(),
+              analyticsConfig: sl(),
+            ),
+            AppCenterTrackingService(
+              sessionService: sl(),
+              accountService: sl(),
+              analyticsConfig: sl(),
+            ),
+          ],
+        ))
+    ..registerLazySingleton<IRealTimePricingService>(
+        () => RealTimePricingService(
+              clientService: sl(),
+              cacheService: sl(),
+              networkService: sl(),
+            ))
+    ..registerLazySingleton<IRealTimeInventoryService>(
+        () => RealTimeInventoryService(
+              clientService: sl(),
+              cacheService: sl(),
+              networkService: sl(),
+            ))
     ..registerLazySingleton<IWebsiteService>(() => WebsiteService(
-        clientService: sl(),
-        sessionService: sl(),
-        cacheService: sl(),
-        networkService: sl()))
+          clientService: sl(),
+          sessionService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
     ..registerLazySingleton<IProductService>(() => ProductService(
           clientService: sl(),
           cacheService: sl(),
@@ -538,7 +561,10 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<IBiometricAuthenticationService>(
         () => BiometricAuthenticationService(commerceAPIServiceProvider: sl()))
     ..registerLazySingleton<IMobileContentService>(() => MobileContentService(
-        cacheService: sl(), networkService: sl(), clientService: sl()))
+          cacheService: sl(),
+          networkService: sl(),
+          clientService: sl(),
+        ))
     ..registerLazySingleton<IMobileSpireContentService>(
         () => MobileSpireContentService(
               clientService: sl(),
@@ -581,25 +607,32 @@ Future<void> initInjectionContainer() async {
           networkService: sl(),
         ))
     ..registerLazySingleton<IWarehouseService>(() => WarehouseService(
-        clientService: sl(), cacheService: sl(), networkService: sl()))
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
     ..registerLazySingleton<ICartService>(() => CartService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
         ))
     ..registerLazySingleton<IDealerService>(() => DealerService(
-        clientService: sl(), cacheService: sl(), networkService: sl()))
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
     ..registerLazySingleton<IVmiLocationsService>(() => VMILocationService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
         ))
     ..registerLazySingleton<IVmiService>(() => VMIService(
-        commerceAPIServiceProvider: sl(),
-        coreServiceProvider: sl(),
-        clientService: sl(),
-        cacheService: sl(),
-        networkService: sl()))
+          commerceAPIServiceProvider: sl(),
+          coreServiceProvider: sl(),
+          clientService: sl(),
+          cacheService: sl(),
+          networkService: sl(),
+        ))
     ..registerLazySingleton<IOrderService>(() => OrderService(
           clientService: sl(),
           cacheService: sl(),
@@ -630,50 +663,17 @@ Future<void> initInjectionContainer() async {
     ))
     ..registerSingletonAsync<IAppConfigurationService>(() async {
       final service = AppConfigurationService(
-          commerceAPIServiceProvider: sl(),
-          clientService: sl(),
-          cacheService: sl(),
-          networkService: sl());
+        commerceAPIServiceProvider: sl(),
+        clientService: sl(),
+        cacheService: sl(),
+        networkService: sl(),
+      );
       await service.init();
       return service;
     })
-    ..registerLazySingleton<FirebaseOptions>(
-      () {
-        switch (defaultTargetPlatform) {
-          case TargetPlatform.android:
-            return FirebaseOptions(
-              apiKey:
-                  sl<IAppConfigurationService>().firebaseAndroidApiKey ?? "",
-              appId: sl<IAppConfigurationService>().firebaseAndroidAppId ?? "",
-              messagingSenderId: sl<IAppConfigurationService>()
-                      .firebaseAndroidMessagingSenderId ??
-                  "",
-              projectId:
-                  sl<IAppConfigurationService>().firebaseAndroidProjectId ?? "",
-              storageBucket:
-                  sl<IAppConfigurationService>().firebaseAndroidStorageBucket ??
-                      "",
-            );
-          case TargetPlatform.iOS:
-            return FirebaseOptions(
-              apiKey: sl<IAppConfigurationService>().firebaseIOSApiKey ?? "",
-              appId: sl<IAppConfigurationService>().firebaseIOSAppId ?? "",
-              messagingSenderId:
-                  sl<IAppConfigurationService>().firebaseIOSMessagingSenderId ??
-                      "",
-              projectId:
-                  sl<IAppConfigurationService>().firebaseIOSProjectId ?? "",
-              storageBucket:
-                  sl<IAppConfigurationService>().firebaseIOSStorageBucket ?? "",
-              iosBundleId:
-                  sl<IAppConfigurationService>().firebaseIOSBundleId ?? "",
-            );
-          default:
-            return const FirebaseOptions(
-                apiKey: "", appId: "", messagingSenderId: "", projectId: "");
-        }
-      },
-    )
+    ..registerLazySingleton<AnalyticsConfig>(() => AnalyticsConfig(
+          appConfigurationService: sl(),
+        ))
     ..registerLazySingleton<IWishListService>(() => WishListService(
           clientService: sl(),
           cacheService: sl(),

@@ -1,5 +1,7 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/fullfillment_method_type.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
@@ -28,6 +30,11 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
   Future<void> _onCurrentCartLoadEvent(
       CartPageLoadEvent event, Emitter<CartPageState> emit) async {
     emit(CartPageLoadingState());
+
+    await _cartUseCase.trackEvent(AnalyticsEvent(
+      AnalyticsConstants.eventViewScreen,
+      AnalyticsConstants.screenNameCart,
+    ));
 
     hasCheckout = await _cartUseCase.hasCheckout();
 
@@ -91,7 +98,8 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
   }
 
   Future<void> _onCartPagePickUpLocationChangeEvent(
-      CartPagePickUpLocationChangeEvent event, Emitter<CartPageState> emit) async {
+      CartPagePickUpLocationChangeEvent event,
+      Emitter<CartPageState> emit) async {
     await _cartUseCase.patchPickUpLocation(event.wareHouse);
     add(CartPageLoadEvent());
   }

@@ -1,3 +1,5 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
 import 'package:flutter/foundation.dart';
@@ -19,6 +21,10 @@ class ShopPageBloc extends Bloc<ShopPageEvent, ShopPageState> {
   Future<void> _onShopPageLoadEvent(
       ShopPageLoadEvent event, Emitter<ShopPageState> emit) async {
     emit(ShopPageLoadingState());
+    await _shopUseCase.trackEvent(AnalyticsEvent(
+      AnalyticsConstants.eventViewScreen,
+      AnalyticsConstants.screenNameShop,
+    ));
     var result = await _shopUseCase.loadData();
     switch (result) {
       case Success(value: final data):

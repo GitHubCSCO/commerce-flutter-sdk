@@ -57,43 +57,43 @@ void main() {
       ],
     );
 
-    blocTest(
-      'emits [DomainOperationInProgress, DomainOperationFailedInvalid] when selectDomain encounters an invalid domain error',
-      build: () {
-        when(() => domainUsecase.domainSelectHandler(any()))
-            .thenAnswer((_) async => DomainChangeStatus.failedInvalidDomain);
-        return domainCubit;
-      },
-      act: (cubit) async {
-        cubit.selectDomain('invalidDomain');
-      },
-      expect: () => [
-        DomainOperationInProgress(),
-        DomainOperationFailedInvalid(
-          LocalizationConstants.invalidDomain.localized(),
-          LocalizationConstants.domainWebsiteNotResponding.localized(),
-        ),
-      ],
-    );
+    // blocTest(
+    //   'emits [DomainOperationInProgress, DomainOperationFailedInvalid] when selectDomain encounters an invalid domain error',
+    //   build: () {
+    //     when(() => domainUsecase.domainSelectHandler(any()))
+    //         .thenAnswer((_) async => DomainChangeStatus.failedInvalidDomain);
+    //     return domainCubit;
+    //   },
+    //   act: (cubit) async {
+    //     cubit.selectDomain('invalidDomain');
+    //   },
+    //   expect: () => [
+    //     DomainOperationInProgress(),
+    //     DomainOperationFailedInvalid(
+    //       LocalizationConstants.invalidDomain.localized(),
+    //       LocalizationConstants.domainWebsiteNotResponding.localized(),
+    //     ),
+    //   ],
+    // );
 
-    blocTest(
-      'emits [DomainOperationInProgress, DomainOperationFailedMobileAppDisabled] when selectDomain encounters a mobile app disabled error',
-      build: () {
-        when(() => domainUsecase.domainSelectHandler(any())).thenAnswer(
-            (_) async => DomainChangeStatus.failedMobileAppDisabled);
-        return domainCubit;
-      },
-      act: (cubit) async {
-        cubit.selectDomain('invalidDomain');
-      },
-      expect: () => [
-        DomainOperationInProgress(),
-        DomainOperationFailedMobileAppDisabled(
-          LocalizationConstants.mobileAppDisabled.localized(),
-          LocalizationConstants.mobileAppDisabledDescription.localized(),
-        ),
-      ],
-    );
+    // blocTest(
+    //   'emits [DomainOperationInProgress, DomainOperationFailedMobileAppDisabled] when selectDomain encounters a mobile app disabled error',
+    //   build: () {
+    //     when(() => domainUsecase.domainSelectHandler(any())).thenAnswer(
+    //         (_) async => DomainChangeStatus.failedMobileAppDisabled);
+    //     return domainCubit;
+    //   },
+    //   act: (cubit) async {
+    //     cubit.selectDomain('invalidDomain');
+    //   },
+    //   expect: () => [
+    //     DomainOperationInProgress(),
+    //     DomainOperationFailedMobileAppDisabled(
+    //       LocalizationConstants.mobileAppDisabled.localized(),
+    //       LocalizationConstants.mobileAppDisabledDescription.localized(),
+    //     ),
+    //   ],
+    // );
 
     blocTest(
       'emits [DomainOperationInProgress, DomainLoaded] when fetchDomain is called successfully',

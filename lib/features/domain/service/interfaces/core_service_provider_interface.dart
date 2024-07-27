@@ -6,6 +6,7 @@ import 'package:commerce_flutter_app/features/domain/service/interfaces/geo_loca
 import 'package:commerce_flutter_app/features/domain/service/interfaces/localization_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/location_search_history_service.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/search_history_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/tracking_service_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/vmi_service_interface.dart';
 
 abstract class ICoreServiceProvider {
@@ -26,6 +27,7 @@ abstract class ICoreServiceProvider {
   // IPlatformService getPlatformService();
   ISearchHistoryService getSearchHistoryService();
   IVmiService getVmiService();
+  ITrackingService getTrackingService();
   // INavigationState getNavigationState();
   // IOptiLogger getOptiLogger();
 }
