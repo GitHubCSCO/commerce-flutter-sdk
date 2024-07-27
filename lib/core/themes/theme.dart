@@ -56,7 +56,7 @@ ThemeData getTheme() {
   return ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
-    colorScheme: colorScheme,
+    colorScheme: colorScheme.copyWith(primary: OptiAppColors.primaryColor),
     disabledColor: _disabled,
     dividerTheme: const DividerThemeData(
       color: _divider,
