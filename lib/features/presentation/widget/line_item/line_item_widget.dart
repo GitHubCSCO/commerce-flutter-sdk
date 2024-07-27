@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/line_item/line
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_title_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class LineItemWidget extends StatelessWidget {
@@ -175,11 +176,11 @@ class LineItemWidget extends StatelessWidget {
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 15).copyWith(left: 15),
-              child: const SizedBox(
+              child: SizedBox(
                 width: 30,
                 height: 30,
-                child: SvgAssetImage(
-                  assetName: AssetConstants.cartItemRemoveIcon,
+                child: SvgPicture.asset(
+                  AssetConstants.cartItemRemoveIcon,
                   fit: BoxFit.fitWidth,
                 ),
               ),

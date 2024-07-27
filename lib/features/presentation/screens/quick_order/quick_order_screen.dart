@@ -153,8 +153,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         Icons.search,
+                                        color: OptiAppColors.primaryColor,
                                       ),
                                       const SizedBox(width: 8),
                                       Expanded(
@@ -345,7 +346,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                             },
                                             backgroundColor: canProcess
                                                 ? OptiAppColors.buttonDarkRedBackgroudColor
-                                                : AppStyle.primary500,
+                                                : OptiAppColors.primaryColor,
                                             text: canProcess
                                                 ? LocalizationConstants.cancel.localized()
                                                 : LocalizationConstants.tapToScan.localized(),

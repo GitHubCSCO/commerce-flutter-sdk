@@ -197,11 +197,11 @@ class WishListLineWidget extends StatelessWidget {
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 15).copyWith(left: 15),
-              child: const SizedBox(
+              child: SizedBox(
                 width: 30,
                 height: 30,
-                child: SvgAssetImage(
-                  assetName: AssetConstants.cartItemRemoveIcon,
+                child: SvgPicture.asset(
+                  AssetConstants.cartItemRemoveIcon,
                   fit: BoxFit.fitWidth,
                 ),
               ),

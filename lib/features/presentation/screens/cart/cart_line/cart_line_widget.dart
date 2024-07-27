@@ -18,6 +18,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/line_item/line
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CartLineWidget extends StatelessWidget {
   final CartLineEntity cartLineEntity;
@@ -117,13 +118,13 @@ class CartLineWidget extends StatelessWidget {
         context.read<CartContentBloc>().add(CartContentRemoveEvent(
             cartLine: CartLineEntityMapper().toModel(cartLineEntity)));
       },
-      child: const Padding(
-        padding: EdgeInsets.all(15.0),
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
         child: SizedBox(
           width: 30,
           height: 30,
-          child: SvgAssetImage(
-            assetName: AssetConstants.cartItemRemoveIcon,
+          child: SvgPicture.asset(
+            AssetConstants.cartItemRemoveIcon,
             fit: BoxFit.fitWidth,
           ),
         ),
@@ -210,7 +211,7 @@ class CartContentHeaderWidget extends StatelessWidget {
                   ),
                   const SizedBox(width: 11),
                   Text(
-                    'Clear Cart',
+                    LocalizationConstants.clearCart.localized(),
                     textAlign: TextAlign.center,
                     style: OptiTextStyles.body,
                   ),
