@@ -113,14 +113,15 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
         price: item.price,
       ));
     }
-    // parameters.pricingRfq!.priceBreaks = priceBreaks;
+    parameters.pricingRfq!.priceBreaks = priceBreaks;
 
-    var quoteLinePricingResponse =
-        await _quotePricingUsecase.getQuotePricing(quoteLine!.id!, parameters);
+    print(parameters.toJson());
+    var quoteLinePricingResponse = await _quotePricingUsecase.getQuotePricing(
+        quoteLine!.quoteId!, parameters);
 
     switch (quoteLinePricingResponse) {
-      case Success():
-        emit(QuoteLinePricingApplySuccessState());
+      case Success(value: final data):
+        emit(QuoteLinePricingApplySuccessState(quoteDto: data!));
         break;
       case Failure():
         emit(QuoteLinePricingApplyFailureState());

@@ -13,6 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_l
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class QuotePricingScreen extends StatelessWidget {
   final QuoteLineEntity? quoteLineEntity;
@@ -66,9 +67,9 @@ class QuotePricingPage extends StatelessWidget {
               ));
             }
           } else if (state is QuoteLinePricingApplySuccessState) {
-            Navigator.pop(context);
+            context.pop(state.quoteDto);
           } else if (state is QuoteLinePricingApplyFailureState) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text(LocalizationConstants.failed),
             ));
           }

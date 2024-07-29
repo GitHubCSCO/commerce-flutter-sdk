@@ -61,7 +61,8 @@ class QuoteCommunicationBloc
       case Success(value: final value):
         {
           if (value != null) {
-            emit(QuoteCommunicationMessageSendSuccessState());
+            emit(QuoteCommunicationMessageSendSuccessState(
+                quoteDto: event.quoteDto));
           } else {
             emit(QuoteCommunicationMessageSendFailureState());
           }

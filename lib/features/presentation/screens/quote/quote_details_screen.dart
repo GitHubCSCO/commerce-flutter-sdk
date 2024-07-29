@@ -18,6 +18,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_wi
 import 'package:commerce_flutter_app/features/presentation/widget/date_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuoteDetailsScreen extends StatelessWidget {
@@ -47,7 +48,13 @@ class QuoteDetailsPage extends StatelessWidget {
         title: Text(""),
       ),
       body: BlocConsumer<QuoteDetailsBloc, QuoteDetailsState>(
-          listener: (_, state) {
+          buildWhen: (previous, current) {
+        if (current is QuoteDetailsLoadedState ||
+            current is QuoteDetailsLoadingState) {
+          return true;
+        }
+        return false;
+      }, listener: (_, state) {
         if (state is QuoteDetailsInitializationSuccessState) {
           context
               .read<QuoteDetailsBloc>()
@@ -323,10 +330,27 @@ class QuoteDetailsPage extends StatelessWidget {
     list.add(ToolMenu(
         title: LocalizationConstants.quote,
         action: () {
-          AppRoute.quotePricing
-              .navigateBackStack(context, extra: quoteLineEntity);
+          gotoQuotePricing(context, quoteLineEntity);
+          // AppRoute.quotePricing
+          //     .navigateBackStack(context, extra: quoteLineEntity);
         }));
     return list;
+  }
+
+  void gotoQuotePricing(
+      BuildContext context, QuoteLineEntity quoteLineEntity) async {
+    // Store the necessary state before the async call
+    final bloc = context.read<QuoteDetailsBloc>();
+
+    final result = await context.pushNamed<QuoteDto>(AppRoute.quotePricing.name,
+        extra: quoteLineEntity);
+
+    // Check if the widget is still mounted
+    if (context.mounted) {
+      if (result != null) {
+        bloc.add(QuoteDetailsInitEvent());
+      }
+    }
   }
 
   Widget _buildQuoteMessageWidget(BuildContext context, QuoteDto? quoteDto) {

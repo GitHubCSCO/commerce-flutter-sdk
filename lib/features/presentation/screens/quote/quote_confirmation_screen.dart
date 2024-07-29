@@ -1,10 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_information_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_line_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -27,7 +23,6 @@ class QuoteConfirmationScreen extends StatelessWidget {
       ]),
     );
   }
-
 
   Widget _buildTitleWidget(String title) {
     return Padding(

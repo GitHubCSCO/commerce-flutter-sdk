@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_pricing_break_item_entity.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 abstract class QuotePricingState {}
 
@@ -24,6 +25,10 @@ class QuotePriceBreakValidationState extends QuotePricingState {
       {required this.isValid, required this.message});
 }
 
-class QuoteLinePricingApplySuccessState extends QuotePricingState {}
+class QuoteLinePricingApplySuccessState extends QuotePricingState {
+  final QuoteDto quoteDto;
+
+  QuoteLinePricingApplySuccessState({required this.quoteDto});
+}
 
 class QuoteLinePricingApplyFailureState extends QuotePricingState {}

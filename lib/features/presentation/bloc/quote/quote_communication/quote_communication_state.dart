@@ -22,7 +22,12 @@ class QuoteCommunicationFailureState extends QuoteCommunicationState {
 }
 
 class QuoteCommunicationMessageSendSuccessState
-    extends QuoteCommunicationState {}
+    extends QuoteCommunicationState {
+  final QuoteDto quoteDto;
+  QuoteCommunicationMessageSendSuccessState({
+    required this.quoteDto,
+  });
+}
 
 class QuoteCommunicationMessageSendFailureState
     extends QuoteCommunicationState {}
