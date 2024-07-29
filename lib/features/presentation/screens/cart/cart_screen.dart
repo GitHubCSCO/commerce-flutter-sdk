@@ -222,7 +222,7 @@ class CartPage extends StatelessWidget {
                             height: 50,
                             padding: const EdgeInsets.all(10),
                             child: const SvgAssetImage(
-                              assetName: "assets/images/cart.svg",
+                              assetName: AssetConstants.iconCart,
                               fit: BoxFit.fitWidth,
                             ),
                           ),

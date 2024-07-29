@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shipping_entity.dart';
@@ -199,7 +200,7 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                             height: 50,
                             padding: const EdgeInsets.all(10),
                             child: const SvgAssetImage(
-                              assetName: "assets/images/cart.svg",
+                              assetName: AssetConstants.iconCart,
                               fit: BoxFit.fitWidth,
                             ),
                           ),
