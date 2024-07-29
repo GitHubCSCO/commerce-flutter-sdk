@@ -20,7 +20,7 @@ mixin BaseCheckout {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               LocalizationConstants.cancel.localized(),
-              style: OptiTextStyles.subtitleLink,
+              style: OptiTextStyles.subtitleHighlight,
             ),
           ),
         ),
@@ -81,7 +81,7 @@ mixin BaseCheckout {
     }
 
     list.add(_buildRow(LocalizationConstants.subtotal.localized(),
-        cart.orderGrandTotalDisplay ?? '', OptiTextStyles.subtitle)!);
+        cart.orderGrandTotalDisplay ?? '', OptiTextStyles.subtitleHighlight)!);
 
     return Container(
       padding: const EdgeInsets.all(16),

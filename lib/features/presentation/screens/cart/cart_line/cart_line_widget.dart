@@ -15,9 +15,10 @@ import 'package:commerce_flutter_app/features/presentation/widget/line_item/line
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_quantity_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_title_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CartLineWidget extends StatelessWidget {
   final CartLineEntity cartLineEntity;
@@ -200,17 +201,17 @@ class CartContentHeaderWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 16,
                     height: 16,
-                    child: SvgPicture.asset(
-                      AssetConstants.cartClearIcon,
+                    child: SvgAssetImage(
+                      assetName: AssetConstants.cartClearIcon,
                       fit: BoxFit.fitWidth,
                     ),
                   ),
                   const SizedBox(width: 11),
                   Text(
-                    'Clear Cart',
+                    LocalizationConstants.clearCart.localized(),
                     textAlign: TextAlign.center,
                     style: OptiTextStyles.body,
                   ),

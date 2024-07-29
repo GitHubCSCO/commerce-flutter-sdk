@@ -113,10 +113,16 @@ class MyApp extends StatelessWidget {
             );
         }
       },
-      child: MaterialApp.router(
-        title: 'Commerce Mobile',
-        routerConfig: sl<GoRouter>(),
-        theme: lightTheme,
+      child: BlocBuilder<RootBloc, RootState>(
+        buildWhen: (previous, current) => current is RootInitial,
+        builder: (context, state) {
+          final lightTheme = getTheme();
+          return MaterialApp.router(
+            title: 'Commerce Mobile',
+            routerConfig: sl<GoRouter>(),
+            theme: lightTheme,
+          );
+        },
       ),
     );
   }

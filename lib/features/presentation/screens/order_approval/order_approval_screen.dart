@@ -251,7 +251,7 @@ class _OrderApprovalItem extends StatelessWidget {
               children: [
                 Text(
                   cart.orderNumber ?? '',
-                  style: OptiTextStyles.body,
+                  style: OptiTextStyles.body.copyWith(color: OptiAppColors.primaryColor),
                 ),
                 Text(
                   cart.orderDate != null

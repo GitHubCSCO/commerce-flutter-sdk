@@ -82,7 +82,7 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
                 },
                 backgroundColor: canProcess
                     ? OptiAppColors.buttonDarkRedBackgroudColor
-                    : AppStyle.primary500,
+                    : OptiAppColors.primaryColor,
                 text: canProcess
                     ? LocalizationConstants.cancel.localized()
                     : LocalizationConstants.tapToScan.localized(),

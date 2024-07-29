@@ -160,7 +160,7 @@ class CartPaymentSummaryWidget extends StatelessWidget {
                 ? paymentSummaryEntity.cart?.orderGrandTotalDisplay
                 : '') ??
             '';
-    TextStyle textStyle = OptiTextStyles.subtitle;
+    TextStyle textStyle = OptiTextStyles.subtitleHighlight;
 
     var widget = _buildRow(title, body, textStyle);
     if (widget != null) {

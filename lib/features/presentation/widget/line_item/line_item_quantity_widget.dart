@@ -56,7 +56,7 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
           // LineItemSubtotalColumnWidget(title: 'U/M', value: 'E/A'),
           if (!(hidePricingEnable ?? false)) ...{
             LineItemSubtotalColumnWidget(
-              title: 'Subtotal',
+              title: LocalizationConstants.subtotal.localized(),
               value: subtotalPriceText ?? '',
               realTimeLoading: realTimeLoading,
             ),
@@ -104,7 +104,7 @@ class LineItemSubtotalColumnWidget extends StatelessWidget {
                 )
               : Text(
                   value,
-                  style: OptiTextStyles.titleLarge,
+                  style: OptiTextStyles.titleLargeHighLight,
                 )
         ],
       ),

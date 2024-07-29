@@ -16,6 +16,7 @@ class AssetConstants {
   static const String productDeatilsAddToCartIcon =
       'assets/images/product_detail_add_to_cart.svg';
 
+  static const String iconCart = "assets/images/cart.svg";
   static const String iconClear = "assets/images/icon_clear.svg";
   static const String iconBarcodeScan = "assets/images/icon_barcode_scan.svg";
   static const String addToCart = "assets/images/add_to_cart.svg";

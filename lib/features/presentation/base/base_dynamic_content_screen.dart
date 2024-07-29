@@ -55,6 +55,10 @@ class BaseDynamicContentScreen extends StatelessWidget {
           final CarouselWidgetEntity carouselWidgetEntity =
           widgetEntity as CarouselWidgetEntity;
 
+          if ((carouselWidgetEntity.childWidgets ?? []).isEmpty) {
+            return null;
+          }
+
           return buildCarouselSectionWidget(
               carouselWidgetEntity: carouselWidgetEntity);
         }

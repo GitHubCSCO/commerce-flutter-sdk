@@ -1,13 +1,15 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class PrimaryButton extends StatelessWidget {
+
   const PrimaryButton({
     super.key,
     this.onPressed,
-    this.backgroundColor = AppStyle.primary500,
+    this.backgroundColor,
     this.foregroundColor = AppStyle.neutral00,
     this.borderRadius = AppStyle.borderRadius,
     this.isEnabled = true,
@@ -21,7 +23,7 @@ class PrimaryButton extends StatelessWidget {
   final String text;
   final Function()? onPressed;
   final bool isEnabled;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final Color foregroundColor;
   final double borderRadius;
 
@@ -34,8 +36,9 @@ class PrimaryButton extends StatelessWidget {
         elevation: const WidgetStatePropertyAll(0),
         backgroundColor: WidgetStatePropertyAll(
           isEnabled
-              ? backgroundColor
-              : backgroundColor.withOpacity(AppStyle.disabledButtonOpacity),
+              ? backgroundColor ?? OptiAppColors.primaryColor
+              : (backgroundColor ?? OptiAppColors.primaryColor)
+                  .withOpacity(AppStyle.disabledButtonOpacity),
         ),
         foregroundColor: WidgetStatePropertyAll(
           isEnabled
@@ -77,20 +80,22 @@ class PrimaryButton extends StatelessWidget {
 class SecondaryButton extends StatelessWidget {
   const SecondaryButton({
     super.key,
-    required this.child,
+    required this.text,
     this.onPressed,
     this.backgroundColor = AppStyle.neutral75,
     this.foregroundColor = AppStyle.primary500,
     this.borderRadius = AppStyle.borderRadius,
     this.isEnabled = true,
+    this.style
   });
 
-  final Widget child;
+  final String text;
   final Function()? onPressed;
   final Color backgroundColor;
   final Color foregroundColor;
   final double borderRadius;
   final bool isEnabled;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +122,7 @@ class SecondaryButton extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: Center(
-          child: child,
+          child: Text(text, style: style ?? TextStyle(color: OptiAppColors.primaryColor)),
         ),
       ),
     );
@@ -127,7 +132,7 @@ class SecondaryButton extends StatelessWidget {
 class TertiaryButton extends StatelessWidget {
   const TertiaryButton({
     super.key,
-    this.child,
+    required this.text,
     this.onPressed,
     this.backgroundColor = AppStyle.neutral00,
     this.foregroundColor = AppStyle.primary500,
@@ -136,7 +141,7 @@ class TertiaryButton extends StatelessWidget {
     this.isEnabled = true,
   });
 
-  final Widget? child;
+  final String text;
   final Function()? onPressed;
   final Color backgroundColor;
   final Color foregroundColor;
@@ -170,7 +175,10 @@ class TertiaryButton extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: Center(
-          child: child,
+          child: Text(
+            text,
+            style: TextStyle(color: OptiAppColors.primaryColor),
+          ),
         ),
       ),
     );
@@ -180,16 +188,18 @@ class TertiaryButton extends StatelessWidget {
 class PlainButton extends StatelessWidget {
   const PlainButton({
     super.key,
-    required this.child,
+    required this.text,
     this.onPressed,
     this.foregroundColor = AppStyle.primary500,
     this.isEnabled = true,
+    this.style
   });
 
-  final Widget child;
+  final String text;
   final Function()? onPressed;
   final Color foregroundColor;
   final bool isEnabled;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +213,10 @@ class PlainButton extends StatelessWidget {
               : foregroundColor.withOpacity(AppStyle.disabledButtonOpacity),
         ),
       ),
-      child: child,
+      child: Text(
+        text,
+        style: style ?? TextStyle(color: OptiAppColors.primaryColor),
+      ),
     );
   }
 }
@@ -226,7 +239,7 @@ class PrimaryBlackButton extends PrimaryButton {
 class SecondaryBlackButton extends SecondaryButton {
   const SecondaryBlackButton({
     super.key,
-    required super.child,
+    required super.text,
     super.onPressed,
     super.isEnabled,
   }) : super(
@@ -237,7 +250,7 @@ class SecondaryBlackButton extends SecondaryButton {
 class TertiaryBlackButton extends TertiaryButton {
   const TertiaryBlackButton({
     super.key,
-    required Widget super.child,
+    required super.text,
     super.onPressed,
     super.isEnabled,
   }) : super(
@@ -248,7 +261,7 @@ class TertiaryBlackButton extends TertiaryButton {
 class PlainBlackButton extends PlainButton {
   const PlainBlackButton({
     super.key,
-    required super.child,
+    required super.text,
     super.onPressed,
     super.isEnabled,
   }) : super(

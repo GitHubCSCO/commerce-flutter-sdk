@@ -255,7 +255,7 @@ class CategoryCarouselWidget extends StatelessWidget {
                   );
                   // CustomSnackBar.showComingSoonSnackBar(context);
               },
-              child: Text(LocalizationConstants.shopAllBrandCategories.localized()),
+              text: LocalizationConstants.shopAllBrandCategories.localized(),
             ),
           ),
         ],
@@ -389,7 +389,7 @@ class BrandProductLinesWidget extends StatelessWidget {
                     extra: brand
                   );
               },
-              child: Text(LocalizationConstants.shopAllBrandProductLines.localized()),
+              text: LocalizationConstants.shopAllBrandProductLines.localized(),
             ),
           ),
         ],

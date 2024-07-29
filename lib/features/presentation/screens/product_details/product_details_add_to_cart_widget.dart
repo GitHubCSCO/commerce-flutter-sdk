@@ -123,7 +123,7 @@ class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
               leadingIcon: SvgPicture.asset(
                 AssetConstants.productDeatilsAddToCartIcon,
                 fit: BoxFit.fitWidth,
-                color: Colors.white,
+                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
               ),
               text: LocalizationConstants.addToCart.localized(),
               onPressed:
@@ -193,7 +193,8 @@ class ProductDetailsAddCartRow extends StatelessWidget {
             Expanded(
               flex: 3,
               child: ProductDetailsAddCartTtitleSubTitleColumn(
-                  'Subtotal', detailsAddToCartEntity.subtotalValueText ?? ''),
+                  LocalizationConstants.subtotal.localized(),
+                  detailsAddToCartEntity.subtotalValueText ?? ''),
             ),
         ],
       ),
@@ -226,7 +227,7 @@ class ProductDetailsAddCartTtitleSubTitleColumn extends StatelessWidget {
           fit: BoxFit.scaleDown,
           child: Text(
             getFormattedValue(value),
-            style: OptiTextStyles.titleLarge,
+            style: OptiTextStyles.titleLargeHighLight,
           ),
         ),
       ],

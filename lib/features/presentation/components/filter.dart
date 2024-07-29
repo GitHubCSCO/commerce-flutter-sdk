@@ -157,7 +157,7 @@ void showFilterModalSheet(
                           height: 48,
                           child: SecondaryButton(
                             onPressed: onReset,
-                            child: Text(LocalizationConstants.reset.localized()),
+                            text: LocalizationConstants.reset.localized(),
                           ),
                         ),
                       ),
