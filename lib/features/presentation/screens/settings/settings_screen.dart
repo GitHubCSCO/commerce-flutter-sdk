@@ -156,7 +156,7 @@ final settingsItems = [
   _SettingsListItemWidget(
     title: LocalizationConstants.languages.localized(),
     onTap: (BuildContext context) =>
-        CustomSnackBar.showComingSoonSnackBar(context),
+        AppRoute.language.navigate(context),
     showTrailing: true,
   ),
   _SettingsListItemWidget(
