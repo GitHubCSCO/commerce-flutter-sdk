@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/view_warehouse_availability_widget.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +68,7 @@ class LineItemPricingWidget extends StatelessWidget {
                         unitOfMeasure ?? "");
                   },
                   child: Text(
-                    "View Availability by Warehouse",
+                    LocalizationConstants.viewAvailabilityWarehouse.localized(),
                     style: OptiTextStyles.link,
                   ),
                 ),

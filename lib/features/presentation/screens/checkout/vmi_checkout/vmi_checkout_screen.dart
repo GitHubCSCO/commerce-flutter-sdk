@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shipping_entity.dart';
@@ -21,9 +22,9 @@ import 'package:commerce_flutter_app/features/presentation/screens/checkout/bill
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class VmiCheckoutEntity {
@@ -163,9 +164,9 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                child: Text(scanningMode == ScanningMode.count
+                                text: scanningMode == ScanningMode.count
                                     ? LocalizationConstants.backToCountInventory.localized()
-                                    : LocalizationConstants.backToCreateOrder.localized()),
+                                    : LocalizationConstants.backToCreateOrder.localized(),
                               ),
                               const SizedBox(height: 4.0),
                               Visibility(
@@ -198,8 +199,8 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                             width: 50,
                             height: 50,
                             padding: const EdgeInsets.all(10),
-                            child: SvgPicture.asset(
-                              "assets/images/cart.svg",
+                            child: const SvgAssetImage(
+                              assetName: AssetConstants.iconCart,
                               fit: BoxFit.fitWidth,
                             ),
                           ),
@@ -211,9 +212,9 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text(scanningMode == ScanningMode.count
+                              text: scanningMode == ScanningMode.count
                                   ? LocalizationConstants.backToCountInventory.localized()
-                                  : LocalizationConstants.backToCreateOrder.localized()),
+                                  : LocalizationConstants.backToCreateOrder.localized(),
                             ),
                           ),
                         ],

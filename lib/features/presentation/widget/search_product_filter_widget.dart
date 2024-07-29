@@ -6,11 +6,11 @@ import 'package:commerce_flutter_app/features/domain/enums/product_list_type.dar
 import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
 import 'package:commerce_flutter_app/features/presentation/components/multiple_selection_option_chip.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_list_filter/product_list_filter_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class SearchProductFilterWidget extends StatelessWidget {
@@ -120,10 +120,10 @@ class SearchProductFilterWidget extends StatelessWidget {
                 },
               );
             },
-            icon: SvgPicture.asset(
+            icon: const SvgAssetImage(
               height: 20,
               width: 20,
-              AssetConstants.filterIcon,
+              assetName: AssetConstants.filterIcon,
               semanticsLabel: 'filter icon',
               fit: BoxFit.fitWidth,
             ),

@@ -88,9 +88,7 @@ class PreviousOrdersWidget extends StatelessWidget {
                 child: TertiaryButton(
                     borderColor: OptiAppColors.grayBackgroundColor,
                     backgroundColor: OptiAppColors.grayBackgroundColor,
-                    child: Text(
-                      LocalizationConstants.viewAllOrders.localized(),
-                    ),
+                    text: LocalizationConstants.viewAllOrders.localized(),
                     onPressed: () {
                       AppRoute.vmiOrderHistory.navigateBackStack(context);
                     }),

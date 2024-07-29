@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
@@ -98,12 +99,7 @@ class _LoginPageState extends State<LoginPage> {
             onPressed: () {
               context.pop();
             },
-            child: Text(
-              LocalizationConstants.cancel.localized(),
-              style: OptiTextStyles.subtitle.copyWith(
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
+            text: LocalizationConstants.cancel.localized(),
           ),
         ],
         automaticallyImplyLeading: false,
@@ -292,12 +288,7 @@ class _LoginPageState extends State<LoginPage> {
                                       .read<LoginCubit>()
                                       .onBiometricLoginSubmit(biometricOption);
                                 },
-                                child: Text(
-                                  'Use $biometricDisplayOption',
-                                  style: OptiTextStyles.subtitle.copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
+                                text: 'Use $biometricDisplayOption',
                               );
                             },
                           );
@@ -307,12 +298,10 @@ class _LoginPageState extends State<LoginPage> {
                 PlainButton(
                   onPressed: () => AppRoute.forgotPassword
                       .navigateBackStack(context, extra: AccountType.standard),
-                  child: Text(
-                    LocalizationConstants.forgotPassword.localized(),
-                    style: OptiTextStyles.subtitle.copyWith(
-                      color: Theme.of(context).primaryColor,
-                    ),
+                  style: OptiTextStyles.subtitle.copyWith(
+                    color: OptiAppColors.primaryColor,
                   ),
+                  text: LocalizationConstants.forgotPassword.localized(),
                 ),
               ],
             ),

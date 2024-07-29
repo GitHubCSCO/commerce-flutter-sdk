@@ -96,7 +96,7 @@ class _TabSwitchWidgetState extends State<TabSwitchWidget> {
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-            color: isSelected ? OptiAppColors.backgroundWhite : OptiAppColors.backgroundGray,
+            color: isSelected ? OptiAppColors.primaryColor : OptiAppColors.backgroundGray,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Center(
@@ -104,7 +104,7 @@ class _TabSwitchWidgetState extends State<TabSwitchWidget> {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
                 text,
-                style: OptiTextStyles.subtitle,
+                style: OptiTextStyles.subtitle.copyWith(color: isSelected ? Colors.white : Colors.black),
               ),
             ),
           ),

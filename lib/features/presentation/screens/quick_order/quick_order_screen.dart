@@ -33,9 +33,9 @@ import 'package:commerce_flutter_app/features/presentation/screens/quick_order/q
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/style_trait_select_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -109,7 +109,6 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
               },
               icon: Icon(
                 cameraFlash ? Icons.flash_on : Icons.flash_off,
-                color: Colors.black,
               )),
           _buildAppBarMenu(),
         ],
@@ -154,9 +153,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         Icons.search,
-                                        color: Colors.grey,
+                                        color: OptiAppColors.primaryColor,
                                       ),
                                       const SizedBox(width: 8),
                                       Expanded(
@@ -335,7 +334,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                             onPressed: () {
                                               _addToCart(context, widget.scanningMode);
                                             },
-                                            child: Text(_getCheckoutButtonTitle(widget.scanningMode)),
+                                            text: _getCheckoutButtonTitle(widget.scanningMode),
                                           ),
                                           const SizedBox(height: 4),
                                           PrimaryButton(
@@ -347,7 +346,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                             },
                                             backgroundColor: canProcess
                                                 ? OptiAppColors.buttonDarkRedBackgroudColor
-                                                : AppStyle.primary500,
+                                                : OptiAppColors.primaryColor,
                                             text: canProcess
                                                 ? LocalizationConstants.cancel.localized()
                                                 : LocalizationConstants.tapToScan.localized(),
@@ -375,8 +374,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                     child: Input(
                       hintText: LocalizationConstants.search.localized(),
                       suffixIcon: IconButton(
-                        icon: SvgPicture.asset(
-                          AssetConstants.iconClear,
+                        icon: const SvgAssetImage(
+                          assetName: AssetConstants.iconClear,
                           semanticsLabel: 'search query clear icon',
                           fit: BoxFit.fitWidth,
                         ),

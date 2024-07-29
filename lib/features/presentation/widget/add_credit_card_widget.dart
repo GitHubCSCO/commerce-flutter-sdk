@@ -445,7 +445,7 @@ class AddCreditCardPage extends StatelessWidget {
   Widget _buildDeleteButtonWidget(BuildContext context) {
     return ListInformationBottomSubmitWidget(actions: [
       TertiaryButton(
-        child: Text(LocalizationConstants.delete.localized()),
+        text: LocalizationConstants.delete.localized(),
         onPressed: () {
           if (addCreditCardEntity.accountPaymentProfile != null) {
             showDialog(

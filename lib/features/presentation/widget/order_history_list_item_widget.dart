@@ -37,7 +37,7 @@ class OrderHistoryListItem extends StatelessWidget {
               children: [
                 Text(
                   orderEntity.orderNumberLabel ?? orderEntity.orderNumber ?? '',
-                  style: OptiTextStyles.body,
+                  style: OptiTextStyles.body.copyWith(color: OptiAppColors.primaryColor),
                 ),
                 Text(
                   orderEntity.orderDate != null

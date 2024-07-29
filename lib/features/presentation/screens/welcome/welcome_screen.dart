@@ -57,9 +57,7 @@ class WelcomeFirstPage extends StatelessWidget {
           TertiaryButton(
             onPressed: () {},
             backgroundColor: Colors.transparent,
-            child: Text(
-              LocalizationConstants.visitWebsite.localized(),
-            ),
+            text: LocalizationConstants.visitWebsite.localized(),
           ),
         ],
       ),

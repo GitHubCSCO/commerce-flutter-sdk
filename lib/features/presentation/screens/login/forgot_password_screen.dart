@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
@@ -69,12 +70,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             onPressed: () {
               context.pop();
             },
-            child: Text(
-              LocalizationConstants.cancel.localized(),
-              style: OptiTextStyles.subtitle.copyWith(
-                color: Theme.of(context).primaryColor,
-              ),
+            style: OptiTextStyles.subtitle.copyWith(
+              color: OptiAppColors.primaryColor,
             ),
+            text: LocalizationConstants.cancel.localized(),
           ),
         ],
         automaticallyImplyLeading: false,
@@ -101,7 +100,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               ),
               actions: [
                 PlainBlackButton(
-                  child: Text(LocalizationConstants.oK.localized()),
+                  text: LocalizationConstants.oK.localized(),
                   onPressed: () {
                     context.pop();
                     context.pop();
@@ -192,7 +191,7 @@ void _errorCommunicatingWithServer(BuildContext context) {
     content: Text(LocalizationConstants.errorCommunicatingWithTheServer.localized()),
     actions: [
       PlainBlackButton(
-        child: Text(LocalizationConstants.oK.localized()),
+        text: LocalizationConstants.oK.localized(),
         onPressed: () {
           context.pop();
           context.pop();

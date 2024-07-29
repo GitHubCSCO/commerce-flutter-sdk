@@ -90,7 +90,7 @@ class _WishListCreatePageState extends State<WishListCreatePage> {
               message: LocalizationConstants.somethingWentWrong.localized(),
               actions: [
                 PlainBlackButton(
-                  child: Text(LocalizationConstants.oK.localized()),
+                  text: LocalizationConstants.oK.localized(),
                   onPressed: () => context.pop(),
                 ),
               ],
@@ -104,7 +104,7 @@ class _WishListCreatePageState extends State<WishListCreatePage> {
               message: LocalizationConstants.enterListName.localized(),
               actions: [
                 PlainBlackButton(
-                  child: Text(LocalizationConstants.oK.localized()),
+                  text: LocalizationConstants.oK.localized(),
                   onPressed: () => context.pop(),
                 ),
               ],
@@ -140,7 +140,7 @@ class _WishListCreatePageState extends State<WishListCreatePage> {
             ListInformationBottomSubmitWidget(
               actions: [
                 SecondaryButton(
-                  child: Text(LocalizationConstants.cancel.localized()),
+                  text: LocalizationConstants.cancel.localized(),
                   onPressed: () {
                     context.pop();
                   },

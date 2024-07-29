@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
@@ -67,11 +68,7 @@ class BottomMenu extends StatelessWidget {
           onPressed: () {
             _showBottomMenu(context, toolMenuList);
           },
-          icon: const Icon(
-            Icons.more_vert,
-            color: Colors.black,
-          )
-      ),
+          icon: const Icon(Icons.more_vert)),
     );
   }
 
