@@ -1,12 +1,5 @@
 part of 'job_quote_details_cubit.dart';
 
-enum JobQuoteDetailsStatus {
-  initial,
-  loading,
-  loaded,
-  failure,
-}
-
 class JobQuoteDetailsState extends Equatable {
   final JobQuoteDetailsStatus status;
   final List<JobQuoteLine> jobQuoteLines;
@@ -38,7 +31,8 @@ class JobQuoteDetailsState extends Equatable {
       status: status ?? this.status,
       jobQuoteLines: jobQuoteLines ?? this.jobQuoteLines,
       jobOrderQty: jobOrderQty ?? this.jobOrderQty,
-      isGenerateOrderEnabled: isGenerateOrderEnabled ?? this.isGenerateOrderEnabled,
+      isGenerateOrderEnabled:
+          isGenerateOrderEnabled ?? this.isGenerateOrderEnabled,
     );
   }
 }

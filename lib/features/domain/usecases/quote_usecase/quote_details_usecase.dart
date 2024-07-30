@@ -75,4 +75,10 @@ class QuoteDetailsUsecase extends BaseUseCase {
         return jobQuoteDto;
     }
   }
+
+  Future<String?> getAuthorizedURL(String path) async {
+    return await commerceAPIServiceProvider
+        .getWebsiteService()
+        .getAuthorizedURL(path);
+  }
 }

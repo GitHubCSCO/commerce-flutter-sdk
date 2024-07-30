@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/enums/job_quote_details_status.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
@@ -99,11 +100,15 @@ class JobQuoteDetailsPage extends StatelessWidget {
                 ),
                 OrderBottomSectionWidget(
                   actions: [
-                    PrimaryButton(
-                      isEnabled: state.isGenerateOrderEnabled,
-                      text: LocalizationConstants.generateOrder,
-                      onPressed: () {},
-                    ),
+                    state.status != JobQuoteDetailsStatus.generateOrderLoading
+                        ? PrimaryButton(
+                            isEnabled: state.isGenerateOrderEnabled,
+                            text: LocalizationConstants.generateOrder,
+                            onPressed: context
+                                .read<JobQuoteDetailsCubit>()
+                                .generateOrder,
+                          )
+                        : const CircularProgressIndicator(),
                   ],
                 ),
               ],
