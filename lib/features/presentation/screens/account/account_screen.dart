@@ -243,7 +243,7 @@ class _AccountLoggedInHeader extends StatelessWidget {
 
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: OptiAppColors.primaryColor,
                     child: Text(
                       nameLabel.isEmpty ? '' : nameLabel[0],
                       style: const TextStyle(color: Colors.white),
