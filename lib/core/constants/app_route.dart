@@ -57,6 +57,7 @@ class RouteNames {
   static const String orderApprovalDetails = 'orderApprovalDetails';
   static const String invoiceHistory = 'invoiceHistory';
   static const String invoiceDetail = 'invoiceDetail';
+  static const String language = 'language';
 }
 
 class RoutePaths {
@@ -127,6 +128,7 @@ class RoutePaths {
       '${RoutePaths.account}/${RouteNames.invoiceHistory}';
   static const String invoiceDetail =
       '${RoutePaths.invoiceHistory}/:invoiceNumber';
+  static const String language = '${RoutePaths.settings}/${RouteNames.language}';
 }
 
 enum AppRoute {
@@ -228,6 +230,10 @@ enum AppRoute {
   invoiceDetail(
     name: RouteNames.invoiceDetail,
     fullPath: RoutePaths.invoiceDetail,
+  ),
+  language(
+    name: RouteNames.language,
+    fullPath: RoutePaths.language,
   ),
   ;
 

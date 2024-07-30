@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_con
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
@@ -62,6 +63,13 @@ class AccountPage extends BaseDynamicContentScreen {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
+        BlocListener<RootBloc, RootState>(
+          listener: (context, state) async {
+            if (state is RootConfigReload) {
+              _reloadAccountPage(context);
+            }
+          },
+        ),
         BlocListener<PullToRefreshBloc, PullToRefreshState>(
           listener: (context, state) async {
             if (state is PullToRefreshLoadState) {
@@ -235,7 +243,7 @@ class _AccountLoggedInHeader extends StatelessWidget {
 
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: OptiAppColors.primaryColor,
                     child: Text(
                       nameLabel.isEmpty ? '' : nameLabel[0],
                       style: const TextStyle(color: Colors.white),

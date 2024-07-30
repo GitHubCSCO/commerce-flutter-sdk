@@ -15,6 +15,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_c
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_product_lines_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/invoice_history/invoice_detail_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/invoice_history/invoice_history_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/language/language_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_approval/order_approval_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
@@ -635,6 +636,14 @@ List<NavigationNode> _getNavigationRoot() {
           cartId: cartId, refreshOrderApprovals: refreshOrderApprovals);
     },
     parent: orderApproval,
+  );
+
+  // path: /account/settings/language
+  final language = createNode(
+    name: AppRoute.language.name,
+    path: AppRoute.language.suffix,
+    builder: (context, state) => LanguageScreen(),
+    parent: settings,
   );
 
   return [
