@@ -3,7 +3,9 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
+import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quote/job_quote_details/job_quote_line_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/order_details_body_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -70,25 +72,41 @@ class JobQuoteDetailsPage extends StatelessWidget {
             );
           } else {
             final cubit = context.watch<JobQuoteDetailsCubit>();
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _JobQuoteInfoSection(
-                    jobName: cubit.jobQuote?.jobName ?? '',
-                    expirationDate: cubit.jobQuote?.expirationDate != null
-                        ? DateFormat(CoreConstants.dateFormatString)
-                            .format(cubit.jobQuote!.expirationDate!)
-                        : '',
-                    customerName: cubit.jobQuote?.customerName ?? '',
-                    shipToAddress: cubit.jobQuote?.shipToFullAddress ?? '',
+            return Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _JobQuoteInfoSection(
+                          jobName: cubit.jobQuote?.jobName ?? '',
+                          expirationDate: cubit.jobQuote?.expirationDate != null
+                              ? DateFormat(CoreConstants.dateFormatString)
+                                  .format(cubit.jobQuote!.expirationDate!)
+                              : '',
+                          customerName: cubit.jobQuote?.customerName ?? '',
+                          shipToAddress:
+                              cubit.jobQuote?.shipToFullAddress ?? '',
+                        ),
+                        _ProductSection(
+                          jobQuoteLines: state.jobQuoteLines,
+                          jobOrderQty: state.jobOrderQty,
+                        ),
+                      ],
+                    ),
                   ),
-                  _ProductSection(
-                    jobQuoteLines: state.jobQuoteLines,
-                    jobOrderQty: state.jobOrderQty,
-                  ),
-                ],
-              ),
+                ),
+                OrderBottomSectionWidget(
+                  actions: [
+                    PrimaryButton(
+                      isEnabled: state.isGenerateOrderEnabled,
+                      text: LocalizationConstants.generateOrder,
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ],
             );
           }
         },
@@ -262,6 +280,12 @@ class _ProductSection extends StatelessWidget {
                       : jobQuoteLine.unitOfMeasureDisplay,
               qtyOrdered: jobOrderQty[index].toString(),
               unitOfMeasure: jobQuoteLine.unitOfMeasure,
+              onQtyChanged: (int? qty) {
+                context.read<JobQuoteDetailsCubit>().updateJobQuoteLineQuantity(
+                      index: index,
+                      quantity: qty,
+                    );
+              },
             );
           },
           separatorBuilder: (context, index) => const Divider(height: 1),
