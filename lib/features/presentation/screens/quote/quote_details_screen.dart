@@ -18,6 +18,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_wi
 import 'package:commerce_flutter_app/features/presentation/widget/date_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuoteDetailsScreen extends StatelessWidget {
@@ -319,7 +320,21 @@ class QuoteDetailsPage extends StatelessWidget {
   List<ToolMenu> _buildToolMenuForQuoteLine(
       BuildContext context, QuoteLineEntity quoteLineEntity) {
     List<ToolMenu> list = [];
-    list.add(ToolMenu(title: LocalizationConstants.lineNotes, action: () {}));
+    list.add(
+      ToolMenu(
+        title: LocalizationConstants.lineNotes,
+        action: () async {
+          var initialText = ''; // TODO - SET INITIAL TEXT
+          final lineNotesText = await context.pushNamed(
+            AppRoute.quoteLineNotes.name,
+            extra: initialText as String?,
+          );
+
+          // TODO - DO SOMETHING WITH lineNotesText
+          print(lineNotesText);
+        },
+      ),
+    );
     list.add(ToolMenu(
         title: LocalizationConstants.quote,
         action: () {

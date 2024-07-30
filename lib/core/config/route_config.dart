@@ -22,6 +22,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_a
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_communication_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_confirmation_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_line_notes_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_pricing_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/request_quote_widget.dart';
@@ -742,6 +743,15 @@ List<NavigationNode> _getNavigationRoot() {
     parent: myQuote,
   );
 
+  final quoteLineNotes = createNode(
+    name: AppRoute.quoteLineNotes.name,
+    path: AppRoute.quoteLineNotes.suffix,
+    builder: (context, state) {
+      final initialText = state.extra as String?;
+      return QuoteLineNotesScreen(initialText: initialText);
+    },
+  );
+
   return [
     root,
     navbarRoot,
@@ -783,5 +793,6 @@ List<NavigationNode> _getNavigationRoot() {
     quotePricing,
     userSelection,
     salesRepSelection,
+    quoteLineNotes,
   ];
 }
