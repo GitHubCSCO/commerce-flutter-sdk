@@ -45,3 +45,5 @@ class SubmitQuoteErrorState extends RequestQuoteState {
     required this.message,
   });
 }
+
+class RequestAddCartInitSuccessState extends RequestQuoteState {} 

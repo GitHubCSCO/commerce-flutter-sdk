@@ -91,6 +91,7 @@ class QuoteDetailsPage extends StatelessWidget {
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Visibility(
                           visible: context
@@ -273,7 +274,9 @@ class QuoteDetailsPage extends StatelessWidget {
             visible: context.read<QuoteDetailsBloc>().canBeDeclined,
             child: TertiaryBlackButton(
               child: Text(declineTitle),
-              onPressed: () {},
+              onPressed: () {
+                
+              },
             ),
           ),
         ],
@@ -339,13 +342,11 @@ class QuoteDetailsPage extends StatelessWidget {
 
   void gotoQuotePricing(
       BuildContext context, QuoteLineEntity quoteLineEntity) async {
-    // Store the necessary state before the async call
     final bloc = context.read<QuoteDetailsBloc>();
 
     final result = await context.pushNamed<QuoteDto>(AppRoute.quotePricing.name,
         extra: quoteLineEntity);
 
-    // Check if the widget is still mounted
     if (context.mounted) {
       if (result != null) {
         bloc.add(QuoteDetailsInitEvent());
@@ -363,13 +364,17 @@ class QuoteDetailsPage extends StatelessWidget {
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
                 LocalizationConstants.message,
                 style: OptiTextStyles.bodyFade,
               ),
               SizedBox(height: 10.0),
-              if (quoteDto?.messageCollection?.last != null)
+              if (quoteDto != null &&
+                  quoteDto.messageCollection != null &&
+                  quoteDto.messageCollection!.isNotEmpty &&
+                  quoteDto.messageCollection?.last != null)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -406,7 +411,24 @@ class QuoteDetailsPage extends StatelessWidget {
                   ],
                 )
               else
-                Text(LocalizationConstants.noMessageItem)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(LocalizationConstants.noMessageItem),
+                    SizedBox(width: 10.0),
+                    Container(
+                      alignment: Alignment.center,
+                      width: 25,
+                      height: 25,
+                      // padding: const EdgeInsets.all(7),
+                      child: const Icon(
+                        Icons.keyboard_arrow_right,
+                        color: Colors.grey,
+                        size: 25,
+                      ),
+                    ),
+                  ],
+                )
             ],
           )),
     );

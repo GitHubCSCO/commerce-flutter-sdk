@@ -33,3 +33,8 @@ class SubmitQuoteEvent extends RequestQuoteEvent {
     this.note,
   });
 }
+
+class SelectUserForSalesRepEvent extends RequestQuoteEvent {
+  final CatalogTypeDto selectedUser;
+  SelectUserForSalesRepEvent({required this.selectedUser});
+}

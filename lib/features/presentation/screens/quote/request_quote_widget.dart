@@ -13,14 +13,17 @@ import 'package:commerce_flutter_app/features/presentation/bloc/quote/request_qu
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/request_quote_selection/request_quote_selection_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/request_quote_selection/request_quote_selection_state.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/selection_item_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class RequestQuoteWidgetScreen extends StatelessWidget {
@@ -32,12 +35,8 @@ class RequestQuoteWidgetScreen extends StatelessWidget {
     return MultiBlocProvider(providers: [
       BlocProvider(
           create: (context) => sl<RequestQuoteBloc>()
-            ..add(RequestQuoteAddCartEvent(cart: cart))
-            ..add(LoadRequestQuoteCartLinesEvent())),
-      BlocProvider(
-          create: (context) => sl<RequestQuoteSelectionBloc>()
-            ..add(RequestQuoteSelectionDefaultEvent(
-                RequestQuoteType.salesQuote))),
+            ..add(RequestQuoteAddCartEvent(cart: cart))),
+      BlocProvider(create: (context) => sl<RequestQuoteSelectionBloc>()),
     ], child: RequestQuoteWidgetPage());
   }
 }
@@ -73,6 +72,7 @@ class RequestQuoteWidgetPage extends StatelessWidget {
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(children: [
+                      _buildSelectUserWidget(context),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -116,14 +116,42 @@ class RequestQuoteWidgetPage extends StatelessWidget {
                                       .read<RequestQuoteBloc>()
                                       .add(LoadRequestQuoteCartLinesEvent());
                                 } else if (state is SubmitQuoteSuccessState) {
-                                  AppRoute.quoteConfirmation.navigate(context, extra: state.quoteDto);
+                                  if (context
+                                      .read<RequestQuoteBloc>()
+                                      .isSalesPerson) {
+                                    AppRoute.quoteDetails.navigate(context,
+                                        extra: state.quoteDto);
+                                  } else {
+                                    AppRoute.quoteConfirmation.navigate(context,
+                                        extra: state.quoteDto);
+                                  }
+                                } else if (state
+                                    is RequestAddCartInitSuccessState) {
+                                  context.read<RequestQuoteSelectionBloc>().add(
+                                      RequestQuoteSelectionDefaultEvent(
+                                          RequestQuoteType.salesQuote));
+                                  context
+                                      .read<RequestQuoteBloc>()
+                                      .add(LoadRequestQuoteCartLinesEvent());
+                                } else if (state is SubmitQuoteErrorState) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(state.message),
+                                    ),
+                                  );
                                 }
                               },
                             ),
                           ],
                           child:
                               BlocBuilder<RequestQuoteBloc, RequestQuoteState>(
-                                  builder: (context, state) {
+                                  buildWhen: (previous, current) {
+                            if (current is RequestQuoteCartLinesLoaded ||
+                                current is RequestQuoteCartLinesLoading) {
+                              return true;
+                            }
+                            return false;
+                          }, builder: (context, state) {
                             if (state is RequestQuoteCartLinesLoaded) {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -235,6 +263,44 @@ class RequestQuoteWidgetPage extends StatelessWidget {
           onTapOutside: (p0) => context.closeKeyboard(),
           onEditingComplete: () => context.closeKeyboard(),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSelectUserWidget(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            LocalizationConstants.creatingQuoteFor,
+            style: OptiTextStyles.subtitle,
+          ),
+          const SizedBox(height: 10),
+          Visibility(
+            visible: context.read<RequestQuoteBloc>().isSalesPerson,
+            child: FilterItemPickerWidget(
+              item: context.read<RequestQuoteBloc>().selectedUser,
+              onItemSelected: (user) {
+                context.read<RequestQuoteBloc>().add(SelectUserForSalesRepEvent(
+                    selectedUser: user as CatalogTypeDto));
+              },
+              selectedLabel:
+                  context.read<RequestQuoteBloc>().selectedUser?.title ?? '',
+              defaultLabel: LocalizationConstants.selectUser,
+              onTap: () async {
+                return await context.pushNamed(
+                  AppRoute.userSelection.name,
+                  extra: CatalogTypeSelectingParameter(
+                    currentItem: context.read<RequestQuoteBloc>().selectedUser,
+                    removeMyself: true,
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

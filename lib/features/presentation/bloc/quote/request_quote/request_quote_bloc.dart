@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/request_quote_type.dart';
@@ -13,6 +14,9 @@ class RequestQuoteBloc extends Bloc<RequestQuoteEvent, RequestQuoteState> {
   Cart? cart;
   ProductSettings? productSettings;
   Session? session;
+  CatalogTypeDto? selectedUser;
+
+  String? msgUserIsRequired;
 
   RequestQuoteBloc({required RequestQuoteUsecase requestQuoteUsecase})
       : _requestQuoteUsecase = requestQuoteUsecase,
@@ -22,7 +26,14 @@ class RequestQuoteBloc extends Bloc<RequestQuoteEvent, RequestQuoteState> {
     on<RequestQuoteAddCartEvent>(_onRequestQuotedAddCartEvent);
     on<UpdateCartLineEvent>(_updateCartLineEntityEvent);
     on<SubmitQuoteEvent>(_onSubmitQuoteEvent);
+    on<SelectUserForSalesRepEvent>(_onSelectUserForSalesRepEvent);
   }
+
+  Future<void> _onSelectUserForSalesRepEvent(
+      SelectUserForSalesRepEvent event, Emitter<RequestQuoteState> emit) async {
+    selectedUser = event.selectedUser;
+  }
+
   Future<void> _onRequestQuotedAddCartEvent(
       RequestQuoteAddCartEvent event, Emitter<RequestQuoteState> emit) async {
     cart = event.cart;
@@ -30,6 +41,10 @@ class RequestQuoteBloc extends Bloc<RequestQuoteEvent, RequestQuoteState> {
     session = sessionResponse is Success
         ? (sessionResponse as Success).value as Session
         : null;
+    msgUserIsRequired = await _requestQuoteUsecase.getSiteMessage(
+        SiteMessageConstants.nameRfqUserIsRequired,
+        SiteMessageConstants.defaultValueRfqUserIsRequired);
+    emit(RequestAddCartInitSuccessState());
   }
 
   Future<void> _onLoadRequestQuoteCartLinesEvent(
@@ -62,33 +77,40 @@ class RequestQuoteBloc extends Bloc<RequestQuoteEvent, RequestQuoteState> {
     emit(SubmitQuoteLoadingState());
 
     bool isJobQuote = event.requestQuoteType == RequestQuoteType.jobQuote;
-
+    var newQuoteResponse;
     if (isSalesPerson) {
+      if (selectedUser == null) {
+        emit(SubmitQuoteErrorState(message: msgUserIsRequired ?? ''));
+        return;
+      }
+
       var param = SalesRepRequesteAQuoteParameters(
           isJobQuote: isJobQuote,
           quoteId: "current",
           jobName: event.jobName,
           note: event.note,
-          userId: "");
+          userId: selectedUser?.id);
+
+      newQuoteResponse = await _requestQuoteUsecase.requestQuote(param);
     } else {
       var param = RequesteAQuoteParameters(
           isJobQuote: isJobQuote,
           quoteId: "current",
           jobName: event.jobName,
           note: event.note);
-      var newQuoteResponse = await _requestQuoteUsecase.requestQuote(param);
+      newQuoteResponse = await _requestQuoteUsecase.requestQuote(param);
+    }
 
-      switch (newQuoteResponse) {
-        case Success(value: final data):
-          if (data != null) {
-            emit(SubmitQuoteSuccessState(quoteDto: data));
-          }
-          break;
-        case Failure(errorResponse: final errorResponse):
-          emit(SubmitQuoteErrorState(
-              message: errorResponse.errorDescription ?? ''));
-          break;
-      }
+    switch (newQuoteResponse) {
+      case Success(value: final data):
+        if (data != null) {
+          emit(SubmitQuoteSuccessState(quoteDto: data));
+        }
+        break;
+      case Failure(errorResponse: final errorResponse):
+        emit(SubmitQuoteErrorState(
+            message: errorResponse.errorDescription ?? ''));
+        break;
     }
   }
 

@@ -10,6 +10,14 @@ class RequestQuoteUsecase extends BaseUseCase {
         .getCurrentSession();
   }
 
+  Future<String> getSiteMessage(
+      String messageName, String? defaultMessage) async {
+    var result = await commerceAPIServiceProvider
+        .getWebsiteService()
+        .getSiteMessage(messageName, defaultMessage: defaultMessage);
+    return result is Success ? (result as Success).value : defaultMessage;
+  }
+
   Future<Result<QuoteSettings, ErrorResponse>> getQuoteSettings() async {
     return await commerceAPIServiceProvider
         .getSettingsService()
