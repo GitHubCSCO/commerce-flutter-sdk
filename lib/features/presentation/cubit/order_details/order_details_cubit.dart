@@ -105,6 +105,10 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     }
   }
 
+  Future<String> getSiteMessage(String messageName, String defaultMessage) async {
+    return await _orderUsecase.getSiteMessage(messageName, defaultMessage);
+  }
+
   // Order Information
   String? get orderNumber => state.order.orderNumber;
 

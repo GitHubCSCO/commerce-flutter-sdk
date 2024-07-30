@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
@@ -166,8 +168,10 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     switch (result) {
       case Success(value: final product):
         if (product == null) {
-          emit(OrderListAddFailedState(SiteMessageConstants
-              .defaultValueQuickOrderCannotOrderUnavailable));
+          final message = await _quickOrderUseCase.getSiteMessage(
+              SiteMessageConstants.nameQuickOrderCannotOrderUnavailable,
+              SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable);
+          emit(OrderListAddFailedState(message));
           emit(OrderListLoadedState(quickOrderItemList, productSettings));
           return;
         }
@@ -190,8 +194,10 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     switch (result) {
       case Success(value: final product):
         if (product == null) {
-          emit(OrderListAddFailedState(SiteMessageConstants
-              .defaultValueQuickOrderCannotOrderUnavailable));
+          final message = await _quickOrderUseCase.getSiteMessage(
+              SiteMessageConstants.nameQuickOrderCannotOrderUnavailable,
+              SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable);
+          emit(OrderListAddFailedState(message));
           emit(OrderListLoadedState(quickOrderItemList, productSettings));
           return;
         }
@@ -224,8 +230,10 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     switch (result) {
       case Success(value: final product):
         if (product == null) {
-          emit(OrderListAddFailedState(SiteMessageConstants
-              .defaultValueQuickOrderCannotOrderUnavailable));
+          final message = await _quickOrderUseCase.getSiteMessage(
+              SiteMessageConstants.nameQuickOrderCannotOrderUnavailable,
+              SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable);
+          emit(OrderListAddFailedState(message));
           emit(OrderListLoadedState(quickOrderItemList, productSettings));
           return;
         }
@@ -237,11 +245,15 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
           emit(OrderListStyleProductAddState(product));
         } else if (product.isConfigured! ||
             (product.isConfigured! && !product.isFixedConfiguration!)) {
-          emit(OrderListAddFailedState(SiteMessageConstants
-              .defaultValueQuickOrderCannotOrderConfigurable));
+          final message = await _quickOrderUseCase.getSiteMessage(
+              SiteMessageConstants.nameQuickOrderCannotOrderConfigurable,
+              SiteMessageConstants.defaultValueQuickOrderCannotOrderConfigurable);
+          emit(OrderListAddFailedState(message));
         } else if (!product.canAddToCart!) {
-          emit(OrderListAddFailedState(SiteMessageConstants
-              .defaultValueQuickOrderCannotOrderUnavailable));
+          final message = await _quickOrderUseCase.getSiteMessage(
+              SiteMessageConstants.nameQuickOrderCannotOrderUnavailable,
+              SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable);
+          emit(OrderListAddFailedState(message));
         } else {
           var newItem =
               _convertProductToQuickOrderItemEntity(product, quantity!);
@@ -259,8 +271,10 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     switch (result) {
       case Success(value: final vmiBin):
         if (vmiBin == null || vmiBin.productEntity == null) {
-          emit(OrderListAddFailedState(SiteMessageConstants
-              .defaultValueQuickOrderCannotOrderUnavailable));
+          final message = await _quickOrderUseCase.getSiteMessage(
+              SiteMessageConstants.nameQuickOrderCannotOrderUnavailable,
+              SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable);
+          emit(OrderListAddFailedState(message));
           emit(OrderListLoadedState(quickOrderItemList, productSettings));
           return;
         }
@@ -282,11 +296,15 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
           } else if (vmiBin.productEntity!.isConfigured! ||
               (vmiBin.productEntity!.isConfigured! &&
                   !vmiBin.productEntity!.isFixedConfiguration!)) {
-            emit(OrderListAddFailedState(SiteMessageConstants
-                .defaultValueQuickOrderCannotOrderConfigurable));
+            final message = await _quickOrderUseCase.getSiteMessage(
+                SiteMessageConstants.nameQuickOrderCannotOrderConfigurable,
+                SiteMessageConstants.defaultValueQuickOrderCannotOrderConfigurable);
+            emit(OrderListAddFailedState(message));
           } else if (!vmiBin.productEntity!.canAddToCart!) {
-            emit(OrderListAddFailedState(SiteMessageConstants
-                .defaultValueQuickOrderCannotOrderUnavailable));
+            final message = await _quickOrderUseCase.getSiteMessage(
+                SiteMessageConstants.nameQuickOrderCannotOrderUnavailable,
+                SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable);
+            emit(OrderListAddFailedState(message));
           } else {
             var newItem =
                 _convertVmiBinProductToQuickOrderItemEntity(vmiBin, quantity!);
@@ -391,6 +409,10 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     } else {
       emit(OrderListNavigateToCartState());
     }
+  }
+
+  Future<String> getSiteMessage(String messageName, String defaultMessage) async {
+    return await _quickOrderUseCase.getSiteMessage(messageName, defaultMessage);
   }
 
   QuickOrderItemEntity _convertVmiBinProductToQuickOrderItemEntity(

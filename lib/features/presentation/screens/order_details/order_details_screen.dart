@@ -52,7 +52,7 @@ class OrderDetailsPage extends StatelessWidget {
             : Text(LocalizationConstants.orderDetails.localized()),
       ),
       body: BlocConsumer<OrderDetailsCubit, OrderDetailsState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state.orderStatus == OrderStatus.reorderLoading) {
             showPleaseWait(context);
           }
@@ -60,17 +60,25 @@ class OrderDetailsPage extends StatelessWidget {
           if (state.orderStatus == OrderStatus.reorderSuccess) {
             Navigator.of(context, rootNavigator: true).pop();
             context.read<CartCountCubit>().onCartItemChange();
+            final message = await context
+                .read<OrderDetailsCubit>()
+                .getSiteMessage(SiteMessageConstants.nameAddToCartSuccess,
+                    SiteMessageConstants.defaultValueAddToCartSuccess);
             CustomSnackBar.showSnackBarMessage(
               context,
-              SiteMessageConstants.defaultValueAddToCartSuccess,
+              message,
             );
           }
 
           if (state.orderStatus == OrderStatus.reorderFailure) {
             Navigator.of(context, rootNavigator: true).pop();
+            final message = await context
+                .read<OrderDetailsCubit>()
+                .getSiteMessage(SiteMessageConstants.nameAddToCartFail,
+                    SiteMessageConstants.defaultValueAddToCartFail);
             CustomSnackBar.showSnackBarMessage(
               context,
-              SiteMessageConstants.defaultValueAddToCartFail,
+              message,
             );
           }
         },

@@ -65,6 +65,7 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
     switch (result) {
       case Success(value: final data):
         if(data == true){
+          _languageUsecase.loadDefaultSiteMessage();
           emit(LanguageChanged());
           var language = _languageUsecase.getCurrentLanguage();
           emit(LanguageListLoaded(languages, language));

@@ -49,7 +49,11 @@ class QuickOrderAutoCompleteBloc extends Bloc<QuickOrderAutoCompleteEvent, Quick
           if ((data?.products ?? []).isNotEmpty) {
             emit(QuickOrderAutoCompleteLoadedState(result: data));
           } else {
-            emit(QuickOrderAutoCompleteFailureState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
+            final message = await _searchUseCase.getSiteMessage(
+                SiteMessageConstants.nameQuickOrderCannotOrderUnavailable,
+                SiteMessageConstants
+                    .defaultValueQuickOrderCannotOrderUnavailable);
+            emit(QuickOrderAutoCompleteFailureState(message));
           }
         case Failure(errorResponse: final errorResponse):
           emit(QuickOrderAutoCompleteFailureState(errorResponse.errorDescription ?? ''));
@@ -70,7 +74,11 @@ class QuickOrderAutoCompleteBloc extends Bloc<QuickOrderAutoCompleteEvent, Quick
           if ((data?.products ?? []).isNotEmpty) {
             emit(QuickOrderAutoCompleteLoadedState(result: data));
           } else {
-            emit(QuickOrderAutoCompleteFailureState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
+            final message = await _searchUseCase.getSiteMessage(
+                SiteMessageConstants.nameQuickOrderCannotOrderUnavailable,
+                SiteMessageConstants
+                    .defaultValueQuickOrderCannotOrderUnavailable);
+            emit(QuickOrderAutoCompleteFailureState(message));
           }
         case Failure(errorResponse: final errorResponse):
           emit(QuickOrderAutoCompleteFailureState(errorResponse.errorDescription ?? ''));
