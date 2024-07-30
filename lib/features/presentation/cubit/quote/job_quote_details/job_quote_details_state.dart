@@ -10,10 +10,12 @@ enum JobQuoteDetailsStatus {
 class JobQuoteDetailsState extends Equatable {
   final JobQuoteDetailsStatus status;
   final List<JobQuoteLine> jobQuoteLines;
+  final List<int> jobOrderQty;
 
   const JobQuoteDetailsState({
     required this.status,
     required this.jobQuoteLines,
+    required this.jobOrderQty,
   });
 
   @override
@@ -25,10 +27,12 @@ class JobQuoteDetailsState extends Equatable {
   JobQuoteDetailsState copyWith({
     JobQuoteDetailsStatus? status,
     List<JobQuoteLine>? jobQuoteLines,
+    List<int>? jobOrderQty,
   }) {
     return JobQuoteDetailsState(
       status: status ?? this.status,
       jobQuoteLines: jobQuoteLines ?? this.jobQuoteLines,
+      jobOrderQty: jobOrderQty ?? this.jobOrderQty,
     );
   }
 }

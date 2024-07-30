@@ -18,6 +18,7 @@ class JobQuoteDetailsCubit extends Cubit<JobQuoteDetailsState> {
           const JobQuoteDetailsState(
             status: JobQuoteDetailsStatus.initial,
             jobQuoteLines: [],
+            jobOrderQty: [],
           ),
         );
 
@@ -48,8 +49,24 @@ class JobQuoteDetailsCubit extends Cubit<JobQuoteDetailsState> {
         state.copyWith(
           status: JobQuoteDetailsStatus.loaded,
           jobQuoteLines: jobQuote.jobQuoteLineCollection ?? [],
+          jobOrderQty: List.filled(
+            (jobQuote.jobQuoteLineCollection ?? []).length,
+            0,
+          ),
         ),
       );
     }
   }
+
+  bool get isGenerateOrderEnabled =>
+      (state.status == JobQuoteDetailsStatus.loaded) &&
+      (jobQuote?.expirationDate != null &&
+          !jobQuote!.expirationDate!.isBefore(
+            DateTime(
+              DateTime.now().year,
+              DateTime.now().month,
+              DateTime.now().day,
+            ),
+          )) &&
+      (state.jobOrderQty.any((e) => e > 0));
 }
