@@ -21,3 +21,5 @@ class LanguageFailedToLoad extends LanguageState {
   final String error;
   LanguageFailedToLoad(this.error);
 }
+
+class LanguageChanged extends LanguageState {}
