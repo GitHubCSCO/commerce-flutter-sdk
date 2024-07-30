@@ -62,4 +62,23 @@ class QuoteDetailsUsecase extends BaseUseCase {
         .getSiteMessage(messageName, defaultMessage: defaultMessage);
     return result is Success ? (result as Success).value : defaultMessage;
   }
+
+  Future<JobQuoteDto?> getJobQuote({required String? jobQuoteId}) async {
+    final result = await commerceAPIServiceProvider
+        .getJobQuoteService()
+        .getJobQuote(jobQuoteId ?? '');
+
+    switch (result) {
+      case Failure():
+        return null;
+      case Success(value: final jobQuoteDto):
+        return jobQuoteDto;
+    }
+  }
+
+  Future<String?> getAuthorizedURL(String path) async {
+    return await commerceAPIServiceProvider
+        .getWebsiteService()
+        .getAuthorizedURL(path);
+  }
 }

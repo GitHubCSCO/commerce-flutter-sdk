@@ -1,0 +1,38 @@
+part of 'job_quote_details_cubit.dart';
+
+class JobQuoteDetailsState extends Equatable {
+  final JobQuoteDetailsStatus status;
+  final List<JobQuoteLine> jobQuoteLines;
+  final List<int> jobOrderQty;
+  final bool isGenerateOrderEnabled;
+
+  const JobQuoteDetailsState({
+    required this.status,
+    required this.jobQuoteLines,
+    required this.jobOrderQty,
+    required this.isGenerateOrderEnabled,
+  });
+
+  @override
+  List<Object> get props => [
+        status,
+        jobQuoteLines,
+        jobOrderQty,
+        isGenerateOrderEnabled,
+      ];
+
+  JobQuoteDetailsState copyWith({
+    JobQuoteDetailsStatus? status,
+    List<JobQuoteLine>? jobQuoteLines,
+    List<int>? jobOrderQty,
+    bool? isGenerateOrderEnabled,
+  }) {
+    return JobQuoteDetailsState(
+      status: status ?? this.status,
+      jobQuoteLines: jobQuoteLines ?? this.jobQuoteLines,
+      jobOrderQty: jobOrderQty ?? this.jobOrderQty,
+      isGenerateOrderEnabled:
+          isGenerateOrderEnabled ?? this.isGenerateOrderEnabled,
+    );
+  }
+}

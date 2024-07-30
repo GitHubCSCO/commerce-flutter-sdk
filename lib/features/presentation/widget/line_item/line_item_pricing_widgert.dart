@@ -30,7 +30,7 @@ class LineItemPricingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 5.0),
+      padding: const EdgeInsets.only(bottom: 5.0, left: 20),
       child: Container(
         color: Colors.white,
         child: Column(
@@ -57,8 +57,8 @@ class LineItemPricingWidget extends StatelessWidget {
             if (showViewAvailabilityByWarehouse)
               GestureDetector(
                 onTap: () {
-                  viewWarehouseWidget(context, productId, erpNumber ?? "",
-                      unitOfMeasure ?? "");
+                  viewWarehouseWidget(
+                      context, productId, erpNumber ?? "", unitOfMeasure ?? "");
                 },
                 child: Text(
                   "View Availability by Warehouse",
