@@ -5,12 +5,14 @@ class JobQuoteDetailsState extends Equatable {
   final List<JobQuoteLine> jobQuoteLines;
   final List<int> jobOrderQty;
   final bool isGenerateOrderEnabled;
+  final Cart cart;
 
   const JobQuoteDetailsState({
     required this.status,
     required this.jobQuoteLines,
     required this.jobOrderQty,
     required this.isGenerateOrderEnabled,
+    required this.cart,
   });
 
   @override
@@ -19,6 +21,7 @@ class JobQuoteDetailsState extends Equatable {
         jobQuoteLines,
         jobOrderQty,
         isGenerateOrderEnabled,
+        cart,
       ];
 
   JobQuoteDetailsState copyWith({
@@ -26,6 +29,7 @@ class JobQuoteDetailsState extends Equatable {
     List<JobQuoteLine>? jobQuoteLines,
     List<int>? jobOrderQty,
     bool? isGenerateOrderEnabled,
+    Cart? cart,
   }) {
     return JobQuoteDetailsState(
       status: status ?? this.status,
@@ -33,6 +37,7 @@ class JobQuoteDetailsState extends Equatable {
       jobOrderQty: jobOrderQty ?? this.jobOrderQty,
       isGenerateOrderEnabled:
           isGenerateOrderEnabled ?? this.isGenerateOrderEnabled,
+      cart: cart ?? this.cart,
     );
   }
 }

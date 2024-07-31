@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
@@ -5,6 +6,7 @@ import 'package:commerce_flutter_app/features/domain/enums/job_quote_details_sta
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quote/job_quote_details/job_quote_line_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/order_details_body_widget.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,7 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quote/job_quote_details/job_quote_details_cubit.dart';
 import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class JobQuoteDetailsScreen extends StatelessWidget {
   final String? jobQuoteId;
@@ -61,7 +64,28 @@ class JobQuoteDetailsPage extends StatelessWidget {
             : Text(LocalizationConstants.myQuoteDetails.localized()),
       ),
       body: BlocConsumer<JobQuoteDetailsCubit, JobQuoteDetailsState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state.status == JobQuoteDetailsStatus.generateOrderFailure) {
+            _displaySignedOutDialog(context);
+          }
+
+          if (state.status == JobQuoteDetailsStatus.generateOrderFailureAuth) {
+            _displayErrorDiaglog(context);
+          }
+
+          if (state.status ==
+              JobQuoteDetailsStatus.generateOrderSuccessWithCheckoutUrl) {
+            launchUrlString(context.read<JobQuoteDetailsCubit>().checkoutUrl);
+          }
+
+          if (state.status == JobQuoteDetailsStatus.quoteAcceptMessageShow) {
+            _displayDialogForAccpetQuote(context);
+          }
+
+          if (state.status == JobQuoteDetailsStatus.proceedToCheckout) {
+            AppRoute.checkout.navigateBackStack(context, extra: state.cart);
+          }
+        },
         builder: (context, state) {
           if (state.status == JobQuoteDetailsStatus.loading) {
             return const Center(
@@ -109,7 +133,12 @@ class JobQuoteDetailsPage extends StatelessWidget {
                                 .read<JobQuoteDetailsCubit>()
                                 .generateOrder,
                           )
-                        : const CircularProgressIndicator(),
+                        : const SizedBox(
+                            width: double.infinity,
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
                   ],
                 ),
               ],
@@ -300,4 +329,57 @@ class _ProductSection extends StatelessWidget {
       ],
     );
   }
+}
+
+void _displayDialogForAccpetQuote(BuildContext context) {
+  displayDialogWidget(
+    context: context,
+    message: LocalizationConstants.acceptQuoteMessage.localized(),
+    actions: [
+      DialogPlainButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: Text(LocalizationConstants.cancel.localized()),
+      ),
+      DialogPlainButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+          context.read<JobQuoteDetailsCubit>().acceptJobQuote();
+        },
+        child: Text(LocalizationConstants.continueText.localized()),
+      ),
+    ],
+  );
+}
+
+void _displaySignedOutDialog(BuildContext context) {
+  displayDialogWidget(
+    context: context,
+    message: LocalizationConstants.signInBeforeCheckout.localized(),
+    actions: [
+      DialogPlainButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: Text(LocalizationConstants.oK.localized()),
+      ),
+    ],
+  );
+}
+
+void _displayErrorDiaglog(BuildContext context) {
+  displayDialogWidget(
+    context: context,
+    title: LocalizationConstants.error.localized(),
+    message: LocalizationConstants.errorCommunicatingWithTheServer.localized(),
+    actions: [
+      DialogPlainButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: Text(LocalizationConstants.oK.localized()),
+      ),
+    ],
+  );
 }

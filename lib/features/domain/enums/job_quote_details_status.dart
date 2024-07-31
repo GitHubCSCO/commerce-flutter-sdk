@@ -8,4 +8,7 @@ enum JobQuoteDetailsStatus {
   generateOrderSuccessWithCheckoutUrl,
   generateOrderFailure,
   generateOrderFailureAuth,
+
+  quoteAcceptMessageShow,
+  proceedToCheckout,
 }

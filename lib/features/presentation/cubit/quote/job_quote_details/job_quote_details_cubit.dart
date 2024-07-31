@@ -17,11 +17,12 @@ class JobQuoteDetailsCubit extends Cubit<JobQuoteDetailsState> {
     required QuoteDetailsUsecase quoteDetailsUsecase,
   })  : _quoteDetailsUsecase = quoteDetailsUsecase,
         super(
-          const JobQuoteDetailsState(
+          JobQuoteDetailsState(
             status: JobQuoteDetailsStatus.initial,
-            jobQuoteLines: [],
-            jobOrderQty: [],
+            jobQuoteLines: const [],
+            jobOrderQty: const [],
             isGenerateOrderEnabled: false,
+            cart: Cart(),
           ),
         );
 
@@ -109,6 +110,18 @@ class JobQuoteDetailsCubit extends Cubit<JobQuoteDetailsState> {
       ),
     );
 
+    final updatedJobQuote =
+        await _quoteDetailsUsecase.updateJobQuote(parameter: parameter);
+
+    if (updatedJobQuote == null) {
+      emit(
+        state.copyWith(
+          status: JobQuoteDetailsStatus.generateOrderFailure,
+        ),
+      );
+      return;
+    }
+
     final isAuthenticated = await _quoteDetailsUsecase.isAuthenticatedAsync();
     switch (isAuthenticated) {
       case Failure():
@@ -136,6 +149,42 @@ class JobQuoteDetailsCubit extends Cubit<JobQuoteDetailsState> {
       return;
     }
 
-    /// TODO - Write code for checkout
+    emit(
+      state.copyWith(
+        cart: updatedJobQuote as Cart,
+      ),
+    );
+    
+    final currentCart = await _quoteDetailsUsecase.getCurrentCart(
+      CartQueryParameters(
+        expand: ['cartlines'],
+      ),
+    );
+
+    switch (currentCart) {
+      case Success(value: final cart):
+        if ((cart?.cartLines ?? []).isNotEmpty) {
+          emit(
+            state.copyWith(
+              status: JobQuoteDetailsStatus.quoteAcceptMessageShow,
+            ),
+          );
+          return;
+        }
+
+        break;
+      case Failure():
+        break;
+    }
+
+    await acceptJobQuote();
+  }
+
+  Future<void> acceptJobQuote() async {
+    emit(
+      state.copyWith(
+        status: JobQuoteDetailsStatus.proceedToCheckout,
+      ),
+    );
   }
 }
