@@ -19,9 +19,9 @@ import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/pick_up_location_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/location_finder_dealer/dealer_location_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_location_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 
 class LocationSearchScreen extends StatelessWidget {
   final LocationSearchType locationSearchType;
@@ -102,10 +102,10 @@ class LocationSearchPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: Input(
-                    hintText: LocalizationConstants.search,
+                    hintText: LocalizationConstants.search.localized(),
                     suffixIcon: IconButton(
-                      icon: SvgPicture.asset(
-                        AssetConstants.iconClear,
+                      icon: const SvgAssetImage(
+                        assetName: AssetConstants.iconClear,
                         semanticsLabel: 'search query clear icon',
                         fit: BoxFit.fitWidth,
                       ),

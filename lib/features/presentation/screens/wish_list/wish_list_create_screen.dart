@@ -68,14 +68,14 @@ class _WishListCreatePageState extends State<WishListCreatePage> {
       appBar: AppBar(
         centerTitle: false,
         backgroundColor: OptiAppColors.backgroundWhite,
-        title: const Text(LocalizationConstants.createNewList),
+        title: Text(LocalizationConstants.createNewList.localized()),
       ),
       body: BlocConsumer<WishListCreateCubit, WishListCreateState>(
         listener: (context, state) {
           if (state.status == WishListStatus.listCreateSuccess) {
             CustomSnackBar.showSnackBarMessage(
               context,
-              LocalizationConstants.listCreated,
+              LocalizationConstants.listCreated.localized(),
             );
             if (widget.onWishListCreated != null) {
               widget.onWishListCreated!();
@@ -86,11 +86,11 @@ class _WishListCreatePageState extends State<WishListCreatePage> {
           if (state.status == WishListStatus.listCreateFailure) {
             displayDialogWidget(
               context: context,
-              title: LocalizationConstants.error,
-              message: LocalizationConstants.somethingWentWrong,
+              title: LocalizationConstants.error.localized(),
+              message: LocalizationConstants.somethingWentWrong.localized(),
               actions: [
                 PlainBlackButton(
-                  child: const Text(LocalizationConstants.oK),
+                  text: LocalizationConstants.oK.localized(),
                   onPressed: () => context.pop(),
                 ),
               ],
@@ -100,11 +100,11 @@ class _WishListCreatePageState extends State<WishListCreatePage> {
           if (state.status == WishListStatus.listCreateEmptyNameFailure) {
             displayDialogWidget(
               context: context,
-              title: LocalizationConstants.error,
-              message: LocalizationConstants.enterListName,
+              title: LocalizationConstants.error.localized(),
+              message: LocalizationConstants.enterListName.localized(),
               actions: [
                 PlainBlackButton(
-                  child: const Text(LocalizationConstants.oK),
+                  text: LocalizationConstants.oK.localized(),
                   onPressed: () => context.pop(),
                 ),
               ],
@@ -140,13 +140,13 @@ class _WishListCreatePageState extends State<WishListCreatePage> {
             ListInformationBottomSubmitWidget(
               actions: [
                 SecondaryButton(
-                  child: const Text(LocalizationConstants.cancel),
+                  text: LocalizationConstants.cancel.localized(),
                   onPressed: () {
                     context.pop();
                   },
                 ),
                 PrimaryButton(
-                  text: LocalizationConstants.create,
+                  text: LocalizationConstants.create.localized(),
                   onPressed: () {
                     context.read<WishListCreateCubit>().createWishList(
                           name: _listNameEditingController.text,

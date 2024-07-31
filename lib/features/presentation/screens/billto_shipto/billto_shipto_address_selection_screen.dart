@@ -7,9 +7,9 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/address_type.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/billto_shipto/address_selection/billto_shipto_address_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -63,8 +63,8 @@ class _BillToShipToAddressSelectionPageState
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.selectionEntity.addressType == AddressType.billTo
-            ? LocalizationConstants.selectBillingAddress
-            : LocalizationConstants.selectShippingAddress),
+            ? LocalizationConstants.selectBillingAddress.localized()
+            : LocalizationConstants.selectShippingAddress.localized()),
         backgroundColor: OptiAppColors.backgroundWhite,
       ),
       body: Column(
@@ -74,10 +74,10 @@ class _BillToShipToAddressSelectionPageState
             padding:
                 const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: Input(
-              hintText: LocalizationConstants.search,
+              hintText: LocalizationConstants.search.localized(),
               suffixIcon: IconButton(
-                icon: SvgPicture.asset(
-                  AssetConstants.iconClear,
+                icon: const SvgAssetImage(
+                  assetName: AssetConstants.iconClear,
                   semanticsLabel: 'search query clear icon',
                   fit: BoxFit.fitWidth,
                 ),
@@ -145,11 +145,11 @@ class _BillToShipToAddressSelectionPageState
                     );
                   case BilltoShiptoAddressSelectionFailed():
                   default:
-                    return const CustomScrollView(
+                    return CustomScrollView(
                       slivers: <Widget>[
                         SliverFillRemaining(
                           child: Center(
-                            child: Text(LocalizationConstants.error),
+                            child: Text(LocalizationConstants.error.localized()),
                           ),
                         ),
                       ],
@@ -233,7 +233,6 @@ class BillToShipToListItem extends StatelessWidget {
                 padding: const EdgeInsets.all(7),
                 child: const Icon(
                   Icons.radio_button_checked,
-                  color: Colors.black,
                   size: 20,
                 ),
               ),

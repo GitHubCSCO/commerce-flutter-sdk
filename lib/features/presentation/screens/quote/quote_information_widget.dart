@@ -18,29 +18,29 @@ class QuoteInformationWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            LocalizationConstants.quoteInformation,
+            LocalizationConstants.quoteInformation.localized(),
             style: OptiTextStyles.bodyFade,
           ),
           SizedBox(height: 10.0),
           DetailRow(
-              label: LocalizationConstants.salesRep,
+              label: LocalizationConstants.salesRep.localized(),
               value: quoteDto?.salespersonName ?? ''),
           DetailRow(
-              label: LocalizationConstants.user,
+              label: LocalizationConstants.user.localized(),
               value: quoteDto?.userName ?? ''),
           DetailRow(
-              label: LocalizationConstants.status,
+              label: LocalizationConstants.status.localized(),
               value: quoteDto?.statusDisplay ?? ''),
           DetailRow(
-              label: LocalizationConstants.dateSubmitted,
+              label: LocalizationConstants.dateSubmitted.localized(),
               value: quoteDto?.orderDate
                       ?.formatDate(format: CoreConstants.dateFormatString) ??
                   ''),
           DetailRow(
-              label: LocalizationConstants.customer,
+              label: LocalizationConstants.customer.localized(),
               value: quoteDto?.customerName ?? ''),
           DetailRow(
-            label: LocalizationConstants.shippingAddress,
+            label: LocalizationConstants.shippingAddress.localized(),
             value: quoteDto?.shipToFullAddress ?? '',
           ),
         ],

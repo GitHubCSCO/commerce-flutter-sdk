@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/view_warehouse_availability_widget.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,8 @@ class LineItemPricingWidget extends StatelessWidget {
   final String? productId;
   final String? erpNumber;
   final String? unitOfMeasure;
+  final bool? hidePricingEnable;
+  final bool? hideInventoryEnable;
 
   const LineItemPricingWidget({
     super.key,
@@ -25,6 +28,8 @@ class LineItemPricingWidget extends StatelessWidget {
     this.productId,
     this.erpNumber,
     this.unitOfMeasure,
+    this.hidePricingEnable,
+    this.hideInventoryEnable,
   });
 
   @override
@@ -36,35 +41,38 @@ class LineItemPricingWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildDiscountMessageSection(
-              context,
-              discountMessage: discountMessage,
-            ),
-            _buildPricingSection(
-              context,
-              priceValueText: priceValueText,
-              unitOfMeasureValueText: unitOfMeasureValueText,
-            ),
-
-            availabilityText != null
-                ? _buildInventorySection(
-                    context,
-                    availabilityText: availabilityText,
-                  )
-                : Container(),
-            // _buildInventorySection(context),
-            // For "View Availability by Warehouse"
-            if (showViewAvailabilityByWarehouse)
-              GestureDetector(
-                onTap: () {
-                  viewWarehouseWidget(
-                      context, productId, erpNumber ?? "", unitOfMeasure ?? "");
-                },
-                child: Text(
-                  "View Availability by Warehouse",
-                  style: OptiTextStyles.link,
-                ),
+            if (!(hidePricingEnable ?? false)) ...{
+              _buildDiscountMessageSection(
+                context,
+                discountMessage: discountMessage,
               ),
+              _buildPricingSection(
+                context,
+                priceValueText: priceValueText,
+                unitOfMeasureValueText: unitOfMeasureValueText,
+              ),
+            },
+            if (!(hideInventoryEnable ?? false)) ...{
+              availabilityText != null
+                  ? _buildInventorySection(
+                context,
+                availabilityText: availabilityText,
+              )
+                  : Container(),
+              // _buildInventorySection(context),
+              // For "View Availability by Warehouse"
+              if (showViewAvailabilityByWarehouse)
+                GestureDetector(
+                  onTap: () {
+                    viewWarehouseWidget(context, productId, erpNumber ?? "",
+                        unitOfMeasure ?? "");
+                  },
+                  child: Text(
+                    LocalizationConstants.viewAvailabilityWarehouse.localized(),
+                    style: OptiTextStyles.link,
+                  ),
+                ),
+            }
           ],
         ),
       ),

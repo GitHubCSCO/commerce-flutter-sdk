@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
@@ -147,9 +148,9 @@ class _InputState extends State<Input> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(AppStyle.borderRadius),
                 boxShadow: (_focusNode.hasFocus && widget.maxLength == null)
-                    ? const [
+                    ? [
                         BoxShadow(
-                          color: AppStyle.inputDropShadowColor,
+                          color: OptiAppColors.primaryColor.withOpacity(0.3),
                           spreadRadius: AppStyle.inputDropShadowSpreadRadius,
                         ),
                       ]
@@ -194,8 +195,8 @@ class _InputState extends State<Input> {
                     borderRadius: BorderRadius.circular(
                       AppStyle.borderRadius,
                     ),
-                    borderSide: const BorderSide(
-                      color: AppStyle.primary500,
+                    borderSide: BorderSide(
+                      color: OptiAppColors.primaryColor,
                     ),
                   ),
                   filled: true,

@@ -2,9 +2,9 @@ import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/display_option.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 List<DisplayOption> _getDisplayOptions(
@@ -100,8 +100,8 @@ class SortToolMenu extends StatelessWidget {
           title: Text('Sort by...', style: OptiTextStyles.bodySmall),
           actions: _getToolMenuWidgets(context, displayOptionsList),
           cancelButton: CupertinoActionSheetAction(
-            child: const Text(
-              LocalizationConstants.cancel,
+            child: Text(
+              LocalizationConstants.cancel.localized(),
               style: TextStyle(color: Colors.blue),
             ),
             onPressed: () => Navigator.pop(context),
@@ -148,10 +148,10 @@ class SortToolMenu extends StatelessWidget {
     return IconButton(
       padding: const EdgeInsets.all(10),
       onPressed: () => _showBottomMenu(context, displayOptions),
-      icon: SvgPicture.asset(
+      icon: const SvgAssetImage(
         height: 20,
         width: 20,
-        AssetConstants.sortIcon,
+        assetName: AssetConstants.sortIcon,
         semanticsLabel: 'sort icon',
         fit: BoxFit.fitWidth,
       ),

@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dar
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/order_approval_usecase/order_approval_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
@@ -14,11 +15,14 @@ part 'order_approval_details_state.dart';
 
 class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
   final OrderApprovalUseCase _orderApprovalUseCase;
+  final PricingInventoryUseCase _pricingInventoryUseCase;
   ProductSettings? productSettings;
 
   OrderApprovalDetailsCubit({
     required OrderApprovalUseCase orderApprovalUseCase,
+    required PricingInventoryUseCase pricingInventoryUseCase
   })  : _orderApprovalUseCase = orderApprovalUseCase,
+        _pricingInventoryUseCase = pricingInventoryUseCase,
         super(
           OrderApprovalDetailsState(
             cart: Cart(),
@@ -39,6 +43,9 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
 
     final cart = await _orderApprovalUseCase.loadCart(cartId: cartId);
 
+    final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
+    final hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
+
     if (cart != null) {
       emit(
         state.copyWith(
@@ -46,6 +53,8 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
           status: OrderStatus.success,
           hasRestrictedCartLines:
               cart.cartLines?.any((cartLine) => cartLine.isRestricted == true),
+          hidePricingEnable: hidePricingEnable,
+          hideInventoryEnable: hideInventoryEnable,
         ),
       );
     } else {
@@ -101,7 +110,7 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
   String get taxValue => state.cart.totalTaxDisplay ?? '';
   String get totalValue => state.cart.orderGrandTotalDisplay ?? '';
   String get subtotalTitle =>
-      '${LocalizationConstants.subtotal} (${state.cart.totalQtyOrdered})';
+      '${LocalizationConstants.subtotal.localized()} (${state.cart.totalQtyOrdered})';
 
   // body section
   bool get isFulfillmentMethodShip => state.cart.fulfillmentMethod == 'Ship';
@@ -109,8 +118,8 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
       state.cart.fulfillmentMethod == 'PickUp';
 
   String get shippingAddressTitle => isFulfillmentMethodShip
-      ? LocalizationConstants.shippingAddress
-      : (isFulfillmentMethodPickUp ? LocalizationConstants.pickUpLocation : '');
+      ? LocalizationConstants.shippingAddress.localized()
+      : (isFulfillmentMethodPickUp ? LocalizationConstants.pickUpLocation.localized() : '');
 
   String get shipToCityStatePostalCodeDisplay => isFulfillmentMethodShip
       ? '${state.cart.shipTo?.city}, ${state.cart.shipTo?.state?.name} ${state.cart.shipTo?.postalCode}'

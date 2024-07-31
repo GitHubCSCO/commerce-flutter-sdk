@@ -49,7 +49,7 @@ class OrderApprovalPage extends StatelessWidget {
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         backgroundColor: OptiAppColors.backgroundWhite,
-        title: const Text(LocalizationConstants.orderApproval),
+        title: Text(LocalizationConstants.orderApproval.localized()),
         centerTitle: false,
         actions: [
           BottomMenuWidget(
@@ -84,7 +84,7 @@ class OrderApprovalPage extends StatelessWidget {
                           state.orderApprovalCollectionModel.pagination
                                       ?.totalItemCount !=
                                   null
-                              ? '${state.orderApprovalCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.orders}'
+                              ? '${state.orderApprovalCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.orders.localized()}'
                               : '',
                           style: OptiTextStyles.header3,
                         ),
@@ -205,6 +205,7 @@ class __OrderApprovalListWidgetState extends State<_OrderApprovalListWidget> {
                   },
                 );
               },
+              hidePricingEnable: state.hidePricingEnable,
             );
           },
           separatorBuilder: (context, index) => const Divider(
@@ -222,11 +223,13 @@ class __OrderApprovalListWidgetState extends State<_OrderApprovalListWidget> {
 
 class _OrderApprovalItem extends StatelessWidget {
   final Cart cart;
+  final bool? hidePricingEnable;
   final void Function()? onTap;
 
   const _OrderApprovalItem({
     required this.cart,
     this.onTap,
+    this.hidePricingEnable,
   });
 
   @override
@@ -248,7 +251,7 @@ class _OrderApprovalItem extends StatelessWidget {
               children: [
                 Text(
                   cart.orderNumber ?? '',
-                  style: OptiTextStyles.body,
+                  style: OptiTextStyles.body.copyWith(color: OptiAppColors.primaryColor),
                 ),
                 Text(
                   cart.orderDate != null
@@ -272,9 +275,12 @@ class _OrderApprovalItem extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  cart.orderGrandTotalDisplay ?? '',
-                  style: OptiTextStyles.bodySmallHighlight,
+                Visibility(
+                  visible: !(hidePricingEnable ?? false),
+                  child: Text(
+                    cart.orderGrandTotalDisplay ?? '',
+                    style: OptiTextStyles.bodySmallHighlight,
+                  ),
                 ),
                 Text(
                   cart.approverReason ?? '',

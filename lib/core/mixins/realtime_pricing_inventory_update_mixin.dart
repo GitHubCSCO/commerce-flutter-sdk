@@ -13,7 +13,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 mixin RealtimePricingInventoryUpdateMixin {
   Future<List<ProductEntity>> updateProductPricingAndInventoryAvailability(
       PricingInventoryUseCase pricingInventoryUseCase, List<Product>? products,
-      {bool onlyPricing = false}) async {
+      {bool? hidePricing, bool? hideInventory}) async {
     final productPricingEnabled =
         await pricingInventoryUseCase.getProductPricingEnable();
     final productAvailabilityEnabled =
@@ -27,7 +27,7 @@ mixin RealtimePricingInventoryUpdateMixin {
     final realTimeResult =
         await pricingInventoryUseCase.getRealtimeSupportType();
 
-    if (productPricingEnabled && realTimeResult != null) {
+    if (!(hidePricing ?? false) && productPricingEnabled && realTimeResult != null) {
       if (realTimeResult == RealTimeSupport.RealTimePricingOnly ||
           realTimeResult ==
               RealTimeSupport.RealTimePricingWithInventoryIncluded ||
@@ -60,7 +60,7 @@ mixin RealtimePricingInventoryUpdateMixin {
       }
     }
 
-    if (!onlyPricing & productAvailabilityEnabled && realTimeResult != null) {
+    if (!(hideInventory ?? false) & productAvailabilityEnabled && realTimeResult != null) {
       if (realTimeResult == RealTimeSupport.NoRealTimePricingAndInventory ||
           realTimeResult == RealTimeSupport.RealTimePricingAndInventory ||
           realTimeResult ==
@@ -141,7 +141,7 @@ mixin RealtimePricingInventoryUpdateMixin {
           for (var product in productList) {
             final productAvailability = Availability(
               messageType: 0,
-              message: LocalizationConstants.unableToRetrieveInventory,
+              message: LocalizationConstants.unableToRetrieveInventory.localized(),
             );
 
             product.availability = AvailabilityEntityMapper.toEntity(productAvailability);

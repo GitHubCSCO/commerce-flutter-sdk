@@ -195,9 +195,9 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                       ExpansionPanel(
                                           headerBuilder: (BuildContext context,
                                               bool isExpanded) {
-                                            return const ListTile(
+                                            return ListTile(
                                               title: Text(LocalizationConstants
-                                                  .billingShipping),
+                                                  .billingShipping.localized()),
                                             );
                                           },
                                           body: BillingShippingWidget(
@@ -218,10 +218,10 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                             headerBuilder:
                                                 (BuildContext context,
                                                     bool isExpanded) {
-                                              return const ListTile(
+                                              return ListTile(
                                                 title: Text(
                                                     LocalizationConstants
-                                                        .paymentDetails),
+                                                        .paymentDetails.localized()),
                                               );
                                             },
                                             body: CheckoutPaymentDetails(
@@ -243,9 +243,9 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                       ExpansionPanel(
                                           headerBuilder: (BuildContext context,
                                               bool isExpanded) {
-                                            return const ListTile(
+                                            return ListTile(
                                               title: Text(LocalizationConstants
-                                                  .reviewOrder),
+                                                  .reviewOrder.localized()),
                                             );
                                           },
                                           body: ReviewOrderWidget(
@@ -260,7 +260,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                               ),
                               ProductListWithBasicInfo(
                                 totalItemsTitle:
-                                    LocalizationConstants.cartContentsItems,
+                                    LocalizationConstants.cartContentsItems.localized(),
                                 list: CartLineListMapper
                                         .toEntity(CartLineList(
                                             cartLines:
@@ -283,7 +283,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                           stream: context
                               .read<ExpansionPanelCubit>()
                               .buttonTextStream,
-                          initialData: LocalizationConstants.continueText,
+                          initialData: LocalizationConstants.continueText.localized(),
                           builder: (context, snapshot) {
                             String buttonText = snapshot.data!;
                             var index = context

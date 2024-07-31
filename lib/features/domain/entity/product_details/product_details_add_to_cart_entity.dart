@@ -4,7 +4,7 @@ import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_meas
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 
 class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
-  final bool? showHidePricing;
+  final bool? hidePricing;
   final bool? shouldAddTopPadding;
   final bool? isAddToCartAllowed;
   final bool? addToCartButtonEnabled;
@@ -20,7 +20,7 @@ class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
   final ProductDetailsPriceEntity? productDetailsPriceEntity;
 
   const ProductDetailsAddtoCartEntity({
-    this.showHidePricing,
+    this.hidePricing,
     this.shouldAddTopPadding,
     this.isAddToCartAllowed,
     this.addToCartButtonEnabled,
@@ -39,7 +39,7 @@ class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
 
   @override
   ProductDetailsAddtoCartEntity copyWith({
-    bool? showHidePricing,
+    bool? hidePricing,
     bool? shouldAddTopPadding,
     bool? isAddToCartAllowed,
     bool? addToCartButtonEnabled,
@@ -56,7 +56,7 @@ class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
     ProdcutDeatilsPageWidgets? detailsSectionType,
   }) {
     return ProductDetailsAddtoCartEntity(
-      showHidePricing: showHidePricing ?? this.showHidePricing,
+      hidePricing: hidePricing ?? this.hidePricing,
       shouldAddTopPadding: shouldAddTopPadding ?? this.shouldAddTopPadding,
       isAddToCartAllowed: isAddToCartAllowed ?? this.isAddToCartAllowed,
       addToCartButtonEnabled:
@@ -82,7 +82,7 @@ class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
 
   @override
   List<Object?> get props => [
-        showHidePricing,
+        hidePricing,
         shouldAddTopPadding,
         isAddToCartAllowed,
         addToCartButtonEnabled,

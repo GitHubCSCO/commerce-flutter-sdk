@@ -85,7 +85,6 @@ class _CountInputPageState extends State<CountInputPage> {
               },
               icon: const Icon(
                 Icons.close,
-                color: Colors.black,
               ),
             ),
           ],
@@ -109,8 +108,8 @@ class _CountInputPageState extends State<CountInputPage> {
                       ),
                       const SizedBox(height: 20.0),
                       TabSwitchWidget(
-                        tabTitle0: LocalizationConstants.history,
-                        tabTitle1: LocalizationConstants.productInfo,
+                        tabTitle0: LocalizationConstants.history.localized(),
+                        tabTitle1: LocalizationConstants.productInfo.localized(),
                         tabWidget0: _getHistoryWidget(),
                         tabWidget1: _getProductInfoWidget(),
                       ),
@@ -135,7 +134,7 @@ class _CountInputPageState extends State<CountInputPage> {
                         _qtyController.text);
                   },
                   isEnabled: isUpdateEnable,
-                  text: LocalizationConstants.update,
+                  text: LocalizationConstants.update.localized(),
                 ),
               )
             ],
@@ -152,7 +151,7 @@ class _CountInputPageState extends State<CountInputPage> {
         onPressed: () {
           Navigator.of(context).pop();
         },
-        child: const Text(LocalizationConstants.oK),
+        child: Text(LocalizationConstants.oK.localized()),
       ),
     ]);
   }
@@ -166,7 +165,7 @@ class _CountInputPageState extends State<CountInputPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(LocalizationConstants.qTY, style: OptiTextStyles.body),
+          Text(LocalizationConstants.qTY.localized(), style: OptiTextStyles.body),
           NumberTextField(
             initialtText: qty.toString(),
             shouldShowIncrementDecermentIcon: false,
@@ -203,13 +202,13 @@ class _CountInputPageState extends State<CountInputPage> {
     List<Widget> list = [];
 
     final date = _buildRow(
-        LocalizationConstants.dateSign,
+        LocalizationConstants.dateSign.localized(),
         OptiTextStyles.subtitle,
         widget.countInventoryEntity.vmiBinEntity.previousCountDate
             .formatDate(format: 'dd/MM/yyyy'),
         OptiTextStyles.body);
     final countQty = _buildRow(
-        LocalizationConstants.countQTYSign,
+        LocalizationConstants.countQTYSign.localized(),
         OptiTextStyles.subtitle,
         (widget.countInventoryEntity.vmiBinEntity.previousCountQty?.toInt() ??
                 0)
@@ -228,7 +227,7 @@ class _CountInputPageState extends State<CountInputPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(LocalizationConstants.previousCount,
+          Text(LocalizationConstants.previousCount.localized(),
               style: OptiTextStyles.titleLarge),
           ...list
         ],
@@ -240,20 +239,20 @@ class _CountInputPageState extends State<CountInputPage> {
     List<Widget> list = [];
 
     final date = _buildRow(
-        LocalizationConstants.dateSign,
+        LocalizationConstants.dateSign.localized(),
         OptiTextStyles.subtitle,
         widget.countInventoryEntity.previousOrder?.orderDate
                 .formatDate(format: 'dd/MM/yyyy') ??
             '',
         OptiTextStyles.body);
     final countQty = _buildRow(
-        LocalizationConstants.orderQTYSign,
+        LocalizationConstants.orderQTYSign.localized(),
         OptiTextStyles.subtitle,
         _getPreviousOrderQty(widget.countInventoryEntity.previousOrder,
             widget.countInventoryEntity.vmiBinEntity),
         OptiTextStyles.body);
     final order = _buildRow(
-        LocalizationConstants.orderSign,
+        LocalizationConstants.orderSign.localized(),
         OptiTextStyles.subtitle,
         widget.countInventoryEntity.previousOrder?.orderNumber ?? '',
         OptiTextStyles.body);
@@ -273,7 +272,7 @@ class _CountInputPageState extends State<CountInputPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(LocalizationConstants.previouseOrder,
+          Text(LocalizationConstants.previouseOrder.localized(),
               style: OptiTextStyles.titleLarge),
           ...list
         ],
@@ -285,36 +284,36 @@ class _CountInputPageState extends State<CountInputPage> {
     List<Widget> list = [];
 
     final part = _buildRow(
-        LocalizationConstants.partNumberSign,
+        LocalizationConstants.partNumberSign.localized(),
         OptiTextStyles.subtitle,
         widget.countInventoryEntity.vmiBinEntity.productEntity?.getProductNumber() ??
             '',
         OptiTextStyles.body);
     final myPart = _buildRow(
-        LocalizationConstants.myPartNumberSign,
+        LocalizationConstants.myPartNumberSign.localized(),
         OptiTextStyles.subtitle,
         widget.countInventoryEntity.vmiBinEntity.productEntity?.customerName ??
             '',
         OptiTextStyles.body);
     final mfg = _buildRow(
-        LocalizationConstants.mFGNumberSign,
+        LocalizationConstants.mFGNumberSign.localized(),
         OptiTextStyles.subtitle,
         widget.countInventoryEntity.vmiBinEntity.productEntity
                 ?.manufacturerItem ??
             '',
         OptiTextStyles.body);
     final bin = _buildRow(
-        LocalizationConstants.binSign,
+        LocalizationConstants.binSign.localized(),
         OptiTextStyles.subtitle,
         widget.countInventoryEntity.vmiBinEntity.binNumber ?? '',
         OptiTextStyles.body);
     final maxCount = _buildRow(
-        LocalizationConstants.maxSign,
+        LocalizationConstants.maxSign.localized(),
         OptiTextStyles.subtitle,
         widget.countInventoryEntity.vmiBinEntity.maximumQty?.toInt().toString() ?? '',
         OptiTextStyles.body);
     final minCount = _buildRow(
-        LocalizationConstants.minSign,
+        LocalizationConstants.minSign.localized(),
         OptiTextStyles.subtitle,
         widget.countInventoryEntity.vmiBinEntity.minimumQty?.toInt().toString() ?? '',
         OptiTextStyles.body);

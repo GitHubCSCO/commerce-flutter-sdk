@@ -58,7 +58,7 @@ class JobQuoteDetailsPage extends StatelessWidget {
                 context.watch<JobQuoteDetailsCubit>().jobQuote?.orderNumber ??
                     '',
               )
-            : const Text(LocalizationConstants.myQuoteDetails),
+            : Text(LocalizationConstants.myQuoteDetails.localized()),
       ),
       body: BlocConsumer<JobQuoteDetailsCubit, JobQuoteDetailsState>(
         listener: (context, state) {},
@@ -103,7 +103,8 @@ class JobQuoteDetailsPage extends StatelessWidget {
                     state.status != JobQuoteDetailsStatus.generateOrderLoading
                         ? PrimaryButton(
                             isEnabled: state.isGenerateOrderEnabled,
-                            text: LocalizationConstants.generateOrder,
+                            text:
+                                LocalizationConstants.generateOrder.localized(),
                             onPressed: context
                                 .read<JobQuoteDetailsCubit>()
                                 .generateOrder,
@@ -143,7 +144,7 @@ class _JobQuoteInfoSection extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)
               .copyWith(bottom: 8),
           child: Text(
-            LocalizationConstants.quoteInformation.toUpperCase(),
+            LocalizationConstants.quoteInformation.localized().toUpperCase(),
             style: OptiTextStyles.titleLarge,
           ),
         ),
@@ -159,28 +160,28 @@ class _JobQuoteInfoSection extends StatelessWidget {
             children: [
               if (jobName.isNotEmpty) ...[
                 _TextEntries(
-                  title: LocalizationConstants.jobName,
+                  title: LocalizationConstants.jobName.localized(),
                   value: jobName,
                 ),
                 const SizedBox(height: 20),
               ],
               if (expirationDate.isNotEmpty) ...[
                 _TextEntries(
-                  title: LocalizationConstants.expirationDate,
+                  title: LocalizationConstants.expirationDate.localized(),
                   value: expirationDate,
                 ),
                 const SizedBox(height: 20),
               ],
               if (customerName.isNotEmpty) ...[
                 _TextEntries(
-                  title: LocalizationConstants.customer,
+                  title: LocalizationConstants.customer.localized(),
                   value: customerName,
                 ),
                 const SizedBox(height: 20),
               ],
               if (shipToAddress.isNotEmpty) ...[
                 _TextEntries(
-                  title: LocalizationConstants.shippingAddress,
+                  title: LocalizationConstants.shippingAddress.localized(),
                   value: shipToAddress,
                 ),
                 const SizedBox(height: 20),
@@ -248,7 +249,7 @@ class _ProductSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                LocalizationConstants.products,
+                LocalizationConstants.products.localized(),
                 style: OptiTextStyles.titleLarge,
               ),
               const SizedBox(width: 8),
@@ -271,11 +272,11 @@ class _ProductSection extends StatelessWidget {
               shortDescription: jobQuoteLine.shortDescription,
               productNumber: jobQuoteLine.erpNumber,
               manufacturerItem: !jobQuoteLine.manufacturerItem.isNullOrEmpty
-                  ? LocalizationConstants.mFGNumberSign +
+                  ? LocalizationConstants.mFGNumberSign.localized() +
                       (jobQuoteLine.manufacturerItem ?? '')
                   : null,
               priceValueText: (jobQuoteLine.quoteRequired ?? false)
-                  ? LocalizationConstants.requiresQuote
+                  ? LocalizationConstants.requiresQuote.localized()
                   : ProductPriceEntityMapper.toEntity(
                           jobQuoteLine.pricing ?? ProductPrice())
                       .getPriceValue(),

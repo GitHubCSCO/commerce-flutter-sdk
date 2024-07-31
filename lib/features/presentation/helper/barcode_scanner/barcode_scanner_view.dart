@@ -82,10 +82,10 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
                 },
                 backgroundColor: canProcess
                     ? OptiAppColors.buttonDarkRedBackgroudColor
-                    : AppStyle.primary500,
+                    : OptiAppColors.primaryColor,
                 text: canProcess
-                    ? LocalizationConstants.cancel
-                    : LocalizationConstants.tapToScan,
+                    ? LocalizationConstants.cancel.localized()
+                    : LocalizationConstants.tapToScan.localized(),
               ),
             ),
           )
@@ -135,8 +135,8 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
         isDialogShowing = true;
         displayDialogWidget(
             context: context,
-            title: LocalizationConstants.multipleBarcodeWarningTitle,
-            message: LocalizationConstants.multipleBarcodeWarningMessage,
+            title: LocalizationConstants.multipleBarcodeWarningTitle.localized(),
+            message: LocalizationConstants.multipleBarcodeWarningMessage.localized(),
             actions: [
               DialogPlainButton(
                 onPressed: () {
@@ -144,7 +144,7 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
                   isDialogShowing = false;
                   Navigator.of(context).pop();
                 },
-                child: const Text(LocalizationConstants.oK),
+                child: Text(LocalizationConstants.oK.localized()),
               ),
             ]);
       }

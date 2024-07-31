@@ -13,7 +13,7 @@ extension WishListLineExtensions on WishListLineEntity? {
       priceValueText = this!.pricing!.unitNetPriceDisplay ?? "";
     } else {
       if (this!.quoteRequired != null && this!.quoteRequired!) {
-        return LocalizationConstants.requiresQuote.toString();
+        return LocalizationConstants.requiresQuote.localized().toString();
       } else {
         priceValueText = this!.pricing.getPriceValue() ?? "";
       }
@@ -31,7 +31,7 @@ extension WishListLineExtensions on WishListLineEntity? {
       subtotalValueText = this!.pricing!.extendedUnitNetPriceDisplay ?? "";
     } else {
       if (this!.quoteRequired != null && this!.quoteRequired!) {
-        return LocalizationConstants.requiresQuote.toString();
+        return LocalizationConstants.requiresQuote.localized().toString();
       } else {
         subtotalValueText = this!.pricing.getSubtotalValue() ?? "";
       }

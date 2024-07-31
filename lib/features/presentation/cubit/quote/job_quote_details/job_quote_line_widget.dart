@@ -121,7 +121,7 @@ class _JobQuoteLineQuantityGroupWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  LocalizationConstants.orderQTY,
+                  LocalizationConstants.orderQTY.localized(),
                   style: OptiTextStyles.bodySmallHighlight,
                 ),
                 const SizedBox(

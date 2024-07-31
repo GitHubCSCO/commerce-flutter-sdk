@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
@@ -60,7 +61,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         title: Text(
-          LocalizationConstants.forgotPassword,
+          LocalizationConstants.forgotPassword.localized(),
           style: OptiTextStyles.titleLarge,
         ),
         centerTitle: false,
@@ -69,12 +70,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             onPressed: () {
               context.pop();
             },
-            child: Text(
-              LocalizationConstants.cancel,
-              style: OptiTextStyles.subtitle.copyWith(
-                color: Theme.of(context).primaryColor,
-              ),
+            style: OptiTextStyles.subtitle.copyWith(
+              color: OptiAppColors.primaryColor,
             ),
+            text: LocalizationConstants.cancel.localized(),
           ),
         ],
         automaticallyImplyLeading: false,
@@ -96,12 +95,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             Navigator.of(context, rootNavigator: true).pop();
             displayDialogWidget(
               context: context,
-              content: const Text(
-                LocalizationConstants.forgotPasswordSuccessfulMessage,
+              content: Text(
+                LocalizationConstants.forgotPasswordSuccessfulMessage.localized(),
               ),
               actions: [
                 PlainBlackButton(
-                  child: const Text(LocalizationConstants.oK),
+                  text: LocalizationConstants.oK.localized(),
                   onPressed: () {
                     context.pop();
                     context.pop();
@@ -146,20 +145,20 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     Text(
                       useEmailAsUserName
                           ? LocalizationConstants
-                              .instructionsEmailStringTemplate
+                              .instructionsEmailStringTemplate.localized()
                           : LocalizationConstants
-                              .instructionsUsernameStringTemplate,
+                              .instructionsUsernameStringTemplate.localized(),
                       style: OptiTextStyles.body,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),
                     Input(
                       label: useEmailAsUserName
-                          ? LocalizationConstants.email
-                          : LocalizationConstants.username,
+                          ? LocalizationConstants.email.localized()
+                          : LocalizationConstants.username.localized(),
                       hintText: useEmailAsUserName
-                          ? LocalizationConstants.enterEmail
-                          : LocalizationConstants.enterUsername,
+                          ? LocalizationConstants.enterEmail.localized()
+                          : LocalizationConstants.enterUsername.localized(),
                       controller: textEditingController,
                       onTapOutside: (p0) => context.closeKeyboard(),
                     ),
@@ -172,7 +171,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                               widget.accountType,
                             );
                       },
-                      text: LocalizationConstants.submit,
+                      text: LocalizationConstants.submit.localized(),
                     ),
                   ],
                 ),
@@ -188,11 +187,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 void _errorCommunicatingWithServer(BuildContext context) {
   displayDialogWidget(
     context: context,
-    title: LocalizationConstants.error,
-    content: const Text(LocalizationConstants.errorCommunicatingWithTheServer),
+    title: LocalizationConstants.error.localized(),
+    content: Text(LocalizationConstants.errorCommunicatingWithTheServer.localized()),
     actions: [
       PlainBlackButton(
-        child: const Text(LocalizationConstants.oK),
+        text: LocalizationConstants.oK.localized(),
         onPressed: () {
           context.pop();
           context.pop();

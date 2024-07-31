@@ -167,7 +167,7 @@ class QuoteDetailsPage extends StatelessWidget {
           Expanded(
             flex: 1,
             child: Text(
-              LocalizationConstants.quoteExpiration,
+              LocalizationConstants.quoteExpiration.localized(),
               textAlign: TextAlign.start,
               style: OptiTextStyles.subtitle,
             ),
@@ -198,20 +198,20 @@ class QuoteDetailsPage extends StatelessWidget {
   void _displayDialogPastExpirationDate(BuildContext context, String msg) {
     displayDialogWidget(
       context: context,
-      title: LocalizationConstants.error,
+      title: LocalizationConstants.error.localized(),
       message: msg,
       actions: [
         DialogPlainButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text(LocalizationConstants.cancel),
+          child: Text(LocalizationConstants.cancel.localized()),
         ),
         DialogPlainButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text(LocalizationConstants.oK),
+          child: Text(LocalizationConstants.oK.localized()),
         ),
       ],
     );
@@ -221,14 +221,14 @@ class QuoteDetailsPage extends StatelessWidget {
       BuildContext context, String msg) {
     displayDialogWidget(
       context: context,
-      title: LocalizationConstants.error,
+      title: LocalizationConstants.error.localized(),
       message: msg,
       actions: [
         DialogPlainButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text(LocalizationConstants.oK),
+          child: Text(LocalizationConstants.oK.localized()),
         ),
       ],
     );
@@ -237,20 +237,20 @@ class QuoteDetailsPage extends StatelessWidget {
   void displayDialogForAccpetQuote(BuildContext context) {
     displayDialogWidget(
       context: context,
-      message: LocalizationConstants.acceptQuoteMessage,
+      message: LocalizationConstants.acceptQuoteMessage.localized(),
       actions: [
         DialogPlainButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text(LocalizationConstants.cancel),
+          child: Text(LocalizationConstants.cancel.localized()),
         ),
         DialogPlainButton(
           onPressed: () {
             Navigator.of(context).pop();
             context.read<QuoteDetailsBloc>().add(ProceedToCheckoutEvent());
           },
-          child: const Text(LocalizationConstants.continueText),
+          child: Text(LocalizationConstants.continueText.localized()),
         ),
       ],
     );
@@ -259,14 +259,14 @@ class QuoteDetailsPage extends StatelessWidget {
   void displayDialogForDeleteQuote(BuildContext context) {
     displayDialogWidget(
       context: context,
-      title: LocalizationConstants.deleteQuote,
+      title: LocalizationConstants.deleteQuote.localized(),
       message: context.read<QuoteDetailsBloc>().deleteQuoteConfirmation,
       actions: [
         DialogPlainButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text(LocalizationConstants.cancel),
+          child: Text(LocalizationConstants.cancel.localized()),
         ),
         DialogPlainButton(
           onPressed: () {
@@ -274,7 +274,7 @@ class QuoteDetailsPage extends StatelessWidget {
             context.read<QuoteDetailsBloc>().add(DeleteQuoteEvent(
                 quoteId: context.read<QuoteDetailsBloc>().quoteDto?.id ?? ""));
           },
-          child: const Text(LocalizationConstants.continueText),
+          child: Text(LocalizationConstants.continueText.localized()),
         ),
       ],
     );
@@ -293,7 +293,7 @@ class QuoteDetailsPage extends StatelessWidget {
           Visibility(
             visible: context.read<QuoteDetailsBloc>().canBeAccepted,
             child: TertiaryBlackButton(
-              child: Text(acceptedTitle),
+              text: acceptedTitle,
               onPressed: () {
                 if ((context.read<QuoteDetailsBloc>().isQuoteRequested ||
                         context.read<QuoteDetailsBloc>().isQuoteCreated) &&
@@ -308,7 +308,7 @@ class QuoteDetailsPage extends StatelessWidget {
           Visibility(
             visible: context.read<QuoteDetailsBloc>().canBeDeclined,
             child: TertiaryBlackButton(
-              child: Text(declineTitle),
+              text: declineTitle,
               onPressed: () {
                 if (context.read<QuoteDetailsBloc>().isQuoteProposed) {
                   context.read<QuoteDetailsBloc>().add(DeclineQuoteEvent());
@@ -370,7 +370,7 @@ class QuoteDetailsPage extends StatelessWidget {
     List<ToolMenu> list = [];
     list.add(
       ToolMenu(
-        title: LocalizationConstants.lineNotes,
+        title: LocalizationConstants.lineNotes.localized(),
         action: () async {
           var initialText = ''; // TODO - SET INITIAL TEXT
           final lineNotesText = await context.pushNamed(
@@ -384,7 +384,7 @@ class QuoteDetailsPage extends StatelessWidget {
       ),
     );
     list.add(ToolMenu(
-        title: LocalizationConstants.quote,
+        title: LocalizationConstants.quote.localized(),
         action: () {
           gotoQuotePricing(context, quoteLineEntity);
           // AppRoute.quotePricing
@@ -420,7 +420,7 @@ class QuoteDetailsPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                LocalizationConstants.message,
+                LocalizationConstants.message.localized(),
                 style: OptiTextStyles.bodyFade,
               ),
               SizedBox(height: 10.0),
@@ -467,7 +467,7 @@ class QuoteDetailsPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(LocalizationConstants.noMessageItem),
+                    Text(LocalizationConstants.noMessageItem.localized()),
                     SizedBox(width: 10.0),
                     Container(
                       alignment: Alignment.center,

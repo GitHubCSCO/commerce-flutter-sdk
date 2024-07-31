@@ -4,9 +4,9 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_state.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -92,25 +92,25 @@ class NavBarPage extends StatelessWidget {
         0,
         AssetConstants.shopIcon,
         AssetConstants.shopSelectedIcon,
-        LocalizationConstants.shopTitle,
+        LocalizationConstants.shopTitle.localized(),
       ),
       _buildBottomNavigationBarItem(
         1,
         AssetConstants.searchIcon,
         AssetConstants.searchSelectedIcon,
-        LocalizationConstants.searchLandingTitle,
+        LocalizationConstants.searchLandingTitle.localized(),
       ),
       _buildBottomNavigationBarItem(
         2,
         AssetConstants.accountIcon,
         AssetConstants.accountSelectedIcon,
-        LocalizationConstants.account,
+        LocalizationConstants.account.localized(),
       ),
       _buildBottomNavigationBarItem(
         3,
         AssetConstants.cartIcon,
         AssetConstants.cartSelectedIcon,
-        LocalizationConstants.cart,
+        LocalizationConstants.cart.localized(),
       ),
     ];
   }
@@ -133,12 +133,12 @@ class NavBarPage extends StatelessWidget {
   Widget _getIcon(int index, String unselectedIconPath, String selectedIconPath,
       [int cartCount = 0]) {
     Widget icon = navigationShell.currentIndex == index
-        ? SvgPicture.asset(
-            selectedIconPath,
+        ? SvgAssetImage(
+            assetName: selectedIconPath,
             fit: BoxFit.fitWidth,
           )
-        : SvgPicture.asset(
-            unselectedIconPath,
+        : SvgAssetImage(
+            assetName: unselectedIconPath,
             fit: BoxFit.fitWidth,
           );
 

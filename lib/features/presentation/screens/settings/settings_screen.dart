@@ -53,7 +53,7 @@ class SettingsPage extends StatelessWidget {
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         backgroundColor: AppStyle.neutral00,
-        title: const Text(LocalizationConstants.settings),
+        title: Text(LocalizationConstants.settings.localized()),
         centerTitle: false,
       ),
       body: Center(
@@ -89,7 +89,7 @@ class _SettingsDomainSelectorWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(LocalizationConstants.currentDomain),
+          Text(LocalizationConstants.currentDomain.localized()),
           const SizedBox(height: 8),
           BlocBuilder<SettingsDomainCubit, SettingsDomainState>(
             builder: (context, state) {
@@ -114,7 +114,7 @@ class _SettingsDomainSelectorWidget extends StatelessWidget {
               semanticsLabel: 'Change domain icon',
               fit: BoxFit.fitWidth,
             ),
-            text: LocalizationConstants.changeDomain,
+            text: LocalizationConstants.changeDomain.localized(),
             onPressed: () =>
                 AppRoute.domainSelection.navigateBackStack(context),
           )
@@ -151,16 +151,16 @@ final settingsItems = [
   _SettingsListItemWidget(
     onTap: (BuildContext context) =>
         CustomSnackBar.showComingSoonSnackBar(context),
-    title: LocalizationConstants.clearCache,
+    title: LocalizationConstants.clearCache.localized(),
   ),
   _SettingsListItemWidget(
-    title: LocalizationConstants.languages,
+    title: LocalizationConstants.languages.localized(),
     onTap: (BuildContext context) =>
-        CustomSnackBar.showComingSoonSnackBar(context),
+        AppRoute.language.navigate(context),
     showTrailing: true,
   ),
   _SettingsListItemWidget(
-    title: LocalizationConstants.adminLogin,
+    title: LocalizationConstants.adminLogin.localized(),
     onTap: (BuildContext context) =>
         CustomSnackBar.showComingSoonSnackBar(context),
   ),
@@ -259,10 +259,10 @@ class _BiometricListTile extends StatelessWidget {
                         : DeviceAuthenticationOption.none;
 
                 final biometricDisplay = Platform.isAndroid
-                    ? LocalizationConstants.fingerprint
+                    ? LocalizationConstants.fingerprint.localized()
                     : biometricOption == DeviceAuthenticationOption.faceID
-                        ? LocalizationConstants.faceID
-                        : LocalizationConstants.touchID;
+                        ? LocalizationConstants.faceID.localized()
+                        : LocalizationConstants.touchID.localized();
 
                 if (biometricOption == DeviceAuthenticationOption.none) {
                   return Container();
@@ -319,12 +319,12 @@ class _BiometricListTile extends StatelessWidget {
                       Navigator.of(context, rootNavigator: true).pop();
                       displayDialogWidget(
                         context: context,
-                        title: LocalizationConstants.error,
+                        title: LocalizationConstants.error.localized(),
                         message: 'Failed to enable $biometricDisplay',
                         actions: [
                           DialogPlainButton(
                             onPressed: () => Navigator.of(context).pop(),
-                            child: const Text(LocalizationConstants.oK),
+                            child: Text(LocalizationConstants.oK.localized()),
                           ),
                         ],
                       );
@@ -414,14 +414,14 @@ class __PassowordDialogState extends State<_PassowordDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text(LocalizationConstants.cancel),
+          child: Text(LocalizationConstants.cancel.localized()),
         ),
         TextButton(
           onPressed: () {
             widget.submitPassword(_passwordController.text);
             Navigator.of(context).pop();
           },
-          child: const Text(LocalizationConstants.enable),
+          child: Text(LocalizationConstants.enable.localized()),
         )
       ],
     );

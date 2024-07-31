@@ -132,8 +132,8 @@ class _CameraViewState extends State<CameraView> {
                     backgroundColor: Colors.grey.shade100,
                     child: const Icon(
                       Icons.close,
-                      size: 20,
                       color: Colors.black,
+                      size: 20,
                     ),
                   ),
                 ),

@@ -12,6 +12,7 @@ class OrderHistoryState extends Equatable {
   final FilterStatus filterStatus;
   final String searchQuery;
   final bool isFromVMI;
+  final bool? hidePricingEnable;
 
   const OrderHistoryState({
     required this.orderEntities,
@@ -25,6 +26,7 @@ class OrderHistoryState extends Equatable {
     required this.temporaryShowMyOrdersValue,
     required this.searchQuery,
     required this.isFromVMI,
+    this.hidePricingEnable,
   });
 
   @override
@@ -39,7 +41,8 @@ class OrderHistoryState extends Equatable {
         temporarySelectedFilterValueIds,
         temporaryShowMyOrdersValue,
         searchQuery,
-        isFromVMI
+        isFromVMI,
+        hidePricingEnable ?? false,
       ];
 
   OrderHistoryState copyWith({
@@ -54,6 +57,8 @@ class OrderHistoryState extends Equatable {
     FilterStatus? filterStatus,
     String? searchQuery,
     bool? isFromVMI,
+    bool? hidePricingEnable,
+    bool? hideInventoryEnable,
   }) {
     return OrderHistoryState(
       isFromVMI: isFromVMI ?? this.isFromVMI,
@@ -70,6 +75,7 @@ class OrderHistoryState extends Equatable {
       filterValues: filterValues ?? this.filterValues,
       filterStatus: filterStatus ?? this.filterStatus,
       searchQuery: searchQuery ?? this.searchQuery,
+      hidePricingEnable: hidePricingEnable ?? this.hidePricingEnable,
     );
   }
 

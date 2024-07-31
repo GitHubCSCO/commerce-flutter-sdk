@@ -39,7 +39,7 @@ class _CategoryPageState extends State<CategoryPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            LocalizationConstants.categories, style: OptiTextStyles.titleLarge),
+            LocalizationConstants.categories.localized(), style: OptiTextStyles.titleLarge),
         actions: [
           BottomMenuWidget(isViewOnWebsiteEnable: false,
               toolMenuList: _getToolMenu(context)),
@@ -87,7 +87,7 @@ class _CategoryPageState extends State<CategoryPage> {
   List<ToolMenu> _getToolMenu(BuildContext context) {
     List<ToolMenu> list = [];
     list.add(ToolMenu(
-        title: LocalizationConstants.listView,
+        title: LocalizationConstants.listView.localized(),
         action: () {
           setState(() {
             isGridView = false;
@@ -95,7 +95,7 @@ class _CategoryPageState extends State<CategoryPage> {
         }
     ));
     list.add(ToolMenu(
-        title: LocalizationConstants.gridView,
+        title: LocalizationConstants.gridView.localized(),
         action: () {
           setState(() {
             isGridView = true;

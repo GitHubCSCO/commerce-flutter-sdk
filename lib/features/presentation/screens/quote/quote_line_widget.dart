@@ -87,7 +87,7 @@ class QuoteLineWidget extends StatelessWidget {
               productId: quoteLineEntity.productId,
               erpNumber: quoteLineEntity.erpNumber,
               unitOfMeasure: quoteLineEntity.baseUnitOfMeasure,
-              showViewAvailabilityByWarehouse: false),
+              showViewAvailabilityByWarehouse: false,),
           Visibility(
             visible: showViewBreakPricing!,
             child: Padding(
@@ -98,7 +98,7 @@ class QuoteLineWidget extends StatelessWidget {
                       context, quoteLineEntity.quoteLinePricingBreakList ?? []);
                 },
                 child: Text(
-                  LocalizationConstants.viewQuotedPricing,
+                  LocalizationConstants.viewQuotedPricing.localized(),
                   style: OptiTextStyles.link,
                 ),
               ),

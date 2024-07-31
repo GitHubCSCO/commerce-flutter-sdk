@@ -11,6 +11,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wis
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_details/wish_list_line/wish_list_line_pricing_widgert.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_quantity_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_title_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -50,13 +51,13 @@ class WishListLineWidget extends StatelessWidget {
           displayDialogWidget(
             context: context,
             message:
-                '${errorMessage ?? ''} ${LocalizationConstants.removeItemFromTheList}',
+                '${errorMessage ?? ''} ${LocalizationConstants.removeItemFromTheList.localized()}',
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text(LocalizationConstants.cancel),
+                child: Text(LocalizationConstants.cancel.localized()),
               ),
               TextButton(
                 onPressed: () {
@@ -65,7 +66,7 @@ class WishListLineWidget extends StatelessWidget {
                       );
                   Navigator.of(context).pop();
                 },
-                child: const Text(LocalizationConstants.oK),
+                child: Text(LocalizationConstants.oK.localized()),
               ),
             ],
           );
@@ -176,11 +177,11 @@ class WishListLineWidget extends StatelessWidget {
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 15).copyWith(left: 15),
-              child: SizedBox(
+              child: const SizedBox(
                 width: 30,
                 height: 30,
-                child: SvgPicture.asset(
-                  AssetConstants.wishListLineAddToCartIcon,
+                child: SvgAssetImage(
+                  assetName: AssetConstants.wishListLineAddToCartIcon,
                   fit: BoxFit.fitWidth,
                 ),
               ),

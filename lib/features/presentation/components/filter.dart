@@ -126,7 +126,7 @@ void showFilterModalSheet(
                             vertical: 10,
                           ),
                           child: Text(
-                            LocalizationConstants.filter,
+                            LocalizationConstants.filter.localized(),
                             style: OptiTextStyles.titleLarge,
                           ),
                         ),
@@ -159,7 +159,7 @@ void showFilterModalSheet(
                           height: 48,
                           child: SecondaryButton(
                             onPressed: onReset,
-                            child: const Text(LocalizationConstants.reset),
+                            text: LocalizationConstants.reset.localized(),
                           ),
                         ),
                       ),
@@ -169,7 +169,7 @@ void showFilterModalSheet(
                         width: 176,
                         height: 48,
                         child: PrimaryButton(
-                          text: LocalizationConstants.apply,
+                          text: LocalizationConstants.apply.localized(),
                           onPressed: () {
                             onApply();
                             Navigator.pop(innerContext);
@@ -328,7 +328,7 @@ class FilterShipToPickerWidget extends StatelessWidget {
         children: [
           shipTo == null
               ? Text(
-                  LocalizationConstants.selectShipToAddress,
+                  LocalizationConstants.selectShipToAddress.localized(),
                   style: OptiTextStyles.body,
                 )
               : Column(
@@ -501,7 +501,7 @@ class FilterBillToPickerWidget extends StatelessWidget {
         children: [
           billTo == null
               ? Text(
-                  LocalizationConstants.selectCustomer,
+                  LocalizationConstants.selectCustomer.localized(),
                   style: OptiTextStyles.body,
                 )
               : Column(

@@ -20,9 +20,10 @@ import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_delete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -75,7 +76,7 @@ class _WishListsPageState extends State<WishListsPage> {
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         backgroundColor: OptiAppColors.backgroundWhite,
-        title: const Text(LocalizationConstants.lists),
+        title: Text(LocalizationConstants.lists.localized()),
         centerTitle: false,
         actions: [
           _OptionsMenu(
@@ -93,10 +94,10 @@ class _WishListsPageState extends State<WishListsPage> {
             color: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
             child: Input(
-              hintText: LocalizationConstants.search,
+              hintText: LocalizationConstants.search.localized(),
               suffixIcon: IconButton(
-                icon: SvgPicture.asset(
-                  AssetConstants.iconClear,
+                icon: const SvgAssetImage(
+                  assetName: AssetConstants.iconClear,
                   semanticsLabel: 'search query clear icon',
                   fit: BoxFit.fitWidth,
                 ),
@@ -130,7 +131,7 @@ class _WishListsPageState extends State<WishListsPage> {
                 Navigator.of(context, rootNavigator: true).pop();
                 CustomSnackBar.showSnackBarMessage(
                   context,
-                  LocalizationConstants.listDeleted,
+                  LocalizationConstants.listDeleted.localized(),
                 );
                 context.read<WishListCubit>().loadWishLists();
               }
@@ -139,13 +140,13 @@ class _WishListsPageState extends State<WishListsPage> {
                 Navigator.of(context, rootNavigator: true).pop();
                 displayDialogWidget(
                   context: context,
-                  title: LocalizationConstants.error,
+                  title: LocalizationConstants.error.localized(),
                   actions: [
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: const Text(LocalizationConstants.oK),
+                      child: Text(LocalizationConstants.oK.localized()),
                     )
                   ],
                 );
@@ -156,12 +157,12 @@ class _WishListsPageState extends State<WishListsPage> {
                 return const Expanded(
                     child: Center(child: CircularProgressIndicator()));
               } else if (state.status == WishListStatus.failure) {
-                return const Expanded(
-                    child: Center(child: Text(LocalizationConstants.error)));
+                return Expanded(
+                    child: Center(child: Text(LocalizationConstants.error.localized())));
               } else if (context.read<WishListCubit>().noWishListFound) {
-                return const Expanded(
+                return Expanded(
                   child: Center(
-                    child: Text(LocalizationConstants.noListsAvailable),
+                    child: Text(LocalizationConstants.noListsAvailable.localized()),
                   ),
                 );
               }
@@ -302,16 +303,16 @@ class _WishListItem extends StatelessWidget {
         (wishList.wishListSharesCount != null &&
             wishList.wishListSharesCount! > 0)) {
       if (wishList.wishListSharesCount! > 0 && wishList.isSharedList == false) {
-        return LocalizationConstants.sharedWith
+        return LocalizationConstants.sharedWith.localized()
             .format([wishList.wishListSharesCount ?? '']);
       } else if (wishList.isSharedList == true) {
-        final result = LocalizationConstants.sharedBy
+        final result = LocalizationConstants.sharedBy.localized()
             .format([wishList.sharedByDisplayName ?? '']);
         return result;
       }
     } else if (wishList.isSharedList == false &&
         !(wishList.wishListSharesCount != 0)) {
-      return LocalizationConstants.private;
+      return LocalizationConstants.private.localized();
     }
 
     return '';
@@ -374,7 +375,7 @@ class _WishListItem extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    LocalizationConstants.updateBy.format(
+                    LocalizationConstants.updateBy.localized().format(
                       [
                         wishList.updatedOn != null
                             ? DateFormat(CoreConstants.dateFormatString)
@@ -438,7 +439,7 @@ class _OptionsMenu extends StatelessWidget {
                 (state.settings.allowMultipleWishLists == false &&
                     (state.wishLists.pagination?.totalItemCount ?? 0) == 0))
               ToolMenu(
-                title: LocalizationConstants.createNewList,
+                title: LocalizationConstants.createNewList.localized(),
                 action: () {
                   AppRoute.wishListCreate.navigateBackStack(
                     context,

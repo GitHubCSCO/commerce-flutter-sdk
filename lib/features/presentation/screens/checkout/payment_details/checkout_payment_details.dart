@@ -129,7 +129,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
           Expanded(
             flex: 1,
             child: Text(
-              LocalizationConstants.paymentMethod,
+              LocalizationConstants.paymentMethod.localized(),
               textAlign: TextAlign.start,
               style: OptiTextStyles.body,
             ),
@@ -193,10 +193,10 @@ class CheckoutPaymentDetails extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Input(
-        label: LocalizationConstants.pONumber,
+        label: LocalizationConstants.pONumber.localized(),
         hintText: cart.requiresPoNumber!
-            ? LocalizationConstants.pONumberRequired
-            : LocalizationConstants.pONumberOptional,
+            ? LocalizationConstants.pONumberRequired.localized()
+            : LocalizationConstants.pONumberOptional.localized(),
         controller: state.poTextEditingController,
         onTapOutside: (_) {
           FocusManager.instance.primaryFocus?.unfocus();

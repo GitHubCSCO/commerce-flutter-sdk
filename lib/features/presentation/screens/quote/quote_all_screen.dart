@@ -30,7 +30,7 @@ class QuoteAllPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(LocalizationConstants.quoteAll),
+        title: Text(LocalizationConstants.quoteAll.localized()),
         actions: [
           InkWell(
             onTap: () {
@@ -39,7 +39,7 @@ class QuoteAllPage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text(
-                LocalizationConstants.apply,
+                LocalizationConstants.apply.localized(),
                 style: OptiTextStyles.linkMedium,
               ),
             ),

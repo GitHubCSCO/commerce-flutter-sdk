@@ -69,7 +69,7 @@ class RequestQuoteWidgetPage extends StatelessWidget {
 
           return Scaffold(
             appBar: AppBar(
-              title: Text(LocalizationConstants.requestQuote),
+              title: Text(LocalizationConstants.requestQuote.localized()),
             ),
             body: Column(
               children: [
@@ -94,8 +94,8 @@ class RequestQuoteWidgetPage extends StatelessWidget {
                         children: [
                           Expanded(
                             child: RadioListTile<RequestQuoteType>(
-                              title:
-                                  const Text(LocalizationConstants.salesQuote),
+                              title: Text(
+                                  LocalizationConstants.salesQuote.localized()),
                               value: RequestQuoteType.salesQuote,
                               groupValue: selectedRequestQuoteType,
                               onChanged: (value) {
@@ -106,7 +106,8 @@ class RequestQuoteWidgetPage extends StatelessWidget {
                           ),
                           Expanded(
                             child: RadioListTile<RequestQuoteType>(
-                              title: const Text(LocalizationConstants.jobQuote),
+                              title: Text(
+                                  LocalizationConstants.jobQuote.localized()),
                               value: RequestQuoteType.jobQuote,
                               groupValue: selectedRequestQuoteType,
                               onChanged: (value) {
@@ -225,7 +226,7 @@ class RequestQuoteWidgetPage extends StatelessWidget {
   Widget _buildSubmitButton(VoidCallback onPressed) {
     return ListInformationBottomSubmitWidget(actions: [
       PrimaryButton(
-        text: LocalizationConstants.submitQuote,
+        text: LocalizationConstants.submitQuote.localized(),
         onPressed: onPressed,
       ),
     ]);
@@ -247,9 +248,10 @@ class RequestQuoteWidgetPage extends StatelessWidget {
   List<ToolMenu> _buildToolMenu(
       BuildContext context, CartLineEntity cartLineEntity) {
     List<ToolMenu> list = [];
-    list.add(ToolMenu(title: LocalizationConstants.lineNotes, action: () {}));
     list.add(ToolMenu(
-        title: LocalizationConstants.delete,
+        title: LocalizationConstants.lineNotes.localized(), action: () {}));
+    list.add(ToolMenu(
+        title: LocalizationConstants.delete.localized(),
         action: () {
           context
               .read<RequestQuoteBloc>()
@@ -263,7 +265,7 @@ class RequestQuoteWidgetPage extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Input(
-          label: LocalizationConstants.jobName,
+          label: LocalizationConstants.jobName.localized(),
           isRequired: true,
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -288,7 +290,7 @@ class RequestQuoteWidgetPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              LocalizationConstants.creatingQuoteFor,
+              LocalizationConstants.creatingQuoteFor.localized(),
               style: OptiTextStyles.subtitle,
             ),
             const SizedBox(height: 10),
@@ -300,7 +302,7 @@ class RequestQuoteWidgetPage extends StatelessWidget {
               },
               selectedLabel:
                   context.read<RequestQuoteBloc>().selectedUser?.title ?? '',
-              defaultLabel: LocalizationConstants.selectUser,
+              defaultLabel: LocalizationConstants.selectUser.localized(),
               onTap: () async {
                 return await context.pushNamed(
                   AppRoute.userSelection.name,
@@ -322,7 +324,7 @@ class RequestQuoteWidgetPage extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Input(
-          label: LocalizationConstants.orderNotes,
+          label: LocalizationConstants.orderNotes.localized(),
           controller: orderNoteInputTextEditingController,
           onTapOutside: (p0) => context.closeKeyboard(),
           onEditingComplete: () => context.closeKeyboard(),

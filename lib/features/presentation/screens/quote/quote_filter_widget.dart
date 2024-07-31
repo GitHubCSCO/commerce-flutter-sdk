@@ -75,15 +75,16 @@ class QuoteFilterWidget extends StatelessWidget {
                     if (shouldShowRequestedDateError) {
                       displayDialogWidget(
                         context: context,
-                        title: LocalizationConstants.error,
+                        title: LocalizationConstants.error.localized(),
                         message: LocalizationConstants
-                            .fromDateShouldBeLessThanOrEqualToDate,
+                            .fromDateShouldBeLessThanOrEqualToDate
+                            .localized(),
                         actions: [
                           PlainBlackButton(
                             onPressed: () {
                               context.pop();
                             },
-                            child: const Text(LocalizationConstants.oK),
+                            text: LocalizationConstants.oK.localized(),
                           ),
                         ],
                       );
@@ -93,15 +94,16 @@ class QuoteFilterWidget extends StatelessWidget {
                     if (shouldShowExpireDateError) {
                       displayDialogWidget(
                         context: context,
-                        title: LocalizationConstants.error,
+                        title: LocalizationConstants.error.localized(),
                         message: LocalizationConstants
-                            .fromDateShouldBeLessThanOrEqualToDate,
+                            .fromDateShouldBeLessThanOrEqualToDate
+                            .localized(),
                         actions: [
                           PlainBlackButton(
                             onPressed: () {
                               context.pop();
                             },
-                            child: const Text(LocalizationConstants.oK),
+                            text: LocalizationConstants.oK.localized(),
                           ),
                         ],
                       );
@@ -175,7 +177,7 @@ void _showQuoteFilter(
               _FilterTextFieldWidget(
                 existingValue: state.quoteNumber,
                 onChanged: context.read<QuoteFilterCubit>().setQuoteNumber,
-                hintText: LocalizationConstants.quoteSign,
+                hintText: LocalizationConstants.quoteSign.localized(),
                 onListen: (context, state, textController) {
                   if (state.quoteNumber != textController.text) {
                     textController.text = state.quoteNumber ?? '';
@@ -187,7 +189,7 @@ void _showQuoteFilter(
               ),
               const SizedBox(height: 15),
               FilterListPicker(
-                label: LocalizationConstants.status,
+                label: LocalizationConstants.status.localized(),
                 items: context.watch<QuoteFilterCubit>().statusList,
                 selectedIndex: state.statusIndex,
                 callback: (context, item) {
@@ -198,7 +200,7 @@ void _showQuoteFilter(
               ),
               const SizedBox(height: 15),
               FilterListPicker(
-                label: LocalizationConstants.quoteType,
+                label: LocalizationConstants.quoteType.localized(),
                 items: context.watch<QuoteFilterCubit>().typeList,
                 selectedIndex: state.typeIndex,
                 callback: (context, item) {
@@ -209,7 +211,7 @@ void _showQuoteFilter(
               ),
               const SizedBox(height: 45),
               Text(
-                LocalizationConstants.customer.toUpperCase(),
+                LocalizationConstants.customer.localized().toUpperCase(),
                 style: OptiTextStyles.subtitle,
               ),
               const SizedBox(height: 15),
@@ -220,7 +222,7 @@ void _showQuoteFilter(
               const SizedBox(height: 45),
               if (state.isSalesPerson) ...[
                 Text(
-                  LocalizationConstants.user.toUpperCase(),
+                  LocalizationConstants.user.localized().toUpperCase(),
                   style: OptiTextStyles.subtitle,
                 ),
                 const SizedBox(height: 15),
@@ -232,7 +234,7 @@ void _showQuoteFilter(
                         .setUser(user as CatalogTypeDto);
                   },
                   selectedLabel: state.user?.title ?? '',
-                  defaultLabel: LocalizationConstants.selectUser,
+                  defaultLabel: LocalizationConstants.selectUser.localized(),
                   onTap: () async {
                     return await context.pushNamed(
                       AppRoute.userSelection.name,
@@ -245,7 +247,7 @@ void _showQuoteFilter(
                 ),
                 const SizedBox(height: 45),
                 Text(
-                  LocalizationConstants.salesRep.toUpperCase(),
+                  LocalizationConstants.salesRep.localized().toUpperCase(),
                   style: OptiTextStyles.subtitle,
                 ),
                 const SizedBox(height: 15),
@@ -257,7 +259,8 @@ void _showQuoteFilter(
                         .setSalesRep(salesRep as CatalogTypeDto);
                   },
                   selectedLabel: state.salesRep?.title ?? '',
-                  defaultLabel: LocalizationConstants.selectSalesRep,
+                  defaultLabel:
+                      LocalizationConstants.selectSalesRep.localized(),
                   onTap: () async {
                     return await context.pushNamed(
                       AppRoute.salesRepSelection.name,
@@ -271,11 +274,13 @@ void _showQuoteFilter(
                 const SizedBox(height: 45),
               ],
               Text(
-                LocalizationConstants.requestedDateRange.toUpperCase(),
+                LocalizationConstants.requestedDateRange
+                    .localized()
+                    .toUpperCase(),
                 style: OptiTextStyles.subtitle,
               ),
               FilterDatePickerWidget(
-                title: LocalizationConstants.requestedFrom,
+                title: LocalizationConstants.requestedFrom.localized(),
                 selectedDate: state.fromDate,
                 onSelectDate: (innerContext, date) {
                   context.read<QuoteFilterCubit>().setFromDate(date);
@@ -283,7 +288,7 @@ void _showQuoteFilter(
               ),
               const SizedBox(height: 15),
               FilterDatePickerWidget(
-                title: LocalizationConstants.requestedTo,
+                title: LocalizationConstants.requestedTo.localized(),
                 selectedDate: state.toDate,
                 onSelectDate: (innerContext, date) {
                   context.read<QuoteFilterCubit>().setToDate(date);
@@ -291,11 +296,13 @@ void _showQuoteFilter(
               ),
               const SizedBox(height: 45),
               Text(
-                LocalizationConstants.expiresDateRange.toUpperCase(),
+                LocalizationConstants.expiresDateRange
+                    .localized()
+                    .toUpperCase(),
                 style: OptiTextStyles.subtitle,
               ),
               FilterDatePickerWidget(
-                title: LocalizationConstants.expireFrom,
+                title: LocalizationConstants.expireFrom.localized(),
                 selectedDate: state.expireFromDate,
                 onSelectDate: (innerContext, date) {
                   context.read<QuoteFilterCubit>().setExpireFromDate(date);
@@ -303,7 +310,7 @@ void _showQuoteFilter(
               ),
               const SizedBox(height: 15),
               FilterDatePickerWidget(
-                title: LocalizationConstants.expireTo,
+                title: LocalizationConstants.expireTo.localized(),
                 selectedDate: state.expireToDate,
                 onSelectDate: (innerContext, date) {
                   context.read<QuoteFilterCubit>().setExpireToDate(date);

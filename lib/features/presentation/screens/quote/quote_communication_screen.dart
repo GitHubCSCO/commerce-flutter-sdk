@@ -90,7 +90,7 @@ class QuoteCommunicationPage extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: Input(
-            hintText: LocalizationConstants.message,
+            hintText: LocalizationConstants.message.localized(),
             controller: messagingController,
             onSubmitted: (value) {
               context.read<QuoteCommunicationBloc>().add(

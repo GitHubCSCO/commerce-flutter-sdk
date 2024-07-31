@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
@@ -9,9 +10,9 @@ import 'package:commerce_flutter_app/features/domain/enums/device_authentication
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_controller/biometric_controller_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class BiometricLoginScreen extends StatelessWidget {
   const BiometricLoginScreen({
@@ -92,12 +93,10 @@ class BiometricLoginPage extends StatelessWidget {
             onPressed: () {
               AppRoute.account.navigate(context);
             },
-            child: Text(
-              LocalizationConstants.cancel,
-              style: OptiTextStyles.subtitle.copyWith(
-                color: Theme.of(context).primaryColor,
-              ),
+            style: OptiTextStyles.subtitle.copyWith(
+              color: OptiAppColors.primaryColor,
             ),
+            text: LocalizationConstants.cancel.localized(),
           ),
         ],
         automaticallyImplyLeading: false,
@@ -151,7 +150,7 @@ class BiometricLoginPage extends StatelessWidget {
                   const SizedBox(height: 200),
                   state is BiometricControllerChangeSuccessEnabled
                       ? PrimaryButton(
-                          text: LocalizationConstants.continueText,
+                          text: LocalizationConstants.continueText.localized(),
                           onPressed: () async {
                             AppRoute.account.navigate(context);
                           },
@@ -168,7 +167,7 @@ class BiometricLoginPage extends StatelessWidget {
                   state is BiometricControllerChangeSuccessEnabled
                       ? const SizedBox.shrink()
                       : PlainButton(
-                          child: const Text('No Thanks'),
+                          text: 'No Thanks',
                           onPressed: () {
                             AppRoute.account.navigate(context);
                           },
@@ -191,8 +190,8 @@ class _BiometricIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.asset(
-      iconPath.replaceAll('{0}', enabled ? 'enabled' : 'disabled'),
+    return SvgAssetImage(
+      assetName: iconPath.replaceAll('{0}', enabled ? 'enabled' : 'disabled'),
       width: 80,
       height: 80,
     );

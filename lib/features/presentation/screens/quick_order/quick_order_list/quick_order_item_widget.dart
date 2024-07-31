@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/presentation/components/number_tex
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/order_widgets/order_product_image_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -161,7 +162,7 @@ class OrderProductTitleWidget extends StatelessWidget {
                       false,
                   child: Row(children: [
                     Text(
-                      LocalizationConstants.myPartNumberSign,
+                      LocalizationConstants.myPartNumberSign.localized(),
                       style: OptiTextStyles.bodySmallHighlight,
                       textAlign: TextAlign.left,
                     ),
@@ -181,7 +182,7 @@ class OrderProductTitleWidget extends StatelessWidget {
                       false,
                   child: Row(children: [
                     Text(
-                      LocalizationConstants.mFGNumberSign,
+                      LocalizationConstants.mFGNumberSign.localized(),
                       style: OptiTextStyles.bodySmallHighlight,
                       textAlign: TextAlign.left,
                     ),
@@ -240,42 +241,42 @@ class OrderProductPricingWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Visibility(
-            //add showhide pricing logic
-            visible: orderItemEntity.discountValueText?.isNotEmpty ?? false,
-            child: Text(
-              orderItemEntity.discountValueText ?? '',
-              style: OptiTextStyles.bodySmall,
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                orderItemEntity.priceValueText ?? '',
-                style: OptiTextStyles.bodySmallHighlight,
-                textAlign: TextAlign.left,
-              ),
-              Text(
-                orderItemEntity.selectedUnitOfMeasureTitle != null
-                    ? (' / ${orderItemEntity.selectedUnitOfMeasureTitle}')
-                    : '',
+          if (!(orderItemEntity.hidePricingEnable ?? false)) ...{
+            Visibility(
+              //add showhide pricing logic
+              visible: orderItemEntity.discountValueText?.isNotEmpty ?? false,
+              child: Text(
+                orderItemEntity.discountValueText ?? '',
                 style: OptiTextStyles.bodySmall,
                 textAlign: TextAlign.left,
               ),
-            ],
-          ),
-          Visibility(
-            //need to apply different availblity color
-            visible: orderItemEntity.showInventoryAvailability != null,
-            child: Text(
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  orderItemEntity.priceValueText ?? '',
+                  style: OptiTextStyles.bodySmallHighlight,
+                  textAlign: TextAlign.left,
+                ),
+                Text(
+                  orderItemEntity.selectedUnitOfMeasureTitle != null
+                      ? (' / ${orderItemEntity.selectedUnitOfMeasureTitle}')
+                      : '',
+                  style: OptiTextStyles.bodySmall,
+                  textAlign: TextAlign.left,
+                ),
+              ],
+            ),
+          },
+          if (!(orderItemEntity.hideInventoryEnable ?? false) ||
+              orderItemEntity.showInventoryAvailability == null)
+            Text(
               orderItemEntity.availability?.message ?? '',
               style: OptiTextStyles.bodySmall,
               textAlign: TextAlign.left,
             ),
-          ),
         ],
       ),
     );
@@ -309,39 +310,44 @@ class OrderProductQuantityGroupWidget extends StatelessWidget {
                   context.read<OrderItemPricingInventoryCubit>().getPricingAndInventory(quickOrderItemEntity, setting);
                 }),
           ),
-          // CartContentTitleSubTitleColumn('U/M', 'E/A'),
-          BlocBuilder<OrderItemPricingInventoryCubit,
-              OrderItemPricingInventoryState>(
-            buildWhen: (previous, current) =>
-            current is OrderItemPricingInventoryInitial ||
-                current is OrderItemPricingInventoryLoading ||
-                current is OrderItemPricingInventoryLoaded ||
-                current is OrderItemPricingInventoryFailed,
-            builder: (context, state) {
-              switch (state.runtimeType) {
-                case OrderItemPricingInventoryInitial:
-                case OrderItemPricingInventoryLoading:
-                  return Expanded(
-                    flex: 2,
-                    child: Container(
-                      padding: const EdgeInsets.only(left: 20, top: 12),
-                      alignment: Alignment.center,
-                      child: LoadingAnimationWidget.prograssiveDots(
-                        color: OptiAppColors.iconPrimary,
-                        size: 30,
+          if (!(quickOrderItemEntity.hidePricingEnable ?? false)) ...{
+            BlocBuilder<OrderItemPricingInventoryCubit,
+                OrderItemPricingInventoryState>(
+              buildWhen: (previous, current) =>
+              current is OrderItemPricingInventoryInitial ||
+                  current is OrderItemPricingInventoryLoading ||
+                  current is OrderItemPricingInventoryLoaded ||
+                  current is OrderItemPricingInventoryFailed,
+              builder: (context, state) {
+                switch (state.runtimeType) {
+                  case OrderItemPricingInventoryInitial:
+                  case OrderItemPricingInventoryLoading:
+                    return Expanded(
+                      flex: 2,
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 20, top: 12),
+                        alignment: Alignment.center,
+                        child: LoadingAnimationWidget.prograssiveDots(
+                          color: OptiAppColors.iconPrimary,
+                          size: 30,
+                        ),
                       ),
-                    ),
-                  );
-                case OrderItemPricingInventoryLoaded:
-                  return OrderProductSubTitleColumn(
-                      LocalizationConstants.subtotal,
-                      quickOrderItemEntity.extendedPriceValueText ?? '');
-                case OrderItemPricingInventoryFailed:
-                default:
-                  return Container();
-              }
-            },
-          ),
+                    );
+                  case OrderItemPricingInventoryLoaded:
+                    return OrderProductSubTitleColumn(
+                        LocalizationConstants.subtotal.localized(),
+                        quickOrderItemEntity.extendedPriceValueText ?? '');
+                  case OrderItemPricingInventoryFailed:
+                  default:
+                    return Container();
+                }
+              },
+            ),
+          } else ...{
+            const Expanded(
+              flex: 2, child: Center(),
+            ),
+          }
         ],
       ),
     );

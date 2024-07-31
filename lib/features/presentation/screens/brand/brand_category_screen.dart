@@ -48,7 +48,7 @@ class _BrandCategoryPageState extends State<BrandCategoryPage> {
       appBar: AppBar(
         title: Text(
             widget.categoryTitle ?? 
-            LocalizationConstants.categories, style: OptiTextStyles.titleLarge),
+            LocalizationConstants.categories.localized(), style: OptiTextStyles.titleLarge),
         actions: [
           BottomMenuWidget(websitePath: widget.brand.detailPagePath,
               toolMenuList: _getToolMenu(context)),
@@ -135,7 +135,7 @@ class _BrandCategoryPageState extends State<BrandCategoryPage> {
   List<ToolMenu> _getToolMenu(BuildContext context) {
     List<ToolMenu> list = [];
     list.add(ToolMenu(
-        title: LocalizationConstants.listView,
+        title: LocalizationConstants.listView.localized(),
         action: () {
           setState(() {
             isGridView = false;
@@ -143,7 +143,7 @@ class _BrandCategoryPageState extends State<BrandCategoryPage> {
         }
     ));
     list.add(ToolMenu(
-        title: LocalizationConstants.gridView,
+        title: LocalizationConstants.gridView.localized(),
         action: () {
           setState(() {
             isGridView = true;

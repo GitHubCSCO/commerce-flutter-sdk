@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
@@ -89,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         title: Text(
-          LocalizationConstants.signIn,
+          LocalizationConstants.signIn.localized(),
           style: OptiTextStyles.titleLarge,
         ),
         centerTitle: false,
@@ -98,12 +99,7 @@ class _LoginPageState extends State<LoginPage> {
             onPressed: () {
               context.pop();
             },
-            child: Text(
-              LocalizationConstants.cancel,
-              style: OptiTextStyles.subtitle.copyWith(
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
+            text: LocalizationConstants.cancel.localized(),
           ),
         ],
         automaticallyImplyLeading: false,
@@ -163,16 +159,16 @@ class _LoginPageState extends State<LoginPage> {
                  ),
                 ),  
                 Input(
-                  label: LocalizationConstants.username,
-                  hintText: LocalizationConstants.enterUsername,
+                  label: LocalizationConstants.username.localized(),
+                  hintText: LocalizationConstants.enterUsername.localized(),
                   controller: _usernameController,
                   onTapOutside: (p0) => context.closeKeyboard(),
                   onEditingComplete: () => context.nextFocus(),
                 ),
                 const SizedBox(height: 16.0),
                 Input(
-                  label: LocalizationConstants.password,
-                  hintText: LocalizationConstants.enterPassword,
+                  label: LocalizationConstants.password.localized(),
+                  hintText: LocalizationConstants.enterPassword.localized(),
                   obscureText: true,
                   controller: _passwordController,
                   onTapOutside: (p0) => context.closeKeyboard(),
@@ -247,7 +243,7 @@ class _LoginPageState extends State<LoginPage> {
                             _passwordController.text,
                           );
                         },
-                        text: LocalizationConstants.signIn,
+                        text: LocalizationConstants.signIn.localized(),
                       );
                     }
                   },
@@ -280,11 +276,11 @@ class _LoginPageState extends State<LoginPage> {
                                       : DeviceAuthenticationOption.none;
 
                               final biometricDisplayOption = Platform.isAndroid
-                                  ? LocalizationConstants.fingerprint
+                                  ? LocalizationConstants.fingerprint.localized()
                                   : biometricOption ==
                                           DeviceAuthenticationOption.faceID
-                                      ? LocalizationConstants.faceID
-                                      : LocalizationConstants.touchID;
+                                      ? LocalizationConstants.faceID.localized()
+                                      : LocalizationConstants.touchID.localized();
 
                               return SecondaryButton(
                                 onPressed: () async {
@@ -292,12 +288,7 @@ class _LoginPageState extends State<LoginPage> {
                                       .read<LoginCubit>()
                                       .onBiometricLoginSubmit(biometricOption);
                                 },
-                                child: Text(
-                                  'Use $biometricDisplayOption',
-                                  style: OptiTextStyles.subtitle.copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
+                                text: 'Use $biometricDisplayOption',
                               );
                             },
                           );
@@ -307,12 +298,10 @@ class _LoginPageState extends State<LoginPage> {
                 PlainButton(
                   onPressed: () => AppRoute.forgotPassword
                       .navigateBackStack(context, extra: AccountType.standard),
-                  child: Text(
-                    LocalizationConstants.forgotPassword,
-                    style: OptiTextStyles.subtitle.copyWith(
-                      color: Theme.of(context).primaryColor,
-                    ),
+                  style: OptiTextStyles.subtitle.copyWith(
+                    color: OptiAppColors.primaryColor,
                   ),
+                  text: LocalizationConstants.forgotPassword.localized(),
                 ),
               ],
             ),

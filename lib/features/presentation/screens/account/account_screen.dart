@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_con
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
@@ -62,6 +63,13 @@ class AccountPage extends BaseDynamicContentScreen {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
+        BlocListener<RootBloc, RootState>(
+          listener: (context, state) async {
+            if (state is RootConfigReload) {
+              _reloadAccountPage(context);
+            }
+          },
+        ),
         BlocListener<PullToRefreshBloc, PullToRefreshState>(
           listener: (context, state) async {
             if (state is PullToRefreshLoadState) {
@@ -109,7 +117,7 @@ class AccountPage extends BaseDynamicContentScreen {
                           backgroundColor:
                               Theme.of(context).colorScheme.surface,
                           title: Text(
-                            LocalizationConstants.account,
+                            LocalizationConstants.account.localized(),
                             style: OptiTextStyles.titleLarge,
                           ),
                           centerTitle: false,
@@ -128,21 +136,21 @@ class AccountPage extends BaseDynamicContentScreen {
                             launchUrlString(context.read<AccountPageBloc>().getPrivacyPolicyUrl()!);
                           },
                           child: Text(
-                            LocalizationConstants.privacyPolicy,
-                            style: OptiTextStyles.linkMedium,
+                            LocalizationConstants.privacyPolicy.localized(),
+                            style: OptiTextStyles.subtitleHighlight,
                           ),
                         ),
                       ),
-                      if(context.read<AccountPageBloc>().getTermsOfUseUrll().isNullOrEmpty == false)
+                      if(context.read<AccountPageBloc>().getTermsOfUseUrl().isNullOrEmpty == false)
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
                         child: GestureDetector(
                           onTap: () {
-                            launchUrlString(context.read<AccountPageBloc>().getTermsOfUseUrll()!);
+                            launchUrlString(context.read<AccountPageBloc>().getTermsOfUseUrl()!);
                           },
                           child: Text(
-                            LocalizationConstants.termsOfUse,
-                            style: OptiTextStyles.linkMedium,
+                            LocalizationConstants.termsOfUse.localized(),
+                            style: OptiTextStyles.subtitleHighlight,
                           ),
                         ),
                       ),
@@ -158,11 +166,11 @@ class AccountPage extends BaseDynamicContentScreen {
                   ),
                 );
               default:
-                return const CustomScrollView(
+                return CustomScrollView(
                   slivers: <Widget>[
                     SliverFillRemaining(
                       child: Center(
-                        child: Text(LocalizationConstants.errorLoadingAccount),
+                        child: Text(LocalizationConstants.errorLoadingAccount.localized()),
                       ),
                     ),
                   ],
@@ -235,7 +243,7 @@ class _AccountLoggedInHeader extends StatelessWidget {
 
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: OptiAppColors.primaryColor,
                     child: Text(
                       nameLabel.isEmpty ? '' : nameLabel[0],
                       style: const TextStyle(color: Colors.white),
@@ -273,7 +281,7 @@ class _AccountLoggedOutHeader extends StatelessWidget {
         ),
         const SizedBox(height: AppStyle.defaultVerticalPadding),
         PrimaryButton(
-          text: LocalizationConstants.signIn,
+          text: LocalizationConstants.signIn.localized(),
           onPressed: () {
             AppRoute.login.navigateBackStack(context);
           },

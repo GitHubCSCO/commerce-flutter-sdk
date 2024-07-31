@@ -11,9 +11,9 @@ import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 //TODO we need to take another look at the name of each class in this file
@@ -103,10 +103,10 @@ class ProductPage extends StatelessWidget {
             padding:
             const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
             child: Input(
-              hintText: LocalizationConstants.search,
+              hintText: LocalizationConstants.search.localized(),
               suffixIcon: IconButton(
-                icon: SvgPicture.asset(
-                  AssetConstants.iconClear,
+                icon: const SvgAssetImage(
+                  assetName: AssetConstants.iconClear,
                   semanticsLabel: 'search query clear icon',
                   fit: BoxFit.fitWidth,
                 ),
@@ -156,7 +156,7 @@ class ProductPage extends StatelessWidget {
                   case ProductFailed():
                   default:
                     return Center(
-                        child: Text(LocalizationConstants.searchNoResults,
+                        child: Text(LocalizationConstants.searchNoResults.localized(),
                             style: OptiTextStyles.body));
                 }
               }),
@@ -183,9 +183,9 @@ class ProductPage extends StatelessWidget {
 
   String _getTitle(ProductPageEntity entity) {
     if (entity.parentType == ProductParentType.category) {
-      return entity.category?.shortDescription ?? entity.categoryTitle ?? LocalizationConstants.categories;
+      return entity.category?.shortDescription ?? entity.categoryTitle ?? LocalizationConstants.categories.localized();
     } else if (entity.parentType == ProductParentType.brand) {
-      return entity.brandEntity?.name ?? entity.brandEntityTitle ?? LocalizationConstants.brands;
+      return entity.brandEntity?.name ?? entity.brandEntityTitle ?? LocalizationConstants.brands.localized();
     }else{
       return entity.pageTitle ?? "Product list";
     }

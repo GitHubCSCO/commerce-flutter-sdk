@@ -37,7 +37,7 @@ class UserSelectionPage extends StatelessWidget {
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         backgroundColor: OptiAppColors.backgroundWhite,
-        title: const Text(LocalizationConstants.selectUser),
+        title: Text(LocalizationConstants.selectUser.localized()),
         centerTitle: false,
       ),
       body: BlocBuilder<UserSelectionCubit, UserSelectionState>(
@@ -49,8 +49,8 @@ class UserSelectionPage extends StatelessWidget {
           }
 
           if (state.status == UserStatus.failiure) {
-            return const Center(
-              child: Text(LocalizationConstants.error),
+            return Center(
+              child: Text(LocalizationConstants.error.localized()),
             );
           }
 

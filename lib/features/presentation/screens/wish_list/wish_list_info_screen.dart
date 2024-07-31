@@ -77,14 +77,14 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
       appBar: AppBar(
         centerTitle: false,
         backgroundColor: OptiAppColors.backgroundWhite,
-        title: const Text(LocalizationConstants.listInformation),
+        title: Text(LocalizationConstants.listInformation.localized()),
       ),
       body: BlocConsumer<WishListInformationCubit, WishListInformationState>(
         listener: (context, state) {
           if (state.status == WishListStatus.listUpdateSuccess) {
             CustomSnackBar.showSnackBarMessage(
               context,
-              LocalizationConstants.listUpdated,
+              LocalizationConstants.listUpdated.localized(),
             );
             if (widget.onWishListUpdated != null) {
               widget.onWishListUpdated!();
@@ -95,7 +95,7 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
           if (state.status == WishListStatus.listUpdateFailure) {
             CustomSnackBar.showSnackBarMessage(
               context,
-              LocalizationConstants.updateFailed,
+              LocalizationConstants.updateFailed.localized(),
             );
           }
         },
@@ -134,18 +134,18 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
             ),
             ListInformationBottomSubmitWidget(actions: [
               PrimaryButton(
-                text: LocalizationConstants.save,
+                text: LocalizationConstants.save.localized(),
                 isEnabled:
                     context.watch<WishListInformationCubit>().canEditNameDesc,
                 onPressed: () {
                   if (_listNameEditingController.text.isEmpty) {
                     displayDialogWidget(
                       context: context,
-                      title: LocalizationConstants.error,
-                      message: LocalizationConstants.enterListName,
+                      title: LocalizationConstants.error.localized(),
+                      message: LocalizationConstants.enterListName.localized(),
                       actions: [
                         PlainButton(
-                          child: const Text(LocalizationConstants.oK),
+                          text: LocalizationConstants.oK.localized(),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },

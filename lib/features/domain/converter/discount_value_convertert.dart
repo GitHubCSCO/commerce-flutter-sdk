@@ -38,7 +38,7 @@ class DiscountValueConverter {
       var savingPercent =
           ((unitListPrice - unitNetPrice) / unitListPrice * 100).round();
       var discountMessage =
-          "${LocalizationConstants.regularPrice}: $unitListPriceDisplay, ${LocalizationConstants.youSave} ${CoreConstants.currencySymbol}${savingsAmount.toStringAsFixed(2)} ($savingPercent%)";
+          "${LocalizationConstants.regularPrice.localized()}: $unitListPriceDisplay, ${LocalizationConstants.youSave.localized()} ${CoreConstants.currencySymbol}${savingsAmount.toStringAsFixed(2)} ($savingPercent%)";
       return discountMessage;
     }
 

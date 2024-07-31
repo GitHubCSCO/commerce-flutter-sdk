@@ -135,9 +135,9 @@ class PaymentDetailsBloc
             // Display information
             var cardName = creditCard.cardHolderName;
             var cardNumber =
-                "${creditCard.cardType} ${LocalizationConstants.endingIn} ${creditCard.cardNumberEnding}";
+                "${creditCard.cardType} ${LocalizationConstants.endingIn.localized()} ${creditCard.cardNumberEnding}";
             var expDate =
-                "${LocalizationConstants.expires} ${creditCard.expirationDate}";
+                "${LocalizationConstants.expires.localized()} ${creditCard.expirationDate}";
 
             var cardDetails = _getCardDetails(creditCard);
             if (tokenExConfiguration == null ||

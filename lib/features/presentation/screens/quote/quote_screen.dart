@@ -47,7 +47,7 @@ class QuotePageState extends State<QuotePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: OptiAppColors.backgroundWhite,
-        title: const Text(LocalizationConstants.quotes),
+        title: Text(LocalizationConstants.quotes.localized()),
         centerTitle: false,
       ),
       body: Column(
@@ -81,8 +81,8 @@ class QuotePageState extends State<QuotePage> {
           ),
           Expanded(
             child: TabSwitchWidget(
-              tabTitle0: LocalizationConstants.pending,
-              tabTitle1: LocalizationConstants.activeJobs,
+              tabTitle0: LocalizationConstants.pending.localized(),
+              tabTitle1: LocalizationConstants.activeJobs.localized(),
               tabWidget0:
                   BlocBuilder<QuoteBloc, QuoteState>(builder: (_, state) {
                 if (state is QuoteFailed) {

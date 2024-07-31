@@ -1,9 +1,9 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shipping_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
@@ -22,10 +22,9 @@ import 'package:commerce_flutter_app/features/presentation/screens/checkout/bill
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/product_list_with_basicInfo.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class VmiCheckoutEntity {
@@ -81,7 +80,7 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                     isVmiCheckout: true,
                     cart: context.read<CheckoutBloc>().cart!));
           } else if (state is CheckoutPlaceOrderFailed) {
-            _showAlert(context, message: LocalizationConstants.orderFailed);
+            _showAlert(context, message: LocalizationConstants.orderFailed.localized());
           }
         },
         buildWhen: (previous, current) =>
@@ -165,9 +164,9 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                child: Text(scanningMode == ScanningMode.count
-                                    ? LocalizationConstants.backToCountInventory
-                                    : LocalizationConstants.backToCreateOrder),
+                                text: scanningMode == ScanningMode.count
+                                    ? LocalizationConstants.backToCountInventory.localized()
+                                    : LocalizationConstants.backToCreateOrder.localized(),
                               ),
                               const SizedBox(height: 4.0),
                               Visibility(
@@ -181,7 +180,7 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                   isEnabled: context
                                       .watch<CheckoutBloc>()
                                       .isCheckoutButtonEnabled,
-                                  text: LocalizationConstants.submitOrder,
+                                  text: LocalizationConstants.submitOrder.localized(),
                                 ),
                               ),
                             ],
@@ -200,8 +199,8 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                             width: 50,
                             height: 50,
                             padding: const EdgeInsets.all(10),
-                            child: SvgPicture.asset(
-                              "assets/images/cart.svg",
+                            child: const SvgAssetImage(
+                              assetName: AssetConstants.iconCart,
                               fit: BoxFit.fitWidth,
                             ),
                           ),
@@ -213,9 +212,9 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text(scanningMode == ScanningMode.count
-                                  ? LocalizationConstants.backToCountInventory
-                                  : LocalizationConstants.backToCreateOrder),
+                              text: scanningMode == ScanningMode.count
+                                  ? LocalizationConstants.backToCountInventory.localized()
+                                  : LocalizationConstants.backToCreateOrder.localized(),
                             ),
                           ),
                         ],
@@ -285,7 +284,7 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text(LocalizationConstants.oK),
+            child: Text(LocalizationConstants.oK.localized()),
           ),
         ]);
   }

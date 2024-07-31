@@ -16,12 +16,15 @@ import 'package:commerce_flutter_app/features/presentation/widget/line_item/line
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_quantity_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_title_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CartLineWidget extends StatelessWidget {
   final CartLineEntity cartLineEntity;
+  final bool? hidePricingEnable;
+  final bool? hideInventoryEnable;
   final bool? showRemoveButton;
   final Widget? moreButtonWidget;
   final void Function()? onShowMoreButtonClickedCallback;
@@ -30,6 +33,8 @@ class CartLineWidget extends StatelessWidget {
   const CartLineWidget(
       {super.key,
       required this.cartLineEntity,
+      this.hidePricingEnable,
+      this.hideInventoryEnable,
       required this.onCartQuantityChangedCallback,
       required this.onCartLineRemovedCallback,
       this.onShowMoreButtonClickedCallback,
@@ -89,16 +94,19 @@ class CartLineWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0, 10.0),
             child: LineItemPricingWidget(
-                discountMessage: cartLineEntity.pricing?.getDiscountValue(),
-                priceValueText: cartLineEntity.updatePriceValueText(),
-                unitOfMeasureValueText:
-                    cartLineEntity.updateUnitOfMeasureValueText(),
-                availabilityText: cartLineEntity.availability?.message,
-                productId: cartLineEntity.productId,
-                erpNumber: cartLineEntity.erpNumber,
-                unitOfMeasure: cartLineEntity.baseUnitOfMeasure,
-                showViewAvailabilityByWarehouse:
-                    cartLineEntity.showInventoryAvailability ?? false),
+              discountMessage: cartLineEntity.pricing?.getDiscountValue(),
+              priceValueText: cartLineEntity.updatePriceValueText(),
+              unitOfMeasureValueText:
+                  cartLineEntity.updateUnitOfMeasureValueText(),
+              availabilityText: cartLineEntity.availability?.message,
+              productId: cartLineEntity.productId,
+              erpNumber: cartLineEntity.erpNumber,
+              unitOfMeasure: cartLineEntity.baseUnitOfMeasure,
+              showViewAvailabilityByWarehouse:
+                  cartLineEntity.showInventoryAvailability ?? false,
+              hidePricingEnable: hidePricingEnable,
+              hideInventoryEnable: hideInventoryEnable,
+            ),
           ),
           LineItemQuantityGroupWidget(
             qtyOrdered: cartLineEntity.qtyOrdered?.toInt().toString(),
@@ -110,6 +118,7 @@ class CartLineWidget extends StatelessWidget {
               onCartQuantityChangedCallback(qty);
             },
             subtotalPriceText: cartLineEntity.updateSubtotalPriceValueText(),
+            hidePricingEnable: hidePricingEnable,
           ),
         ],
       ),
@@ -135,3 +144,4 @@ class CartLineWidget extends StatelessWidget {
     );
   }
 }
+

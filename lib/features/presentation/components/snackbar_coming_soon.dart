@@ -79,54 +79,54 @@ class CustomSnackBar {
 
   static void showProductDeleted(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(LocalizationConstants.productDeleted),
-        duration: Duration(seconds: 1),
+      SnackBar(
+        content: Text(LocalizationConstants.productDeleted.localized()),
+        duration: const Duration(seconds: 1),
       ),
     );
   }
 
   static void showProductDeleteFailed(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(LocalizationConstants.errorDeletingProduct),
-        duration: Duration(seconds: 1),
+      SnackBar(
+        content: Text(LocalizationConstants.errorDeletingProduct.localized()),
+        duration: const Duration(seconds: 1),
       ),
     );
   }
 
   static void showVMILocationNoteSaved(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(LocalizationConstants.locationNoteUpdated),
-        duration: Duration(seconds: 1),
+      SnackBar(
+        content: Text(LocalizationConstants.locationNoteUpdated.localized()),
+        duration: const Duration(seconds: 1),
       ),
     );
   }
 
   static void showVMILocationNoteNotSaved(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(LocalizationConstants.error),
-        duration: Duration(seconds: 1),
+      SnackBar(
+        content: Text(LocalizationConstants.error.localized()),
+        duration: const Duration(seconds: 1),
       ),
     );
   }
 
   static void showPromotionApplied(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(LocalizationConstants.promotionApplied),
-        duration: Duration(seconds: 1),
+      SnackBar(
+        content: Text(LocalizationConstants.promotionApplied.localized()),
+        duration: const Duration(seconds: 1),
       ),
     );
   }
 
   static void showPromotionNotApplied(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(LocalizationConstants.promotionNotAppliedContinue),
-        duration: Duration(seconds: 1),
+      SnackBar(
+        content: Text(LocalizationConstants.promotionNotAppliedContinue.localized()),
+        duration: const Duration(seconds: 1),
       ),
     );
   }

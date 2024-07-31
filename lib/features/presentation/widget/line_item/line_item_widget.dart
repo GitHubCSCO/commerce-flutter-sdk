@@ -7,8 +7,9 @@ import 'package:commerce_flutter_app/features/presentation/widget/line_item/line
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_quantity_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_title_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class LineItemWidget extends StatelessWidget {
@@ -32,6 +33,8 @@ class LineItemWidget extends StatelessWidget {
   final void Function()? onDelete;
   final String? unitOfMeasure;
   final String? lineNotes;
+  final bool? hidePricingEnable;
+  final bool? hideInventoryEnable;
 
   const LineItemWidget({
     super.key,
@@ -55,6 +58,8 @@ class LineItemWidget extends StatelessWidget {
     this.onDelete,
     this.unitOfMeasure,
     this.lineNotes,
+    this.hidePricingEnable,
+    this.hideInventoryEnable,
   });
 
   @override
@@ -105,21 +110,27 @@ class LineItemWidget extends StatelessWidget {
             manufacturerItem: manufacturerItem,
             productNumber: productNumber,
           ),
-          LineItemPricingWidget(
-            discountMessage: discountMessage,
-            priceValueText: priceValueText,
-            unitOfMeasureValueText: unitOfMeasureValueText,
-            availabilityText: availabilityText,
-            showViewQuantityPricing: showViewQuantityPricing,
-            showViewAvailabilityByWarehouse: showViewAvailabilityByWarehouse,
-            productId: productId,
-            erpNumber: productNumber,
-            unitOfMeasure: unitOfMeasure,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0, 10.0),
+            child: LineItemPricingWidget(
+              discountMessage: discountMessage,
+              priceValueText: priceValueText,
+              unitOfMeasureValueText: unitOfMeasureValueText,
+              availabilityText: availabilityText,
+              showViewQuantityPricing: showViewQuantityPricing,
+              showViewAvailabilityByWarehouse: showViewAvailabilityByWarehouse,
+              productId: productId,
+              erpNumber: productNumber,
+              unitOfMeasure: unitOfMeasure,
+              hidePricingEnable: hidePricingEnable,
+              hideInventoryEnable: hideInventoryEnable,
+            ),
           ),
           LineItemQuantityGroupWidget(
             qtyOrdered: qtyOrdered,
             subtotalPriceText: subtotalPriceText,
             canEdit: canEditQty,
+            hidePricingEnable: hidePricingEnable,
           ),
           if (!lineNotes.isNullOrEmpty) ...[
             const SizedBox(height: 10),
@@ -149,11 +160,11 @@ class LineItemWidget extends StatelessWidget {
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 15).copyWith(left: 15),
-              child: SizedBox(
+              child: const SizedBox(
                 width: 30,
                 height: 30,
-                child: SvgPicture.asset(
-                  AssetConstants.wishListLineAddToCartIcon,
+                child: SvgAssetImage(
+                  assetName: AssetConstants.wishListLineAddToCartIcon,
                   fit: BoxFit.fitWidth,
                 ),
               ),

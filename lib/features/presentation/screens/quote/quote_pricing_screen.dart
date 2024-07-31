@@ -34,7 +34,7 @@ class QuotePricingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text(LocalizationConstants.quote),
+          title: Text(LocalizationConstants.quote.localized()),
           actions: [
             InkWell(
               onTap: () {
@@ -45,7 +45,7 @@ class QuotePricingPage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Text(
-                  LocalizationConstants.apply,
+                  LocalizationConstants.apply.localized(),
                   style: OptiTextStyles.linkMedium,
                 ),
               ),
@@ -69,8 +69,8 @@ class QuotePricingPage extends StatelessWidget {
           } else if (state is QuoteLinePricingApplySuccessState) {
             context.pop(state.quoteDto);
           } else if (state is QuoteLinePricingApplyFailureState) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text(LocalizationConstants.failed),
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(LocalizationConstants.failed.localized()),
             ));
           }
         }, builder: (context, state) {
@@ -119,14 +119,14 @@ class QuotePricingPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           TertiaryBlackButton(
-            child: const Text(LocalizationConstants.addPriceBreak),
+            text: LocalizationConstants.addPriceBreak.localized(),
             onPressed: () {
               context.read<QuotePricingBloc>().add(AddQuotePriceBreakEvent());
             },
           ),
           const SizedBox(width: 16),
           TertiaryBlackButton(
-            child: const Text(LocalizationConstants.reset),
+            text: LocalizationConstants.reset.localized(),
             onPressed: () {
               context.read<QuotePricingBloc>().add(ResetQuotePriceBreakEvent());
             },
@@ -141,16 +141,16 @@ class QuotePricingPage extends StatelessWidget {
     return Column(
       children: [
         PriceRowWidget(
-            label: LocalizationConstants.unitCost,
+            label: LocalizationConstants.unitCost.localized(),
             price: quoteLineEntity.pricingRfq?.unitCostDisplay ?? ''),
         PriceRowWidget(
-            label: LocalizationConstants.list,
+            label: LocalizationConstants.list.localized(),
             price: quoteLineEntity.pricingRfq?.listPriceDisplay ?? ''),
         PriceRowWidget(
-            label: LocalizationConstants.customer,
+            label: LocalizationConstants.customer.localized(),
             price: quoteLineEntity.pricingRfq?.customerPriceDisplay ?? ''),
         PriceRowWidget(
-            label: LocalizationConstants.minimum,
+            label: LocalizationConstants.minimum.localized(),
             price:
                 quoteLineEntity.pricingRfq?.minimumPriceAllowedDisplay ?? ''),
       ],
@@ -206,7 +206,7 @@ class PriceBreakwidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: Text(
-                LocalizationConstants.to,
+                LocalizationConstants.to.localized(),
                 style: OptiTextStyles.body,
               ),
             ),

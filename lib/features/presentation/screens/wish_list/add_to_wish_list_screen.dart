@@ -20,9 +20,9 @@ import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -121,15 +121,15 @@ class AddToSingleWishListPage extends StatelessWidget {
           Navigator.of(context, rootNavigator: true).pop();
           displayDialogWidget(
             context: context,
-            message: LocalizationConstants.failedToAddToList,
-            title: LocalizationConstants.error,
+            message: LocalizationConstants.failedToAddToList.localized(),
+            title: LocalizationConstants.error.localized(),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   context.pop();
                 },
-                child: const Text(LocalizationConstants.oK),
+                child: Text(LocalizationConstants.oK.localized()),
               )
             ],
           );
@@ -172,7 +172,7 @@ class _AddToWishListPageState extends State<AddToWishListPage> {
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         backgroundColor: OptiAppColors.backgroundWhite,
-        title: const Text(LocalizationConstants.addToList),
+        title: Text(LocalizationConstants.addToList.localized()),
         centerTitle: false,
       ),
       body: Column(
@@ -181,10 +181,10 @@ class _AddToWishListPageState extends State<AddToWishListPage> {
             color: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
             child: Input(
-              hintText: LocalizationConstants.search,
+              hintText: LocalizationConstants.search.localized(),
               suffixIcon: IconButton(
-                icon: SvgPicture.asset(
-                  AssetConstants.iconClear,
+                icon: const SvgAssetImage(
+                  assetName: AssetConstants.iconClear,
                   semanticsLabel: 'search query clear icon',
                   fit: BoxFit.fitWidth,
                 ),
@@ -232,7 +232,7 @@ class _AddToWishListPageState extends State<AddToWishListPage> {
                 Navigator.of(context, rootNavigator: true).pop();
                 CustomSnackBar.showSnackBarMessage(
                   context,
-                  LocalizationConstants.failedToAddToList,
+                  LocalizationConstants.failedToAddToList.localized(),
                 );
               }
             },
@@ -241,12 +241,12 @@ class _AddToWishListPageState extends State<AddToWishListPage> {
                 return const Expanded(
                     child: Center(child: CircularProgressIndicator()));
               } else if (state.status == WishListStatus.failure) {
-                return const Expanded(
-                    child: Center(child: Text(LocalizationConstants.error)));
+                return Expanded(
+                    child: Center(child: Text(LocalizationConstants.error.localized())));
               } else if (context.read<WishListAddToCubit>().noWishListFound) {
-                return const Expanded(
+                return Expanded(
                   child: Center(
-                    child: Text(LocalizationConstants.noListsAvailable),
+                    child: Text(LocalizationConstants.noListsAvailable.localized()),
                   ),
                 );
               }
@@ -298,7 +298,7 @@ class _AddToWishListPageState extends State<AddToWishListPage> {
           ListInformationBottomSubmitWidget(
             actions: [
               PrimaryButton(
-                text: LocalizationConstants.createNewList,
+                text: LocalizationConstants.createNewList.localized(),
                 onPressed: () {
                   AppRoute.wishListCreate.navigateBackStack(
                     context,
@@ -428,16 +428,16 @@ class _WishListItem extends StatelessWidget {
         (wishList.wishListSharesCount != null &&
             wishList.wishListSharesCount! > 0)) {
       if (wishList.wishListSharesCount! > 0 && wishList.isSharedList == false) {
-        return LocalizationConstants.sharedWith
+        return LocalizationConstants.sharedWith.localized()
             .format([wishList.wishListSharesCount ?? '']);
       } else if (wishList.isSharedList == true) {
-        final result = LocalizationConstants.sharedBy
+        final result = LocalizationConstants.sharedBy.localized()
             .format([wishList.sharedByDisplayName ?? '']);
         return result;
       }
     } else if (wishList.isSharedList == false &&
         !(wishList.wishListSharesCount != 0)) {
-      return LocalizationConstants.private;
+      return LocalizationConstants.private.localized();
     }
 
     return '';
@@ -473,7 +473,7 @@ class _WishListItem extends StatelessWidget {
               ),
             ),
             Text(
-              LocalizationConstants.updateBy.format(
+              LocalizationConstants.updateBy.localized().format(
                 [
                   wishList.updatedOn != null
                       ? DateFormat(CoreConstants.dateFormatString)

@@ -73,7 +73,7 @@ class QuoteAllCubit extends Cubit<QuoteAllState> {
 
     var quantityIsValid = (maxDiscount == 0 || quantity <= maxDiscount) &&
         (minMargin == 0 || quantity >= minMargin);
-    var discountMessage = LocalizationConstants.discountMessage;
+    var discountMessage = LocalizationConstants.discountMessage.localized();
     emit(QuoteAllValidationState(
         isValid: quantityIsValid, message: discountMessage));
   }

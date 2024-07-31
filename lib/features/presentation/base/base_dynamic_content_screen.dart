@@ -8,8 +8,8 @@ import 'package:commerce_flutter_app/features/domain/entity/content_management/w
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/action_grid_section_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/action_list_section_widget.dart';
@@ -53,7 +53,11 @@ class BaseDynamicContentScreen extends StatelessWidget {
       case CarouselWidgetEntity:
         {
           final CarouselWidgetEntity carouselWidgetEntity =
-              widgetEntity as CarouselWidgetEntity;
+          widgetEntity as CarouselWidgetEntity;
+
+          if ((carouselWidgetEntity.childWidgets ?? []).isEmpty) {
+            return null;
+          }
 
           return buildCarouselSectionWidget(
               carouselWidgetEntity: carouselWidgetEntity);
@@ -61,18 +65,18 @@ class BaseDynamicContentScreen extends StatelessWidget {
       case ActionsWidgetEntity:
         {
           final ActionsWidgetEntity actionsWidgetEntity =
-              widgetEntity as ActionsWidgetEntity;
+          widgetEntity as ActionsWidgetEntity;
 
           return (actionsWidgetEntity.layout == ActionsLayout.grid)
               ? buildActionGridSectionWidget(
-                  actionsWidgetEntity: actionsWidgetEntity)
+              actionsWidgetEntity: actionsWidgetEntity)
               : buildActionListSectionWidget(
-                  actionsWidgetEntity: actionsWidgetEntity);
+              actionsWidgetEntity: actionsWidgetEntity);
         }
       case ProductCarouselWidgetEntity:
         {
           final ProductCarouselWidgetEntity productCarouselWidgetEntity =
-              widgetEntity as ProductCarouselWidgetEntity;
+          widgetEntity as ProductCarouselWidgetEntity;
 
           return buildProductCarouselSectionWidget(
               productCarouselWidgetEntity: productCarouselWidgetEntity);
@@ -80,7 +84,7 @@ class BaseDynamicContentScreen extends StatelessWidget {
       case SearchHistoryWidgetEntity:
         {
           final SearchHistoryWidgetEntity searchHistoryWidgetEntity =
-              widgetEntity as SearchHistoryWidgetEntity;
+          widgetEntity as SearchHistoryWidgetEntity;
 
           return buildSearchHistorySectionWidget(
               searchHistoryWidgetEntity: searchHistoryWidgetEntity);
@@ -89,7 +93,7 @@ class BaseDynamicContentScreen extends StatelessWidget {
       case CurrentLocationWidgetEntity:
         {
           final CurrentLocationWidgetEntity currentLocationWidgetEntity =
-              widgetEntity as CurrentLocationWidgetEntity;
+          widgetEntity as CurrentLocationWidgetEntity;
           return buildCurrentLocationSectionWidget(
               currentLocationWidgetEntity: currentLocationWidgetEntity);
         }
@@ -97,7 +101,7 @@ class BaseDynamicContentScreen extends StatelessWidget {
       case PreviousOrdersWidgetEntity:
         {
           final PreviousOrdersWidgetEntity previousOrdersWidgetEntity =
-              widgetEntity as PreviousOrdersWidgetEntity;
+          widgetEntity as PreviousOrdersWidgetEntity;
           return buildPreviousOrdersSectionWidget(
               previousOrdersWidgetEntity: previousOrdersWidgetEntity);
         }
@@ -105,7 +109,7 @@ class BaseDynamicContentScreen extends StatelessWidget {
       case LocationNoteWidgetEntity:
         {
           final LocationNoteWidgetEntity locationNoteWidgetEntity =
-              widgetEntity as LocationNoteWidgetEntity;
+          widgetEntity as LocationNoteWidgetEntity;
           return buildLocationNoteSectionWidget(
               locationNoteWidgetEntity: locationNoteWidgetEntity);
         }
@@ -137,14 +141,19 @@ class BaseDynamicContentScreen extends StatelessWidget {
 
   Widget buildProductCarouselSectionWidget(
       {required ProductCarouselWidgetEntity productCarouselWidgetEntity}) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<ProductCarouselCubit>(
-            create: (context) => sl<ProductCarouselCubit>()
-              ..getCarouselProducts(productCarouselWidgetEntity)),
-      ],
-      child: ProductCarouselSectionWidget(
-          productCarouselWidgetEntity: productCarouselWidgetEntity),
+    return BlocProvider<ProductCarouselCubit>(
+      create: (context) => sl<ProductCarouselCubit>()
+        ..getCarouselProducts(productCarouselWidgetEntity),
+      child: BlocListener<RootBloc, RootState>(
+        listener: (context, state) {
+          if (state is RootPricingInventoryReload) {
+            context.read<ProductCarouselCubit>().getCarouselProducts(
+                productCarouselWidgetEntity);
+          }
+        },
+        child: ProductCarouselSectionWidget(
+            productCarouselWidgetEntity: productCarouselWidgetEntity),
+      ),
     );
   }
 
@@ -157,7 +166,7 @@ class BaseDynamicContentScreen extends StatelessWidget {
   Widget buildCurrentLocationSectionWidget(
       {required CurrentLocationWidgetEntity currentLocationWidgetEntity}) {
     return CurrentLocationWidget(
-            currentLocationWidgetEntity: currentLocationWidgetEntity);
+        currentLocationWidgetEntity: currentLocationWidgetEntity);
   }
 
   Widget buildPreviousOrdersSectionWidget(

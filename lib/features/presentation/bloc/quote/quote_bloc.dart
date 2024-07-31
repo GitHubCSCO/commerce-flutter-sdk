@@ -64,10 +64,10 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
   String get title {
     if (state is QuoteLoaded) {
       final length = ((state as QuoteLoaded).quotes ?? []).length;
-      return '$length ${length == 1 ? LocalizationConstants.quote : LocalizationConstants.quotes}';
+      return '$length ${length == 1 ? LocalizationConstants.quote.localized() : LocalizationConstants.quotes.localized()}';
     } else if (state is JobQuoteLoaded) {
       final length = ((state as JobQuoteLoaded).jobQuotes ?? []).length;
-      return '$length ${length == 1 ? LocalizationConstants.jobQuote : LocalizationConstants.jobQuotes}';
+      return '$length ${length == 1 ? LocalizationConstants.jobQuote.localized() : LocalizationConstants.jobQuotes.localized()}';
     } else {
       return '';
     }

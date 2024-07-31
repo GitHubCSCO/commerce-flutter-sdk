@@ -31,15 +31,15 @@ class QuoteFilterCubit extends Cubit<QuoteFilterState> {
   List<(String, String)> statuses = [];
   List<(String, String)> types = [
     (
-      LocalizationConstants.selectQuoteType,
-      LocalizationConstants.selectQuoteType,
+      LocalizationConstants.selectQuoteType.localized(),
+      LocalizationConstants.selectQuoteType.localized(),
     ),
     (
-      LocalizationConstants.salesQuotes,
+      LocalizationConstants.salesQuotes.localized(),
       QuoteType.quote.toString(),
     ),
     (
-      LocalizationConstants.jobQuotes,
+      LocalizationConstants.jobQuotes.localized(),
       QuoteType.job.toString(),
     ),
   ];
@@ -69,14 +69,17 @@ class QuoteFilterCubit extends Cubit<QuoteFilterState> {
     newState.isSalesPerson = session?.isSalesPerson ?? false;
 
     statuses = [
-      (LocalizationConstants.selectStatus, LocalizationConstants.selectStatus),
+      (
+        LocalizationConstants.selectStatus.localized(),
+        LocalizationConstants.selectStatus.localized()
+      ),
       ...[
         (
-          LocalizationConstants.requested,
+          LocalizationConstants.requested.localized(),
           'QuoteRequested',
         ),
         (
-          LocalizationConstants.proposed,
+          LocalizationConstants.proposed.localized(),
           'QuoteProposed',
         ),
       ],
@@ -86,13 +89,13 @@ class QuoteFilterCubit extends Cubit<QuoteFilterState> {
       statuses.insert(
         1,
         (
-          LocalizationConstants.created,
+          LocalizationConstants.created.localized(),
           'QuoteCreated',
         ),
       );
       statuses.add(
         (
-          LocalizationConstants.rejected,
+          LocalizationConstants.rejected.localized(),
           'QuoteRejected',
         ),
       );

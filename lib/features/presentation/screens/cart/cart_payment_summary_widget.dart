@@ -112,8 +112,8 @@ class CartPaymentSummaryWidget extends StatelessWidget {
 
   Widget? _buildOrderApprove() {
     String title = paymentSummaryEntity.cart == null
-        ? LocalizationConstants.approvingCart
-        : LocalizationConstants.approvingCartInfos.format([
+        ? LocalizationConstants.approvingCart.localized()
+        : LocalizationConstants.approvingCartInfos.localized().format([
             paymentSummaryEntity.cart!.orderNumber,
             paymentSummaryEntity.cart!.initiatedByUserName
           ]);
@@ -145,8 +145,8 @@ class CartPaymentSummaryWidget extends StatelessWidget {
 
   Widget? _buildSubTotal() {
     String title = paymentSummaryEntity.cart == null
-        ? LocalizationConstants.subtotal
-        : LocalizationConstants.subtotalItems
+        ? LocalizationConstants.subtotal.localized()
+        : LocalizationConstants.subtotalItems.localized()
             .format([paymentSummaryEntity.cart?.totalCountDisplay ?? '']);
     String body = paymentSummaryEntity.cart?.orderSubTotalDisplay ?? '';
     TextStyle textStyle = OptiTextStyles.subtitle;
@@ -154,13 +154,13 @@ class CartPaymentSummaryWidget extends StatelessWidget {
   }
 
   Widget? _buildEstimatedTotal(bool shouldShowTaxAndShipping) {
-    String title = LocalizationConstants.total;
+    String title = LocalizationConstants.total.localized();
     String body =
         ((shouldShowTaxAndShipping && paymentSummaryEntity.cart != null)
                 ? paymentSummaryEntity.cart?.orderGrandTotalDisplay
                 : '') ??
             '';
-    TextStyle textStyle = OptiTextStyles.subtitle;
+    TextStyle textStyle = OptiTextStyles.subtitleHighlight;
 
     var widget = _buildRow(title, body, textStyle);
     if (widget != null) {
@@ -174,7 +174,7 @@ class CartPaymentSummaryWidget extends StatelessWidget {
   }
 
   Widget? _buildEstimatedTax(bool shouldShowTaxAndShipping) {
-    String title = LocalizationConstants.tax;
+    String title = LocalizationConstants.tax.localized();
     String body =
         ((shouldShowTaxAndShipping && paymentSummaryEntity.cart != null)
                 ? paymentSummaryEntity.cart?.totalTaxDisplay
@@ -185,7 +185,7 @@ class CartPaymentSummaryWidget extends StatelessWidget {
   }
 
   Widget? _buildShipping(bool shouldShowTaxAndShipping) {
-    String title = LocalizationConstants.shipping;
+    String title = LocalizationConstants.shipping.localized();
     String body =
         ((shouldShowTaxAndShipping && paymentSummaryEntity.cart != null)
                 ? paymentSummaryEntity.cart?.shippingChargesDisplay
@@ -196,7 +196,7 @@ class CartPaymentSummaryWidget extends StatelessWidget {
   }
 
   Widget? _buildShippingHandling(bool shouldShowTaxAndShipping) {
-    String title = LocalizationConstants.shippingHandling;
+    String title = LocalizationConstants.shippingHandling.localized();
     String body =
         ((shouldShowTaxAndShipping && paymentSummaryEntity.cart != null)
                 ? paymentSummaryEntity.cart?.shippingAndHandlingDisplay
@@ -207,7 +207,7 @@ class CartPaymentSummaryWidget extends StatelessWidget {
   }
 
   Widget? _buildHandling(bool shouldShowTaxAndShipping) {
-    String title = LocalizationConstants.handling;
+    String title = LocalizationConstants.handling.localized();
     String body =
         ((shouldShowTaxAndShipping && paymentSummaryEntity.cart != null)
                 ? paymentSummaryEntity.cart?.handlingChargesDisplay
@@ -218,7 +218,7 @@ class CartPaymentSummaryWidget extends StatelessWidget {
   }
 
   Widget? _buildMiscCharge(bool shouldShowTaxAndShipping) {
-    String title = LocalizationConstants.miscCharge;
+    String title = LocalizationConstants.miscCharge.localized();
     String body =
         ((shouldShowTaxAndShipping && paymentSummaryEntity.cart != null)
                 ? paymentSummaryEntity.cart?.otherChargesDisplay
@@ -242,7 +242,7 @@ class CartPaymentSummaryWidget extends StatelessWidget {
         ? '${CoreConstants.currencySymbol}${discountTotal.toStringAsFixed(2)}'
         : '';
 
-    String title = LocalizationConstants.discounts;
+    String title = LocalizationConstants.discounts.localized();
     String body = formattedDiscountTotal;
     TextStyle textStyle = OptiTextStyles.body;
     return _buildRow(title, body, textStyle);
@@ -307,7 +307,7 @@ class CartPaymentSummaryWidget extends StatelessWidget {
   }
 
   Widget? _buildPromotion(Promotion promotion) {
-    String title = '${LocalizationConstants.promotion} : ${promotion.name!}';
+    String title = '${LocalizationConstants.promotion.localized()} : ${promotion.name!}';
     String body = '-${promotion.amountDisplay!}';
     TextStyle textStyle = OptiTextStyles.bodyFade;
     return _buildRow(title, body, textStyle);

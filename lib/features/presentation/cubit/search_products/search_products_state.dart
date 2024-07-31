@@ -15,6 +15,8 @@ class SearchProductsState extends Equatable {
   final bool selectedStockedItems;
   final ProductSettings? productSettings;
   final bool productPricingEnabled;
+  final bool? hidePricingEnabled;
+  final bool? hideInventoryEnabled;
 
   const SearchProductsState({
     required this.originalQuery,
@@ -31,6 +33,8 @@ class SearchProductsState extends Equatable {
     required this.selectedStockedItems,
     required this.productSettings,
     required this.productPricingEnabled,
+    this.hidePricingEnabled,
+    this.hideInventoryEnabled,
   });
 
   @override
@@ -48,6 +52,8 @@ class SearchProductsState extends Equatable {
         selectedStockedItems,
         productSettings ?? ProductSettings(),
         productPricingEnabled,
+        hidePricingEnabled ?? false,
+        hideInventoryEnabled ?? false,
       ];
 
   SearchProductsState copyWith({
@@ -65,6 +71,8 @@ class SearchProductsState extends Equatable {
     bool? selectedStockedItems,
     ProductSettings? productSettings,
     bool? productPricingEnabled,
+    bool? hidePricingEnabled,
+    bool? hideInventoryEnabled,
   }) {
     return SearchProductsState(
       originalQuery: originalQuery ?? this.originalQuery,
@@ -83,6 +91,8 @@ class SearchProductsState extends Equatable {
       selectedStockedItems: selectedStockedItems ?? this.selectedStockedItems,
       productSettings: productSettings ?? this.productSettings,
       productPricingEnabled: productPricingEnabled ?? this.productPricingEnabled,
+      hidePricingEnabled: hidePricingEnabled ?? this.hidePricingEnabled,
+      hideInventoryEnabled: hideInventoryEnabled ?? this.hideInventoryEnabled,
     );
   }
 }

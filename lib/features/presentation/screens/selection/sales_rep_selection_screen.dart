@@ -37,7 +37,7 @@ class SalesRepSelectionPage extends StatelessWidget {
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         backgroundColor: OptiAppColors.backgroundWhite,
-        title: const Text(LocalizationConstants.selectSalesRep),
+        title: Text(LocalizationConstants.selectSalesRep.localized()),
         centerTitle: false,
       ),
       body: BlocBuilder<SalesRepSelectionCubit, SalesRepSelectionState>(
@@ -49,8 +49,8 @@ class SalesRepSelectionPage extends StatelessWidget {
           }
 
           if (state.status == SalesRepStatus.failiure) {
-            return const Center(
-              child: Text(LocalizationConstants.error),
+            return Center(
+              child: Text(LocalizationConstants.error.localized()),
             );
           }
 

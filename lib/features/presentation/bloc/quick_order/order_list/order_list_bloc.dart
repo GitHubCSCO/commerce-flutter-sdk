@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_ent
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/quick_order_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,14 +20,17 @@ part 'order_list_state.dart';
 class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   List<QuickOrderItemEntity> quickOrderItemList = [];
   final QuickOrderUseCase _quickOrderUseCase;
+  final PricingInventoryUseCase _pricingInventoryUseCase;
   final ScanningMode scanningMode;
   bool isPreviouslyScannedItem = false;
   ProductSettings? productSettings;
 
   OrderListBloc(
       {required QuickOrderUseCase quickOrderUseCase,
+      required PricingInventoryUseCase pricingInventoryUseCase,
       required this.scanningMode})
       : _quickOrderUseCase = quickOrderUseCase,
+        _pricingInventoryUseCase = pricingInventoryUseCase,
         super(OrderListInitialState()) {
     _createAlternateCart();
     on<OrderListLoadEvent>(_onOrderListLoadEvent);
@@ -424,6 +428,13 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         orderItemEntity.selectedUnitOfMeasure = null;
       }
     }
+
+    final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
+    final hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
+
+    orderItemEntity.hidePricingEnable = hidePricingEnable;
+    orderItemEntity.hideInventoryEnable = hideInventoryEnable;
+
     return orderItemEntity;
   }
 
@@ -453,6 +464,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
       }
     }
   }
+
+  bool hidePricingEnable() => _pricingInventoryUseCase.getHidePricingEnable();
 
   String calculateSubtotal() {
     if (productSettings == null) {

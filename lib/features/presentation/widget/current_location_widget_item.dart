@@ -53,7 +53,7 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                 children: [
                   InkWell(
                     child: Text(
-                      LocalizationConstants.call,
+                      LocalizationConstants.call.localized(),
                       textAlign: TextAlign.center,
                       style: OptiTextStyles.link,
                     ),
@@ -64,7 +64,7 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                   const SizedBox(width: 16),
                   InkWell(
                     child: Text(
-                      LocalizationConstants.directions,
+                      LocalizationConstants.directions.localized(),
                       textAlign: TextAlign.center,
                       style: OptiTextStyles.link,
                     ),
@@ -79,7 +79,7 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                       visible: isVMILocationfinder,
                       child: InkWell(
                         child: Text(
-                          LocalizationConstants.changeLocation,
+                          LocalizationConstants.changeLocation.localized(),
                           textAlign: TextAlign.center,
                           style: OptiTextStyles.link,
                         ),

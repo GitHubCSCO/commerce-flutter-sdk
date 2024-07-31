@@ -8,9 +8,9 @@ import 'package:commerce_flutter_app/features/presentation/components/input.dart
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_filter_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -74,10 +74,10 @@ class OrderApprovalFilterWidget extends StatelessWidget {
                   },
                 );
               },
-              icon: SvgPicture.asset(
+              icon: const SvgAssetImage(
                 height: 20,
                 width: 20,
-                AssetConstants.filterIcon,
+                assetName: AssetConstants.filterIcon,
                 semanticsLabel: 'filter icon',
                 fit: BoxFit.fitWidth,
               ),
@@ -112,7 +112,7 @@ void _showOrderApprovalFilterWidget(
               ),
               const SizedBox(height: 45),
               Text(
-                LocalizationConstants.customer.toUpperCase(),
+                LocalizationConstants.customer.localized().toUpperCase(),
                 style: OptiTextStyles.subtitle,
               ),
               const SizedBox(height: 10),
@@ -124,7 +124,7 @@ void _showOrderApprovalFilterWidget(
               ),
               const SizedBox(height: 45),
               Text(
-                LocalizationConstants.orderTotal.toUpperCase(),
+                LocalizationConstants.orderTotal.localized().toUpperCase(),
                 style: OptiTextStyles.subtitle,
               ),
               const SizedBox(height: 10),
@@ -135,11 +135,11 @@ void _showOrderApprovalFilterWidget(
               ),
               const SizedBox(height: 45),
               Text(
-                LocalizationConstants.dateRange.toUpperCase(),
+                LocalizationConstants.dateRange.localized().toUpperCase(),
                 style: OptiTextStyles.subtitle,
               ),
               FilterDatePickerWidget(
-                title: LocalizationConstants.from,
+                title: LocalizationConstants.from.localized(),
                 selectedDate: state.fromDate,
                 onSelectDate: (innerContext, date) {
                   context.read<OrderApprovalFilterCubit>().setFromDate(date);
@@ -147,7 +147,7 @@ void _showOrderApprovalFilterWidget(
               ),
               const SizedBox(height: 10),
               FilterDatePickerWidget(
-                title: LocalizationConstants.to,
+                title: LocalizationConstants.to.localized(),
                 selectedDate: state.toDate,
                 onSelectDate: (innerContext, date) {
                   context.read<OrderApprovalFilterCubit>().setToDate(date);
@@ -216,7 +216,7 @@ class _FilterOrderTotalWidgetState extends State<_FilterOrderTotalWidget> {
         children: [
           Input(
             controller: orderNumberController,
-            hintText: LocalizationConstants.orderNumberSign,
+            hintText: LocalizationConstants.orderNumberSign.localized(),
           ),
         ],
       ),
@@ -356,7 +356,7 @@ class _FilterTotalAmountWidgetState extends State<_FilterTotalAmountWidget> {
         children: [
           Input(
             controller: orderTotalController,
-            hintText: LocalizationConstants.enterAmount,
+            hintText: LocalizationConstants.enterAmount.localized(),
             keyboardType: TextInputType.number,
             onTapOutside: (p0) => FocusManager.instance.primaryFocus?.unfocus(),
           ),

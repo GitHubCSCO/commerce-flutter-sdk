@@ -37,7 +37,7 @@ class _QuoteLineNotesScreenState extends State<QuoteLineNotesScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: OptiAppColors.backgroundWhite,
-        title: const Text(LocalizationConstants.lineNotes),
+        title: Text(LocalizationConstants.lineNotes.localized()),
         centerTitle: false,
       ),
       body: SafeArea(
@@ -53,8 +53,9 @@ class _QuoteLineNotesScreenState extends State<QuoteLineNotesScreen> {
                           horizontal: 20, vertical: 10),
                       child: TextField(
                         controller: controller,
-                        decoration: const InputDecoration(
-                          hintText: LocalizationConstants.enterLineNotes,
+                        decoration: InputDecoration(
+                          hintText:
+                              LocalizationConstants.enterLineNotes.localized(),
                         ),
                         scrollPadding: const EdgeInsets.all(20.0),
                         keyboardType: TextInputType.multiline,
@@ -74,7 +75,7 @@ class _QuoteLineNotesScreenState extends State<QuoteLineNotesScreen> {
                 PrimaryButton(
                   isEnabled: controller.text.isNotEmpty &&
                       controller.text != widget.initialText,
-                  text: LocalizationConstants.save,
+                  text: LocalizationConstants.save.localized(),
                   onPressed: () {
                     context.pop(controller.text);
                   },

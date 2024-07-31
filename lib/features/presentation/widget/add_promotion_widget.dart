@@ -72,8 +72,8 @@ class AddPromotionWidget extends StatelessWidget {
                               ),
                             )),
                         Input(
-                          label: LocalizationConstants.promotionalCode,
-                          hintText: LocalizationConstants.promotionalCode,
+                          label: LocalizationConstants.promotionalCode.localized(),
+                          hintText: LocalizationConstants.promotionalCode.localized(),
                           controller: promoCodeController,
                           onTapOutside: (_) {
                             FocusManager.instance.primaryFocus?.unfocus();
@@ -86,9 +86,7 @@ class AddPromotionWidget extends StatelessWidget {
                         TertiaryButton(
                             borderColor: OptiAppColors.grayBackgroundColor,
                             backgroundColor: OptiAppColors.grayBackgroundColor,
-                            child: const Text(
-                              LocalizationConstants.apply,
-                            ),
+                            text: LocalizationConstants.apply.localized(),
                             onPressed: () {
                               context
                                   .read<PromoCodeCubit>()
@@ -104,9 +102,7 @@ class AddPromotionWidget extends StatelessWidget {
                       child: TertiaryButton(
                           borderColor: OptiAppColors.grayBackgroundColor,
                           backgroundColor: OptiAppColors.grayBackgroundColor,
-                          child: const Text(
-                            LocalizationConstants.addDiscount,
-                          ),
+                          text: LocalizationConstants.addDiscount.localized(),
                           onPressed: () {
                             context
                                 .read<PromoCodeCubit>()

@@ -4,9 +4,31 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+
+void _onClickClearAllCart(BuildContext context) {
+  displayDialogWidget(
+      context: context,
+      title: "",
+      message: LocalizationConstants.clearAllItemsInCart.localized(),
+      actions: [
+        DialogPlainButton(
+          onPressed: () {
+            context.read<CartContentBloc>().add(CartContentClearAllEvent());
+            Navigator.of(context).pop();
+          },
+          child: Text(LocalizationConstants.remove.localized()),
+        ),
+        DialogPlainButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text(LocalizationConstants.cancel.localized()),
+        ),
+      ]);
+}
 
 class CartContentHeaderWidget extends StatelessWidget {
   final bool? showClearCart;
@@ -32,7 +54,7 @@ class CartContentHeaderWidget extends StatelessWidget {
             TextSpan(
               children: [
                 TextSpan(
-                  text: 'Cart ',
+                  text: "${LocalizationConstants.cart.localized()} ",
                   style: OptiTextStyles.titleLarge,
                 ),
                 TextSpan(
@@ -54,17 +76,17 @@ class CartContentHeaderWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 16,
                     height: 16,
-                    child: SvgPicture.asset(
-                      AssetConstants.cartClearIcon,
+                    child: SvgAssetImage(
+                      assetName: AssetConstants.cartClearIcon,
                       fit: BoxFit.fitWidth,
                     ),
                   ),
                   const SizedBox(width: 11),
                   Text(
-                    'Clear Cart',
+                    LocalizationConstants.clearCart.localized(),
                     textAlign: TextAlign.center,
                     style: OptiTextStyles.body,
                   ),
@@ -75,27 +97,5 @@ class CartContentHeaderWidget extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  void _onClickClearAllCart(BuildContext context) {
-    displayDialogWidget(
-        context: context,
-        title: "",
-        message: LocalizationConstants.clearAllItemsInCart,
-        actions: [
-          DialogPlainButton(
-            onPressed: () {
-              context.read<CartContentBloc>().add(CartContentClearAllEvent());
-              Navigator.of(context).pop();
-            },
-            child: const Text(LocalizationConstants.remove),
-          ),
-          DialogPlainButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text(LocalizationConstants.cancel),
-          ),
-        ]);
   }
 }

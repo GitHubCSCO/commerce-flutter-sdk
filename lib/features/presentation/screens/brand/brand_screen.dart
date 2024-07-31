@@ -12,9 +12,9 @@ import 'package:commerce_flutter_app/features/presentation/components/input.dart
 import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_list/brand_list_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BrandScreen extends StatelessWidget {
@@ -44,7 +44,7 @@ class BrandPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            LocalizationConstants.brands, style: OptiTextStyles.titleLarge),
+            LocalizationConstants.brands.localized(), style: OptiTextStyles.titleLarge),
         actions: [
           BottomMenuWidget(websitePath: websitePath),
         ],
@@ -55,10 +55,10 @@ class BrandPage extends StatelessWidget {
             padding:
             const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
             child: Input(
-              hintText: LocalizationConstants.search,
+              hintText: LocalizationConstants.search.localized(),
               suffixIcon: IconButton(
-                icon: SvgPicture.asset(
-                  AssetConstants.iconClear,
+                icon: const SvgAssetImage(
+                  assetName: AssetConstants.iconClear,
                   semanticsLabel: 'search query clear icon',
                   fit: BoxFit.fitWidth,
                 ),
@@ -139,7 +139,7 @@ class BrandPage extends StatelessWidget {
                       callback: _handleAutoCompleteCallback);
                 case BrandAutoCompleteFailed():
                   return Center(
-                      child: Text(LocalizationConstants.noResultFoundMessage,
+                      child: Text(LocalizationConstants.noResultFoundMessage.localized(),
                           style: OptiTextStyles.body));
                 default:
                   return const Center();

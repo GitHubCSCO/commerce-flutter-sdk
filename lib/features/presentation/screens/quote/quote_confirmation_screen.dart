@@ -36,7 +36,7 @@ class QuoteConfirmationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(LocalizationConstants.quoteConfirmation),
+        title: Text(LocalizationConstants.quoteConfirmation.localized()),
       ),
       body: BlocBuilder<QuoteConfirmationCubit, QuoteConfirmationState>(
           builder: (_, state) {
@@ -107,14 +107,14 @@ class QuoteConfirmationPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           TertiaryBlackButton(
-            child: Text(LocalizationConstants.viewMyQuotes),
+            text: LocalizationConstants.viewMyQuotes.localized(),
             onPressed: () {
               AppRoute.myQuote.navigate(context);
             },
           ),
           const SizedBox(width: 16),
           TertiaryBlackButton(
-            child: Text(LocalizationConstants.continueShopping),
+            text: LocalizationConstants.continueShopping.localized(),
             onPressed: () {
               AppRoute.shop.navigate(context);
             },

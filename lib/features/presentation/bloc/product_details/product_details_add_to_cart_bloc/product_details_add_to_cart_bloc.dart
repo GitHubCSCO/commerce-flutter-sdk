@@ -29,75 +29,9 @@ class ProductDetailsAddToCartBloc
     var productDetailsAddToCartEntity = event.productDetailsAddToCartEntity;
 
     productDetailsAddToCartEntity =
-        updateAddToCartViewModel(productDetailsAddToCartEntity);
+        _productDetailsAddToCartUseCase.updateAddToCartViewModel(productDetailsAddToCartEntity);
     emit(ProductDetailsAddtoCartSuccess(
         productDetailsAddToCartEntity: productDetailsAddToCartEntity));
-  }
-
-  ProductDetailsAddtoCartEntity updateAddToCartViewModel(
-      ProductDetailsAddtoCartEntity productDetailsAddtoCartEntity) {
-    if (productDetailsAddtoCartEntity == null) {
-      return productDetailsAddtoCartEntity;
-    }
-    //var alternateUnitsOfMeasureEnabled = true;
-
-    var productDetailsPriceEntity =
-        productDetailsAddtoCartEntity.productDetailsPriceEntity;
-
-    var quantity = int.parse(productDetailsAddtoCartEntity.quantityText!);
-    var styledProduct = productDetailsPriceEntity?.styledProduct;
-    var product = productDetailsPriceEntity?.product;
-
-    var productUnitOfMeasures = styledProduct == null
-        ? product?.productUnitOfMeasures
-        : styledProduct.productUnitOfMeasures;
-
-    if (productUnitOfMeasures != null && productUnitOfMeasures.isNotEmpty) {
-      productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
-        isUnitOfMeasuresVisible: productUnitOfMeasures.length > 1,
-        // productUnitOfMeasures: List<ProductUnitOfMeasure>.from(productUnitOfMeasures),
-        // selectedUnitOfMeasure: chosenUnitOfMeasure
-      );
-    } else {
-      productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
-          isUnitOfMeasuresVisible: false,
-          // productUnitOfMeasures: <ProductUnitOfMeasure>[],
-          selectedUnitOfMeasure: null);
-    }
-
-    // update subtotal value
-    var isQuoteRequired = styledProduct != null
-        ? styledProduct.quoteRequired
-        : product?.quoteRequired;
-    var shouldHideSubtotalValue = quantity < 1 || isQuoteRequired!;
-
-    if (shouldHideSubtotalValue ||
-        productDetailsPriceEntity?.product?.pricing == null) {
-      productDetailsAddtoCartEntity =
-          productDetailsAddtoCartEntity.copyWith(subtotalValueText: '');
-    } else if (productDetailsPriceEntity
-            ?.product?.pricing?.extendedUnitNetPriceDisplay ==
-        null) {
-      productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
-          subtotalValueText: SiteMessageConstants.valueRealTimePricingLoadFail);
-    } else if (productDetailsPriceEntity
-            ?.product?.pricing?.extendedUnitNetPrice ==
-        0) {
-      productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
-          subtotalValueText: SiteMessageConstants.valuePricingZeroPriceMessage);
-    } else {
-      productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
-          subtotalValueText: productDetailsPriceEntity
-              ?.product?.pricing?.extendedUnitNetPriceDisplay);
-    }
-
-    productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
-        selectedUnitOfMeasureValueText:
-            productDetailsPriceEntity?.product?.pricing?.getUnitOfMeasure(
-                productDetailsAddtoCartEntity.selectedUnitOfMeasureValueText ??
-                    ''));
-
-    return productDetailsAddtoCartEntity;
   }
 
   Future<void> _onAddToCartEvent(

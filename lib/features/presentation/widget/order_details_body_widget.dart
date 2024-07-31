@@ -47,6 +47,9 @@ class OrderDetailsBodyWidget extends StatelessWidget {
   final List<PromotionItem>? promotions;
   final int? itemCount;
 
+  final bool? hidePricingEnable;
+  final bool? hideInventoryEnable;
+
   const OrderDetailsBodyWidget({
     super.key,
     this.orderNumber,
@@ -80,6 +83,8 @@ class OrderDetailsBodyWidget extends StatelessWidget {
     this.totalTitle,
     this.promotions,
     this.itemCount,
+    this.hidePricingEnable,
+    this.hideInventoryEnable,
   });
 
   @override
@@ -109,22 +114,23 @@ class OrderDetailsBodyWidget extends StatelessWidget {
             fullAddress: shippingFullAddress,
             countryName: shippingCountryName,
           ),
-        OrderPaymentSectionWidget(
-          discount: discount,
-          discountTitle: discountTitle,
-          otherCharges: otherCharges,
-          otherChargesTitle: otherChargesTitle,
-          promotions: promotions,
-          shippingHandling: shippingHandling,
-          shippingHandlingTitle: shippingHandlingTitle,
-          subtotal: subtotal,
-          subtotalTitle: subtotalTitle,
-          tax: tax,
-          taxTitle: taxTitle,
-          total: total,
-          totalTitle: totalTitle,
-          itemCount: itemCount,
-        ),
+        if (!(hidePricingEnable ?? false))
+          OrderPaymentSectionWidget(
+            discount: discount,
+            discountTitle: discountTitle,
+            otherCharges: otherCharges,
+            otherChargesTitle: otherChargesTitle,
+            promotions: promotions,
+            shippingHandling: shippingHandling,
+            shippingHandlingTitle: shippingHandlingTitle,
+            subtotal: subtotal,
+            subtotalTitle: subtotalTitle,
+            tax: tax,
+            taxTitle: taxTitle,
+            total: total,
+            totalTitle: totalTitle,
+            itemCount: itemCount,
+          ),
         if (isPickupLocationVisible)
           OrderPickupLocationWidget(
             address: pickupLocationAddress,
@@ -170,43 +176,43 @@ class OrderInformationWidget extends StatelessWidget {
           children: [
             if (orderNumber != null)
               TwoTextsRow(
-                label: LocalizationConstants.orderNumberSign,
+                label: LocalizationConstants.orderNumberSign.localized(),
                 value: orderNumber!,
                 textStyle: OptiTextStyles.subtitle,
               ),
             if (webOrderNumber != null)
               TwoTextsRow(
-                label: LocalizationConstants.webOrderNumberSign,
+                label: LocalizationConstants.webOrderNumberSign.localized(),
                 value: webOrderNumber!,
                 textStyle: OptiTextStyles.body,
               ),
             if (orderDate != null)
               TwoTextsRow(
-                label: LocalizationConstants.orderDate,
+                label: LocalizationConstants.orderDate.localized(),
                 value: orderDate!,
                 textStyle: OptiTextStyles.body,
               ),
             if (orderStatus != null)
               TwoTextsRow(
-                label: LocalizationConstants.orderStatus,
+                label: LocalizationConstants.orderStatus.localized(),
                 value: orderStatus!,
                 textStyle: OptiTextStyles.body,
               ),
             if (poNumber != null)
               TwoTextsRow(
-                label: LocalizationConstants.pONumberSign,
+                label: LocalizationConstants.pONumberSign.localized(),
                 value: poNumber!,
                 textStyle: OptiTextStyles.body,
               ),
             if (shippingMethod != null)
               TwoTextsRow(
-                label: LocalizationConstants.shippingMethod,
+                label: LocalizationConstants.shippingMethod.localized(),
                 value: shippingMethod!,
                 textStyle: OptiTextStyles.body,
               ),
             if (terms != null)
               TwoTextsRow(
-                label: LocalizationConstants.terms,
+                label: LocalizationConstants.terms.localized(),
                 value: terms!,
                 textStyle: OptiTextStyles.body,
               ),
@@ -303,10 +309,14 @@ class OrderPickupLocationWidget extends StatelessWidget {
 
 class OrderProductsSectionWidget extends StatelessWidget {
   final List<OrderLineEntity> orderLines;
+  final bool? hidePricingEnable;
+  final bool? hideInventoryEnable;
 
   const OrderProductsSectionWidget({
     super.key,
     required this.orderLines,
+    this.hidePricingEnable,
+    this.hideInventoryEnable,
   });
 
   @override
@@ -323,7 +333,7 @@ class OrderProductsSectionWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                LocalizationConstants.products,
+                LocalizationConstants.products.localized(),
                 style: OptiTextStyles.titleLarge,
               ),
               const SizedBox(width: 8),
@@ -358,6 +368,8 @@ class OrderProductsSectionWidget extends StatelessWidget {
               canEditQty: false,
               showViewAvailabilityByWarehouse: false,
               showViewQuantityPricing: false,
+              hidePricingEnable: hidePricingEnable,
+              hideInventoryEnable: hideInventoryEnable,
             );
           },
           separatorBuilder: (context, index) => const Divider(height: 1),
@@ -432,7 +444,7 @@ class OrderPaymentSectionWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)
               .copyWith(bottom: 8),
           child: Text(
-            LocalizationConstants.orderSummary,
+            LocalizationConstants.orderSummary.localized(),
             style: OptiTextStyles.titleLarge,
           ),
         ),

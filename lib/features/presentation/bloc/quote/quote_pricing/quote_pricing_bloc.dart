@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:math';
-
-import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_pricing_break_item_entity.dart';
@@ -114,8 +111,6 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
       ));
     }
     parameters.pricingRfq!.priceBreaks = priceBreaks;
-
-    print(parameters.toJson());
     var quoteLinePricingResponse = await _quotePricingUsecase.getQuotePricing(
         quoteLine!.quoteId!, parameters);
 
@@ -325,7 +320,7 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
     String endQtyDisplay;
 
     if (endQty != null && endQty == 0) {
-      return LocalizationConstants.max;
+      return LocalizationConstants.max.localized();
     } else if (endQty != null) {
       endQtyDisplay = endQty
           .toStringAsFixed(2)

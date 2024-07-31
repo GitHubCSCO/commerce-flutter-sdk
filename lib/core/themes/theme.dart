@@ -2,8 +2,6 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-final lightTheme = _getTheme();
-
 const _primary = Color.fromRGBO(0, 55, 255, 1);
 const _secondary = Colors.amber;
 
@@ -41,7 +39,7 @@ final _lightColorScheme = ColorScheme(
   outline: _divider,
 );
 
-ThemeData _getTheme() {
+ThemeData getTheme() {
   final colorScheme = _lightColorScheme;
 
   final buttonShape = RoundedRectangleBorder(
@@ -58,12 +56,15 @@ ThemeData _getTheme() {
   return ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
-    colorScheme: colorScheme,
+    colorScheme: colorScheme.copyWith(primary: OptiAppColors.primaryColor),
     disabledColor: _disabled,
     dividerTheme: const DividerThemeData(
       color: _divider,
       space: 1,
       thickness: 0.5,
+    ),
+    iconTheme: IconThemeData(
+      color: OptiAppColors.primaryColor
     ),
     // chipTheme: ChipThemeData(
     //   labelStyle: textTheme.labelSmall,
@@ -109,9 +110,14 @@ ThemeData _getTheme() {
     //   groupAlignment: 0,
     // ),
     appBarTheme: AppBarTheme(
-        titleTextStyle: OptiTextStyles.titleLarge,
-        color: _background,
-        surfaceTintColor: _background),
+      titleTextStyle: OptiTextStyles.titleLarge,
+      color: _background,
+      surfaceTintColor: _background,
+      iconTheme: IconThemeData(
+        color: OptiAppColors.primaryColor, // Set the AppBar icon color here
+      ),
+
+    ),
     // dialogTheme: DialogTheme(
     //   backgroundColor: colorScheme.background,
     //   surfaceTintColor: colorScheme.background,
@@ -236,6 +242,9 @@ class OptiTextStyles {
         ),
       );
 
+  static TextStyle get titleLargeHighLight =>
+      titleLarge.copyWith(color: OptiAppColors.primaryColor);
+
   static TextStyle get titleSmall => _getInterFontStyle(
         const TextStyle(
           fontSize: 16,
@@ -260,13 +269,8 @@ class OptiTextStyles {
         ),
       );
 
-  static TextStyle get subtitleLink => _getInterFontStyle(
-        const TextStyle(
-          fontSize: 14,
-          color: linkColor,
-          fontWeight: titleWeight,
-        ),
-      );
+  static TextStyle get subtitleHighlight =>
+      subtitle.copyWith(color: OptiAppColors.primaryColor);
 
   // Body
   static TextStyle get body => _getInterFontStyle(
@@ -312,17 +316,12 @@ class OptiTextStyles {
   static TextStyle get link => _getInterFontStyle(
         const TextStyle(
           fontSize: 12,
-          color: _primary,
           fontWeight: linkWeight,
-        ),
+        ).copyWith(color: OptiAppColors.primaryColor),
       );
-  static TextStyle get linkMedium => _getInterFontStyle(
-        const TextStyle(
-          fontSize: 15,
-          color: _primary,
-          fontWeight: linkWeight,
-        ),
-      );
+
+  static TextStyle get linkMedium =>
+      link.copyWith(fontSize: 15, color: OptiAppColors.primaryColor);
 
   static TextStyle get badgesStyle => _getInterFontStyle(
         const TextStyle(

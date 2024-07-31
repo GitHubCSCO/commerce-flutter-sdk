@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/domain/enums/product_list_type.dar
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
@@ -21,9 +22,9 @@ import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_a
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -70,10 +71,10 @@ class SearchPage extends BaseDynamicContentScreen {
             children: [
               Expanded(
                 child: Input(
-                  hintText: LocalizationConstants.search,
+                  hintText: LocalizationConstants.search.localized(),
                   suffixIcon: IconButton(
-                    icon: SvgPicture.asset(
-                      AssetConstants.iconClear,
+                    icon: const SvgAssetImage(
+                      assetName: AssetConstants.iconClear,
                       semanticsLabel: 'search query clear icon',
                       fit: BoxFit.fitWidth,
                     ),
@@ -104,8 +105,8 @@ class SearchPage extends BaseDynamicContentScreen {
                 ),
               ),
               IconButton(
-                icon: SvgPicture.asset(
-                  AssetConstants.iconBarcodeScan,
+                icon: const SvgAssetImage(
+                  assetName: AssetConstants.iconBarcodeScan,
                   semanticsLabel: 'barcode scan icon',
                   fit: BoxFit.fitWidth,
                 ),
@@ -125,6 +126,13 @@ class SearchPage extends BaseDynamicContentScreen {
         Expanded(
           child: MultiBlocListener(
             listeners: [
+              BlocListener<RootBloc, RootState>(
+                listener: (context, state) async {
+                  if (state is RootConfigReload) {
+                    _reloadSearchPage(context);
+                  }
+                },
+              ),
               BlocListener<PullToRefreshBloc, PullToRefreshState>(
                 listener: (context, state) {
                   if (state is PullToRefreshLoadState) {
@@ -225,12 +233,12 @@ class SearchPage extends BaseDynamicContentScreen {
                                   ),
                                 );
                               default:
-                                return const CustomScrollView(
+                                return CustomScrollView(
                                   slivers: <Widget>[
                                     SliverFillRemaining(
                                       child: Center(
                                         child: Text(LocalizationConstants
-                                            .errorLoadingSearchLanding),
+                                            .errorLoadingSearchLanding.localized()),
                                       ),
                                     ),
                                   ],
@@ -244,7 +252,7 @@ class SearchPage extends BaseDynamicContentScreen {
                     case SearchAutoCompleteInitialState:
                       return Center(
                         child: Text(
-                          LocalizationConstants.searchPrompt,
+                          LocalizationConstants.searchPrompt.localized(),
                           style: OptiTextStyles.body,
                         ),
                       );
@@ -255,7 +263,7 @@ class SearchPage extends BaseDynamicContentScreen {
                     case SearchAutoCompleteFailureState:
                       return Center(
                           child: Text(
-                        LocalizationConstants.searchNoResults,
+                        LocalizationConstants.searchNoResults.localized(),
                         style: OptiTextStyles.body,
                       ));
                     case SearchProductsLoadedState:
@@ -279,12 +287,12 @@ class SearchPage extends BaseDynamicContentScreen {
                       );
                     case SearchProductsFailureState:
                       return Center(
-                          child: Text(LocalizationConstants.searchNoResults,
+                          child: Text(LocalizationConstants.searchNoResults.localized(),
                               style: OptiTextStyles.body));
                     default:
-                      return const Center(
+                      return Center(
                           child: Text(
-                              LocalizationConstants.errorLoadingSearchLanding));
+                              LocalizationConstants.errorLoadingSearchLanding.localized()));
                   }
                 }),
           ),
@@ -307,7 +315,7 @@ class SearchPage extends BaseDynamicContentScreen {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
                 child: Text(
-                  LocalizationConstants.categories,
+                  LocalizationConstants.categories.localized(),
                   style: OptiTextStyles.titleSmall,
                 ),
               ),
@@ -326,7 +334,7 @@ class SearchPage extends BaseDynamicContentScreen {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
                 child: Text(
-                  LocalizationConstants.brands,
+                  LocalizationConstants.brands.localized(),
                   style: OptiTextStyles.titleSmall,
                 ),
               ),

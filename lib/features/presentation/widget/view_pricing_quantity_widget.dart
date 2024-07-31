@@ -15,7 +15,7 @@ void viewPricingQuantityWidget(
         scrollable: true,
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
-        title: Text(LocalizationConstants.quantityPricing,
+        title: Text(LocalizationConstants.quantityPricing.localized(),
             style: OptiTextStyles.titleLarge),
         content: Padding(
           padding: const EdgeInsets.all(8.0),

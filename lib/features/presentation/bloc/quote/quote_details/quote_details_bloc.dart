@@ -318,18 +318,18 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
 
   String get getSubmitTitle {
     if (compareStatus(QuoteStatus.QuoteProposed)) {
-      return LocalizationConstants.acceptSalesQuote;
+      return LocalizationConstants.acceptSalesQuote.localized();
     } else if (compareStatus(QuoteStatus.QuoteRequested) || isSalesPerson) {
-      return LocalizationConstants.submitSalesQuote;
+      return LocalizationConstants.submitSalesQuote.localized();
     }
     return "";
   }
 
   String get acceptedTitle {
     if (compareStatus(QuoteStatus.QuoteProposed)) {
-      return LocalizationConstants.acceptSalesQuote;
+      return LocalizationConstants.acceptSalesQuote.localized();
     } else if (compareStatus(QuoteStatus.QuoteRequested) || isSalesPerson) {
-      return LocalizationConstants.quoteAll;
+      return LocalizationConstants.quoteAll.localized();
     }
 
     return "";
@@ -337,9 +337,9 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
 
   String get declineTile {
     if (compareStatus(QuoteStatus.QuoteProposed)) {
-      return LocalizationConstants.declineSalesQuote;
+      return LocalizationConstants.declineSalesQuote.localized();
     } else if (compareStatus(QuoteStatus.QuoteRequested) || isSalesPerson) {
-      return LocalizationConstants.deleteSalesQuote;
+      return LocalizationConstants.deleteSalesQuote.localized();
     }
 
     return "";

@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
@@ -51,12 +52,12 @@ class BottomMenu extends StatelessWidget {
           case BottomMenuWebsiteUrlFailed():
             displayDialogWidget(
               context: context,
-              title: LocalizationConstants.error,
+              title: LocalizationConstants.error.localized(),
               message: SiteMessageConstants.defaultMobileAppAlertCommunicationError,
               actions: [
                 DialogPlainButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text(LocalizationConstants.oK),
+                  child: Text(LocalizationConstants.oK.localized()),
                 ),
               ],
             );
@@ -67,11 +68,7 @@ class BottomMenu extends StatelessWidget {
           onPressed: () {
             _showBottomMenu(context, toolMenuList);
           },
-          icon: const Icon(
-            Icons.more_vert,
-            color: Colors.black,
-          )
-      ),
+          icon: const Icon(Icons.more_vert)),
     );
   }
 
@@ -82,9 +79,9 @@ class BottomMenu extends StatelessWidget {
         return CupertinoActionSheet(
           actions: _getToolMenuWidgets(context, mContext, toolMenuList),
           cancelButton: CupertinoActionSheetAction(
-            child: const Text(
-              LocalizationConstants.cancel,
-              style: TextStyle(color: Colors.blue),
+            child: Text(
+              LocalizationConstants.cancel.localized(),
+              style: const TextStyle(color: Colors.blue),
             ),
             onPressed: () => Navigator.pop(mContext),
           ),
@@ -105,9 +102,9 @@ class BottomMenu extends StatelessWidget {
             context.read<BottomMenuCubit>().loadWebsiteUrl(websitePath);
           }
         },
-        child: const Text(
-          LocalizationConstants.viewOnWebsite,
-          style: TextStyle(color: Colors.blue),
+        child: Text(
+          LocalizationConstants.viewOnWebsite.localized(),
+          style: const TextStyle(color: Colors.blue),
         ),
       ));
     }

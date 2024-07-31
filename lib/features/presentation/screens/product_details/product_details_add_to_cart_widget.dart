@@ -123,9 +123,9 @@ class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
               leadingIcon: SvgPicture.asset(
                 AssetConstants.productDeatilsAddToCartIcon,
                 fit: BoxFit.fitWidth,
-                color: Colors.white,
+                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
               ),
-              text: LocalizationConstants.addToCart,
+              text: LocalizationConstants.addToCart.localized(),
               onPressed:
                   widget.detailsAddToCartEntity.addToCartButtonEnabled == true
                       ? () {
@@ -189,11 +189,13 @@ class ProductDetailsAddCartRow extends StatelessWidget {
           Expanded(
               flex: 1,
               child: ProductDetailsAddCartTtitleSubTitleColumn('U/M', 'E/A')),
-          Expanded(
-            flex: 3,
-            child: ProductDetailsAddCartTtitleSubTitleColumn(
-                'Subtotal', detailsAddToCartEntity.subtotalValueText ?? ''),
-          ),
+          if (!(detailsAddToCartEntity.hidePricing ?? false))
+            Expanded(
+              flex: 3,
+              child: ProductDetailsAddCartTtitleSubTitleColumn(
+                  LocalizationConstants.subtotal.localized(),
+                  detailsAddToCartEntity.subtotalValueText ?? ''),
+            ),
         ],
       ),
     );
@@ -225,7 +227,7 @@ class ProductDetailsAddCartTtitleSubTitleColumn extends StatelessWidget {
           fit: BoxFit.scaleDown,
           child: Text(
             getFormattedValue(value),
-            style: OptiTextStyles.titleLarge,
+            style: OptiTextStyles.titleLargeHighLight,
           ),
         ),
       ],
@@ -243,8 +245,8 @@ class AddToCartNotSignedInWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return PrimaryButton(
       text: productPricingEnabled
-          ? LocalizationConstants.signInForAddToCart
-          : LocalizationConstants.signInForPricing,
+          ? LocalizationConstants.signInForAddToCart.localized()
+          : LocalizationConstants.signInForPricing.localized(),
       onPressed: () {
         AppRoute.login.navigateBackStack(context);
       },
