@@ -9,7 +9,6 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuoteLineEntityMapper {
   static QuoteLineEntity toEntity(QuoteLine? model) => QuoteLineEntity(
-        
         pricingRfq: model?.pricingRfq != null
             ? PricingRfqEntityMapper.toEntity(model?.pricingRfq ?? PricingRfq())
             : null,

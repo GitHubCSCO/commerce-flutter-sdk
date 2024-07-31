@@ -79,14 +79,27 @@ class QuoteDetailsUsecase extends BaseUseCase {
   Future<JobQuoteDto?> updateJobQuote({
     required JobQuoteUpdateParameter parameter,
   }) async {
-    final result = await commerceAPIServiceProvider.getJobQuoteService().updateJobQuote(parameter);
-    
+    final result = await commerceAPIServiceProvider
+        .getJobQuoteService()
+        .updateJobQuote(parameter);
+
     switch (result) {
       case Failure():
         return null;
       case Success(value: final jobQuoteDto):
         return jobQuoteDto;
     }
+  }
+
+  Future<Result<CartLine, ErrorResponse>> updateCartLine(CartLine cartLine) {
+    return commerceAPIServiceProvider.getCartService().updateCartLine(cartLine);
+  }
+
+  Future<Result<QuoteLine, ErrorResponse>> patchQuoteLine(
+      String quoteId, QuoteLine quoteLine) {
+    return commerceAPIServiceProvider
+        .getQuoteService()
+        .patchQuoteLine(quoteId, quoteLine);
   }
 
   Future<String?> getAuthorizedURL(String path) async {

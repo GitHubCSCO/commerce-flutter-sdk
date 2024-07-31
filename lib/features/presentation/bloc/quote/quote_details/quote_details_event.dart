@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 abstract class QuoteDetailsEvent {}
@@ -30,4 +31,10 @@ class ProceedToCheckoutEvent extends QuoteDetailsEvent {}
 class ExpirationDateSelectEvent extends QuoteDetailsEvent {
   final DateTime expirationDate;
   ExpirationDateSelectEvent({required this.expirationDate});
+}
+
+class QuoteLineNoteUpdateEvent extends QuoteDetailsEvent {
+  final String note;
+  final QuoteLineEntity quoteLineEntity;
+  QuoteLineNoteUpdateEvent({required this.note, required this.quoteLineEntity});
 }

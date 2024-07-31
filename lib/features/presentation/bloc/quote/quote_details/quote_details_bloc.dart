@@ -44,6 +44,36 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
     on<AcceptQuoteEvent>(_onAcceptQuoteEvent);
     on<ProceedToCheckoutEvent>(_onProceedToCheckoutEvent);
     on<ExpirationDateSelectEvent>(_onSelectExpirationDate);
+    on<QuoteLineNoteUpdateEvent>(_onUpdateQuoteLineNotes);
+  }
+
+  Future<void> _onUpdateQuoteLineNotes(
+      QuoteLineNoteUpdateEvent event, Emitter<QuoteDetailsState> emit) async {
+    emit(QuoteDetailsLoadingState());
+    var quoteLine = QuoteLineEntityMapper.toModel(event.quoteLineEntity);
+    if (quoteLine != null) {
+      if (QuoteStatus.Cart.toString() == event.quoteLineEntity.status) {
+        var quotelineUpdateResponse =
+            await _quoteDetailsUsecase.updateCartLine(quoteLine);
+        switch (quotelineUpdateResponse) {
+          case Success(value: final data):
+            emit(QuotelineNoetUpdateSuccessState());
+          case Failure():
+            emit(QuotelineNoetUpdateFailureState());
+        }
+      } else {
+        var quotelineUpdateResponse = await _quoteDetailsUsecase.patchQuoteLine(
+            event.quoteLineEntity.quoteId ?? "", quoteLine);
+        switch (quotelineUpdateResponse) {
+          case Success(value: final data):
+            emit(QuotelineNoetUpdateSuccessState());
+          case Failure():
+            emit(QuotelineNoetUpdateFailureState());
+        }
+      }
+    } else {
+      emit(QuotelineNoetUpdateFailureState());
+    }
   }
 
   Future<void> _onLoadQuoteDetailsInitialEvent(

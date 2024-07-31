@@ -95,6 +95,12 @@ class QuoteDetailsPage extends StatelessWidget {
           Navigator.of(context).pop();
         } else if (state is QuoteDeclineFailedState) {
           CustomSnackBar.showFailure(context);
+        } else if (state is QuotelineNoetUpdateSuccessState) {
+          CustomSnackBar.showSuccesss(context);
+          context.read<QuoteDetailsBloc>().add(QuoteDetailsInitEvent());
+        } else if (state is QuotelineNoetUpdateFailureState) {
+          CustomSnackBar.showFailure(context);
+          context.read<QuoteDetailsBloc>().add(QuoteDetailsInitEvent());
         }
       }, builder: (_, state) {
         if (state is QuoteDetailsFailedState) {
@@ -406,8 +412,8 @@ class QuoteDetailsPage extends StatelessWidget {
             extra: initialText as String?,
           );
 
-          // TODO - DO SOMETHING WITH lineNotesText
-          print(lineNotesText);
+          context.read<QuoteDetailsBloc>().add(QuoteLineNoteUpdateEvent(
+              note: lineNotesText as String, quoteLineEntity: quoteLineEntity));
         },
       ),
     );
