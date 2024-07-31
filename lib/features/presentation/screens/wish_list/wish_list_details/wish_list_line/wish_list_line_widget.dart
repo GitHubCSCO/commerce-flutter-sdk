@@ -34,17 +34,23 @@ class WishListLineWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
         String? errorMessage;
         if (wishListLineEntity.isDiscontinued == true ||
             wishListLineEntity.isActive != true) {
-          errorMessage = SiteMessageConstants
-              .defaultValueWishListItemsDiscontinuedAndRemoved;
+          errorMessage = await context
+              .read<WishListDetailsCubit>()
+              .getSiteMessage(
+                  SiteMessageConstants.nameWishListItemsDiscontinuedAndRemoved,
+                  SiteMessageConstants.defaultValueWishListItemsDiscontinuedAndRemoved);
         }
 
         if (wishListLineEntity.isVisible != true) {
-          errorMessage = SiteMessageConstants
-              .defaultValueWishListItemsNotDisplayedDueRestrictions;
+          errorMessage = await context
+              .read<WishListDetailsCubit>()
+              .getSiteMessage(
+              SiteMessageConstants.nameWishListItemsNotDisplayedDueRestrictions,
+              SiteMessageConstants.defaultValueWishListItemsNotDisplayedDueRestrictions);
         }
 
         if (!errorMessage.isNullOrEmpty) {

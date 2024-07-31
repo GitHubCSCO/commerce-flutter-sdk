@@ -53,8 +53,7 @@ class InvoiceDetailScreen extends StatelessWidget {
                 displayDialogWidget(
                   context: context,
                   title: LocalizationConstants.error.localized(),
-                  message: SiteMessageConstants
-                      .defaultMobileAppAlertCommunicationError,
+                  message: state.message,
                   actions: [
                     DialogPlainButton(
                       onPressed: () => Navigator.of(context).pop(),

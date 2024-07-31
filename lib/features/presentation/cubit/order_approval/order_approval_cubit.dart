@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/order_approval_usecase/order_approval_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
@@ -33,7 +34,10 @@ class OrderApprovalCubit extends Cubit<OrderApprovalState> {
     );
 
     if (result == null) {
-      emit(state.copyWith(status: OrderStatus.failure));
+      final message = await _orderApprovalUseCase.getSiteMessage(
+          SiteMessageConstants.nameMobileAppAlertCommunicationError,
+          SiteMessageConstants.defaultMobileAppAlertCommunicationError);
+      emit(state.copyWith(status: OrderStatus.failure, errorMessage: message));
       return;
     }
 

@@ -179,8 +179,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                 displayDialogWidget(
                   context: context,
                   title: LocalizationConstants.error.localized(),
-                  message: SiteMessageConstants
-                      .defaultMobileAppAlertCommunicationError,
+                  message: state.message ?? '',
                   actions: [
                     TextButton(
                       onPressed: () {

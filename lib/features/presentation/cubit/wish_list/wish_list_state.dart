@@ -6,6 +6,7 @@ class WishListState extends Equatable {
   final WishListSortOrder sortOrder;
   final String searchQuery;
   final WishListSettingsEntity settings;
+  final String? message;
 
   const WishListState({
     required this.wishLists,
@@ -13,16 +14,12 @@ class WishListState extends Equatable {
     required this.sortOrder,
     required this.searchQuery,
     required this.settings,
+    this.message,
   });
 
   @override
-  List<Object> get props => [
-        wishLists,
-        status,
-        sortOrder,
-        searchQuery,
-        settings,
-      ];
+  List<Object> get props =>
+      [wishLists, status, sortOrder, searchQuery, settings, message ?? ''];
 
   WishListState copyWith({
     WishListCollectionEntity? wishLists,
@@ -30,6 +27,7 @@ class WishListState extends Equatable {
     WishListSortOrder? sortOrder,
     String? searchQuery,
     WishListSettingsEntity? settings,
+    String? message
   }) {
     return WishListState(
       wishLists: wishLists ?? this.wishLists,
@@ -37,6 +35,7 @@ class WishListState extends Equatable {
       sortOrder: sortOrder ?? this.sortOrder,
       searchQuery: searchQuery ?? this.searchQuery,
       settings: settings ?? this.settings,
+      message: message ?? this.message,
     );
   }
 }

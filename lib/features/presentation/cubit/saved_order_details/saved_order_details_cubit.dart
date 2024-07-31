@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
@@ -61,8 +62,25 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
     emit(state.copyWith(status: OrderStatus.addToCartLoading));
 
     final result = await _savedOrderUsecase.placeOrder(cart: state.cart);
+    String message = '';
 
-    emit(state.copyWith(status: result));
+    switch(result) {
+      case OrderStatus.addToCartSuccess:
+        message = await _savedOrderUsecase.getSiteMessage(
+            SiteMessageConstants.nameAddToCartSuccess,
+            SiteMessageConstants.defaultValueAddToCartSuccess);
+      case OrderStatus.addToCartFailure:
+        message = await _savedOrderUsecase.getSiteMessage(
+            SiteMessageConstants.nameAddToCartFail,
+            SiteMessageConstants.defaultValueAddToCartFail);
+      case OrderStatus.deleteCartFailure:
+        message = await _savedOrderUsecase.getSiteMessage(
+            SiteMessageConstants.nameDeleteCart,
+            SiteMessageConstants.defaultValueDeleteCartFail);
+      default:
+    }
+
+    emit(state.copyWith(status: result, errorMessage: message));
   }
 
   Future<void> deleteSavedOrders() async {
@@ -74,7 +92,10 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
     if (result) {
       emit(state.copyWith(status: OrderStatus.deleteCartSuccess));
     } else {
-      emit(state.copyWith(status: OrderStatus.deleteCartFailure));
+      final message = await _savedOrderUsecase.getSiteMessage(
+          SiteMessageConstants.nameDeleteCart,
+          SiteMessageConstants.defaultValueDeleteCartFail);
+      emit(state.copyWith(status: OrderStatus.deleteCartFailure, errorMessage: message));
     }
   }
 

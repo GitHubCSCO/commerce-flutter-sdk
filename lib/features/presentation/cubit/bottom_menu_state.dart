@@ -8,4 +8,10 @@ class BottomMenuWebsiteUrlLoaded extends BottomMenuState {
 
   BottomMenuWebsiteUrlLoaded(this.url);
 }
-class BottomMenuWebsiteUrlFailed extends BottomMenuState {}
+class BottomMenuWebsiteUrlFailed extends BottomMenuState {
+
+  final String message;
+
+  BottomMenuWebsiteUrlFailed(this.message);
+
+}

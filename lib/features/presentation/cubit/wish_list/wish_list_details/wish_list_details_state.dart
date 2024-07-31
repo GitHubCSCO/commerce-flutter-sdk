@@ -7,6 +7,7 @@ class WishListDetailsState extends Equatable {
   final WishListLineSortOrder sortOrder;
   final String searchQuery;
   final WishListSettingsEntity settings;
+  final String? message;
 
   const WishListDetailsState({
     required this.wishList,
@@ -15,6 +16,7 @@ class WishListDetailsState extends Equatable {
     required this.sortOrder,
     required this.searchQuery,
     required this.settings,
+    this.message
   });
 
   @override
@@ -25,6 +27,7 @@ class WishListDetailsState extends Equatable {
         sortOrder,
         searchQuery,
         settings,
+        message ?? ''
       ];
 
   WishListDetailsState copyWith({
@@ -34,6 +37,7 @@ class WishListDetailsState extends Equatable {
     WishListLineSortOrder? sortOrder,
     String? searchQuery,
     WishListSettingsEntity? settings,
+    String? message
   }) {
     return WishListDetailsState(
       wishList: wishList ?? this.wishList,
@@ -42,6 +46,7 @@ class WishListDetailsState extends Equatable {
       sortOrder: sortOrder ?? this.sortOrder,
       searchQuery: searchQuery ?? this.searchQuery,
       settings: settings ?? this.settings,
+      message: message ?? this.message,
     );
   }
 }

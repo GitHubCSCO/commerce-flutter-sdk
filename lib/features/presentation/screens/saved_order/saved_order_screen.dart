@@ -2,7 +2,6 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
@@ -64,8 +63,7 @@ class SavedOrderPage extends StatelessWidget {
               case OrderStatus.failure:
                 return Center(
                   child: Text(
-                    SiteMessageConstants
-                        .defaultMobileAppAlertCommunicationError,
+                    state.errorMessage ?? '',
                   ),
                 );
 

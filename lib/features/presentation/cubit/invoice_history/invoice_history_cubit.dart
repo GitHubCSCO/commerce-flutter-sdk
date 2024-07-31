@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/enums/invoice_sort_order.dart';
 import 'package:commerce_flutter_app/features/domain/enums/invoice_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/invoice_usecase/invoice_usecase.dart';
@@ -55,15 +56,23 @@ class InvoiceHistoryCubit extends Cubit<InvoiceHistoryState> {
     );
 
     if (result == null) {
-      emit(state.copyWith(status: InvoiceStatus.failure));
+      final message = await _invoiceUseCase.getSiteMessage(
+          SiteMessageConstants.nameMobileAppAlertCommunicationError,
+          SiteMessageConstants.defaultMobileAppAlertCommunicationError);
+      emit(state.copyWith(status: InvoiceStatus.failure, errorMessage: message));
       return;
     }
+
+    final message = await _invoiceUseCase.getSiteMessage(
+        SiteMessageConstants.nameInvoiceNoResultsMessage,
+        SiteMessageConstants.defaultInvoiceNoResultsMessage);
 
     emit(
       state.copyWith(
         status: InvoiceStatus.success,
         invoiceCollectionModel: result,
         invoiceQueryParameters: newQueryParameters,
+        errorMessage: (result.invoices ?? []).isEmpty ? message : ''
       ),
     );
   }

@@ -744,7 +744,7 @@ class AddCreditCardPage extends StatelessWidget {
                 child: Text(
                   SiteMessageConstants
                       .defaultValueCreditCardInfoExpirationMonthRequired,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.red, // Change the color if needed
                   ),
                 )),
@@ -797,14 +797,15 @@ class AddCreditCardPage extends StatelessWidget {
                 child: Text(
                   SiteMessageConstants
                       .defaultValueCreditCardInfoExpirationYearRequired,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.red, // Change the color if needed
                   ),
                 )),
           ],
         );
-      } else
+      } else {
         return Container();
+      }
     });
   }
 

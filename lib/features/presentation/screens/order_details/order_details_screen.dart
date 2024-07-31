@@ -1,6 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
@@ -60,25 +59,17 @@ class OrderDetailsPage extends StatelessWidget {
           if (state.orderStatus == OrderStatus.reorderSuccess) {
             Navigator.of(context, rootNavigator: true).pop();
             context.read<CartCountCubit>().onCartItemChange();
-            final message = await context
-                .read<OrderDetailsCubit>()
-                .getSiteMessage(SiteMessageConstants.nameAddToCartSuccess,
-                    SiteMessageConstants.defaultValueAddToCartSuccess);
             CustomSnackBar.showSnackBarMessage(
               context,
-              message,
+              state.errorMessage ?? '',
             );
           }
 
           if (state.orderStatus == OrderStatus.reorderFailure) {
             Navigator.of(context, rootNavigator: true).pop();
-            final message = await context
-                .read<OrderDetailsCubit>()
-                .getSiteMessage(SiteMessageConstants.nameAddToCartFail,
-                    SiteMessageConstants.defaultValueAddToCartFail);
             CustomSnackBar.showSnackBarMessage(
               context,
-              message,
+              state.errorMessage ?? '',
             );
           }
         },
