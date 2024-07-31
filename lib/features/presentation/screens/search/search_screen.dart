@@ -52,7 +52,7 @@ class SearchScreen extends StatelessWidget {
   }
 }
 
-class SearchPage extends BaseDynamicContentScreen {
+class SearchPage extends StatelessWidget with BaseDynamicContentScreen {
   SearchPage({super.key});
 
   final textEditingController = TextEditingController();
@@ -177,7 +177,8 @@ class SearchPage extends BaseDynamicContentScreen {
                       extra: state.brand,
                     );
                   } else if (state is AutoCompleteProductListState) {
-                    AppRoute.product.navigateBackStack(context, extra: state.pageEntity);
+                    AppRoute.product
+                        .navigateBackStack(context, extra: state.pageEntity);
                   }
                 },
               ),
@@ -230,7 +231,8 @@ class SearchPage extends BaseDynamicContentScreen {
                                     SliverFillRemaining(
                                       child: Center(
                                         child: Text(LocalizationConstants
-                                            .errorLoadingSearchLanding.localized()),
+                                            .errorLoadingSearchLanding
+                                            .localized()),
                                       ),
                                     ),
                                   ],
@@ -279,12 +281,14 @@ class SearchPage extends BaseDynamicContentScreen {
                       );
                     case SearchProductsFailureState:
                       return Center(
-                          child: Text(LocalizationConstants.searchNoResults.localized(),
+                          child: Text(
+                              LocalizationConstants.searchNoResults.localized(),
                               style: OptiTextStyles.body));
                     default:
                       return Center(
-                          child: Text(
-                              LocalizationConstants.errorLoadingSearchLanding.localized()));
+                          child: Text(LocalizationConstants
+                              .errorLoadingSearchLanding
+                              .localized()));
                   }
                 }),
           ),
@@ -305,7 +309,8 @@ class SearchPage extends BaseDynamicContentScreen {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
                 child: Text(
                   LocalizationConstants.categories.localized(),
                   style: OptiTextStyles.titleSmall,
@@ -324,7 +329,8 @@ class SearchPage extends BaseDynamicContentScreen {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
                 child: Text(
                   LocalizationConstants.brands.localized(),
                   style: OptiTextStyles.titleSmall,
@@ -347,18 +353,20 @@ class SearchPage extends BaseDynamicContentScreen {
     );
   }
 
-  void handleAutoCompleteCategoryCallback(BuildContext context, AutocompleteCategory category) {
+  void handleAutoCompleteCategoryCallback(
+      BuildContext context, AutocompleteCategory category) {
     context.read<SearchBloc>().add(AutoCompleteCategoryEvent(category));
   }
 
-  void handleAutoCompleteBrandCallback(BuildContext context, AutocompleteBrand brand) {
+  void handleAutoCompleteBrandCallback(
+      BuildContext context, AutocompleteBrand brand) {
     context.read<SearchBloc>().add(AutoCompleteBrandEvent(brand));
   }
 
-  void handleAutoCompleteCallback(BuildContext context, AutocompleteProduct product) {
+  void handleAutoCompleteCallback(
+      BuildContext context, AutocompleteProduct product) {
     AppRoute.productDetails.navigateBackStack(context,
         pathParameters: {"productId": product.id.toString()},
         extra: ProductEntity());
   }
-
 }

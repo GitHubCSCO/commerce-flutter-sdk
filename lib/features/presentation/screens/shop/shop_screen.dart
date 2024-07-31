@@ -35,8 +35,7 @@ class ShopScreen extends StatelessWidget {
   }
 }
 
-class ShopPage extends BaseDynamicContentScreen {
-
+class ShopPage extends StatelessWidget with BaseDynamicContentScreen {
   final websitePath = WebsitePaths.shopWebsitePath;
 
   const ShopPage({super.key});
@@ -113,7 +112,8 @@ class ShopPage extends BaseDynamicContentScreen {
                     slivers: <Widget>[
                       SliverFillRemaining(
                         child: Center(
-                          child: Text(LocalizationConstants.errorLoadingShop.localized()),
+                          child: Text(LocalizationConstants.errorLoadingShop
+                              .localized()),
                         ),
                       ),
                     ],

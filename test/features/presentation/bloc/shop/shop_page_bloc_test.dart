@@ -11,32 +11,31 @@ import '../../../../sdk/usecases/mock_usecases.dart';
 class MockAnalyticsEvent extends Mock implements AnalyticsEvent {}
 
 void main() {
+  late ShopUseCase mockShopUseCase;
+  late ShopPageBloc sut;
+
+  setUp(() {
+    mockShopUseCase = MockShopUseCase();
+    sut = ShopPageBloc(shopUseCase: mockShopUseCase);
+  });
+
+  setUpAll(() {
+    registerFallbackValue(MockAnalyticsEvent());
+  });
+
+  tearDown(() {
+    sut.close();
+  });
   group('ShopPageBloc', () {
-    late ShopUseCase shopUseCase;
-    late ShopPageBloc shopPageBloc;
-
-    setUp(() {
-      shopUseCase = MockShopUseCase();
-      shopPageBloc = ShopPageBloc(shopUseCase: shopUseCase);
-    });
-
-    setUpAll(() {
-      registerFallbackValue(MockAnalyticsEvent());
-    });
-
-    tearDown(() {
-      shopPageBloc.close();
-    });
-
     blocTest<ShopPageBloc, ShopPageState>(
       'emits [ShopPageLoadingState, ShopPageLoadedState] when ShopPageLoadEvent is added and loadData succeeds',
-      build: () => shopPageBloc,
+      build: () => sut,
       act: (bloc) async {
-        when(() => shopUseCase.trackEvent(any())).thenAnswer((_) async {});
-        when(() => shopUseCase.loadData())
+        when(() => mockShopUseCase.trackEvent(any())).thenAnswer((_) async {});
+        when(() => mockShopUseCase.loadData())
             .thenAnswer((_) async => const Success([]));
         bloc.add(const ShopPageLoadEvent());
-        await untilCalled(() => shopUseCase.loadData());
+        await untilCalled(() => mockShopUseCase.loadData());
       },
       expect: () => [
         isA<ShopPageLoadingState>(),
@@ -47,14 +46,14 @@ void main() {
     blocTest<ShopPageBloc, ShopPageState>(
       'emits [ShopPageLoadingState, ShopPageFailureState] when ShopPageLoadEvent is added and loadData fails',
       build: () {
-        when(() => shopUseCase.trackEvent(any())).thenAnswer((_) async {});
-        when(() => shopUseCase.loadData()).thenAnswer(
+        when(() => mockShopUseCase.trackEvent(any())).thenAnswer((_) async {});
+        when(() => mockShopUseCase.loadData()).thenAnswer(
             (_) async => Failure(ErrorResponse(errorDescription: 'Error')));
-        return shopPageBloc;
+        return sut;
       },
       act: (bloc) async {
         bloc.add(const ShopPageLoadEvent());
-        await untilCalled(() => shopUseCase.loadData());
+        await untilCalled(() => mockShopUseCase.loadData());
       },
       expect: () => [
         isA<ShopPageLoadingState>(),
