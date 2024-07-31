@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/date_time_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
@@ -12,6 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_even
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_state.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_filter_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_item_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/tab_switch_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,6 +51,14 @@ class QuotePageState extends State<QuotePage> {
         backgroundColor: OptiAppColors.backgroundWhite,
         title: Text(LocalizationConstants.quotes.localized()),
         centerTitle: false,
+        actions: [
+          BottomMenuWidget(
+            websitePath:
+                context.watch<QuoteBloc>().pageType == QuotePageType.pending
+                    ? WebsitePaths.myQuotesWebsitePath
+                    : WebsitePaths.jobQuotesWebsitePath,
+          ),
+        ],
       ),
       body: Column(
         children: [

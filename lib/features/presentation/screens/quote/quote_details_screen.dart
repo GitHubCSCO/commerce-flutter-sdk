@@ -1,7 +1,9 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/date_time_extension.dart';
+import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
@@ -45,8 +47,15 @@ class QuoteDetailsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        centerTitle: false,
         title:
-            Text(context.read<QuoteDetailsBloc>().quoteDto?.quoteNumber ?? ""),
+            Text(context.watch<QuoteDetailsBloc>().quoteDto?.orderNumber ?? ''),
+        actions: [
+          BottomMenuWidget(
+            websitePath: WebsitePaths.myQuoteDetailsWebsitePath
+                .format([context.watch<QuoteDetailsBloc>().quoteDto?.id ?? '']),
+          ),
+        ],
       ),
       body: BlocConsumer<QuoteDetailsBloc, QuoteDetailsState>(
           buildWhen: (previous, current) {

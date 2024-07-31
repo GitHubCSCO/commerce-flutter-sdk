@@ -8,6 +8,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
   final QuoteUsecase _quoteUsecase;
+  QuotePageType pageType = QuotePageType.pending;
 
   QuoteQueryParameters parameter = QuoteQueryParameters(
     pageSize: 16,
@@ -25,6 +26,7 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
     emit(QuoteLoading());
 
     parameter = event.quoteParameters ?? parameter;
+    pageType = event.quotePageType;
 
     switch (event.quotePageType) {
       case QuotePageType.pending:
