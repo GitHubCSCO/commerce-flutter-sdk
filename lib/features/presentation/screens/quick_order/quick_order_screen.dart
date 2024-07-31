@@ -188,8 +188,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                 );
                                 CustomSnackBar.showSnackBarMessage(
                                     context,
-                                    SiteMessageConstants
-                                        .defaultValueQuickOrderInstructions);
+                                    state.message ?? '');
                                 
                               } else if (state is OrderListAddToListFailedState) {
                                 _showAlert(
