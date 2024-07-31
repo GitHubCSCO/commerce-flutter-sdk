@@ -56,3 +56,5 @@ class PastExpirationDateState extends QuoteDetailsState {
   final String message;
   PastExpirationDateState({required this.message});
 }
+
+class SubmitButtonLoadingState extends QuoteDetailsState {}

@@ -97,6 +97,7 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
 
   Future<void> _onAcceptQuoteEvent(
       AcceptQuoteEvent event, Emitter<QuoteDetailsState> emit) async {
+    emit(SubmitButtonLoadingState());
     var isUserAuthenticatedResponse =
         await _quoteDetailsUsecase.isAuthenticatedAsync();
 
@@ -139,6 +140,7 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
 
   Future<void> _onSubmitQuoteEvent(
       SubmitQuoteEvent event, Emitter<QuoteDetailsState> emit) async {
+    emit(SubmitButtonLoadingState());
     var quoteDto = event.quoteDto;
 
     if (isSalesPerson) {

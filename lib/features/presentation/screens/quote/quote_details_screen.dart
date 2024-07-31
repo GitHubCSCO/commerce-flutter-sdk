@@ -45,7 +45,8 @@ class QuoteDetailsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(""),
+        title:
+            Text(context.read<QuoteDetailsBloc>().quoteDto?.quoteNumber ?? ""),
       ),
       body: BlocConsumer<QuoteDetailsBloc, QuoteDetailsState>(
           buildWhen: (previous, current) {
@@ -117,33 +118,48 @@ class QuoteDetailsPage extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-                child: Visibility(
-                  visible:
-                      context.read<QuoteDetailsBloc>().canBeSubmittedOrDeleted,
-                  child: PrimaryButton(
-                    onPressed: () {
-                      if (context.read<QuoteDetailsBloc>().isQuoteProposed) {
-                        context
-                            .read<QuoteDetailsBloc>()
-                            .add(AcceptQuoteEvent());
-                      } else if (context
+              BlocBuilder<QuoteDetailsBloc, QuoteDetailsState>(
+                  builder: (_, state) {
+                if (state is SubmitButtonLoadingState) {
+                  return Padding(
+                    padding: const EdgeInsets.all(30.0),
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                } else {
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+                    child: Visibility(
+                      visible: context
                           .read<QuoteDetailsBloc>()
-                          .isSalesPerson) {
-                        QuoteDto? quoteDto =
-                            context.read<QuoteDetailsBloc>().quoteDto;
-                        if (quoteDto != null) {
-                          context
+                          .canBeSubmittedOrDeleted,
+                      child: PrimaryButton(
+                        onPressed: () {
+                          if (context
                               .read<QuoteDetailsBloc>()
-                              .add(SubmitQuoteEvent(quoteDto: quoteDto));
-                        }
-                      }
-                    },
-                    text: context.read<QuoteDetailsBloc>().getSubmitTitle,
-                  ),
-                ),
-              ),
+                              .isQuoteProposed) {
+                            context
+                                .read<QuoteDetailsBloc>()
+                                .add(AcceptQuoteEvent());
+                          } else if (context
+                              .read<QuoteDetailsBloc>()
+                              .isSalesPerson) {
+                            QuoteDto? quoteDto =
+                                context.read<QuoteDetailsBloc>().quoteDto;
+                            if (quoteDto != null) {
+                              context
+                                  .read<QuoteDetailsBloc>()
+                                  .add(SubmitQuoteEvent(quoteDto: quoteDto));
+                            }
+                          }
+                        },
+                        text: context.read<QuoteDetailsBloc>().getSubmitTitle,
+                      ),
+                    ),
+                  );
+                }
+              })
             ],
           );
         } else {
