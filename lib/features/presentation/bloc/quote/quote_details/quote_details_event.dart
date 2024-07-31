@@ -14,6 +14,10 @@ class DeleteQuoteEvent extends QuoteDetailsEvent {
   DeleteQuoteEvent({required this.quoteId});
 }
 
+class DeclineQuoteEvent extends QuoteDetailsEvent {
+  DeclineQuoteEvent();
+}
+
 class SubmitQuoteEvent extends QuoteDetailsEvent {
   final QuoteDto quoteDto;
   SubmitQuoteEvent({required this.quoteDto});

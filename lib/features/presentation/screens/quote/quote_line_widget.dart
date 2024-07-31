@@ -22,6 +22,7 @@ class QuoteLineWidget extends StatelessWidget {
   final bool? showViewBreakPricing;
   final bool? showQuantityAndSubtotalField;
   final Widget? moreButtonWidget;
+  final bool? canEditQuantity;
   final void Function()? onShowMoreButtonClickedCallback;
   final void Function(int quantity) onCartQuantityChangedCallback;
   final void Function(CartLineEntity) onCartLineRemovedCallback;
@@ -34,6 +35,7 @@ class QuoteLineWidget extends StatelessWidget {
       this.showRemoveButton = true,
       this.showViewBreakPricing = false,
       this.showQuantityAndSubtotalField = true,
+      this.canEditQuantity = true,
       this.moreButtonWidget});
 
   @override
@@ -106,6 +108,7 @@ class QuoteLineWidget extends StatelessWidget {
             visible: showQuantityAndSubtotalField!,
             child: LineItemQuantityGroupWidget(
               qtyOrdered: quoteLineEntity.qtyOrdered?.toInt().toString(),
+              canEdit: canEditQuantity!,
               onQtyChanged: (int? qty) {
                 if (qty == null) {
                   return;

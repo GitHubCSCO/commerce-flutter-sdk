@@ -24,6 +24,10 @@ class QuoteDeletionSuccessState extends QuoteDetailsState {}
 
 class QuoteDeletionFailedState extends QuoteDetailsState {}
 
+class QuoteDeclineSuccessState extends QuoteDetailsState {}
+
+class QuoteDeclineFailedState extends QuoteDetailsState {}
+
 class QuoteSubmissionSuccessState extends QuoteDetailsState {}
 
 class QuoteSubmissionFailedState extends QuoteDetailsState {}

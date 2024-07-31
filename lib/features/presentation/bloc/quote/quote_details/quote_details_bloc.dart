@@ -26,12 +26,15 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
   Cart? cart;
   QuoteSettings? quoteSettings;
 
+  String? deleteQuoteConfirmation;
+
   QuoteDetailsBloc({required QuoteDetailsUsecase quoteDetailsUsecase})
       : _quoteDetailsUsecase = quoteDetailsUsecase,
         super(QuoteDetailsInitialState()) {
     on<LoadQuoteDetailsDataEvent>(_onLoadQuoteDetailsDataEvent);
     on<QuoteDetailsInitEvent>(_onLoadQuoteDetailsInitialEvent);
     on<DeleteQuoteEvent>(_onDeleteSalesQuoteEvent);
+    on<DeclineQuoteEvent>(_onDeclineQuoteEvent);
     on<SubmitQuoteEvent>(_onSubmitQuoteEvent);
     on<AcceptQuoteEvent>(_onAcceptQuoteEvent);
     on<ProceedToCheckoutEvent>(_onProceedToCheckoutEvent);
@@ -55,6 +58,10 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
     quoteSettings = quoteSettingsResult is Success
         ? (quoteSettingsResult as Success).value as QuoteSettings
         : null;
+
+    deleteQuoteConfirmation = await _quoteDetailsUsecase.getSiteMessage(
+        SiteMessageConstants.nameDeleteQuoteConfirmation,
+        SiteMessageConstants.defaultDeleteQuoteConfirmation);
 
     emit(QuoteDetailsInitializationSuccessState());
   }
@@ -191,6 +198,28 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
         break;
       case Failure(errorResponse: final errorResponse):
         emit(QuoteDeletionFailedState());
+        break;
+      default:
+    }
+  }
+
+  Future<void> _onDeclineQuoteEvent(
+      DeclineQuoteEvent event, Emitter<QuoteDetailsState> emit) async {
+    quoteDto?.status = "QuoteRejected";
+
+    emit(QuoteDetailsLoadingState());
+
+    var submitQuoteResponse = await _quoteDetailsUsecase.submitQuote(quoteDto!);
+    switch (submitQuoteResponse) {
+      case Success(value: final data):
+        if (data != null) {
+          emit(QuoteDeclineSuccessState());
+        } else {
+          emit(QuoteDeclineFailedState());
+        }
+        break;
+      case Failure(errorResponse: final errorResponse):
+        emit(QuoteDeclineFailedState());
         break;
       default:
     }
@@ -368,5 +397,9 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
 
   bool get isQuoteRequested {
     return compareStatus(QuoteStatus.QuoteRequested);
+  }
+
+  bool get isQuoteCreated {
+    return compareStatus(QuoteStatus.QuoteCreated);
   }
 }

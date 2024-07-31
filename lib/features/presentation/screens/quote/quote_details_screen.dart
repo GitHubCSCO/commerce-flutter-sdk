@@ -75,6 +75,16 @@ class QuoteDetailsPage extends StatelessWidget {
         } else if (state is QuoteSubmissionFailedState) {
           CustomSnackBar.showFailure(context);
           Navigator.of(context).pop();
+        } else if (state is QuoteDeletionSuccessState) {
+          CustomSnackBar.showSuccesss(context);
+          Navigator.of(context).pop();
+        } else if (state is QuoteDeletionFailedState) {
+          CustomSnackBar.showFailure(context);
+        } else if (state is QuoteDeclineSuccessState) {
+          CustomSnackBar.showSuccesss(context);
+          Navigator.of(context).pop();
+        } else if (state is QuoteDeclineFailedState) {
+          CustomSnackBar.showFailure(context);
         }
       }, builder: (_, state) {
         if (state is QuoteDetailsFailedState) {
@@ -246,6 +256,30 @@ class QuoteDetailsPage extends StatelessWidget {
     );
   }
 
+  void displayDialogForDeleteQuote(BuildContext context) {
+    displayDialogWidget(
+      context: context,
+      title: LocalizationConstants.deleteQuote,
+      message: context.read<QuoteDetailsBloc>().deleteQuoteConfirmation,
+      actions: [
+        DialogPlainButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text(LocalizationConstants.cancel),
+        ),
+        DialogPlainButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            context.read<QuoteDetailsBloc>().add(DeleteQuoteEvent(
+                quoteId: context.read<QuoteDetailsBloc>().quoteDto?.id ?? ""));
+          },
+          child: const Text(LocalizationConstants.continueText),
+        ),
+      ],
+    );
+  }
+
   Widget _buildButtonsWidget(BuildContext context, QuoteDto? quoteDto) {
     var acceptedTitle = context.read<QuoteDetailsBloc>().acceptedTitle;
     var declineTitle = context.read<QuoteDetailsBloc>().declineTile;
@@ -261,7 +295,8 @@ class QuoteDetailsPage extends StatelessWidget {
             child: TertiaryBlackButton(
               child: Text(acceptedTitle),
               onPressed: () {
-                if (context.read<QuoteDetailsBloc>().isQuoteRequested &&
+                if ((context.read<QuoteDetailsBloc>().isQuoteRequested ||
+                        context.read<QuoteDetailsBloc>().isQuoteCreated) &&
                     context.read<QuoteDetailsBloc>().isSalesPerson) {
                   AppRoute.quoteAll.navigateBackStack(context,
                       extra: context.read<QuoteDetailsBloc>().quoteDto);
@@ -275,7 +310,11 @@ class QuoteDetailsPage extends StatelessWidget {
             child: TertiaryBlackButton(
               child: Text(declineTitle),
               onPressed: () {
-                
+                if (context.read<QuoteDetailsBloc>().isQuoteProposed) {
+                  context.read<QuoteDetailsBloc>().add(DeclineQuoteEvent());
+                } else {
+                  displayDialogForDeleteQuote(context);
+                }
               },
             ),
           ),

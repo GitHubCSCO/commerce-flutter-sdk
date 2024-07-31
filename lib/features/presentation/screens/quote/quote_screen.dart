@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
@@ -13,6 +15,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_i
 import 'package:commerce_flutter_app/features/presentation/widget/tab_switch_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuoteScreen extends StatelessWidget {
@@ -142,11 +145,12 @@ class QuotePageState extends State<QuotePage> {
         // physics: const NeverScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
         itemCount: quotes?.length ?? 0,
-        itemBuilder: (context, index) {
+        itemBuilder: (_, index) {
           return InkWell(
             onTap: () {
-              AppRoute.quoteDetails
-                  .navigateBackStack(context, extra: quotes[index]);
+              goToQuoteDetails(context, quotes[index]);
+              // AppRoute.quoteDetails
+              //     .navigateBackStack(context, extra: quotes[index]);
             },
             child: QuoteItemWidget(
               typeDisplay: quotes![index].typeDisplay ?? '',
@@ -163,6 +167,21 @@ class QuotePageState extends State<QuotePage> {
         },
       ),
     );
+  }
+
+  void goToQuoteDetails(BuildContext context, QuoteDto quoteDto) async {
+    final result = await context.pushNamed<Bool>(
+      AppRoute.quoteDetails.name,
+      extra: quoteDto,
+    );
+    if (!context.mounted) {
+      return;
+    }
+
+    if (result != null) {
+      context.read<QuoteBloc>().add(QuoteLoadEvent(
+          quotePageType: QuotePageType.pending, quoteParameters: null));
+    }
   }
 
   Widget _buildActiveJobsWidget(

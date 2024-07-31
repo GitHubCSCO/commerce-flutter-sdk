@@ -25,10 +25,13 @@ class QuoteAllCubit extends Cubit<QuoteAllState> {
     var titleMsg = titleMsgResponse is Success
         ? (titleMsgResponse as Success).value
         : SiteMessageConstants.defaultValueRfqQuoteOrderHeader;
+
+    selectedCalculationMethod = quoteDto.calculationMethods?.first;
     emit(QuoteAllLoadedState(quoteDto: quoteDto, titleMsg: titleMsg));
   }
 
   Future<void> quoteAll() async {
+    emit(QuoteAllLoadingState());
     var quoteAllQueryParameters = QuoteAllQueryParameters(
         calculationMethod: selectedCalculationMethod!.value,
         percent: quantity,

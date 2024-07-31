@@ -47,12 +47,10 @@ class QuoteAllPage extends StatelessWidget {
         ],
       ),
       body: BlocConsumer<QuoteAllCubit, QuoteAllState>(
-        listener: (context, state) {
+        listener: (_, state) {
           if (state is QuoteAllValidationState) {
             context.read<QuoteAllCubit>().quoteAll();
-          }
-
-          if (state is QuoteAllAppliedSuccessState) {
+          } else if (state is QuoteAllAppliedSuccessState) {
             CustomSnackBar.showSuccesss(context);
             Navigator.pop(context);
           }
