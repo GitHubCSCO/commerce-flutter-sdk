@@ -84,6 +84,10 @@ class QuotePricingPage extends StatelessWidget {
               child:
                   Column(mainAxisAlignment: MainAxisAlignment.start, children: [
                 QuoteLineWidget(
+                    hidePricingEnable:
+                        state.quoteLineEntity.hidePricingEnable ?? false,
+                    hideInventoryEnable:
+                        state.quoteLineEntity.hideInventoryEnable ?? false,
                     quoteLineEntity: state.quoteLineEntity,
                     showRemoveButton: false,
                     showViewBreakPricing: false,

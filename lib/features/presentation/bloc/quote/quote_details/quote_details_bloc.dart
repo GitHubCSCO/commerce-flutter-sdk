@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/constants/site_message_constants.dart'
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/quote_line_mapper.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_details_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_details/quote_details_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_details/quote_details_state.dart';
@@ -20,6 +21,7 @@ enum QuoteStatus {
 
 class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
   final QuoteDetailsUsecase _quoteDetailsUsecase;
+  final PricingInventoryUseCase _pricingInventoryUseCase;
   ProductSettings? productSettings;
   Session? session;
   QuoteDto? quoteDto;
@@ -28,8 +30,11 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
 
   String? deleteQuoteConfirmation;
 
-  QuoteDetailsBloc({required QuoteDetailsUsecase quoteDetailsUsecase})
+  QuoteDetailsBloc(
+      {required QuoteDetailsUsecase quoteDetailsUsecase,
+      required PricingInventoryUseCase pricingInventoryUseCase})
       : _quoteDetailsUsecase = quoteDetailsUsecase,
+        _pricingInventoryUseCase = pricingInventoryUseCase,
         super(QuoteDetailsInitialState()) {
     on<LoadQuoteDetailsDataEvent>(_onLoadQuoteDetailsDataEvent);
     on<QuoteDetailsInitEvent>(_onLoadQuoteDetailsInitialEvent);
@@ -227,6 +232,8 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
 
   List<QuoteLineEntity> getQuoteLineEntities(QuoteDto quote) {
     List<QuoteLineEntity> quoteLineEntities = [];
+    var hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
+    var hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
     for (var quoteLine in quote.quoteLineCollection ?? []) {
       var quoteLineEntity = QuoteLineEntityMapper.toEntity(quoteLine);
       var shouldShowWarehouseInventoryButton =
@@ -234,6 +241,8 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
                   productSettings) &&
               quoteLine.availability.messageType != 0;
       quoteLineEntity = quoteLineEntity.copyWith(
+          hidePricingEnable: hidePricingEnable,
+          hideInventoryEnable: hideInventoryEnable,
           showInventoryAvailability: shouldShowWarehouseInventoryButton,
           quoteStatus: quote.status,
           isJobQuote: quote.isJobQuote,

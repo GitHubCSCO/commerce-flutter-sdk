@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_pricing_break_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/quote_line_mapper.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_pricing_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_pricing/quote_pricing_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_pricing/quote_pricing_state.dart';
@@ -11,11 +12,15 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
   final QuotePricingUsecase _quotePricingUsecase;
+  final PricingInventoryUseCase _pricingInventoryUseCase;
   QuoteLineEntity? quoteLine;
   List<QuoteLinePricingBreakItemEntity> quoteLinePricingBreakItemEntities = [];
 
-  QuotePricingBloc({required QuotePricingUsecase quotePricingUsecase})
+  QuotePricingBloc(
+      {required QuotePricingUsecase quotePricingUsecase,
+      required PricingInventoryUseCase pricingInventoryUseCase})
       : _quotePricingUsecase = quotePricingUsecase,
+        _pricingInventoryUseCase = pricingInventoryUseCase,
         super(QuotePricingInitialState()) {
     on<LoadQuotePricingEvent>(_onQuoteLinePricingLoadEvent);
     on<AddQuotePriceBreakEvent>(_onAddPriceBreakEvent);
@@ -27,6 +32,19 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
     on<ResetQuotePriceBreakEvent>(_onResetQuoteLinePricing);
   }
 
+  QuoteLineEntity updateQuoteLineForHidePricingAndInventory(
+      QuoteLineEntity quoteLineEntity) {
+    var hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
+    var hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
+
+    quoteLineEntity = quoteLineEntity.copyWith(
+      hideInventoryEnable: hideInventoryEnable,
+      hidePricingEnable: hidePricingEnable,
+    );
+
+    return quoteLineEntity;
+  }
+
   Future<void> _onQuoteLinePricingLoadEvent(
       LoadQuotePricingEvent event, Emitter<QuotePricingState> emit) async {
     emit(QuotePricingLoadingState());
@@ -34,7 +52,8 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
     quoteLinePricingBreakItemEntities =
         getQuoteLinePricingBreakItemEntities(event.quoteLineEntity);
     emit(QuotePricingLoadedState(
-        quoteLineEntity: event.quoteLineEntity,
+        quoteLineEntity:
+            updateQuoteLineForHidePricingAndInventory(event.quoteLineEntity),
         quoteLinePricingBreakItemEntities: quoteLinePricingBreakItemEntities));
   }
 
@@ -84,7 +103,7 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
     quoteLinePricingBreakItemEntities =
         getQuoteLinePricingBreakItemEntities(quoteLine!);
     emit(QuotePricingLoadedState(
-        quoteLineEntity: quoteLine!,
+        quoteLineEntity: updateQuoteLineForHidePricingAndInventory(quoteLine!),
         quoteLinePricingBreakItemEntities: quoteLinePricingBreakItemEntities));
   }
 
@@ -176,7 +195,7 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
     }
     updatePriceBreakRule();
     emit(QuotePricingLoadedState(
-        quoteLineEntity: quoteLine!,
+        quoteLineEntity: updateQuoteLineForHidePricingAndInventory(quoteLine!),
         quoteLinePricingBreakItemEntities: quoteLinePricingBreakItemEntities));
   }
 
@@ -191,7 +210,7 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
             quoteLinePricingBreakItemEntities[index].startQuantity);
 
     emit(QuotePricingLoadedState(
-        quoteLineEntity: quoteLine!,
+        quoteLineEntity: updateQuoteLineForHidePricingAndInventory(quoteLine!),
         quoteLinePricingBreakItemEntities: quoteLinePricingBreakItemEntities));
   }
 
@@ -204,7 +223,7 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
         endQuantityDisplay(
             quoteLinePricingBreakItemEntities[index].endQuantity);
     emit(QuotePricingLoadedState(
-        quoteLineEntity: quoteLine!,
+        quoteLineEntity: updateQuoteLineForHidePricingAndInventory(quoteLine!),
         quoteLinePricingBreakItemEntities: quoteLinePricingBreakItemEntities));
   }
 
@@ -216,7 +235,7 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
     quoteLinePricingBreakItemEntities[index].priceDisplay =
         priceDisplay(quoteLinePricingBreakItemEntities[index].price);
     emit(QuotePricingLoadedState(
-        quoteLineEntity: quoteLine!,
+        quoteLineEntity: updateQuoteLineForHidePricingAndInventory(quoteLine!),
         quoteLinePricingBreakItemEntities: quoteLinePricingBreakItemEntities));
   }
 
@@ -227,7 +246,7 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
         .removeWhere((element) => element.id == event.id);
     updatePriceBreakRule();
     emit(QuotePricingLoadedState(
-        quoteLineEntity: quoteLine!,
+        quoteLineEntity: updateQuoteLineForHidePricingAndInventory(quoteLine!),
         quoteLinePricingBreakItemEntities: quoteLinePricingBreakItemEntities));
   }
 

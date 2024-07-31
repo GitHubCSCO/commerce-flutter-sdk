@@ -383,7 +383,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => RequestQuoteSelectionBloc())
 
     //quote details
-    ..registerFactory(() => QuoteDetailsBloc(quoteDetailsUsecase: sl()))
+    ..registerFactory(() => QuoteDetailsBloc(quoteDetailsUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => QuoteDetailsUsecase())
 
     // job quote details
@@ -399,12 +399,12 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => QuoteAllUsecase())
 
     // quote pricing
-    ..registerFactory(() => QuotePricingBloc(quotePricingUsecase: sl()))
+    ..registerFactory(() => QuotePricingBloc(quotePricingUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => QuotePricingUsecase())
 
     // quote confirmation
     ..registerFactory(
-        () => QuoteConfirmationCubit(quoteConfirmationUsecase: sl()))
+        () => QuoteConfirmationCubit(quoteConfirmationUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => QuoteConfirmationUsecase())
 
     //shop category

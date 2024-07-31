@@ -21,6 +21,8 @@ class QuoteLineEntity extends CartLineEntity {
   final bool? isJobQuote;
   final String? quoteStatus;
   final String? quoteId;
+  final bool? hidePricingEnable;
+  final bool? hideInventoryEnable;
   final List<QuoteLinePricingEntity>? quoteLinePricingBreakList;
 
   const QuoteLineEntity(
@@ -73,6 +75,8 @@ class QuoteLineEntity extends CartLineEntity {
       this.quoteId,
       this.pricingRfq,
       this.maxQty,
+      this.hideInventoryEnable,
+      this.hidePricingEnable,
       this.quoteLinePricingBreakList})
       : super();
   @override
@@ -129,64 +133,67 @@ class QuoteLineEntity extends CartLineEntity {
       bool? isJobQuote,
       String? quoteStatus,
       String? quoteId,
-      List<QuoteLinePricingEntity>? quoteLinePricingBreakList}) {
+      List<QuoteLinePricingEntity>? quoteLinePricingBreakList,
+      bool? hidePricingEnable,
+      bool? hideInventoryEnable}) {
     return QuoteLineEntity(
-      quoteLinePricingBreakList:
-          quoteLinePricingBreakList ?? this.quoteLinePricingBreakList,
-      isJobQuote: isJobQuote ?? this.isJobQuote,
-      quoteStatus: quoteStatus ?? this.quoteStatus,
-      quoteId: quoteId ?? this.quoteId,
-      pricingRfq: pricingRfq ?? this.pricingRfq,
-      maxQty: maxQty ?? this.maxQty,
-      altText: altText ?? this.altText,
-      availability: availability ?? this.availability,
-      baseUnitOfMeasure: baseUnitOfMeasure ?? this.baseUnitOfMeasure,
-      baseUnitOfMeasureDisplay:
-          baseUnitOfMeasureDisplay ?? this.baseUnitOfMeasureDisplay,
-      brand: brand ?? this.brand,
-      breakPrices: breakPrices ?? this.breakPrices,
-      canAddToCart: canAddToCart ?? this.canAddToCart,
-      canBackOrder: canBackOrder ?? this.canBackOrder,
-      costCode: costCode ?? this.costCode,
-      customerName: customerName ?? this.customerName,
-      erpNumber: erpNumber ?? this.erpNumber,
-      hasInsufficientInventory:
-          hasInsufficientInventory ?? this.hasInsufficientInventory,
-      id: id ?? this.id,
-      isActive: isActive ?? this.isActive,
-      isDiscounted: isDiscounted ?? this.isDiscounted,
-      isFixedConfiguration: isFixedConfiguration ?? this.isFixedConfiguration,
-      isPromotionItem: isPromotionItem ?? this.isPromotionItem,
-      isQtyAdjusted: isQtyAdjusted ?? this.isQtyAdjusted,
-      isRestricted: isRestricted ?? this.isRestricted,
-      isSubscription: isSubscription ?? this.isSubscription,
-      line: line ?? this.line,
-      manufacturerItem: manufacturerItem ?? this.manufacturerItem,
-      notes: notes ?? this.notes,
-      pricing: pricing ?? this.pricing,
-      productId: productId ?? this.productId,
-      productName: productName ?? this.productName,
-      productSubscription: productSubscription ?? this.productSubscription,
-      productUri: productUri ?? this.productUri,
-      qtyLeft: qtyLeft ?? this.qtyLeft,
-      qtyOnHand: qtyOnHand ?? this.qtyOnHand,
-      qtyOrdered: qtyOrdered ?? this.qtyOrdered,
-      qtyPerBaseUnitOfMeasure:
-          qtyPerBaseUnitOfMeasure ?? this.qtyPerBaseUnitOfMeasure,
-      quoteRequired: quoteRequired ?? this.quoteRequired,
-      requisitionId: requisitionId ?? this.requisitionId,
-      salePriceLabel: salePriceLabel ?? this.salePriceLabel,
-      sectionOptions: sectionOptions ?? this.sectionOptions,
-      shortDescription: shortDescription ?? this.shortDescription,
-      showInventoryAvailability:
-          showInventoryAvailability ?? this.showInventoryAvailability,
-      smallImagePath: smallImagePath ?? this.smallImagePath,
-      status: status ?? this.status,
-      unitOfMeasure: unitOfMeasure ?? this.unitOfMeasure,
-      unitOfMeasureDescription:
-          unitOfMeasureDescription ?? this.unitOfMeasureDescription,
-      unitOfMeasureDisplay: unitOfMeasureDisplay ?? this.unitOfMeasureDisplay,
-      vmiBinId: vmiBinId ?? this.vmiBinId,
-    );
+        quoteLinePricingBreakList:
+            quoteLinePricingBreakList ?? this.quoteLinePricingBreakList,
+        isJobQuote: isJobQuote ?? this.isJobQuote,
+        quoteStatus: quoteStatus ?? this.quoteStatus,
+        quoteId: quoteId ?? this.quoteId,
+        pricingRfq: pricingRfq ?? this.pricingRfq,
+        maxQty: maxQty ?? this.maxQty,
+        altText: altText ?? this.altText,
+        availability: availability ?? this.availability,
+        baseUnitOfMeasure: baseUnitOfMeasure ?? this.baseUnitOfMeasure,
+        baseUnitOfMeasureDisplay:
+            baseUnitOfMeasureDisplay ?? this.baseUnitOfMeasureDisplay,
+        brand: brand ?? this.brand,
+        breakPrices: breakPrices ?? this.breakPrices,
+        canAddToCart: canAddToCart ?? this.canAddToCart,
+        canBackOrder: canBackOrder ?? this.canBackOrder,
+        costCode: costCode ?? this.costCode,
+        customerName: customerName ?? this.customerName,
+        erpNumber: erpNumber ?? this.erpNumber,
+        hasInsufficientInventory:
+            hasInsufficientInventory ?? this.hasInsufficientInventory,
+        id: id ?? this.id,
+        isActive: isActive ?? this.isActive,
+        isDiscounted: isDiscounted ?? this.isDiscounted,
+        isFixedConfiguration: isFixedConfiguration ?? this.isFixedConfiguration,
+        isPromotionItem: isPromotionItem ?? this.isPromotionItem,
+        isQtyAdjusted: isQtyAdjusted ?? this.isQtyAdjusted,
+        isRestricted: isRestricted ?? this.isRestricted,
+        isSubscription: isSubscription ?? this.isSubscription,
+        line: line ?? this.line,
+        manufacturerItem: manufacturerItem ?? this.manufacturerItem,
+        notes: notes ?? this.notes,
+        pricing: pricing ?? this.pricing,
+        productId: productId ?? this.productId,
+        productName: productName ?? this.productName,
+        productSubscription: productSubscription ?? this.productSubscription,
+        productUri: productUri ?? this.productUri,
+        qtyLeft: qtyLeft ?? this.qtyLeft,
+        qtyOnHand: qtyOnHand ?? this.qtyOnHand,
+        qtyOrdered: qtyOrdered ?? this.qtyOrdered,
+        qtyPerBaseUnitOfMeasure:
+            qtyPerBaseUnitOfMeasure ?? this.qtyPerBaseUnitOfMeasure,
+        quoteRequired: quoteRequired ?? this.quoteRequired,
+        requisitionId: requisitionId ?? this.requisitionId,
+        salePriceLabel: salePriceLabel ?? this.salePriceLabel,
+        sectionOptions: sectionOptions ?? this.sectionOptions,
+        shortDescription: shortDescription ?? this.shortDescription,
+        showInventoryAvailability:
+            showInventoryAvailability ?? this.showInventoryAvailability,
+        smallImagePath: smallImagePath ?? this.smallImagePath,
+        status: status ?? this.status,
+        unitOfMeasure: unitOfMeasure ?? this.unitOfMeasure,
+        unitOfMeasureDescription:
+            unitOfMeasureDescription ?? this.unitOfMeasureDescription,
+        unitOfMeasureDisplay: unitOfMeasureDisplay ?? this.unitOfMeasureDisplay,
+        vmiBinId: vmiBinId ?? this.vmiBinId,
+        hidePricingEnable: hidePricingEnable ?? this.hidePricingEnable,
+        hideInventoryEnable: hideInventoryEnable ?? this.hideInventoryEnable);
   }
 }

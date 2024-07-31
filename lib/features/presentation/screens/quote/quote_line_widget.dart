@@ -1,9 +1,7 @@
-import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/cart_line_extentions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
@@ -23,6 +21,8 @@ class QuoteLineWidget extends StatelessWidget {
   final bool? showQuantityAndSubtotalField;
   final Widget? moreButtonWidget;
   final bool? canEditQuantity;
+  final bool hidePricingEnable;
+  final bool hideInventoryEnable;
   final void Function()? onShowMoreButtonClickedCallback;
   final void Function(int quantity) onCartQuantityChangedCallback;
   final void Function(CartLineEntity) onCartLineRemovedCallback;
@@ -31,6 +31,8 @@ class QuoteLineWidget extends StatelessWidget {
       required this.quoteLineEntity,
       required this.onCartQuantityChangedCallback,
       required this.onCartLineRemovedCallback,
+      required this.hidePricingEnable,
+      required this.hideInventoryEnable,
       this.onShowMoreButtonClickedCallback,
       this.showRemoveButton = true,
       this.showViewBreakPricing = false,
@@ -79,17 +81,20 @@ class QuoteLineWidget extends StatelessWidget {
             productNumber: quoteLineEntity.getProductNumber(),
           ),
           LineItemPricingWidget(
-              discountMessage: quoteLineEntity.pricing?.getDiscountValue(),
-              priceValueText: quoteLineEntity.updatePriceValueText(),
-              unitOfMeasureValueText:
-                  quoteLineEntity.updateUnitOfMeasureValueText(),
-              availabilityText: quoteLineEntity.availability?.message,
-              productId: quoteLineEntity.productId,
-              erpNumber: quoteLineEntity.erpNumber,
-              unitOfMeasure: quoteLineEntity.baseUnitOfMeasure,
-              showViewAvailabilityByWarehouse: false,),
+            hideInventoryEnable: hideInventoryEnable,
+            hidePricingEnable: hidePricingEnable,
+            discountMessage: quoteLineEntity.pricing?.getDiscountValue(),
+            priceValueText: quoteLineEntity.updatePriceValueText(),
+            unitOfMeasureValueText:
+                quoteLineEntity.updateUnitOfMeasureValueText(),
+            availabilityText: quoteLineEntity.availability?.message,
+            productId: quoteLineEntity.productId,
+            erpNumber: quoteLineEntity.erpNumber,
+            unitOfMeasure: quoteLineEntity.baseUnitOfMeasure,
+            showViewAvailabilityByWarehouse: false,
+          ),
           Visibility(
-            visible: showViewBreakPricing!,
+            visible: showViewBreakPricing! && !hidePricingEnable,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20.0, 0, 10, 15),
               child: GestureDetector(
@@ -107,6 +112,7 @@ class QuoteLineWidget extends StatelessWidget {
           Visibility(
             visible: showQuantityAndSubtotalField!,
             child: LineItemQuantityGroupWidget(
+              hidePricingEnable: hidePricingEnable,
               qtyOrdered: quoteLineEntity.qtyOrdered?.toInt().toString(),
               canEdit: canEditQuantity!,
               onQtyChanged: (int? qty) {

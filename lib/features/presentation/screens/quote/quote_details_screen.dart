@@ -338,6 +338,9 @@ class QuoteDetailsPage extends StatelessWidget {
         Column(
           children: quoteLineEntities
               .map((quoteLineEntity) => QuoteLineWidget(
+                  hideInventoryEnable:
+                      quoteLineEntity.hideInventoryEnable ?? false,
+                  hidePricingEnable: quoteLineEntity.hidePricingEnable ?? false,
                   quoteLineEntity: quoteLineEntity,
                   showViewBreakPricing: true,
                   showRemoveButton: false,

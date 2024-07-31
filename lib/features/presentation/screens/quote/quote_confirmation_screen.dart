@@ -41,7 +41,7 @@ class QuoteConfirmationPage extends StatelessWidget {
       body: BlocBuilder<QuoteConfirmationCubit, QuoteConfirmationState>(
           builder: (_, state) {
         if (state is QuoteConfirmationLoadingState) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (state is QuoteConfirmationLoadedState) {
           return SingleChildScrollView(
             child:
@@ -86,6 +86,9 @@ class QuoteConfirmationPage extends StatelessWidget {
         Column(
           children: quoteLineEntities
               .map((quoteLineEntity) => QuoteLineWidget(
+                  hideInventoryEnable:
+                      quoteLineEntity.hideInventoryEnable ?? false,
+                  hidePricingEnable: quoteLineEntity.hidePricingEnable ?? false,
                   quoteLineEntity: quoteLineEntity,
                   showViewBreakPricing: true,
                   showRemoveButton: false,
