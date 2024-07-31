@@ -70,6 +70,13 @@ class CartPage extends StatelessWidget {
       ),
       body: MultiBlocListener(
         listeners: [
+          BlocListener<RootBloc, RootState>(
+            listener: (context, state) async {
+              if (state is RootConfigReload) {
+                _reloadCartPage(context);
+              }
+            },
+          ),
           BlocListener<PullToRefreshBloc, PullToRefreshState>(
             listener: (context, state) {
               if (state is PullToRefreshLoadState) {

@@ -106,9 +106,12 @@ class LocalizationService implements ILocalizationService {
   }
   
   Future<bool> loadTranslationDictionary(Language? language) async {
+    _translationDictionary.clear();
+
     int count = 0;
     int maxLength = _commerceAPIServiceProvider.getTranslationService().getMaxLengthOfTranslationText();
     var sbFieldValue = StringBuffer();
+
     for (var k in LocalizationConstants.values) {
       count++;
       if(sbFieldValue.length + k.keyword.length >= maxLength){
@@ -156,7 +159,7 @@ class LocalizationService implements ILocalizationService {
             if(value.translationDictionaries!=null){
               for (var item in value.translationDictionaries!) {
                 if(item.keyword.isNullOrEmpty == false && item.translation.isNullOrEmpty == false){
-                  _translationDictionary.putIfAbsent(item.keyword!, () => item.translation!);
+                  _translationDictionary.update(item.keyword!, (value) => item.translation!, ifAbsent: () => item.translation!);
                 }
               }
             }

@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/domain/enums/product_list_type.dar
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
@@ -125,6 +126,13 @@ class SearchPage extends StatelessWidget with BaseDynamicContentScreen {
         Expanded(
           child: MultiBlocListener(
             listeners: [
+              BlocListener<RootBloc, RootState>(
+                listener: (context, state) async {
+                  if (state is RootConfigReload) {
+                    _reloadSearchPage(context);
+                  }
+                },
+              ),
               BlocListener<PullToRefreshBloc, PullToRefreshState>(
                 listener: (context, state) {
                   if (state is PullToRefreshLoadState) {
