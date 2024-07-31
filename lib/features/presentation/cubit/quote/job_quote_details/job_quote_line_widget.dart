@@ -169,15 +169,15 @@ class _JobQuoteLineStatisticsWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${LocalizationConstants.jobQty}: $qtyOrdered',
+          '${LocalizationConstants.jobQty.localized()}: $qtyOrdered',
           style: OptiTextStyles.bodySmallHighlight,
         ),
         Text(
-          '${LocalizationConstants.purchasedQty}: $purchasedQty',
+          '${LocalizationConstants.purchasedQty.localized()}: $purchasedQty',
           style: OptiTextStyles.bodySmallHighlight,
         ),
         Text(
-          '${LocalizationConstants.qtyRemaining}: ${qtyOrdered - purchasedQty}',
+          '${LocalizationConstants.qtyRemaining.localized()}: ${qtyOrdered - purchasedQty}',
           style: OptiTextStyles.bodySmallHighlight,
         ),
       ],
