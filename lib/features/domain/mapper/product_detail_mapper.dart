@@ -3,7 +3,8 @@ import 'package:commerce_flutter_app/features/domain/mapper/legacy_configuration
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductDetailEntityMapper {
-  ProductDetailEntity toEntity(ProductDetail? model) => ProductDetailEntity(
+  static ProductDetailEntity toEntity(ProductDetail? model) =>
+      ProductDetailEntity(
         name: model?.name,
         modelNumber: model?.modelNumber,
         sku: model?.sku,
@@ -34,7 +35,7 @@ class ProductDetailEntityMapper {
             .toEntity(model?.configuration ?? LegacyConfiguration()),
       );
 
-  ProductDetail? toModel(ProductDetailEntity entity) => ProductDetail(
+  static ProductDetail? toModel(ProductDetailEntity entity) => ProductDetail(
         name: entity.name,
         modelNumber: entity.modelNumber,
         sku: entity.sku,
