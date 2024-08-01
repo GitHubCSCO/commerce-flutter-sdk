@@ -32,7 +32,7 @@ class BaseUseCase {
     var result = await commerceAPIServiceProvider
         .getWebsiteService()
         .getSiteMessage(messageName, defaultMessage: defaultMessage);
-    return result is Success ? (result as Success).value : defaultMessage;
+    return result ?? defaultMessage ?? '';
   }
 
 }

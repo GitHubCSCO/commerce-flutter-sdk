@@ -233,7 +233,7 @@ class CartPage extends StatelessWidget {
                               fit: BoxFit.fitWidth,
                             ),
                           ),
-                          const Text('There are no items in your cart'),
+                          Text(state.message),
                           Padding(
                             padding: const EdgeInsets.all(24),
                             child: TertiaryButton(
