@@ -155,15 +155,15 @@ final settingsItems = [
   ),
   _SettingsListItemWidget(
     title: LocalizationConstants.languages.localized(),
-    onTap: (BuildContext context) =>
-        AppRoute.language.navigate(context),
+    onTap: (BuildContext context) => AppRoute.language.navigate(context),
     showTrailing: true,
   ),
-  _SettingsListItemWidget(
-    title: LocalizationConstants.adminLogin.localized(),
-    onTap: (BuildContext context) =>
-        CustomSnackBar.showComingSoonSnackBar(context),
-  ),
+  // TODO - Enable this later when we implement admin login
+  // _SettingsListItemWidget(
+  //   title: LocalizationConstants.adminLogin.localized(),
+  //   onTap: (BuildContext context) =>
+  //       CustomSnackBar.showComingSoonSnackBar(context),
+  // ),
 ];
 
 class _SettingsListItemWidget extends StatelessWidget {
