@@ -13,6 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/components/two_texts_
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_details/saved_order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/cart_order_products_section_widget.dart';
@@ -129,6 +130,26 @@ class OrderDetailsPage extends StatelessWidget {
                               .getCartLines(),
                           hidePricingEnable: state.hidePricingEnable,
                           hideInventoryEnable: state.hideInventoryEnable,
+                          onAddToList: ({required cartLineEntity}) {
+                            WishListCallbackHelper.addItemsToWishList(
+                              context,
+                              addToCartCollection: WishListAddToCartCollection(
+                                wishListLines: [
+                                  AddCartLine(
+                                    productId: cartLineEntity.productId,
+                                    qtyOrdered: 1,
+                                    unitOfMeasure: cartLineEntity.unitOfMeasure,
+                                  ),
+                                ],
+                              ),
+                              onAddedToCart: null,
+                            );
+                          },
+                          onAddToCart: ({required cartLineEntity}) {
+                            // context
+                            //     .read<SavedOrderDetailsCubit>()
+                            //     .addToCart(cartLineEntity: cartLineEntity);
+                          },
                         ),
                       ],
                     ),
@@ -142,7 +163,8 @@ class OrderDetailsPage extends StatelessWidget {
                         confirmDialog(
                           context: context,
                           message: LocalizationConstants
-                              .deleteSavedOrderConfirmMessage.localized(),
+                              .deleteSavedOrderConfirmMessage
+                              .localized(),
                           onConfirm: () async {
                             await context
                                 .read<SavedOrderDetailsCubit>()
