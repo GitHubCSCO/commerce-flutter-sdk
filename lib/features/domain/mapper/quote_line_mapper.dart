@@ -1,4 +1,8 @@
+import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
+import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/pricing_rfq_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/brand_mapper.dart';
@@ -79,7 +83,66 @@ class QuoteLineEntityMapper {
                 entity.pricingRfq ?? PricingRfqEntity())
             : null,
         maxQty: entity.maxQty,
-      );
+      )
+        ..altText = entity.altText
+        ..availability = entity.availability != null
+            ? AvailabilityEntityMapper.toModel(
+                entity.availability ?? AvailabilityEntity())
+            : null
+        ..baseUnitOfMeasure = entity.baseUnitOfMeasure
+        ..baseUnitOfMeasureDisplay = entity.baseUnitOfMeasureDisplay
+        ..brand = entity.brand != null
+            ? BrandEntityMapper.toModel(entity.brand ?? BrandEntity())
+            : null
+        ..breakPrices = entity.breakPrices
+            ?.map((breakPrice) => BreakPriceDtoEntityMapper.toModel(breakPrice))
+            .toList()
+        ..canAddToCart = entity.canAddToCart
+        ..canBackOrder = entity.canBackOrder
+        ..costCode = entity.costCode
+        ..customerName = entity.customerName
+        ..erpNumber = entity.erpNumber
+        ..hasInsufficientInventory = entity.hasInsufficientInventory
+        ..id = entity.id
+        ..isActive = entity.isActive
+        ..isDiscounted = entity.isDiscounted
+        ..isFixedConfiguration = entity.isFixedConfiguration
+        ..isPromotionItem = entity.isPromotionItem
+        ..isQtyAdjusted = entity.isQtyAdjusted
+        ..isRestricted = entity.isRestricted
+        ..isSubscription = entity.isSubscription
+        ..line = entity.line
+        ..manufacturerItem = entity.manufacturerItem
+        ..notes = entity.notes
+        ..pricing = entity.pricing != null
+            ? ProductPriceEntityMapper.toModel(
+                entity.pricing ?? ProductPriceEntity())
+            : null
+        ..productId = entity.productId
+        ..productName = entity.productName
+        ..productSubscription = entity.productSubscription != null
+            ? ProductSubscriptionEntityMapper.toModel(
+                entity.productSubscription ?? ProductSubscriptionEntity())
+            : null
+        ..productUri = entity.productUri
+        ..qtyLeft = entity.qtyLeft
+        ..qtyOnHand = entity.qtyOnHand
+        ..qtyOrdered = entity.qtyOrdered
+        ..qtyPerBaseUnitOfMeasure = entity.qtyPerBaseUnitOfMeasure
+        ..quoteRequired = entity.quoteRequired
+        ..requisitionId = entity.requisitionId
+        ..salePriceLabel = entity.salePriceLabel
+        ..sectionOptions = entity.sectionOptions
+            ?.map((sectionOption) =>
+                SectionOptionEntityMapper.toModel(sectionOption))
+            .toList()
+        ..shortDescription = entity.shortDescription
+        ..smallImagePath = entity.smallImagePath
+        ..status = entity.status
+        ..unitOfMeasure = entity.unitOfMeasure
+        ..unitOfMeasureDescription = entity.unitOfMeasureDescription
+        ..unitOfMeasureDisplay = entity.unitOfMeasureDisplay
+        ..vmiBinId = entity.vmiBinId;
 }
 
 class PricingRfqEntityMapper {
