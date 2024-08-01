@@ -167,7 +167,7 @@ class LineItemWidget extends StatelessWidget {
                 width: 30,
                 height: 30,
                 child: SvgPicture.asset(
-                  AssetConstants.wishListLineAddToCartIcon,
+                  AssetConstants.addToWishListIcon,
                   fit: BoxFit.fitWidth,
                 ),
               ),
