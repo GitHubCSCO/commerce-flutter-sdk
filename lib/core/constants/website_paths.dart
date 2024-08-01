@@ -13,6 +13,10 @@ class WebsitePaths {
   static const vmiOrdersPath = 'redirectto/VmiOrdersPage?customerSequence=-1&vmiLocationId=%s';
   static const invoiceHistoryWebsitePath = 'redirectto/InvoicesPage';
   static const invoiceDetailWebsitePath = 'redirectto/InvoiceDetailPage?invoiceNumber=%s';
+  static const myQuotesWebsitePath = 'redirectto/RfqMyQuotesPage';
+  static const jobQuotesWebsitePath = 'redirectto/RfqJobQuotesPage';
+  static const myQuoteDetailsWebsitePath = 'redirectto/RfqQuoteDetailsPage?quoteId=%s';
+  static const jobQuoteDetailsWebsitePath = 'redirectto/RfqJobQuoteDetailsPage?jobQuoteId=%s';
 }
 
 class PrintPaths {

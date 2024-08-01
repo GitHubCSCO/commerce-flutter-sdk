@@ -2,7 +2,7 @@ import 'package:commerce_flutter_app/features/domain/entity/child_trait_value_en
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ChildTraitValueEntityMapper {
-  ChildTraitValueEntity toEntity(ChildTraitValue model) =>
+  static ChildTraitValueEntity toEntity(ChildTraitValue model) =>
       ChildTraitValueEntity(
         id: model.id,
         styleTraitId: model.styleTraitId,
@@ -10,7 +10,8 @@ class ChildTraitValueEntityMapper {
         valueDisplay: model.valueDisplay,
       );
 
-  ChildTraitValue toModel(ChildTraitValueEntity entity) => ChildTraitValue(
+  static ChildTraitValue toModel(ChildTraitValueEntity entity) =>
+      ChildTraitValue(
         id: entity.id,
         styleTraitId: entity.styleTraitId,
         value: entity.value,

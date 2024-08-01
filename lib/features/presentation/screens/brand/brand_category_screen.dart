@@ -100,7 +100,7 @@ class _BrandCategoryPageState extends State<BrandCategoryPage> {
         extra: (brand, brandCategory, null)
       );
     }else{
-      final brandEntity = BrandEntityMapper().toEntity(brand);
+      final brandEntity = BrandEntityMapper.toEntity(brand);
       final productPageEntity = ProductPageEntity(
         '', 
         ProductParentType.brandCategory,

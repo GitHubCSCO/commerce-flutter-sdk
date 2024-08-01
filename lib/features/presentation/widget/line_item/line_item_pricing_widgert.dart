@@ -35,7 +35,7 @@ class LineItemPricingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 5.0),
+      padding: const EdgeInsets.only(bottom: 5.0, left: 20),
       child: Container(
         color: Colors.white,
         child: Column(

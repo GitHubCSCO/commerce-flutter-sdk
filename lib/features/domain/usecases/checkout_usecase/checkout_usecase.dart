@@ -16,7 +16,7 @@ class CheckoutUsecase extends BaseUseCase {
     ]);
     return await commerceAPIServiceProvider
         .getCartService()
-        .getCurrentCart(cartParameters);
+        .getCart(cartId!, cartParameters);
   }
 
   Future<Result<Cart, ErrorResponse>> patchCart(Cart cart) async {
@@ -31,7 +31,9 @@ class CheckoutUsecase extends BaseUseCase {
   }
 
   Session? getCurrentSession() {
-    return commerceAPIServiceProvider.getSessionService().getCachedCurrentSession();
+    return commerceAPIServiceProvider
+        .getSessionService()
+        .getCachedCurrentSession();
   }
 
   Future<Result<CartSettings, ErrorResponse>> getCartSetting() {

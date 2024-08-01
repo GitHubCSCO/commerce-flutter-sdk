@@ -15,6 +15,7 @@ class NumberTextField extends StatefulWidget {
   final EdgeInsets contentPadding;
   final double borderWidth;
   final ValueChanged<int?>? onChanged;
+  final ValueChanged<int?>? onSubmitted;
   final String? initialtText;
   final bool shouldShowIncrementDecermentIcon;
   final void Function(bool hasFocus)? focusListener;
@@ -34,6 +35,7 @@ class NumberTextField extends StatefulWidget {
     this.borderWidth = 2,
     this.onChanged,
     this.focusListener,
+    this.onSubmitted,
   }) : super(key: key);
 
   @override
@@ -56,11 +58,17 @@ class _NumberTextFieldState extends State<NumberTextField> {
     _shouldShowIncrementDecermentIcon =
         widget.shouldShowIncrementDecermentIcon!;
     _updateArrows(int.tryParse(_controller.text));
-
+    _focusNode.addListener(_onFocusChange);
     if (widget.focusListener != null) {
       _focusNode.addListener(() {
         widget.focusListener!(_focusNode.hasFocus);
       });
+    }
+  }
+
+  void _onFocusChange() {
+    if (!_focusNode.hasFocus) {
+      _handleSubmitted(_controller.text);
     }
   }
 
@@ -139,6 +147,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
                 maxLines: 1,
                 onTapOutside: (p0) => context.closeKeyboard(),
                 onSubmitted: (value) {
+                  _handleSubmitted(value);
                   _focusNode.unfocus();
                 },
                 onChanged: (value) {
@@ -178,6 +187,12 @@ class _NumberTextFieldState extends State<NumberTextField> {
             )
         ],
       );
+  void _handleSubmitted(String value) {
+    final intValue = int.tryParse(value);
+    widget.onSubmitted?.call(intValue);
+    _updateArrows(intValue);
+    _updateArrows(intValue);
+  }
 
   void _update(bool up) {
     var intValue = int.tryParse(_controller.text);

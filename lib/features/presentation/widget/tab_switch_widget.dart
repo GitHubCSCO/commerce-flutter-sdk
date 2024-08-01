@@ -3,7 +3,6 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:flutter/material.dart';
 
 class TabSwitchWidget extends StatefulWidget {
-
   final String tabTitle0;
   final String tabTitle1;
   final Widget tabWidget0;
@@ -11,16 +10,17 @@ class TabSwitchWidget extends StatefulWidget {
   final int selectedIndex;
   final void Function(int)? onTabSelectionChange;
 
-  const TabSwitchWidget({super.key, 
-        required this.tabTitle0, 
-        required this.tabTitle1, 
-        required this.tabWidget0, 
-        required this.tabWidget1, 
-        this.selectedIndex = 0, this.onTabSelectionChange});
+  const TabSwitchWidget(
+      {super.key,
+      required this.tabTitle0,
+      required this.tabTitle1,
+      required this.tabWidget0,
+      required this.tabWidget1,
+      this.selectedIndex = 0,
+      this.onTabSelectionChange});
 
   @override
   State<TabSwitchWidget> createState() => _TabSwitchWidgetState();
-
 }
 
 class _TabSwitchWidgetState extends State<TabSwitchWidget> {
@@ -79,9 +79,7 @@ class _TabSwitchWidgetState extends State<TabSwitchWidget> {
           ),
         ),
         const SizedBox(height: 8.0),
-        SizedBox(
-          child: selectedIndex == 0 ? widget.tabWidget0 : widget.tabWidget1,
-        )
+        selectedIndex == 0 ? widget.tabWidget0 : widget.tabWidget1
       ],
     );
   }
@@ -112,5 +110,4 @@ class _TabSwitchWidgetState extends State<TabSwitchWidget> {
       ),
     );
   }
-
 }

@@ -26,8 +26,8 @@ class ProductPriceEntity extends Equatable {
   final num? vatRate;
   final num? vatAmount;
   final String? vatAmountDisplay;
-  final List<BreakPriceEntity>? unitListBreakPrices;
-  final List<BreakPriceEntity>? unitRegularBreakPrices;
+  final List<BreakPriceDTOEntity>? unitListBreakPrices;
+  final List<BreakPriceDTOEntity>? unitRegularBreakPrices;
   final num? regularPrice;
   final String? regularPriceDisplay;
   final num? extendedRegularPrice;
@@ -36,8 +36,8 @@ class ProductPriceEntity extends Equatable {
   final String? actualPriceDisplay;
   final num? extendedActualPrice;
   final String? extendedActualPriceDisplay;
-  final List<BreakPriceEntity>? regularBreakPrices;
-  final List<BreakPriceEntity>? actualBreakPrices;
+  final List<BreakPriceDTOEntity>? regularBreakPrices;
+  final List<BreakPriceDTOEntity>? actualBreakPrices;
   const ProductPriceEntity({
     this.productId,
     this.isOnSale,
@@ -100,8 +100,8 @@ class ProductPriceEntity extends Equatable {
     num? vatRate,
     num? vatAmount,
     String? vatAmountDisplay,
-    List<BreakPriceEntity>? unitListBreakPrices,
-    List<BreakPriceEntity>? unitRegularBreakPrices,
+    List<BreakPriceDTOEntity>? unitListBreakPrices,
+    List<BreakPriceDTOEntity>? unitRegularBreakPrices,
     num? regularPrice,
     String? regularPriceDisplay,
     num? extendedRegularPrice,
@@ -110,8 +110,8 @@ class ProductPriceEntity extends Equatable {
     String? actualPriceDisplay,
     num? extendedActualPrice,
     String? extendedActualPriceDisplay,
-    List<BreakPriceEntity>? regularBreakPrices,
-    List<BreakPriceEntity>? actualBreakPrices,
+    List<BreakPriceDTOEntity>? regularBreakPrices,
+    List<BreakPriceDTOEntity>? actualBreakPrices,
   }) {
     return ProductPriceEntity(
       productId: productId ?? this.productId,

@@ -253,7 +253,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
             onTap: () {
               AppRoute.locationSearch.navigateBackStack(context,
                   extra: VMILocationSelectCallbackHelper(
-                      selectedPickupWarehouse: WarehouseEntityMapper()
+                      selectedPickupWarehouse: WarehouseEntityMapper
                           .toEntity(wareHouse ?? Warehouse()),
                       onSelectVMILocation: (location) {},
                       onWarehouseLocationSelected: (wareHouse) {
@@ -261,7 +261,7 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                           _isSwitched = false;
                         });
                         context.read<BillToShipToBloc>().add(PickUpUpdateEvent(
-                            WarehouseEntityMapper().toModel(wareHouse)));
+                            WarehouseEntityMapper.toModel(wareHouse)));
                       },
                       locationSearchType: LocationSearchType.pickUpLocation));
             },

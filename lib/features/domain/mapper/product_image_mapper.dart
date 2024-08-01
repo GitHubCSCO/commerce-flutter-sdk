@@ -2,7 +2,7 @@ import 'package:commerce_flutter_app/features/domain/entity/product_image_entity
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductImageEntityMapper {
-  ProductImageEntity toEntity(ProductImage model) => ProductImageEntity(
+  static ProductImageEntity toEntity(ProductImage model) => ProductImageEntity(
         id: model.id,
         sortOrder: model.sortOrder,
         name: model.name,
@@ -12,7 +12,7 @@ class ProductImageEntityMapper {
         altText: model.altText,
         imageType: model.imageType,
       );
-  ProductImage toModel(ProductImageEntity entity) => ProductImage(
+  static ProductImage toModel(ProductImageEntity entity) => ProductImage(
         id: entity.id,
         sortOrder: entity.sortOrder,
         name: entity.name,
