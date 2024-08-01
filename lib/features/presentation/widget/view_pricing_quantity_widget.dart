@@ -6,7 +6,7 @@ import 'package:commerce_flutter_app/features/presentation/components/buttons.da
 import 'package:flutter/material.dart';
 
 void viewPricingQuantityWidget(
-    BuildContext context, List<BreakPriceEntity> breakPriceDto) {
+    BuildContext context, List<BreakPriceDTOEntity> breakPriceDto) {
   var cellHeight = breakPriceDto.length > 1 ? 40 : 20;
   showDialog(
     context: context,

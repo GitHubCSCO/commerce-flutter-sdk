@@ -176,7 +176,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
   List<CartLineEntity> getCartLines() {
     List<CartLineEntity> cartlines = [];
     for (var cartLine in cart?.cartLines ?? []) {
-      var cartLineEntity = CartLineEntityMapper().toEntity(cartLine);
+      var cartLineEntity = CartLineEntityMapper.toEntity(cartLine);
       var shouldShowWarehouseInventoryButton =
           InventoryUtils.isInventoryPerWarehouseButtonShownAsync(
                   productSettings) &&
@@ -234,5 +234,15 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
     }
 
     return cart?.canCheckOut == true && !isCartEmpty && hasCheckout;
+  }
+
+  bool get canSubmitForQuote {
+    if (cart == null) {
+      return false;
+    }
+
+    return cart?.canRequestQuote == true &&
+        cart?.isAwaitingApproval == false &&
+        !isCartEmpty;
   }
 }

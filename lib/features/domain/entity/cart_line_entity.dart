@@ -87,7 +87,7 @@ class CartLineEntity extends AddCartLineEntity {
   final bool? isDiscounted;
   final bool? isFixedConfiguration;
   final bool? quoteRequired;
-  final List<BreakPriceEntity>? breakPrices;
+  final List<BreakPriceDTOEntity>? breakPrices;
   final AvailabilityEntity? availability;
   final num? qtyOnHand;
   final bool? canAddToCart;
@@ -190,7 +190,7 @@ class CartLineEntity extends AddCartLineEntity {
       bool? isDiscounted,
       bool? isFixedConfiguration,
       bool? quoteRequired,
-      List<BreakPriceEntity>? breakPrices,
+      List<BreakPriceDTOEntity>? breakPrices,
       AvailabilityEntity? availability,
       num? qtyOnHand,
       bool? canAddToCart,

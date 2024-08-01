@@ -261,7 +261,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                               ProductListWithBasicInfo(
                                 totalItemsTitle:
                                     LocalizationConstants.cartContentsItems.localized(),
-                                list: CartLineListMapper()
+                                list: CartLineListMapper
                                         .toEntity(CartLineList(
                                             cartLines:
                                                 state.cart.cartLines ?? []))

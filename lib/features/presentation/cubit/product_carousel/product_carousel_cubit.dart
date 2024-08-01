@@ -71,7 +71,7 @@ class ProductCarouselCubit extends Cubit<ProductCarouselState> {
                 var matchingPrice = pricingResult.value?.realTimePricingResults
                     ?.firstWhere((o) => o.productId == productEntity!.id);
                 productEntity?.pricing =
-                    ProductPriceEntityMapper().toEntity(matchingPrice);
+                    ProductPriceEntityMapper.toEntity(matchingPrice);
               }
             case Failure():
             default:

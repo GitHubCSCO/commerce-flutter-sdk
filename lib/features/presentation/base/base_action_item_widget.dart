@@ -192,9 +192,9 @@ class BaseActionItemWidget extends StatelessWidget {
         };
       case ActionType.custom:
         return () {
-          context.read<LoadWebsiteUrlBloc>().add(LoadCustomUrlLoadEvent(
-            customUrl: actionLink.url
-          ));
+          context
+              .read<LoadWebsiteUrlBloc>()
+              .add(LoadCustomUrlLoadEvent(customUrl: actionLink.url));
         };
       case ActionType.invoices:
         return () {
@@ -203,8 +203,11 @@ class BaseActionItemWidget extends StatelessWidget {
       case ActionType.viewAccountOnWebsite:
         return () {
           context.read<LoadWebsiteUrlBloc>().add(LoadWebsiteUrlLoadEvent(
-            redirectUrl: WebsitePaths.accountWebsitePath
-          ));
+              redirectUrl: WebsitePaths.accountWebsitePath));
+        };
+      case ActionType.quotes:
+        return () {
+          AppRoute.myQuote.navigateBackStack(context);
         };
       default:
         return () {

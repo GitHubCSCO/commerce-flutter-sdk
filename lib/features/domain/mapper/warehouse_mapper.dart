@@ -2,7 +2,7 @@ import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dar
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WarehouseEntityMapper {
-  WarehouseEntity toEntity(Warehouse model) => WarehouseEntity(
+  static WarehouseEntity toEntity(Warehouse model) => WarehouseEntity(
         messageType: model.messageType,
         message: model.message,
         requiresRealTimeInventory: model.requiresRealTimeInventory,
@@ -21,7 +21,7 @@ class WarehouseEntityMapper {
         state: model.state,
         isDefault: model.isDefault,
         alternateWarehouses: model.alternateWarehouses
-            ?.map((warehouse) => WarehouseEntityMapper().toEntity(warehouse))
+            ?.map((warehouse) => WarehouseEntityMapper.toEntity(warehouse))
             .toList(),
         latitude: model.latitude,
         longitude: model.longitude,
@@ -31,7 +31,7 @@ class WarehouseEntityMapper {
         pickupShipViaId: model.pickupShipViaId,
       );
 
-  Warehouse toModel(WarehouseEntity entity) => Warehouse(
+  static Warehouse toModel(WarehouseEntity entity) => Warehouse(
         // messageType: entity.messageType,
         // message: entity.message,
         // requiresRealTimeInventory: entity.requiresRealTimeInventory,
@@ -50,7 +50,7 @@ class WarehouseEntityMapper {
         state: entity.state,
         isDefault: entity.isDefault,
         alternateWarehouses: entity.alternateWarehouses
-            ?.map((warehouse) => WarehouseEntityMapper().toModel(warehouse))
+            ?.map((warehouse) => WarehouseEntityMapper.toModel(warehouse))
             .toList(),
         latitude: entity.latitude,
         longitude: entity.longitude,
