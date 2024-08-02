@@ -14,8 +14,8 @@ class ActionLinkCubit extends Cubit<ActionLinkState> {
 
   Future<void> viewableActions(ActionsWidgetEntity actionsWidgetEntity) async {
     emit(ActionLinkLoadingState());
-    final list = await _actionLinkUseCase.getViewableActions(actionsWidgetEntity.actions);
+    final list = await _actionLinkUseCase
+        .getViewableActions(actionsWidgetEntity.actions);
     emit(ActionLinkLoadedState(list));
   }
-
 }

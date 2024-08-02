@@ -322,7 +322,8 @@ class OrderLineEntity extends Equatable {
       customerName: customerName ?? this.customerName,
       shortDescription: shortDescription ?? this.shortDescription,
       productErpNumber: productErpNumber ?? this.productErpNumber,
-      customerProductNumber: customerProductNumber ?? this.customerProductNumber,
+      customerProductNumber:
+          customerProductNumber ?? this.customerProductNumber,
       requiredDate: requiredDate ?? this.requiredDate,
       lastShipDate: lastShipDate ?? this.lastShipDate,
       customerNumber: customerNumber ?? this.customerNumber,
@@ -339,7 +340,8 @@ class OrderLineEntity extends Equatable {
       qtyShipped: qtyShipped ?? this.qtyShipped,
       unitOfMeasure: unitOfMeasure ?? this.unitOfMeasure,
       unitOfMeasureDisplay: unitOfMeasureDisplay ?? this.unitOfMeasureDisplay,
-      unitOfMeasureDescription: unitOfMeasureDescription ?? this.unitOfMeasureDescription,
+      unitOfMeasureDescription:
+          unitOfMeasureDescription ?? this.unitOfMeasureDescription,
       availability: availability ?? this.availability,
       inventoryQtyOrdered: inventoryQtyOrdered ?? this.inventoryQtyOrdered,
       inventoryQtyShipped: inventoryQtyShipped ?? this.inventoryQtyShipped,
@@ -349,14 +351,16 @@ class OrderLineEntity extends Equatable {
       discountPercent: discountPercent ?? this.discountPercent,
       discountAmount: discountAmount ?? this.discountAmount,
       unitDiscountAmount: unitDiscountAmount ?? this.unitDiscountAmount,
-      promotionAmountApplied: promotionAmountApplied ?? this.promotionAmountApplied,
+      promotionAmountApplied:
+          promotionAmountApplied ?? this.promotionAmountApplied,
       totalDiscountAmount: totalDiscountAmount ?? this.totalDiscountAmount,
       lineTotal: lineTotal ?? this.lineTotal,
       totalRegularPrice: totalRegularPrice ?? this.totalRegularPrice,
       unitListPrice: unitListPrice ?? this.unitListPrice,
       unitRegularPrice: unitRegularPrice ?? this.unitRegularPrice,
       unitCost: unitCost ?? this.unitCost,
-      orderLineOtherCharges: orderLineOtherCharges ?? this.orderLineOtherCharges,
+      orderLineOtherCharges:
+          orderLineOtherCharges ?? this.orderLineOtherCharges,
       taxRate: taxRate ?? this.taxRate,
       taxAmount: taxAmount ?? this.taxAmount,
       returnReason: returnReason ?? this.returnReason,
@@ -364,16 +368,23 @@ class OrderLineEntity extends Equatable {
       rmaQtyReceived: rmaQtyReceived ?? this.rmaQtyReceived,
       unitPriceDisplay: unitPriceDisplay ?? this.unitPriceDisplay,
       unitNetPriceDisplay: unitNetPriceDisplay ?? this.unitNetPriceDisplay,
-      extendedUnitNetPriceDisplay: extendedUnitNetPriceDisplay ?? this.extendedUnitNetPriceDisplay,
-      discountAmountDisplay: discountAmountDisplay ?? this.discountAmountDisplay,
-      unitDiscountAmountDisplay: unitDiscountAmountDisplay ?? this.unitDiscountAmountDisplay,
-      totalDiscountAmountDisplay: totalDiscountAmountDisplay ?? this.totalDiscountAmountDisplay,
+      extendedUnitNetPriceDisplay:
+          extendedUnitNetPriceDisplay ?? this.extendedUnitNetPriceDisplay,
+      discountAmountDisplay:
+          discountAmountDisplay ?? this.discountAmountDisplay,
+      unitDiscountAmountDisplay:
+          unitDiscountAmountDisplay ?? this.unitDiscountAmountDisplay,
+      totalDiscountAmountDisplay:
+          totalDiscountAmountDisplay ?? this.totalDiscountAmountDisplay,
       lineTotalDisplay: lineTotalDisplay ?? this.lineTotalDisplay,
-      totalRegularPriceDisplay: totalRegularPriceDisplay ?? this.totalRegularPriceDisplay,
+      totalRegularPriceDisplay:
+          totalRegularPriceDisplay ?? this.totalRegularPriceDisplay,
       unitListPriceDisplay: unitListPriceDisplay ?? this.unitListPriceDisplay,
-      unitRegularPriceDisplay: unitRegularPriceDisplay ?? this.unitRegularPriceDisplay,
+      unitRegularPriceDisplay:
+          unitRegularPriceDisplay ?? this.unitRegularPriceDisplay,
       unitCostDisplay: unitCostDisplay ?? this.unitCostDisplay,
-      orderLineOtherChargesDisplay: orderLineOtherChargesDisplay ?? this.orderLineOtherChargesDisplay,
+      orderLineOtherChargesDisplay:
+          orderLineOtherChargesDisplay ?? this.orderLineOtherChargesDisplay,
       costCode: costCode ?? this.costCode,
       canAddToCart: canAddToCart ?? this.canAddToCart,
       isActiveProduct: isActiveProduct ?? this.isActiveProduct,
@@ -382,9 +393,11 @@ class OrderLineEntity extends Equatable {
       canAddToWishlist: canAddToWishlist ?? this.canAddToWishlist,
       brand: brand ?? this.brand,
       netPriceWithVat: netPriceWithVat ?? this.netPriceWithVat,
-      netPriceWithVatDisplay: netPriceWithVatDisplay ?? this.netPriceWithVatDisplay,
+      netPriceWithVatDisplay:
+          netPriceWithVatDisplay ?? this.netPriceWithVatDisplay,
       unitPriceWithVat: unitPriceWithVat ?? this.unitPriceWithVat,
-      unitPriceWithVatDisplay: unitPriceWithVatDisplay ?? this.unitPriceWithVatDisplay,
+      unitPriceWithVatDisplay:
+          unitPriceWithVatDisplay ?? this.unitPriceWithVatDisplay,
       vmiBinNumber: vmiBinNumber ?? this.vmiBinNumber,
     );
   }

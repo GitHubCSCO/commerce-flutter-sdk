@@ -5,16 +5,16 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BillToShipToUseCase extends BaseUseCase {
   Future<Session?> getCurrentSession() async {
-    Session? cachedCurrentSession =
-            commerceAPIServiceProvider
-                .getSessionService()
-                .getCachedCurrentSession();
-                
-    if(cachedCurrentSession==null){
+    Session? cachedCurrentSession = commerceAPIServiceProvider
+        .getSessionService()
+        .getCachedCurrentSession();
+
+    if (cachedCurrentSession == null) {
       final result = await commerceAPIServiceProvider
           .getSessionService()
           .getCurrentSession();
-      Session? currentSession = result is Success ? (result as Success).value : null;
+      Session? currentSession =
+          result is Success ? (result as Success).value : null;
       return Future.value(currentSession);
     }
 
@@ -53,39 +53,54 @@ class BillToShipToUseCase extends BaseUseCase {
         .patchCustomerSession(currentSession);
     //TODO we need to make it better:
     //TODO follow webflow
-    if(result is Success){
-        commerceAPIServiceProvider.getCacheService().clearAllCaches();
-        Session patchedSession = (result as Success).value as Session;
-        return patchedSession;
-    }else{
+    if (result is Success) {
+      commerceAPIServiceProvider.getCacheService().clearAllCaches();
+      Session patchedSession = (result as Success).value as Session;
+      return patchedSession;
+    } else {
       return null;
     }
   }
 
-  Future<void> updateDefaultCustomerIfNeeded(bool isDefaultEnable, bool isDefaultCustomer, FulfillmentMethodType selectedShippingMethod, bool wasShipToUpdated) async {
-    final session = (await commerceAPIServiceProvider.getSessionService().getCurrentSession()).getResultSuccessValue();
+  Future<void> updateDefaultCustomerIfNeeded(
+      bool isDefaultEnable,
+      bool isDefaultCustomer,
+      FulfillmentMethodType selectedShippingMethod,
+      bool wasShipToUpdated) async {
+    final session = (await commerceAPIServiceProvider
+            .getSessionService()
+            .getCurrentSession())
+        .getResultSuccessValue();
     final willCall = await hasWillCall();
 
     var willUpdateDefaultCustomer = !isDefaultCustomer && isDefaultEnable;
     willUpdateDefaultCustomer |= isDefaultCustomer && !isDefaultEnable;
 
     if (willUpdateDefaultCustomer) {
-      final currentAccount = commerceAPIServiceProvider.getAccountService().currentAccount;
+      final currentAccount =
+          commerceAPIServiceProvider.getAccountService().currentAccount;
       if (session == null || currentAccount == null) {
         return;
       }
 
       currentAccount.setDefaultCustomer = true;
-      var isFulfillmentMethodPickUpSetAsDefault = willCall && selectedShippingMethod == FulfillmentMethodType.PickUp && isDefaultEnable;
-      currentAccount.defaultWarehouseId = isFulfillmentMethodPickUpSetAsDefault ? session.pickUpWarehouse?.id.toString() : null;
-      currentAccount.defaultWarehouse = isFulfillmentMethodPickUpSetAsDefault ? session.pickUpWarehouse : null;
+      var isFulfillmentMethodPickUpSetAsDefault = willCall &&
+          selectedShippingMethod == FulfillmentMethodType.PickUp &&
+          isDefaultEnable;
+      currentAccount.defaultWarehouseId = isFulfillmentMethodPickUpSetAsDefault
+          ? session.pickUpWarehouse?.id.toString()
+          : null;
+      currentAccount.defaultWarehouse = isFulfillmentMethodPickUpSetAsDefault
+          ? session.pickUpWarehouse
+          : null;
 
       currentAccount.defaultFulfillmentMethod = selectedShippingMethod.name;
-      currentAccount.defaultCustomerId = isDefaultEnable ? session.shipTo?.id : null;
+      currentAccount.defaultCustomerId =
+          isDefaultEnable ? session.shipTo?.id : null;
 
       final accountPatchResultResponse = (await commerceAPIServiceProvider
-          .getAccountService()
-          .patchAccountAsync(currentAccount))
+              .getAccountService()
+              .patchAccountAsync(currentAccount))
           .getResultSuccessValue();
 
       if (accountPatchResultResponse == null) {
@@ -94,14 +109,22 @@ class BillToShipToUseCase extends BaseUseCase {
     }
   }
 
-  Future<bool> isDefaultCustomerSelected(FulfillmentMethodType selectedShippingMethod, bool wasShipToUpdated) async {
-    final session = (await commerceAPIServiceProvider.getSessionService().getCurrentSession()).getResultSuccessValue();
+  Future<bool> isDefaultCustomerSelected(
+      FulfillmentMethodType selectedShippingMethod,
+      bool wasShipToUpdated) async {
+    final session = (await commerceAPIServiceProvider
+            .getSessionService()
+            .getCurrentSession())
+        .getResultSuccessValue();
     if (session?.shipTo == null) {
       return false;
     } else {
-      final currentAccount = commerceAPIServiceProvider.getAccountService().currentAccount;
+      final currentAccount =
+          commerceAPIServiceProvider.getAccountService().currentAccount;
 
-      if (currentAccount?.defaultFulfillmentMethod != null && !(currentAccount?.defaultFulfillmentMethod == selectedShippingMethod.name)) {
+      if (currentAccount?.defaultFulfillmentMethod != null &&
+          !(currentAccount?.defaultFulfillmentMethod ==
+              selectedShippingMethod.name)) {
         return false;
       } else {
         if (wasShipToUpdated) {

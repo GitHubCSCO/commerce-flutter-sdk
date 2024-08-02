@@ -43,8 +43,7 @@ class SearchScreen extends StatelessWidget {
       BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
       BlocProvider<SearchPageCmsBloc>(
         create: (context) =>
-        sl<SearchPageCmsBloc>()
-          ..add(SearchPageCmsLoadEvent()),
+            sl<SearchPageCmsBloc>()..add(SearchPageCmsLoadEvent()),
       ),
       BlocProvider<SearchBloc>(
         create: (context) => sl<SearchBloc>(),
@@ -95,7 +94,9 @@ class SearchPage extends BaseDynamicContentScreen {
                   },
                   onChanged: (String searchQuery) {
                     _delayer.run(() {
-                      context.read<SearchBloc>().add(SearchTypingEvent(searchQuery));
+                      context
+                          .read<SearchBloc>()
+                          .add(SearchTypingEvent(searchQuery));
                     });
                   },
                   onSubmitted: (String query) {
@@ -111,9 +112,8 @@ class SearchPage extends BaseDynamicContentScreen {
                   fit: BoxFit.fitWidth,
                 ),
                 onPressed: () async {
-                  final result = await GoRouter.of(context).pushNamed(
-                    AppRoute.barcodeSearch.name
-                  ) as String;
+                  final result = await GoRouter.of(context)
+                      .pushNamed(AppRoute.barcodeSearch.name) as String;
                   if (!result.isNullOrEmpty) {
                     context.read<SearchBloc>().searchQuery = result;
                     context.read<SearchBloc>().add(SearchSearchEvent());
@@ -172,12 +172,13 @@ class SearchPage extends BaseDynamicContentScreen {
                 listener: (context, state) {
                   if (state is AutoCompleteCategoryState) {
                     AppRoute.shopSubCategory.navigateBackStack(
-                        context,
-                        pathParameters: {
-                          "categoryId": state.category.id.toString(),
-                          "categoryTitle": state.category.shortDescription.toString(),
-                          "categoryPath": state.category.path.toString()
-                        },
+                      context,
+                      pathParameters: {
+                        "categoryId": state.category.id.toString(),
+                        "categoryTitle":
+                            state.category.shortDescription.toString(),
+                        "categoryPath": state.category.path.toString()
+                      },
                     );
                   } else if (state is AutoCompleteBrandState) {
                     AppRoute.shopBrandDetails.navigateBackStack(
@@ -185,7 +186,8 @@ class SearchPage extends BaseDynamicContentScreen {
                       extra: state.brand,
                     );
                   } else if (state is AutoCompleteProductListState) {
-                    AppRoute.product.navigateBackStack(context, extra: state.pageEntity);
+                    AppRoute.product
+                        .navigateBackStack(context, extra: state.pageEntity);
                   }
                 },
               ),
@@ -238,7 +240,8 @@ class SearchPage extends BaseDynamicContentScreen {
                                     SliverFillRemaining(
                                       child: Center(
                                         child: Text(LocalizationConstants
-                                            .errorLoadingSearchLanding.localized()),
+                                            .errorLoadingSearchLanding
+                                            .localized()),
                                       ),
                                     ),
                                   ],
@@ -287,12 +290,14 @@ class SearchPage extends BaseDynamicContentScreen {
                       );
                     case SearchProductsFailureState:
                       return Center(
-                          child: Text(LocalizationConstants.searchNoResults.localized(),
+                          child: Text(
+                              LocalizationConstants.searchNoResults.localized(),
                               style: OptiTextStyles.body));
                     default:
                       return Center(
-                          child: Text(
-                              LocalizationConstants.errorLoadingSearchLanding.localized()));
+                          child: Text(LocalizationConstants
+                              .errorLoadingSearchLanding
+                              .localized()));
                   }
                 }),
           ),
@@ -313,7 +318,8 @@ class SearchPage extends BaseDynamicContentScreen {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
                 child: Text(
                   LocalizationConstants.categories.localized(),
                   style: OptiTextStyles.titleSmall,
@@ -332,7 +338,8 @@ class SearchPage extends BaseDynamicContentScreen {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
                 child: Text(
                   LocalizationConstants.brands.localized(),
                   style: OptiTextStyles.titleSmall,
@@ -355,18 +362,20 @@ class SearchPage extends BaseDynamicContentScreen {
     );
   }
 
-  void handleAutoCompleteCategoryCallback(BuildContext context, AutocompleteCategory category) {
+  void handleAutoCompleteCategoryCallback(
+      BuildContext context, AutocompleteCategory category) {
     context.read<SearchBloc>().add(AutoCompleteCategoryEvent(category));
   }
 
-  void handleAutoCompleteBrandCallback(BuildContext context, AutocompleteBrand brand) {
+  void handleAutoCompleteBrandCallback(
+      BuildContext context, AutocompleteBrand brand) {
     context.read<SearchBloc>().add(AutoCompleteBrandEvent(brand));
   }
 
-  void handleAutoCompleteCallback(BuildContext context, AutocompleteProduct product) {
+  void handleAutoCompleteCallback(
+      BuildContext context, AutocompleteProduct product) {
     AppRoute.productDetails.navigateBackStack(context,
         pathParameters: {"productId": product.id.toString()},
         extra: ProductEntity());
   }
-
 }

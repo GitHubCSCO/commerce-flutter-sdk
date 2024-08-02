@@ -14,6 +14,4 @@ class AddToCartEnable extends AddToCartState {
   AddToCartEnable({required this.canAddToCart});
 }
 
-class AddToCartButtonLoading extends AddToCartState {
-
-}
+class AddToCartButtonLoading extends AddToCartState {}

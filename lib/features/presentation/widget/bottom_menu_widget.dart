@@ -15,8 +15,11 @@ class BottomMenuWidget extends StatelessWidget {
   final String websitePath;
   final bool isViewOnWebsiteEnable;
 
-  BottomMenuWidget({super.key, List<
-      ToolMenu>? toolMenuList, String? websitePath, bool? isViewOnWebsiteEnable})
+  BottomMenuWidget(
+      {super.key,
+      List<ToolMenu>? toolMenuList,
+      String? websitePath,
+      bool? isViewOnWebsiteEnable})
       : toolMenuList = toolMenuList ?? [],
         websitePath = websitePath ?? '',
         isViewOnWebsiteEnable = isViewOnWebsiteEnable ?? true;
@@ -25,7 +28,10 @@ class BottomMenuWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<BottomMenuCubit>(),
-      child: BottomMenu(toolMenuList: toolMenuList, websitePath: websitePath, isViewOnWebsiteEnable: isViewOnWebsiteEnable),
+      child: BottomMenu(
+          toolMenuList: toolMenuList,
+          websitePath: websitePath,
+          isViewOnWebsiteEnable: isViewOnWebsiteEnable),
     );
   }
 }
@@ -36,7 +42,10 @@ class BottomMenu extends StatelessWidget {
   final bool isViewOnWebsiteEnable;
 
   BottomMenu(
-      {super.key, List<ToolMenu>? toolMenuList, String? websitePath, bool? isViewOnWebsiteEnable})
+      {super.key,
+      List<ToolMenu>? toolMenuList,
+      String? websitePath,
+      bool? isViewOnWebsiteEnable})
       : toolMenuList = toolMenuList ?? [],
         websitePath = websitePath ?? '',
         isViewOnWebsiteEnable = isViewOnWebsiteEnable ?? true;
@@ -53,7 +62,8 @@ class BottomMenu extends StatelessWidget {
             displayDialogWidget(
               context: context,
               title: LocalizationConstants.error.localized(),
-              message: SiteMessageConstants.defaultMobileAppAlertCommunicationError,
+              message:
+                  SiteMessageConstants.defaultMobileAppAlertCommunicationError,
               actions: [
                 DialogPlainButton(
                   onPressed: () => Navigator.of(context).pop(),

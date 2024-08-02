@@ -150,7 +150,8 @@ class RoutePaths {
   static const String salesRepSelection = '/${RouteNames.salesRepSelection}';
   static const String jobQuoteDetails = '${RoutePaths.myQuote}/:jobQuoteId';
   static const String quoteLineNotes = '/${RouteNames.quoteLineNotes}';
-  static const String language = '${RoutePaths.settings}/${RouteNames.language}';
+  static const String language =
+      '${RoutePaths.settings}/${RouteNames.language}';
 }
 
 enum AppRoute {

@@ -60,10 +60,10 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
               value: subtotalPriceText ?? '',
               realTimeLoading: realTimeLoading,
             ),
-          }
-          else ...{
+          } else ...{
             const Expanded(
-              flex: 2, child: Center(),
+              flex: 2,
+              child: Center(),
             ),
           }
         ],

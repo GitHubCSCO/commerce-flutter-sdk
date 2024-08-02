@@ -10,9 +10,11 @@ class ProductCarouselEntity extends Equatable {
   @override
   List<Object?> get props => [productPricingEnabled, product];
 
-  ProductCarouselEntity copyWith({bool? productPricingEnabled, ProductEntity? product}) {
+  ProductCarouselEntity copyWith(
+      {bool? productPricingEnabled, ProductEntity? product}) {
     return ProductCarouselEntity(
-        productPricingEnabled: productPricingEnabled ?? this.productPricingEnabled,
+        productPricingEnabled:
+            productPricingEnabled ?? this.productPricingEnabled,
         product: product ?? this.product);
   }
 }

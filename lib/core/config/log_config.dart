@@ -1,3 +1,3 @@
 class LogConfig {
-    static bool isAllLogsEnabled = false;
+  static bool isAllLogsEnabled = false;
 }

@@ -154,7 +154,7 @@ class JobQuoteDetailsCubit extends Cubit<JobQuoteDetailsState> {
         cart: updatedJobQuote as Cart,
       ),
     );
-    
+
     final currentCart = await _quoteDetailsUsecase.getCurrentCart(
       CartQueryParameters(
         expand: ['cartlines'],

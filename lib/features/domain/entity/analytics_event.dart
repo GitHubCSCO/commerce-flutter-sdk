@@ -14,11 +14,12 @@ class AnalyticsEvent {
     withProperty(name: eventPropertyScreenName, strValue: area);
   }
 
-  AnalyticsEvent withProperty({required String name, String? strValue, bool? boolValue}) {
-    if(strValue!=null){
+  AnalyticsEvent withProperty(
+      {required String name, String? strValue, bool? boolValue}) {
+    if (strValue != null) {
       properties[name] = strValue;
     }
-    if(boolValue!=null){
+    if (boolValue != null) {
       properties[name] = boolValue.toString();
     }
     return this;

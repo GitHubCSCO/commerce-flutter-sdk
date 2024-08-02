@@ -27,7 +27,9 @@ mixin RealtimePricingInventoryUpdateMixin {
     final realTimeResult =
         await pricingInventoryUseCase.getRealtimeSupportType();
 
-    if (!(hidePricing ?? false) && productPricingEnabled && realTimeResult != null) {
+    if (!(hidePricing ?? false) &&
+        productPricingEnabled &&
+        realTimeResult != null) {
       if (realTimeResult == RealTimeSupport.RealTimePricingOnly ||
           realTimeResult ==
               RealTimeSupport.RealTimePricingWithInventoryIncluded ||
@@ -60,7 +62,8 @@ mixin RealtimePricingInventoryUpdateMixin {
       }
     }
 
-    if (!(hideInventory ?? false) & productAvailabilityEnabled && realTimeResult != null) {
+    if (!(hideInventory ?? false) & productAvailabilityEnabled &&
+        realTimeResult != null) {
       if (realTimeResult == RealTimeSupport.NoRealTimePricingAndInventory ||
           realTimeResult == RealTimeSupport.RealTimePricingAndInventory ||
           realTimeResult ==
@@ -89,10 +92,13 @@ mixin RealtimePricingInventoryUpdateMixin {
                     realTimeInventory.inventoryAvailabilityDtos?.singleWhere(
                         (ia) => ia.unitOfMeasure == product.unitOfMeasure,
                         orElse: () => InventoryAvailability());
-                if (inventoryAvailability != null && inventoryAvailability.availability != null) {
-                  productAvailability = AvailabilityEntityMapper.toEntity(inventoryAvailability.availability);
+                if (inventoryAvailability != null &&
+                    inventoryAvailability.availability != null) {
+                  productAvailability = AvailabilityEntityMapper.toEntity(
+                      inventoryAvailability.availability);
                 } else {
-                  productAvailability = AvailabilityEntityMapper.toEntity(Availability(messageType: 0));
+                  productAvailability = AvailabilityEntityMapper.toEntity(
+                      Availability(messageType: 0));
                 }
 
                 product.productUnitOfMeasures
@@ -114,7 +120,8 @@ mixin RealtimePricingInventoryUpdateMixin {
                   }
 
                   productUnitOfMeasureEntity.copyWith(
-                    availability: AvailabilityEntityMapper.toEntity(availability),
+                    availability:
+                        AvailabilityEntityMapper.toEntity(availability),
                   );
                 });
 
@@ -141,10 +148,12 @@ mixin RealtimePricingInventoryUpdateMixin {
           for (var product in productList) {
             final productAvailability = Availability(
               messageType: 0,
-              message: LocalizationConstants.unableToRetrieveInventory.localized(),
+              message:
+                  LocalizationConstants.unableToRetrieveInventory.localized(),
             );
 
-            product.availability = AvailabilityEntityMapper.toEntity(productAvailability);
+            product.availability =
+                AvailabilityEntityMapper.toEntity(productAvailability);
           }
         }
       }

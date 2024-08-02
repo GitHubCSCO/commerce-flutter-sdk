@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class AutoCompleteWidget extends StatelessWidget {
-
   final Function(BuildContext, AutocompleteProduct) callback;
   final List<AutocompleteProduct>? autoCompleteProductList;
 
-  const AutoCompleteWidget({super.key, required this.callback, this.autoCompleteProductList});
+  const AutoCompleteWidget(
+      {super.key, required this.callback, this.autoCompleteProductList});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,8 @@ class AutoCompleteWidget extends StatelessWidget {
           onTap: () {
             callback(context, autoCompleteProduct);
           },
-          child: AutoCompleteProductWidget(autocompleteProduct: autoCompleteProduct),
+          child: AutoCompleteProductWidget(
+              autocompleteProduct: autoCompleteProduct),
         );
       },
     );
@@ -39,7 +40,6 @@ class AutoCompleteWidget extends StatelessWidget {
 }
 
 class AutoCompleteProductWidget extends StatelessWidget {
-
   final AutocompleteProduct autocompleteProduct;
 
   const AutoCompleteProductWidget(
@@ -71,8 +71,7 @@ class AutoCompleteProductWidget extends StatelessWidget {
                       StackTrace? stackTrace) {
                     // This function is called when the image fails to load
                     return Container(
-                      color:
-                          OptiAppColors.backgroundGray, // Placeholder color
+                      color: OptiAppColors.backgroundGray, // Placeholder color
                       alignment: Alignment.center,
                       child: const Icon(
                         Icons.image, // Icon to display
@@ -99,7 +98,8 @@ class AutoCompleteProductWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  LocalizationConstants.itemNumber.localized()
+                  LocalizationConstants.itemNumber
+                      .localized()
                       .format([autocompleteProduct.erpNumber ?? '']),
                   style: OptiTextStyles.bodySmall.copyWith(
                     color: OptiAppColors.textDisabledColor,

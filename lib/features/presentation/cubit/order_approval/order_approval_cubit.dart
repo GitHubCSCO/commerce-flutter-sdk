@@ -41,10 +41,9 @@ class OrderApprovalCubit extends Cubit<OrderApprovalState> {
 
     emit(
       state.copyWith(
-        status: OrderStatus.success,
-        orderApprovalCollectionModel: result,
-        hidePricingEnable: hidePricingEnable
-      ),
+          status: OrderStatus.success,
+          orderApprovalCollectionModel: result,
+          hidePricingEnable: hidePricingEnable),
     );
   }
 

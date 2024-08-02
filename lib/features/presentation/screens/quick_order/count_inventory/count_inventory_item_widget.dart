@@ -9,12 +9,12 @@ import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_wi
 import 'package:flutter/material.dart';
 
 class CountInventoryItemWidget extends StatelessWidget {
-
   final Function(BuildContext context, QuickOrderItemEntity,
       OrderCallBackType orderCallBackType) callback;
   final QuickOrderItemEntity quickOrderItemEntity;
 
-  const CountInventoryItemWidget({super.key, required this.callback, required this.quickOrderItemEntity});
+  const CountInventoryItemWidget(
+      {super.key, required this.callback, required this.quickOrderItemEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +104,8 @@ class CountInventoryItemWidget extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          OrderVmiProductTitleWidget(callback: callback, orderItemEntity: quickOrderItemEntity),
+          OrderVmiProductTitleWidget(
+              callback: callback, orderItemEntity: quickOrderItemEntity),
           Container(
             color: Colors.white,
             padding: const EdgeInsets.all(20.0),
@@ -117,7 +118,8 @@ class CountInventoryItemWidget extends StatelessWidget {
     );
   }
 
-  Widget? _buildRow(String title, TextStyle titleTextStyle, String body, TextStyle bodyTextStyle) {
+  Widget? _buildRow(String title, TextStyle titleTextStyle, String body,
+      TextStyle bodyTextStyle) {
     if (title.isEmpty || body.isEmpty) {
       return null;
     } else {
@@ -146,16 +148,15 @@ class CountInventoryItemWidget extends StatelessWidget {
       );
     }
   }
-
 }
 
 class OrderVmiProductTitleWidget extends StatelessWidget {
-
   final Function(BuildContext context, QuickOrderItemEntity,
       OrderCallBackType orderCallBackType) callback;
   final QuickOrderItemEntity orderItemEntity;
 
-  const OrderVmiProductTitleWidget({super.key, required this.callback, required this.orderItemEntity});
+  const OrderVmiProductTitleWidget(
+      {super.key, required this.callback, required this.orderItemEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -170,8 +171,9 @@ class OrderVmiProductTitleWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Visibility(
-                  visible: orderItemEntity.productEntity.brand?.name?.isNotEmpty ??
-                      false,
+                  visible:
+                      orderItemEntity.productEntity.brand?.name?.isNotEmpty ??
+                          false,
                   child: Text(
                     orderItemEntity.productEntity.brand?.name ?? '',
                     style: OptiTextStyles.bodySmall,
@@ -179,8 +181,8 @@ class OrderVmiProductTitleWidget extends StatelessWidget {
                   ),
                 ),
                 Visibility(
-                  visible:
-                  orderItemEntity.productEntity.shortDescription?.isNotEmpty ??
+                  visible: orderItemEntity
+                          .productEntity.shortDescription?.isNotEmpty ??
                       false,
                   child: Text(
                     orderItemEntity.productEntity.shortDescription ?? '',
@@ -203,7 +205,9 @@ class OrderVmiProductTitleWidget extends StatelessWidget {
       child: SizedBox(
         width: 30,
         height: 30,
-        child: BottomMenuWidget(isViewOnWebsiteEnable: false, toolMenuList: _buildToolMenu(context)),
+        child: BottomMenuWidget(
+            isViewOnWebsiteEnable: false,
+            toolMenuList: _buildToolMenu(context)),
       ),
     );
   }
@@ -222,6 +226,4 @@ class OrderVmiProductTitleWidget extends StatelessWidget {
         }));
     return list;
   }
-
 }
-

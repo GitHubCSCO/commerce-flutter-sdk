@@ -17,9 +17,7 @@ class QuickOrderTypingEvent extends QuickOrderAutoCompleteEvent {
 class QuickOrderUnFocusEvent extends QuickOrderAutoCompleteEvent {}
 
 class QuickOrderLoadEvent extends QuickOrderAutoCompleteEvent {
-
   final String query;
 
   QuickOrderLoadEvent(this.query);
-
 }

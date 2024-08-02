@@ -102,8 +102,7 @@ class SearchUseCase extends BaseUseCase {
     }
   }
 
-  Future<Result<Category, ErrorResponse>> getCategory(
-      String categoryId) async {
+  Future<Result<Category, ErrorResponse>> getCategory(String categoryId) async {
     return await commerceAPIServiceProvider
         .getCategoryService()
         .getCategory(categoryId);
@@ -116,11 +115,8 @@ class SearchUseCase extends BaseUseCase {
         .getCategoryList(parameters: parameters);
   }
 
-  Future<Result<Brand, ErrorResponse>> getBrand(
-      String brandId) async {
-    return await commerceAPIServiceProvider
-        .getBrandService()
-        .getBrand(brandId);
+  Future<Result<Brand, ErrorResponse>> getBrand(String brandId) async {
+    return await commerceAPIServiceProvider.getBrandService().getBrand(brandId);
   }
 
   List<SortOrderAttribute> getAvailableSortOrders({

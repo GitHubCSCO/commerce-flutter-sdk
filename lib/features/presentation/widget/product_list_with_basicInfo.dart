@@ -26,7 +26,8 @@ class ProductListWithBasicInfo extends StatelessWidget {
             width: double.maxFinite,
             color: OptiAppColors.backgroundWhite,
             margin: const EdgeInsets.only(top: 8.0),
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
             child: Text(
               totalItemsTitle!.format([list.length]),
               textAlign: TextAlign.start,
@@ -131,7 +132,8 @@ class ProductListItemWithBasicInfo extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  LocalizationConstants.itemNumber.localized()
+                  LocalizationConstants.itemNumber
+                      .localized()
                       .format([productNumber ?? '']),
                   style: OptiTextStyles.bodySmall.copyWith(
                     color: OptiAppColors.textDisabledColor,

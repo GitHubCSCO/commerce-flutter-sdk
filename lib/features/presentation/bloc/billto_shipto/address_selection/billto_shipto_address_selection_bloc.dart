@@ -8,31 +8,38 @@ part 'billto_shipto_address_selection_event.dart';
 
 part 'billto_shipto_address_selection_state.dart';
 
-class BilltoShiptoAddressSelectionBloc extends Bloc<BilltoShiptoAddressSelectionEvent, BilltoShiptoAddressSelectionState> {
-  final BillToShipToAddressSelectionUseCase _billToShipToAddressSelectionUseCase;
+class BilltoShiptoAddressSelectionBloc extends Bloc<
+    BilltoShiptoAddressSelectionEvent, BilltoShiptoAddressSelectionState> {
+  final BillToShipToAddressSelectionUseCase
+      _billToShipToAddressSelectionUseCase;
 
   BilltoShiptoAddressSelectionBloc(
-      {required BillToShipToAddressSelectionUseCase billToShipToAddressSelectionUseCase})
+      {required BillToShipToAddressSelectionUseCase
+          billToShipToAddressSelectionUseCase})
       : _billToShipToAddressSelectionUseCase =
             billToShipToAddressSelectionUseCase,
         super(BilltoShiptoAddressSelectionInitial()) {
     on<BilltoShiptoAddressLoadEvent>(
-            (event, emit) => _onBilltoShiptoAddressLoadEvent(event, emit));
+        (event, emit) => _onBilltoShiptoAddressLoadEvent(event, emit));
   }
 
-  Future<void> _onBilltoShiptoAddressLoadEvent(BilltoShiptoAddressLoadEvent event,
+  Future<void> _onBilltoShiptoAddressLoadEvent(
+      BilltoShiptoAddressLoadEvent event,
       Emitter<BilltoShiptoAddressSelectionState> emit) async {
     emit(BilltoShiptoAddressSelectionLoading());
 
     if (event.selectionEntity.addressType == AddressType.billTo) {
       await _loadBillToAddress(event.searchQuery, event.currentPage, emit);
     } else {
-      await _loadShipToAddress(event.selectionEntity.selectedBillTo?.id ?? '', event.searchQuery, event.currentPage, emit);
+      await _loadShipToAddress(event.selectionEntity.selectedBillTo?.id ?? '',
+          event.searchQuery, event.currentPage, emit);
     }
   }
 
-  Future<void> _loadBillToAddress(String query, int currentPage, Emitter<BilltoShiptoAddressSelectionState> emit) async {
-    final result = await _billToShipToAddressSelectionUseCase.getBillToAddresses(query, currentPage);
+  Future<void> _loadBillToAddress(String query, int currentPage,
+      Emitter<BilltoShiptoAddressSelectionState> emit) async {
+    final result = await _billToShipToAddressSelectionUseCase
+        .getBillToAddresses(query, currentPage);
 
     switch (result) {
       case Success(value: final data):
@@ -42,8 +49,10 @@ class BilltoShiptoAddressSelectionBloc extends Bloc<BilltoShiptoAddressSelection
     }
   }
 
-  Future<void> _loadShipToAddress(String billToId, String query, int currentPage, Emitter<BilltoShiptoAddressSelectionState> emit) async {
-    final result = await _billToShipToAddressSelectionUseCase.getShipToAddresses(billToId, query, currentPage);
+  Future<void> _loadShipToAddress(String billToId, String query,
+      int currentPage, Emitter<BilltoShiptoAddressSelectionState> emit) async {
+    final result = await _billToShipToAddressSelectionUseCase
+        .getShipToAddresses(billToId, query, currentPage);
 
     switch (result) {
       case Success(value: final data):
@@ -52,5 +61,4 @@ class BilltoShiptoAddressSelectionBloc extends Bloc<BilltoShiptoAddressSelection
         emit(BilltoShiptoAddressSelectionFailed());
     }
   }
-
 }

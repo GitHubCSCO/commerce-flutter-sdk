@@ -103,12 +103,13 @@ class QuickOrderUseCase extends BaseUseCase {
             var parameters = ProductQueryParameters(expand: "styledproducts");
 
             var result = (await commerceAPIServiceProvider
-                .getProductService()
-                .getProduct(product.id ?? '', parameters: parameters))
+                    .getProductService()
+                    .getProduct(product.id ?? '', parameters: parameters))
                 .getResultSuccessValue();
 
             if (result?.product != null) {
-              final productEntity = ProductEntityMapper().toEntity(result!.product!);
+              final productEntity =
+                  ProductEntityMapper().toEntity(result!.product!);
               return Success(productEntity);
             }
           } else {

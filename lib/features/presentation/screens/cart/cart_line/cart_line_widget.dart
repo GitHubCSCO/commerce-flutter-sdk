@@ -144,4 +144,3 @@ class CartLineWidget extends StatelessWidget {
     );
   }
 }
-

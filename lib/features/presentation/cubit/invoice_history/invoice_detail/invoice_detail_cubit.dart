@@ -60,8 +60,10 @@ class InvoiceDetailCubit extends Cubit<InvoiceDetailState> {
   String get poNumber => LocalizationConstants.pONumber.localized();
   String get status => LocalizationConstants.status.localized();
   String get billingAddress => LocalizationConstants.billingAddress.localized();
-  String get shippingAddress => LocalizationConstants.shippingAddress.localized();
-  String get shippingMethodTitle => LocalizationConstants.shippingMethod.localized();
+  String get shippingAddress =>
+      LocalizationConstants.shippingAddress.localized();
+  String get shippingMethodTitle =>
+      LocalizationConstants.shippingMethod.localized();
   String get orderNotesTitle => LocalizationConstants.orderNotes.localized();
 
   String get invoiceDateValue => state.invoice.invoiceDate != null
@@ -108,6 +110,7 @@ class InvoiceDetailCubit extends Cubit<InvoiceDetailState> {
   String get discountValue => state.invoice.discountAmountDisplay ?? '';
   String get totalTitle => LocalizationConstants.total.localized();
   String get totalValue => state.invoice.invoiceTotalDisplay ?? '';
-  String get otherChargesTitle => LocalizationConstants.otherCharges.localized();
+  String get otherChargesTitle =>
+      LocalizationConstants.otherCharges.localized();
   String get otherChargesValue => state.invoice.otherChargesDisplay ?? '';
 }

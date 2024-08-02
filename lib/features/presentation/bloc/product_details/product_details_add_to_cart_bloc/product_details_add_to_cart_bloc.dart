@@ -28,8 +28,8 @@ class ProductDetailsAddToCartBloc
     emit(ProductDetailsAddtoCartLoading());
     var productDetailsAddToCartEntity = event.productDetailsAddToCartEntity;
 
-    productDetailsAddToCartEntity =
-        _productDetailsAddToCartUseCase.updateAddToCartViewModel(productDetailsAddToCartEntity);
+    productDetailsAddToCartEntity = _productDetailsAddToCartUseCase
+        .updateAddToCartViewModel(productDetailsAddToCartEntity);
     emit(ProductDetailsAddtoCartSuccess(
         productDetailsAddToCartEntity: productDetailsAddToCartEntity));
   }

@@ -13,11 +13,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 
 class BarcodeScannerView extends StatefulWidget {
-
   final Function(BuildContext, String) callback;
   final bool barcodeFullView;
 
-  BarcodeScannerView({required this.callback, required this.barcodeFullView, super.key});
+  BarcodeScannerView(
+      {required this.callback, required this.barcodeFullView, super.key});
 
   @override
   State<BarcodeScannerView> createState() => _BarcodeScannerViewState();
@@ -107,7 +107,8 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
 
     final size = rotateSize(
         inputImage.metadata!.size, inputImage.metadata?.rotation.rawValue ?? 0);
-    double areaHeight = calculateNewHeight(screenSize.height - bottomViewHeight, size.height, scanAreaHeight);
+    double areaHeight = calculateNewHeight(
+        screenSize.height - bottomViewHeight, size.height, scanAreaHeight);
 
     final left = sideMargin;
     final right = size.width - left;
@@ -135,8 +136,10 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
         isDialogShowing = true;
         displayDialogWidget(
             context: context,
-            title: LocalizationConstants.multipleBarcodeWarningTitle.localized(),
-            message: LocalizationConstants.multipleBarcodeWarningMessage.localized(),
+            title:
+                LocalizationConstants.multipleBarcodeWarningTitle.localized(),
+            message:
+                LocalizationConstants.multipleBarcodeWarningMessage.localized(),
             actions: [
               DialogPlainButton(
                 onPressed: () {
@@ -190,10 +193,10 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
     return Size(rotatedWidth, rotatedHeight);
   }
 
-  double calculateNewHeight(double screenHeight, double cameraHeight, double areaHeight) {
+  double calculateNewHeight(
+      double screenHeight, double cameraHeight, double areaHeight) {
     double ratio = cameraHeight / screenHeight;
     double newHeight = areaHeight * ratio;
     return newHeight;
   }
-
 }
