@@ -22,5 +22,4 @@ class AttributeValueEntityMapper {
         count: entity.count,
         selected: entity.selected,
       );
-      
 }

@@ -9,12 +9,10 @@ class LanguageLoading extends LanguageState {}
 class LanguageLoaded extends LanguageState {}
 
 class LanguageListLoaded extends LanguageState {
-
   final List<Language>? languages;
   final Language? selectedLanguage;
 
   LanguageListLoaded(this.languages, this.selectedLanguage);
-
 }
 
 class LanguageFailedToLoad extends LanguageState {

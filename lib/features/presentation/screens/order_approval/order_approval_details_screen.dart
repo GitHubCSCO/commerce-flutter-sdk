@@ -162,8 +162,9 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                             estimatedTaxValueLabel: context
                                 .watch<OrderApprovalDetailsCubit>()
                                 .taxValue,
-                            estimatedShippingTitleLabel:
-                                LocalizationConstants.shippingHandling.localized(),
+                            estimatedShippingTitleLabel: LocalizationConstants
+                                .shippingHandling
+                                .localized(),
                             estimatedShippingValueLabel: context
                                 .watch<OrderApprovalDetailsCubit>()
                                 .shippingValue,
@@ -172,18 +173,22 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                             estimatedTotalValueLabel: context
                                 .watch<OrderApprovalDetailsCubit>()
                                 .totalValue,
-                            estitamatedTaxTitleLabel: LocalizationConstants.tax.localized(),
+                            estitamatedTaxTitleLabel:
+                                LocalizationConstants.tax.localized(),
                           ),
                         _OrderApprovalInfoWidget(
-                          orderStatusLabel: LocalizationConstants.status.localized(),
+                          orderStatusLabel:
+                              LocalizationConstants.status.localized(),
                           orderStatusValueLabel: context
                               .watch<OrderApprovalDetailsCubit>()
                               .statusValue,
-                          poTitleLabel: LocalizationConstants.pONumberSign.localized(),
+                          poTitleLabel:
+                              LocalizationConstants.pONumberSign.localized(),
                           poValueLabel: context
                               .watch<OrderApprovalDetailsCubit>()
                               .poValue,
-                          orderDateValueLabel: LocalizationConstants.orderDate.localized(),
+                          orderDateValueLabel:
+                              LocalizationConstants.orderDate.localized(),
                           orderDateTitleLabel: context
                               .watch<OrderApprovalDetailsCubit>()
                               .orderDateValue,
@@ -227,7 +232,8 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                         onPressed: () {
                           confirmDialog(
                             context: context,
-                            message: '${LocalizationConstants.deleteOrder.localized()}?',
+                            message:
+                                '${LocalizationConstants.deleteOrder.localized()}?',
                             onConfirm: () async {
                               await context
                                   .read<OrderApprovalDetailsCubit>()

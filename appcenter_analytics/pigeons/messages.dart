@@ -8,7 +8,8 @@ import 'package:pigeon/pigeon.dart';
     swiftOut: 'ios/Classes/Messages.g.swift',
     kotlinOut:
         'android/src/main/kotlin/com/optimizely/plugin/appcenter_analytics/Messages.g.kt',
-    kotlinOptions: KotlinOptions(package: 'com.optimizely.plugin.appcenter_analytics'),
+    kotlinOptions:
+        KotlinOptions(package: 'com.optimizely.plugin.appcenter_analytics'),
   ),
 )
 @HostApi()

@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 class CarouselItemWidget extends StatelessWidget {
   final CarouselSlideWidgetEntity carouselSlideWidgetEntity;
 
-  const CarouselItemWidget({super.key, required this.carouselSlideWidgetEntity});
+  const CarouselItemWidget(
+      {super.key, required this.carouselSlideWidgetEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +16,8 @@ class CarouselItemWidget extends StatelessWidget {
       child: Image.network(
         carouselSlideWidgetEntity.imagePath.makeImageUrl(),
         fit: BoxFit.fitWidth,
-        errorBuilder: (BuildContext context, Object error,
-            StackTrace? stackTrace) {
+        errorBuilder:
+            (BuildContext context, Object error, StackTrace? stackTrace) {
           // This function is called when the image fails to load
           return Container(
             color: OptiAppColors.backgroundGray, // Placeholder color
@@ -31,5 +32,4 @@ class CarouselItemWidget extends StatelessWidget {
       ),
     );
   }
-
 }

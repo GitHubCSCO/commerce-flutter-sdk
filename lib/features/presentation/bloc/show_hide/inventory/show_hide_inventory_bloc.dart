@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'show_hide_inventory_event.dart';
 part 'show_hide_inventory_state.dart';
 
-class ShowHideInventoryBloc extends Bloc<ShowHideInventoryEvent, ShowHideInventoryState> {
-
+class ShowHideInventoryBloc
+    extends Bloc<ShowHideInventoryEvent, ShowHideInventoryState> {
   final ShowHidePricingInventoryUseCase _showHidePricingInventoryUseCase;
 
   ShowHideInventoryBloc(

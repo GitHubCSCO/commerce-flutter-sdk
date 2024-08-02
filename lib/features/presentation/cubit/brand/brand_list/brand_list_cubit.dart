@@ -5,7 +5,6 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 part 'brand_list_state.dart';
 
 class BrandListCubit extends Cubit<BrandListState> {
-
   final BrandUseCase _brandUseCase;
 
   BrandListCubit({required BrandUseCase brandUseCase})
@@ -23,5 +22,4 @@ class BrandListCubit extends Cubit<BrandListState> {
         emit(BrandListFailed(error: error.message ?? ''));
     }
   }
-
 }

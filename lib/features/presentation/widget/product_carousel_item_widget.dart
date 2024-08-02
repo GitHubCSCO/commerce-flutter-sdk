@@ -12,7 +12,10 @@ class ProductCarouselItemWidget extends StatelessWidget {
   final bool hidePricingEnable;
 
   const ProductCarouselItemWidget(
-      {super.key, required this.productCarousel, required this.isLoading, required this.hidePricingEnable});
+      {super.key,
+      required this.productCarousel,
+      required this.isLoading,
+      required this.hidePricingEnable});
 
   @override
   Widget build(BuildContext context) {

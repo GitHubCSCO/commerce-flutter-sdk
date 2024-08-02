@@ -18,7 +18,8 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
   final ShippingEntity shippingEntity;
   final void Function(BuildContext, WarehouseEntity)? onCallBack;
 
-  const CartShippingWidget({super.key, required this.shippingEntity, this.onCallBack});
+  const CartShippingWidget(
+      {super.key, required this.shippingEntity, this.onCallBack});
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +94,8 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                                 onWarehouseLocationSelected: (wareHouse) {
                                   onCallBack?.call(context, wareHouse);
                                 },
-                                locationSearchType: LocationSearchType.pickUpLocation));
+                                locationSearchType:
+                                    LocationSearchType.pickUpLocation));
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
@@ -109,7 +111,8 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  LocalizationConstants.pickUpLocation.localized(),
+                                  LocalizationConstants.pickUpLocation
+                                      .localized(),
                                   textAlign: TextAlign.center,
                                   style: OptiTextStyles.subtitle,
                                 ),

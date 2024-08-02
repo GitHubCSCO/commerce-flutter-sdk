@@ -15,7 +15,6 @@ class StyleValueEntity extends Equatable {
   final String? swatchType;
   final bool? isAvailable;
 
-
   const StyleValueEntity({
     this.styleTraitName,
     this.styleTraitId,
@@ -43,7 +42,7 @@ class StyleValueEntity extends Equatable {
     String? swatchColorValue,
     String? swatchImageValue,
     String? swatchType,
-     bool? isAvailable,
+    bool? isAvailable,
   }) {
     return StyleValueEntity(
       styleTraitName: styleTraitName ?? this.styleTraitName,

@@ -64,30 +64,40 @@ class ActionListItemWidget extends BaseActionItemWidget {
                   const SizedBox(width: 2),
                   if (action.type == ActionType.showHidePricing)
                     BlocBuilder<ShowHidePricingBloc, ShowHidePricingState>(
-                      builder: (context, state) {
-                        bool toggle = (state is! ShowHidePricingChanged) ? false : state.value;
-                        return Switch(
-                          value: toggle,
-                          onChanged: (value) {
-                            context.read<ShowHidePricingBloc>().add(ShowHidePricingToggled(value));
-                            context.read<RootBloc>().add(RootHidePricingInventoryEvent());
-                          },
-                        );
-                      }
-                    )
+                        builder: (context, state) {
+                      bool toggle = (state is! ShowHidePricingChanged)
+                          ? false
+                          : state.value;
+                      return Switch(
+                        value: toggle,
+                        onChanged: (value) {
+                          context
+                              .read<ShowHidePricingBloc>()
+                              .add(ShowHidePricingToggled(value));
+                          context
+                              .read<RootBloc>()
+                              .add(RootHidePricingInventoryEvent());
+                        },
+                      );
+                    })
                   else if (action.type == ActionType.showHideInventory)
                     BlocBuilder<ShowHideInventoryBloc, ShowHideInventoryState>(
                         builder: (context, state) {
-                          bool toggle = (state is! ShowHideInventoryChanged) ? false : state.value;
-                          return Switch(
-                            value: toggle,
-                            onChanged: (value) {
-                              context.read<ShowHideInventoryBloc>().add(ShowHideInventoryToggled(value));
-                              context.read<RootBloc>().add(RootHidePricingInventoryEvent());
-                            },
-                          );
-                        }
-                    )
+                      bool toggle = (state is! ShowHideInventoryChanged)
+                          ? false
+                          : state.value;
+                      return Switch(
+                        value: toggle,
+                        onChanged: (value) {
+                          context
+                              .read<ShowHideInventoryBloc>()
+                              .add(ShowHideInventoryToggled(value));
+                          context
+                              .read<RootBloc>()
+                              .add(RootHidePricingInventoryEvent());
+                        },
+                      );
+                    })
                   else
                     Container(
                       alignment: Alignment.center,
@@ -108,5 +118,4 @@ class ActionListItemWidget extends BaseActionItemWidget {
       ),
     );
   }
-
 }
