@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/exceptions/language_exceptions.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/localization_interface.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -11,10 +12,13 @@ class LocalizationService implements ILocalizationService {
   Language? _currentLanguage;
 
   final ICommerceAPIServiceProvider _commerceAPIServiceProvider;
+  final ICoreServiceProvider _coreServiceProvider;
 
   LocalizationService({
     required ICommerceAPIServiceProvider commerceAPIServiceProvider,
-  }) : _commerceAPIServiceProvider = commerceAPIServiceProvider;
+    required ICoreServiceProvider coreServiceProvider,
+  })  : _commerceAPIServiceProvider = commerceAPIServiceProvider,
+        _coreServiceProvider = coreServiceProvider;
 
   @override
   Future<Result<bool, ErrorResponse>> changeLanguage(Language? language) async {
@@ -179,8 +183,10 @@ class LocalizationService implements ILocalizationService {
       case Success(value: final value):
         {
           if (value == null) {
-            // send error to trackerservice
-            // await _commerceAPIServiceProvider.getTrackingService().trackError(GetTranslationException(message:"Could not load translation for language (${language?.languageCode}) with $keywords"));
+            await _coreServiceProvider.getTrackingService().trackError(
+                GetTranslationException(
+                    message:
+                        "Could not load translation for language (${language?.languageCode}) with $keywords"));
           } else {
             if (value.translationDictionaries != null) {
               for (var item in value.translationDictionaries!) {
@@ -196,8 +202,9 @@ class LocalizationService implements ILocalizationService {
         }
       case Failure(errorResponse: final errorResponse):
         {
-          //send error to trackerservice
-          //await _commerceAPIServiceProvider.getTrackingService().trackError(errorResponse)
+          await _coreServiceProvider
+              .getTrackingService()
+              .trackError(errorResponse);
         }
     }
   }

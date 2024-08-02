@@ -710,6 +710,7 @@ Future<void> initInjectionContainer() async {
         ))
     ..registerLazySingleton<ILocalizationService>(() => LocalizationService(
           commerceAPIServiceProvider: sl(),
+          coreServiceProvider: sl(),
         ))
     ..registerSingletonAsync<IAppConfigurationService>(() async {
       final service = AppConfigurationService(

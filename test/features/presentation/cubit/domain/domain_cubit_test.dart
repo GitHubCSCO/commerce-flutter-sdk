@@ -26,6 +26,49 @@ void main() async {
     sut.close();
   });
   group('DomainCubit', () {
+    test('equality for states', () {
+      expect(DomainUnknown(), isA<DomainState>());
+      expect(DomainUnknown(), DomainUnknown());
+
+      expect(DomainOperationInProgress(), isA<DomainState>());
+      expect(DomainOperationInProgress(), DomainOperationInProgress());
+
+      expect(DomainLoaded('domain'), isA<DomainState>());
+      expect(DomainLoaded('domain'), DomainLoaded('domain'));
+      expect(DomainLoaded('domain'), isNot(DomainLoaded('not_valid_domain')));
+
+      expect(DomainOperationFailed('title', 'message'), isA<DomainState>());
+      expect(DomainOperationFailed('title', 'message'),
+          DomainOperationFailed('title', 'message'));
+      expect(DomainOperationFailed('title', 'message'),
+          isNot(DomainOperationFailed('not_title', 'not_message')));
+
+      expect(
+          DomainOperationFailedOffline('title', 'message'), isA<DomainState>());
+      expect(DomainOperationFailedOffline('title', 'message'),
+          DomainOperationFailedOffline('title', 'message'));
+      expect(DomainOperationFailedOffline('title', 'message'),
+          isNot(DomainOperationFailedOffline('not_title', 'not_message')));
+
+      expect(
+          DomainOperationFailedInvalid('title', 'message'), isA<DomainState>());
+      expect(DomainOperationFailedInvalid('title', 'message'),
+          DomainOperationFailedInvalid('title', 'message'));
+      expect(DomainOperationFailedInvalid('title', 'message'),
+          isNot(DomainOperationFailedInvalid('not_title', 'not_message')));
+
+      expect(DomainOperationFailedMobileAppDisabled('title', 'message'),
+          isA<DomainState>());
+      expect(DomainOperationFailedMobileAppDisabled('title', 'message'),
+          DomainOperationFailedMobileAppDisabled('title', 'message'));
+      expect(
+          DomainOperationFailedMobileAppDisabled('title', 'message'),
+          isNot(DomainOperationFailedMobileAppDisabled(
+              'not_title', 'not_message')));
+    });
+    test('initial state is DomainUnknown', () {
+      expect(sut.state, isA<DomainUnknown>());
+    });
     blocTest(
       'emits [DomainOperationInProgress, DomainLoaded] when selectDomain is called successfully',
       build: () {
