@@ -29,7 +29,11 @@ class CartPageLoadedState extends CartPageState {
       this.hideInventoryEnable});
 }
 
-class CartPageNoDataState extends CartPageState {}
+class CartPageNoDataState extends CartPageState {
+  final String message;
+
+  CartPageNoDataState(this.message);
+}
 
 class CartPageFailureState extends CartPageState {
   final String error;

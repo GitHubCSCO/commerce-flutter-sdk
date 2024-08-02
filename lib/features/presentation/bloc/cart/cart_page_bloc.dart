@@ -51,7 +51,10 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
         case Success(value: final data):
           cart = data;
           if (cart?.cartLines == null || cart!.cartLines!.isEmpty) {
-            emit(CartPageNoDataState());
+            final message = await _cartUseCase.getSiteMessage(
+                SiteMessageConstants.nameNoOrderLines,
+                SiteMessageConstants.defaultValueNoOrderLines);
+            emit(CartPageNoDataState(message));
             return;
           }
           var wareHouse = _cartUseCase.getPickUpWareHouse();

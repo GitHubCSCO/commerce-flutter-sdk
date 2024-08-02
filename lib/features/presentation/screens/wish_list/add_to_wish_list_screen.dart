@@ -107,7 +107,7 @@ class AddToSingleWishListPage extends StatelessWidget {
           Navigator.of(context, rootNavigator: true).pop();
           CustomSnackBar.showSnackBarMessage(
             context,
-            SiteMessageConstants.defaultValueWishListProductAdded,
+            state.message ?? '',
           );
 
           if (onWishListUpdated != null) {
@@ -218,7 +218,7 @@ class _AddToWishListPageState extends State<AddToWishListPage> {
                 Navigator.of(context, rootNavigator: true).pop();
                 CustomSnackBar.showSnackBarMessage(
                   context,
-                  SiteMessageConstants.defaultValueWishListProductAdded,
+                  state.message ?? '',
                 );
 
                 if (widget.onWishListUpdated != null) {

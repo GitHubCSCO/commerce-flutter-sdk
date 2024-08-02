@@ -1,4 +1,3 @@
-import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/language_usecase/language_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -31,8 +30,7 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
         }
         break;
       case Failure(errorResponse: final errorResponse):
-        //send error to trackerservice
-        //await _commerceAPIServiceProvider.getTrackingService().trackError(errorResponse)
+        await _languageUsecase.trackError(errorResponse);
         emit(LanguageFailedToLoad(errorResponse.extractErrorMessage() ??
             "Language could not be loaded."));
         break;
@@ -54,6 +52,7 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
         }
         break;
       case Failure(errorResponse: final errorResponse):
+        await _languageUsecase.trackError(errorResponse);
         emit(LanguageFailedToLoad(errorResponse.extractErrorMessage() ??
             "Language could not be loaded."));
         break;
@@ -67,6 +66,7 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
     switch (result) {
       case Success(value: final data):
         if (data == true) {
+          _languageUsecase.loadDefaultSiteMessage();
           emit(LanguageChanged());
           var language = _languageUsecase.getCurrentLanguage();
           emit(LanguageListLoaded(languages, language));
@@ -75,6 +75,7 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
         }
         break;
       case Failure(errorResponse: final errorResponse):
+        await _languageUsecase.trackError(errorResponse);
         emit(LanguageFailedToLoad(errorResponse.extractErrorMessage() ??
             "Language could not be changed."));
         break;

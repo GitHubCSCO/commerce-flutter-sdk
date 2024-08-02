@@ -193,9 +193,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                       .add(OrderListRemoveEvent());
                                 });
                                 CustomSnackBar.showSnackBarMessage(
-                                    context,
-                                    SiteMessageConstants
-                                        .defaultValueQuickOrderInstructions);
+                                    context, state.message ?? '');
                               } else if (state
                                   is OrderListAddToListFailedState) {
                                 _showAlert(context,
@@ -566,8 +564,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
         return;
       }
       if (addToCartCartLineList.length == addCartLines.length) {
-        CustomSnackBar.showSnackBarMessage(context,
+        final message = await context.read<OrderListBloc>().getSiteMessage(
+            SiteMessageConstants.nameAddToCartAllProductsSuccess,
             SiteMessageConstants.defaultValueAddToCartAllProductsFromList);
+        CustomSnackBar.showSnackBarMessage(context, message);
       } else {
         CustomSnackBar.showSnackBarMessage(
             context, SiteMessageConstants.defaultValueProductOutOfStock);
@@ -586,8 +586,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
 
       context.read<OrderListBloc>().add(OrderListAddToCartEvent());
     } else {
-      CustomSnackBar.showSnackBarMessage(
-          context, SiteMessageConstants.defaultValueAddToCartFail);
+      final message = await context.read<OrderListBloc>().getSiteMessage(
+          SiteMessageConstants.nameAddToCartFail,
+          SiteMessageConstants.defaultValueAddToCartFail);
+      CustomSnackBar.showSnackBarMessage(context, message);
     }
   }
 

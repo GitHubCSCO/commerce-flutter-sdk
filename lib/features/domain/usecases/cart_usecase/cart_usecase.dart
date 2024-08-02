@@ -55,14 +55,6 @@ class CartUseCase extends BaseUseCase {
         .isCustomerOrderApproval();
   }
 
-  Future<String> getSiteMessage(
-      String messageName, String? defaultMessage) async {
-    var result = await commerceAPIServiceProvider
-        .getWebsiteService()
-        .getSiteMessage(messageName, defaultMessage: defaultMessage);
-    return result is Success ? (result as Success).value : defaultMessage;
-  }
-
   Future<Result<ProductSettings, ErrorResponse>> loadProductSettings() async {
     return await commerceAPIServiceProvider
         .getSettingsService()
