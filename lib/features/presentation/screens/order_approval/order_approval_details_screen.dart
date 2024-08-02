@@ -14,6 +14,7 @@ import 'package:commerce_flutter_app/features/presentation/components/two_texts_
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_handler/order_approval_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval_details/order_approval_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/cart_order_products_section_widget.dart';
@@ -21,6 +22,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/order_details_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class OrderApprovalDetailsScreen extends StatelessWidget {
   final String cartId;
@@ -162,8 +164,9 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                             estimatedTaxValueLabel: context
                                 .watch<OrderApprovalDetailsCubit>()
                                 .taxValue,
-                            estimatedShippingTitleLabel:
-                                LocalizationConstants.shippingHandling.localized(),
+                            estimatedShippingTitleLabel: LocalizationConstants
+                                .shippingHandling
+                                .localized(),
                             estimatedShippingValueLabel: context
                                 .watch<OrderApprovalDetailsCubit>()
                                 .shippingValue,
@@ -172,18 +175,22 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                             estimatedTotalValueLabel: context
                                 .watch<OrderApprovalDetailsCubit>()
                                 .totalValue,
-                            estitamatedTaxTitleLabel: LocalizationConstants.tax.localized(),
+                            estitamatedTaxTitleLabel:
+                                LocalizationConstants.tax.localized(),
                           ),
                         _OrderApprovalInfoWidget(
-                          orderStatusLabel: LocalizationConstants.status.localized(),
+                          orderStatusLabel:
+                              LocalizationConstants.status.localized(),
                           orderStatusValueLabel: context
                               .watch<OrderApprovalDetailsCubit>()
                               .statusValue,
-                          poTitleLabel: LocalizationConstants.pONumberSign.localized(),
+                          poTitleLabel:
+                              LocalizationConstants.pONumberSign.localized(),
                           poValueLabel: context
                               .watch<OrderApprovalDetailsCubit>()
                               .poValue,
-                          orderDateValueLabel: LocalizationConstants.orderDate.localized(),
+                          orderDateValueLabel:
+                              LocalizationConstants.orderDate.localized(),
                           orderDateTitleLabel: context
                               .watch<OrderApprovalDetailsCubit>()
                               .orderDateValue,
@@ -212,6 +219,26 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                               .getCartLines(),
                           hidePricingEnable: state.hidePricingEnable,
                           hideInventoryEnable: state.hideInventoryEnable,
+                          onAddToList: ({required cartLineEntity}) {
+                            WishListCallbackHelper.addItemsToWishList(
+                              context,
+                              addToCartCollection: WishListAddToCartCollection(
+                                wishListLines: [
+                                  AddCartLine(
+                                    productId: cartLineEntity.productId,
+                                    qtyOrdered: 1,
+                                    unitOfMeasure: cartLineEntity.unitOfMeasure,
+                                  ),
+                                ],
+                              ),
+                              onAddedToCart: null,
+                            );
+                          },
+                          onAddToCart: ({required cartLineEntity}) {
+                            // context
+                            //     .read<OrderApprovalDetailsCubit>()
+                            //     .addToCart(cartLineEntity: cartLineEntity);
+                          },
                         ),
                       ],
                     ),
@@ -227,7 +254,8 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                         onPressed: () {
                           confirmDialog(
                             context: context,
-                            message: '${LocalizationConstants.deleteOrder.localized()}?',
+                            message:
+                                '${LocalizationConstants.deleteOrder.localized()}?',
                             onConfirm: () async {
                               await context
                                   .read<OrderApprovalDetailsCubit>()
