@@ -13,15 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_l
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class BaseActionItemWidget extends StatelessWidget {
-  const BaseActionItemWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
-
+mixin BaseActionItemWidget {
   String getActionIconPath(ActionLinkEntity actionLink) {
     switch (actionLink.type) {
       case ActionType.categories:

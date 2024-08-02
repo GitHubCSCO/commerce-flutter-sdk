@@ -36,7 +36,7 @@ class ShopScreen extends StatelessWidget {
   }
 }
 
-class ShopPage extends BaseDynamicContentScreen {
+class ShopPage extends StatelessWidget with BaseDynamicContentScreen {
   final websitePath = WebsitePaths.shopWebsitePath;
 
   const ShopPage({super.key});

@@ -52,7 +52,7 @@ class SearchScreen extends StatelessWidget {
   }
 }
 
-class SearchPage extends BaseDynamicContentScreen {
+class SearchPage extends StatelessWidget with BaseDynamicContentScreen {
   SearchPage({super.key});
 
   final textEditingController = TextEditingController();

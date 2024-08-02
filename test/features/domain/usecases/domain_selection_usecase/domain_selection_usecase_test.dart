@@ -1,53 +1,57 @@
 import 'package:commerce_flutter_app/features/domain/enums/domain_change_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:test/test.dart';
 import '../../injector_mock.dart';
 
-void main() {
+void main() async {
+  late DomainUsecase sut;
+  setUp(() async {
+    initInjectionContainerMock();
+    await GetIt.I.allReady();
+    sut = DomainUsecase();
+  });
+
+  tearDown(() {
+    // Reset GetIt after each test
+    GetIt.I.reset();
+  });
+
   group('DomainUsecase', () {
-    late DomainUsecase domainSelectionUsecase;
-
-    setUpAll(() {
-      initInjectionContainerMock();
-      domainSelectionUsecase = DomainUsecase();
-    });
-
     test(
       'domainSelectHandler should set the extracted domain and return success status when settings are retrieved successfully',
       () async {
         const domain = 'test.com';
         const extractedDomain = 'www.test.com';
 
-        when(() => domainSelectionUsecase.commerceAPIServiceProvider
-            .getNetworkService()
-            .isOnline()).thenAnswer((_) async => true);
-        when(() => domainSelectionUsecase.commerceAPIServiceProvider
+        when(() =>
+                sut.commerceAPIServiceProvider.getNetworkService().isOnline())
+            .thenAnswer((_) async => true);
+        when(() => sut.commerceAPIServiceProvider
                 .getSettingsService()
                 .getProductSettingsAsync())
             .thenAnswer((_) async => Success(ProductSettings()));
-        when(() => domainSelectionUsecase.commerceAPIServiceProvider
+        when(() => sut.commerceAPIServiceProvider
                 .getSettingsService()
                 .getWebsiteSettingsAsync())
             .thenAnswer(
                 (_) async => Success(WebsiteSettings(mobileAppEnabled: true)));
 
-        when(() => domainSelectionUsecase.commerceAPIServiceProvider
-            .getClientService()
-            .host).thenReturn(null);
-        when(() => domainSelectionUsecase.commerceAPIServiceProvider
+        when(() => sut.commerceAPIServiceProvider.getClientService().host)
+            .thenReturn(null);
+        when(() => sut.commerceAPIServiceProvider
             .getLocalStorageService()
             .save("DomainKey", extractedDomain)).thenAnswer((_) async {});
 
-        final result = await domainSelectionUsecase.domainSelectHandler(domain);
+        final result = await sut.domainSelectHandler(domain);
 
         expect(result, equals(DomainChangeStatus.success));
         expect(ClientConfig.hostUrl, equals(extractedDomain));
-        verify(() => domainSelectionUsecase.commerceAPIServiceProvider
-            .getClientService()
-            .host = extractedDomain);
-        verify(() => domainSelectionUsecase.commerceAPIServiceProvider
+        verify(() => sut.commerceAPIServiceProvider.getClientService().host =
+            extractedDomain);
+        verify(() => sut.commerceAPIServiceProvider
             .getAdminClientService()
             .host = extractedDomain);
       },
@@ -57,11 +61,10 @@ void main() {
         () async {
       const domain = 'test.com';
 
-      when(() => domainSelectionUsecase.commerceAPIServiceProvider
-          .getNetworkService()
-          .isOnline()).thenAnswer((_) async => false);
+      when(() => sut.commerceAPIServiceProvider.getNetworkService().isOnline())
+          .thenAnswer((_) async => false);
 
-      final result = await domainSelectionUsecase.domainSelectHandler(domain);
+      final result = await sut.domainSelectHandler(domain);
 
       expect(result, equals(DomainChangeStatus.failedOffline));
     });
@@ -71,23 +74,21 @@ void main() {
         () async {
       const domain = 'test.com';
 
-      when(() => domainSelectionUsecase.commerceAPIServiceProvider
-          .getNetworkService()
-          .isOnline()).thenAnswer((_) async => true);
-      when(() => domainSelectionUsecase.commerceAPIServiceProvider
+      when(() => sut.commerceAPIServiceProvider.getNetworkService().isOnline())
+          .thenAnswer((_) async => true);
+      when(() => sut.commerceAPIServiceProvider
               .getSettingsService()
               .getProductSettingsAsync())
           .thenAnswer((_) async => Failure(ErrorResponse()));
-      when(() => domainSelectionUsecase.commerceAPIServiceProvider
+      when(() => sut.commerceAPIServiceProvider
               .getSettingsService()
               .getWebsiteSettingsAsync())
           .thenAnswer((_) async => Failure(ErrorResponse()));
 
-      when(() => domainSelectionUsecase.commerceAPIServiceProvider
-          .getClientService()
-          .host).thenReturn('test.com');
+      when(() => sut.commerceAPIServiceProvider.getClientService().host)
+          .thenReturn('test.com');
 
-      final result = await domainSelectionUsecase.domainSelectHandler(domain);
+      final result = await sut.domainSelectHandler(domain);
 
       expect(result, equals(DomainChangeStatus.failedInvalidDomain));
     });
@@ -97,20 +98,19 @@ void main() {
         () async {
       const domain = 'test.com';
 
-      when(() => domainSelectionUsecase.commerceAPIServiceProvider
-          .getNetworkService()
-          .isOnline()).thenAnswer((_) async => true);
-      when(() => domainSelectionUsecase.commerceAPIServiceProvider
+      when(() => sut.commerceAPIServiceProvider.getNetworkService().isOnline())
+          .thenAnswer((_) async => true);
+      when(() => sut.commerceAPIServiceProvider
               .getSettingsService()
               .getProductSettingsAsync())
           .thenAnswer((_) async => Success(ProductSettings()));
-      when(() => domainSelectionUsecase.commerceAPIServiceProvider
+      when(() => sut.commerceAPIServiceProvider
               .getSettingsService()
               .getWebsiteSettingsAsync())
           .thenAnswer(
               (_) async => Success(WebsiteSettings(mobileAppEnabled: false)));
 
-      final result = await domainSelectionUsecase.domainSelectHandler(domain);
+      final result = await sut.domainSelectHandler(domain);
 
       expect(result, equals(DomainChangeStatus.failedMobileAppDisabled));
     });
@@ -120,34 +120,32 @@ void main() {
       () async {
         const domain = 'www.test.com';
 
-        when(() => domainSelectionUsecase.commerceAPIServiceProvider
-            .getNetworkService()
-            .isOnline()).thenAnswer((_) async => true);
-        when(() => domainSelectionUsecase.commerceAPIServiceProvider
+        when(() =>
+                sut.commerceAPIServiceProvider.getNetworkService().isOnline())
+            .thenAnswer((_) async => true);
+        when(() => sut.commerceAPIServiceProvider
                 .getSettingsService()
                 .getProductSettingsAsync())
             .thenAnswer((_) async => Success(ProductSettings()));
-        when(() => domainSelectionUsecase.commerceAPIServiceProvider
+        when(() => sut.commerceAPIServiceProvider
                 .getSettingsService()
                 .getWebsiteSettingsAsync())
             .thenAnswer(
                 (_) async => Success(WebsiteSettings(mobileAppEnabled: true)));
 
-        when(() => domainSelectionUsecase.commerceAPIServiceProvider
-            .getClientService()
-            .host).thenReturn(null);
-        when(() => domainSelectionUsecase.commerceAPIServiceProvider
+        when(() => sut.commerceAPIServiceProvider.getClientService().host)
+            .thenReturn(null);
+        when(() => sut.commerceAPIServiceProvider
             .getLocalStorageService()
             .save("DomainKey", domain)).thenAnswer((_) async {});
 
-        final result = await domainSelectionUsecase.domainSelectHandler(domain);
+        final result = await sut.domainSelectHandler(domain);
 
         expect(result, equals(DomainChangeStatus.success));
         expect(ClientConfig.hostUrl, equals(domain));
-        verify(() => domainSelectionUsecase.commerceAPIServiceProvider
-            .getClientService()
-            .host = domain);
-        verify(() => domainSelectionUsecase.commerceAPIServiceProvider
+        verify(() =>
+            sut.commerceAPIServiceProvider.getClientService().host = domain);
+        verify(() => sut.commerceAPIServiceProvider
             .getAdminClientService()
             .host = domain);
       },
@@ -158,7 +156,7 @@ void main() {
       () async {
         const domain = '';
 
-        final result = await domainSelectionUsecase.domainSelectHandler(domain);
+        final result = await sut.domainSelectHandler(domain);
 
         expect(result, equals(DomainChangeStatus.failedInvalidDomain));
       },

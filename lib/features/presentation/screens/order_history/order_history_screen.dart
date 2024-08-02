@@ -37,7 +37,7 @@ class OrderHistoryScreen extends StatelessWidget {
   }
 }
 
-class OrderHistoryPage extends BaseDynamicContentScreen {
+class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
   final bool? isFromVMI;
   OrderHistoryPage(this.isFromVMI, {super.key});
 

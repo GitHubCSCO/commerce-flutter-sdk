@@ -56,7 +56,7 @@ class AccountScreen extends StatelessWidget {
   }
 }
 
-class AccountPage extends BaseDynamicContentScreen {
+class AccountPage extends StatelessWidget with BaseDynamicContentScreen {
   const AccountPage({super.key});
 
   @override
