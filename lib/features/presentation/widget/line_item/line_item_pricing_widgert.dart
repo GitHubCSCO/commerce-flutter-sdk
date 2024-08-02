@@ -35,7 +35,7 @@ class LineItemPricingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 5.0, left: 20),
+      padding: const EdgeInsets.only(bottom: 5.0),
       child: Container(
         color: Colors.white,
         child: Column(
@@ -55,9 +55,9 @@ class LineItemPricingWidget extends StatelessWidget {
             if (!(hideInventoryEnable ?? false)) ...{
               availabilityText != null
                   ? _buildInventorySection(
-                context,
-                availabilityText: availabilityText,
-              )
+                      context,
+                      availabilityText: availabilityText,
+                    )
                   : Container(),
               // _buildInventorySection(context),
               // For "View Availability by Warehouse"

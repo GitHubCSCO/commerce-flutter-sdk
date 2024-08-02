@@ -58,6 +58,4 @@ class CheckoutPlaceOrderFailed extends CheckoutState {
   CheckoutPlaceOrderFailed({required this.error});
 }
 
-class CheckoutShipToAddressAddedState extends CheckoutState {
-
-}
+class CheckoutShipToAddressAddedState extends CheckoutState {}

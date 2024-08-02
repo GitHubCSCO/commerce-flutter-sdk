@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class LanguageItem extends StatelessWidget {
-
   final Language language;
   final bool isSelected;
   final void Function(BuildContext, Language)? onCallBack;
@@ -66,5 +65,4 @@ class LanguageItem extends StatelessWidget {
       ),
     );
   }
-
 }

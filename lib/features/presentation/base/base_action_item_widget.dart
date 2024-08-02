@@ -13,15 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_l
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class BaseActionItemWidget extends StatelessWidget {
-  const BaseActionItemWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
-
+mixin BaseActionItemWidget {
   String getActionIconPath(ActionLinkEntity actionLink) {
     switch (actionLink.type) {
       case ActionType.categories:
@@ -103,7 +95,9 @@ class BaseActionItemWidget extends StatelessWidget {
       case ActionType.forceCrash:
         return "Force Crash";
       case ActionType.toggleLogging:
-      return LogConfig.isAllLogsEnabled ? "Disable logging" : "Enable logging";
+        return LogConfig.isAllLogsEnabled
+            ? "Disable logging"
+            : "Enable logging";
       case ActionType.invoices:
         return LocalizationConstants.invoiceHistory.localized();
       case ActionType.savedPayments:

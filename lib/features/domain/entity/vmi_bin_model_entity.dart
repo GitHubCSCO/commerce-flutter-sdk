@@ -2,7 +2,6 @@ import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart'
 import 'package:equatable/equatable.dart';
 
 class VmiBinModelEntity extends Equatable {
-
   final String id;
   final String vmiLocationId;
   final String binNumber;
@@ -37,5 +36,4 @@ class VmiBinModelEntity extends Equatable {
 
   @override
   List<Object?> get props => [id];
-
 }

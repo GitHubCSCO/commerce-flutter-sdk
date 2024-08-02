@@ -17,16 +17,24 @@ class BrandCategoryScreen extends StatelessWidget {
   Brand brand;
   BrandCategory? brandCategory;
   GetBrandSubCategoriesResult? brandSubCategories;
-  BrandCategoryScreen({super.key, required this.brand, this.brandCategory, this.brandSubCategories});
+  BrandCategoryScreen(
+      {super.key,
+      required this.brand,
+      this.brandCategory,
+      this.brandSubCategories});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<BrandCategoryBloc>(
-      create: (context) => sl<BrandCategoryBloc>()..add(BrandCategoryLoadEvent(brand: brand, brandCategory: brandCategory, brandSubCategories: brandSubCategories)),
-      child: BrandCategoryPage(brand: brand, categoryTitle: brandCategory?.categoryName),
+      create: (context) => sl<BrandCategoryBloc>()
+        ..add(BrandCategoryLoadEvent(
+            brand: brand,
+            brandCategory: brandCategory,
+            brandSubCategories: brandSubCategories)),
+      child: BrandCategoryPage(
+          brand: brand, categoryTitle: brandCategory?.categoryName),
     );
   }
-
 }
 
 class BrandCategoryPage extends StatefulWidget {
@@ -47,10 +55,12 @@ class _BrandCategoryPageState extends State<BrandCategoryPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            widget.categoryTitle ?? 
-            LocalizationConstants.categories.localized(), style: OptiTextStyles.titleLarge),
+            widget.categoryTitle ??
+                LocalizationConstants.categories.localized(),
+            style: OptiTextStyles.titleLarge),
         actions: [
-          BottomMenuWidget(websitePath: widget.brand.detailPagePath,
+          BottomMenuWidget(
+              websitePath: widget.brand.detailPagePath,
               toolMenuList: _getToolMenu(context)),
         ],
       ),
@@ -63,22 +73,34 @@ class _BrandCategoryPageState extends State<BrandCategoryPage> {
             case BrandCategoryLoaded():
               return Container(
                 child: isGridView
-                    ? CategoryGridWidget(list: state.list, callback: (ctxt, category) async {
-                      await _handleCategoryClick(ctxt, widget.brand, brandCategory: category);
-                    })
-                    : CategoryListWidget(list: state.list, callback: (ctxt, category) async {
-                       await _handleCategoryClick(ctxt, widget.brand, brandCategory: category);
-                    }),
+                    ? CategoryGridWidget(
+                        list: state.list,
+                        callback: (ctxt, category) async {
+                          await _handleCategoryClick(ctxt, widget.brand,
+                              brandCategory: category);
+                        })
+                    : CategoryListWidget(
+                        list: state.list,
+                        callback: (ctxt, category) async {
+                          await _handleCategoryClick(ctxt, widget.brand,
+                              brandCategory: category);
+                        }),
               );
             case BrandSubCategoryLoaded():
               return Container(
                 child: isGridView
-                    ? CategoryGridWidget(list: state.list, callback: (ctxt, category) async {
-                      await _handleCategoryClick(ctxt, widget.brand, brandSubCategories: category);
-                    })
-                    : CategoryListWidget(list: state.list, callback: (ctxt, category) async {
-                      await _handleCategoryClick(ctxt, widget.brand, brandSubCategories: category);
-                    }),
+                    ? CategoryGridWidget(
+                        list: state.list,
+                        callback: (ctxt, category) async {
+                          await _handleCategoryClick(ctxt, widget.brand,
+                              brandSubCategories: category);
+                        })
+                    : CategoryListWidget(
+                        list: state.list,
+                        callback: (ctxt, category) async {
+                          await _handleCategoryClick(ctxt, widget.brand,
+                              brandSubCategories: category);
+                        }),
               );
             case BrandCategoryFailed():
             default:
@@ -88,28 +110,31 @@ class _BrandCategoryPageState extends State<BrandCategoryPage> {
       ),
     );
   }
+
   //TODO need to fix it. This is anti pattern
   //! TODO caution
   //! TODO we are passing multiple objects through extra using record
   //! TODO either we need to organize this record in a better way or use any other data structure
-  Future<void> _handleCategoryClick(BuildContext context, Brand brand, {BrandCategory? brandCategory, GetBrandSubCategoriesResult? brandSubCategories}) async {
-    var result = await context.read<BrandCategoryBloc>().onSelectBrandCategory(brandCategory);
-    if(result?.subCategories?.isNotEmpty == true){
-      AppRoute.brandCategory.navigateBackStack(
-        context,
-        extra: (brand, brandCategory, null)
-      );
-    }else{
+  Future<void> _handleCategoryClick(BuildContext context, Brand brand,
+      {BrandCategory? brandCategory,
+      GetBrandSubCategoriesResult? brandSubCategories}) async {
+    var result = await context
+        .read<BrandCategoryBloc>()
+        .onSelectBrandCategory(brandCategory);
+    if (result?.subCategories?.isNotEmpty == true) {
+      AppRoute.brandCategory
+          .navigateBackStack(context, extra: (brand, brandCategory, null));
+    } else {
       final brandEntity = BrandEntityMapper.toEntity(brand);
       final productPageEntity = ProductPageEntity(
-        '', 
+        '',
         ProductParentType.brandCategory,
         brandEntity: brandEntity,
-        brandEntityId: brandCategory?.brandId, 
+        brandEntityId: brandCategory?.brandId,
         categoryId: brandCategory?.categoryId,
         brandEntityTitle: brandCategory?.categoryName,
       );
-      AppRoute.product.navigateBackStack(context, extra: productPageEntity); 
+      AppRoute.product.navigateBackStack(context, extra: productPageEntity);
     }
 
     // if((brandCategory?.subCategories?.length ?? 0) > 0){
@@ -123,8 +148,8 @@ class _BrandCategoryPageState extends State<BrandCategoryPage> {
     //     extra: (brand, null, brandSubCategories)
     //   );
     // }else{
-    //   final productPageEntity = ProductPageEntity('', 
-    //     ProductParentType.brand, 
+    //   final productPageEntity = ProductPageEntity('',
+    //     ProductParentType.brand,
     //     brandEntityId: brandCategory?.brandId ?? brandSubCategories?.brandId,
     //     brandEntityTitle: brandCategory?.categoryName ?? brandSubCategories?.categoryName
     //   );
@@ -140,16 +165,14 @@ class _BrandCategoryPageState extends State<BrandCategoryPage> {
           setState(() {
             isGridView = false;
           });
-        }
-    ));
+        }));
     list.add(ToolMenu(
         title: LocalizationConstants.gridView.localized(),
         action: () {
           setState(() {
             isGridView = true;
           });
-        }
-    ));
+        }));
     return list;
   }
 }

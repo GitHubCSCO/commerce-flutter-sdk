@@ -82,7 +82,6 @@ class WarehouseInventoryCubit extends Cubit<WareHouseInventoryState> {
 
         return inventoryWarehousesDto?.warehouseDtos ?? [];
       }
-
     }
 
     return [];

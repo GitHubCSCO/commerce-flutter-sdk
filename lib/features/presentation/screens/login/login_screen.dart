@@ -129,35 +129,37 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 50),
                 BlocListener<SettingsDomainCubit, SettingsDomainState>(
                   listener: (context, state) {
-                    if(state is SettingsDomainLoaded){
-                      final remoteConfigCubit = context.read<RemoteConfigCubit>();
+                    if (state is SettingsDomainLoaded) {
+                      final remoteConfigCubit =
+                          context.read<RemoteConfigCubit>();
                       remoteConfigCubit.fetchDebugCredential(state.domain);
                     }
                   },
-                child: BlocBuilder<RemoteConfigCubit, RemoteConfigState>(
-                  builder: (context, state) {
-                    if (state is RemoteConfigDebugCredentialsLoaded) {
-                      if (state.creds?.isNotEmpty == true) {
-                        return DropdownButton<Map<String, String>>(
-                          hint: const Text('Select an item'),
-                          items: state.creds?.map((item) {
-                            return DropdownMenuItem<Map<String, String>>(
-                              value: item,
-                              child: Text(item['username']!),
-                            );
-                          }).toList(),
-                          onChanged: (newValue) {
-                            setState(() {
-                              _fillCredentials(newValue?['username'], newValue?['password']);
-                            });
-                          },
-                        );
+                  child: BlocBuilder<RemoteConfigCubit, RemoteConfigState>(
+                    builder: (context, state) {
+                      if (state is RemoteConfigDebugCredentialsLoaded) {
+                        if (state.creds?.isNotEmpty == true) {
+                          return DropdownButton<Map<String, String>>(
+                            hint: const Text('Select an item'),
+                            items: state.creds?.map((item) {
+                              return DropdownMenuItem<Map<String, String>>(
+                                value: item,
+                                child: Text(item['username']!),
+                              );
+                            }).toList(),
+                            onChanged: (newValue) {
+                              setState(() {
+                                _fillCredentials(newValue?['username'],
+                                    newValue?['password']);
+                              });
+                            },
+                          );
+                        }
                       }
-                    }
-                    return Container();
-                  },
-                 ),
-                ),  
+                      return Container();
+                    },
+                  ),
+                ),
                 Input(
                   label: LocalizationConstants.username.localized(),
                   hintText: LocalizationConstants.enterUsername.localized(),
@@ -179,7 +181,8 @@ class _LoginPageState extends State<LoginPage> {
                     if (state is LoginSuccessState) {
                       context.read<AuthCubit>().loadAuthenticationState();
 
-                      if (state.loginStatus == LoginStatus.loginSuccessBiometric) {
+                      if (state.loginStatus ==
+                          LoginStatus.loginSuccessBiometric) {
                         final biometricOptionsState =
                             context.read<BiometricOptionsCubit>().state;
                         final options =
@@ -199,7 +202,8 @@ class _LoginPageState extends State<LoginPage> {
                           return;
                         }
                         return;
-                      } else if (state.loginStatus == LoginStatus.loginSuccessBillToShipTo) {
+                      } else if (state.loginStatus ==
+                          LoginStatus.loginSuccessBillToShipTo) {
                         final isCancel = await context.pushNamed<bool>(
                           AppRoute.billToShipToChange.name,
                         );
@@ -276,11 +280,13 @@ class _LoginPageState extends State<LoginPage> {
                                       : DeviceAuthenticationOption.none;
 
                               final biometricDisplayOption = Platform.isAndroid
-                                  ? LocalizationConstants.fingerprint.localized()
+                                  ? LocalizationConstants.fingerprint
+                                      .localized()
                                   : biometricOption ==
                                           DeviceAuthenticationOption.faceID
                                       ? LocalizationConstants.faceID.localized()
-                                      : LocalizationConstants.touchID.localized();
+                                      : LocalizationConstants.touchID
+                                          .localized();
 
                               return SecondaryButton(
                                 onPressed: () async {

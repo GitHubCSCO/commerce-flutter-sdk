@@ -3,18 +3,17 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BrandCategoryUseCase extends BaseUseCase {
   Future<Result<GetBrandCategoriesResult, ErrorResponse>> getBrandCategories(
-    BrandCategoriesQueryParameter brandCategoriesQueryParameter
-  ) {
+      BrandCategoriesQueryParameter brandCategoriesQueryParameter) {
     return commerceAPIServiceProvider
-                .getBrandService()
-                .getBrandCategories(brandCategoriesQueryParameter);
+        .getBrandService()
+        .getBrandCategories(brandCategoriesQueryParameter);
   }
 
-  Future<Result<GetBrandSubCategoriesResult, ErrorResponse>> getBrandCategorySubCategories(
-    BrandCategoriesQueryParameter brandCategoriesQueryParameter
-  ) {
+  Future<Result<GetBrandSubCategoriesResult, ErrorResponse>>
+      getBrandCategorySubCategories(
+          BrandCategoriesQueryParameter brandCategoriesQueryParameter) {
     return commerceAPIServiceProvider
-                .getBrandService()
-                .getBrandCategorySubCategories(brandCategoriesQueryParameter);
+        .getBrandService()
+        .getBrandCategorySubCategories(brandCategoriesQueryParameter);
   }
 }

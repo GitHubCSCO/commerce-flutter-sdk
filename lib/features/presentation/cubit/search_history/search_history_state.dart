@@ -17,4 +17,3 @@ class SearchHistoryFailureState extends SearchHistoryState {
 
   SearchHistoryFailureState({required this.error});
 }
-

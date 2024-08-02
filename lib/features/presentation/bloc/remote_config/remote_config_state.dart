@@ -12,9 +12,9 @@ final class RemoteConfigInitial extends RemoteConfigState {}
 final class RemoteConfigLoading extends RemoteConfigState {}
 
 final class RemoteConfigDebugCredentialsLoaded extends RemoteConfigState {
-  final List<Map<String,String>>? creds;
+  final List<Map<String, String>>? creds;
   const RemoteConfigDebugCredentialsLoaded({required this.creds});
-    
+
   @override
   List<Object?> get props => [creds];
 }
@@ -22,7 +22,7 @@ final class RemoteConfigDebugCredentialsLoaded extends RemoteConfigState {
 final class RemoteConfigDebugDomainLoaded extends RemoteConfigState {
   final Map<String, String> domains;
   const RemoteConfigDebugDomainLoaded({required this.domains});
-  
+
   @override
   List<Object?> get props => [domains];
 }

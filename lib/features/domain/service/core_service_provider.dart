@@ -44,6 +44,6 @@ class CoreServiceProvider implements ICoreServiceProvider {
   @override
   ISearchHistoryService getSearchHistoryService() => sl<SearchHistoryService>();
 
-    @override
+  @override
   ITrackingService getTrackingService() => sl<ITrackingService>();
 }

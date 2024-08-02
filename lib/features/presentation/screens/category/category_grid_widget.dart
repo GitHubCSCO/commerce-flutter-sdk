@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class CategoryGridWidget<T extends BaseModel> extends StatelessWidget {
-
   final List<T> list;
   final Function(BuildContext, T) callback;
 
-  const CategoryGridWidget({super.key, required this.list, required this.callback});
+  const CategoryGridWidget(
+      {super.key, required this.list, required this.callback});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,8 @@ class CategoryGridWidget<T extends BaseModel> extends StatelessWidget {
           const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
       itemBuilder: (context, index) {
         final category = list[index];
-        return CategoryGridItemWidget<T>(height: itemHeight, item: category, callback: callback);
+        return CategoryGridItemWidget<T>(
+            height: itemHeight, item: category, callback: callback);
       },
     );
   }
@@ -33,16 +34,18 @@ class CategoryGridWidget<T extends BaseModel> extends StatelessWidget {
     double height = oneThirdWidth * (3 / 4);
     return height;
   }
-
 }
 
 class CategoryGridItemWidget<T extends BaseModel> extends StatelessWidget {
-
   final double height;
   final T item;
   final Function(BuildContext, T) callback;
 
-  const CategoryGridItemWidget({super.key, required this.height, required this.item, required this.callback});
+  const CategoryGridItemWidget(
+      {super.key,
+      required this.height,
+      required this.item,
+      required this.callback});
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +89,7 @@ class CategoryGridItemWidget<T extends BaseModel> extends StatelessWidget {
                     StackTrace? stackTrace) {
                   // This function is called when the image fails to load
                   return Container(
-                    color:
-                    OptiAppColors.backgroundGray, // Placeholder color
+                    color: OptiAppColors.backgroundGray, // Placeholder color
                     alignment: Alignment.center,
                     child: const Icon(
                       Icons.image, // Icon to display
@@ -115,5 +117,4 @@ class CategoryGridItemWidget<T extends BaseModel> extends StatelessWidget {
       ),
     );
   }
-
 }

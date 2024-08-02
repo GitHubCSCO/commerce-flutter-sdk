@@ -9,5 +9,4 @@ class ReviewOrderCubit extends Cubit<ReviewOrderState> {
   Future<void> onOrderConfigChange() async {
     emit(ReviewOrderState());
   }
-
 }

@@ -66,8 +66,8 @@ class Configuration {
       this.FirebaseIOSProjectId,
       this.FirebaseIOSStorageBucket,
       this.FirebaseIOSBundleId,
-    this.AppCenterSecretiOS,
-    this.AppCenterSecretAndroid,
+      this.AppCenterSecretiOS,
+      this.AppCenterSecretAndroid,
       this.CheckoutUrlConfiguration});
 
   Map<String, dynamic> toMap() {
@@ -443,10 +443,14 @@ class AppConfigurationService extends ServiceBase
 
   @override
   Future<void> loadRemoteSettings() async {
-    var getWebsiteResult = await _commerceAPIServiceProvider.getWebsiteService().getWebsite();
+    var getWebsiteResult =
+        await _commerceAPIServiceProvider.getWebsiteService().getWebsite();
     var websiteSettings = getWebsiteResult.getResultSuccessValue();
-    if(websiteSettings!=null){
-      OptiAppColors.primaryColor = websiteSettings.mobilePrimaryColor!=null ? OptiAppColors.colorFromHexString(websiteSettings.mobilePrimaryColor!) : OptiAppColors.defaultPrimaryColor;
+    if (websiteSettings != null) {
+      OptiAppColors.primaryColor = websiteSettings.mobilePrimaryColor != null
+          ? OptiAppColors.colorFromHexString(
+              websiteSettings.mobilePrimaryColor!)
+          : OptiAppColors.defaultPrimaryColor;
       privacyPolicyUrl = websiteSettings.mobilePrivacyPolicyUrl?.makeValidUrl();
       termsOfUseUrl = websiteSettings.mobileTermsOfUseUrl?.makeValidUrl();
     }
@@ -499,5 +503,4 @@ class AppConfigurationService extends ServiceBase
   void setHidePricingEnable(bool enable) {
     hidePricingEnable = enable;
   }
-
 }

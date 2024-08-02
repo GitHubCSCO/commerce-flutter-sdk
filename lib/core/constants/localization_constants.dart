@@ -675,11 +675,14 @@ enum LocalizationConstants {
   final String keyword;
 }
 
-
-extension GetLocalized on LocalizationConstants{
-  String localized(){
-    if(sl<ILocalizationService>().translationDictionary?.containsKey(keyword) == true){
-      return sl<ILocalizationService>().translationDictionary?[keyword] ?? keyword;
+extension GetLocalized on LocalizationConstants {
+  String localized() {
+    if (sl<ILocalizationService>()
+            .translationDictionary
+            ?.containsKey(keyword) ==
+        true) {
+      return sl<ILocalizationService>().translationDictionary?[keyword] ??
+          keyword;
     }
     return keyword;
   }

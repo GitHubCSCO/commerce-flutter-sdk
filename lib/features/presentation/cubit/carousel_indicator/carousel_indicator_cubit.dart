@@ -8,5 +8,4 @@ class CarouselIndicatorCubit extends Cubit<CarouselIndicatorState> {
   Future<void> carouselPageChange(int index) async {
     emit(CarouselIndicatorState(index));
   }
-
 }

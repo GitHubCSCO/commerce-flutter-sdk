@@ -13,7 +13,7 @@ extension StringFormatExtension on String {
     });
   }
 
-   String capitalize() {
+  String capitalize() {
     if (this == null || this.isEmpty) {
       return this;
     }

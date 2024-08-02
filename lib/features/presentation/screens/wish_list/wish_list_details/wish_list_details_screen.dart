@@ -150,7 +150,8 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
               if (state.status == WishListStatus.listAddToCartFailureTimeOut) {
                 CustomSnackBar.showSnackBarMessage(
                   context,
-                  LocalizationConstants.addWishListToCartTimeoutCheckCartAgain.localized(),
+                  LocalizationConstants.addWishListToCartTimeoutCheckCartAgain
+                      .localized(),
                   seconds: 3,
                 );
               }
@@ -160,7 +161,8 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                 displayDialogWidget(
                   context: context,
                   title: LocalizationConstants.productsOutOfStock.localized(),
-                  message: LocalizationConstants.productsOutOfStockMessage.localized(),
+                  message: LocalizationConstants.productsOutOfStockMessage
+                      .localized(),
                   actions: [
                     TextButton(
                       onPressed: () {
@@ -318,7 +320,8 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                     child: Center(child: CircularProgressIndicator()));
               } else if (state.status == WishListStatus.failure) {
                 return Expanded(
-                    child: Center(child: Text(LocalizationConstants.error.localized())));
+                    child: Center(
+                        child: Text(LocalizationConstants.error.localized())));
               } else if (context.read<WishListDetailsCubit>().emptyWishList) {
                 return Expanded(
                   child: Center(
@@ -564,7 +567,9 @@ class _OptionsMenu extends StatelessWidget {
                   displayDialogWidget(
                     context: context,
                     title: LocalizationConstants.leaveList.localized(),
-                    message: LocalizationConstants.leaveSpecificList.localized().format(
+                    message: LocalizationConstants.leaveSpecificList
+                        .localized()
+                        .format(
                       [state.wishList.name ?? ''],
                     ),
                     actions: [

@@ -6,8 +6,10 @@ class AnalyticsConstants {
   static const String screenNameBrandCategory = "Brand Category";
   static const String screenNameBrandProductLine = "Brand Product Line";
   static const String screenNameBrandProductList = "Brand Product List";
-  static const String screenNameBrandCategoryProductList = "Brand Category Product List";
-  static const String screenNameBrandProductLineProductList = "Brand Product Line Product List";
+  static const String screenNameBrandCategoryProductList =
+      "Brand Category Product List";
+  static const String screenNameBrandProductLineProductList =
+      "Brand Product Line Product List";
   static const String screenNameCart = "Cart";
   static const String screenNameCategory = "Category";
   static const String screenNameCheckout = "Checkout";
@@ -39,7 +41,8 @@ class AnalyticsConstants {
   static const String screenNameQuotes = "Quotes";
   static const String screenNameQuoteDetails = "QuoteDetails";
   static const String screenNameQuoteRequest = "Quote Request";
-  static const String screenNameQuoteRequestConfirmation = "Quote Request Confirmation";
+  static const String screenNameQuoteRequestConfirmation =
+      "Quote Request Confirmation";
   static const String screenNameQuoteMesages = "QuoteMessages";
   static const String screenNameQuoteAll = "Quote All";
   static const String screenNameVMILocations = "VMI Locations";
@@ -91,14 +94,18 @@ class AnalyticsConstants {
   static const String eventViewAttributes = "view_attributes";
   static const String eventViewSpecification = "view_specification";
   static const String eventViewSearchResults = "view_search_results";
-  static const String eventSearchSuggestedKeywords = "search_suggested_keywords";
+  static const String eventSearchSuggestedKeywords =
+      "search_suggested_keywords";
   static const String eventPropertyPreviousQuery = "previous_query";
   static const String eventPropertyNewQuery = "new_query";
   static const String eventSearchAutocomplete = "search_autocomplete";
-  static const String eventPropertyProductResultsCount = "product_results_count";
-  static const String eventPropertyCategoryResultsCount = "category_results_count";
+  static const String eventPropertyProductResultsCount =
+      "product_results_count";
+  static const String eventPropertyCategoryResultsCount =
+      "category_results_count";
   static const String eventPropertyBrandResultsCount = "brand_results_count";
-  static const String eventSelectSearchAutocompleteItem = "select_search_autocomplete_item";
+  static const String eventSelectSearchAutocompleteItem =
+      "select_search_autocomplete_item";
   static const String eventViewBarcode = "view_barcode";
   static const String eventScanBarcode = "scan_barcode";
   static const String eventSearchProduct = "search_product";
@@ -115,12 +122,14 @@ class AnalyticsConstants {
   static const String eventPropertyLoginType = "login_type";
   static const String eventBiometricSetup = "biometric_setup";
   static const String eventPrintPdf = "print_pdf";
-  static const String eventViewWarehouseAvailability = "view_warehouse_availability";
+  static const String eventViewWarehouseAvailability =
+      "view_warehouse_availability";
   static const String eventQuickOrderAddToList = "add_to_list";
   static const String eventQuickOrderClear = "clear_quick_order";
   static const String eventQuickOrderAddToCart = "add_to_cart";
   static const String eventQuickOrderAddProduct = "add_product_quick_order";
-  static const String eventQuickOrderRemoveProduct = "remove_product_quick_order";
+  static const String eventQuickOrderRemoveProduct =
+      "remove_product_quick_order";
   static const String eventQuickOrderEditQuantity = "edit_quantity_quick_order";
   static const String eventQuickOrderScan = "quick_order_scan";
   static const String eventQuickOrderSearch = "quick_order_search";
@@ -178,7 +187,8 @@ class AnalyticsConstants {
   static const String eventPropertyResult = "result";
   static const String eventPropertyResultsCount = "results_count";
   static const String eventBrandListSearchTerm = "brand_list_search_term";
-  static const String eventBrandListSearchResultsCount = "brand_list_search_results_count";
+  static const String eventBrandListSearchResultsCount =
+      "brand_list_search_results_count";
   static const String eventPropertyLanguageId = "language_id";
   static const String eventPropertyLanguageCode = "language_code";
   static const String eventPropertyCartLineId = "cart_line_id";

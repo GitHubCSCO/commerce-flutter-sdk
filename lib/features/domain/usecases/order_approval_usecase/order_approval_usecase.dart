@@ -42,7 +42,6 @@ class OrderApprovalUseCase extends BaseUseCase {
     return approveResponse.getResultSuccessValue() != null;
   }
 
-
   Future<BillTo?> getBillToAddress() async {
     var session = commerceAPIServiceProvider
         .getSessionService()

@@ -104,8 +104,9 @@ class ProductDetailsUseCase extends BaseUseCase {
       }
     }
 
-    var includeAlternateInventory = accountSettings.enableWarehousePickup==false ||
-        session.fulfillmentMethod != FulfillmentMethodType.PickUp.name;
+    var includeAlternateInventory =
+        accountSettings.enableWarehousePickup == false ||
+            session.fulfillmentMethod != FulfillmentMethodType.PickUp.name;
 
     var parameters = ProductQueryParameters(
       addToRecentlyViewed: true,
@@ -209,7 +210,8 @@ class ProductDetailsUseCase extends BaseUseCase {
     genralInfoEntity = genralInfoEntity.copyWith(
         mFGNumberTitle: LocalizationConstants.myPartNumberSign.localized());
     genralInfoEntity = genralInfoEntity.copyWith(
-        packDescriptionTitle: LocalizationConstants.packDescription.localized());
+        packDescriptionTitle:
+            LocalizationConstants.packDescription.localized());
 
     return genralInfoEntity;
   }
@@ -288,8 +290,10 @@ class ProductDetailsUseCase extends BaseUseCase {
   }
 
   ProductDetailsPriceEntity makeProductDetailsPriceEntity() {
-    final hidePricingEnable = coreServiceProvider.getAppConfigurationService().hidePricingEnable;
-    final hideInventoryEnable = coreServiceProvider.getAppConfigurationService().hideInventoryEnable;
+    final hidePricingEnable =
+        coreServiceProvider.getAppConfigurationService().hidePricingEnable;
+    final hideInventoryEnable =
+        coreServiceProvider.getAppConfigurationService().hideInventoryEnable;
     return ProductDetailsPriceEntity(
       detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsPrice,
       hidePricing: hidePricingEnable,

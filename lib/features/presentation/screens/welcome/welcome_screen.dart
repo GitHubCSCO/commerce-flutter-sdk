@@ -44,7 +44,9 @@ class WelcomeFirstPage extends StatelessWidget {
             'Sign in below if you are an existing customer.',
             style: WelcomeStyle.welcomeCardTextStyle,
           ),
-          const SizedBox(height: 10,),
+          const SizedBox(
+            height: 10,
+          ),
           PrimaryButton(
             onPressed: () {
               AppRoute.domainSelection.navigateBackStack(context);

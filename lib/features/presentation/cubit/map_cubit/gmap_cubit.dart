@@ -20,7 +20,7 @@ class GMapCubit extends Cubit<GMapState> {
           markerId: MarkerId(location.locationName ?? "")));
     }
     this.markers = markers;
-    if(markers.isNotEmpty){
+    if (markers.isNotEmpty) {
       emit(GMapMarkesUpdated(markers: markers, focusMarker: markers.first));
     }
   }
