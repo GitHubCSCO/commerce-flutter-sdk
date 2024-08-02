@@ -19,10 +19,12 @@ class ProductCarouselLoadedState extends ProductCarouselState {
 
   ProductCarouselLoadedState(
       {required this.productCarouselList,
-      required this.isPricingLoading, this.hidePricingEnable});
+      required this.isPricingLoading,
+      this.hidePricingEnable});
 
   @override
-  List<Object?> get props => [productCarouselList, isPricingLoading, hidePricingEnable];
+  List<Object?> get props =>
+      [productCarouselList, isPricingLoading, hidePricingEnable];
 }
 
 class ProductCarouselFailureState extends ProductCarouselState {

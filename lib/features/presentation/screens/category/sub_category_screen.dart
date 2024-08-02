@@ -16,23 +16,25 @@ class SubCategoryScreen extends StatelessWidget {
   String? categoryId;
   String? categoryTitle;
   String? categoryPath;
-  SubCategoryScreen({super.key, this.categoryId, this.categoryTitle, this.categoryPath});
+  SubCategoryScreen(
+      {super.key, this.categoryId, this.categoryTitle, this.categoryPath});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<CategoryBloc>(
-      create: (context) => sl<CategoryBloc>()..add(CategoryLoadEvent(categoryId: categoryId)),
-      child: SubCategoryPage(categoryTitle: categoryTitle, categoryPath: categoryPath),
+      create: (context) =>
+          sl<CategoryBloc>()..add(CategoryLoadEvent(categoryId: categoryId)),
+      child: SubCategoryPage(
+          categoryTitle: categoryTitle, categoryPath: categoryPath),
     );
   }
-
 }
 
 class SubCategoryPage extends StatefulWidget {
   late final String? categoryTitle;
   late final String? categoryPath;
 
-  SubCategoryPage({super.key,this.categoryTitle, this.categoryPath});
+  SubCategoryPage({super.key, this.categoryTitle, this.categoryPath});
 
   @override
   State<SubCategoryPage> createState() => _SubCategoryPageState();
@@ -46,10 +48,12 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            widget.categoryTitle ?? 
-            LocalizationConstants.categories.localized(), style: OptiTextStyles.titleLarge),
+            widget.categoryTitle ??
+                LocalizationConstants.categories.localized(),
+            style: OptiTextStyles.titleLarge),
         actions: [
-          BottomMenuWidget(websitePath: widget.categoryPath,
+          BottomMenuWidget(
+              websitePath: widget.categoryPath,
               toolMenuList: _getToolMenu(context)),
         ],
       ),
@@ -62,8 +66,10 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
             case CategoryLoaded():
               return Container(
                 child: isGridView
-                    ? CategoryGridWidget(list: state.list, callback: _handleCategoryClick)
-                    : CategoryListWidget(list: state.list, callback: _handleCategoryClick),
+                    ? CategoryGridWidget(
+                        list: state.list, callback: _handleCategoryClick)
+                    : CategoryListWidget(
+                        list: state.list, callback: _handleCategoryClick),
               );
             case CategoryFailed():
             default:
@@ -75,7 +81,7 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
   }
 
   void _handleCategoryClick(BuildContext context, Category category) {
-    if((category.subCategories?.length ?? 0) > 0){
+    if ((category.subCategories?.length ?? 0) > 0) {
       AppRoute.shopSubCategory.navigateBackStack(context,
           //TODO SubCategoryScreen might be redundant, we might be able to use categoryscreen do the same thing
           //TODO what if id and name is null, we need to take care of that
@@ -84,8 +90,9 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
             "categoryTitle": category.shortDescription.toString(),
             "categoryPath": category.path.toString()
           });
-    }else{
-      final productPageEntity = ProductPageEntity('', ProductParentType.category, category: category);
+    } else {
+      final productPageEntity =
+          ProductPageEntity('', ProductParentType.category, category: category);
       AppRoute.product.navigateBackStack(context, extra: productPageEntity);
     }
   }
@@ -98,16 +105,14 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
           setState(() {
             isGridView = false;
           });
-        }
-    ));
+        }));
     list.add(ToolMenu(
         title: LocalizationConstants.gridView.localized(),
         action: () {
           setState(() {
             isGridView = true;
           });
-        }
-    ));
+        }));
     return list;
   }
 }

@@ -308,19 +308,18 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     return reversedQuickOrderProductsList;
   }
 
-  List<AddCartLine> getAddCartLines({
-    required ScanningMode scanningMode,
-    required List<QuickOrderItemEntity> reversedQuickOrderProductsList,
-    required Set<String> allCountCartProducts, 
-    required Set<String> currentCartProducts
-  }) {
+  List<AddCartLine> getAddCartLines(
+      {required ScanningMode scanningMode,
+      required List<QuickOrderItemEntity> reversedQuickOrderProductsList,
+      required Set<String> allCountCartProducts,
+      required Set<String> currentCartProducts}) {
     List<AddCartLine> addCartLines = [];
-    
+
     for (var x in reversedQuickOrderProductsList) {
       if (scanningMode == ScanningMode.count) {
         allCountCartProducts.add(x.productEntity.id.toString());
         var orderCount = (x.vmiBinEntity?.maximumQty ?? 0) - x.quantityOrdered;
-        if(orderCount > 0){
+        if (orderCount > 0) {
           currentCartProducts.add(x.productEntity.id.toString());
           addCartLines.add(AddCartLine(
             productId: x.productEntity.id,
@@ -355,7 +354,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     if (scanningMode == ScanningMode.count) {
       var cartLinesResponse = await _quickOrderUseCase.getCartLineCollection();
       List<CartLine>? cartLines = cartLinesResponse is Success
-          ? ((cartLinesResponse as Success).value as GetCartLinesResult).cartLines
+          ? ((cartLinesResponse as Success).value as GetCartLinesResult)
+              .cartLines
           : [];
       List<Future> listOfTasks = [];
       for (var oldCartLine in cartLines ?? []) {
@@ -380,13 +380,11 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         scanningMode == ScanningMode.create) {
       final result = await _quickOrderUseCase.getCart();
       final cartResult = result.getResultSuccessValue();
-      if(cartResult!=null){
-          quickOrderItemList.clear();
-          emit(OrderListNavigateToVmiCheckoutState(
-            cart: cartResult
-          ));
-      }else{
-          emit(OrderListFailedState());
+      if (cartResult != null) {
+        quickOrderItemList.clear();
+        emit(OrderListNavigateToVmiCheckoutState(cart: cartResult));
+      } else {
+        emit(OrderListFailedState());
       }
     } else {
       emit(OrderListNavigateToCartState());
@@ -430,7 +428,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     }
 
     final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
-    final hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
+    final hideInventoryEnable =
+        _pricingInventoryUseCase.getHideInventoryEnable();
 
     orderItemEntity.hidePricingEnable = hidePricingEnable;
     orderItemEntity.hideInventoryEnable = hideInventoryEnable;

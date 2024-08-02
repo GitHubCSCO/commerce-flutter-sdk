@@ -13,7 +13,8 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
 
   Future<void> fetchDebugCredential(String domain) async {
     emit(RemoteConfigLoading());
-    var debugCredentials = await _remoteConfigUsecase.fetchDebugCredential(domain);
+    var debugCredentials =
+        await _remoteConfigUsecase.fetchDebugCredential(domain);
     emit(RemoteConfigDebugCredentialsLoaded(creds: debugCredentials));
   }
 

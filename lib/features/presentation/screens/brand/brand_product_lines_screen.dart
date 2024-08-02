@@ -13,7 +13,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BrandProductLinesScreen extends StatelessWidget {
-
   final Brand brand;
 
   BrandProductLinesScreen({super.key, required this.brand});
@@ -21,17 +20,14 @@ class BrandProductLinesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<BrandProductLinesCubit>(
-      create: (context) => sl<BrandProductLinesCubit>()..getBrandProductLines(
-        brand
-      ),
+      create: (context) =>
+          sl<BrandProductLinesCubit>()..getBrandProductLines(brand),
       child: BrandProductLinesPage(brand: brand),
     );
   }
-
 }
 
 class BrandProductLinesPage extends StatefulWidget {
-
   final Brand brand;
 
   BrandProductLinesPage({super.key, required this.brand});
@@ -41,17 +37,17 @@ class BrandProductLinesPage extends StatefulWidget {
 }
 
 class _BrandProductLinesPageState extends State<BrandProductLinesPage> {
-
   bool isGridView = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            LocalizationConstants.allBrandProductLines.localized(), style: OptiTextStyles.titleLarge),
+        title: Text(LocalizationConstants.allBrandProductLines.localized(),
+            style: OptiTextStyles.titleLarge),
         actions: [
-          BottomMenuWidget(isViewOnWebsiteEnable: false,
+          BottomMenuWidget(
+              isViewOnWebsiteEnable: false,
               toolMenuList: _getToolMenu(context)),
         ],
       ),
@@ -64,12 +60,18 @@ class _BrandProductLinesPageState extends State<BrandProductLinesPage> {
             case BrandProductLinesLoaded():
               return Container(
                 child: isGridView
-                    ? CategoryGridWidget(list: state.list, callback: (ctxt, item) async {
-                      await _handleCategoryClick(ctxt, widget.brand, brandProductLine: item);
-                    })
-                    : CategoryListWidget(list: state.list, callback: (ctxt, item) async {
-                       await _handleCategoryClick(ctxt, widget.brand, brandProductLine: item);
-                    }),
+                    ? CategoryGridWidget(
+                        list: state.list,
+                        callback: (ctxt, item) async {
+                          await _handleCategoryClick(ctxt, widget.brand,
+                              brandProductLine: item);
+                        })
+                    : CategoryListWidget(
+                        list: state.list,
+                        callback: (ctxt, item) async {
+                          await _handleCategoryClick(ctxt, widget.brand,
+                              brandProductLine: item);
+                        }),
               );
             case BrandProductLinesFailed():
             default:
@@ -79,19 +81,21 @@ class _BrandProductLinesPageState extends State<BrandProductLinesPage> {
       ),
     );
   }
+
   //TODO need to fix it. This is anti pattern
   //! TODO caution
   //! TODO we are passing multiple objects through extra using record
   //! TODO either we need to organize this record in a better way or use any other data structure
-  Future<void> _handleCategoryClick(BuildContext context, Brand brand, {BrandProductLine? brandProductLine}) async {
-      final productPageEntity = ProductPageEntity(
-        '', 
-        ProductParentType.brandProductLine, 
-        brandProductLine: brandProductLine,
-        brandEntityId: brand.id,
-        pageTitle: brandProductLine?.name,
-      );
-      AppRoute.product.navigateBackStack(context, extra: productPageEntity); 
+  Future<void> _handleCategoryClick(BuildContext context, Brand brand,
+      {BrandProductLine? brandProductLine}) async {
+    final productPageEntity = ProductPageEntity(
+      '',
+      ProductParentType.brandProductLine,
+      brandProductLine: brandProductLine,
+      brandEntityId: brand.id,
+      pageTitle: brandProductLine?.name,
+    );
+    AppRoute.product.navigateBackStack(context, extra: productPageEntity);
   }
 
   List<ToolMenu> _getToolMenu(BuildContext context) {
@@ -102,16 +106,14 @@ class _BrandProductLinesPageState extends State<BrandProductLinesPage> {
           setState(() {
             isGridView = false;
           });
-        }
-    ));
+        }));
     list.add(ToolMenu(
         title: LocalizationConstants.gridView.localized(),
         action: () {
           setState(() {
             isGridView = true;
           });
-        }
-    ));
+        }));
     return list;
   }
 }

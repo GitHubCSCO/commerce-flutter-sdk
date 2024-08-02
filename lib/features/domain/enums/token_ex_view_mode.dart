@@ -1,6 +1,5 @@
-  enum TokenExViewMode
-    {
-        full ,
-        number,
-        cvv ,
-    }
+enum TokenExViewMode {
+  full,
+  number,
+  cvv,
+}

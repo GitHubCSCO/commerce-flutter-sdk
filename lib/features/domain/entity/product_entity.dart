@@ -522,7 +522,7 @@ class ProductEntity extends Equatable {
       childTraitValues: childTraitValues ?? this.childTraitValues,
     );
   }
-  
+
   @override
   List<Object?> get props => [id];
 }

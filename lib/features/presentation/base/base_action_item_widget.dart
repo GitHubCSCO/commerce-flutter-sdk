@@ -103,7 +103,9 @@ class BaseActionItemWidget extends StatelessWidget {
       case ActionType.forceCrash:
         return "Force Crash";
       case ActionType.toggleLogging:
-      return LogConfig.isAllLogsEnabled ? "Disable logging" : "Enable logging";
+        return LogConfig.isAllLogsEnabled
+            ? "Disable logging"
+            : "Enable logging";
       case ActionType.invoices:
         return LocalizationConstants.invoiceHistory.localized();
       case ActionType.savedPayments:

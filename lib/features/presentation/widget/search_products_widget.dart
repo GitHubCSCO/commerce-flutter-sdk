@@ -32,7 +32,8 @@ class SearchProductsWidget extends StatefulWidget {
 
   const SearchProductsWidget({
     super.key,
-    required this.onPageChanged, required this.productListType,
+    required this.onPageChanged,
+    required this.productListType,
   });
 
   @override
@@ -98,31 +99,35 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Visibility(
-                            visible: state.originalQuery != null && state.originalQuery!.isNotEmpty,
+                            visible: state.originalQuery != null &&
+                                state.originalQuery!.isNotEmpty,
                             child: Text(
-                              state.originalQuery==null ?
-                              LocalizationConstants.results.localized().format(
-                                [
-                                  (state.paginationEntity
-                                              ?.totalItemCount ==
-                                          0)
-                                      ? LocalizationConstants.no.localized()
-                                      : state.paginationEntity
-                                          ?.totalItemCount
-                                ],
-                              )
-                              :
-                              LocalizationConstants.resultsFor.localized().format(
-                                [
-                                  (state.paginationEntity
-                                              ?.totalItemCount ==
-                                          0)
-                                      ? LocalizationConstants.no.localized()
-                                      : state.paginationEntity
-                                          ?.totalItemCount,
-                                  state.originalQuery
-                                ],
-                              ),
+                              state.originalQuery == null
+                                  ? LocalizationConstants.results
+                                      .localized()
+                                      .format(
+                                      [
+                                        (state.paginationEntity?.totalItemCount ==
+                                                0)
+                                            ? LocalizationConstants.no
+                                                .localized()
+                                            : state.paginationEntity
+                                                ?.totalItemCount
+                                      ],
+                                    )
+                                  : LocalizationConstants.resultsFor
+                                      .localized()
+                                      .format(
+                                      [
+                                        (state.paginationEntity?.totalItemCount ==
+                                                0)
+                                            ? LocalizationConstants.no
+                                                .localized()
+                                            : state.paginationEntity
+                                                ?.totalItemCount,
+                                        state.originalQuery
+                                      ],
+                                    ),
                               style: OptiTextStyles.header3,
                             ),
                           ),
@@ -145,8 +150,7 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                                     .watch<SearchProductsCubit>()
                                     .selectedFiltersCount,
                                 previouslyPurchased: state.previouslyPurchased,
-                                searchText:
-                                    state.originalQuery,
+                                searchText: state.originalQuery,
                                 selectedAttributeValueIds:
                                     state.selectedAttributeValueIds,
                                 selectedBrandIds: state.selectedBrandIds,
@@ -180,9 +184,7 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                             : state.productEntities?.length ?? 0,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          if (index >=
-                                  (state.productEntities?.length ??
-                                      0) &&
+                          if (index >= (state.productEntities?.length ?? 0) &&
                               state.searchProductStatus ==
                                   SearchProductStatus.moreLoading) {
                             return const Padding(
@@ -191,8 +193,7 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                             );
                           }
 
-                          final product =
-                              state.productEntities![index];
+                          final product = state.productEntities![index];
                           return SearchProductWidget(
                             product: product,
                             productSettings: state.productSettings,
@@ -231,7 +232,7 @@ class SearchProductWidget extends StatelessWidget {
     return InkWell(
       onTap: () {
         var productId = product.styleParentId ?? product.id;
-        //TODO what if productid is null, 
+        //TODO what if productid is null,
         AppRoute.topLevelProductDetails.navigateBackStack(context,
             pathParameters: {"productId": productId.toString()},
             extra: product);
@@ -288,7 +289,8 @@ class SearchProductWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    LocalizationConstants.itemNumber.localized()
+                    LocalizationConstants.itemNumber
+                        .localized()
                         .format([product.erpNumber ?? '']),
                     style: OptiTextStyles.bodySmall.copyWith(
                       color: OptiAppColors.textDisabledColor,
@@ -299,7 +301,8 @@ class SearchProductWidget extends StatelessWidget {
                   LineItemPricingWidget(
                     discountMessage: product.pricing?.getDiscountValue(),
                     priceValueText: product.updatePriceValueText(pricingEnable),
-                    unitOfMeasureValueText: product.updateUnitOfMeasure(pricingEnable),
+                    unitOfMeasureValueText:
+                        product.updateUnitOfMeasure(pricingEnable),
                     availabilityText: product.availability?.message,
                     productId: product.id,
                     erpNumber: product.erpNumber,
@@ -377,21 +380,18 @@ class SearchProductWidget extends StatelessWidget {
     final myPart = _buildRow(
         LocalizationConstants.myPartNumberSign.localized(),
         OptiTextStyles.bodySmall,
-        product.customerName ??
-            '',
+        product.customerName ?? '',
         OptiTextStyles.bodyExtraSmall);
     final mfg = _buildRow(
         LocalizationConstants.mFGNumberSign.localized(),
         OptiTextStyles.bodySmall,
-        product.manufacturerItem ??
-            '',
+        product.manufacturerItem ?? '',
         OptiTextStyles.bodyExtraSmall);
 
     final pack = _buildRow(
         LocalizationConstants.packSign.localized(),
         OptiTextStyles.bodySmall,
-        product.packDescription ??
-            '',
+        product.packDescription ?? '',
         OptiTextStyles.bodyExtraSmall);
 
     if (myPart != null) {
@@ -438,16 +438,21 @@ class SearchProductWidget extends StatelessWidget {
   }
 
   bool _showWarehouseInventory() {
-    var warehouseInventoryButtonEnabled = InventoryUtils.isInventoryPerWarehouseButtonShownAsync(productSettings);
+    var warehouseInventoryButtonEnabled =
+        InventoryUtils.isInventoryPerWarehouseButtonShownAsync(productSettings);
     var showWarehouseInventoryButton = false;
 
-    if (!(product.isConfigured ?? false) || (product.isFixedConfiguration ?? false) && !(product.isStyleProductParent ?? false)) {
-      if (product.availability != null && !(product.availability?.requiresRealTimeInventory ?? false) && (product.availability?.messageType ?? 0) != 0) {
-        showWarehouseInventoryButton = (product.trackInventory ?? false) && warehouseInventoryButtonEnabled;
+    if (!(product.isConfigured ?? false) ||
+        (product.isFixedConfiguration ?? false) &&
+            !(product.isStyleProductParent ?? false)) {
+      if (product.availability != null &&
+          !(product.availability?.requiresRealTimeInventory ?? false) &&
+          (product.availability?.messageType ?? 0) != 0) {
+        showWarehouseInventoryButton = (product.trackInventory ?? false) &&
+            warehouseInventoryButtonEnabled;
       }
     }
 
     return showWarehouseInventoryButton;
   }
-
 }

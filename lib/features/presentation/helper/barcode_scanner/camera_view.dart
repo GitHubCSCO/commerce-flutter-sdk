@@ -9,15 +9,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 
 class CameraView extends StatefulWidget {
-  CameraView({Key? key,
-    required this.customPaint,
-    required this.onImage,
-    required this.barcodeFullView,
-    this.onCameraFeedReady,
-    this.onDetectorViewModeChanged,
-    this.onCameraLensDirectionChanged,
-    this.initialCameraLensDirection = CameraLensDirection.back,
-    this.resolutionPreset})
+  CameraView(
+      {Key? key,
+      required this.customPaint,
+      required this.onImage,
+      required this.barcodeFullView,
+      this.onCameraFeedReady,
+      this.onDetectorViewModeChanged,
+      this.onCameraLensDirectionChanged,
+      this.initialCameraLensDirection = CameraLensDirection.back,
+      this.resolutionPreset})
       : super(key: key);
 
   final CustomPaint? customPaint;
@@ -75,8 +76,8 @@ class _CameraViewState extends State<CameraView> {
           setState(() {
             cameraFlash = state.cameraFlash;
           });
-          _controller?.setFlashMode(
-              cameraFlash ? FlashMode.torch : FlashMode.off);
+          _controller
+              ?.setFlashMode(cameraFlash ? FlashMode.torch : FlashMode.off);
         }
       },
       child: Scaffold(body: _liveFeedBody()),
@@ -104,97 +105,91 @@ class _CameraViewState extends State<CameraView> {
     );
   }
 
-  Widget _backButton() =>
-        Visibility(
-          visible: widget.barcodeFullView,
-          child: Positioned(
-            top: 40,
-            right: 24,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                InkWell(
-                  onTap: () => Navigator.of(context).pop(),
-                  borderRadius: BorderRadius.circular(32),
-                  child: Container(
-                    width: 64.0,
-                    height: 64.0,
-                    alignment: Alignment.center,
+  Widget _backButton() => Visibility(
+        visible: widget.barcodeFullView,
+        child: Positioned(
+          top: 40,
+          right: 24,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              InkWell(
+                onTap: () => Navigator.of(context).pop(),
+                borderRadius: BorderRadius.circular(32),
+                child: Container(
+                  width: 64.0,
+                  height: 64.0,
+                  alignment: Alignment.center,
+                ),
+              ),
+              SizedBox(
+                height: 32.0,
+                width: 32.0,
+                child: FloatingActionButton(
+                  heroTag: Object(),
+                  shape: const CircleBorder(),
+                  onPressed: () => Navigator.of(context).pop(),
+                  backgroundColor: Colors.grey.shade100,
+                  child: const Icon(
+                    Icons.close,
+                    color: Colors.black,
+                    size: 20,
                   ),
                 ),
-                SizedBox(
-                  height: 32.0,
-                  width: 32.0,
-                  child: FloatingActionButton(
-                    heroTag: Object(),
-                    shape: const CircleBorder(),
-                    onPressed: () => Navigator.of(context).pop(),
-                    backgroundColor: Colors.grey.shade100,
-                    child: const Icon(
-                      Icons.close,
-                      color: Colors.black,
-                      size: 20,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        );
+        ),
+      );
 
-
-
-  Widget _switchFlashToggle() =>
-        Visibility(
-          visible: widget.barcodeFullView,
-          child: Positioned(
-            top: 40,
-            left: 24,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                InkWell(
-                  onTap: (){
-                      setState(() => cameraFlash = !cameraFlash);
-                      _controller?.setFlashMode(
-                          cameraFlash ? FlashMode.torch : FlashMode.off);
+  Widget _switchFlashToggle() => Visibility(
+        visible: widget.barcodeFullView,
+        child: Positioned(
+          top: 40,
+          left: 24,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              InkWell(
+                onTap: () {
+                  setState(() => cameraFlash = !cameraFlash);
+                  _controller?.setFlashMode(
+                      cameraFlash ? FlashMode.torch : FlashMode.off);
+                },
+                borderRadius: BorderRadius.circular(32),
+                child: Container(
+                  width: 64.0,
+                  height: 64.0,
+                  alignment: Alignment.center,
+                ),
+              ),
+              SizedBox(
+                height: 32.0,
+                width: 32.0,
+                child: FloatingActionButton(
+                  heroTag: Object(),
+                  shape: const CircleBorder(),
+                  onPressed: () {
+                    setState(() => cameraFlash = !cameraFlash);
+                    _controller?.setFlashMode(
+                        cameraFlash ? FlashMode.torch : FlashMode.off);
                   },
-                  borderRadius: BorderRadius.circular(32),
-                  child: Container(
-                    width: 64.0,
-                    height: 64.0,
-                    alignment: Alignment.center,
+                  backgroundColor: Colors.grey.shade100,
+                  child: Icon(
+                    cameraFlash ? Icons.flash_on : Icons.flash_off,
+                    size: 20,
+                    color: Colors.black,
                   ),
                 ),
-                SizedBox(
-                  height: 32.0,
-                  width: 32.0,
-                  child: FloatingActionButton(
-                    heroTag: Object(),
-                    shape: const CircleBorder(),
-                    onPressed: () {
-                      setState(() => cameraFlash = !cameraFlash);
-                      _controller?.setFlashMode(
-                          cameraFlash ? FlashMode.torch : FlashMode.off);
-                    },
-                    backgroundColor: Colors.grey.shade100,
-                    child: Icon(
-                      cameraFlash ? Icons.flash_on : Icons.flash_off,
-                      size: 20,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        );
+        ),
+      );
 
   Widget _rectangleScanArea() {
     double rectangleHeight = CoreConstants.barcodeRectangleSize;
-    Size screenSize = MediaQuery
-        .of(context)
-        .size;
+    Size screenSize = MediaQuery.of(context).size;
 
     final topMargin = (screenSize.height - 180 - 80) / 2;
 
@@ -273,7 +268,7 @@ class _CameraViewState extends State<CameraView> {
       rotation = InputImageRotationValue.fromRawValue(sensorOrientation);
     } else if (Platform.isAndroid) {
       var rotationCompensation =
-      _orientations[_controller!.value.deviceOrientation];
+          _orientations[_controller!.value.deviceOrientation];
       if (rotationCompensation == null) return null;
       if (camera.lensDirection == CameraLensDirection.front) {
         // front-facing

@@ -32,12 +32,13 @@ class SearchHistorySectionWidget extends StatelessWidget {
             decoration: const BoxDecoration(color: Colors.white),
             child: ListView.builder(
               padding: const EdgeInsets.all(0.0),
-              itemCount: _historyListCount(searchHistoryWidgetEntity.itemsCount, searchHistoryWidgetEntity.histories?.length ?? 0),
+              itemCount: _historyListCount(searchHistoryWidgetEntity.itemsCount,
+                  searchHistoryWidgetEntity.histories?.length ?? 0),
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
-                final history =  searchHistoryWidgetEntity.histories![index];
+                final history = searchHistoryWidgetEntity.histories![index];
                 return SearchHistoryItemWidget(history: history);
               },
             ),

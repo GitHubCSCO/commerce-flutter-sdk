@@ -14,8 +14,8 @@ class ProductDetailsCarouselItemWidget extends StatelessWidget {
     return Image.network(
       productImageEntity.mediumImagePath.makeImageUrl(),
       fit: BoxFit.fitWidth,
-      errorBuilder: (BuildContext context, Object error,
-          StackTrace? stackTrace) {
+      errorBuilder:
+          (BuildContext context, Object error, StackTrace? stackTrace) {
         // This function is called when the image fails to load
         return Container(
           color: OptiAppColors.backgroundGray, // Placeholder color

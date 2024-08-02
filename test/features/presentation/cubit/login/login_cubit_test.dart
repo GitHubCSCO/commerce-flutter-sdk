@@ -22,7 +22,6 @@ void main() {
       loginCubit.close();
     });
 
-
     blocTest(
       'emits [LoginLoadingState, LoginSuccessState] when onLoginSubmit is called successfully with biometric option',
       build: () {
@@ -57,6 +56,5 @@ void main() {
     //     ),
     //   ],
     // );
-
   });
 }

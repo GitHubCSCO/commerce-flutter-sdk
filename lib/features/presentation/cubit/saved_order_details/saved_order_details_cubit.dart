@@ -17,10 +17,10 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
   final PricingInventoryUseCase _pricingInventoryUseCase;
   ProductSettings? productSettings;
 
-  SavedOrderDetailsCubit({
-    required SavedOrderUsecase savedOrderUsecase,
-    required PricingInventoryUseCase pricingInventoryUseCase
-  })  : _savedOrderUsecase = savedOrderUsecase,
+  SavedOrderDetailsCubit(
+      {required SavedOrderUsecase savedOrderUsecase,
+      required PricingInventoryUseCase pricingInventoryUseCase})
+      : _savedOrderUsecase = savedOrderUsecase,
         _pricingInventoryUseCase = pricingInventoryUseCase,
         super(
           SavedOrderDetailsState(
@@ -42,15 +42,15 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
 
     if (cart != null) {
       final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
-      final hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
+      final hideInventoryEnable =
+          _pricingInventoryUseCase.getHideInventoryEnable();
 
       emit(
         state.copyWith(
-          cart: cart,
-          status: OrderStatus.success,
-          hidePricingEnable: hidePricingEnable,
-          hideInventoryEnable: hideInventoryEnable
-        ),
+            cart: cart,
+            status: OrderStatus.success,
+            hidePricingEnable: hidePricingEnable,
+            hideInventoryEnable: hideInventoryEnable),
       );
     } else {
       emit(state.copyWith(status: OrderStatus.failure));

@@ -7,8 +7,8 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 part 'quick_order_auto_complete_event.dart';
 part 'quick_order_auto_complete_state.dart';
 
-class QuickOrderAutoCompleteBloc extends Bloc<QuickOrderAutoCompleteEvent, QuickOrderAutoCompleteState> {
-
+class QuickOrderAutoCompleteBloc
+    extends Bloc<QuickOrderAutoCompleteEvent, QuickOrderAutoCompleteState> {
   final SearchUseCase _searchUseCase;
   final ScanningMode _scanningMode;
 
@@ -21,24 +21,27 @@ class QuickOrderAutoCompleteBloc extends Bloc<QuickOrderAutoCompleteEvent, Quick
       : _searchUseCase = searchUseCase,
         _scanningMode = scanningMode,
         super(QuickOrderInitialState()) {
-    on<QuickOrderStartSearchEvent>((event, emit) => _onStartSearchEvent(event, emit));
-    on<QuickOrderEndSearchEvent>((event, emit) => _onEndSearchEvent(event, emit));
+    on<QuickOrderStartSearchEvent>(
+        (event, emit) => _onStartSearchEvent(event, emit));
+    on<QuickOrderEndSearchEvent>(
+        (event, emit) => _onEndSearchEvent(event, emit));
     on<QuickOrderFocusEvent>(_onSearchFocusEvent);
     on<QuickOrderTypingEvent>(_onSearchTypingEvent);
     on<QuickOrderUnFocusEvent>(_onSearchUnFocusEvent);
   }
 
-  Future<void> _onStartSearchEvent(
-      QuickOrderStartSearchEvent event, Emitter<QuickOrderAutoCompleteState> emit) async {
+  Future<void> _onStartSearchEvent(QuickOrderStartSearchEvent event,
+      Emitter<QuickOrderAutoCompleteState> emit) async {
     emit(QuickOrderAutoCompleteInitialState());
   }
 
-  Future<void> _onEndSearchEvent(
-      QuickOrderEndSearchEvent event, Emitter<QuickOrderAutoCompleteState> emit) async {
+  Future<void> _onEndSearchEvent(QuickOrderEndSearchEvent event,
+      Emitter<QuickOrderAutoCompleteState> emit) async {
     emit(QuickOrderInitialState());
   }
 
-  Future<void> _onSearchFocusEvent(QuickOrderFocusEvent event, Emitter<QuickOrderAutoCompleteState> emit) async {
+  Future<void> _onSearchFocusEvent(QuickOrderFocusEvent event,
+      Emitter<QuickOrderAutoCompleteState> emit) async {
     if (searchQuery.isEmpty) {
       emit(QuickOrderAutoCompleteInitialState());
     } else {
@@ -49,16 +52,19 @@ class QuickOrderAutoCompleteBloc extends Bloc<QuickOrderAutoCompleteEvent, Quick
           if ((data?.products ?? []).isNotEmpty) {
             emit(QuickOrderAutoCompleteLoadedState(result: data));
           } else {
-            emit(QuickOrderAutoCompleteFailureState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
+            emit(QuickOrderAutoCompleteFailureState(SiteMessageConstants
+                .defaultValueQuickOrderCannotOrderUnavailable));
           }
         case Failure(errorResponse: final errorResponse):
-          emit(QuickOrderAutoCompleteFailureState(errorResponse.errorDescription ?? ''));
+          emit(QuickOrderAutoCompleteFailureState(
+              errorResponse.errorDescription ?? ''));
         default:
       }
     }
   }
 
-  Future<void> _onSearchTypingEvent(QuickOrderTypingEvent event, Emitter<QuickOrderAutoCompleteState> emit) async {
+  Future<void> _onSearchTypingEvent(QuickOrderTypingEvent event,
+      Emitter<QuickOrderAutoCompleteState> emit) async {
     searchQuery = event.quickOrderQuery;
     if (searchQuery.isEmpty) {
       emit(QuickOrderAutoCompleteInitialState());
@@ -70,27 +76,31 @@ class QuickOrderAutoCompleteBloc extends Bloc<QuickOrderAutoCompleteEvent, Quick
           if ((data?.products ?? []).isNotEmpty) {
             emit(QuickOrderAutoCompleteLoadedState(result: data));
           } else {
-            emit(QuickOrderAutoCompleteFailureState(SiteMessageConstants.defaultValueQuickOrderCannotOrderUnavailable));
+            emit(QuickOrderAutoCompleteFailureState(SiteMessageConstants
+                .defaultValueQuickOrderCannotOrderUnavailable));
           }
         case Failure(errorResponse: final errorResponse):
-          emit(QuickOrderAutoCompleteFailureState(errorResponse.errorDescription ?? ''));
+          emit(QuickOrderAutoCompleteFailureState(
+              errorResponse.errorDescription ?? ''));
         default:
       }
     }
   }
 
-  Future<void> _onSearchUnFocusEvent(QuickOrderUnFocusEvent event, Emitter<QuickOrderAutoCompleteState> emit) async {
+  Future<void> _onSearchUnFocusEvent(QuickOrderUnFocusEvent event,
+      Emitter<QuickOrderAutoCompleteState> emit) async {
     if (searchQuery.isEmpty) {
       emit(QuickOrderInitialState());
     }
   }
 
-  Future<Result<AutocompleteResult, ErrorResponse>?> loadAutoCompleteProducts() async {
-    if (_scanningMode == ScanningMode.count || _scanningMode == ScanningMode.create) {
+  Future<Result<AutocompleteResult, ErrorResponse>?>
+      loadAutoCompleteProducts() async {
+    if (_scanningMode == ScanningMode.count ||
+        _scanningMode == ScanningMode.create) {
       return await _searchUseCase.loadVmiAutocompleteResults(searchQuery);
     } else {
       return await _searchUseCase.loadAutocompleteResults(searchQuery);
     }
   }
-
 }

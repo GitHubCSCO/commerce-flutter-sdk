@@ -91,7 +91,7 @@ class ContentConfigurationService implements IContentConfigurationService {
             final pageContentManagementEntity =
                 PageContentManagementMapper().toEntity(value);
 
-          persistContentManagementData(value, contentType);
+            persistContentManagementData(value, contentType);
             return Success(pageContentManagementEntity);
           } else {
             final persistedConternManagement =

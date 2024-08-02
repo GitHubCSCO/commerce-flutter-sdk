@@ -1,11 +1,9 @@
 import 'package:equatable/equatable.dart';
 
 abstract class CountState extends Equatable {
-
   final int cartItemCount;
 
   const CountState({required this.cartItemCount});
-
 }
 
 class CountInitialState extends CountState {
@@ -27,9 +25,9 @@ class CartCountState extends CountState {
 class CartTabReloadState extends CountState {
   final DateTime timestamp;
 
-  const CartTabReloadState({required this.timestamp, required super.cartItemCount});
+  const CartTabReloadState(
+      {required this.timestamp, required super.cartItemCount});
 
   @override
   List<Object?> get props => [timestamp];
-
 }

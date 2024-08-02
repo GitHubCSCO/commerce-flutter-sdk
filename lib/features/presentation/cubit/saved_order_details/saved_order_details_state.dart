@@ -7,13 +7,12 @@ class SavedOrderDetailsState extends Equatable {
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
 
-  const SavedOrderDetailsState({
-    required this.cart,
-    required this.status,
-    required this.shouldShowWarehouseInventoryButton,
-    this.hidePricingEnable,
-    this.hideInventoryEnable
-  });
+  const SavedOrderDetailsState(
+      {required this.cart,
+      required this.status,
+      required this.shouldShowWarehouseInventoryButton,
+      this.hidePricingEnable,
+      this.hideInventoryEnable});
 
   @override
   List<Object> get props => [

@@ -55,7 +55,8 @@ class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
       return;
     }
     status = VmiLocationListStatus.moreLoading;
-    emit((state as VMILocationLoadedState).copyWith(status: VmiLocationListStatus.moreLoading));
+    emit((state as VMILocationLoadedState)
+        .copyWith(status: VmiLocationListStatus.moreLoading));
 
     var response = await _vmiLocationUseCase.getVMILocations(
       pagination!.page! + 1,
@@ -104,7 +105,6 @@ class VMILocationBloc extends Bloc<VMILocationEvent, VMILocationState> {
     }
     searchedDataEntityList = null;
     if (seachPlace != null) {
-
       emit(VMILocationLoadedState(
           currentLocationDataEntityList: currentLocationDataEntityList,
           selectedLocation: selectedLocation,

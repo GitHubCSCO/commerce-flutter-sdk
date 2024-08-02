@@ -1,1 +1,7 @@
-enum VmiLocationListStatus { initial,loading, moreLoading, loaded, itemSelected }
+enum VmiLocationListStatus {
+  initial,
+  loading,
+  moreLoading,
+  loaded,
+  itemSelected
+}

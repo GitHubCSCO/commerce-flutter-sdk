@@ -6,5 +6,6 @@ class BrandCategoryLoadEvent extends BrandCategoryEvent {
   BrandCategory? brandCategory;
   GetBrandSubCategoriesResult? brandSubCategories;
   Brand brand;
-  BrandCategoryLoadEvent({required this.brand, this.brandCategory, this.brandSubCategories});
+  BrandCategoryLoadEvent(
+      {required this.brand, this.brandCategory, this.brandSubCategories});
 }

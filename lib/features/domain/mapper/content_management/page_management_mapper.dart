@@ -31,7 +31,8 @@ class PageContentManagementMapper {
             model.childWidgets?.map(toPageClassicChildWidgetEntity).toList() ??
                 [],
         displayThumbnailImage: model.displayThumbnailImage,
-        displayTopSellersFrom: TopSellersCategoriesSpanConverter.convert( model.displayTopSellersFrom ?? ''),
+        displayTopSellersFrom: TopSellersCategoriesSpanConverter.convert(
+            model.displayTopSellersFrom ?? ''),
         displayAddToCart: model.displayAddToCart,
         numberOfProductsToDisplay: model.numberOfProductsToDisplay,
         displayPartNumbers: model.displayPartNumbers,
@@ -62,7 +63,8 @@ class PageContentManagementMapper {
         secondaryTextColor: model.secondaryTextColor,
         primaryTextColor: model.primaryTextColor,
         imageUrl: model.imageUrl,
-        textJustification:  TextJustificationConverter.convert(model.textJustification ?? ''),
+        textJustification:
+            TextJustificationConverter.convert(model.textJustification ?? ''),
         applyDarkOverlayToImage: model.applyDarkOverlayToImage,
         primaryText: model.primaryText,
         secondaryText: model.secondaryText,

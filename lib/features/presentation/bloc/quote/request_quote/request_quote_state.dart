@@ -30,8 +30,8 @@ class UpdateCartlineSuccessState extends RequestQuoteState {}
 
 class UpdateCartlineErrorState extends RequestQuoteState {}
 
+class SubmitQuoteLoadingState extends RequestQuoteState {}
 
-class SubmitQuoteLoadingState extends RequestQuoteState {}  
 class SubmitQuoteSuccessState extends RequestQuoteState {
   final QuoteDto quoteDto;
   SubmitQuoteSuccessState({
@@ -46,4 +46,4 @@ class SubmitQuoteErrorState extends RequestQuoteState {
   });
 }
 
-class RequestAddCartInitSuccessState extends RequestQuoteState {} 
+class RequestAddCartInitSuccessState extends RequestQuoteState {}

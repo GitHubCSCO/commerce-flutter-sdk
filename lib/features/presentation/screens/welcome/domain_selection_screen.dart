@@ -24,7 +24,7 @@ class DomainScreen extends StatelessWidget {
         BlocProvider(
           create: (context) => sl<RemoteConfigCubit>()..fetchDebugDomains(),
         ),
-      ], 
+      ],
       child: const DomainWelcomeScreen(),
     );
   }
@@ -73,7 +73,7 @@ class _DomainPageState extends State<DomainPage> {
       _textEditingController.text = siteUrl;
     });
   }
-  
+
   @override
   void initState() {
     super.initState();
@@ -98,9 +98,10 @@ class _DomainPageState extends State<DomainPage> {
           children: [
             BlocBuilder<RemoteConfigCubit, RemoteConfigState>(
               builder: (context, state) {
-                if (state is RemoteConfigDebugDomainLoaded && state.domains.isNotEmpty) {
+                if (state is RemoteConfigDebugDomainLoaded &&
+                    state.domains.isNotEmpty) {
                   return _buildDropdown(state.domains);
-                }else{
+                } else {
                   return Container();
                 }
               },
@@ -126,12 +127,14 @@ class _DomainPageState extends State<DomainPage> {
         hint: const Text('Select domain'),
         onChanged: (String? newValue) {
           setState(() {
-            if (newValue.isNullOrEmpty == false && debugCredentials.containsKey(newValue)) {
+            if (newValue.isNullOrEmpty == false &&
+                debugCredentials.containsKey(newValue)) {
               _fillCredentials(debugCredentials[newValue]!);
             }
           });
         },
-        items: debugCredentials.keys.map<DropdownMenuItem<String>>((String siteUrl) {
+        items: debugCredentials.keys
+            .map<DropdownMenuItem<String>>((String siteUrl) {
           return DropdownMenuItem<String>(
             value: siteUrl,
             child: Text(siteUrl),
@@ -140,7 +143,7 @@ class _DomainPageState extends State<DomainPage> {
       ),
     );
   }
-  
+
   Widget _buildPrimaryButton(BuildContext context) {
     return BlocConsumer<DomainCubit, DomainState>(
       listener: (context, state) {
@@ -162,7 +165,9 @@ class _DomainPageState extends State<DomainPage> {
             onPressed: _textEditingController.text.isNotEmpty
                 ? () {
                     context.closeKeyboard();
-                    context.read<DomainCubit>().selectDomain(_textEditingController.text);
+                    context
+                        .read<DomainCubit>()
+                        .selectDomain(_textEditingController.text);
                   }
                 : null,
             isEnabled: _textEditingController.text.isNotEmpty,

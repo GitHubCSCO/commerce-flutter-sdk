@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class PrimaryButton extends StatelessWidget {
-
   const PrimaryButton({
     super.key,
     this.onPressed,
@@ -78,16 +77,15 @@ class PrimaryButton extends StatelessWidget {
 }
 
 class SecondaryButton extends StatelessWidget {
-  const SecondaryButton({
-    super.key,
-    required this.text,
-    this.onPressed,
-    this.backgroundColor = AppStyle.neutral75,
-    this.foregroundColor = AppStyle.primary500,
-    this.borderRadius = AppStyle.borderRadius,
-    this.isEnabled = true,
-    this.style
-  });
+  const SecondaryButton(
+      {super.key,
+      required this.text,
+      this.onPressed,
+      this.backgroundColor = AppStyle.neutral75,
+      this.foregroundColor = AppStyle.primary500,
+      this.borderRadius = AppStyle.borderRadius,
+      this.isEnabled = true,
+      this.style});
 
   final String text;
   final Function()? onPressed;
@@ -122,7 +120,8 @@ class SecondaryButton extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: Center(
-          child: Text(text, style: style ?? TextStyle(color: OptiAppColors.primaryColor)),
+          child: Text(text,
+              style: style ?? TextStyle(color: OptiAppColors.primaryColor)),
         ),
       ),
     );
@@ -186,14 +185,13 @@ class TertiaryButton extends StatelessWidget {
 }
 
 class PlainButton extends StatelessWidget {
-  const PlainButton({
-    super.key,
-    required this.text,
-    this.onPressed,
-    this.foregroundColor = AppStyle.primary500,
-    this.isEnabled = true,
-    this.style
-  });
+  const PlainButton(
+      {super.key,
+      required this.text,
+      this.onPressed,
+      this.foregroundColor = AppStyle.primary500,
+      this.isEnabled = true,
+      this.style});
 
   final String text;
   final Function()? onPressed;

@@ -77,10 +77,12 @@ class ListDetailsWidget extends StatelessWidget {
         (wishList.wishListSharesCount ?? 0) > 0) {
       if ((wishList.wishListSharesCount ?? 0) > 0 &&
           wishList.isSharedList != true) {
-        sharedInfoText = LocalizationConstants.sharedWith.localized()
+        sharedInfoText = LocalizationConstants.sharedWith
+            .localized()
             .format([wishList.wishListSharesCount ?? 0]);
       } else if (wishList.isSharedList == true) {
-        sharedInfoText = LocalizationConstants.sharedBy.localized().format(['']);
+        sharedInfoText =
+            LocalizationConstants.sharedBy.localized().format(['']);
       }
     } else if (wishList.isSharedList != true &&
         (wishList.wishListSharesCount ?? 0) == 0) {
@@ -122,8 +124,9 @@ class ListDetailsWidget extends StatelessWidget {
         const SizedBox(height: 16),
         _ListDetailsPropertiesRow(
           title: LocalizationConstants.products.localized(),
-          value:
-              LocalizationConstants.items.localized().format([wishList.wishListLinesCount]),
+          value: LocalizationConstants.items
+              .localized()
+              .format([wishList.wishListLinesCount]),
         ),
       ],
     );

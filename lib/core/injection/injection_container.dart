@@ -298,17 +298,15 @@ Future<void> initInjectionContainer() async {
         SavedOrderCubit(savedOrderUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => SavedOrderUsecase())
     ..registerFactory(() => SavedOrderDetailsCubit(
-          savedOrderUsecase: sl(), pricingInventoryUseCase: sl()))
+        savedOrderUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => SavedOrderHandlerCubit(savedOrderUsecase: sl()))
 
     //order approval
     ..registerFactory(() => OrderApprovalUseCase())
-    ..registerFactory(() =>
-      OrderApprovalCubit(
-          orderApprovalUseCase: sl(), pricingInventoryUseCase: sl()))
-    ..registerFactory(() =>
-          OrderApprovalDetailsCubit(
-              orderApprovalUseCase: sl(), pricingInventoryUseCase: sl()))
+    ..registerFactory(() => OrderApprovalCubit(
+        orderApprovalUseCase: sl(), pricingInventoryUseCase: sl()))
+    ..registerFactory(() => OrderApprovalDetailsCubit(
+        orderApprovalUseCase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(
         () => OrderApprovalFilterCubit(orderApprovalUseCase: sl()))
     ..registerFactory(() => OrderApprovalHandlerCubit())
@@ -341,7 +339,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => AddToCartCubit(addToCartUsecase: sl()))
     ..registerFactory(() => AddToCartUsecase())
     ..registerFactory(() =>
-          SearchProductsCubit(searchUseCase: sl(), pricingInventoryUseCase: sl()))
+        SearchProductsCubit(searchUseCase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(
         () => ProductListFilterCubit(productListFilterUsecase: sl()))
     ..registerFactory(() => ProductListFilterUsecase())
@@ -383,7 +381,8 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => RequestQuoteSelectionBloc())
 
     //quote details
-    ..registerFactory(() => QuoteDetailsBloc(quoteDetailsUsecase: sl(), pricingInventoryUseCase: sl()))
+    ..registerFactory(() => QuoteDetailsBloc(
+        quoteDetailsUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => QuoteDetailsUsecase())
 
     // job quote details
@@ -399,12 +398,13 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => QuoteAllUsecase())
 
     // quote pricing
-    ..registerFactory(() => QuotePricingBloc(quotePricingUsecase: sl(), pricingInventoryUseCase: sl()))
+    ..registerFactory(() => QuotePricingBloc(
+        quotePricingUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => QuotePricingUsecase())
 
     // quote confirmation
-    ..registerFactory(
-        () => QuoteConfirmationCubit(quoteConfirmationUsecase: sl(), pricingInventoryUseCase: sl()))
+    ..registerFactory(() => QuoteConfirmationCubit(
+        quoteConfirmationUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => QuoteConfirmationUsecase())
 
     //shop category
@@ -554,8 +554,10 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => CarouselIndicatorCubit())
 
     //show/hide pricing inventory
-    ..registerLazySingleton(() => ShowHidePricingBloc(showHidePricingInventoryUseCase: sl()))
-    ..registerLazySingleton(() => ShowHideInventoryBloc(showHidePricingInventoryUseCase: sl()))
+    ..registerLazySingleton(
+        () => ShowHidePricingBloc(showHidePricingInventoryUseCase: sl()))
+    ..registerLazySingleton(
+        () => ShowHideInventoryBloc(showHidePricingInventoryUseCase: sl()))
     ..registerFactory(() => ShowHidePricingInventoryUseCase())
 
     //action link
@@ -729,10 +731,10 @@ Future<void> initInjectionContainer() async {
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
-    ))
+        ))
     ..registerLazySingleton<ILocalizationService>(() => LocalizationService(
           commerceAPIServiceProvider: sl(),
-    ))
+        ))
     ..registerSingletonAsync<IAppConfigurationService>(() async {
       final service = AppConfigurationService(
         commerceAPIServiceProvider: sl(),
