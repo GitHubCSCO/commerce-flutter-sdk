@@ -1,33 +1,38 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../../../sdk/services/mock_services.dart';
 import '../../../../sdk/usecases/mock_usecases.dart';
 
-void main() {
+void main() async {
+  late LoginUsecase mockLoginUsecase;
+  late LoginCubit sut;
+  setUp(() async {
+    GetIt.I.registerSingleton<ILocalizationService>(MockLocalizationService());
+    await GetIt.I.allReady();
+
+    mockLoginUsecase = MockLoginUsecase();
+    sut = LoginCubit(loginUsecase: mockLoginUsecase);
+  });
+  tearDown(() {
+    // Reset GetIt after each test
+    GetIt.I.reset();
+    sut.close();
+  });
   group('LoginCubit', () {
-    late LoginUsecase loginUsecase;
-    late LoginCubit loginCubit;
-
-    setUp(() {
-      loginUsecase = MockLoginUsecase();
-      loginCubit = LoginCubit(loginUsecase: loginUsecase);
-    });
-
-    tearDown(() {
-      loginCubit.close();
-    });
-
     blocTest(
       'emits [LoginLoadingState, LoginSuccessState] when onLoginSubmit is called successfully with biometric option',
       build: () {
-        when(() => loginUsecase.attemptSignIn(any(), any()))
+        when(() => mockLoginUsecase.attemptSignIn(any(), any()))
             .thenAnswer((_) async => LoginStatus.loginSuccessBiometric);
-        return loginCubit;
+        return sut;
       },
       act: (cubit) async {
         cubit.onLoginSubmit('validUsername', 'validPassword');
@@ -38,23 +43,23 @@ void main() {
       ],
     );
 
-    // blocTest(
-    //   'emits [LoginLoadingState, LoginFailureState] when onLoginSubmit encounters an error',
-    //   build: () {
-    //     when(() => loginUsecase.attemptSignIn(any(), any()))
-    //         .thenAnswer((_) async => LoginStatus.loginErrorUnsuccessful);
-    //     return loginCubit;
-    //   },
-    //   act: (cubit) async {
-    //     cubit.onLoginSubmit('invalidUsername', 'invalidPassword');
-    //   },
-    //   expect: () => [
-    //     LoginLoadingState(),
-    //     LoginFailureState(
-    //       message: LocalizationConstants.incorrectLoginOrPassword.localized(),
-    //       buttonText: LocalizationConstants.dismiss.localized(),
-    //     ),
-    //   ],
-    // );
+    blocTest(
+      'emits [LoginLoadingState, LoginFailureState] when onLoginSubmit encounters an error',
+      build: () {
+        when(() => mockLoginUsecase.attemptSignIn(any(), any()))
+            .thenAnswer((_) async => LoginStatus.loginErrorUnsuccessful);
+        return sut;
+      },
+      act: (cubit) async {
+        cubit.onLoginSubmit('invalidUsername', 'invalidPassword');
+      },
+      expect: () => [
+        LoginLoadingState(),
+        LoginFailureState(
+          message: LocalizationConstants.incorrectLoginOrPassword.localized(),
+          buttonText: LocalizationConstants.dismiss.localized(),
+        ),
+      ],
+    );
   });
 }

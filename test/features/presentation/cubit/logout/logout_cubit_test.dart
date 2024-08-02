@@ -7,24 +7,24 @@ import 'package:mocktail/mocktail.dart';
 import '../../../../sdk/usecases/mock_usecases.dart';
 
 void main() {
+  late LogoutUsecase mockLogoutUsecase;
+  late LogoutCubit sut;
+
+  setUp(() {
+    mockLogoutUsecase = MockLogoutUsecase();
+    sut = LogoutCubit(logoutUsecase: mockLogoutUsecase);
+  });
+
+  tearDown(() {
+    sut.close();
+  });
+
   group('LogoutCubit', () {
-    late LogoutUsecase logoutUsecase;
-    late LogoutCubit logoutCubit;
-
-    setUp(() {
-      logoutUsecase = MockLogoutUsecase();
-      logoutCubit = LogoutCubit(logoutUsecase: logoutUsecase);
-    });
-
-    tearDown(() {
-      logoutCubit.close();
-    });
-
     blocTest(
       'emits [LogoutLoading, LogoutSuccess] when logout is called successfully',
       build: () {
-        when(() => logoutUsecase.logout()).thenAnswer((_) async {});
-        return logoutCubit;
+        when(() => mockLogoutUsecase.logout()).thenAnswer((_) async {});
+        return sut;
       },
       act: (cubit) async {
         await cubit.logout();
@@ -34,5 +34,7 @@ void main() {
         LogoutSuccess(),
       ],
     );
+    //TODO
+    //Seems like we don't have LogoutFailed State. Need to look into it later
   });
 }

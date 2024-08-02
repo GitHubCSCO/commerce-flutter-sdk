@@ -9,7 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widg
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ActionListItemWidget extends BaseActionItemWidget {
+class ActionListItemWidget extends StatelessWidget with BaseActionItemWidget {
   final ActionLinkEntity action;
 
   const ActionListItemWidget({super.key, required this.action});

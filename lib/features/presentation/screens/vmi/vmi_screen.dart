@@ -40,7 +40,7 @@ class VMIScreen extends StatelessWidget {
   }
 }
 
-class VMIPage extends BaseDynamicContentScreen {
+class VMIPage extends StatelessWidget with BaseDynamicContentScreen {
   const VMIPage({super.key});
 
   @override
