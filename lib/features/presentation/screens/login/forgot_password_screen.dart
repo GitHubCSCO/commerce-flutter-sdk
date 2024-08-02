@@ -96,7 +96,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             displayDialogWidget(
               context: context,
               content: Text(
-                LocalizationConstants.forgotPasswordSuccessfulMessage.localized(),
+                LocalizationConstants.forgotPasswordSuccessfulMessage
+                    .localized(),
               ),
               actions: [
                 PlainBlackButton(
@@ -145,9 +146,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     Text(
                       useEmailAsUserName
                           ? LocalizationConstants
-                              .instructionsEmailStringTemplate.localized()
+                              .instructionsEmailStringTemplate
+                              .localized()
                           : LocalizationConstants
-                              .instructionsUsernameStringTemplate.localized(),
+                              .instructionsUsernameStringTemplate
+                              .localized(),
                       style: OptiTextStyles.body,
                       textAlign: TextAlign.center,
                     ),
@@ -188,7 +191,8 @@ void _errorCommunicatingWithServer(BuildContext context) {
   displayDialogWidget(
     context: context,
     title: LocalizationConstants.error.localized(),
-    content: Text(LocalizationConstants.errorCommunicatingWithTheServer.localized()),
+    content:
+        Text(LocalizationConstants.errorCommunicatingWithTheServer.localized()),
     actions: [
       PlainBlackButton(
         text: LocalizationConstants.oK.localized(),

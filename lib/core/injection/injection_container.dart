@@ -1,32 +1,8 @@
 import 'package:commerce_flutter_app/core/config/analytics_config.dart';
 import 'package:commerce_flutter_app/core/config/route_config.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
-import 'package:commerce_flutter_app/features/domain/service/app_configuration_service.dart';
-import 'package:commerce_flutter_app/features/domain/service/appcenter_tracking_service.dart';
-import 'package:commerce_flutter_app/features/domain/service/biometric_authentication_service.dart';
-import 'package:commerce_flutter_app/features/domain/service/commerce_api_service_provider.dart';
-import 'package:commerce_flutter_app/features/domain/service/composite_tracking_service.dart';
-import 'package:commerce_flutter_app/features/domain/service/content_configuration_service.dart';
-import 'package:commerce_flutter_app/features/domain/service/core_service_provider.dart';
-import 'package:commerce_flutter_app/features/domain/service/firebase_tracking_service.dart';
-import 'package:commerce_flutter_app/features/domain/service/geo_location_service.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/app_configuration_service_interface.dart';
-import 'package:commerce_flutter_app/features/domain/service/device_service.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/biometric_authentication_interface.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/device_interface.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/geo_location_service_interface.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/localization_interface.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/location_search_history_service.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/search_history_service_interface.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/tracking_service_interface.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/vmi_service_interface.dart';
-import 'package:commerce_flutter_app/features/domain/service/localization_service.dart';
-import 'package:commerce_flutter_app/features/domain/service/location_search_history_service.dart';
-import 'package:commerce_flutter_app/features/domain/service/network_service.dart';
-import 'package:commerce_flutter_app/features/domain/service/search_history_service.dart';
-import 'package:commerce_flutter_app/features/domain/service/vmi_service.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
+import 'package:commerce_flutter_app/features/domain/service/services.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/add_credit_card_usecase/add_credit_card_usecase.dart';
@@ -298,17 +274,15 @@ Future<void> initInjectionContainer() async {
         SavedOrderCubit(savedOrderUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => SavedOrderUsecase())
     ..registerFactory(() => SavedOrderDetailsCubit(
-          savedOrderUsecase: sl(), pricingInventoryUseCase: sl()))
+        savedOrderUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => SavedOrderHandlerCubit(savedOrderUsecase: sl()))
 
     //order approval
     ..registerFactory(() => OrderApprovalUseCase())
-    ..registerFactory(() =>
-      OrderApprovalCubit(
-          orderApprovalUseCase: sl(), pricingInventoryUseCase: sl()))
-    ..registerFactory(() =>
-          OrderApprovalDetailsCubit(
-              orderApprovalUseCase: sl(), pricingInventoryUseCase: sl()))
+    ..registerFactory(() => OrderApprovalCubit(
+        orderApprovalUseCase: sl(), pricingInventoryUseCase: sl()))
+    ..registerFactory(() => OrderApprovalDetailsCubit(
+        orderApprovalUseCase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(
         () => OrderApprovalFilterCubit(orderApprovalUseCase: sl()))
     ..registerFactory(() => OrderApprovalHandlerCubit())
@@ -341,7 +315,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => AddToCartCubit(addToCartUsecase: sl()))
     ..registerFactory(() => AddToCartUsecase())
     ..registerFactory(() =>
-          SearchProductsCubit(searchUseCase: sl(), pricingInventoryUseCase: sl()))
+        SearchProductsCubit(searchUseCase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(
         () => ProductListFilterCubit(productListFilterUsecase: sl()))
     ..registerFactory(() => ProductListFilterUsecase())
@@ -383,7 +357,8 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => RequestQuoteSelectionBloc())
 
     //quote details
-    ..registerFactory(() => QuoteDetailsBloc(quoteDetailsUsecase: sl(), pricingInventoryUseCase: sl()))
+    ..registerFactory(() => QuoteDetailsBloc(
+        quoteDetailsUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => QuoteDetailsUsecase())
 
     // job quote details
@@ -399,12 +374,13 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => QuoteAllUsecase())
 
     // quote pricing
-    ..registerFactory(() => QuotePricingBloc(quotePricingUsecase: sl(), pricingInventoryUseCase: sl()))
+    ..registerFactory(() => QuotePricingBloc(
+        quotePricingUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => QuotePricingUsecase())
 
     // quote confirmation
-    ..registerFactory(
-        () => QuoteConfirmationCubit(quoteConfirmationUsecase: sl(), pricingInventoryUseCase: sl()))
+    ..registerFactory(() => QuoteConfirmationCubit(
+        quoteConfirmationUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => QuoteConfirmationUsecase())
 
     //shop category
@@ -554,8 +530,10 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => CarouselIndicatorCubit())
 
     //show/hide pricing inventory
-    ..registerLazySingleton(() => ShowHidePricingBloc(showHidePricingInventoryUseCase: sl()))
-    ..registerLazySingleton(() => ShowHideInventoryBloc(showHidePricingInventoryUseCase: sl()))
+    ..registerLazySingleton(
+        () => ShowHidePricingBloc(showHidePricingInventoryUseCase: sl()))
+    ..registerLazySingleton(
+        () => ShowHideInventoryBloc(showHidePricingInventoryUseCase: sl()))
     ..registerFactory(() => ShowHidePricingInventoryUseCase())
 
     //action link
@@ -729,10 +707,10 @@ Future<void> initInjectionContainer() async {
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
-    ))
+        ))
     ..registerLazySingleton<ILocalizationService>(() => LocalizationService(
           commerceAPIServiceProvider: sl(),
-    ))
+        ))
     ..registerSingletonAsync<IAppConfigurationService>(() async {
       final service = AppConfigurationService(
         commerceAPIServiceProvider: sl(),

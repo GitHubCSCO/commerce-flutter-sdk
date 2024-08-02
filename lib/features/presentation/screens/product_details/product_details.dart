@@ -74,7 +74,7 @@ class ProductDetailsScreen extends StatelessWidget {
   }
 }
 
-class ProductDetailsPage extends BaseDynamicContentScreen {
+class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
   final String productId;
   final ProductEntity? product;
   const ProductDetailsPage(this.productId, this.product, {super.key});

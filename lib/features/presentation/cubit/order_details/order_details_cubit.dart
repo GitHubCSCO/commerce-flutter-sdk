@@ -17,7 +17,9 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
   final OrderUsecase _orderUsecase;
   final PricingInventoryUseCase _pricingInventoryUseCase;
 
-  OrderDetailsCubit({required OrderUsecase orderUsercase, required PricingInventoryUseCase pricingInventoryUseCase})
+  OrderDetailsCubit(
+      {required OrderUsecase orderUsercase,
+      required PricingInventoryUseCase pricingInventoryUseCase})
       : _orderUsecase = orderUsercase,
         _pricingInventoryUseCase = pricingInventoryUseCase,
         super(
@@ -50,7 +52,8 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       );
 
       final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
-      final hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
+      final hideInventoryEnable =
+          _pricingInventoryUseCase.getHideInventoryEnable();
 
       if (order.orderPromotions != null || order.orderPromotions!.isNotEmpty) {
         final promotionAdjustedOrder = order.copyWith(
@@ -68,13 +71,12 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
 
         emit(
           state.copyWith(
-            order: promotionAdjustedOrder,
-            orderSettings: orderSettings,
-            orderStatus: OrderStatus.success,
-            isReorderViewVisible: isReorderVisible,
-            hidePricingEnable: hidePricingEnable,
-            hideInventoryEnable: hideInventoryEnable
-          ),
+              order: promotionAdjustedOrder,
+              orderSettings: orderSettings,
+              orderStatus: OrderStatus.success,
+              isReorderViewVisible: isReorderVisible,
+              hidePricingEnable: hidePricingEnable,
+              hideInventoryEnable: hideInventoryEnable),
         );
 
         return;
@@ -222,7 +224,8 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       ? ''
       : '-${state.order.orderDiscountAmountDisplay}';
 
-  String? get shippingHandlingTitle => LocalizationConstants.shippingHandling.localized();
+  String? get shippingHandlingTitle =>
+      LocalizationConstants.shippingHandling.localized();
 
   num get _shippingHandlingValue =>
       (state.order.shippingCharges ?? 0) + (state.order.handlingCharges ?? 0);
@@ -230,7 +233,8 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       ? ''
       : '${CoreConstants.currencySymbol}${_shippingHandlingValue.toStringAsFixed(2)}';
 
-  String? get otherChargesTitle => LocalizationConstants.otherCharges.localized();
+  String? get otherChargesTitle =>
+      LocalizationConstants.otherCharges.localized();
 
   String? get otherChargesValue =>
       (state.order.otherCharges == null || state.order.otherCharges! == 0)

@@ -1,224 +1,34 @@
-import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/product_list_type.dart';
-import 'package:commerce_flutter_app/features/domain/enums/search_product_status.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/search_product_filter_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class SearchProductsWidget extends StatefulWidget {
-  final Function(int) onPageChanged; // Callback to handle page changes
-  final ProductListType productListType;
-
-  const SearchProductsWidget({
-    super.key,
-    required this.onPageChanged, required this.productListType,
-  });
-
-  @override
-  State<SearchProductsWidget> createState() => _SearchProductsWidgetState();
-}
-
-class _SearchProductsWidgetState extends State<SearchProductsWidget> {
-  final _scrollController = ScrollController();
-
-  void _onScroll() {
-    if (_isBottom) {
-      context.read<SearchProductsCubit>().loadMoreSearchProducts();
-    }
-  }
-
-  bool get _isBottom {
-    if (!_scrollController.hasClients) {
-      return false;
-    }
-
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.offset;
-    return currentScroll >= (maxScroll * 0.9);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_onScroll);
-  }
-
-  @override
-  void dispose() {
-    _scrollController
-      ..removeListener(_onScroll)
-      ..dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<SearchProductsCubit, SearchProductsState>(
-      builder: (context, state) {
-        return BlocListener<AddToCartCubit, AddToCartState>(
-          listener: (context, state) {
-            switch (state) {
-              case AddToCartSuccess():
-                context.read<CartCountCubit>().onCartItemChange();
-                CustomSnackBar.showProductAddedToCart(context);
-                break;
-              case AddToCartFailure():
-                break;
-            }
-          },
-          child: state.searchProductStatus == SearchProductStatus.loading
-              ? const Center(child: CircularProgressIndicator())
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Visibility(
-                            visible: state.originalQuery != null && state.originalQuery!.isNotEmpty,
-                            child: Text(
-                              state.originalQuery==null ?
-                              LocalizationConstants.results.localized().format(
-                                [
-                                  (state.paginationEntity
-                                              ?.totalItemCount ==
-                                          0)
-                                      ? LocalizationConstants.no.localized()
-                                      : state.paginationEntity
-                                          ?.totalItemCount
-                                ],
-                              )
-                              :
-                              LocalizationConstants.resultsFor.localized().format(
-                                [
-                                  (state.paginationEntity
-                                              ?.totalItemCount ==
-                                          0)
-                                      ? LocalizationConstants.no.localized()
-                                      : state.paginationEntity
-                                          ?.totalItemCount,
-                                  state.originalQuery
-                                ],
-                              ),
-                              style: OptiTextStyles.header3,
-                            ),
-                          ),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SortToolMenu(
-                                availableSortOrders: state.availableSortOrders,
-                                onSortOrderChanged: (sortOrder) async {
-                                  await context
-                                      .read<SearchProductsCubit>()
-                                      .sortOrderChanged(sortOrder);
-                                },
-                                selectedSortOrder: state.selectedSortOrder,
-                              ),
-                              SearchProductFilterWidget(
-                                context,
-                                productListType: widget.productListType,
-                                badgeCount: context
-                                    .watch<SearchProductsCubit>()
-                                    .selectedFiltersCount,
-                                previouslyPurchased: state.previouslyPurchased,
-                                searchText:
-                                    state.originalQuery,
-                                selectedAttributeValueIds:
-                                    state.selectedAttributeValueIds,
-                                selectedBrandIds: state.selectedBrandIds,
-                                selectedProductLineIds:
-                                    state.selectedProductLineIds,
-                                selectedCategoryId: state.selectedCategoryId,
-                                selectedStockedItems:
-                                    state.selectedStockedItems,
-                                onApply: context
-                                    .read<SearchProductsCubit>()
-                                    .applyFilter,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: ListView.separated(
-                        controller: _scrollController,
-                        padding: EdgeInsets.zero,
-                        separatorBuilder: (context, index) => const Divider(
-                          height: 1,
-                          indent: 16,
-                          endIndent: 16,
-                          color: Color(0xFFF5F5F5),
-                        ),
-                        itemCount: state.searchProductStatus ==
-                                SearchProductStatus.moreLoading
-                            ? (state.productEntities?.length ?? 0) + 1
-                            : state.productEntities?.length ?? 0,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          if (index >=
-                                  (state.productEntities?.length ??
-                                      0) &&
-                              state.searchProductStatus ==
-                                  SearchProductStatus.moreLoading) {
-                            return const Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Center(child: CircularProgressIndicator()),
-                            );
-                          }
-
-                          final product =
-                              state.productEntities![index];
-                          return SearchProductWidget(
-                            product: product,
-                            productSettings: state.productSettings,
-                            pricingEnable: state.productPricingEnabled,
-                            hidePricingEnable: state.hidePricingEnabled,
-                            hideInventoryEnable: state.hideInventoryEnabled,
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-        );
-      },
-    );
-  }
-}
-
-class SearchProductWidget extends StatelessWidget {
+class SearchProductListItemWidget extends StatelessWidget {
   final ProductEntity product;
   final ProductSettings? productSettings;
   final bool? pricingEnable;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
 
-  const SearchProductWidget(
+  const SearchProductListItemWidget(
       {super.key,
       required this.product,
       required this.productSettings,
@@ -231,7 +41,7 @@ class SearchProductWidget extends StatelessWidget {
     return InkWell(
       onTap: () {
         var productId = product.styleParentId ?? product.id;
-        //TODO what if productid is null, 
+        //TODO what if productid is null,
         AppRoute.topLevelProductDetails.navigateBackStack(context,
             pathParameters: {"productId": productId.toString()},
             extra: product);
@@ -288,7 +98,8 @@ class SearchProductWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    LocalizationConstants.itemNumber.localized()
+                    LocalizationConstants.itemNumber
+                        .localized()
                         .format([product.erpNumber ?? '']),
                     style: OptiTextStyles.bodySmall.copyWith(
                       color: OptiAppColors.textDisabledColor,
@@ -299,7 +110,8 @@ class SearchProductWidget extends StatelessWidget {
                   LineItemPricingWidget(
                     discountMessage: product.pricing?.getDiscountValue(),
                     priceValueText: product.updatePriceValueText(pricingEnable),
-                    unitOfMeasureValueText: product.updateUnitOfMeasure(pricingEnable),
+                    unitOfMeasureValueText:
+                        product.updateUnitOfMeasure(pricingEnable),
                     availabilityText: product.availability?.message,
                     productId: product.id,
                     erpNumber: product.erpNumber,
@@ -377,21 +189,18 @@ class SearchProductWidget extends StatelessWidget {
     final myPart = _buildRow(
         LocalizationConstants.myPartNumberSign.localized(),
         OptiTextStyles.bodySmall,
-        product.customerName ??
-            '',
+        product.customerName ?? '',
         OptiTextStyles.bodyExtraSmall);
     final mfg = _buildRow(
         LocalizationConstants.mFGNumberSign.localized(),
         OptiTextStyles.bodySmall,
-        product.manufacturerItem ??
-            '',
+        product.manufacturerItem ?? '',
         OptiTextStyles.bodyExtraSmall);
 
     final pack = _buildRow(
         LocalizationConstants.packSign.localized(),
         OptiTextStyles.bodySmall,
-        product.packDescription ??
-            '',
+        product.packDescription ?? '',
         OptiTextStyles.bodyExtraSmall);
 
     if (myPart != null) {
@@ -438,16 +247,21 @@ class SearchProductWidget extends StatelessWidget {
   }
 
   bool _showWarehouseInventory() {
-    var warehouseInventoryButtonEnabled = InventoryUtils.isInventoryPerWarehouseButtonShownAsync(productSettings);
+    var warehouseInventoryButtonEnabled =
+        InventoryUtils.isInventoryPerWarehouseButtonShownAsync(productSettings);
     var showWarehouseInventoryButton = false;
 
-    if (!(product.isConfigured ?? false) || (product.isFixedConfiguration ?? false) && !(product.isStyleProductParent ?? false)) {
-      if (product.availability != null && !(product.availability?.requiresRealTimeInventory ?? false) && (product.availability?.messageType ?? 0) != 0) {
-        showWarehouseInventoryButton = (product.trackInventory ?? false) && warehouseInventoryButtonEnabled;
+    if (!(product.isConfigured ?? false) ||
+        (product.isFixedConfiguration ?? false) &&
+            !(product.isStyleProductParent ?? false)) {
+      if (product.availability != null &&
+          !(product.availability?.requiresRealTimeInventory ?? false) &&
+          (product.availability?.messageType ?? 0) != 0) {
+        showWarehouseInventoryButton = (product.trackInventory ?? false) &&
+            warehouseInventoryButtonEnabled;
       }
     }
 
     return showWarehouseInventoryButton;
   }
-
 }

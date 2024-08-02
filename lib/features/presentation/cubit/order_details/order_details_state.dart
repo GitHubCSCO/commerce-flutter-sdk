@@ -16,7 +16,7 @@ class OrderDetailsState extends Equatable {
     required this.orderSettings,
     this.hidePricingEnable,
     this.hideInventoryEnable,
-    this.errorMessage
+    this.errorMessage,
   });
 
   @override
@@ -37,7 +37,7 @@ class OrderDetailsState extends Equatable {
     OrderSettingsEntity? orderSettings,
     bool? hidePricingEnable,
     bool? hideInventoryEnable,
-    String? errorMessage
+    String? errorMessage,
   }) {
     return OrderDetailsState(
       order: order ?? this.order,

@@ -10,7 +10,9 @@ class LanguageUsecase extends BaseUseCase {
   }
 
   Future<Result<bool, ErrorResponse>> loadCurrentLanguage() async {
-    return await coreServiceProvider.getLocalizationService().loadCurrentLanguage();
+    return await coreServiceProvider
+        .getLocalizationService()
+        .loadCurrentLanguage();
   }
 
   Future<Result<LanguageCollection, ErrorResponse>> loadLanguageList() async {
@@ -18,7 +20,9 @@ class LanguageUsecase extends BaseUseCase {
   }
 
   Future<Result<bool, ErrorResponse>> changeLanguage(Language language) async {
-    return await coreServiceProvider.getLocalizationService().changeLanguage(language);
+    return await coreServiceProvider
+        .getLocalizationService()
+        .changeLanguage(language);
   }
 
   Future<void> loadDefaultSiteMessage() async {

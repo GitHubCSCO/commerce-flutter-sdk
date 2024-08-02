@@ -140,7 +140,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       var cartLineEntity = CartLineEntityMapper.toEntity(cartLine);
       var shouldShowWarehouseInventoryButton =
           InventoryUtils.isInventoryPerWarehouseButtonShownAsync(
-              productSettings) &&
+                  productSettings) &&
               cartLine.availability.messageType != 0;
       cartLineEntity = cartLineEntity.copyWith(
           showInventoryAvailability: shouldShowWarehouseInventoryButton);

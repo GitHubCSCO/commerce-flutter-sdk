@@ -15,7 +15,6 @@ class OrderListLoadingState extends OrderListState {
 }
 
 class OrderListLoadedState extends OrderListState {
-
   final List<QuickOrderItemEntity> quickOrderItemList;
   final ProductSettings? productSettings;
 
@@ -23,7 +22,6 @@ class OrderListLoadedState extends OrderListState {
 
   @override
   List<Object?> get props => [];
-
 }
 
 class OrderListFailedState extends OrderListState {
@@ -32,14 +30,12 @@ class OrderListFailedState extends OrderListState {
 }
 
 class OrderListAddFailedState extends OrderListState {
-
   final String message;
 
   OrderListAddFailedState(this.message);
 
   @override
   List<Object?> get props => [];
-
 }
 
 class OrderListNavigateToCartState extends OrderListState {
@@ -48,7 +44,6 @@ class OrderListNavigateToCartState extends OrderListState {
 }
 
 class OrderListNavigateToVmiCheckoutState extends OrderListState {
-
   final Cart cart;
 
   OrderListNavigateToVmiCheckoutState({required this.cart});
@@ -63,7 +58,6 @@ class OrderListAddToListFailedState extends OrderListState {
 }
 
 class OrderListAddToListSuccessState extends OrderListState {
-
   final WishListAddToCartCollection wishListLines;
   final String? message;
 
@@ -71,33 +65,27 @@ class OrderListAddToListSuccessState extends OrderListState {
 
   @override
   List<Object?> get props => [];
-
 }
 
 class OrderListStyleProductAddState extends OrderListState {
-
   final ProductEntity productEntity;
 
   OrderListStyleProductAddState(this.productEntity);
 
   @override
   List<Object?> get props => [];
-
 }
 
 class OrderListVmiStyleProductAddState extends OrderListState {
-
   final VmiBinModelEntity vmiBinEntity;
 
   OrderListVmiStyleProductAddState(this.vmiBinEntity);
 
   @override
   List<Object?> get props => [];
-
 }
 
 class OrderListVmiProductAddState extends OrderListState {
-
   final VmiBinModelEntity vmiBinEntity;
   final OrderEntity? previousOrderEntity;
 
@@ -105,7 +93,4 @@ class OrderListVmiProductAddState extends OrderListState {
 
   @override
   List<Object?> get props => [];
-
 }
-
-

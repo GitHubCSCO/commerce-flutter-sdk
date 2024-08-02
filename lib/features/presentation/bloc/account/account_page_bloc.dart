@@ -42,7 +42,7 @@ class AccountPageBloc extends Bloc<AccountPageEvent, AccountPageState> {
   String? getPrivacyPolicyUrl() {
     return _accountUseCase.privacyPolicyUrl;
   }
-  
+
   String? getTermsOfUseUrl() {
     return _accountUseCase.termsOfUseUrl;
   }

@@ -1,4 +1,3 @@
-
 import 'package:appcenter_analytics/appcenter_analytics.dart';
 import 'package:flutter/material.dart';
 

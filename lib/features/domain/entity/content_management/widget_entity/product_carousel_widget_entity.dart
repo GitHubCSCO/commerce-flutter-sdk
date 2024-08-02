@@ -41,7 +41,7 @@ class ProductCarouselWidgetEntity extends WidgetEntity {
     this.selectedCategoryIds,
     this.shouldForceLoadData,
     List<ProductCarouselEntity>? productCarouselList,
-  }) : productCarouselList = productCarouselList ?? [],
+  })  : productCarouselList = productCarouselList ?? [],
         super(id: id, type: type, subType: subType);
 
   @override

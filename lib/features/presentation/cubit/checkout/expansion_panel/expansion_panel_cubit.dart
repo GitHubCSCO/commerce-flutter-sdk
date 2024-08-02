@@ -9,11 +9,14 @@ part 'expansion_panel_state.dart';
 class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
   List<ExpansionPanelItem> list = [
     ExpansionPanelItem(
-        headerValue: LocalizationConstants.billingShipping.localized(), isExpanded: true),
+        headerValue: LocalizationConstants.billingShipping.localized(),
+        isExpanded: true),
     ExpansionPanelItem(
-        headerValue: LocalizationConstants.paymentDetails.localized(), isExpanded: false),
+        headerValue: LocalizationConstants.paymentDetails.localized(),
+        isExpanded: false),
     ExpansionPanelItem(
-        headerValue: LocalizationConstants.reviewOrder.localized(), isExpanded: false)
+        headerValue: LocalizationConstants.reviewOrder.localized(),
+        isExpanded: false)
   ];
 
   int expansionIndex = 0;
@@ -25,7 +28,8 @@ class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
 
   ExpansionPanelCubit() : super(ExpansionPanelInitialState()) {
     _continueButtonController = StreamController<String>.broadcast();
-    _continueButtonController.add(LocalizationConstants.continueText.localized());
+    _continueButtonController
+        .add(LocalizationConstants.continueText.localized());
   }
 
   void initialize(int numberOfPanels) {

@@ -192,9 +192,10 @@ class OrderDetailsPage extends StatelessWidget {
                                   .read<OrderDetailsCubit>()
                                   .reorderAllProducts();
                             },
-                            message:
-                                LocalizationConstants.addOrderContentToCart.localized(),
-                            confirmText: LocalizationConstants.reorder.localized(),
+                            message: LocalizationConstants.addOrderContentToCart
+                                .localized(),
+                            confirmText:
+                                LocalizationConstants.reorder.localized(),
                           );
                         },
                       ),

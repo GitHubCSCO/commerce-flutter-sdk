@@ -14,7 +14,7 @@ class SavedOrderDetailsState extends Equatable {
     required this.shouldShowWarehouseInventoryButton,
     this.hidePricingEnable,
     this.hideInventoryEnable,
-    this.errorMessage
+    this.errorMessage,
   });
 
   @override
@@ -33,7 +33,7 @@ class SavedOrderDetailsState extends Equatable {
     bool? shouldShowWarehouseInventoryButton,
     bool? hidePricingEnable,
     bool? hideInventoryEnable,
-    String? errorMessage
+    String? errorMessage,
   }) {
     return SavedOrderDetailsState(
       cart: cart ?? this.cart,

@@ -14,13 +14,12 @@ import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BillToShipToAddressSelectionEntity {
-
   BillTo? selectedBillTo;
   ShipTo? selectedShipTo;
   AddressType addressType;
 
-  BillToShipToAddressSelectionEntity({this.selectedBillTo, this.selectedShipTo, required this.addressType});
-
+  BillToShipToAddressSelectionEntity(
+      {this.selectedBillTo, this.selectedShipTo, required this.addressType});
 }
 
 class BillToShipToAddressSelectionScreen extends StatelessWidget {
@@ -34,7 +33,9 @@ class BillToShipToAddressSelectionScreen extends StatelessWidget {
     return BlocProvider<BilltoShiptoAddressSelectionBloc>(
       create: (context) => sl<BilltoShiptoAddressSelectionBloc>()
         ..add(BilltoShiptoAddressLoadEvent(
-            searchQuery: '', currentPage: 1, selectionEntity: billToShipToAddressSelectionEntity)),
+            searchQuery: '',
+            currentPage: 1,
+            selectionEntity: billToShipToAddressSelectionEntity)),
       child: BillToShipToAddressSelectionPage(
         selectionEntity: billToShipToAddressSelectionEntity,
       ),
@@ -43,7 +44,6 @@ class BillToShipToAddressSelectionScreen extends StatelessWidget {
 }
 
 class BillToShipToAddressSelectionPage extends StatefulWidget {
-
   final BillToShipToAddressSelectionEntity selectionEntity;
 
   const BillToShipToAddressSelectionPage(
@@ -115,12 +115,9 @@ class _BillToShipToAddressSelectionPageState
                   case BilltoShiptoAddressSelectionLoaded():
                     final list = state.list ?? [];
                     final selectedAddressId =
-                        widget.selectionEntity.addressType ==
-                                AddressType.billTo
-                            ? widget.selectionEntity
-                                .selectedBillTo?.id
-                            : widget.selectionEntity
-                                .selectedShipTo?.id;
+                        widget.selectionEntity.addressType == AddressType.billTo
+                            ? widget.selectionEntity.selectedBillTo?.id
+                            : widget.selectionEntity.selectedShipTo?.id;
                     return Container(
                       color: OptiAppColors.backgroundWhite,
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -129,9 +126,7 @@ class _BillToShipToAddressSelectionPageState
                         itemBuilder: (context, index) {
                           final address = list[index];
                           final isSelected =
-                            address.id == selectedAddressId
-                                  ? true
-                                  : false;
+                              address.id == selectedAddressId ? true : false;
                           return BillToShipToListItem(
                               address: address,
                               isSelected: isSelected,
@@ -149,7 +144,8 @@ class _BillToShipToAddressSelectionPageState
                       slivers: <Widget>[
                         SliverFillRemaining(
                           child: Center(
-                            child: Text(LocalizationConstants.error.localized()),
+                            child:
+                                Text(LocalizationConstants.error.localized()),
                           ),
                         ),
                       ],

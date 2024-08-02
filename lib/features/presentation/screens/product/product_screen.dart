@@ -9,8 +9,9 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product/product_
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/search_product/search_products_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,7 +28,6 @@ enum ProductParentType {
 }
 
 class ProductPageEntity {
-
   String query = '';
   ProductParentType parentType;
   String? pageTitle;
@@ -39,7 +39,15 @@ class ProductPageEntity {
   String? brandEntityTitle;
   BrandProductLine? brandProductLine;
 
-  ProductPageEntity(this.query, this.parentType, {this.pageTitle, this.category, this.categoryId, this.categoryTitle, this.brandEntity, this.brandEntityId, this.brandEntityTitle, this.brandProductLine});
+  ProductPageEntity(this.query, this.parentType,
+      {this.pageTitle,
+      this.category,
+      this.categoryId,
+      this.categoryTitle,
+      this.brandEntity,
+      this.brandEntityId,
+      this.brandEntityTitle,
+      this.brandProductLine});
 
   ProductPageEntity copyWith({
     String? query,
@@ -62,11 +70,9 @@ class ProductPageEntity {
       brandEntityTitle: brandEntityTitle ?? this.brandEntityTitle,
     );
   }
-
 }
 
 class ProductScreen extends StatelessWidget {
-
   final ProductPageEntity pageEntity;
 
   const ProductScreen({super.key, required this.pageEntity});
@@ -74,34 +80,42 @@ class ProductScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ProductBloc>(
-      create: (context) => sl<ProductBloc>()..add(ProductLoadEvent(entity: pageEntity)),
+      create: (context) =>
+          sl<ProductBloc>()..add(ProductLoadEvent(entity: pageEntity)),
       child: ProductPage(pageEntity: pageEntity),
     );
   }
 }
-class ProductPage extends StatelessWidget {
 
+class ProductPage extends StatefulWidget {
   final ProductPageEntity pageEntity;
 
   ProductPage({super.key, required this.pageEntity});
 
+  @override
+  State<ProductPage> createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
   final textEditingController = TextEditingController();
+  bool isGridView = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            _getTitle(pageEntity), style: OptiTextStyles.titleLarge),
+        title: Text(_getTitle(widget.pageEntity),
+            style: OptiTextStyles.titleLarge),
         actions: [
-          BottomMenuWidget(websitePath: _getWebsitePath(pageEntity)),
+          BottomMenuWidget(
+              websitePath: _getWebsitePath(widget.pageEntity),
+              toolMenuList: _getToolMenu(context)),
         ],
       ),
       body: Column(
         children: [
           Container(
-            padding:
-            const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
             child: Input(
               hintText: LocalizationConstants.search.localized(),
               suffixIcon: IconButton(
@@ -112,18 +126,17 @@ class ProductPage extends StatelessWidget {
                 ),
                 onPressed: () {
                   textEditingController.clear();
-                  context
-                      .read<ProductBloc>()
-                      .add(ProductLoadEvent(entity: pageEntity.copyWith(query: '')));
+                  context.read<ProductBloc>().add(ProductLoadEvent(
+                      entity: widget.pageEntity.copyWith(query: '')));
                   context.closeKeyboard();
                 },
               ),
               onTapOutside: (p0) => context.closeKeyboard(),
               textInputAction: TextInputAction.search,
               onSubmitted: (String query) {
-                context
-                    .read<ProductBloc>()
-                    .add(ProductLoadEvent(entity: pageEntity.copyWith(query: textEditingController.text)));
+                context.read<ProductBloc>().add(ProductLoadEvent(
+                    entity: widget.pageEntity
+                        .copyWith(query: textEditingController.text)));
               },
               controller: textEditingController,
             ),
@@ -135,11 +148,12 @@ class ProductPage extends StatelessWidget {
               ),
               BlocProvider(
                 create: (context) => sl<SearchProductsCubit>()
-                  ..setProductFilter(pageEntity),
+                  ..setProductFilter(widget.pageEntity),
               ),
             ],
             child: Expanded(
-              child: BlocBuilder<ProductBloc, ProductState>(builder: (context, state) {
+              child: BlocBuilder<ProductBloc, ProductState>(
+                  builder: (context, state) {
                 switch (state) {
                   case ProductInitial():
                   case ProductLoading():
@@ -151,12 +165,14 @@ class ProductPage extends StatelessWidget {
                         .loadInitialSearchProducts(productCollectionResult);
                     return SearchProductsWidget(
                       onPageChanged: (page) {},
-                      productListType: _getProductListType(pageEntity),
+                      productListType: _getProductListType(widget.pageEntity),
+                      isGridView: isGridView,
                     );
                   case ProductFailed():
                   default:
                     return Center(
-                        child: Text(LocalizationConstants.searchNoResults.localized(),
+                        child: Text(
+                            LocalizationConstants.searchNoResults.localized(),
                             style: OptiTextStyles.body));
                 }
               }),
@@ -183,10 +199,14 @@ class ProductPage extends StatelessWidget {
 
   String _getTitle(ProductPageEntity entity) {
     if (entity.parentType == ProductParentType.category) {
-      return entity.category?.shortDescription ?? entity.categoryTitle ?? LocalizationConstants.categories.localized();
+      return entity.category?.shortDescription ??
+          entity.categoryTitle ??
+          LocalizationConstants.categories.localized();
     } else if (entity.parentType == ProductParentType.brand) {
-      return entity.brandEntity?.name ?? entity.brandEntityTitle ?? LocalizationConstants.brands.localized();
-    }else{
+      return entity.brandEntity?.name ??
+          entity.brandEntityTitle ??
+          LocalizationConstants.brands.localized();
+    } else {
       return entity.pageTitle ?? "Product list";
     }
   }
@@ -200,5 +220,24 @@ class ProductPage extends StatelessWidget {
       return entity.brandProductLine?.productListPagePath;
     }
     return null;
+  }
+
+  List<ToolMenu> _getToolMenu(BuildContext context) {
+    List<ToolMenu> list = [];
+    list.add(ToolMenu(
+        title: LocalizationConstants.listView.localized(),
+        action: () {
+          setState(() {
+            isGridView = false;
+          });
+        }));
+    list.add(ToolMenu(
+        title: LocalizationConstants.gridView.localized(),
+        action: () {
+          setState(() {
+            isGridView = true;
+          });
+        }));
+    return list;
   }
 }

@@ -7,15 +7,18 @@ part 'date_selection_state.dart';
 class DateSelectionCubit extends Cubit<DateSelectionState> {
   DateTime? date;
 
-  DateSelectionCubit() : super(DateSelectionState(LocalizationConstants.selectDate.localized(), DateTime(0)));
+  DateSelectionCubit()
+      : super(DateSelectionState(
+            LocalizationConstants.selectDate.localized(), DateTime(0)));
 
   Future<void> onInitialDateSelect(DateTime? selectedDate) async {
-    if(selectedDate != null) {
+    if (selectedDate != null) {
       String formattedDate = DateFormat('dd/MM/yyyy').format(selectedDate);
       date = selectedDate;
       emit(DateSelectionState(formattedDate, selectedDate));
     } else {
-      emit(DateSelectionState(LocalizationConstants.selectDate.localized(), DateTime(0)));
+      emit(DateSelectionState(
+          LocalizationConstants.selectDate.localized(), DateTime(0)));
     }
   }
 
@@ -24,5 +27,4 @@ class DateSelectionCubit extends Cubit<DateSelectionState> {
     date = selectedDate;
     emit(DateSelectionState(formattedDate, selectedDate));
   }
-
 }

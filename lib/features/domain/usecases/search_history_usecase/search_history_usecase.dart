@@ -12,7 +12,8 @@ class SearchHistoryUseCase extends BaseUseCase {
           .loadPersistedData<List<String>>(CacheServiceConstants.searchHistory);
       if (list != null) {
         list.isEmpty
-            ? list.add(LocalizationConstants.searchNoHistoryAvailable.localized())
+            ? list
+                .add(LocalizationConstants.searchNoHistoryAvailable.localized())
             : null;
       }
 

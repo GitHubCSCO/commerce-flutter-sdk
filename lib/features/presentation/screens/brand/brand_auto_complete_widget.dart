@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BrandAutoCompleteWidget extends StatelessWidget {
-
   final Function(BuildContext, AutocompleteBrand) callback;
   final List<AutocompleteBrand>? autocompleteBrands;
 
-  const BrandAutoCompleteWidget({super.key, required this.callback, required this.autocompleteBrands});
+  const BrandAutoCompleteWidget(
+      {super.key, required this.callback, required this.autocompleteBrands});
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +37,9 @@ class BrandAutoCompleteWidget extends StatelessWidget {
 }
 
 class AutoCompleteBrandWidget extends StatelessWidget {
-
   final AutocompleteBrand autoCompleteBrand;
 
-  const AutoCompleteBrandWidget(
-      {super.key, required this.autoCompleteBrand});
+  const AutoCompleteBrandWidget({super.key, required this.autoCompleteBrand});
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +56,11 @@ class AutoCompleteBrandWidget extends StatelessWidget {
     final productLine = autoCompleteBrand.productLineName ?? '';
     final title = autoCompleteBrand.title ?? '';
     if (productLine.isNotEmpty && title.isNotEmpty) {
-      return LocalizationConstants.autocompleteCategoryOrBrandCombinedTitle.localized().format([productLine, title]);
+      return LocalizationConstants.autocompleteCategoryOrBrandCombinedTitle
+          .localized()
+          .format([productLine, title]);
     } else {
       return title;
     }
   }
-
 }
-

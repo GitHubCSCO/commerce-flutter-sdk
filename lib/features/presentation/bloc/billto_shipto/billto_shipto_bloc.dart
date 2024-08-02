@@ -28,7 +28,8 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
     on<BillToUpdateEvent>((event, emit) => _onBillToUpdateEvent(event, emit));
     on<ShipToUpdateEvent>((event, emit) => _onShipToUpdateEvent(event, emit));
     on<PickUpUpdateEvent>((event, emit) => _onPickUpUpdateEvent(event, emit));
-    on<FulfillmentMethodUpdateEvent>((event, emit) => _onFulfillmentMethodUpdateEvent(event, emit));
+    on<FulfillmentMethodUpdateEvent>(
+        (event, emit) => _onFulfillmentMethodUpdateEvent(event, emit));
     on<SaveBillToShipToEvent>(
         (event, emit) => _onSaveBillToShipToEvent(event, emit));
   }
@@ -85,9 +86,9 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
       BillToShipToLoadEvent event, Emitter<BillToShipToState> emit) async {
     emit(BillToShipToLoading());
     final session = await _billToShipToUseCase.getCurrentSession();
-    if(session==null){
+    if (session == null) {
       emit(BillToShipToFailed());
-    }else{
+    } else {
       billToAddress = session.billTo;
       pickUpWarehouse = session.pickUpWarehouse;
 
@@ -98,7 +99,8 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
               wasShipToUpdated);
       isDefaultSwitchEnable = isDefaultCustomerSelected;
 
-      if (hasWillCall && session.fulfillmentMethod == FulfillmentMethodType.PickUp.name) {
+      if (hasWillCall &&
+          session.fulfillmentMethod == FulfillmentMethodType.PickUp.name) {
         recipientAddress = session.shipTo;
         selectedShippingMethod = FulfillmentMethodType.PickUp;
       } else {
@@ -134,10 +136,10 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
     }
 
     var patchedSession = await _billToShipToUseCase.updateCurrentSession(
-      billToAddress: billToAddress, 
-      shipToRecipientAddress:  shipToRecipientAddress,
-      pickUpWarehouse: pickUpWarehouse, 
-      selectedShippingMethod: selectedShippingMethod);
+        billToAddress: billToAddress,
+        shipToRecipientAddress: shipToRecipientAddress,
+        pickUpWarehouse: pickUpWarehouse,
+        selectedShippingMethod: selectedShippingMethod);
 
     await _billToShipToUseCase.updateDefaultCustomerIfNeeded(
         event.isDefaultEnable,
@@ -171,5 +173,4 @@ class BillToShipToBloc extends Bloc<BillToShipToEvent, BillToShipToState> {
       return isSwitch;
     }
   }
-
 }

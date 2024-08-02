@@ -41,7 +41,7 @@ class Input extends StatefulWidget {
       this.focusListener,
       this.suffixIcon,
       this.validator,
-    this.maxLength,
+      this.maxLength,
       this.isRequired = false});
 
   @override

@@ -1,5 +1,4 @@
 abstract class ISearchHistoryService {
-  
   int get searchQueryHistoryCount;
   set searchQueryHistoryCount(int count);
 

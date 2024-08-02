@@ -7,10 +7,11 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 part 'brand_details_state.dart';
 
 class BrandDetailsCubit extends Cubit<BrandDetailsState> {
-
   final BrandUseCase _brandUseCase;
 
-  BrandDetailsCubit({required BrandUseCase brandUseCase}) : _brandUseCase = brandUseCase, super(BrandDetailsInitial());
+  BrandDetailsCubit({required BrandUseCase brandUseCase})
+      : _brandUseCase = brandUseCase,
+        super(BrandDetailsInitial());
 
   Future<void> getBrandDetails(Brand brand) async {
     emit(BrandDetailsLLoading());
@@ -19,12 +20,12 @@ class BrandDetailsCubit extends Cubit<BrandDetailsState> {
     emit(BrandDetailsLoaded(brandDetailsEntity: response));
   }
 
-  Future<GetBrandSubCategoriesResult?> onSelectBrandCategory(BrandCategory? brandCategory) async {
+  Future<GetBrandSubCategoriesResult?> onSelectBrandCategory(
+      BrandCategory? brandCategory) async {
     final brandCategoriesQueryParameter = BrandCategoriesQueryParameter(
-      brandId: brandCategory?.brandId,
-      categoryId: brandCategory?.categoryId
-    );
-    final response = await _brandUseCase.getBrandCategorySubCategories(brandCategoriesQueryParameter);
+        brandId: brandCategory?.brandId, categoryId: brandCategory?.categoryId);
+    final response = await _brandUseCase
+        .getBrandCategorySubCategories(brandCategoriesQueryParameter);
     return response.getResultSuccessValue();
   }
 }

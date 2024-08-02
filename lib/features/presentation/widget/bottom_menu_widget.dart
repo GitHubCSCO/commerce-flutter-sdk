@@ -1,6 +1,4 @@
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/bottom_menu_cubit.dart';
@@ -15,9 +13,12 @@ class BottomMenuWidget extends StatelessWidget {
   final String websitePath;
   final bool isViewOnWebsiteEnable;
 
-  BottomMenuWidget({super.key, List<
-      ToolMenu>? toolMenuList, String? websitePath, bool? isViewOnWebsiteEnable})
-      : toolMenuList = toolMenuList ?? [],
+  BottomMenuWidget({
+    super.key,
+    List<ToolMenu>? toolMenuList,
+    String? websitePath,
+    bool? isViewOnWebsiteEnable,
+  })  : toolMenuList = toolMenuList ?? [],
         websitePath = websitePath ?? '',
         isViewOnWebsiteEnable = isViewOnWebsiteEnable ?? true;
 
@@ -25,7 +26,11 @@ class BottomMenuWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<BottomMenuCubit>(),
-      child: BottomMenu(toolMenuList: toolMenuList, websitePath: websitePath, isViewOnWebsiteEnable: isViewOnWebsiteEnable),
+      child: BottomMenu(
+        toolMenuList: toolMenuList,
+        websitePath: websitePath,
+        isViewOnWebsiteEnable: isViewOnWebsiteEnable,
+      ),
     );
   }
 }
@@ -35,9 +40,12 @@ class BottomMenu extends StatelessWidget {
   final String websitePath;
   final bool isViewOnWebsiteEnable;
 
-  BottomMenu(
-      {super.key, List<ToolMenu>? toolMenuList, String? websitePath, bool? isViewOnWebsiteEnable})
-      : toolMenuList = toolMenuList ?? [],
+  BottomMenu({
+    super.key,
+    List<ToolMenu>? toolMenuList,
+    String? websitePath,
+    bool? isViewOnWebsiteEnable,
+  })  : toolMenuList = toolMenuList ?? [],
         websitePath = websitePath ?? '',
         isViewOnWebsiteEnable = isViewOnWebsiteEnable ?? true;
 

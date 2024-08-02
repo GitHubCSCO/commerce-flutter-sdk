@@ -8,21 +8,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LanguageScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider<LanguageBloc>(
-      create: (context) =>
-      sl<LanguageBloc>()
-        ..add(LanguageListLoadEvent()),
+      create: (context) => sl<LanguageBloc>()..add(LanguageListLoadEvent()),
       child: LanguagePage(),
     );
   }
-
 }
 
 class LanguagePage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

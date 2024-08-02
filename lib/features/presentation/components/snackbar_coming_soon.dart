@@ -125,7 +125,8 @@ class CustomSnackBar {
   static void showPromotionNotApplied(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(LocalizationConstants.promotionNotAppliedContinue.localized()),
+        content:
+            Text(LocalizationConstants.promotionNotAppliedContinue.localized()),
         duration: const Duration(seconds: 1),
       ),
     );
