@@ -132,4 +132,8 @@ class DomainUsecase extends BaseUseCase {
   Future<void> loadRemoteSettings() async {
     await coreServiceProvider.getAppConfigurationService().loadRemoteSettings();
   }
+
+  void clearCache() async {
+    commerceAPIServiceProvider.getCacheService().clearAllCaches();
+  }
 }

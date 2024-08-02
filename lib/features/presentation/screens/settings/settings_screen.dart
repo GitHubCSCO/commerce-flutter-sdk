@@ -149,8 +149,7 @@ class _SettingsListWidget extends StatelessWidget {
 final settingsItems = [
   const _BiometricListTile(),
   _SettingsListItemWidget(
-    onTap: (BuildContext context) =>
-        CustomSnackBar.showComingSoonSnackBar(context),
+    onTap: (BuildContext context) => showClearCacheDialog(context),
     title: LocalizationConstants.clearCache.localized(),
   ),
   _SettingsListItemWidget(
@@ -165,6 +164,26 @@ final settingsItems = [
   //       CustomSnackBar.showComingSoonSnackBar(context),
   // ),
 ];
+
+void showClearCacheDialog(BuildContext context) {
+  displayDialogWidget(
+    context: context,
+    title: LocalizationConstants.clearCache.localized(),
+    actions: [
+      DialogPlainButton(
+        onPressed: () => Navigator.of(context).pop(),
+        child: Text(LocalizationConstants.cancel.localized()),
+      ),
+      DialogPlainButton(
+        onPressed: () {
+          context.read<SettingsDomainCubit>().clearCache();
+          Navigator.of(context).pop();
+        },
+        child: Text(LocalizationConstants.oK.localized()),
+      ),
+    ],
+  );
+}
 
 class _SettingsListItemWidget extends StatelessWidget {
   final void Function(BuildContext context) onTap;
