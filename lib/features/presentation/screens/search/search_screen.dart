@@ -21,7 +21,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/extra/delayer.
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/search_product/search_products_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

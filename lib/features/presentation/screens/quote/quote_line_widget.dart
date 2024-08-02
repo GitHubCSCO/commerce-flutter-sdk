@@ -80,18 +80,21 @@ class QuoteLineWidget extends StatelessWidget {
             manufacturerItem: quoteLineEntity.manufacturerItem,
             productNumber: quoteLineEntity.getProductNumber(),
           ),
-          LineItemPricingWidget(
-            hideInventoryEnable: hideInventoryEnable,
-            hidePricingEnable: hidePricingEnable,
-            discountMessage: quoteLineEntity.pricing?.getDiscountValue(),
-            priceValueText: quoteLineEntity.updatePriceValueText(),
-            unitOfMeasureValueText:
-                quoteLineEntity.updateUnitOfMeasureValueText(),
-            availabilityText: quoteLineEntity.availability?.message,
-            productId: quoteLineEntity.productId,
-            erpNumber: quoteLineEntity.erpNumber,
-            unitOfMeasure: quoteLineEntity.baseUnitOfMeasure,
-            showViewAvailabilityByWarehouse: false,
+          Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: LineItemPricingWidget(
+              hideInventoryEnable: hideInventoryEnable,
+              hidePricingEnable: hidePricingEnable,
+              discountMessage: quoteLineEntity.pricing?.getDiscountValue(),
+              priceValueText: quoteLineEntity.updatePriceValueText(),
+              unitOfMeasureValueText:
+                  quoteLineEntity.updateUnitOfMeasureValueText(),
+              availabilityText: quoteLineEntity.availability?.message,
+              productId: quoteLineEntity.productId,
+              erpNumber: quoteLineEntity.erpNumber,
+              unitOfMeasure: quoteLineEntity.baseUnitOfMeasure,
+              showViewAvailabilityByWarehouse: false,
+            ),
           ),
           Visibility(
             visible: showViewBreakPricing! && !hidePricingEnable,

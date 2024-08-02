@@ -9,8 +9,9 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product/product_
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/search_products_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/search_product/search_products_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -86,20 +87,29 @@ class ProductScreen extends StatelessWidget {
   }
 }
 
-class ProductPage extends StatelessWidget {
+class ProductPage extends StatefulWidget {
   final ProductPageEntity pageEntity;
 
   ProductPage({super.key, required this.pageEntity});
 
+  @override
+  State<ProductPage> createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
   final textEditingController = TextEditingController();
+  bool isGridView = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_getTitle(pageEntity), style: OptiTextStyles.titleLarge),
+        title: Text(_getTitle(widget.pageEntity),
+            style: OptiTextStyles.titleLarge),
         actions: [
-          BottomMenuWidget(websitePath: _getWebsitePath(pageEntity)),
+          BottomMenuWidget(
+              websitePath: _getWebsitePath(widget.pageEntity),
+              toolMenuList: _getToolMenu(context)),
         ],
       ),
       body: Column(
@@ -116,8 +126,8 @@ class ProductPage extends StatelessWidget {
                 ),
                 onPressed: () {
                   textEditingController.clear();
-                  context.read<ProductBloc>().add(
-                      ProductLoadEvent(entity: pageEntity.copyWith(query: '')));
+                  context.read<ProductBloc>().add(ProductLoadEvent(
+                      entity: widget.pageEntity.copyWith(query: '')));
                   context.closeKeyboard();
                 },
               ),
@@ -125,8 +135,8 @@ class ProductPage extends StatelessWidget {
               textInputAction: TextInputAction.search,
               onSubmitted: (String query) {
                 context.read<ProductBloc>().add(ProductLoadEvent(
-                    entity: pageEntity.copyWith(
-                        query: textEditingController.text)));
+                    entity: widget.pageEntity
+                        .copyWith(query: textEditingController.text)));
               },
               controller: textEditingController,
             ),
@@ -137,8 +147,8 @@ class ProductPage extends StatelessWidget {
                 create: (context) => sl<AddToCartCubit>(),
               ),
               BlocProvider(
-                create: (context) =>
-                    sl<SearchProductsCubit>()..setProductFilter(pageEntity),
+                create: (context) => sl<SearchProductsCubit>()
+                  ..setProductFilter(widget.pageEntity),
               ),
             ],
             child: Expanded(
@@ -155,7 +165,8 @@ class ProductPage extends StatelessWidget {
                         .loadInitialSearchProducts(productCollectionResult);
                     return SearchProductsWidget(
                       onPageChanged: (page) {},
-                      productListType: _getProductListType(pageEntity),
+                      productListType: _getProductListType(widget.pageEntity),
+                      isGridView: isGridView,
                     );
                   case ProductFailed():
                   default:
@@ -209,5 +220,24 @@ class ProductPage extends StatelessWidget {
       return entity.brandProductLine?.productListPagePath;
     }
     return null;
+  }
+
+  List<ToolMenu> _getToolMenu(BuildContext context) {
+    List<ToolMenu> list = [];
+    list.add(ToolMenu(
+        title: LocalizationConstants.listView.localized(),
+        action: () {
+          setState(() {
+            isGridView = false;
+          });
+        }));
+    list.add(ToolMenu(
+        title: LocalizationConstants.gridView.localized(),
+        action: () {
+          setState(() {
+            isGridView = true;
+          });
+        }));
+    return list;
   }
 }
