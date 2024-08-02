@@ -105,12 +105,14 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       final message = await _orderUsecase.getSiteMessage(
           SiteMessageConstants.nameAddToCartSuccess,
           SiteMessageConstants.defaultValueAddToCartSuccess);
-      emit(state.copyWith(orderStatus: OrderStatus.reorderSuccess, errorMessage: message));
+      emit(state.copyWith(
+          orderStatus: OrderStatus.reorderSuccess, errorMessage: message));
     } else {
       final message = await _orderUsecase.getSiteMessage(
           SiteMessageConstants.nameAddToCartFail,
           SiteMessageConstants.defaultValueAddToCartFail);
-      emit(state.copyWith(orderStatus: OrderStatus.reorderFailure, errorMessage: message));
+      emit(state.copyWith(
+          orderStatus: OrderStatus.reorderFailure, errorMessage: message));
     }
   }
 

@@ -37,5 +37,4 @@ class BaseUseCase {
         .getSiteMessage(messageName, defaultMessage: defaultMessage);
     return result ?? defaultMessage ?? '';
   }
-
 }

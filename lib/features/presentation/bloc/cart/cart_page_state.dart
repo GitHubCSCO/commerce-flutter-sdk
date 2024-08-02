@@ -30,11 +30,9 @@ class CartPageLoadedState extends CartPageState {
 }
 
 class CartPageNoDataState extends CartPageState {
-
   final String message;
 
   CartPageNoDataState(this.message);
-
 }
 
 class CartPageFailureState extends CartPageState {

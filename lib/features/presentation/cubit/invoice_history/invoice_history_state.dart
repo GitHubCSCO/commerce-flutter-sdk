@@ -7,13 +7,12 @@ class InvoiceHistoryState extends Equatable {
   final InvoiceSortOrder invoiceSortOrder;
   final String? errorMessage;
 
-  const InvoiceHistoryState({
-    required this.status,
-    required this.invoiceCollectionModel,
-    required this.invoiceQueryParameters,
-    required this.invoiceSortOrder,
-    this.errorMessage
-  });
+  const InvoiceHistoryState(
+      {required this.status,
+      required this.invoiceCollectionModel,
+      required this.invoiceQueryParameters,
+      required this.invoiceSortOrder,
+      this.errorMessage});
 
   @override
   List<Object> get props => [
@@ -24,13 +23,12 @@ class InvoiceHistoryState extends Equatable {
         errorMessage ?? '',
       ];
 
-  InvoiceHistoryState copyWith({
-    InvoiceStatus? status,
-    GetInvoiceResult? invoiceCollectionModel,
-    InvoiceQueryParameters? invoiceQueryParameters,
-    InvoiceSortOrder? invoiceSortOrder,
-    String? errorMessage
-  }) {
+  InvoiceHistoryState copyWith(
+      {InvoiceStatus? status,
+      GetInvoiceResult? invoiceCollectionModel,
+      InvoiceQueryParameters? invoiceQueryParameters,
+      InvoiceSortOrder? invoiceSortOrder,
+      String? errorMessage}) {
     return InvoiceHistoryState(
       status: status ?? this.status,
       invoiceCollectionModel:

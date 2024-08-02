@@ -64,7 +64,7 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
     final result = await _savedOrderUsecase.placeOrder(cart: state.cart);
     String message = '';
 
-    switch(result) {
+    switch (result) {
       case OrderStatus.addToCartSuccess:
         message = await _savedOrderUsecase.getSiteMessage(
             SiteMessageConstants.nameAddToCartSuccess,
@@ -95,7 +95,8 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
       final message = await _savedOrderUsecase.getSiteMessage(
           SiteMessageConstants.nameDeleteCart,
           SiteMessageConstants.defaultValueDeleteCartFail);
-      emit(state.copyWith(status: OrderStatus.deleteCartFailure, errorMessage: message));
+      emit(state.copyWith(
+          status: OrderStatus.deleteCartFailure, errorMessage: message));
     }
   }
 

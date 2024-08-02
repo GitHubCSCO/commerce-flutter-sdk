@@ -59,7 +59,8 @@ class InvoiceHistoryCubit extends Cubit<InvoiceHistoryState> {
       final message = await _invoiceUseCase.getSiteMessage(
           SiteMessageConstants.nameMobileAppAlertCommunicationError,
           SiteMessageConstants.defaultMobileAppAlertCommunicationError);
-      emit(state.copyWith(status: InvoiceStatus.failure, errorMessage: message));
+      emit(
+          state.copyWith(status: InvoiceStatus.failure, errorMessage: message));
       return;
     }
 
@@ -69,11 +70,10 @@ class InvoiceHistoryCubit extends Cubit<InvoiceHistoryState> {
 
     emit(
       state.copyWith(
-        status: InvoiceStatus.success,
-        invoiceCollectionModel: result,
-        invoiceQueryParameters: newQueryParameters,
-        errorMessage: (result.invoices ?? []).isEmpty ? message : ''
-      ),
+          status: InvoiceStatus.success,
+          invoiceCollectionModel: result,
+          invoiceQueryParameters: newQueryParameters,
+          errorMessage: (result.invoices ?? []).isEmpty ? message : ''),
     );
   }
 

@@ -42,15 +42,18 @@ class WishListLineWidget extends StatelessWidget {
               .read<WishListDetailsCubit>()
               .getSiteMessage(
                   SiteMessageConstants.nameWishListItemsDiscontinuedAndRemoved,
-                  SiteMessageConstants.defaultValueWishListItemsDiscontinuedAndRemoved);
+                  SiteMessageConstants
+                      .defaultValueWishListItemsDiscontinuedAndRemoved);
         }
 
         if (wishListLineEntity.isVisible != true) {
           errorMessage = await context
               .read<WishListDetailsCubit>()
               .getSiteMessage(
-              SiteMessageConstants.nameWishListItemsNotDisplayedDueRestrictions,
-              SiteMessageConstants.defaultValueWishListItemsNotDisplayedDueRestrictions);
+                  SiteMessageConstants
+                      .nameWishListItemsNotDisplayedDueRestrictions,
+                  SiteMessageConstants
+                      .defaultValueWishListItemsNotDisplayedDueRestrictions);
         }
 
         if (!errorMessage.isNullOrEmpty) {

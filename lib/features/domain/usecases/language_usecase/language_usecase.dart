@@ -26,10 +26,17 @@ class LanguageUsecase extends BaseUseCase {
   }
 
   Future<void> loadDefaultSiteMessage() async {
-    SiteMessageConstants.valuePricingSignInForPrice = await getSiteMessage(SiteMessageConstants.namePricingSignInForPrice, SiteMessageConstants.defaultValuePricingSignInForPrice);
-    SiteMessageConstants.valuePricingZeroPriceMessage = await getSiteMessage(SiteMessageConstants.namePricingZeroPriceMessage, SiteMessageConstants.defaultValuePricingZeroPriceMessage);
-    SiteMessageConstants.valueRealTimePricingLoadFail = await getSiteMessage(SiteMessageConstants.nameRealTimePricingLoadFail, SiteMessageConstants.defaultValueRealTimePricingLoadFail);
-    SiteMessageConstants.valueRealTimeInventoryLoadFail = await getSiteMessage(SiteMessageConstants.nameRealTimeInventoryLoadFail, SiteMessageConstants.defaultValueRealTimeInventoryLoadFail);
+    SiteMessageConstants.valuePricingSignInForPrice = await getSiteMessage(
+        SiteMessageConstants.namePricingSignInForPrice,
+        SiteMessageConstants.defaultValuePricingSignInForPrice);
+    SiteMessageConstants.valuePricingZeroPriceMessage = await getSiteMessage(
+        SiteMessageConstants.namePricingZeroPriceMessage,
+        SiteMessageConstants.defaultValuePricingZeroPriceMessage);
+    SiteMessageConstants.valueRealTimePricingLoadFail = await getSiteMessage(
+        SiteMessageConstants.nameRealTimePricingLoadFail,
+        SiteMessageConstants.defaultValueRealTimePricingLoadFail);
+    SiteMessageConstants.valueRealTimeInventoryLoadFail = await getSiteMessage(
+        SiteMessageConstants.nameRealTimeInventoryLoadFail,
+        SiteMessageConstants.defaultValueRealTimeInventoryLoadFail);
   }
-
 }

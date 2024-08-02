@@ -7,13 +7,12 @@ class OrderApprovalState extends Equatable {
   final bool? hidePricingEnable;
   final String? errorMessage;
 
-  const OrderApprovalState({
-    required this.status,
-    required this.orderApprovalCollectionModel,
-    required this.orderApprovalParameters,
-    this.hidePricingEnable,
-    this.errorMessage
-  });
+  const OrderApprovalState(
+      {required this.status,
+      required this.orderApprovalCollectionModel,
+      required this.orderApprovalParameters,
+      this.hidePricingEnable,
+      this.errorMessage});
 
   @override
   List<Object> get props => [

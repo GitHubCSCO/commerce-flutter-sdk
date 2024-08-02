@@ -192,7 +192,8 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       final message = await _wishListDetailsUsecase.getSiteMessage(
           SiteMessageConstants.nameMobileAppAlertCommunicationError,
           SiteMessageConstants.defaultMobileAppAlertCommunicationError);
-      emit(state.copyWith(status: WishListStatus.errorModification, message: message));
+      emit(state.copyWith(
+          status: WishListStatus.errorModification, message: message));
       return;
     }
 
@@ -286,8 +287,9 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     );
   }
 
-  Future<String> getSiteMessage(String messageName, String defaultMessage) async {
-    return await _wishListDetailsUsecase.getSiteMessage(messageName, defaultMessage);
+  Future<String> getSiteMessage(
+      String messageName, String defaultMessage) async {
+    return await _wishListDetailsUsecase.getSiteMessage(
+        messageName, defaultMessage);
   }
-
 }
