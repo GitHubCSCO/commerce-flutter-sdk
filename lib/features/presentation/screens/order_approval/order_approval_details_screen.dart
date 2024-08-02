@@ -1,7 +1,6 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
@@ -89,7 +88,7 @@ class OrderApprovalDetailsPage extends StatelessWidget {
             : Text(LocalizationConstants.orderApproval.localized()),
       ),
       body: BlocConsumer<OrderApprovalDetailsCubit, OrderApprovalDetailsState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state.status == OrderStatus.addToCartLoading ||
               state.status == OrderStatus.deleteCartLoading) {
             showPleaseWait(context);
@@ -113,7 +112,7 @@ class OrderApprovalDetailsPage extends StatelessWidget {
             Navigator.of(context, rootNavigator: true).pop();
             CustomSnackBar.showSnackBarMessage(
               context,
-              SiteMessageConstants.defaultVaLueOrderApprovalBadRequest,
+              state.errorMessage ?? '',
             );
           }
 
@@ -131,7 +130,7 @@ class OrderApprovalDetailsPage extends StatelessWidget {
             Navigator.of(context, rootNavigator: true).pop();
             CustomSnackBar.showSnackBarMessage(
               context,
-              SiteMessageConstants.defaultValueDeleteCartFail,
+              state.errorMessage ?? '',
             );
           }
         },
@@ -162,8 +161,9 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                             estimatedTaxValueLabel: context
                                 .watch<OrderApprovalDetailsCubit>()
                                 .taxValue,
-                            estimatedShippingTitleLabel:
-                                LocalizationConstants.shippingHandling.localized(),
+                            estimatedShippingTitleLabel: LocalizationConstants
+                                .shippingHandling
+                                .localized(),
                             estimatedShippingValueLabel: context
                                 .watch<OrderApprovalDetailsCubit>()
                                 .shippingValue,
@@ -172,18 +172,22 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                             estimatedTotalValueLabel: context
                                 .watch<OrderApprovalDetailsCubit>()
                                 .totalValue,
-                            estitamatedTaxTitleLabel: LocalizationConstants.tax.localized(),
+                            estitamatedTaxTitleLabel:
+                                LocalizationConstants.tax.localized(),
                           ),
                         _OrderApprovalInfoWidget(
-                          orderStatusLabel: LocalizationConstants.status.localized(),
+                          orderStatusLabel:
+                              LocalizationConstants.status.localized(),
                           orderStatusValueLabel: context
                               .watch<OrderApprovalDetailsCubit>()
                               .statusValue,
-                          poTitleLabel: LocalizationConstants.pONumberSign.localized(),
+                          poTitleLabel:
+                              LocalizationConstants.pONumberSign.localized(),
                           poValueLabel: context
                               .watch<OrderApprovalDetailsCubit>()
                               .poValue,
-                          orderDateValueLabel: LocalizationConstants.orderDate.localized(),
+                          orderDateValueLabel:
+                              LocalizationConstants.orderDate.localized(),
                           orderDateTitleLabel: context
                               .watch<OrderApprovalDetailsCubit>()
                               .orderDateValue,
@@ -227,7 +231,8 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                         onPressed: () {
                           confirmDialog(
                             context: context,
-                            message: '${LocalizationConstants.deleteOrder.localized()}?',
+                            message:
+                                '${LocalizationConstants.deleteOrder.localized()}?',
                             onConfirm: () async {
                               await context
                                   .read<OrderApprovalDetailsCubit>()

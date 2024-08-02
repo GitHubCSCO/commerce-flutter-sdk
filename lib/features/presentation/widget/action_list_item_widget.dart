@@ -9,7 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widg
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ActionListItemWidget extends BaseActionItemWidget {
+class ActionListItemWidget extends StatelessWidget with BaseActionItemWidget {
   final ActionLinkEntity action;
 
   const ActionListItemWidget({super.key, required this.action});
@@ -64,30 +64,40 @@ class ActionListItemWidget extends BaseActionItemWidget {
                   const SizedBox(width: 2),
                   if (action.type == ActionType.showHidePricing)
                     BlocBuilder<ShowHidePricingBloc, ShowHidePricingState>(
-                      builder: (context, state) {
-                        bool toggle = (state is! ShowHidePricingChanged) ? false : state.value;
-                        return Switch(
-                          value: toggle,
-                          onChanged: (value) {
-                            context.read<ShowHidePricingBloc>().add(ShowHidePricingToggled(value));
-                            context.read<RootBloc>().add(RootHidePricingInventoryEvent());
-                          },
-                        );
-                      }
-                    )
+                        builder: (context, state) {
+                      bool toggle = (state is! ShowHidePricingChanged)
+                          ? false
+                          : state.value;
+                      return Switch(
+                        value: toggle,
+                        onChanged: (value) {
+                          context
+                              .read<ShowHidePricingBloc>()
+                              .add(ShowHidePricingToggled(value));
+                          context
+                              .read<RootBloc>()
+                              .add(RootHidePricingInventoryEvent());
+                        },
+                      );
+                    })
                   else if (action.type == ActionType.showHideInventory)
                     BlocBuilder<ShowHideInventoryBloc, ShowHideInventoryState>(
                         builder: (context, state) {
-                          bool toggle = (state is! ShowHideInventoryChanged) ? false : state.value;
-                          return Switch(
-                            value: toggle,
-                            onChanged: (value) {
-                              context.read<ShowHideInventoryBloc>().add(ShowHideInventoryToggled(value));
-                              context.read<RootBloc>().add(RootHidePricingInventoryEvent());
-                            },
-                          );
-                        }
-                    )
+                      bool toggle = (state is! ShowHideInventoryChanged)
+                          ? false
+                          : state.value;
+                      return Switch(
+                        value: toggle,
+                        onChanged: (value) {
+                          context
+                              .read<ShowHideInventoryBloc>()
+                              .add(ShowHideInventoryToggled(value));
+                          context
+                              .read<RootBloc>()
+                              .add(RootHidePricingInventoryEvent());
+                        },
+                      );
+                    })
                   else
                     Container(
                       alignment: Alignment.center,
@@ -108,5 +118,4 @@ class ActionListItemWidget extends BaseActionItemWidget {
       ),
     );
   }
-
 }

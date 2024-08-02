@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_con
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
@@ -55,13 +56,20 @@ class AccountScreen extends StatelessWidget {
   }
 }
 
-class AccountPage extends BaseDynamicContentScreen {
+class AccountPage extends StatelessWidget with BaseDynamicContentScreen {
   const AccountPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
+        BlocListener<RootBloc, RootState>(
+          listener: (context, state) async {
+            if (state is RootConfigReload) {
+              _reloadAccountPage(context);
+            }
+          },
+        ),
         BlocListener<PullToRefreshBloc, PullToRefreshState>(
           listener: (context, state) async {
             if (state is PullToRefreshLoadState) {
@@ -120,34 +128,49 @@ class AccountPage extends BaseDynamicContentScreen {
                       const _AccountHeader(),
                       const SizedBox(height: AppStyle.defaultVerticalPadding),
                       ...buildContentWidgets(state.widgetEntities),
-                      if(context.read<AccountPageBloc>().getPrivacyPolicyUrl().isNullOrEmpty == false)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            launchUrlString(context.read<AccountPageBloc>().getPrivacyPolicyUrl()!);
-                          },
-                          child: Text(
-                            LocalizationConstants.privacyPolicy.localized(),
-                            style: OptiTextStyles.subtitleHighlight,
+                      if (context
+                              .read<AccountPageBloc>()
+                              .getPrivacyPolicyUrl()
+                              .isNullOrEmpty ==
+                          false)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15.0, vertical: 4.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              launchUrlString(context
+                                  .read<AccountPageBloc>()
+                                  .getPrivacyPolicyUrl()!);
+                            },
+                            child: Text(
+                              LocalizationConstants.privacyPolicy.localized(),
+                              style: OptiTextStyles.subtitleHighlight,
+                            ),
                           ),
                         ),
-                      ),
-                      if(context.read<AccountPageBloc>().getTermsOfUseUrl().isNullOrEmpty == false)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            launchUrlString(context.read<AccountPageBloc>().getTermsOfUseUrl()!);
-                          },
-                          child: Text(
-                            LocalizationConstants.termsOfUse.localized(),
-                            style: OptiTextStyles.subtitleHighlight,
+                      if (context
+                              .read<AccountPageBloc>()
+                              .getTermsOfUseUrl()
+                              .isNullOrEmpty ==
+                          false)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15.0, vertical: 4.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              launchUrlString(context
+                                  .read<AccountPageBloc>()
+                                  .getTermsOfUseUrl()!);
+                            },
+                            child: Text(
+                              LocalizationConstants.termsOfUse.localized(),
+                              style: OptiTextStyles.subtitleHighlight,
+                            ),
                           ),
                         ),
-                      ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15.0, vertical: 4.0),
                         child: Text(
                             context
                                 .read<AccountPageBloc>()
@@ -162,7 +185,8 @@ class AccountPage extends BaseDynamicContentScreen {
                   slivers: <Widget>[
                     SliverFillRemaining(
                       child: Center(
-                        child: Text(LocalizationConstants.errorLoadingAccount.localized()),
+                        child: Text(LocalizationConstants.errorLoadingAccount
+                            .localized()),
                       ),
                     ),
                   ],
@@ -235,7 +259,7 @@ class _AccountLoggedInHeader extends StatelessWidget {
 
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: OptiAppColors.primaryColor,
                     child: Text(
                       nameLabel.isEmpty ? '' : nameLabel[0],
                       style: const TextStyle(color: Colors.white),

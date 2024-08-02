@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/settings/wish_list_settings_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_collection_entity.dart';
@@ -188,7 +189,11 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     emit(state.copyWith(status: WishListStatus.realTimeAttributesLoading));
 
     if (modificationResult == null) {
-      emit(state.copyWith(status: WishListStatus.errorModification));
+      final message = await _wishListDetailsUsecase.getSiteMessage(
+          SiteMessageConstants.nameMobileAppAlertCommunicationError,
+          SiteMessageConstants.defaultMobileAppAlertCommunicationError);
+      emit(state.copyWith(
+          status: WishListStatus.errorModification, message: message));
       return;
     }
 
@@ -280,5 +285,11 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       settings: state.settings,
       wishList: wishList,
     );
+  }
+
+  Future<String> getSiteMessage(
+      String messageName, String defaultMessage) async {
+    return await _wishListDetailsUsecase.getSiteMessage(
+        messageName, defaultMessage);
   }
 }

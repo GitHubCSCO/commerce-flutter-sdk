@@ -13,13 +13,13 @@ class VMIService extends ServiceBase implements IVmiService {
   final ICommerceAPIServiceProvider _commerceAPIServiceProvider;
   final ICoreServiceProvider _coreServiceProvider;
 
-  VMIService(
-      {required ICommerceAPIServiceProvider commerceAPIServiceProvider,
-      required ICoreServiceProvider coreServiceProvider,
-      required super.clientService,
-      required super.cacheService,
-      required super.networkService,})
-      : _commerceAPIServiceProvider = commerceAPIServiceProvider,
+  VMIService({
+    required ICommerceAPIServiceProvider commerceAPIServiceProvider,
+    required ICoreServiceProvider coreServiceProvider,
+    required super.clientService,
+    required super.cacheService,
+    required super.networkService,
+  })  : _commerceAPIServiceProvider = commerceAPIServiceProvider,
         _coreServiceProvider = coreServiceProvider;
   @override
   // TODO: implement currentVmiLocation

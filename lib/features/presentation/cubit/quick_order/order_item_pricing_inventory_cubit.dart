@@ -8,26 +8,31 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 part 'order_item_pricing_inventory_state.dart';
 
-class OrderItemPricingInventoryCubit extends Cubit<OrderItemPricingInventoryState> {
+class OrderItemPricingInventoryCubit
+    extends Cubit<OrderItemPricingInventoryState> {
   final OrderPricingInventoryUseCase _pricingInventoryUseCase;
 
-  OrderItemPricingInventoryCubit({required OrderPricingInventoryUseCase pricingInventoryUseCase}):
-        _pricingInventoryUseCase = pricingInventoryUseCase,
+  OrderItemPricingInventoryCubit(
+      {required OrderPricingInventoryUseCase pricingInventoryUseCase})
+      : _pricingInventoryUseCase = pricingInventoryUseCase,
         super(OrderItemPricingInventoryInitial());
 
-  Future<void> getPricingAndInventory(QuickOrderItemEntity quickOrderItemEntity, ProductSettings productSettings) async {
+  Future<void> getPricingAndInventory(QuickOrderItemEntity quickOrderItemEntity,
+      ProductSettings productSettings) async {
     emit(OrderItemPricingInventoryLoading());
 
     var product = quickOrderItemEntity.productEntity;
 
     if (product.quoteRequired ?? false) {
-      quickOrderItemEntity.priceValueText = LocalizationConstants.requiresQuote.localized();
+      quickOrderItemEntity.priceValueText =
+          LocalizationConstants.requiresQuote.localized();
       emit(OrderItemPricingInventoryLoaded());
       return;
     }
 
     if (quickOrderItemEntity.quantityOrdered < 1) {
-      quickOrderItemEntity.extendedPriceValueText = '${CoreConstants.currencySymbol}${0.00.toStringAsFixed(2)}';
+      quickOrderItemEntity.extendedPriceValueText =
+          '${CoreConstants.currencySymbol}${0.00.toStringAsFixed(2)}';
       emit(OrderItemSubTotalChange());
       emit(OrderItemPricingInventoryLoaded());
       return;
@@ -36,7 +41,9 @@ class OrderItemPricingInventoryCubit extends Cubit<OrderItemPricingInventoryStat
     var productId = product.id;
 
     var isUserSignedIn = await _pricingInventoryUseCase.isAuthenticated();
-    var isStorefrontAccessGranted = productSettings.storefrontAccess != StorefrontAccessConstants.signInRequiredToAddToCartOrSeePrices || isUserSignedIn;
+    var isStorefrontAccessGranted = productSettings.storefrontAccess !=
+            StorefrontAccessConstants.signInRequiredToAddToCartOrSeePrices ||
+        isUserSignedIn;
 
     if (productSettings.canSeePrices! && isStorefrontAccessGranted) {
       if (productSettings.realTimePricing!) {
@@ -51,27 +58,32 @@ class OrderItemPricingInventoryCubit extends Cubit<OrderItemPricingInventoryStat
         RealTimePricingParameters parameter = RealTimePricingParameters(
           productPriceParameters: priceProducts,
         );
-        var getProductRealTimePrices = await _pricingInventoryUseCase.getProductRealTimePrices(parameter);
-        var pricing = getProductRealTimePrices?.realTimePricingResults?.firstWhere(
-              (result) => result.productId == productId
-        );
-        quickOrderItemEntity.updatePricing(ProductPriceEntityMapper().toEntity(pricing), productSettings.canSeePrices!);
-
+        var getProductRealTimePrices =
+            await _pricingInventoryUseCase.getProductRealTimePrices(parameter);
+        var pricing = getProductRealTimePrices?.realTimePricingResults
+            ?.firstWhere((result) => result.productId == productId);
+        quickOrderItemEntity.updatePricing(
+            ProductPriceEntityMapper.toEntity(pricing),
+            productSettings.canSeePrices!);
       } else {
         ProductPriceQueryParameter parameters = ProductPriceQueryParameter(
           qtyOrdered: quickOrderItemEntity.quantityOrdered,
           unitOfMeasure: product.selectedUnitOfMeasure,
         );
 
-        var pricing = await _pricingInventoryUseCase.getProductPrice(productId!, parameters);
-        quickOrderItemEntity.updatePricing(ProductPriceEntityMapper().toEntity(pricing), productSettings.canSeePrices!);
+        var pricing = await _pricingInventoryUseCase.getProductPrice(
+            productId!, parameters);
+        quickOrderItemEntity.updatePricing(
+            ProductPriceEntityMapper.toEntity(pricing),
+            productSettings.canSeePrices!);
       }
     }
     emit(OrderItemSubTotalChange());
 
     var productAvailabilityEnabled = productSettings.showInventoryAvailability!;
     var showInventoryAvailability = false;
-    if ((!product.isConfigured! || product.isFixedConfiguration!) && !product.isStyleProductParent!) {
+    if ((!product.isConfigured! || product.isFixedConfiguration!) &&
+        !product.isStyleProductParent!) {
       showInventoryAvailability = productAvailabilityEnabled;
     }
     showInventoryAvailability = product.availability?.message != null &&
@@ -86,16 +98,17 @@ class OrderItemPricingInventoryCubit extends Cubit<OrderItemPricingInventoryStat
           productIds: [productId!],
         );
 
-        var result = await _pricingInventoryUseCase.getProductRealTimeInventory(parameters);
-        var inventory = result?.realTimeInventoryResults?.firstWhere(
-              (result) => result.productId == product.id
-        );
+        var result = await _pricingInventoryUseCase
+            .getProductRealTimeInventory(parameters);
+        var inventory = result?.realTimeInventoryResults
+            ?.firstWhere((result) => result.productId == product.id);
 
         if (inventory != null) {
-          var availability = inventory.inventoryAvailabilityDtos?.firstWhere(
-                (dto) => dto.unitOfMeasure?.toLowerCase() ==
-                product.unitOfMeasure?.toLowerCase()
-          ).availability;
+          var availability = inventory.inventoryAvailabilityDtos
+              ?.firstWhere((dto) =>
+                  dto.unitOfMeasure?.toLowerCase() ==
+                  product.unitOfMeasure?.toLowerCase())
+              .availability;
           quickOrderItemEntity.availability = availability;
         }
       }
@@ -103,5 +116,4 @@ class OrderItemPricingInventoryCubit extends Cubit<OrderItemPricingInventoryStat
 
     emit(OrderItemPricingInventoryLoaded());
   }
-
 }

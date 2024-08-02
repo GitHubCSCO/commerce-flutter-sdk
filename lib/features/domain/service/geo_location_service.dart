@@ -27,7 +27,7 @@ class GeoLocationService implements IGeoLocationService {
         }
       }
 
-      var curlocation =  await location.getLocation();
+      var curlocation = await location.getLocation();
       return curlocation;
     } catch (e) {
       return null;

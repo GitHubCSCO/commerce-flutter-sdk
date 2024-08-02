@@ -70,6 +70,13 @@ class CartPage extends StatelessWidget {
       ),
       body: MultiBlocListener(
         listeners: [
+          BlocListener<RootBloc, RootState>(
+            listener: (context, state) async {
+              if (state is RootConfigReload) {
+                _reloadCartPage(context);
+              }
+            },
+          ),
           BlocListener<PullToRefreshBloc, PullToRefreshState>(
             listener: (context, state) {
               if (state is PullToRefreshLoadState) {
@@ -155,7 +162,8 @@ class CartPage extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: TertiaryBlackButton(
-                                    text: LocalizationConstants.addAllToList.localized(),
+                                    text: LocalizationConstants.addAllToList
+                                        .localized(),
                                     onPressed: () {
                                       final addCartLines = context
                                           .read<CartPageBloc>()
@@ -174,7 +182,8 @@ class CartPage extends StatelessWidget {
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: TertiaryBlackButton(
-                                    text: LocalizationConstants.saveOrder.localized(),
+                                    text: LocalizationConstants.saveOrder
+                                        .localized(),
                                     onPressed: () {
                                       context
                                           .read<SavedOrderHandlerCubit>()
@@ -184,6 +193,20 @@ class CartPage extends StatelessWidget {
                                   ),
                                 ),
                               ],
+                            ),
+                            Visibility(
+                              visible: context
+                                  .watch<CartPageBloc>()
+                                  .canSubmitForQuote,
+                              child: PrimaryButton(
+                                onPressed: () {
+                                  AppRoute.requestQuote.navigateBackStack(
+                                      context,
+                                      extra: state.cart);
+                                },
+                                text: LocalizationConstants.submitForQuote
+                                    .localized(),
+                              ),
                             ),
                             Visibility(
                               visible: context
@@ -202,8 +225,10 @@ class CartPage extends StatelessWidget {
                                 text: context
                                         .watch<CartPageBloc>()
                                         .approvalButtonVisible
-                                    ? LocalizationConstants.checkoutForApproval.localized()
-                                    : LocalizationConstants.checkout.localized(),
+                                    ? LocalizationConstants.checkoutForApproval
+                                        .localized()
+                                    : LocalizationConstants.checkout
+                                        .localized(),
                               ),
                             ),
                           ],
@@ -226,14 +251,15 @@ class CartPage extends StatelessWidget {
                               fit: BoxFit.fitWidth,
                             ),
                           ),
-                          const Text('There are no items in your cart'),
+                          Text(state.message),
                           Padding(
                             padding: const EdgeInsets.all(24),
                             child: TertiaryButton(
                               onPressed: () {
                                 AppRoute.shop.navigate(context);
                               },
-                              text: LocalizationConstants.continueShopping.localized(),
+                              text: LocalizationConstants.continueShopping
+                                  .localized(),
                             ),
                           )
                         ],
@@ -245,7 +271,8 @@ class CartPage extends StatelessWidget {
                     slivers: <Widget>[
                       SliverFillRemaining(
                         child: Center(
-                          child: Text(LocalizationConstants.errorLoadingCart.localized()),
+                          child: Text(LocalizationConstants.errorLoadingCart
+                              .localized()),
                         ),
                       ),
                     ],
@@ -374,7 +401,7 @@ class CartPage extends StatelessWidget {
   void _handlePickUpLocationCallBack(
       BuildContext context, WarehouseEntity wareHouse) {
     context.read<CartPageBloc>().add(CartPagePickUpLocationChangeEvent(
-        WarehouseEntityMapper().toModel(wareHouse)));
+        WarehouseEntityMapper.toModel(wareHouse)));
   }
 }
 

@@ -1,7 +1,9 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/enums/address_type.dart';
+import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/date_picker_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
@@ -406,6 +408,181 @@ class FilterDatePickerWidget extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class FilterListPicker extends StatelessWidget {
+  final String label;
+  final List<Object> items;
+  final int selectedIndex;
+  final void Function(BuildContext, Object) callback;
+
+  const FilterListPicker({
+    super.key,
+    required this.label,
+    required this.items,
+    required this.selectedIndex,
+    required this.callback,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: OptiAppColors.backgroundInput,
+        borderRadius: BorderRadius.circular(AppStyle.borderRadius),
+      ),
+      height: 50,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: OptiAppColors.backgroundInput,
+              borderRadius: BorderRadius.circular(AppStyle.borderRadius),
+            ),
+            height: 50,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: ListPicker(
+                          key: UniqueKey(),
+                          selectedIndex: selectedIndex,
+                          items: items,
+                          callback: callback,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class FilterBillToPickerWidget extends StatelessWidget {
+  final BillTo? billTo;
+  final void Function(BillTo?) onBillToSelected;
+
+  const FilterBillToPickerWidget({
+    super.key,
+    required this.billTo,
+    required this.onBillToSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        final result = await context.pushNamed(
+          AppRoute.billToShipToSelection.name,
+          extra: BillToShipToAddressSelectionEntity(
+            addressType: AddressType.billTo,
+            selectedBillTo: billTo,
+          ),
+        );
+
+        if (result != null && result is BillTo && context.mounted) {
+          onBillToSelected(result);
+        }
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          billTo == null
+              ? Text(
+                  LocalizationConstants.selectCustomer.localized(),
+                  style: OptiTextStyles.body,
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      billTo?.companyName ?? '',
+                      style: OptiTextStyles.titleSmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      billTo?.address1 ?? '',
+                      style: OptiTextStyles.body,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      '${billTo?.city ?? ''}, ${billTo?.state?.abbreviation ?? ''} ${billTo?.postalCode ?? ''}',
+                      style: OptiTextStyles.body,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+          const Icon(
+            Icons.arrow_forward_ios,
+            color: Colors.grey,
+            size: 16,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class FilterItemPickerWidget extends StatelessWidget {
+  final Object? item;
+  final String? selectedLabel;
+  final String defaultLabel;
+  final void Function(Object?) onItemSelected;
+  final Future<Object?> Function() onTap;
+
+  const FilterItemPickerWidget({
+    super.key,
+    required this.item,
+    required this.onItemSelected,
+    required this.selectedLabel,
+    required this.defaultLabel,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        final result = await onTap();
+        if (result != null && context.mounted) {
+          onItemSelected(result);
+        }
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          item == null
+              ? Text(
+                  defaultLabel,
+                  style: OptiTextStyles.body,
+                )
+              : Text(
+                  selectedLabel ?? '',
+                  style: OptiTextStyles.titleSmall,
+                ),
+          const Icon(
+            Icons.arrow_forward_ios,
+            color: Colors.grey,
+            size: 16,
+          ),
+        ],
+      ),
     );
   }
 }

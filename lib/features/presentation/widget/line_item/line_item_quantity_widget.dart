@@ -37,7 +37,7 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
                     max: CoreConstants.maximumOrderQuantity,
                     initialtText: qtyOrdered,
                     shouldShowIncrementDecermentIcon: false,
-                    onChanged: onQtyChanged,
+                    onSubmitted: onQtyChanged,
                   )
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,10 +60,10 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
               value: subtotalPriceText ?? '',
               realTimeLoading: realTimeLoading,
             ),
-          }
-          else ...{
+          } else ...{
             const Expanded(
-              flex: 2, child: Center(),
+              flex: 2,
+              child: Center(),
             ),
           }
         ],

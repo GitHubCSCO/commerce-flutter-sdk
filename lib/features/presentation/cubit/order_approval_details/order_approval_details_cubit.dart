@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
@@ -18,10 +19,10 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
   final PricingInventoryUseCase _pricingInventoryUseCase;
   ProductSettings? productSettings;
 
-  OrderApprovalDetailsCubit({
-    required OrderApprovalUseCase orderApprovalUseCase,
-    required PricingInventoryUseCase pricingInventoryUseCase
-  })  : _orderApprovalUseCase = orderApprovalUseCase,
+  OrderApprovalDetailsCubit(
+      {required OrderApprovalUseCase orderApprovalUseCase,
+      required PricingInventoryUseCase pricingInventoryUseCase})
+      : _orderApprovalUseCase = orderApprovalUseCase,
         _pricingInventoryUseCase = pricingInventoryUseCase,
         super(
           OrderApprovalDetailsState(
@@ -44,7 +45,8 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
     final cart = await _orderApprovalUseCase.loadCart(cartId: cartId);
 
     final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
-    final hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
+    final hideInventoryEnable =
+        _pricingInventoryUseCase.getHideInventoryEnable();
 
     if (cart != null) {
       emit(
@@ -67,13 +69,19 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
 
     final result = await _orderApprovalUseCase.approveOrder(cart: state.cart);
 
-    emit(
-      state.copyWith(
-        status: result
-            ? OrderStatus.addToCartSuccess
-            : OrderStatus.addToCartFailure,
-      ),
-    );
+    if (result) {
+      emit(
+        state.copyWith(status: OrderStatus.addToCartSuccess),
+      );
+    } else {
+      final message = await _orderApprovalUseCase.getSiteMessage(
+          SiteMessageConstants.nameOrderApprovalBadRequest,
+          SiteMessageConstants.defaultVaLueOrderApprovalBadRequest);
+      emit(
+        state.copyWith(
+            status: OrderStatus.addToCartFailure, errorMessage: message),
+      );
+    }
   }
 
   Future<void> deleteOrder() async {
@@ -85,14 +93,18 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
     if (result) {
       emit(state.copyWith(status: OrderStatus.deleteCartSuccess));
     } else {
-      emit(state.copyWith(status: OrderStatus.deleteCartFailure));
+      final message = await _orderApprovalUseCase.getSiteMessage(
+          SiteMessageConstants.nameDeleteCart,
+          SiteMessageConstants.defaultValueDeleteCartFail);
+      emit(state.copyWith(
+          status: OrderStatus.deleteCartFailure, errorMessage: message));
     }
   }
 
   List<CartLineEntity> getCartLines() {
     List<CartLineEntity> cartlines = [];
     for (var cartLine in state.cart.cartLines ?? []) {
-      var cartLineEntity = CartLineEntityMapper().toEntity(cartLine);
+      var cartLineEntity = CartLineEntityMapper.toEntity(cartLine);
       var shouldShowWarehouseInventoryButton =
           InventoryUtils.isInventoryPerWarehouseButtonShownAsync(
                   productSettings) &&
@@ -119,7 +131,9 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
 
   String get shippingAddressTitle => isFulfillmentMethodShip
       ? LocalizationConstants.shippingAddress.localized()
-      : (isFulfillmentMethodPickUp ? LocalizationConstants.pickUpLocation.localized() : '');
+      : (isFulfillmentMethodPickUp
+          ? LocalizationConstants.pickUpLocation.localized()
+          : '');
 
   String get shipToCityStatePostalCodeDisplay => isFulfillmentMethodShip
       ? '${state.cart.shipTo?.city}, ${state.cart.shipTo?.state?.name} ${state.cart.shipTo?.postalCode}'

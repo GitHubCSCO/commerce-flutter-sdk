@@ -22,4 +22,3 @@ class CartShippingSelectionChangeState extends CartShippingSelectionState {
   @override
   List<Object?> get props => [selectedOption];
 }
-

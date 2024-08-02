@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
@@ -15,7 +16,17 @@ import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_c
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_product_lines_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/invoice_history/invoice_detail_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/invoice_history/invoice_history_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/language/language_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_approval/order_approval_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quote/job_quote_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_all_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_communication_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_confirmation_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_details_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_line_notes_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_pricing_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/quote/request_quote_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/account/account_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
@@ -38,6 +49,8 @@ import 'package:commerce_flutter_app/features/presentation/screens/order_details
 import 'package:commerce_flutter_app/features/presentation/screens/saved_order/saved_order_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/saved_payments/saved_payments_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/search/barcode_search_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/selection/sales_rep_selection_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/selection/user_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_location_note.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/vmi/vmi_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/add_to_wish_list_screen.dart';
@@ -58,7 +71,9 @@ import 'package:commerce_flutter_app/features/presentation/screens/welcome/welco
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_details/wish_list_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/add_credit_card_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/add_shipping_address_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/selection_item_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -597,6 +612,68 @@ List<NavigationNode> _getNavigationRoot() {
     parent: savedOrders,
   );
 
+  // path: /account/myQuote
+  final myQuote = createNode(
+    name: AppRoute.myQuote.name,
+    path: AppRoute.myQuote.suffix,
+    builder: (context, state) => const QuoteScreen(),
+    parent: account,
+  );
+
+  // path: /requestQuote
+  final requestQuote = createNode(
+    name: AppRoute.requestQuote.name,
+    path: AppRoute.requestQuote.suffix,
+    builder: (context, state) =>
+        RequestQuoteWidgetScreen(cart: state.extra as Cart),
+    parent: null,
+  );
+
+  // path: /quote Confirmation
+  final quoteConfirmation = createNode(
+    name: AppRoute.quoteConfirmation.name,
+    path: AppRoute.quoteConfirmation.suffix,
+    builder: (context, state) =>
+        QuoteConfirmationScreen(quote: state.extra as QuoteDto),
+    parent: null,
+  );
+
+  // path: /quote Details
+  final quoteDetails = createNode(
+    name: AppRoute.quoteDetails.name,
+    path: AppRoute.quoteDetails.suffix,
+    builder: (context, state) =>
+        QuoteDetailsScreen(quoteDto: state.extra as QuoteDto),
+    parent: null,
+  );
+
+  // path: /quote quoteCommunication
+  final quoteCommunication = createNode(
+    name: AppRoute.quoteCommunication.name,
+    path: AppRoute.quoteCommunication.suffix,
+    builder: (context, state) =>
+        QuoteCommunicationScreen(quoteDto: state.extra as QuoteDto),
+    parent: null,
+  );
+
+  // path: Quote All
+  final quoteAll = createNode(
+    name: AppRoute.quoteAll.name,
+    path: AppRoute.quoteAll.suffix,
+    builder: (context, state) =>
+        QuoteAllScreen(quoteDto: state.extra as QuoteDto),
+    parent: null,
+  );
+
+  // path: Quote Pricing
+  final quotePricing = createNode(
+    name: AppRoute.quotePricing.name,
+    path: AppRoute.quotePricing.suffix,
+    builder: (context, state) =>
+        QuotePricingScreen(quoteLineEntity: state.extra as QuoteLineEntity),
+    parent: null,
+  );
+
   // path: /account/invoiceHistory
   final invoiceHistory = createNode(
     name: AppRoute.invoiceHistory.name,
@@ -637,6 +714,53 @@ List<NavigationNode> _getNavigationRoot() {
     parent: orderApproval,
   );
 
+  final userSelection = createNode(
+    name: AppRoute.userSelection.name,
+    path: AppRoute.userSelection.suffix,
+    builder: (context, state) {
+      final parameter = state.extra as CatalogTypeSelectingParameter;
+      return UserSelectionScreen(parameter: parameter);
+    },
+    parent: null,
+  );
+
+  final salesRepSelection = createNode(
+    name: AppRoute.salesRepSelection.name,
+    path: AppRoute.salesRepSelection.suffix,
+    builder: (context, state) {
+      final parameter = state.extra as CatalogTypeSelectingParameter;
+      return SalesRepSelectionScreen(parameter: parameter);
+    },
+    parent: null,
+  );
+
+  final jobQuoteDetails = createNode(
+    name: AppRoute.jobQuoteDetails.name,
+    path: AppRoute.jobQuoteDetails.suffix,
+    builder: (context, state) {
+      final jobQuoteId = state.pathParameters['jobQuoteId'] ?? '';
+      return JobQuoteDetailsScreen(jobQuoteId: jobQuoteId);
+    },
+    parent: myQuote,
+  );
+
+  final quoteLineNotes = createNode(
+    name: AppRoute.quoteLineNotes.name,
+    path: AppRoute.quoteLineNotes.suffix,
+    builder: (context, state) {
+      final initialText = state.extra as String?;
+      return QuoteLineNotesScreen(initialText: initialText);
+    },
+  );
+
+  // path: /account/settings/language
+  final language = createNode(
+    name: AppRoute.language.name,
+    path: AppRoute.language.suffix,
+    builder: (context, state) => LanguageScreen(),
+    parent: settings,
+  );
+
   return [
     root,
     navbarRoot,
@@ -669,6 +793,15 @@ List<NavigationNode> _getNavigationRoot() {
     product,
     topLevelProductDetails,
     addCreditCard,
-    addShippingAddress
+    addShippingAddress,
+    requestQuote,
+    quoteConfirmation,
+    quoteDetails,
+    quoteCommunication,
+    quoteAll,
+    quotePricing,
+    userSelection,
+    salesRepSelection,
+    quoteLineNotes,
   ];
 }

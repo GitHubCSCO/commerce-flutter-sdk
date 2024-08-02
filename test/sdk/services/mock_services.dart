@@ -1,6 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/tracking_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -84,3 +82,5 @@ class MockContentConfigurationService extends Mock
     implements IContentConfigurationService {}
 
 class MockCoreServiceProvider extends Mock implements ICoreServiceProvider {}
+
+class MockLocalizationService extends Mock implements ILocalizationService {}

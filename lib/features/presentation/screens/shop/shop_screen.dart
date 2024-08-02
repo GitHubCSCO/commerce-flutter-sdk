@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/shop/shop_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
@@ -35,8 +36,7 @@ class ShopScreen extends StatelessWidget {
   }
 }
 
-class ShopPage extends BaseDynamicContentScreen {
-
+class ShopPage extends StatelessWidget with BaseDynamicContentScreen {
   final websitePath = WebsitePaths.shopWebsitePath;
 
   const ShopPage({super.key});
@@ -50,6 +50,13 @@ class ShopPage extends BaseDynamicContentScreen {
       ], backgroundColor: Theme.of(context).colorScheme.surface),
       body: MultiBlocListener(
         listeners: [
+          BlocListener<RootBloc, RootState>(
+            listener: (context, state) async {
+              if (state is RootConfigReload) {
+                _reloadShopPage(context);
+              }
+            },
+          ),
           BlocListener<PullToRefreshBloc, PullToRefreshState>(
             listener: (context, state) {
               if (state is PullToRefreshLoadState) {
@@ -113,7 +120,8 @@ class ShopPage extends BaseDynamicContentScreen {
                     slivers: <Widget>[
                       SliverFillRemaining(
                         child: Center(
-                          child: Text(LocalizationConstants.errorLoadingShop.localized()),
+                          child: Text(LocalizationConstants.errorLoadingShop
+                              .localized()),
                         ),
                       ),
                     ],

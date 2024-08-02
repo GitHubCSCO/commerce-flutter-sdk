@@ -4,7 +4,7 @@ import 'package:commerce_flutter_app/features/domain/mapper/field_score_mapper.d
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ScoreExplanationEntityMapper {
-  ScoreExplanationEntity toEntity(ScoreExplanation? model) =>
+  static ScoreExplanationEntity toEntity(ScoreExplanation? model) =>
       ScoreExplanationEntity(
         totalBoost: model?.totalBoost,
         aggregateFieldScores: model?.aggregateFieldScores
@@ -16,7 +16,8 @@ class ScoreExplanationEntityMapper {
             .toList(),
       );
 
-  ScoreExplanation? toModel(ScoreExplanationEntity entity) => ScoreExplanation(
+  static ScoreExplanation? toModel(ScoreExplanationEntity entity) =>
+      ScoreExplanation(
         totalBoost: entity.totalBoost,
         aggregateFieldScores: entity.aggregateFieldScores
             ?.map((fieldScoreEntity) =>

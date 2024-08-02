@@ -5,3 +5,5 @@ abstract class RootEvent {}
 class RootInitialEvent extends RootEvent {}
 
 class RootHidePricingInventoryEvent extends RootEvent {}
+
+class RootConfigChangeEvent extends RootEvent {}

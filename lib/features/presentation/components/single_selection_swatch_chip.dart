@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 enum ChipOrientation { vertical, horizontal }
 
 class SingleSelectionSwatchChip<T> extends StatefulWidget {
-  const SingleSelectionSwatchChip({
+  SingleSelectionSwatchChip({
     super.key,
     required this.values,
     this.selectedValue,
@@ -13,6 +13,7 @@ class SingleSelectionSwatchChip<T> extends StatefulWidget {
     this.chipTitle,
     required this.maxItemsToShow,
     this.orientation = ChipOrientation.horizontal,
+    this.shouldIgnoreTitleAndLabelName = false,
   });
 
   final List<T> values;
@@ -21,6 +22,7 @@ class SingleSelectionSwatchChip<T> extends StatefulWidget {
   final String? chipTitle;
   final int maxItemsToShow;
   final ChipOrientation orientation;
+  bool? shouldIgnoreTitleAndLabelName;
   @override
   _SingleSelectionSwatchChipState<T> createState() =>
       _SingleSelectionSwatchChipState<T>();
@@ -106,30 +108,33 @@ class _SingleSelectionSwatchChipState<T>
         : widget.values.skip(1).take(maxItemsToShow).toList();
 
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: EdgeInsets.all(getPaddingSize()),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (chipTitle != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    chipTitle!,
-                    style: OptiTextStyles.body,
-                  ),
-                  if (widget.values.length > maxItemsToShow)
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          showAll = !showAll;
-                        });
-                      },
-                      child: Text(showAll ? 'View Less' : 'View More'),
+            Visibility(
+              visible: !widget.shouldIgnoreTitleAndLabelName!,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      chipTitle!,
+                      style: OptiTextStyles.body,
                     ),
-                ],
+                    if (widget.values.length > maxItemsToShow)
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            showAll = !showAll;
+                          });
+                        },
+                        child: Text(showAll ? 'View Less' : 'View More'),
+                      ),
+                  ],
+                ),
               ),
             ),
           Wrap(
@@ -161,12 +166,28 @@ class _SingleSelectionSwatchChipState<T>
     );
   }
 
+  double getPaddingSize() {
+    if (widget.shouldIgnoreTitleAndLabelName!) {
+      return 2;
+    }
+
+    return 20;
+  }
+
+  double getGridSize() {
+    if (widget.shouldIgnoreTitleAndLabelName!) {
+      return 30;
+    }
+
+    return 40;
+  }
+
   List<Widget> _buildChildren(T value) {
     bool isAvailable = _getValueAvailibility(value);
     return [
       Container(
-        width: 40,
-        height: 40,
+        width: getGridSize(),
+        height: getGridSize(),
         decoration: BoxDecoration(
           color: selectedValue == value
               ? Colors.black
@@ -186,17 +207,20 @@ class _SingleSelectionSwatchChipState<T>
         ),
         child: Center(child: _getAvatar(value)),
       ),
-      widget.orientation == ChipOrientation.vertical
-          ? Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child:
-                  Text(_getValueTitle(value), style: OptiTextStyles.bodySmall),
-            )
-          : Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child:
-                  Text(_getValueTitle(value), style: OptiTextStyles.bodySmall),
-            ),
+      Visibility(
+        visible: !widget.shouldIgnoreTitleAndLabelName!,
+        child: widget.orientation == ChipOrientation.vertical
+            ? Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(_getValueTitle(value),
+                    style: OptiTextStyles.bodySmall),
+              )
+            : Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Text(_getValueTitle(value),
+                    style: OptiTextStyles.bodySmall),
+              ),
+      ),
     ];
   }
 }

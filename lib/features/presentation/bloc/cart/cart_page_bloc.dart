@@ -19,7 +19,9 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
   Cart? cart;
   bool hasCheckout = true;
   ProductSettings? productSettings;
-  CartPageBloc({required CartUseCase cartUseCase, required PricingInventoryUseCase pricingInventoryUseCase})
+  CartPageBloc(
+      {required CartUseCase cartUseCase,
+      required PricingInventoryUseCase pricingInventoryUseCase})
       : _cartUseCase = cartUseCase,
         _pricingInventoryUseCase = pricingInventoryUseCase,
         super(CartPageInitialState()) {
@@ -49,7 +51,10 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
         case Success(value: final data):
           cart = data;
           if (cart?.cartLines == null || cart!.cartLines!.isEmpty) {
-            emit(CartPageNoDataState());
+            final message = await _cartUseCase.getSiteMessage(
+                SiteMessageConstants.nameNoOrderLines,
+                SiteMessageConstants.defaultValueNoOrderLines);
+            emit(CartPageNoDataState(message));
             return;
           }
           var wareHouse = _cartUseCase.getPickUpWareHouse();
@@ -66,8 +71,10 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
           var settingResult = await _cartUseCase.loadCartSetting();
           switch (settingResult) {
             case Success(value: final setting):
-              final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
-              final hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
+              final hidePricingEnable =
+                  _pricingInventoryUseCase.getHidePricingEnable();
+              final hideInventoryEnable =
+                  _pricingInventoryUseCase.getHideInventoryEnable();
 
               emit(CartPageLoadedState(
                 cart: data!,
@@ -169,7 +176,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
   List<CartLineEntity> getCartLines() {
     List<CartLineEntity> cartlines = [];
     for (var cartLine in cart?.cartLines ?? []) {
-      var cartLineEntity = CartLineEntityMapper().toEntity(cartLine);
+      var cartLineEntity = CartLineEntityMapper.toEntity(cartLine);
       var shouldShowWarehouseInventoryButton =
           InventoryUtils.isInventoryPerWarehouseButtonShownAsync(
                   productSettings) &&
@@ -227,5 +234,15 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
     }
 
     return cart?.canCheckOut == true && !isCartEmpty && hasCheckout;
+  }
+
+  bool get canSubmitForQuote {
+    if (cart == null) {
+      return false;
+    }
+
+    return cart?.canRequestQuote == true &&
+        cart?.isAwaitingApproval == false &&
+        !isCartEmpty;
   }
 }

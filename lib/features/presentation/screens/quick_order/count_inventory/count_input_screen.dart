@@ -109,7 +109,8 @@ class _CountInputPageState extends State<CountInputPage> {
                       const SizedBox(height: 20.0),
                       TabSwitchWidget(
                         tabTitle0: LocalizationConstants.history.localized(),
-                        tabTitle1: LocalizationConstants.productInfo.localized(),
+                        tabTitle1:
+                            LocalizationConstants.productInfo.localized(),
                         tabWidget0: _getHistoryWidget(),
                         tabWidget1: _getProductInfoWidget(),
                       ),
@@ -144,7 +145,6 @@ class _CountInputPageState extends State<CountInputPage> {
     );
   }
 
-
   void _showAlertDialog(String message) {
     displayDialogWidget(context: context, message: message, actions: [
       DialogPlainButton(
@@ -165,7 +165,8 @@ class _CountInputPageState extends State<CountInputPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(LocalizationConstants.qTY.localized(), style: OptiTextStyles.body),
+          Text(LocalizationConstants.qTY.localized(),
+              style: OptiTextStyles.body),
           NumberTextField(
             initialtText: qty.toString(),
             shouldShowIncrementDecermentIcon: false,
@@ -286,7 +287,8 @@ class _CountInputPageState extends State<CountInputPage> {
     final part = _buildRow(
         LocalizationConstants.partNumberSign.localized(),
         OptiTextStyles.subtitle,
-        widget.countInventoryEntity.vmiBinEntity.productEntity?.getProductNumber() ??
+        widget.countInventoryEntity.vmiBinEntity.productEntity
+                ?.getProductNumber() ??
             '',
         OptiTextStyles.body);
     final myPart = _buildRow(
@@ -310,12 +312,18 @@ class _CountInputPageState extends State<CountInputPage> {
     final maxCount = _buildRow(
         LocalizationConstants.maxSign.localized(),
         OptiTextStyles.subtitle,
-        widget.countInventoryEntity.vmiBinEntity.maximumQty?.toInt().toString() ?? '',
+        widget.countInventoryEntity.vmiBinEntity.maximumQty
+                ?.toInt()
+                .toString() ??
+            '',
         OptiTextStyles.body);
     final minCount = _buildRow(
         LocalizationConstants.minSign.localized(),
         OptiTextStyles.subtitle,
-        widget.countInventoryEntity.vmiBinEntity.minimumQty?.toInt().toString() ?? '',
+        widget.countInventoryEntity.vmiBinEntity.minimumQty
+                ?.toInt()
+                .toString() ??
+            '',
         OptiTextStyles.body);
 
     if (part != null) {

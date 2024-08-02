@@ -2,7 +2,7 @@ import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.d
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class StyleValueEntityMapper {
-  StyleValueEntity toEntity(StyleValue model) => StyleValueEntity(
+  static StyleValueEntity toEntity(StyleValue model) => StyleValueEntity(
         styleTraitName: model.styleTraitName,
         styleTraitId: model.styleTraitId,
         styleTraitValueId: model.styleTraitValueId,
@@ -16,7 +16,7 @@ class StyleValueEntityMapper {
         swatchType: model.swatchType,
       );
 
-  StyleValue toModel(StyleValueEntity entity) => StyleValue(
+  static StyleValue toModel(StyleValueEntity entity) => StyleValue(
         styleTraitName: entity.styleTraitName,
         styleTraitId: entity.styleTraitId,
         styleTraitValueId: entity.styleTraitValueId,

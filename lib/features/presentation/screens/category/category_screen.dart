@@ -38,10 +38,11 @@ class _CategoryPageState extends State<CategoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            LocalizationConstants.categories.localized(), style: OptiTextStyles.titleLarge),
+        title: Text(LocalizationConstants.categories.localized(),
+            style: OptiTextStyles.titleLarge),
         actions: [
-          BottomMenuWidget(isViewOnWebsiteEnable: false,
+          BottomMenuWidget(
+              isViewOnWebsiteEnable: false,
               toolMenuList: _getToolMenu(context)),
         ],
       ),
@@ -54,8 +55,10 @@ class _CategoryPageState extends State<CategoryPage> {
             case CategoryLoaded():
               return Container(
                 child: isGridView
-                    ? CategoryGridWidget(list: state.list, callback: _handleCategoryClick)
-                    : CategoryListWidget(list: state.list, callback: _handleCategoryClick),
+                    ? CategoryGridWidget(
+                        list: state.list, callback: _handleCategoryClick)
+                    : CategoryListWidget(
+                        list: state.list, callback: _handleCategoryClick),
               );
             case CategoryFailed():
             default:
@@ -67,19 +70,19 @@ class _CategoryPageState extends State<CategoryPage> {
   }
 
   void _handleCategoryClick(BuildContext context, Category category) {
-    if((category.subCategories?.length ?? 0) > 0){
-      AppRoute.shopSubCategory.navigateBackStack(
-        context,
-        //TODO what if id or name is null, we need to take care of that
-        //TODO we should find a better way to pass categorytitle, 
-        //TODO because if category title is long or does have special character it mmight or might not work properly
+    if ((category.subCategories?.length ?? 0) > 0) {
+      AppRoute.shopSubCategory.navigateBackStack(context,
+          //TODO what if id or name is null, we need to take care of that
+          //TODO we should find a better way to pass categorytitle,
+          //TODO because if category title is long or does have special character it mmight or might not work properly
           pathParameters: {
             "categoryId": category.id.toString(),
             "categoryTitle": category.shortDescription.toString(),
             "categoryPath": category.path.toString()
           });
-    }else{
-      final productPageEntity = ProductPageEntity('', ProductParentType.category, category: category);
+    } else {
+      final productPageEntity =
+          ProductPageEntity('', ProductParentType.category, category: category);
       AppRoute.product.navigateBackStack(context, extra: productPageEntity);
     }
   }
@@ -92,16 +95,14 @@ class _CategoryPageState extends State<CategoryPage> {
           setState(() {
             isGridView = false;
           });
-        }
-    ));
+        }));
     list.add(ToolMenu(
         title: LocalizationConstants.gridView.localized(),
         action: () {
           setState(() {
             isGridView = true;
           });
-        }
-    ));
+        }));
     return list;
   }
 }

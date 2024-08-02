@@ -23,11 +23,16 @@ class CartUseCase extends BaseUseCase {
         .getCurrentCartPromotions();
   }
 
-  Future<Result<Session, ErrorResponse>> patchPickUpLocation(Warehouse warehouse) async {
-    var newSession = commerceAPIServiceProvider.getSessionService().getCachedCurrentSession();
+  Future<Result<Session, ErrorResponse>> patchPickUpLocation(
+      Warehouse warehouse) async {
+    var newSession = commerceAPIServiceProvider
+        .getSessionService()
+        .getCachedCurrentSession();
     newSession?.pickUpWarehouse = warehouse;
 
-    return await commerceAPIServiceProvider.getSessionService().patchSession(newSession!);
+    return await commerceAPIServiceProvider
+        .getSessionService()
+        .patchSession(newSession!);
   }
 
   Warehouse? getPickUpWareHouse() {
@@ -48,14 +53,6 @@ class CartUseCase extends BaseUseCase {
     return await commerceAPIServiceProvider
         .getClientService()
         .isCustomerOrderApproval();
-  }
-
-  Future<String> getSiteMessage(
-      String messageName, String? defaultMessage) async {
-    var result = await commerceAPIServiceProvider
-        .getWebsiteService()
-        .getSiteMessage(messageName, defaultMessage: defaultMessage);
-    return result is Success ? (result as Success).value : defaultMessage;
   }
 
   Future<Result<ProductSettings, ErrorResponse>> loadProductSettings() async {

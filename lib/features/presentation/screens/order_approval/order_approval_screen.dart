@@ -68,7 +68,7 @@ class OrderApprovalPage extends StatelessWidget {
             case OrderStatus.failure:
               return Center(
                 child: Text(
-                  SiteMessageConstants.defaultMobileAppAlertCommunicationError,
+                  state.errorMessage ?? '',
                 ),
               );
             default:
@@ -251,7 +251,8 @@ class _OrderApprovalItem extends StatelessWidget {
               children: [
                 Text(
                   cart.orderNumber ?? '',
-                  style: OptiTextStyles.body.copyWith(color: OptiAppColors.primaryColor),
+                  style: OptiTextStyles.body
+                      .copyWith(color: OptiAppColors.primaryColor),
                 ),
                 Text(
                   cart.orderDate != null

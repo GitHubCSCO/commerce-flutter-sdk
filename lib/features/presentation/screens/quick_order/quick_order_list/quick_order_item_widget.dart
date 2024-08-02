@@ -24,7 +24,9 @@ class QuickOrderItemWidget extends StatelessWidget {
   final ProductSettings setting;
 
   QuickOrderItemWidget(
-      {required this.callback, required this.quickOrderItemEntity, required this.setting});
+      {required this.callback,
+      required this.quickOrderItemEntity,
+      required this.setting});
 
   @override
   Widget build(BuildContext context) {
@@ -64,12 +66,14 @@ class QuickOrderItemWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          OrderProductTitleWidget(callback: callback, orderItemEntity: quickOrderItemEntity),
+          OrderProductTitleWidget(
+              callback: callback, orderItemEntity: quickOrderItemEntity),
           BlocConsumer<OrderItemPricingInventoryCubit,
               OrderItemPricingInventoryState>(
             listener: (context, state) {
               if (state is OrderItemSubTotalChange) {
-                callback(context, quickOrderItemEntity, OrderCallBackType.calculateSubtotal);
+                callback(context, quickOrderItemEntity,
+                    OrderCallBackType.calculateSubtotal);
               }
             },
             buildWhen: (previous, current) =>
@@ -98,21 +102,21 @@ class QuickOrderItemWidget extends StatelessWidget {
               }
             },
           ),
-          OrderProductQuantityGroupWidget(callback, quickOrderItemEntity, setting)
+          OrderProductQuantityGroupWidget(
+              callback, quickOrderItemEntity, setting)
         ],
       ),
     );
   }
-
 }
 
 class OrderProductTitleWidget extends StatelessWidget {
-
   final Function(BuildContext context, QuickOrderItemEntity,
       OrderCallBackType orderCallBackType) callback;
   final QuickOrderItemEntity orderItemEntity;
 
-  const OrderProductTitleWidget({Key? key, required this.callback, required this.orderItemEntity})
+  const OrderProductTitleWidget(
+      {Key? key, required this.callback, required this.orderItemEntity})
       : super(key: key);
 
   @override
@@ -128,8 +132,9 @@ class OrderProductTitleWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Visibility(
-                  visible: orderItemEntity.productEntity.brand?.name?.isNotEmpty ??
-                      false,
+                  visible:
+                      orderItemEntity.productEntity.brand?.name?.isNotEmpty ??
+                          false,
                   child: Text(
                     orderItemEntity.productEntity.brand?.name ?? '',
                     style: OptiTextStyles.bodySmall,
@@ -137,8 +142,8 @@ class OrderProductTitleWidget extends StatelessWidget {
                   ),
                 ),
                 Visibility(
-                  visible:
-                  orderItemEntity.productEntity.shortDescription?.isNotEmpty ??
+                  visible: orderItemEntity
+                          .productEntity.shortDescription?.isNotEmpty ??
                       false,
                   child: Text(
                     orderItemEntity.productEntity.shortDescription ?? '',
@@ -147,8 +152,7 @@ class OrderProductTitleWidget extends StatelessWidget {
                   ),
                 ),
                 Visibility(
-                  visible:
-                  orderItemEntity.productEntity
+                  visible: orderItemEntity.productEntity
                       .getProductNumber()
                       .isNotEmpty,
                   child: Text(
@@ -158,8 +162,9 @@ class OrderProductTitleWidget extends StatelessWidget {
                   ),
                 ),
                 Visibility(
-                  visible: orderItemEntity.productEntity.customerName?.isNotEmpty ??
-                      false,
+                  visible:
+                      orderItemEntity.productEntity.customerName?.isNotEmpty ??
+                          false,
                   child: Row(children: [
                     Text(
                       LocalizationConstants.myPartNumberSign.localized(),
@@ -177,8 +182,8 @@ class OrderProductTitleWidget extends StatelessWidget {
                   ]),
                 ),
                 Visibility(
-                  visible:
-                  orderItemEntity.productEntity.manufacturerItem?.isNotEmpty ??
+                  visible: orderItemEntity
+                          .productEntity.manufacturerItem?.isNotEmpty ??
                       false,
                   child: Row(children: [
                     Text(
@@ -223,7 +228,6 @@ class OrderProductTitleWidget extends StatelessWidget {
       ),
     );
   }
-
 }
 
 class OrderProductPricingWidget extends StatelessWidget {
@@ -289,7 +293,8 @@ class OrderProductQuantityGroupWidget extends StatelessWidget {
   final QuickOrderItemEntity quickOrderItemEntity;
   final ProductSettings setting;
 
-  OrderProductQuantityGroupWidget(this.callback, this.quickOrderItemEntity, this.setting);
+  OrderProductQuantityGroupWidget(
+      this.callback, this.quickOrderItemEntity, this.setting);
 
   @override
   Widget build(BuildContext context) {
@@ -304,17 +309,20 @@ class OrderProductQuantityGroupWidget extends StatelessWidget {
                 shouldShowIncrementDecermentIcon: false,
                 onChanged: (int? quantity) {
                   if ((quantity ?? 0) == 0) {
-                    quickOrderItemEntity.previousQty = quickOrderItemEntity.quantityOrdered;
+                    quickOrderItemEntity.previousQty =
+                        quickOrderItemEntity.quantityOrdered;
                   }
                   quickOrderItemEntity.quantityOrdered = quantity ?? 0;
-                  context.read<OrderItemPricingInventoryCubit>().getPricingAndInventory(quickOrderItemEntity, setting);
+                  context
+                      .read<OrderItemPricingInventoryCubit>()
+                      .getPricingAndInventory(quickOrderItemEntity, setting);
                 }),
           ),
           if (!(quickOrderItemEntity.hidePricingEnable ?? false)) ...{
             BlocBuilder<OrderItemPricingInventoryCubit,
                 OrderItemPricingInventoryState>(
               buildWhen: (previous, current) =>
-              current is OrderItemPricingInventoryInitial ||
+                  current is OrderItemPricingInventoryInitial ||
                   current is OrderItemPricingInventoryLoading ||
                   current is OrderItemPricingInventoryLoaded ||
                   current is OrderItemPricingInventoryFailed,
@@ -345,7 +353,8 @@ class OrderProductQuantityGroupWidget extends StatelessWidget {
             ),
           } else ...{
             const Expanded(
-              flex: 2, child: Center(),
+              flex: 2,
+              child: Center(),
             ),
           }
         ],

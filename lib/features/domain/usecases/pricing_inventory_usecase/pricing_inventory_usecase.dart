@@ -4,9 +4,9 @@ import 'package:commerce_flutter_app/features/presentation/cubit/product_carouse
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class PricingInventoryUseCase extends BaseUseCase {
-
   Future<bool> getProductInventoryAvailable() async {
-    final productSettings = (await loadProductSettings()).getResultSuccessValue();
+    final productSettings =
+        (await loadProductSettings()).getResultSuccessValue();
     return productSettings?.showInventoryAvailability ?? false;
   }
 
@@ -17,25 +17,37 @@ class PricingInventoryUseCase extends BaseUseCase {
   }
 
   bool getHidePricingEnable() {
-    return coreServiceProvider.getAppConfigurationService().hidePricingEnable ?? false;
+    return coreServiceProvider.getAppConfigurationService().hidePricingEnable ??
+        false;
   }
 
   bool getHideInventoryEnable() {
-    return coreServiceProvider.getAppConfigurationService().hideInventoryEnable ?? false;
+    return coreServiceProvider
+            .getAppConfigurationService()
+            .hideInventoryEnable ??
+        false;
   }
 
   Future<bool> getProductPricingEnable() async {
-    var productPricingEnabledResult = await coreServiceProvider.getAppConfigurationService().productPricingEnabled();
-    bool productPricingPresentationEnabled = productPricingEnabledResult ?? false;
+    var productPricingEnabledResult = await coreServiceProvider
+        .getAppConfigurationService()
+        .productPricingEnabled();
+    bool productPricingPresentationEnabled =
+        productPricingEnabledResult ?? false;
     return productPricingPresentationEnabled;
   }
 
   Future<RealTimeSupport?> getRealtimeSupportType() async {
-    return await coreServiceProvider.getAppConfigurationService().getRealtimeSupportType();
+    return await coreServiceProvider
+        .getAppConfigurationService()
+        .getRealtimeSupportType();
   }
 
-  Future<Result<GetRealTimePricingResult, ErrorResponse>?> getRealTimePricing(RealTimePricingParameters parameter) async {
-    var getProductRealTimePricesResponse = await commerceAPIServiceProvider.getRealTimePricingService().getProductRealTimePrices(parameter);
+  Future<Result<GetRealTimePricingResult, ErrorResponse>?> getRealTimePricing(
+      RealTimePricingParameters parameter) async {
+    var getProductRealTimePricesResponse = await commerceAPIServiceProvider
+        .getRealTimePricingService()
+        .getProductRealTimePrices(parameter);
     var pricingResult = getProductRealTimePricesResponse;
     switch (pricingResult) {
       case Success(value: final data):
@@ -47,8 +59,10 @@ class PricingInventoryUseCase extends BaseUseCase {
     }
   }
 
-  Future<Result<GetRealTimeInventoryResult, ErrorResponse>> getRealTimeInventory(RealTimeInventoryParameters parameter) async {
-    return await commerceAPIServiceProvider.getRealTimeInventoryService().getProductRealTimeInventory(parameters: parameter);
+  Future<Result<GetRealTimeInventoryResult, ErrorResponse>>
+      getRealTimeInventory(RealTimeInventoryParameters parameter) async {
+    return await commerceAPIServiceProvider
+        .getRealTimeInventoryService()
+        .getProductRealTimeInventory(parameters: parameter);
   }
-
 }

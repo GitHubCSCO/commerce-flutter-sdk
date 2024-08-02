@@ -6,7 +6,6 @@ part 'category_event.dart';
 part 'category_state.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
-
   final CategoryUseCase _categoryUseCase;
 
   CategoryBloc({required CategoryUseCase categoryUseCase})
@@ -15,12 +14,12 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     on<CategoryLoadEvent>((event, emit) => _onCategoryLoadEvent(event, emit));
   }
 
-  Future<void> _onCategoryLoadEvent(CategoryLoadEvent event, Emitter<CategoryState> emit) async {
+  Future<void> _onCategoryLoadEvent(
+      CategoryLoadEvent event, Emitter<CategoryState> emit) async {
     emit(CategoryLoading());
 
-    final response = await _categoryUseCase.getCategories(
-      categoryId: event.categoryId
-    );
+    final response =
+        await _categoryUseCase.getCategories(categoryId: event.categoryId);
 
     switch (response) {
       case Success(value: final data):
@@ -29,5 +28,4 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         emit(CategoryFailed(error: error.message ?? ''));
     }
   }
-
 }

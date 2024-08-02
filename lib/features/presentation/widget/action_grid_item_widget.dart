@@ -4,7 +4,7 @@ import 'package:commerce_flutter_app/features/presentation/base/base_action_item
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 
-class ActionGridItemWidget extends BaseActionItemWidget {
+class ActionGridItemWidget extends StatelessWidget with BaseActionItemWidget {
   final ActionLinkEntity action;
 
   const ActionGridItemWidget({super.key, required this.action});

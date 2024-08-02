@@ -48,7 +48,9 @@ class SavedPaymentPage extends StatelessWidget {
               child: state.accountPaymentProfiles != null &&
                       state.accountPaymentProfiles!.isEmpty
                   ? Center(
-                      child: Text(LocalizationConstants.noSavedPaymentsFound.localized(),
+                      child: Text(
+                          LocalizationConstants.noSavedPaymentsFound
+                              .localized(),
                           style: OptiTextStyles.body),
                     )
                   : ListView(

@@ -5,4 +5,3 @@ abstract class PullToRefreshState {}
 class PullToRefreshLoadState extends PullToRefreshState {}
 
 class PullToRefreshLadingState extends PullToRefreshState {}
-

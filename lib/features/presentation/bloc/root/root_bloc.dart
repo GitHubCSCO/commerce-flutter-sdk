@@ -11,5 +11,8 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     on<RootHidePricingInventoryEvent>((event, emit) {
       emit(RootPricingInventoryReload());
     });
+    on<RootConfigChangeEvent>((event, emit) {
+      emit(RootConfigReload());
+    });
   }
 }

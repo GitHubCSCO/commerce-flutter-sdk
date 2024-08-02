@@ -23,14 +23,17 @@ class LoginCubit extends Cubit<LoginState> {
         emit(const LoginSuccessState(loginStatus: LoginStatus.loginSuccess));
         break;
       case LoginStatus.loginSuccessBiometric:
-        emit(const LoginSuccessState(loginStatus: LoginStatus.loginSuccessBiometric));
+        emit(const LoginSuccessState(
+            loginStatus: LoginStatus.loginSuccessBiometric));
         break;
       case LoginStatus.loginSuccessBillToShipTo:
-        final fullSession = (await loginUsecase.getCurrentSession()).getResultSuccessValue();
+        final fullSession =
+            (await loginUsecase.getCurrentSession()).getResultSuccessValue();
         if (fullSession == null) {
           emit(
             LoginFailureState(
-              title: LocalizationConstants.errorCommunicatingWithTheServer.localized(),
+              title: LocalizationConstants.errorCommunicatingWithTheServer
+                  .localized(),
               buttonText: LocalizationConstants.dismiss.localized(),
             ),
           );
@@ -40,7 +43,8 @@ class LoginCubit extends Cubit<LoginState> {
         final currentShipTo = fullSession.shipTo;
 
         if (currentBillTo?.id == null || currentShipTo?.id == null) {
-          emit(const LoginSuccessState(loginStatus: LoginStatus.loginSuccessBillToShipTo));
+          emit(const LoginSuccessState(
+              loginStatus: LoginStatus.loginSuccessBillToShipTo));
           return;
         }
 
@@ -53,39 +57,54 @@ class LoginCubit extends Cubit<LoginState> {
           exclude: ['excludeshowall'],
         );
 
-        final billToResultResponse = (await loginUsecase.getBillTo(parameters)).getResultSuccessValue();
+        final billToResultResponse =
+            (await loginUsecase.getBillTo(parameters)).getResultSuccessValue();
         if (billToResultResponse == null) {
           emit(
             LoginFailureState(
-              title: LocalizationConstants.errorCommunicatingWithTheServer.localized(),
+              title: LocalizationConstants.errorCommunicatingWithTheServer
+                  .localized(),
               buttonText: LocalizationConstants.dismiss.localized(),
             ),
           );
           return;
         }
-        final hasOneBillTo = billToResultResponse.billTos?.length == 1 && billToResultResponse.billTos?[0].id != null;
-        final isBillToTheSameAsCurrent = hasOneBillTo && billToResultResponse.billTos?[0].id == currentBillTo?.id;
+        final hasOneBillTo = billToResultResponse.billTos?.length == 1 &&
+            billToResultResponse.billTos?[0].id != null;
+        final isBillToTheSameAsCurrent = hasOneBillTo &&
+            billToResultResponse.billTos?[0].id == currentBillTo?.id;
 
         if (isBillToTheSameAsCurrent) {
           final shipToParameters = ShipTosQueryParameters(
             exclude: ['excludeshowall'],
           );
-          final shipToResultResponse = (await loginUsecase.getShipTo(currentBillTo?.id ?? '', shipToParameters)).getResultSuccessValue();
-          var hasOneShipTo = shipToResultResponse?.shipTos?.length == 1 && shipToResultResponse?.shipTos?[0].id != null;
-          var isShipToTheSameAsCurrent = hasOneShipTo && shipToResultResponse?.shipTos?[0].id == currentShipTo?.id;
+          final shipToResultResponse = (await loginUsecase.getShipTo(
+                  currentBillTo?.id ?? '', shipToParameters))
+              .getResultSuccessValue();
+          var hasOneShipTo = shipToResultResponse?.shipTos?.length == 1 &&
+              shipToResultResponse?.shipTos?[0].id != null;
+          var isShipToTheSameAsCurrent = hasOneShipTo &&
+              shipToResultResponse?.shipTos?[0].id == currentShipTo?.id;
           if (isShipToTheSameAsCurrent) {
-            emit(const LoginSuccessState(loginStatus: LoginStatus.loginSuccess));
+            emit(
+                const LoginSuccessState(loginStatus: LoginStatus.loginSuccess));
             return;
           }
         }
-        emit(const LoginSuccessState(loginStatus: LoginStatus.loginSuccessBillToShipTo));
+        emit(const LoginSuccessState(
+            loginStatus: LoginStatus.loginSuccessBillToShipTo));
         break;
       case LoginStatus.loginErrorOffline:
+        final title = await loginUsecase.getSiteMessage(
+            SiteMessageConstants.nameMobileAppAlertNoInternet,
+            SiteMessageConstants.defaultMobileAppAlertNoInternet);
+        final message = await loginUsecase.getSiteMessage(
+            SiteMessageConstants.nameMobileAppAlertNoInternetDescription,
+            SiteMessageConstants.defaultMobileAppAlertNoInternetDescription);
         emit(
           LoginFailureState(
-            title: SiteMessageConstants.defaultMobileAppAlertNoInternet,
-            message:
-                SiteMessageConstants.defaultMobileAppAlertNoInternetDescription,
+            title: title,
+            message: message,
             buttonText: LocalizationConstants.dismiss.localized(),
           ),
         );
@@ -123,14 +142,20 @@ class LoginCubit extends Cubit<LoginState> {
     final loginStatus = await loginUsecase.authenticateBiometrically(option);
     switch (loginStatus) {
       case LoginStatus.loginSuccessBillToShipTo:
-        emit(const LoginSuccessState(loginStatus: LoginStatus.loginSuccessBillToShipTo));
+        emit(const LoginSuccessState(
+            loginStatus: LoginStatus.loginSuccessBillToShipTo));
         break;
       case LoginStatus.loginErrorOffline:
+        final title = await loginUsecase.getSiteMessage(
+            SiteMessageConstants.nameMobileAppAlertNoInternet,
+            SiteMessageConstants.defaultMobileAppAlertNoInternet);
+        final message = await loginUsecase.getSiteMessage(
+            SiteMessageConstants.nameMobileAppAlertNoInternetDescription,
+            SiteMessageConstants.defaultMobileAppAlertNoInternetDescription);
         emit(
           LoginFailureState(
-            title: SiteMessageConstants.defaultMobileAppAlertNoInternet,
-            message:
-                SiteMessageConstants.defaultMobileAppAlertNoInternetDescription,
+            title: title,
+            message: message,
             buttonText: LocalizationConstants.dismiss.localized(),
           ),
         );
@@ -172,5 +197,4 @@ class LoginCubit extends Cubit<LoginState> {
   Future<void> onCancelLogin() async {
     await loginUsecase.loginCancel();
   }
-
 }

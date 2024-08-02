@@ -10,5 +10,4 @@ class ListViewDivider extends StatelessWidget {
       color: Colors.transparent,
     );
   }
-  
 }

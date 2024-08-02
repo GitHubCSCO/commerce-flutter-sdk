@@ -132,5 +132,4 @@ class DomainUsecase extends BaseUseCase {
   Future<void> loadRemoteSettings() async {
     await coreServiceProvider.getAppConfigurationService().loadRemoteSettings();
   }
-
 }

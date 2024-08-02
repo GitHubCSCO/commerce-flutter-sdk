@@ -29,8 +29,7 @@ class ActionListSectionWidget extends StatelessWidget {
           itemCount: actionsWidgetEntity.actions?.length ?? 0,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          separatorBuilder: (context, index) =>
-          const Divider(
+          separatorBuilder: (context, index) => const Divider(
             height: 0,
             thickness: 0.3,
           ),
