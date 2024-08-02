@@ -7,13 +7,17 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
+import 'package:commerce_flutter_app/features/presentation/components/single_selection_swatch_chip.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/style_trait_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/style_trait_state.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
@@ -120,6 +124,13 @@ class SearchProductListItemWidget extends StatelessWidget {
                     hidePricingEnable: hidePricingEnable,
                     hideInventoryEnable: hideInventoryEnable,
                   ),
+                  BlocProvider<StyleTraitCubit>(
+                      create: (context) {
+                        return sl<StyleTraitCubit>()
+                          ..initSelectedAvailableTraitValues(product)
+                          ..fetchStyleTraitValues(product);
+                      },
+                      child: getSwatcesWidget()),
                 ],
               ),
             ),
@@ -216,6 +227,41 @@ class SearchProductListItemWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: list,
+    );
+  }
+
+  Widget getSwatcesWidget() {
+    return BlocBuilder<StyleTraitCubit, StyleTraitState>(
+      builder: (context, state) {
+        if (state is StyleTraitStateLoaded &&
+            state.styleTraitsEntity.isNotEmpty) {
+          var styleTrait = context
+              .read<StyleTraitCubit>()
+              .getProductListColorTrait(state.styleTraitsEntity);
+
+          return Visibility(
+              visible: styleTrait != null,
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SingleSelectionSwatchChip<StyleValueEntity>(
+                        values: styleTrait!.styleValues!
+                            .map((e) => e.styleValue!)
+                            .toList(),
+                        shouldIgnoreTitleAndLabelName: true,
+                        maxItemsToShow: styleTrait.numberOfSwatchesVisible!,
+                        orientation: ChipOrientation.horizontal,
+                        selectedValue: context
+                                .read<StyleTraitCubit>()
+                                .selectedStyleValues?[
+                            styleTrait.selectedStyleValue?.styleValue
+                                ?.styleTraitValueId],
+                        onSelectionChanged: (StyleValueEntity? selection) {})
+                  ]));
+        }
+        return Container();
+      },
     );
   }
 

@@ -33,6 +33,9 @@ class StyleTraitCubit extends Cubit<StyleTraitState> {
   }
 
   Future<void> fetchStyleTraitValues(ProductEntity product) async {
+    if (product.styleTraits == null || product.styleTraits!.isEmpty) {
+      return;
+    }
     emit(StyleTraitStateLoading());
     this.product = product;
     final List<ProductDetailStyleTrait> styleTraitsEntity = [];
@@ -73,5 +76,19 @@ class StyleTraitCubit extends Cubit<StyleTraitState> {
 
   bool isStyledProductCreated() {
     return styledProductEntity != null;
+  }
+
+  ProductDetailStyleTrait? getProductListColorTrait(
+      List<ProductDetailStyleTrait> styleTraitsEntities) {
+    if (styleTraitsEntities.isNotEmpty) {
+      for (var styletrait in styleTraitsEntities) {
+        for (var styleValue in styletrait.styleValues!) {
+          if (styleValue.styleValue?.swatchType == "Color") {
+            return styletrait;
+          }
+        }
+      }
+    }
+    return null;
   }
 }

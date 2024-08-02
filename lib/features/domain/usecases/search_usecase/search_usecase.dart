@@ -88,7 +88,7 @@ class SearchUseCase extends BaseUseCase {
       categoryId: selectedCategoryId,
       previouslyPurchasedProducts: previouslyPurchased,
       stockedItemsOnly: selectedStockedItems,
-      expand: ["pricing", "facets", "brand"],
+      expand: ["pricing", "facets", "brand", "varianttraits", "styledproducts"],
       sort: selectedSortOrder?.value,
     );
     var result = await commerceAPIServiceProvider
