@@ -1,11 +1,10 @@
 name: commerce_flutter_app
 description: A new Flutter project.
-publish_to: 'none'
-version: 0.3.3+1
+publish_to: "none"
+version: 0.3.4+1
 
 environment:
-  sdk: '>=3.0.6 <4.0.0'
-
+  sdk: ">=3.0.6 <4.0.0"
 
 dependencies:
   flutter:
@@ -49,7 +48,6 @@ dependencies:
   firebase_analytics: ^11.2.0
   appcenter_analytics:
     path: ./appcenter_analytics
-
 
 dev_dependencies:
   build_runner: ^2.1.4
