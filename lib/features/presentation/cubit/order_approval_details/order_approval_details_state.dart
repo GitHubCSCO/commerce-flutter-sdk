@@ -7,6 +7,7 @@ class OrderApprovalDetailsState extends Equatable {
   final bool hasRestrictedCartLines;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
+  final String? errorMessage;
 
   const OrderApprovalDetailsState({
     required this.cart,
@@ -15,6 +16,7 @@ class OrderApprovalDetailsState extends Equatable {
     this.hasRestrictedCartLines = false,
     this.hidePricingEnable,
     this.hideInventoryEnable,
+    this.errorMessage,
   });
 
   @override
@@ -25,6 +27,7 @@ class OrderApprovalDetailsState extends Equatable {
         hasRestrictedCartLines,
         hidePricingEnable ?? false,
         hideInventoryEnable ?? false,
+        errorMessage ?? '',
       ];
 
   OrderApprovalDetailsState copyWith({
@@ -34,6 +37,7 @@ class OrderApprovalDetailsState extends Equatable {
     bool? hasRestrictedCartLines,
     bool? hidePricingEnable,
     bool? hideInventoryEnable,
+    String? errorMessage,
   }) {
     return OrderApprovalDetailsState(
       cart: cart ?? this.cart,
@@ -44,6 +48,7 @@ class OrderApprovalDetailsState extends Equatable {
           hasRestrictedCartLines ?? this.hasRestrictedCartLines,
       hidePricingEnable: hidePricingEnable,
       hideInventoryEnable: hideInventoryEnable,
+      errorMessage: errorMessage,
     );
   }
 }

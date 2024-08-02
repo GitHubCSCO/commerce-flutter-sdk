@@ -29,4 +29,12 @@ class BaseUseCase {
   Future<void> setUserID(String userId) async {
     await coreServiceProvider.getTrackingService().setUserID(userId);
   }
+
+  Future<String> getSiteMessage(
+      String messageName, String? defaultMessage) async {
+    var result = await commerceAPIServiceProvider
+        .getWebsiteService()
+        .getSiteMessage(messageName, defaultMessage: defaultMessage);
+    return result ?? defaultMessage ?? '';
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/settings/order_settings_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
@@ -101,9 +102,17 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     );
 
     if (result == OrderStatus.success) {
-      emit(state.copyWith(orderStatus: OrderStatus.reorderSuccess));
+      final message = await _orderUsecase.getSiteMessage(
+          SiteMessageConstants.nameAddToCartSuccess,
+          SiteMessageConstants.defaultValueAddToCartSuccess);
+      emit(state.copyWith(
+          orderStatus: OrderStatus.reorderSuccess, errorMessage: message));
     } else {
-      emit(state.copyWith(orderStatus: OrderStatus.reorderFailure));
+      final message = await _orderUsecase.getSiteMessage(
+          SiteMessageConstants.nameAddToCartFail,
+          SiteMessageConstants.defaultValueAddToCartFail);
+      emit(state.copyWith(
+          orderStatus: OrderStatus.reorderFailure, errorMessage: message));
     }
   }
 

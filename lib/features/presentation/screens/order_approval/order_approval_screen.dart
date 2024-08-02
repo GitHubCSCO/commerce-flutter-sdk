@@ -68,7 +68,7 @@ class OrderApprovalPage extends StatelessWidget {
             case OrderStatus.failure:
               return Center(
                 child: Text(
-                  SiteMessageConstants.defaultMobileAppAlertCommunicationError,
+                  state.errorMessage ?? '',
                 ),
               );
             default:

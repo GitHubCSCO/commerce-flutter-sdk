@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -22,5 +23,20 @@ class LanguageUsecase extends BaseUseCase {
     return await coreServiceProvider
         .getLocalizationService()
         .changeLanguage(language);
+  }
+
+  Future<void> loadDefaultSiteMessage() async {
+    SiteMessageConstants.valuePricingSignInForPrice = await getSiteMessage(
+        SiteMessageConstants.namePricingSignInForPrice,
+        SiteMessageConstants.defaultValuePricingSignInForPrice);
+    SiteMessageConstants.valuePricingZeroPriceMessage = await getSiteMessage(
+        SiteMessageConstants.namePricingZeroPriceMessage,
+        SiteMessageConstants.defaultValuePricingZeroPriceMessage);
+    SiteMessageConstants.valueRealTimePricingLoadFail = await getSiteMessage(
+        SiteMessageConstants.nameRealTimePricingLoadFail,
+        SiteMessageConstants.defaultValueRealTimePricingLoadFail);
+    SiteMessageConstants.valueRealTimeInventoryLoadFail = await getSiteMessage(
+        SiteMessageConstants.nameRealTimeInventoryLoadFail,
+        SiteMessageConstants.defaultValueRealTimeInventoryLoadFail);
   }
 }

@@ -59,8 +59,9 @@ class OrderListAddToListFailedState extends OrderListState {
 
 class OrderListAddToListSuccessState extends OrderListState {
   final WishListAddToCartCollection wishListLines;
+  final String? message;
 
-  OrderListAddToListSuccessState(this.wishListLines);
+  OrderListAddToListSuccessState(this.wishListLines, this.message);
 
   @override
   List<Object?> get props => [];

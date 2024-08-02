@@ -6,13 +6,16 @@ class SavedOrderDetailsState extends Equatable {
   final bool shouldShowWarehouseInventoryButton;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
+  final String? errorMessage;
 
-  const SavedOrderDetailsState(
-      {required this.cart,
-      required this.status,
-      required this.shouldShowWarehouseInventoryButton,
-      this.hidePricingEnable,
-      this.hideInventoryEnable});
+  const SavedOrderDetailsState({
+    required this.cart,
+    required this.status,
+    required this.shouldShowWarehouseInventoryButton,
+    this.hidePricingEnable,
+    this.hideInventoryEnable,
+    this.errorMessage,
+  });
 
   @override
   List<Object> get props => [
@@ -20,7 +23,8 @@ class SavedOrderDetailsState extends Equatable {
         status,
         shouldShowWarehouseInventoryButton,
         hidePricingEnable ?? false,
-        hideInventoryEnable ?? false
+        hideInventoryEnable ?? false,
+        errorMessage ?? '',
       ];
 
   SavedOrderDetailsState copyWith({
@@ -29,6 +33,7 @@ class SavedOrderDetailsState extends Equatable {
     bool? shouldShowWarehouseInventoryButton,
     bool? hidePricingEnable,
     bool? hideInventoryEnable,
+    String? errorMessage,
   }) {
     return SavedOrderDetailsState(
       cart: cart ?? this.cart,
@@ -37,6 +42,7 @@ class SavedOrderDetailsState extends Equatable {
           this.shouldShowWarehouseInventoryButton,
       hidePricingEnable: hidePricingEnable ?? this.hidePricingEnable,
       hideInventoryEnable: hideInventoryEnable ?? this.hideInventoryEnable,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -19,7 +20,14 @@ class WishListAddToCubit extends WishListCubit {
       emptyWishList: true,
     );
 
-    emit(state.copyWith(status: result));
+    if (result == WishListStatus.listItemAddToListSuccess) {
+      final message = await wishListUsecase.getSiteMessage(
+          SiteMessageConstants.nameWishListProductAdded,
+          SiteMessageConstants.defaultValueWishListProductAdded);
+      emit(state.copyWith(status: result, message: message));
+    } else {
+      emit(state.copyWith(status: result));
+    }
   }
 
   Future<void> loadSettings() async {
@@ -52,6 +60,13 @@ class WishListAddToCubit extends WishListCubit {
       addToCartCollection: listItems,
     );
 
-    emit(state.copyWith(status: result));
+    if (result == WishListStatus.listItemAddToListSuccess) {
+      final message = await wishListUsecase.getSiteMessage(
+          SiteMessageConstants.nameWishListProductAdded,
+          SiteMessageConstants.defaultValueWishListProductAdded);
+      emit(state.copyWith(status: result, message: message));
+    } else {
+      emit(state.copyWith(status: result));
+    }
   }
 }

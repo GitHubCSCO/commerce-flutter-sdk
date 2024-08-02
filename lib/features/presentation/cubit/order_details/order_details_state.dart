@@ -7,14 +7,17 @@ class OrderDetailsState extends Equatable {
   final OrderSettingsEntity orderSettings;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
+  final String? errorMessage;
 
-  const OrderDetailsState(
-      {required this.order,
-      required this.isReorderViewVisible,
-      required this.orderStatus,
-      required this.orderSettings,
-      this.hidePricingEnable,
-      this.hideInventoryEnable});
+  const OrderDetailsState({
+    required this.order,
+    required this.isReorderViewVisible,
+    required this.orderStatus,
+    required this.orderSettings,
+    this.hidePricingEnable,
+    this.hideInventoryEnable,
+    this.errorMessage,
+  });
 
   @override
   List<Object> get props => [
@@ -23,7 +26,8 @@ class OrderDetailsState extends Equatable {
         isReorderViewVisible,
         orderSettings,
         hidePricingEnable ?? false,
-        hideInventoryEnable ?? false
+        hideInventoryEnable ?? false,
+        errorMessage ?? ''
       ];
 
   OrderDetailsState copyWith({
@@ -33,6 +37,7 @@ class OrderDetailsState extends Equatable {
     OrderSettingsEntity? orderSettings,
     bool? hidePricingEnable,
     bool? hideInventoryEnable,
+    String? errorMessage,
   }) {
     return OrderDetailsState(
       order: order ?? this.order,
@@ -41,6 +46,7 @@ class OrderDetailsState extends Equatable {
       orderSettings: orderSettings ?? this.orderSettings,
       hidePricingEnable: hidePricingEnable ?? this.hidePricingEnable,
       hideInventoryEnable: hideInventoryEnable ?? this.hideInventoryEnable,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }

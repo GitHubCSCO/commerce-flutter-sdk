@@ -95,11 +95,16 @@ class LoginCubit extends Cubit<LoginState> {
             loginStatus: LoginStatus.loginSuccessBillToShipTo));
         break;
       case LoginStatus.loginErrorOffline:
+        final title = await loginUsecase.getSiteMessage(
+            SiteMessageConstants.nameMobileAppAlertNoInternet,
+            SiteMessageConstants.defaultMobileAppAlertNoInternet);
+        final message = await loginUsecase.getSiteMessage(
+            SiteMessageConstants.nameMobileAppAlertNoInternetDescription,
+            SiteMessageConstants.defaultMobileAppAlertNoInternetDescription);
         emit(
           LoginFailureState(
-            title: SiteMessageConstants.defaultMobileAppAlertNoInternet,
-            message:
-                SiteMessageConstants.defaultMobileAppAlertNoInternetDescription,
+            title: title,
+            message: message,
             buttonText: LocalizationConstants.dismiss.localized(),
           ),
         );
@@ -141,11 +146,16 @@ class LoginCubit extends Cubit<LoginState> {
             loginStatus: LoginStatus.loginSuccessBillToShipTo));
         break;
       case LoginStatus.loginErrorOffline:
+        final title = await loginUsecase.getSiteMessage(
+            SiteMessageConstants.nameMobileAppAlertNoInternet,
+            SiteMessageConstants.defaultMobileAppAlertNoInternet);
+        final message = await loginUsecase.getSiteMessage(
+            SiteMessageConstants.nameMobileAppAlertNoInternetDescription,
+            SiteMessageConstants.defaultMobileAppAlertNoInternetDescription);
         emit(
           LoginFailureState(
-            title: SiteMessageConstants.defaultMobileAppAlertNoInternet,
-            message:
-                SiteMessageConstants.defaultMobileAppAlertNoInternetDescription,
+            title: title,
+            message: message,
             buttonText: LocalizationConstants.dismiss.localized(),
           ),
         );

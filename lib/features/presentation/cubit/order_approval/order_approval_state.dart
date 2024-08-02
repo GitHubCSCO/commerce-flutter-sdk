@@ -5,20 +5,22 @@ class OrderApprovalState extends Equatable {
   final GetOrderApprovalCollectionResult orderApprovalCollectionModel;
   final OrderApprovalParameters orderApprovalParameters;
   final bool? hidePricingEnable;
+  final String? errorMessage;
 
-  const OrderApprovalState({
-    required this.status,
-    required this.orderApprovalCollectionModel,
-    required this.orderApprovalParameters,
-    this.hidePricingEnable,
-  });
+  const OrderApprovalState(
+      {required this.status,
+      required this.orderApprovalCollectionModel,
+      required this.orderApprovalParameters,
+      this.hidePricingEnable,
+      this.errorMessage});
 
   @override
   List<Object> get props => [
         status,
         orderApprovalCollectionModel,
         orderApprovalParameters,
-        hidePricingEnable ?? false
+        hidePricingEnable ?? false,
+        errorMessage ?? ''
       ];
 
   OrderApprovalState copyWith({
@@ -26,6 +28,7 @@ class OrderApprovalState extends Equatable {
     GetOrderApprovalCollectionResult? orderApprovalCollectionModel,
     OrderApprovalParameters? orderApprovalParameters,
     bool? hidePricingEnable,
+    String? errorMessage,
   }) {
     return OrderApprovalState(
       status: status ?? this.status,
@@ -34,6 +37,7 @@ class OrderApprovalState extends Equatable {
       orderApprovalParameters:
           orderApprovalParameters ?? this.orderApprovalParameters,
       hidePricingEnable: hidePricingEnable ?? this.hidePricingEnable,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }

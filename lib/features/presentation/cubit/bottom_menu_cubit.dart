@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/platform_usecase/platform_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,7 +16,10 @@ class BottomMenuCubit extends Cubit<BottomMenuState> {
     if (result != null) {
       emit(BottomMenuWebsiteUrlLoaded(result));
     } else {
-      emit(BottomMenuWebsiteUrlFailed());
+      final message = await _platformUseCase.getSiteMessage(
+          SiteMessageConstants.nameMobileAppAlertNoInternet,
+          SiteMessageConstants.defaultMobileAppAlertCommunicationError);
+      emit(BottomMenuWebsiteUrlFailed(message));
     }
   }
 }

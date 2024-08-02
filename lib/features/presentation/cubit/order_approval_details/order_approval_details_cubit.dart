@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
@@ -68,13 +69,19 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
 
     final result = await _orderApprovalUseCase.approveOrder(cart: state.cart);
 
-    emit(
-      state.copyWith(
-        status: result
-            ? OrderStatus.addToCartSuccess
-            : OrderStatus.addToCartFailure,
-      ),
-    );
+    if (result) {
+      emit(
+        state.copyWith(status: OrderStatus.addToCartSuccess),
+      );
+    } else {
+      final message = await _orderApprovalUseCase.getSiteMessage(
+          SiteMessageConstants.nameOrderApprovalBadRequest,
+          SiteMessageConstants.defaultVaLueOrderApprovalBadRequest);
+      emit(
+        state.copyWith(
+            status: OrderStatus.addToCartFailure, errorMessage: message),
+      );
+    }
   }
 
   Future<void> deleteOrder() async {
@@ -86,7 +93,11 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
     if (result) {
       emit(state.copyWith(status: OrderStatus.deleteCartSuccess));
     } else {
-      emit(state.copyWith(status: OrderStatus.deleteCartFailure));
+      final message = await _orderApprovalUseCase.getSiteMessage(
+          SiteMessageConstants.nameDeleteCart,
+          SiteMessageConstants.defaultValueDeleteCartFail);
+      emit(state.copyWith(
+          status: OrderStatus.deleteCartFailure, errorMessage: message));
     }
   }
 
