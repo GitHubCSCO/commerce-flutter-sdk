@@ -9,13 +9,13 @@ class QuoteLinePricingBreakItemEntity {
   bool? deletionEnabled;
   int id;
   QuoteLinePricingBreakItemEntity({
-     this.startQuantity,
-     this.startQuantityDisplay,
-     this.endQuantity,
-     this.endQuantityDisplay,
-     this.price,
-     this.priceDisplay,
-     this.endQuantityEnabled,
+    this.startQuantity,
+    this.startQuantityDisplay,
+    this.endQuantity,
+    this.endQuantityDisplay,
+    this.price,
+    this.priceDisplay,
+    this.endQuantityEnabled,
     this.deletionEnabled,
     required this.id,
   });

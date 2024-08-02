@@ -97,7 +97,8 @@ class VMIPage extends BaseDynamicContentScreen {
                   slivers: <Widget>[
                     SliverFillRemaining(
                       child: Center(
-                        child: Text(LocalizationConstants.errorLoadingShop.localized()),
+                        child: Text(
+                            LocalizationConstants.errorLoadingShop.localized()),
                       ),
                     ),
                   ],

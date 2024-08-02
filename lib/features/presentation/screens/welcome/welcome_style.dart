@@ -33,7 +33,8 @@ class WelcomeStyle {
 
   static const String optimizelyLogo = 'assets/images/optimizely-logo.png';
 
-  static const String welcomeBackgroundImage = 'assets/images/launch_screen_background@3x.png';
+  static const String welcomeBackgroundImage =
+      'assets/images/launch_screen_background@3x.png';
 
   static const double optimizelyLogoHeight = 120;
 

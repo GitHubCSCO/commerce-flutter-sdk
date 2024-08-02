@@ -134,12 +134,12 @@ class ProductDetailsAddToCartUseCase extends BaseUseCase {
       productDetailsAddtoCartEntity =
           productDetailsAddtoCartEntity.copyWith(subtotalValueText: '');
     } else if (productDetailsPriceEntity
-        ?.product?.pricing?.extendedUnitNetPriceDisplay ==
+            ?.product?.pricing?.extendedUnitNetPriceDisplay ==
         null) {
       productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
           subtotalValueText: SiteMessageConstants.valueRealTimePricingLoadFail);
     } else if (productDetailsPriceEntity
-        ?.product?.pricing?.extendedUnitNetPrice ==
+            ?.product?.pricing?.extendedUnitNetPrice ==
         0) {
       productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
           subtotalValueText: SiteMessageConstants.valuePricingZeroPriceMessage);
@@ -149,7 +149,8 @@ class ProductDetailsAddToCartUseCase extends BaseUseCase {
               ?.product?.pricing?.extendedUnitNetPriceDisplay);
     }
 
-    final hidePricingEnable = coreServiceProvider.getAppConfigurationService().hidePricingEnable;
+    final hidePricingEnable =
+        coreServiceProvider.getAppConfigurationService().hidePricingEnable;
 
     productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
       selectedUnitOfMeasureValueText:
@@ -161,5 +162,4 @@ class ProductDetailsAddToCartUseCase extends BaseUseCase {
 
     return productDetailsAddtoCartEntity;
   }
-
 }

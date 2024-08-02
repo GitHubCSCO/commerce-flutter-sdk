@@ -14,5 +14,4 @@ class SearchHistoryCubit extends Cubit<SearchHistoryState> {
     var result = await _searchHistoryUseCase.getSearchHistory();
     emit(SearchHistoryLoadedState(historyList: result));
   }
-
 }

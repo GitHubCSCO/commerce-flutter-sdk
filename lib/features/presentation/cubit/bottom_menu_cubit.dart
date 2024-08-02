@@ -4,11 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'bottom_menu_state.dart';
 
 class BottomMenuCubit extends Cubit<BottomMenuState> {
-
   final PlatformUseCase _platformUseCase;
 
-  BottomMenuCubit({required PlatformUseCase platformUseCase}) :
-        _platformUseCase = platformUseCase,
+  BottomMenuCubit({required PlatformUseCase platformUseCase})
+      : _platformUseCase = platformUseCase,
         super(BottomMenuInitial());
 
   Future<void> loadWebsiteUrl(String path) async {
@@ -19,5 +18,4 @@ class BottomMenuCubit extends Cubit<BottomMenuState> {
       emit(BottomMenuWebsiteUrlFailed());
     }
   }
-
 }

@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class CategoryListWidget<T extends BaseModel> extends StatelessWidget {
-
   final List<T> list;
   final Function(BuildContext, T) callback;
 
-  const CategoryListWidget({super.key, required this.list, required this.callback});
+  const CategoryListWidget(
+      {super.key, required this.list, required this.callback});
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +29,14 @@ class CategoryListWidget<T extends BaseModel> extends StatelessWidget {
       ),
     );
   }
-
 }
 
 class CategoryListItemWidget<T extends BaseModel> extends StatelessWidget {
-
   final T item;
   final Function(BuildContext, T) callback;
 
-  const CategoryListItemWidget({super.key, required this.item, required this.callback});
+  const CategoryListItemWidget(
+      {super.key, required this.item, required this.callback});
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +89,7 @@ class CategoryListItemWidget<T extends BaseModel> extends StatelessWidget {
                       // This function is called when the image fails to load
                       return Container(
                         color:
-                        OptiAppColors.backgroundGray, // Placeholder color
+                            OptiAppColors.backgroundGray, // Placeholder color
                         alignment: Alignment.center,
                         child: const Icon(
                           Icons.image, // Icon to display
@@ -117,5 +116,4 @@ class CategoryListItemWidget<T extends BaseModel> extends StatelessWidget {
       ),
     );
   }
-
 }

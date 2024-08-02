@@ -133,7 +133,8 @@ class SearchProductFilterWidget extends StatelessWidget {
     );
   }
 
-  ProductsQueryParameters _getProductsQueryParameters(ProductListType productListType) {
+  ProductsQueryParameters _getProductsQueryParameters(
+      ProductListType productListType) {
     String? selectedCategoryId;
     List<String>? selectedBrandIds;
     List<String>? selectedProductLineIds;
@@ -168,7 +169,6 @@ class SearchProductFilterWidget extends StatelessWidget {
       query: searchText,
     );
   }
-
 }
 
 void _showProductFilterWidget(

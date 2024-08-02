@@ -24,18 +24,19 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
     var result = await _languageUsecase.loadCurrentLanguage();
     switch (result) {
       case Success(value: final data):
-        if(data == true){
+        if (data == true) {
           emit(LanguageLoaded());
-        }else{
+        } else {
           emit(LanguageFailedToLoad("Language could not be loaded."));
         }
         break;
       case Failure(errorResponse: final errorResponse):
-        //send error to trackerservice 
+        //send error to trackerservice
         //await _commerceAPIServiceProvider.getTrackingService().trackError(errorResponse)
-        emit(LanguageFailedToLoad(errorResponse.extractErrorMessage() ?? "Language could not be loaded."));
+        emit(LanguageFailedToLoad(errorResponse.extractErrorMessage() ??
+            "Language could not be loaded."));
         break;
-    }  
+    }
   }
 
   Future<void> _onLanguageListLoadEvent(
@@ -44,16 +45,17 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
     var result = await _languageUsecase.loadLanguageList();
     switch (result) {
       case Success(value: final data):
-        if((data?.languages ?? []).isNotEmpty){
+        if ((data?.languages ?? []).isNotEmpty) {
           languages = data?.languages;
           var language = _languageUsecase.getCurrentLanguage();
           emit(LanguageListLoaded(languages, language));
-        }else{
+        } else {
           emit(LanguageFailedToLoad("Language could not be loaded."));
         }
         break;
       case Failure(errorResponse: final errorResponse):
-        emit(LanguageFailedToLoad(errorResponse.extractErrorMessage() ?? "Language could not be loaded."));
+        emit(LanguageFailedToLoad(errorResponse.extractErrorMessage() ??
+            "Language could not be loaded."));
         break;
     }
   }
@@ -64,17 +66,18 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
     var result = await _languageUsecase.changeLanguage(event.language);
     switch (result) {
       case Success(value: final data):
-        if(data == true){
+        if (data == true) {
           emit(LanguageChanged());
           var language = _languageUsecase.getCurrentLanguage();
           emit(LanguageListLoaded(languages, language));
-        }else{
+        } else {
           emit(LanguageFailedToLoad("Language could not be changed."));
         }
         break;
       case Failure(errorResponse: final errorResponse):
-        emit(LanguageFailedToLoad(errorResponse.extractErrorMessage() ?? "Language could not be changed."));
+        emit(LanguageFailedToLoad(errorResponse.extractErrorMessage() ??
+            "Language could not be changed."));
         break;
-    }  
+    }
   }
 }

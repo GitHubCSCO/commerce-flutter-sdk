@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 mixin BaseCheckout {
-
   AppBar buildAppBar(BuildContext context) {
     return AppBar(
       title: Text(LocalizationConstants.checkout.localized()),
@@ -51,16 +50,19 @@ mixin BaseCheckout {
     var info = '';
 
     if (promotions != null && promotions.length > 1) {
-      info = LocalizationConstants.promoCodesMore.localized()
+      info = LocalizationConstants.promoCodesMore
+          .localized()
           .format([lastPromotion?.name, promotions.length - 1]);
     } else {
-      info = LocalizationConstants.promoCodes.localized().format([lastPromotion?.name]);
+      info = LocalizationConstants.promoCodes
+          .localized()
+          .format([lastPromotion?.name]);
     }
 
     var amount = promotions?.fold(
         0,
-            (previousValue, element) =>
-        previousValue + (element.amount?.toInt() ?? 0));
+        (previousValue, element) =>
+            previousValue + (element.amount?.toInt() ?? 0));
 
     var currencySymbol = '';
 
@@ -131,5 +133,4 @@ mixin BaseCheckout {
       );
     }
   }
-
 }

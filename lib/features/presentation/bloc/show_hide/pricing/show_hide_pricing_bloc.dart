@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'show_hide_pricing_event.dart';
 part 'show_hide_pricing_state.dart';
 
-class ShowHidePricingBloc extends Bloc<ShowHidePricingEvent, ShowHidePricingState> {
-
+class ShowHidePricingBloc
+    extends Bloc<ShowHidePricingEvent, ShowHidePricingState> {
   final ShowHidePricingInventoryUseCase _showHidePricingInventoryUseCase;
 
   ShowHidePricingBloc(
@@ -18,7 +18,5 @@ class ShowHidePricingBloc extends Bloc<ShowHidePricingEvent, ShowHidePricingStat
       _showHidePricingInventoryUseCase.setHidePricingEnable(event.value);
       emit(ShowHidePricingChanged(event.value));
     });
-
   }
-
 }

@@ -6,7 +6,6 @@ class BrandCategoryInitial extends BrandCategoryState {}
 
 class BrandCategoryLoading extends BrandCategoryState {}
 
-
 class BrandSubCategoryLoaded extends BrandCategoryState {
   List<GetBrandSubCategoriesResult> list;
   BrandSubCategoryLoaded({required this.list});

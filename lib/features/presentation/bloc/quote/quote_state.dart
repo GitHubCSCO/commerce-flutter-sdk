@@ -10,9 +10,7 @@ class QuoteLoading extends QuoteState {}
 class QuoteLoaded extends QuoteState {
   final QuotePageType quotePageType;
   final List<QuoteDto>? quotes;
-  QuoteLoaded(
-      {required this.quotePageType,
-      required this.quotes});
+  QuoteLoaded({required this.quotePageType, required this.quotes});
 }
 
 class JobQuoteLoaded extends QuoteState {

@@ -19,7 +19,9 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
   Cart? cart;
   bool hasCheckout = true;
   ProductSettings? productSettings;
-  CartPageBloc({required CartUseCase cartUseCase, required PricingInventoryUseCase pricingInventoryUseCase})
+  CartPageBloc(
+      {required CartUseCase cartUseCase,
+      required PricingInventoryUseCase pricingInventoryUseCase})
       : _cartUseCase = cartUseCase,
         _pricingInventoryUseCase = pricingInventoryUseCase,
         super(CartPageInitialState()) {
@@ -66,8 +68,10 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
           var settingResult = await _cartUseCase.loadCartSetting();
           switch (settingResult) {
             case Success(value: final setting):
-              final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
-              final hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
+              final hidePricingEnable =
+                  _pricingInventoryUseCase.getHidePricingEnable();
+              final hideInventoryEnable =
+                  _pricingInventoryUseCase.getHideInventoryEnable();
 
               emit(CartPageLoadedState(
                 cart: data!,

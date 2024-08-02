@@ -72,8 +72,10 @@ class AddPromotionWidget extends StatelessWidget {
                               ),
                             )),
                         Input(
-                          label: LocalizationConstants.promotionalCode.localized(),
-                          hintText: LocalizationConstants.promotionalCode.localized(),
+                          label:
+                              LocalizationConstants.promotionalCode.localized(),
+                          hintText:
+                              LocalizationConstants.promotionalCode.localized(),
                           controller: promoCodeController,
                           onTapOutside: (_) {
                             FocusManager.instance.primaryFocus?.unfocus();
