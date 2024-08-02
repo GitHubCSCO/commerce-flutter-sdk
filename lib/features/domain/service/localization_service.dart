@@ -3,14 +3,13 @@ import 'package:commerce_flutter_app/core/exceptions/language_exceptions.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/localization_interface.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-
 class LocalizationService implements ILocalizationService {
   static const String _translationDictionaryKey = "translation_dictionary";
 
-  final Map<String,String> _translationDictionary = {};
+  final Map<String, String> _translationDictionary = {};
 
   Language? _currentLanguage;
-  
+
   final ICommerceAPIServiceProvider _commerceAPIServiceProvider;
 
   LocalizationService({
@@ -19,32 +18,44 @@ class LocalizationService implements ILocalizationService {
 
   @override
   Future<Result<bool, ErrorResponse>> changeLanguage(Language? language) async {
-    if (language == null){
-        return Failure(ErrorResponse(exception: ChangeLanguageException( message: "Provided language is null in changeLanguage")));
+    if (language == null) {
+      return Failure(ErrorResponse(
+          exception: ChangeLanguageException(
+              message: "Provided language is null in changeLanguage")));
     }
     var translationDictionaryLoaded = await loadTranslationDictionary(language);
-    if(translationDictionaryLoaded){
-      var sessionResult = await _commerceAPIServiceProvider.getSessionService().getCurrentSession();
+    if (translationDictionaryLoaded) {
+      var sessionResult = await _commerceAPIServiceProvider
+          .getSessionService()
+          .getCurrentSession();
       switch (sessionResult) {
         case Success(value: final session):
           {
-            if(session==null){
-              return Failure(ErrorResponse(exception: ChangeLanguageException( message: "Session is null during changeLanguage")));
-            }else{
+            if (session == null) {
+              return Failure(ErrorResponse(
+                  exception: ChangeLanguageException(
+                      message: "Session is null during changeLanguage")));
+            } else {
               session.language = language;
-              var patchSessionResult = await _commerceAPIServiceProvider.getSessionService().patchSession(session);
-              switch(patchSessionResult){
+              var patchSessionResult = await _commerceAPIServiceProvider
+                  .getSessionService()
+                  .patchSession(session);
+              switch (patchSessionResult) {
                 case Success(value: final patchedSession):
-                {
-                  if(patchedSession==null || patchedSession.language?.id != language.id){
-                    return Failure(ErrorResponse(exception: ChangeLanguageException( message: "Session could not be patched with languageCode: ${language.languageCode} ${language.toJson().toString()}")));
+                  {
+                    if (patchedSession == null ||
+                        patchedSession.language?.id != language.id) {
+                      return Failure(ErrorResponse(
+                          exception: ChangeLanguageException(
+                              message:
+                                  "Session could not be patched with languageCode: ${language.languageCode} ${language.toJson().toString()}")));
+                    }
+                    _currentLanguage = language;
                   }
-                  _currentLanguage = language;
-                }
                 case Failure(errorResponse: final errorResponse):
-                {
-                  return Failure(errorResponse);
-                }
+                  {
+                    return Failure(errorResponse);
+                  }
               }
             }
           }
@@ -63,21 +74,26 @@ class LocalizationService implements ILocalizationService {
   }
 
   /// Loads the current language setting.
-  /// 
+  ///
   /// Throws a [LoadLanguageException] if the session cannot be loaded.
   @override
   Future<Result<bool, ErrorResponse>> loadCurrentLanguage() async {
-    var sessionResult = await _commerceAPIServiceProvider.getSessionService().getCurrentSession();
+    var sessionResult = await _commerceAPIServiceProvider
+        .getSessionService()
+        .getCurrentSession();
     switch (sessionResult) {
       case Success(value: final session):
         {
-          if(session==null){
-            return Failure(ErrorResponse(exception: LoadLanguageException(message: "Could not load session to get the language")));
-          }else{
-            var translationDictionaryLoaded = await loadTranslationDictionary(session.language);
-            if(translationDictionaryLoaded){
+          if (session == null) {
+            return Failure(ErrorResponse(
+                exception: LoadLanguageException(
+                    message: "Could not load session to get the language")));
+          } else {
+            var translationDictionaryLoaded =
+                await loadTranslationDictionary(session.language);
+            if (translationDictionaryLoaded) {
               _currentLanguage = session.language;
-            }else{
+            } else {
               await loadPersistedTranslationDictionaryIfAvailable();
             }
             return const Success(true);
@@ -92,31 +108,39 @@ class LocalizationService implements ILocalizationService {
 
   @override
   Future<void> removeCurrentLanguage() async {
-    await _commerceAPIServiceProvider.getCacheService().removePersistedData(_translationDictionaryKey);
+    await _commerceAPIServiceProvider
+        .getCacheService()
+        .removePersistedData(_translationDictionaryKey);
     _translationDictionary.clear();
     _currentLanguage = null;
   }
 
   Future<void> loadPersistedTranslationDictionaryIfAvailable() async {
-    var persistedTranslationDictionary = await _commerceAPIServiceProvider.getCacheService().loadPersistedData<Map<String, String>?>(_translationDictionaryKey);
-    if (persistedTranslationDictionary != null && persistedTranslationDictionary.isNotEmpty){
+    var persistedTranslationDictionary = await _commerceAPIServiceProvider
+        .getCacheService()
+        .loadPersistedData<Map<String, String>?>(_translationDictionaryKey);
+    if (persistedTranslationDictionary != null &&
+        persistedTranslationDictionary.isNotEmpty) {
       _translationDictionary.clear();
       _translationDictionary.addAll(persistedTranslationDictionary);
-    } 
+    }
   }
-  
+
   Future<bool> loadTranslationDictionary(Language? language) async {
     _translationDictionary.clear();
 
     int count = 0;
-    int maxLength = _commerceAPIServiceProvider.getTranslationService().getMaxLengthOfTranslationText();
+    int maxLength = _commerceAPIServiceProvider
+        .getTranslationService()
+        .getMaxLengthOfTranslationText();
     var sbFieldValue = StringBuffer();
 
     for (var k in LocalizationConstants.values) {
       count++;
-      if(sbFieldValue.length + k.keyword.length >= maxLength){
+      if (sbFieldValue.length + k.keyword.length >= maxLength) {
         //remove the last character ',' from string buffer
-        var modifiedString = sbFieldValue.toString().substring(0, sbFieldValue.length - 1);
+        var modifiedString =
+            sbFieldValue.toString().substring(0, sbFieldValue.length - 1);
         await fetchTranslations(language, modifiedString, count);
         sbFieldValue.clear();
         count = 1;
@@ -125,41 +149,46 @@ class LocalizationService implements ILocalizationService {
       sbFieldValue.write(",");
     }
 
-    if (sbFieldValue.length > 1)
-    {
-      var modifiedString = sbFieldValue.toString().substring(0, sbFieldValue.length - 1);
+    if (sbFieldValue.length > 1) {
+      var modifiedString =
+          sbFieldValue.toString().substring(0, sbFieldValue.length - 1);
       await fetchTranslations(language, modifiedString, count);
     }
 
-    await _commerceAPIServiceProvider.getCacheService().persistData(_translationDictionaryKey, _translationDictionary);
+    await _commerceAPIServiceProvider
+        .getCacheService()
+        .persistData(_translationDictionaryKey, _translationDictionary);
 
     return _translationDictionary.isNotEmpty;
   }
 
-  Future<void> fetchTranslations(Language? language, String keywords, int pageSize) async {
-    var translationParameters = TranslationQueryParameters
-    (
+  Future<void> fetchTranslations(
+      Language? language, String keywords, int pageSize) async {
+    var translationParameters = TranslationQueryParameters(
       languageCode: language?.languageCode,
       source: 'Label',
       keyword: keywords,
       pageSize: pageSize,
     );
-    
-    var result = await _commerceAPIServiceProvider.getTranslationService().getTranslations(
-      parameters: translationParameters
-    );    
+
+    var result = await _commerceAPIServiceProvider
+        .getTranslationService()
+        .getTranslations(parameters: translationParameters);
 
     switch (result) {
       case Success(value: final value):
         {
-          if(value==null){
-            // send error to trackerservice 
+          if (value == null) {
+            // send error to trackerservice
             // await _commerceAPIServiceProvider.getTrackingService().trackError(GetTranslationException(message:"Could not load translation for language (${language?.languageCode}) with $keywords"));
-          }else{
-            if(value.translationDictionaries!=null){
+          } else {
+            if (value.translationDictionaries != null) {
               for (var item in value.translationDictionaries!) {
-                if(item.keyword.isNullOrEmpty == false && item.translation.isNullOrEmpty == false){
-                  _translationDictionary.update(item.keyword!, (value) => item.translation!, ifAbsent: () => item.translation!);
+                if (item.keyword.isNullOrEmpty == false &&
+                    item.translation.isNullOrEmpty == false) {
+                  _translationDictionary.update(
+                      item.keyword!, (value) => item.translation!,
+                      ifAbsent: () => item.translation!);
                 }
               }
             }
@@ -167,12 +196,12 @@ class LocalizationService implements ILocalizationService {
         }
       case Failure(errorResponse: final errorResponse):
         {
-          //send error to trackerservice 
+          //send error to trackerservice
           //await _commerceAPIServiceProvider.getTrackingService().trackError(errorResponse)
         }
     }
   }
 
   @override
-  Map<String, String>? get translationDictionary => _translationDictionary;  
+  Map<String, String>? get translationDictionary => _translationDictionary;
 }

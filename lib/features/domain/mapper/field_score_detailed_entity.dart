@@ -15,7 +15,6 @@ class FieldScoreDetailedEntityMapper {
 
   FieldScoreDetailed toModel(FieldScoreDetailedEntity entity) =>
       FieldScoreDetailed(
-
         boost: entity.boost,
         matchText: entity.matchText,
         termFrequencyNormalized: entity.termFrequencyNormalized,

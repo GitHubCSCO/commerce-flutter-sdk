@@ -3,7 +3,7 @@ import 'package:commerce_flutter_app/features/domain/mapper/style_value_mapper.d
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class StyleTraitEntityMapper {
-  StyleTraitEntity toEntity(StyleTrait model) => StyleTraitEntity(
+  static StyleTraitEntity toEntity(StyleTrait model) => StyleTraitEntity(
         styleTraitId: model.styleTraitId,
         name: model.name,
         nameDisplay: model.nameDisplay,
@@ -13,15 +13,15 @@ class StyleTraitEntityMapper {
         numberOfSwatchesVisible: model.numberOfSwatchesVisible,
         displayTextWithSwatch: model.displayTextWithSwatch,
         styleValues: model.styleValues
-            ?.map((styleValue) => StyleValueEntityMapper().toEntity(styleValue))
+            ?.map((styleValue) => StyleValueEntityMapper.toEntity(styleValue))
             .toList(),
         id: model.id,
         traitValues: model.traitValues
-            ?.map((traitValue) => StyleValueEntityMapper().toEntity(traitValue))
+            ?.map((traitValue) => StyleValueEntityMapper.toEntity(traitValue))
             .toList(),
       );
 
-  StyleTrait toModel(StyleTraitEntity entity) => StyleTrait(
+  static StyleTrait toModel(StyleTraitEntity entity) => StyleTrait(
         styleTraitId: entity.styleTraitId,
         name: entity.name,
         nameDisplay: entity.nameDisplay,
@@ -29,12 +29,12 @@ class StyleTraitEntityMapper {
         sortOrder: entity.sortOrder,
         styleValues: entity.styleValues
             ?.map((styleValueEntity) =>
-                StyleValueEntityMapper().toModel(styleValueEntity))
+                StyleValueEntityMapper.toModel(styleValueEntity))
             .toList(),
         id: entity.id,
         traitValues: entity.traitValues
             ?.map((traitValueEntity) =>
-                StyleValueEntityMapper().toModel(traitValueEntity))
+                StyleValueEntityMapper.toModel(traitValueEntity))
             .toList(),
       );
 }

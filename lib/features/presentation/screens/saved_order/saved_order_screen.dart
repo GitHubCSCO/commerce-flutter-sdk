@@ -106,7 +106,8 @@ class SavedOrderPage extends StatelessWidget {
                                   state.cartCollectionModel.carts ?? [],
                             )
                           : Center(
-                              child: Text(LocalizationConstants.noSavedOrders.localized()),
+                              child: Text(LocalizationConstants.noSavedOrders
+                                  .localized()),
                             ),
                     ),
                   ],

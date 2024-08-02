@@ -128,8 +128,8 @@ class ProductDetailsStyleTraitsUseCase {
             styleTraitId: styleTrait.id,
             valueDisplay: LocalizationConstants.selectSomething.localized() +
                 styleTrait.nameDisplay!),
-        displayName:
-            LocalizationConstants.selectSomething.localized() + styleTrait.nameDisplay!,
+        displayName: LocalizationConstants.selectSomething.localized() +
+            styleTrait.nameDisplay!,
         isAvailable: true);
   }
 

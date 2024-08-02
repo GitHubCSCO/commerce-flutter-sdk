@@ -35,15 +35,15 @@ class ProductCarouselCubit extends Cubit<ProductCarouselState> {
           isPricingLoading: true));
 
       final productPricingEnabled =
-      await _pricingInventoryUseCase.getProductPricingEnable();
+          await _pricingInventoryUseCase.getProductPricingEnable();
 
       final productList = widgetEntity.productCarouselList
-          ?.map((productCarousel) => productCarousel.product)
-          .toList() ??
+              ?.map((productCarousel) => productCarousel.product)
+              .toList() ??
           [];
 
-      final realTimeResult = await _pricingInventoryUseCase
-          .getRealtimeSupportType();
+      final realTimeResult =
+          await _pricingInventoryUseCase.getRealtimeSupportType();
 
       if (productPricingEnabled && realTimeResult != null) {
         if (realTimeResult == RealTimeSupport.RealTimePricingOnly ||
@@ -51,19 +51,18 @@ class ProductCarouselCubit extends Cubit<ProductCarouselState> {
                 RealTimeSupport.RealTimePricingWithInventoryIncluded ||
             realTimeResult == RealTimeSupport.RealTimePricingAndInventory) {
           final productPriceParameters = productList
-              .map((product) =>
-              ProductPriceQueryParameter(
-                productId: product!.id,
-                qtyOrdered: 1,
-                unitOfMeasure: product.unitOfMeasure,
-              ))
+              .map((product) => ProductPriceQueryParameter(
+                    productId: product!.id,
+                    qtyOrdered: 1,
+                    unitOfMeasure: product.unitOfMeasure,
+                  ))
               .toList();
 
           final parameter = RealTimePricingParameters(
               productPriceParameters: productPriceParameters);
 
           final pricingResult =
-          await _pricingInventoryUseCase.getRealTimePricing(parameter);
+              await _pricingInventoryUseCase.getRealTimePricing(parameter);
 
           switch (pricingResult) {
             case Success():
@@ -71,7 +70,7 @@ class ProductCarouselCubit extends Cubit<ProductCarouselState> {
                 var matchingPrice = pricingResult.value?.realTimePricingResults
                     ?.firstWhere((o) => o.productId == productEntity!.id);
                 productEntity?.pricing =
-                    ProductPriceEntityMapper().toEntity(matchingPrice);
+                    ProductPriceEntityMapper.toEntity(matchingPrice);
               }
             case Failure():
             default:

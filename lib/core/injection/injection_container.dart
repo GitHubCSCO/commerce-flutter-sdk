@@ -48,6 +48,13 @@ import 'package:commerce_flutter_app/features/domain/usecases/promo_code_usecase
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/count_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/order_pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/quick_order_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_all_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_communication_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_confirmation_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_details_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_pricing_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/request_quote_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/remote_config/remote_config_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/saved_order/saved_order_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/saved_payments_usecase/saved_payments_usecase.dart';
@@ -55,6 +62,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/search_history_use
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_cms_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/add_to_cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/selection_usecase/selection_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/show_hide_pricing_inventory_usecase/show_hide_pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_location_note_usecase.dart';
@@ -87,6 +95,13 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/auto_complete/quick_order_auto_complete_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/quote/job_quote_details/job_quote_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_communication/quote_communication_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_details/quote_details_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_pricing/quote_pricing_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/quote/request_quote/request_quote_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/quote/request_quote_selection/request_quote_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/remote_config/remote_config_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
@@ -139,11 +154,16 @@ import 'package:commerce_flutter_app/features/presentation/cubit/product_carouse
 import 'package:commerce_flutter_app/features/presentation/cubit/product_list_filter/product_list_filter_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/quote/quote_all_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/quote/quote_confirmation/quote_confirmation_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/quote_filter/quote_filter_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order/saved_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_details/saved_order_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_payments/saved_payments_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/selection/sales_rep_selection/sales_rep_selection_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/selection/user_selection/user_selection_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/vmi_location_note/vmi_location_note_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_add_to/wish_list_add_to_cubit.dart';
@@ -254,17 +274,15 @@ Future<void> initInjectionContainer() async {
         SavedOrderCubit(savedOrderUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => SavedOrderUsecase())
     ..registerFactory(() => SavedOrderDetailsCubit(
-          savedOrderUsecase: sl(), pricingInventoryUseCase: sl()))
+        savedOrderUsecase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => SavedOrderHandlerCubit(savedOrderUsecase: sl()))
 
     //order approval
     ..registerFactory(() => OrderApprovalUseCase())
-    ..registerFactory(() =>
-      OrderApprovalCubit(
-          orderApprovalUseCase: sl(), pricingInventoryUseCase: sl()))
-    ..registerFactory(() =>
-          OrderApprovalDetailsCubit(
-              orderApprovalUseCase: sl(), pricingInventoryUseCase: sl()))
+    ..registerFactory(() => OrderApprovalCubit(
+        orderApprovalUseCase: sl(), pricingInventoryUseCase: sl()))
+    ..registerFactory(() => OrderApprovalDetailsCubit(
+        orderApprovalUseCase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(
         () => OrderApprovalFilterCubit(orderApprovalUseCase: sl()))
     ..registerFactory(() => OrderApprovalHandlerCubit())
@@ -316,6 +334,54 @@ Future<void> initInjectionContainer() async {
     //account
     ..registerFactory(() => RemoteConfigCubit(remoteConfigUsecase: sl()))
     ..registerFactory(() => RemoteConfigUsecase())
+
+    // my quote
+    ..registerFactory(() => QuoteBloc(quoteUsecase: sl()))
+    ..registerFactory(() => QuoteUsecase())
+
+    // quote filter
+    ..registerFactory(() => QuoteFilterCubit(quoteUseCase: sl()))
+
+    // select user
+    ..registerFactory(() => UserSelectionCubit(selectionUsecase: sl()))
+    ..registerFactory(() => SelectionUsecase())
+
+    // select sales rep
+    ..registerFactory(() => SalesRepSelectionCubit(selectionUsecase: sl()))
+
+    // request quote
+    ..registerFactory(() => RequestQuoteBloc(requestQuoteUsecase: sl()))
+    ..registerFactory(() => RequestQuoteUsecase())
+
+    // request quote selection
+    ..registerFactory(() => RequestQuoteSelectionBloc())
+
+    //quote details
+    ..registerFactory(() => QuoteDetailsBloc(
+        quoteDetailsUsecase: sl(), pricingInventoryUseCase: sl()))
+    ..registerFactory(() => QuoteDetailsUsecase())
+
+    // job quote details
+    ..registerFactory(() => JobQuoteDetailsCubit(quoteDetailsUsecase: sl()))
+
+    // quote communication
+    ..registerFactory(
+        () => QuoteCommunicationBloc(quoteCommunicationUsecase: sl()))
+    ..registerFactory(() => QuoteCommunicationUsecase())
+
+    // quote all
+    ..registerFactory(() => QuoteAllCubit(quoteAllUsecase: sl()))
+    ..registerFactory(() => QuoteAllUsecase())
+
+    // quote pricing
+    ..registerFactory(() => QuotePricingBloc(
+        quotePricingUsecase: sl(), pricingInventoryUseCase: sl()))
+    ..registerFactory(() => QuotePricingUsecase())
+
+    // quote confirmation
+    ..registerFactory(() => QuoteConfirmationCubit(
+        quoteConfirmationUsecase: sl(), pricingInventoryUseCase: sl()))
+    ..registerFactory(() => QuoteConfirmationUsecase())
 
     //shop category
     ..registerFactory(() => CategoryBloc(categoryUseCase: sl()))
@@ -464,8 +530,10 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => CarouselIndicatorCubit())
 
     //show/hide pricing inventory
-    ..registerLazySingleton(() => ShowHidePricingBloc(showHidePricingInventoryUseCase: sl()))
-    ..registerLazySingleton(() => ShowHideInventoryBloc(showHidePricingInventoryUseCase: sl()))
+    ..registerLazySingleton(
+        () => ShowHidePricingBloc(showHidePricingInventoryUseCase: sl()))
+    ..registerLazySingleton(
+        () => ShowHideInventoryBloc(showHidePricingInventoryUseCase: sl()))
     ..registerFactory(() => ShowHidePricingInventoryUseCase())
 
     //action link
@@ -558,6 +626,8 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<ISecureStorageService>(() => SecureStorageService())
     ..registerLazySingleton<ILocalStorageService>(() => LocalStorageService())
     ..registerLazySingleton<IGeoLocationService>(() => GeoLocationService())
+    ..registerLazySingleton<IMessageService>(() => MessageService(
+        cacheService: sl(), networkService: sl(), clientService: sl()))
     ..registerLazySingleton<ISettingsService>(() => SettingsService(
           cacheService: sl(),
           clientService: sl(),
@@ -629,14 +699,18 @@ Future<void> initInjectionContainer() async {
       await service.init();
       return service;
     })
+    ..registerLazySingleton<IQuoteService>(() => QuoteService(
+        clientService: sl(), cacheService: sl(), networkService: sl()))
+    ..registerLazySingleton<IJobQuoteService>(() => JobQuoteService(
+        clientService: sl(), cacheService: sl(), networkService: sl()))
     ..registerLazySingleton<ITranslationService>(() => TranslationService(
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
-    ))
+        ))
     ..registerLazySingleton<ILocalizationService>(() => LocalizationService(
           commerceAPIServiceProvider: sl(),
-    ))
+        ))
     ..registerSingletonAsync<IAppConfigurationService>(() async {
       final service = AppConfigurationService(
         commerceAPIServiceProvider: sl(),

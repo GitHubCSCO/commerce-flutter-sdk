@@ -88,8 +88,7 @@ class AppCenterApi {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.appcenter_analytics.AppCenterApi.isEnabled', codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(null) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -113,10 +112,10 @@ class AppCenterApi {
 
   Future<bool> isConfigured() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.appcenter_analytics.AppCenterApi.isConfigured', codec,
+        'dev.flutter.pigeon.appcenter_analytics.AppCenterApi.isConfigured',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(null) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -140,10 +139,10 @@ class AppCenterApi {
 
   Future<String> getInstallId() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.appcenter_analytics.AppCenterApi.getInstallId', codec,
+        'dev.flutter.pigeon.appcenter_analytics.AppCenterApi.getInstallId',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(null) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -167,10 +166,10 @@ class AppCenterApi {
 
   Future<bool> isRunningInAppCenterTestCloud() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.appcenter_analytics.AppCenterApi.isRunningInAppCenterTestCloud', codec,
+        'dev.flutter.pigeon.appcenter_analytics.AppCenterApi.isRunningInAppCenterTestCloud',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(null) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -203,12 +202,14 @@ class AppCenterAnalyticsApi {
 
   static const MessageCodec<Object?> codec = StandardMessageCodec();
 
-  Future<void> trackEvent(String arg_name, Map<String?, String?>? arg_properties, int? arg_flags) async {
+  Future<void> trackEvent(String arg_name,
+      Map<String?, String?>? arg_properties, int? arg_flags) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.appcenter_analytics.AppCenterAnalyticsApi.trackEvent', codec,
+        'dev.flutter.pigeon.appcenter_analytics.AppCenterAnalyticsApi.trackEvent',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_name, arg_properties, arg_flags]) as List<Object?>?;
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_name, arg_properties, arg_flags]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -227,10 +228,10 @@ class AppCenterAnalyticsApi {
 
   Future<void> pause() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.appcenter_analytics.AppCenterAnalyticsApi.pause', codec,
+        'dev.flutter.pigeon.appcenter_analytics.AppCenterAnalyticsApi.pause',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(null) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -249,10 +250,10 @@ class AppCenterAnalyticsApi {
 
   Future<void> resume() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.appcenter_analytics.AppCenterAnalyticsApi.resume', codec,
+        'dev.flutter.pigeon.appcenter_analytics.AppCenterAnalyticsApi.resume',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(null) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -271,7 +272,8 @@ class AppCenterAnalyticsApi {
 
   Future<void> analyticsSetEnabled(bool arg_enabled) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.appcenter_analytics.AppCenterAnalyticsApi.analyticsSetEnabled', codec,
+        'dev.flutter.pigeon.appcenter_analytics.AppCenterAnalyticsApi.analyticsSetEnabled',
+        codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_enabled]) as List<Object?>?;
@@ -293,10 +295,10 @@ class AppCenterAnalyticsApi {
 
   Future<bool> analyticsIsEnabled() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.appcenter_analytics.AppCenterAnalyticsApi.analyticsIsEnabled', codec,
+        'dev.flutter.pigeon.appcenter_analytics.AppCenterAnalyticsApi.analyticsIsEnabled',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(null) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -320,10 +322,10 @@ class AppCenterAnalyticsApi {
 
   Future<void> enableManualSessionTracker() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.appcenter_analytics.AppCenterAnalyticsApi.enableManualSessionTracker', codec,
+        'dev.flutter.pigeon.appcenter_analytics.AppCenterAnalyticsApi.enableManualSessionTracker',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(null) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -342,10 +344,10 @@ class AppCenterAnalyticsApi {
 
   Future<void> startSession() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.appcenter_analytics.AppCenterAnalyticsApi.startSession', codec,
+        'dev.flutter.pigeon.appcenter_analytics.AppCenterAnalyticsApi.startSession',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(null) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -364,7 +366,8 @@ class AppCenterAnalyticsApi {
 
   Future<bool> setTransmissionInterval(int arg_seconds) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.appcenter_analytics.AppCenterAnalyticsApi.setTransmissionInterval', codec,
+        'dev.flutter.pigeon.appcenter_analytics.AppCenterAnalyticsApi.setTransmissionInterval',
+        codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_seconds]) as List<Object?>?;
@@ -402,10 +405,10 @@ class AppCenterCrashesApi {
 
   Future<void> generateTestCrash() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.appcenter_analytics.AppCenterCrashesApi.generateTestCrash', codec,
+        'dev.flutter.pigeon.appcenter_analytics.AppCenterCrashesApi.generateTestCrash',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(null) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -424,10 +427,10 @@ class AppCenterCrashesApi {
 
   Future<bool> hasReceivedMemoryWarningInLastSession() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.appcenter_analytics.AppCenterCrashesApi.hasReceivedMemoryWarningInLastSession', codec,
+        'dev.flutter.pigeon.appcenter_analytics.AppCenterCrashesApi.hasReceivedMemoryWarningInLastSession',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(null) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -451,10 +454,10 @@ class AppCenterCrashesApi {
 
   Future<bool> hasCrashedInLastSession() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.appcenter_analytics.AppCenterCrashesApi.hasCrashedInLastSession', codec,
+        'dev.flutter.pigeon.appcenter_analytics.AppCenterCrashesApi.hasCrashedInLastSession',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(null) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -478,7 +481,8 @@ class AppCenterCrashesApi {
 
   Future<void> crashesSetEnabled(bool arg_enabled) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.appcenter_analytics.AppCenterCrashesApi.crashesSetEnabled', codec,
+        'dev.flutter.pigeon.appcenter_analytics.AppCenterCrashesApi.crashesSetEnabled',
+        codec,
         binaryMessenger: _binaryMessenger);
     final List<Object?>? replyList =
         await channel.send(<Object?>[arg_enabled]) as List<Object?>?;
@@ -500,10 +504,10 @@ class AppCenterCrashesApi {
 
   Future<bool> crashesIsEnabled() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.appcenter_analytics.AppCenterCrashesApi.crashesIsEnabled', codec,
+        'dev.flutter.pigeon.appcenter_analytics.AppCenterCrashesApi.crashesIsEnabled',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(null) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -525,12 +529,15 @@ class AppCenterCrashesApi {
     }
   }
 
-  Future<void> trackException(String arg_message, String? arg_type, String? arg_stackTrace, Map<String?, String?>? arg_properties) async {
+  Future<void> trackException(String arg_message, String? arg_type,
+      String? arg_stackTrace, Map<String?, String?>? arg_properties) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.appcenter_analytics.AppCenterCrashesApi.trackException', codec,
+        'dev.flutter.pigeon.appcenter_analytics.AppCenterCrashesApi.trackException',
+        codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_message, arg_type, arg_stackTrace, arg_properties]) as List<Object?>?;
+    final List<Object?>? replyList = await channel.send(
+            <Object?>[arg_message, arg_type, arg_stackTrace, arg_properties])
+        as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',

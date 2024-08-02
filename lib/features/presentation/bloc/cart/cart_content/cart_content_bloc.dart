@@ -22,7 +22,7 @@ class CartContentBloc extends Bloc<CartContentEvent, CartContentState> {
     var cartLineEntity = event.cartLineEntity;
 
     final result = await _contentUseCase
-        .updateCartLine(CartLineEntityMapper().toModel(cartLineEntity));
+        .updateCartLine(CartLineEntityMapper.toModel(cartLineEntity));
 
     switch (result) {
       case Success(value: final data):

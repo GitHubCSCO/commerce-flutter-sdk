@@ -26,12 +26,15 @@ class LineItemTitleWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  shortDescription ?? '',
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: OptiTextStyles.body,
-                  textAlign: TextAlign.left,
+                Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: Text(
+                    shortDescription ?? '',
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: OptiTextStyles.body,
+                    textAlign: TextAlign.left,
+                  ),
                 ),
                 if (!productNumber.isNullOrEmpty)
                   Text(

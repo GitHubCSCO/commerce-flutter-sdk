@@ -155,8 +155,7 @@ final settingsItems = [
   ),
   _SettingsListItemWidget(
     title: LocalizationConstants.languages.localized(),
-    onTap: (BuildContext context) =>
-        AppRoute.language.navigate(context),
+    onTap: (BuildContext context) => AppRoute.language.navigate(context),
     showTrailing: true,
   ),
   _SettingsListItemWidget(

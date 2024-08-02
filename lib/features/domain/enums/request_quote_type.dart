@@ -1,0 +1,1 @@
+enum RequestQuoteType { salesQuote, jobQuote }

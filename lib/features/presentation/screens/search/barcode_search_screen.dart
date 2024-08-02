@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BarcodeSearchScreen extends StatelessWidget {
-
   const BarcodeSearchScreen({super.key});
 
   @override
@@ -25,5 +24,4 @@ class BarcodeSearchScreen extends StatelessWidget {
     }
     Navigator.of(context).pop(rawValue);
   }
-
 }

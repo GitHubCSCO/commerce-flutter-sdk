@@ -18,10 +18,10 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
   final PricingInventoryUseCase _pricingInventoryUseCase;
   ProductSettings? productSettings;
 
-  OrderApprovalDetailsCubit({
-    required OrderApprovalUseCase orderApprovalUseCase,
-    required PricingInventoryUseCase pricingInventoryUseCase
-  })  : _orderApprovalUseCase = orderApprovalUseCase,
+  OrderApprovalDetailsCubit(
+      {required OrderApprovalUseCase orderApprovalUseCase,
+      required PricingInventoryUseCase pricingInventoryUseCase})
+      : _orderApprovalUseCase = orderApprovalUseCase,
         _pricingInventoryUseCase = pricingInventoryUseCase,
         super(
           OrderApprovalDetailsState(
@@ -44,7 +44,8 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
     final cart = await _orderApprovalUseCase.loadCart(cartId: cartId);
 
     final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
-    final hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
+    final hideInventoryEnable =
+        _pricingInventoryUseCase.getHideInventoryEnable();
 
     if (cart != null) {
       emit(
@@ -92,7 +93,7 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
   List<CartLineEntity> getCartLines() {
     List<CartLineEntity> cartlines = [];
     for (var cartLine in state.cart.cartLines ?? []) {
-      var cartLineEntity = CartLineEntityMapper().toEntity(cartLine);
+      var cartLineEntity = CartLineEntityMapper.toEntity(cartLine);
       var shouldShowWarehouseInventoryButton =
           InventoryUtils.isInventoryPerWarehouseButtonShownAsync(
                   productSettings) &&
@@ -119,7 +120,9 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
 
   String get shippingAddressTitle => isFulfillmentMethodShip
       ? LocalizationConstants.shippingAddress.localized()
-      : (isFulfillmentMethodPickUp ? LocalizationConstants.pickUpLocation.localized() : '');
+      : (isFulfillmentMethodPickUp
+          ? LocalizationConstants.pickUpLocation.localized()
+          : '');
 
   String get shipToCityStatePostalCodeDisplay => isFulfillmentMethodShip
       ? '${state.cart.shipTo?.city}, ${state.cart.shipTo?.state?.name} ${state.cart.shipTo?.postalCode}'

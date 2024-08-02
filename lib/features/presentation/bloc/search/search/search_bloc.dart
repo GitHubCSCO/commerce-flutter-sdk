@@ -9,7 +9,6 @@ part 'search_event.dart';
 part 'search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
-
   final SearchUseCase _searchUseCase;
 
   String searchQuery = "";
@@ -35,12 +34,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       case Success(value: final data):
         emit(SearchAutoCompleteLoadedState(result: data));
       case Failure(errorResponse: final errorResponse):
-        emit(SearchAutoCompleteFailureState(errorResponse.errorDescription ?? ''));
+        emit(SearchAutoCompleteFailureState(
+            errorResponse.errorDescription ?? ''));
       default:
     }
   }
 
-  Future<void> _onSearchFocusEvent(SearchFocusEvent event, Emitter<SearchState> emit) async {
+  Future<void> _onSearchFocusEvent(
+      SearchFocusEvent event, Emitter<SearchState> emit) async {
     if (searchQuery.isEmpty) {
       emit(SearchAutoCompleteInitialState());
     } else {
@@ -50,13 +51,15 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         case Success(value: final data):
           emit(SearchAutoCompleteLoadedState(result: data));
         case Failure(errorResponse: final errorResponse):
-          emit(SearchAutoCompleteFailureState(errorResponse.errorDescription ?? ''));
+          emit(SearchAutoCompleteFailureState(
+              errorResponse.errorDescription ?? ''));
         default:
       }
     }
   }
 
-  Future<void> _onSearchTypingEvent(SearchTypingEvent event, Emitter<SearchState> emit) async {
+  Future<void> _onSearchTypingEvent(
+      SearchTypingEvent event, Emitter<SearchState> emit) async {
     searchQuery = event.searchQuery;
     if (searchQuery.isEmpty) {
       emit(SearchAutoCompleteInitialState());
@@ -67,46 +70,54 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         case Success(value: final data):
           emit(SearchAutoCompleteLoadedState(result: data));
         case Failure(errorResponse: final errorResponse):
-          emit(SearchAutoCompleteFailureState(errorResponse.errorDescription ?? ''));
+          emit(SearchAutoCompleteFailureState(
+              errorResponse.errorDescription ?? ''));
         default:
       }
     }
   }
 
-  Future<void> _onSearchUnFocusEvent(SearchUnFocusEvent event, Emitter<SearchState> emit) async {
+  Future<void> _onSearchUnFocusEvent(
+      SearchUnFocusEvent event, Emitter<SearchState> emit) async {
     if (searchQuery.isEmpty) {
       emit(SearchCmsInitialState());
     }
   }
 
-  Future<void> _onSearchSearchEvent(SearchSearchEvent event, Emitter<SearchState> emit) async {
+  Future<void> _onSearchSearchEvent(
+      SearchSearchEvent event, Emitter<SearchState> emit) async {
     if (searchQuery.isNotEmpty) {
       emit(SearchLoadingState());
-      final result = await _searchUseCase.loadSearchProductsResults(searchQuery, 1);
+      final result =
+          await _searchUseCase.loadSearchProductsResults(searchQuery, 1);
       switch (result) {
         case Success(value: final data):
           emit(SearchProductsLoadedState(result: data));
         case Failure(errorResponse: final errorResponse):
-          emit(SearchProductsFailureState(errorResponse.errorDescription ?? ''));
+          emit(
+              SearchProductsFailureState(errorResponse.errorDescription ?? ''));
         default:
       }
     }
   }
 
-  Future<void> _onSearchCloseEvent(SearchCloseEvent event, Emitter<SearchState> emit) async {
+  Future<void> _onSearchCloseEvent(
+      SearchCloseEvent event, Emitter<SearchState> emit) async {
     searchQuery = "";
     emit(SearchCmsInitialState());
   }
 
-  Future<void> _onAutoCompleteCategoryEvent(AutoCompleteCategoryEvent event, Emitter<SearchState> emit) async {
+  Future<void> _onAutoCompleteCategoryEvent(
+      AutoCompleteCategoryEvent event, Emitter<SearchState> emit) async {
     final categoryId = event.category.id;
     if (categoryId == null) {
       return;
     }
-    
+
     emit(SearchLoadingState());
-    
-    final category = (await _searchUseCase.getCategory(categoryId)).getResultSuccessValue();
+
+    final category =
+        (await _searchUseCase.getCategory(categoryId)).getResultSuccessValue();
     if (category == null) {
       return;
     }
@@ -114,14 +125,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     if ((category.subCategories ?? []).isNotEmpty) {
       emit(AutoCompleteCategoryState(category));
     } else {
-      final parameters = CategoryQueryParameters(
-        maxDepth: 2,
-        startCategoryId: category.id
-      );
+      final parameters =
+          CategoryQueryParameters(maxDepth: 2, startCategoryId: category.id);
 
-      final subCategories = (await _searchUseCase.getCategoryList(parameters)).getResultSuccessValue();
+      final subCategories = (await _searchUseCase.getCategoryList(parameters))
+          .getResultSuccessValue();
       if (subCategories == null || subCategories.isEmpty) {
-        final pageEntity = ProductPageEntity('', ProductParentType.category, category: category);
+        final pageEntity = ProductPageEntity('', ProductParentType.category,
+            category: category);
         emit(AutoCompleteProductListState(pageEntity));
       } else {
         emit(AutoCompleteCategoryState(category));
@@ -130,7 +141,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     add(SearchAutoCompleteLoadEvent(searchQuery));
   }
 
-  Future<void> _onAutoCompleteBrandEvent(AutoCompleteBrandEvent event, Emitter<SearchState> emit) async {
+  Future<void> _onAutoCompleteBrandEvent(
+      AutoCompleteBrandEvent event, Emitter<SearchState> emit) async {
     final brandId = event.brand.id;
     if (brandId == null) {
       return;
@@ -138,16 +150,15 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
     emit(SearchLoadingState());
 
-    final brand = (await _searchUseCase.getBrand(brandId)).getResultSuccessValue();
+    final brand =
+        (await _searchUseCase.getBrand(brandId)).getResultSuccessValue();
     if (brand == null) {
       return;
     }
 
     if (event.brand.productLineId != null) {
       final brandProductLine = BrandProductLine(
-        id: event.brand.productLineId,
-        name: event.brand.productLineName
-      );
+          id: event.brand.productLineId, name: event.brand.productLineName);
       final productPageEntity = ProductPageEntity(
         '',
         ProductParentType.brandProductLine,
@@ -161,5 +172,4 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     }
     add(SearchAutoCompleteLoadEvent(searchQuery));
   }
-
 }

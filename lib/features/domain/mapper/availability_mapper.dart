@@ -2,12 +2,12 @@ import 'package:commerce_flutter_app/features/domain/entity/availability_entity.
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class AvailabilityEntityMapper {
-  AvailabilityEntity toEntity(Availability? model) => AvailabilityEntity(
+  static AvailabilityEntity toEntity(Availability? model) => AvailabilityEntity(
         messageType: model?.messageType,
         message: model?.message,
         requiresRealTimeInventory: model?.requiresRealTimeInventory,
       );
-  Availability toModel(AvailabilityEntity entity) => Availability(
+  static Availability toModel(AvailabilityEntity entity) => Availability(
         messageType: entity.messageType,
         message: entity.message,
         requiresRealTimeInventory: entity.requiresRealTimeInventory,

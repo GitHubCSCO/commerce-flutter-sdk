@@ -43,8 +43,7 @@ class SearchScreen extends StatelessWidget {
       BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
       BlocProvider<SearchPageCmsBloc>(
         create: (context) =>
-        sl<SearchPageCmsBloc>()
-          ..add(SearchPageCmsLoadEvent()),
+            sl<SearchPageCmsBloc>()..add(SearchPageCmsLoadEvent()),
       ),
       BlocProvider<SearchBloc>(
         create: (context) => sl<SearchBloc>(),
@@ -95,7 +94,9 @@ class SearchPage extends StatelessWidget with BaseDynamicContentScreen {
                   },
                   onChanged: (String searchQuery) {
                     _delayer.run(() {
-                      context.read<SearchBloc>().add(SearchTypingEvent(searchQuery));
+                      context
+                          .read<SearchBloc>()
+                          .add(SearchTypingEvent(searchQuery));
                     });
                   },
                   onSubmitted: (String query) {
@@ -111,9 +112,8 @@ class SearchPage extends StatelessWidget with BaseDynamicContentScreen {
                   fit: BoxFit.fitWidth,
                 ),
                 onPressed: () async {
-                  final result = await GoRouter.of(context).pushNamed(
-                    AppRoute.barcodeSearch.name
-                  ) as String;
+                  final result = await GoRouter.of(context)
+                      .pushNamed(AppRoute.barcodeSearch.name) as String;
                   if (!result.isNullOrEmpty) {
                     context.read<SearchBloc>().searchQuery = result;
                     context.read<SearchBloc>().add(SearchSearchEvent());
@@ -172,12 +172,13 @@ class SearchPage extends StatelessWidget with BaseDynamicContentScreen {
                 listener: (context, state) {
                   if (state is AutoCompleteCategoryState) {
                     AppRoute.shopSubCategory.navigateBackStack(
-                        context,
-                        pathParameters: {
-                          "categoryId": state.category.id.toString(),
-                          "categoryTitle": state.category.shortDescription.toString(),
-                          "categoryPath": state.category.path.toString()
-                        },
+                      context,
+                      pathParameters: {
+                        "categoryId": state.category.id.toString(),
+                        "categoryTitle":
+                            state.category.shortDescription.toString(),
+                        "categoryPath": state.category.path.toString()
+                      },
                     );
                   } else if (state is AutoCompleteBrandState) {
                     AppRoute.shopBrandDetails.navigateBackStack(

@@ -6,8 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'cart_shipping_selection_event.dart';
 part 'cart_shipping_selection_state.dart';
 
-class CartShippingSelectionBloc extends Bloc<CartShippingSelectionEvent, CartShippingSelectionState> {
-
+class CartShippingSelectionBloc
+    extends Bloc<CartShippingSelectionEvent, CartShippingSelectionState> {
   final CartShippingUseCase _shippingUseCase;
 
   CartShippingSelectionBloc({required CartShippingUseCase shippingUseCase})
@@ -17,14 +17,16 @@ class CartShippingSelectionBloc extends Bloc<CartShippingSelectionEvent, CartShi
     on<CartShippingOptionChangeEvent>(_onCartShippingSelectionChangeState);
   }
 
-  Future<void> _onCartShippingDefaultState(CartShippingOptionDefaultEvent event, Emitter<CartShippingSelectionState> emit) async {
+  Future<void> _onCartShippingDefaultState(CartShippingOptionDefaultEvent event,
+      Emitter<CartShippingSelectionState> emit) async {
     emit(CartShippingDefaultState(event.selectedOption));
   }
 
-  Future<void> _onCartShippingSelectionChangeState(CartShippingOptionChangeEvent event, Emitter<CartShippingSelectionState> emit) async {
+  Future<void> _onCartShippingSelectionChangeState(
+      CartShippingOptionChangeEvent event,
+      Emitter<CartShippingSelectionState> emit) async {
     emit(CartShippingDefaultState(event.selectedOption));
     await _shippingUseCase.patchCurrentShippingOption(event.selectedOption);
     emit(CartShippingSelectionChangeState(event.selectedOption));
   }
-
 }

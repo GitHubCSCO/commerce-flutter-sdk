@@ -199,6 +199,10 @@ mixin BaseActionItemWidget {
           context.read<LoadWebsiteUrlBloc>().add(LoadWebsiteUrlLoadEvent(
               redirectUrl: WebsitePaths.accountWebsitePath));
         };
+      case ActionType.quotes:
+        return () {
+          AppRoute.myQuote.navigateBackStack(context);
+        };
       default:
         return () {
           CustomSnackBar.showComingSoonSnackBar(context);

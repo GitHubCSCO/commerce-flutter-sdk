@@ -43,7 +43,6 @@ class BillToShipToChangePage extends StatefulWidget with MapDirection {
 }
 
 class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
-
   bool _isSwitched = false;
   bool _isSaveEnable = false;
 
@@ -89,8 +88,10 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
               case BillToShipToLoading():
                 return const Center(child: CircularProgressIndicator());
               case BillToShipToLoaded():
-                _isSaveEnable = context.read<BillToShipToBloc>().saveButtonEnable();
-                _isSwitched = context.read<BillToShipToBloc>().defaultEnable(_isSwitched);
+                _isSaveEnable =
+                    context.read<BillToShipToBloc>().saveButtonEnable();
+                _isSwitched =
+                    context.read<BillToShipToBloc>().defaultEnable(_isSwitched);
                 return Container(
                   color: OptiAppColors.backgroundWhite,
                   child: Column(
@@ -115,9 +116,12 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                           final type = index == 1
                               ? FulfillmentMethodType.PickUp
                               : FulfillmentMethodType.Ship;
-                          context.read<BillToShipToBloc>().add(FulfillmentMethodUpdateEvent(type));
-                          bool isEnable = context.read<BillToShipToBloc>().saveButtonEnable(
-                              fulfillmentMethodType: type);
+                          context
+                              .read<BillToShipToBloc>()
+                              .add(FulfillmentMethodUpdateEvent(type));
+                          bool isEnable = context
+                              .read<BillToShipToBloc>()
+                              .saveButtonEnable(fulfillmentMethodType: type);
                           setState(() {
                             _isSwitched = false;
                             _isSaveEnable = isEnable;
@@ -130,7 +134,9 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                         child: Row(
                           children: [
                             Expanded(
-                              child: Text(LocalizationConstants.setAsDefault.localized(),
+                              child: Text(
+                                  LocalizationConstants.setAsDefault
+                                      .localized(),
                                   style: OptiTextStyles.body),
                             ),
                             Switch(
@@ -253,15 +259,15 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
             onTap: () {
               AppRoute.locationSearch.navigateBackStack(context,
                   extra: VMILocationSelectCallbackHelper(
-                      selectedPickupWarehouse: WarehouseEntityMapper()
-                          .toEntity(wareHouse ?? Warehouse()),
+                      selectedPickupWarehouse: WarehouseEntityMapper.toEntity(
+                          wareHouse ?? Warehouse()),
                       onSelectVMILocation: (location) {},
                       onWarehouseLocationSelected: (wareHouse) {
                         setState(() {
                           _isSwitched = false;
                         });
                         context.read<BillToShipToBloc>().add(PickUpUpdateEvent(
-                            WarehouseEntityMapper().toModel(wareHouse)));
+                            WarehouseEntityMapper.toModel(wareHouse)));
                       },
                       locationSearchType: LocationSearchType.pickUpLocation));
             },
@@ -394,5 +400,4 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
 
     await widget.launchMap(latitudeDouble, longitudeDouble);
   }
-
 }

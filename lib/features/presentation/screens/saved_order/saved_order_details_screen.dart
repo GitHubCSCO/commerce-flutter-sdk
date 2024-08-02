@@ -142,7 +142,8 @@ class OrderDetailsPage extends StatelessWidget {
                         confirmDialog(
                           context: context,
                           message: LocalizationConstants
-                              .deleteSavedOrderConfirmMessage.localized(),
+                              .deleteSavedOrderConfirmMessage
+                              .localized(),
                           onConfirm: () async {
                             await context
                                 .read<SavedOrderDetailsCubit>()

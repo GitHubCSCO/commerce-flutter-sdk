@@ -48,7 +48,9 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
   @override
   Widget build(BuildContext context) {
     var vmlLocationId = context.read<OrderHistoryCubit>().vmiLocationId;
-    websitePath = isFromVMI == true ? WebsitePaths.vmiOrdersPath.format([vmlLocationId ?? '']) : WebsitePaths.ordersPath;
+    websitePath = isFromVMI == true
+        ? WebsitePaths.vmiOrdersPath.format([vmlLocationId ?? ''])
+        : WebsitePaths.ordersPath;
     return Scaffold(
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
@@ -165,13 +167,11 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
 }
 
 class _OrderHistoryListWidget extends StatefulWidget {
-
   final List<OrderEntity> orderEntities;
   final bool? hidePricingEnable;
 
   const _OrderHistoryListWidget(
-      {required this.orderEntities,
-      this.hidePricingEnable});
+      {required this.orderEntities, this.hidePricingEnable});
 
   @override
   State<_OrderHistoryListWidget> createState() =>

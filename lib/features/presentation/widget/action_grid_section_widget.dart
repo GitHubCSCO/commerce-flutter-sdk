@@ -15,8 +15,8 @@ class ActionGridSectionWidget extends StatelessWidget {
       child: GridView.builder(
           itemCount: actionsWidgetEntity.actions?.length ?? 0,
           shrinkWrap: true,
-          gridDelegate:
-          const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4),
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             final action = actionsWidgetEntity.actions![index];

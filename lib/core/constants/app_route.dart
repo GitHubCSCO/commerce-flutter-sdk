@@ -57,6 +57,17 @@ class RouteNames {
   static const String orderApprovalDetails = 'orderApprovalDetails';
   static const String invoiceHistory = 'invoiceHistory';
   static const String invoiceDetail = 'invoiceDetail';
+  static const String myQuote = 'myQuote';
+  static const String requestQuote = 'requestQuote';
+  static const String quoteConfirmation = 'quoteConfirmation';
+  static const String quoteDetails = 'quoteDetails';
+  static const String quoteCommunication = 'quoteCommunication';
+  static const String quoteAll = 'quoteAll';
+  static const String quotePricing = 'quotePricing';
+  static const String userSelection = 'userSelection';
+  static const String salesRepSelection = 'salesRepSelection';
+  static const String jobQuoteDetails = 'jobQuoteDetails';
+  static const String quoteLineNotes = 'quoteLineNotes';
   static const String language = 'language';
 }
 
@@ -128,7 +139,19 @@ class RoutePaths {
       '${RoutePaths.account}/${RouteNames.invoiceHistory}';
   static const String invoiceDetail =
       '${RoutePaths.invoiceHistory}/:invoiceNumber';
-  static const String language = '${RoutePaths.settings}/${RouteNames.language}';
+  static const String myQuote = '${RoutePaths.account}/${RouteNames.myQuote}';
+  static const String requestQuote = '/${RouteNames.requestQuote}';
+  static const String quoteConfirmation = '/${RouteNames.quoteConfirmation}';
+  static const String quoteDetails = '/${RouteNames.quoteDetails}';
+  static const String quoteCommunication = '/${RouteNames.quoteCommunication}';
+  static const String quoteAll = '/${RouteNames.quoteAll}';
+  static const String quotePricing = '/${RouteNames.quotePricing}';
+  static const String userSelection = '/${RouteNames.userSelection}';
+  static const String salesRepSelection = '/${RouteNames.salesRepSelection}';
+  static const String jobQuoteDetails = '${RoutePaths.myQuote}/:jobQuoteId';
+  static const String quoteLineNotes = '/${RouteNames.quoteLineNotes}';
+  static const String language =
+      '${RoutePaths.settings}/${RouteNames.language}';
 }
 
 enum AppRoute {
@@ -230,6 +253,37 @@ enum AppRoute {
   invoiceDetail(
     name: RouteNames.invoiceDetail,
     fullPath: RoutePaths.invoiceDetail,
+  ),
+  requestQuote(
+      name: RouteNames.requestQuote, fullPath: RoutePaths.requestQuote),
+  myQuote(name: RouteNames.myQuote, fullPath: RoutePaths.myQuote),
+  quoteConfirmation(
+      name: RouteNames.quoteConfirmation,
+      fullPath: RoutePaths.quoteConfirmation),
+  quoteDetails(
+      name: RouteNames.quoteDetails, fullPath: RoutePaths.quoteDetails),
+  quoteCommunication(
+      name: RouteNames.quoteCommunication,
+      fullPath: RoutePaths.quoteCommunication),
+  quoteAll(name: RouteNames.quoteAll, fullPath: RoutePaths.quoteAll),
+  quotePricing(
+      name: RouteNames.quotePricing, fullPath: RoutePaths.quotePricing),
+
+  userSelection(
+    name: RouteNames.userSelection,
+    fullPath: RoutePaths.userSelection,
+  ),
+  salesRepSelection(
+    name: RouteNames.salesRepSelection,
+    fullPath: RoutePaths.salesRepSelection,
+  ),
+  jobQuoteDetails(
+    name: RouteNames.jobQuoteDetails,
+    fullPath: RoutePaths.jobQuoteDetails,
+  ),
+  quoteLineNotes(
+    name: RouteNames.quoteLineNotes,
+    fullPath: RoutePaths.quoteLineNotes,
   ),
   language(
     name: RouteNames.language,

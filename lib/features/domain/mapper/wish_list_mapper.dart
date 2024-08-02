@@ -73,7 +73,7 @@ class WishListLineEntityMapper {
         qtyOrdered: wishListLine.qtyOrdered,
         erpNumber: wishListLine.erpNumber,
         pricing: wishListLine.pricing != null
-            ? ProductPriceEntityMapper().toEntity(wishListLine.pricing!)
+            ? ProductPriceEntityMapper.toEntity(wishListLine.pricing!)
             : null,
         quoteRequired: wishListLine.quoteRequired,
         isActive: wishListLine.isActive,
@@ -84,10 +84,10 @@ class WishListLineEntityMapper {
         canBackOrder: wishListLine.canBackOrder,
         trackInventory: wishListLine.trackInventory,
         availability: wishListLine.availability != null
-            ? AvailabilityEntityMapper().toEntity(wishListLine.availability!)
+            ? AvailabilityEntityMapper.toEntity(wishListLine.availability!)
             : null,
         breakPrices: wishListLine.breakPrices
-            ?.map((e) => BreakPriceEntityMapper().toEntity(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toEntity(e))
             .toList(),
         unitOfMeasure: wishListLine.unitOfMeasure,
         unitOfMeasureDisplay: wishListLine.unitOfMeasureDisplay,
@@ -97,7 +97,7 @@ class WishListLineEntityMapper {
         qtyPerBaseUnitOfMeasure: wishListLine.qtyPerBaseUnitOfMeasure,
         selectedUnitOfMeasure: wishListLine.selectedUnitOfMeasure,
         productUnitOfMeasures: wishListLine.productUnitOfMeasures
-            ?.map((e) => ProductUnitOfMeasureEntityMapper().toEntity(e))
+            ?.map((e) => ProductUnitOfMeasureEntityMapper.toEntity(e))
             .toList(),
         packDescription: wishListLine.packDescription,
         createdOn: wishListLine.createdOn,
@@ -107,7 +107,7 @@ class WishListLineEntityMapper {
         isVisible: wishListLine.isVisible,
         isDiscontinued: wishListLine.isDiscontinued,
         sortOrder: wishListLine.sortOrder,
-        brand: BrandEntityMapper().toEntity(wishListLine.brand),
+        brand: BrandEntityMapper.toEntity(wishListLine.brand),
         isQtyAdjusted: wishListLine.isQtyAdjusted,
         allowZeroPricing: wishListLine.allowZeroPricing,
       );
@@ -127,7 +127,7 @@ class WishListLineEntityMapper {
         qtyOrdered: wishListLineEntity.qtyOrdered,
         erpNumber: wishListLineEntity.erpNumber,
         pricing: wishListLineEntity.pricing != null
-            ? ProductPriceEntityMapper().toModel(wishListLineEntity.pricing!)
+            ? ProductPriceEntityMapper.toModel(wishListLineEntity.pricing!)
             : null,
         quoteRequired: wishListLineEntity.quoteRequired,
         isActive: wishListLineEntity.isActive,
@@ -138,11 +138,10 @@ class WishListLineEntityMapper {
         canBackOrder: wishListLineEntity.canBackOrder,
         trackInventory: wishListLineEntity.trackInventory,
         availability: wishListLineEntity.availability != null
-            ? AvailabilityEntityMapper()
-                .toModel(wishListLineEntity.availability!)
+            ? AvailabilityEntityMapper.toModel(wishListLineEntity.availability!)
             : null,
         breakPrices: wishListLineEntity.breakPrices
-            ?.map((e) => BreakPriceEntityMapper().toModel(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toModel(e))
             .toList(),
         unitOfMeasure: wishListLineEntity.unitOfMeasure,
         unitOfMeasureDisplay: wishListLineEntity.unitOfMeasureDisplay,
@@ -152,7 +151,7 @@ class WishListLineEntityMapper {
         qtyPerBaseUnitOfMeasure: wishListLineEntity.qtyPerBaseUnitOfMeasure,
         selectedUnitOfMeasure: wishListLineEntity.selectedUnitOfMeasure,
         productUnitOfMeasures: wishListLineEntity.productUnitOfMeasures
-            ?.map((e) => ProductUnitOfMeasureEntityMapper().toModel(e))
+            ?.map((e) => ProductUnitOfMeasureEntityMapper.toModel(e))
             .toList(),
         packDescription: wishListLineEntity.packDescription,
         createdOn: wishListLineEntity.createdOn,
@@ -161,7 +160,7 @@ class WishListLineEntityMapper {
         isSharedLine: wishListLineEntity.isSharedLine,
         allowZeroPricing: wishListLineEntity.allowZeroPricing,
         brand: wishListLineEntity.brand != null
-            ? BrandEntityMapper().toModel(wishListLineEntity.brand!)
+            ? BrandEntityMapper.toModel(wishListLineEntity.brand!)
             : null,
         isVisible: wishListLineEntity.isVisible,
         isDiscontinued: wishListLineEntity.isDiscontinued,

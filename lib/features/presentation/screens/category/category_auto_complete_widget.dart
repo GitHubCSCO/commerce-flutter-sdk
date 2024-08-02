@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class CategoryAutoCompleteWidget extends StatelessWidget {
-
   final Function(BuildContext, AutocompleteCategory) callback;
   final List<AutocompleteCategory>? autocompleteCategories;
 
-  const CategoryAutoCompleteWidget({super.key, required this.callback, required this.autocompleteCategories});
+  const CategoryAutoCompleteWidget(
+      {super.key,
+      required this.callback,
+      required this.autocompleteCategories});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,8 @@ class CategoryAutoCompleteWidget extends StatelessWidget {
           onTap: () {
             callback(context, autoCompleteCategory);
           },
-          child: AutoCompleteCategoryWidget(autoCompleteCategory: autoCompleteCategory),
+          child: AutoCompleteCategoryWidget(
+              autoCompleteCategory: autoCompleteCategory),
         );
       },
     );
@@ -37,7 +40,6 @@ class CategoryAutoCompleteWidget extends StatelessWidget {
 }
 
 class AutoCompleteCategoryWidget extends StatelessWidget {
-
   final AutocompleteCategory autoCompleteCategory;
 
   const AutoCompleteCategoryWidget(
@@ -58,11 +60,11 @@ class AutoCompleteCategoryWidget extends StatelessWidget {
     final title = autoCompleteCategory.title ?? '';
     final subTitle = autoCompleteCategory.subtitle ?? '';
     if (title.isNotEmpty && subTitle.isNotEmpty) {
-      return LocalizationConstants.autocompleteCategoryOrBrandCombinedTitle.localized().format([title, subTitle]);
+      return LocalizationConstants.autocompleteCategoryOrBrandCombinedTitle
+          .localized()
+          .format([title, subTitle]);
     } else {
       return title;
     }
   }
-
 }
-

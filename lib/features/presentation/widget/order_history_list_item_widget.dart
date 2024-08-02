@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class OrderHistoryListItem extends StatelessWidget {
-
   final OrderEntity orderEntity;
   final bool? hidePricingEnable;
   final void Function()? onTap;
@@ -37,7 +36,8 @@ class OrderHistoryListItem extends StatelessWidget {
               children: [
                 Text(
                   orderEntity.orderNumberLabel ?? orderEntity.orderNumber ?? '',
-                  style: OptiTextStyles.body.copyWith(color: OptiAppColors.primaryColor),
+                  style: OptiTextStyles.body
+                      .copyWith(color: OptiAppColors.primaryColor),
                 ),
                 Text(
                   orderEntity.orderDate != null

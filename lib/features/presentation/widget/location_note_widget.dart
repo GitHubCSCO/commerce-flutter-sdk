@@ -54,8 +54,11 @@ class LocationNoteWidget extends StatelessWidget {
                           state.locationNote.isEmpty,
                       child: Center(
                         child: Text(
-                          LocalizationConstants.enterLocationNote.localized()
-                              .format([LocalizationConstants.editLocationNote.localized()]),
+                          LocalizationConstants.enterLocationNote
+                              .localized()
+                              .format([
+                            LocalizationConstants.editLocationNote.localized()
+                          ]),
                           style: OptiTextStyles.body,
                           textAlign: TextAlign.center,
                         ),
@@ -68,7 +71,8 @@ class LocationNoteWidget extends StatelessWidget {
                         child: TertiaryButton(
                             borderColor: OptiAppColors.grayBackgroundColor,
                             backgroundColor: OptiAppColors.grayBackgroundColor,
-                            text: LocalizationConstants.editLocationNote.localized(),
+                            text: LocalizationConstants.editLocationNote
+                                .localized(),
                             onPressed: () {
                               AppRoute.vmilocaitonote.navigateBackStack(context,
                                   extra: VMILocationNoteCallbackHelper(

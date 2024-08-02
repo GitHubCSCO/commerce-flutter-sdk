@@ -15,7 +15,9 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
   final bool isVMILocationfinder;
 
   CurrentLocationWidgetItem(
-      {super.key, required this.locationData, required this.isVMILocationfinder});
+      {super.key,
+      required this.locationData,
+      required this.isVMILocationfinder});
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +71,7 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                       style: OptiTextStyles.link,
                     ),
                     onTap: () {
-                      _onDirectionsClick(
-                          locationData.latLong?.latitude ?? 0.0,
+                      _onDirectionsClick(locationData.latLong?.latitude ?? 0.0,
                           locationData.latLong?.longitude ?? 0.0);
                     },
                   ),
@@ -118,8 +119,6 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                   .read<CurrentLocationCubit>()
                   .onLocationSelectEvent(location);
               context.read<CurrentLocationCubit>().onLoadLocationData();
-              
-
             },
             locationSearchType: LocationSearchType.vmi));
   }
