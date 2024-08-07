@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
@@ -18,10 +19,10 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
   final PricingInventoryUseCase _pricingInventoryUseCase;
   ProductSettings? productSettings;
 
-  OrderApprovalDetailsCubit({
-    required OrderApprovalUseCase orderApprovalUseCase,
-    required PricingInventoryUseCase pricingInventoryUseCase
-  })  : _orderApprovalUseCase = orderApprovalUseCase,
+  OrderApprovalDetailsCubit(
+      {required OrderApprovalUseCase orderApprovalUseCase,
+      required PricingInventoryUseCase pricingInventoryUseCase})
+      : _orderApprovalUseCase = orderApprovalUseCase,
         _pricingInventoryUseCase = pricingInventoryUseCase,
         super(
           OrderApprovalDetailsState(
@@ -44,7 +45,8 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
     final cart = await _orderApprovalUseCase.loadCart(cartId: cartId);
 
     final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
-    final hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
+    final hideInventoryEnable =
+        _pricingInventoryUseCase.getHideInventoryEnable();
 
     if (cart != null) {
       emit(
@@ -104,6 +106,56 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
     return cartlines;
   }
 
+  Future<void> addToCart({required AddCartLine addCartLine}) async {
+    emit(
+      state.copyWith(
+        status: OrderStatus.lineItemAddToCartLoading,
+      ),
+    );
+
+    final newCartLine = await _orderApprovalUseCase.addLineItemToCart(
+      addCartLine: addCartLine,
+    );
+
+    addCartLineToCartMessageName = newCartLine == null
+        ? SiteMessageConstants.nameAddToCartFail
+        : SiteMessageConstants.nameAddToCartSuccess;
+    addCartLineToCartDefaultMessage = newCartLine == null
+        ? SiteMessageConstants.defaultValueAddToCartFail
+        : SiteMessageConstants.defaultValueAddToCartSuccess;
+    addCartLineToCartMessage = await _orderApprovalUseCase.getSiteMessage(
+          messageName: addCartLineToCartMessageName,
+          defaultMessage: addCartLineToCartDefaultMessage,
+        ) ??
+        '';
+
+    if (newCartLine != null && newCartLine.isQtyAdjusted == true) {
+      quantityAdjustedMessage = await _orderApprovalUseCase.getSiteMessage(
+            messageName: SiteMessageConstants.nameAddToCartQuantityAdjusted,
+            defaultMessage:
+                SiteMessageConstants.defaultValueAddToCartQuantityAdjusted,
+          ) ??
+          '';
+
+      emit(
+        state.copyWith(
+          status: OrderStatus.lineItemAddToCartQtyAdjusted,
+        ),
+      );
+    } else {
+      emit(
+        state.copyWith(
+          status: OrderStatus.lineItemAddToCartComplete,
+        ),
+      );
+    }
+  }
+
+  String addCartLineToCartMessageName = '';
+  String addCartLineToCartDefaultMessage = '';
+  String addCartLineToCartMessage = '';
+  String quantityAdjustedMessage = '';
+
   // header section
   String get subtotalValue => state.cart.orderSubTotalDisplay ?? '';
   String get shippingValue => state.cart.shippingAndHandlingDisplay ?? '';
@@ -119,7 +171,9 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
 
   String get shippingAddressTitle => isFulfillmentMethodShip
       ? LocalizationConstants.shippingAddress.localized()
-      : (isFulfillmentMethodPickUp ? LocalizationConstants.pickUpLocation.localized() : '');
+      : (isFulfillmentMethodPickUp
+          ? LocalizationConstants.pickUpLocation.localized()
+          : '');
 
   String get shipToCityStatePostalCodeDisplay => isFulfillmentMethodShip
       ? '${state.cart.shipTo?.city}, ${state.cart.shipTo?.state?.name} ${state.cart.shipTo?.postalCode}'

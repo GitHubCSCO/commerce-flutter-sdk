@@ -136,6 +136,24 @@ class OrderApprovalDetailsPage extends StatelessWidget {
               SiteMessageConstants.defaultValueDeleteCartFail,
             );
           }
+
+          if (state.status == OrderStatus.lineItemAddToCartComplete) {
+            context.read<CartCountCubit>().onCartItemChange();
+            _displaySnackBarMessageFromCubit(context);
+          }
+
+          if (state.status == OrderStatus.lineItemAddToCartQtyAdjusted) {
+            context.read<CartCountCubit>().onCartItemChange();
+            confirmDialog(
+              context: context,
+              message: context
+                  .read<OrderApprovalDetailsCubit>()
+                  .quantityAdjustedMessage,
+              onConfirm: () {
+                _displaySnackBarMessageFromCubit(context);
+              },
+            );
+          }
         },
         builder: (context, state) {
           if (state.status == OrderStatus.loading) {
@@ -235,9 +253,33 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                             );
                           },
                           onAddToCart: ({required cartLineEntity}) {
-                            // context
-                            //     .read<OrderApprovalDetailsCubit>()
-                            //     .addToCart(cartLineEntity: cartLineEntity);
+                            void doAddToCart() {
+                              final addCartLine = AddCartLine(
+                                productId: cartLineEntity.productId,
+                                qtyOrdered: 1,
+                                sectionOptions: [],
+                                unitOfMeasure: cartLineEntity.unitOfMeasure,
+                              );
+
+                              context
+                                  .read<OrderApprovalDetailsCubit>()
+                                  .addToCart(addCartLine: addCartLine);
+                            }
+
+                            if (cartLineEntity.canAddToCart != true) {
+                              confirmDialog(
+                                context: context,
+                                title: LocalizationConstants.productsOutOfStock
+                                    .localized(),
+                                message: LocalizationConstants
+                                    .productsOutOfStockMessage
+                                    .localized(),
+                                onConfirm: doAddToCart,
+                              );
+                              return;
+                            }
+
+                            doAddToCart();
                           },
                         ),
                       ],
@@ -458,4 +500,11 @@ class _OrderApprovalInfoWidget extends StatelessWidget {
       ],
     );
   }
+}
+
+void _displaySnackBarMessageFromCubit(BuildContext context) {
+  CustomSnackBar.showSnackBarMessage(
+    context,
+    context.read<OrderApprovalDetailsCubit>().addCartLineToCartMessage,
+  );
 }
