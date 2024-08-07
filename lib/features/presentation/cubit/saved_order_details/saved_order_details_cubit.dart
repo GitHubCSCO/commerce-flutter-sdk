@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
@@ -19,7 +20,7 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
 
   SavedOrderDetailsCubit({
     required SavedOrderUsecase savedOrderUsecase,
-    required PricingInventoryUseCase pricingInventoryUseCase
+    required PricingInventoryUseCase pricingInventoryUseCase,
   })  : _savedOrderUsecase = savedOrderUsecase,
         _pricingInventoryUseCase = pricingInventoryUseCase,
         super(
@@ -42,15 +43,15 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
 
     if (cart != null) {
       final hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
-      final hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
+      final hideInventoryEnable =
+          _pricingInventoryUseCase.getHideInventoryEnable();
 
       emit(
         state.copyWith(
-          cart: cart,
-          status: OrderStatus.success,
-          hidePricingEnable: hidePricingEnable,
-          hideInventoryEnable: hideInventoryEnable
-        ),
+            cart: cart,
+            status: OrderStatus.success,
+            hidePricingEnable: hidePricingEnable,
+            hideInventoryEnable: hideInventoryEnable),
       );
     } else {
       emit(state.copyWith(status: OrderStatus.failure));
@@ -92,6 +93,56 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
     }
     return cartlines;
   }
+
+  Future<void> addToCart({required AddCartLine addCartLine}) async {
+    emit(
+      state.copyWith(
+        status: OrderStatus.lineItemAddToCartLoading,
+      ),
+    );
+
+    final newCartLine = await _savedOrderUsecase.addLineItemToCart(
+      addCartLine: addCartLine,
+    );
+
+    addCartLineToCartMessageName = newCartLine == null
+        ? SiteMessageConstants.nameAddToCartFail
+        : SiteMessageConstants.nameAddToCartSuccess;
+    addCartLineToCartDefaultMessage = newCartLine == null
+        ? SiteMessageConstants.defaultValueAddToCartFail
+        : SiteMessageConstants.defaultValueAddToCartSuccess;
+    addCartLineToCartMessage = await _savedOrderUsecase.getSiteMessage(
+          messageName: addCartLineToCartMessageName,
+          defaultMessage: addCartLineToCartDefaultMessage,
+        ) ??
+        '';
+
+    if (newCartLine != null && newCartLine.isQtyAdjusted == true) {
+      quantityAdjustedMessage = await _savedOrderUsecase.getSiteMessage(
+            messageName: SiteMessageConstants.nameAddToCartQuantityAdjusted,
+            defaultMessage:
+                SiteMessageConstants.defaultValueAddToCartQuantityAdjusted,
+          ) ??
+          '';
+
+      emit(
+        state.copyWith(
+          status: OrderStatus.lineItemAddToCartQtyAdjusted,
+        ),
+      );
+    } else {
+      emit(
+        state.copyWith(
+          status: OrderStatus.lineItemAddToCartComplete,
+        ),
+      );
+    }
+  }
+
+  String addCartLineToCartMessageName = '';
+  String addCartLineToCartDefaultMessage = '';
+  String addCartLineToCartMessage = '';
+  String quantityAdjustedMessage = '';
 
   String get shipToLabel => state.cart.shipToLabel ?? '';
 

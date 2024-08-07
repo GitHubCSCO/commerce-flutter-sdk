@@ -16,4 +16,8 @@ enum OrderStatus {
   addToCartSuccess,
   addToCartLoading,
   addToCartFailure,
+
+  lineItemAddToCartLoading,
+  lineItemAddToCartQtyAdjusted,
+  lineItemAddToCartComplete,
 }
