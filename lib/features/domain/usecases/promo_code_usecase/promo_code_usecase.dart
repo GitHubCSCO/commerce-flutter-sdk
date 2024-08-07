@@ -11,12 +11,10 @@ class PromoCodeUsecase extends BaseUseCase {
         .applyPromotion(addPromotion);
   }
 
-
   Future<Result<PromotionCollectionModel, ErrorResponse>>
       loadCartPromotions() async {
     return await commerceAPIServiceProvider
         .getCartService()
         .getCurrentCartPromotions();
   }
-
 }

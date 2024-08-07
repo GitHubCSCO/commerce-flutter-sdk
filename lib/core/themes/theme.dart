@@ -63,9 +63,7 @@ ThemeData getTheme() {
       space: 1,
       thickness: 0.5,
     ),
-    iconTheme: IconThemeData(
-      color: OptiAppColors.primaryColor
-    ),
+    iconTheme: IconThemeData(color: OptiAppColors.primaryColor),
     // chipTheme: ChipThemeData(
     //   labelStyle: textTheme.labelSmall,
     //   side: const BorderSide(
@@ -116,7 +114,6 @@ ThemeData getTheme() {
       iconTheme: IconThemeData(
         color: OptiAppColors.primaryColor, // Set the AppBar icon color here
       ),
-
     ),
     // dialogTheme: DialogTheme(
     //   backgroundColor: colorScheme.background,
@@ -336,6 +333,14 @@ class OptiTextStyles {
           fontSize: 14,
           color: Colors.white,
           fontWeight: titleWeight,
+        ),
+      );
+
+  static TextStyle get errorText => _getInterFontStyle(
+        const TextStyle(
+          fontSize: 14,
+          color: Colors.red,
+          fontWeight: bodyWeight,
         ),
       );
 }

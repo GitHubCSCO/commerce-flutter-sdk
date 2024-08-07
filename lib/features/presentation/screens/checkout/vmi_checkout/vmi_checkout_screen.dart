@@ -55,7 +55,9 @@ class VmiCheckoutScreen extends StatelessWidget {
             ..add(LoadPaymentDetailsEvent(cart: vmiCheckoutEntity.cart)),
         ),
       ],
-      child: VmiCheckoutPage(scanningMode: vmiCheckoutEntity.scanningMode, vmiCheckoutEntity: vmiCheckoutEntity),
+      child: VmiCheckoutPage(
+          scanningMode: vmiCheckoutEntity.scanningMode,
+          vmiCheckoutEntity: vmiCheckoutEntity),
     );
   }
 }
@@ -64,7 +66,8 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
   final ScanningMode scanningMode;
   final VmiCheckoutEntity vmiCheckoutEntity;
 
-  VmiCheckoutPage({super.key, required this.scanningMode, required this.vmiCheckoutEntity});
+  VmiCheckoutPage(
+      {super.key, required this.scanningMode, required this.vmiCheckoutEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +83,8 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                     isVmiCheckout: true,
                     cart: context.read<CheckoutBloc>().cart!));
           } else if (state is CheckoutPlaceOrderFailed) {
-            _showAlert(context, message: LocalizationConstants.orderFailed.localized());
+            _showAlert(context,
+                message: LocalizationConstants.orderFailed.localized());
           }
         },
         buildWhen: (previous, current) =>
@@ -143,9 +147,13 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                   create: (context) => sl<CartContentBloc>(),
                                   child: CartLineWidgetList(
                                     showClearCart: false,
-                                    cartLineEntities: context.read<CheckoutBloc>().getCartLines(),
+                                    cartLineEntities: context
+                                        .read<CheckoutBloc>()
+                                        .getCartLines(),
                                     onCartChangeCallBack: (context) {
-                                      context.read<CheckoutBloc>().add(LoadCheckoutEvent(cart: vmiCheckoutEntity.cart));
+                                      context.read<CheckoutBloc>().add(
+                                          LoadCheckoutEvent(
+                                              cart: vmiCheckoutEntity.cart));
                                     },
                                   ),
                                 )
@@ -165,8 +173,10 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                   Navigator.pop(context);
                                 },
                                 text: scanningMode == ScanningMode.count
-                                    ? LocalizationConstants.backToCountInventory.localized()
-                                    : LocalizationConstants.backToCreateOrder.localized(),
+                                    ? LocalizationConstants.backToCountInventory
+                                        .localized()
+                                    : LocalizationConstants.backToCreateOrder
+                                        .localized(),
                               ),
                               const SizedBox(height: 4.0),
                               Visibility(
@@ -180,7 +190,8 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                   isEnabled: context
                                       .watch<CheckoutBloc>()
                                       .isCheckoutButtonEnabled,
-                                  text: LocalizationConstants.submitOrder.localized(),
+                                  text: LocalizationConstants.submitOrder
+                                      .localized(),
                                 ),
                               ),
                             ],
@@ -213,8 +224,10 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                 Navigator.pop(context);
                               },
                               text: scanningMode == ScanningMode.count
-                                  ? LocalizationConstants.backToCountInventory.localized()
-                                  : LocalizationConstants.backToCreateOrder.localized(),
+                                  ? LocalizationConstants.backToCountInventory
+                                      .localized()
+                                  : LocalizationConstants.backToCreateOrder
+                                      .localized(),
                             ),
                           ),
                         ],

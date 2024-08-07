@@ -158,11 +158,13 @@ class _WishListsPageState extends State<WishListsPage> {
                     child: Center(child: CircularProgressIndicator()));
               } else if (state.status == WishListStatus.failure) {
                 return Expanded(
-                    child: Center(child: Text(LocalizationConstants.error.localized())));
+                    child: Center(
+                        child: Text(LocalizationConstants.error.localized())));
               } else if (context.read<WishListCubit>().noWishListFound) {
                 return Expanded(
                   child: Center(
-                    child: Text(LocalizationConstants.noListsAvailable.localized()),
+                    child: Text(
+                        LocalizationConstants.noListsAvailable.localized()),
                   ),
                 );
               }
@@ -303,10 +305,12 @@ class _WishListItem extends StatelessWidget {
         (wishList.wishListSharesCount != null &&
             wishList.wishListSharesCount! > 0)) {
       if (wishList.wishListSharesCount! > 0 && wishList.isSharedList == false) {
-        return LocalizationConstants.sharedWith.localized()
+        return LocalizationConstants.sharedWith
+            .localized()
             .format([wishList.wishListSharesCount ?? '']);
       } else if (wishList.isSharedList == true) {
-        final result = LocalizationConstants.sharedBy.localized()
+        final result = LocalizationConstants.sharedBy
+            .localized()
             .format([wishList.sharedByDisplayName ?? '']);
         return result;
       }

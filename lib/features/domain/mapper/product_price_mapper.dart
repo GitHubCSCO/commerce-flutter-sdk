@@ -3,7 +3,7 @@ import 'package:commerce_flutter_app/features/domain/mapper/break_price_mapper.d
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductPriceEntityMapper {
-  ProductPriceEntity toEntity(ProductPrice? model) => ProductPriceEntity(
+  static ProductPriceEntity toEntity(ProductPrice? model) => ProductPriceEntity(
         productId: model?.productId,
         isOnSale: model?.isOnSale,
         requiresRealTimePrice: model?.requiresRealTimePrice,
@@ -28,10 +28,10 @@ class ProductPriceEntityMapper {
         vatAmount: model?.vatAmount,
         vatAmountDisplay: model?.vatAmountDisplay,
         unitListBreakPrices: model?.unitListBreakPrices
-            ?.map((e) => BreakPriceEntityMapper().toEntity(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toEntity(e))
             .toList(),
         unitRegularBreakPrices: model?.unitRegularBreakPrices
-            ?.map((e) => BreakPriceEntityMapper().toEntity(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toEntity(e))
             .toList(),
         regularPrice: model?.regularPrice,
         regularPriceDisplay: model?.regularPriceDisplay,
@@ -42,14 +42,14 @@ class ProductPriceEntityMapper {
         extendedActualPrice: model?.extendedActualPrice,
         extendedActualPriceDisplay: model?.extendedActualPriceDisplay,
         regularBreakPrices: model?.regularBreakPrices
-            ?.map((e) => BreakPriceEntityMapper().toEntity(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toEntity(e))
             .toList(),
         actualBreakPrices: model?.actualBreakPrices
-            ?.map((e) => BreakPriceEntityMapper().toEntity(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toEntity(e))
             .toList(),
       );
 
-  ProductPrice toModel(ProductPriceEntity entity) => ProductPrice(
+  static ProductPrice toModel(ProductPriceEntity entity) => ProductPrice(
         productId: entity.productId,
         isOnSale: entity.isOnSale,
         requiresRealTimePrice: entity.requiresRealTimePrice,
@@ -74,10 +74,10 @@ class ProductPriceEntityMapper {
         vatAmount: entity.vatAmount,
         vatAmountDisplay: entity.vatAmountDisplay,
         unitListBreakPrices: entity.unitListBreakPrices
-            ?.map((e) => BreakPriceEntityMapper().toModel(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toModel(e))
             .toList(),
         unitRegularBreakPrices: entity.unitRegularBreakPrices
-            ?.map((e) => BreakPriceEntityMapper().toModel(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toModel(e))
             .toList(),
         regularPrice: entity.regularPrice,
         regularPriceDisplay: entity.regularPriceDisplay,
@@ -88,10 +88,10 @@ class ProductPriceEntityMapper {
         extendedActualPrice: entity.extendedActualPrice,
         extendedActualPriceDisplay: entity.extendedActualPriceDisplay,
         regularBreakPrices: entity.regularBreakPrices
-            ?.map((e) => BreakPriceEntityMapper().toModel(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toModel(e))
             .toList(),
         actualBreakPrices: entity.actualBreakPrices
-            ?.map((e) => BreakPriceEntityMapper().toModel(e))
+            ?.map((e) => BreakPriceDtoEntityMapper.toModel(e))
             .toList(),
       );
 }

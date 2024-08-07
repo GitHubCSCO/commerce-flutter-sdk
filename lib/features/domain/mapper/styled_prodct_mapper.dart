@@ -20,24 +20,24 @@ class StyledProductEntityMapper {
         largeImagePath: model.largeImagePath,
         qtyOnHand: model.qtyOnHand,
         numberInCart: model.numberInCart,
-        pricing: ProductPriceEntityMapper()
-            .toEntity(model.pricing ?? ProductPrice()),
+        pricing:
+            ProductPriceEntityMapper.toEntity(model.pricing ?? ProductPrice()),
         quoteRequired: model.quoteRequired,
         styleValues: model.styleValues
-            ?.map((styleValue) => StyleValueEntityMapper().toEntity(styleValue))
+            ?.map((styleValue) => StyleValueEntityMapper.toEntity(styleValue))
             .toList(),
-        availability: AvailabilityEntityMapper()
-            .toEntity(model.availability ?? Availability()),
+        availability: AvailabilityEntityMapper.toEntity(
+            model.availability ?? Availability()),
         productUnitOfMeasures: model.productUnitOfMeasures
-            ?.map((productUnitOfMeasure) => ProductUnitOfMeasureEntityMapper()
-                .toEntity(productUnitOfMeasure))
+            ?.map((productUnitOfMeasure) =>
+                ProductUnitOfMeasureEntityMapper.toEntity(productUnitOfMeasure))
             .toList(),
         productImages: model.productImages
             ?.map((productImage) =>
-                ProductImageEntityMapper().toEntity(productImage))
+                ProductImageEntityMapper.toEntity(productImage))
             .toList(),
         warehouses: model.warehouses
-            ?.map((warehouse) => WarehouseEntityMapper().toEntity(warehouse))
+            ?.map((warehouse) => WarehouseEntityMapper.toEntity(warehouse))
             .toList(),
         trackInventory: model.trackInventory,
       );
@@ -51,24 +51,24 @@ class StyledProductEntityMapper {
         largeImagePath: entity.largeImagePath,
         qtyOnHand: entity.qtyOnHand,
         numberInCart: entity.numberInCart,
-        pricing: ProductPriceEntityMapper()
-            .toModel(entity.pricing ?? ProductPriceEntity()),
+        pricing: ProductPriceEntityMapper.toModel(
+            entity.pricing ?? ProductPriceEntity()),
         quoteRequired: entity.quoteRequired,
         styleValues: entity.styleValues
-            ?.map((styleValue) => StyleValueEntityMapper().toModel(styleValue))
+            ?.map((styleValue) => StyleValueEntityMapper.toModel(styleValue))
             .toList(),
-        availability: AvailabilityEntityMapper()
-            .toModel(entity.availability ?? AvailabilityEntity()),
+        availability: AvailabilityEntityMapper.toModel(
+            entity.availability ?? AvailabilityEntity()),
         productUnitOfMeasures: entity.productUnitOfMeasures
-            ?.map((productUnitOfMeasure) => ProductUnitOfMeasureEntityMapper()
-                .toModel(productUnitOfMeasure))
+            ?.map((productUnitOfMeasure) =>
+                ProductUnitOfMeasureEntityMapper.toModel(productUnitOfMeasure))
             .toList(),
         productImages: entity.productImages
             ?.map((productImage) =>
-                ProductImageEntityMapper().toModel(productImage))
+                ProductImageEntityMapper.toModel(productImage))
             .toList(),
         warehouses: entity.warehouses
-            ?.map((warehouse) => WarehouseEntityMapper().toModel(warehouse))
+            ?.map((warehouse) => WarehouseEntityMapper.toModel(warehouse))
             .toList(),
         trackInventory: entity.trackInventory,
       );

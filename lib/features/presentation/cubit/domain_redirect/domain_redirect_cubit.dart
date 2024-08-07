@@ -20,6 +20,7 @@ class DomainRedirectCubit extends Cubit<DomainRedirectStatus> {
 
     if (result != null) {
       await _languageUsecase.loadCurrentLanguage();
+      await _languageUsecase.loadDefaultSiteMessage();
       await _domainUsecase.loadRemoteSettings();
       emit(DomainRedirectStatus.redirect);
     } else {

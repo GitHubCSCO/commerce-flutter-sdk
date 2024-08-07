@@ -48,5 +48,4 @@ class CardExpirationCubit extends Cubit<CardExpirationState> {
     emit(CardExpirationValidationState(
         selectedExpirationMonth == null, selectedExpirationYear == null));
   }
-
 }

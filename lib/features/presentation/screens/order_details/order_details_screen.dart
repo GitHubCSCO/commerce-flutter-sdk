@@ -1,6 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
@@ -52,7 +51,7 @@ class OrderDetailsPage extends StatelessWidget {
             : Text(LocalizationConstants.orderDetails.localized()),
       ),
       body: BlocConsumer<OrderDetailsCubit, OrderDetailsState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state.orderStatus == OrderStatus.reorderLoading) {
             showPleaseWait(context);
           }
@@ -62,7 +61,7 @@ class OrderDetailsPage extends StatelessWidget {
             context.read<CartCountCubit>().onCartItemChange();
             CustomSnackBar.showSnackBarMessage(
               context,
-              SiteMessageConstants.defaultValueAddToCartSuccess,
+              state.errorMessage ?? '',
             );
           }
 
@@ -70,7 +69,7 @@ class OrderDetailsPage extends StatelessWidget {
             Navigator.of(context, rootNavigator: true).pop();
             CustomSnackBar.showSnackBarMessage(
               context,
-              SiteMessageConstants.defaultValueAddToCartFail,
+              state.errorMessage ?? '',
             );
           }
         },
@@ -193,9 +192,10 @@ class OrderDetailsPage extends StatelessWidget {
                                   .read<OrderDetailsCubit>()
                                   .reorderAllProducts();
                             },
-                            message:
-                                LocalizationConstants.addOrderContentToCart.localized(),
-                            confirmText: LocalizationConstants.reorder.localized(),
+                            message: LocalizationConstants.addOrderContentToCart
+                                .localized(),
+                            confirmText:
+                                LocalizationConstants.reorder.localized(),
                           );
                         },
                       ),

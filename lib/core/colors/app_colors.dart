@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 class OptiAppColors {
-  
   static const Color backgroundWhite = Color(0xFFFFFFFF);
   static const Color textPrimary = Color(0xFF222222);
   static const Color textSecondary = Color(0xFF707070);

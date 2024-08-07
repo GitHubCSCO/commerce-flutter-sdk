@@ -60,7 +60,7 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
         switch (getProductRealTimePricesResponse) {
           case Success(value: final data):
             var realTimePrices = data;
-            productPricing = ProductPriceEntityMapper().toEntity(realTimePrices
+            productPricing = ProductPriceEntityMapper.toEntity(realTimePrices
                 ?.realTimePricingResults!
                 .firstWhere((o) => o.productId == productId));
             return Success(productPricing);
@@ -84,7 +84,7 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
 
         switch (productPricingResponse) {
           case Success(value: final data):
-            productPricing = ProductPriceEntityMapper().toEntity(data);
+            productPricing = ProductPriceEntityMapper.toEntity(data);
             return Success(productPricing);
           case Failure(errorResponse: final errorResponse):
             return Failure(ErrorResponse(
@@ -156,12 +156,12 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
         styledProduct = styledProduct.copyWith(
             qtyOnHand: inventory.qtyOnHand,
             availability:
-                AvailabilityEntityMapper().toEntity(newInventoryAvailability));
+                AvailabilityEntityMapper.toEntity(newInventoryAvailability));
       } else {
         productEntity = productEntity.copyWith(
             qtyOnHand: inventory.qtyOnHand,
             availability:
-                AvailabilityEntityMapper().toEntity(newInventoryAvailability));
+                AvailabilityEntityMapper.toEntity(newInventoryAvailability));
       }
 
       var productUnitOfMeasures = styledProduct != null
@@ -172,12 +172,12 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
             ?.firstWhere((o) => o.unitOfMeasure == p.unitOfMeasure);
         if (unitOfMeasureAvailability != null) {
           p = p.copyWith(
-              availability: AvailabilityEntityMapper()
-                  .toEntity(unitOfMeasureAvailability.availability));
+              availability: AvailabilityEntityMapper.toEntity(
+                  unitOfMeasureAvailability.availability));
         } else {
           p = p.copyWith(
-              availability: AvailabilityEntityMapper()
-                  .toEntity(Availability(messageType: 0)));
+              availability: AvailabilityEntityMapper.toEntity(
+                  Availability(messageType: 0)));
         }
       }
     } else {
@@ -188,20 +188,20 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
       if (styledProduct != null) {
         styledProduct = styledProduct.copyWith(
             availability:
-                AvailabilityEntityMapper().toEntity(newProductAvailability));
+                AvailabilityEntityMapper.toEntity(newProductAvailability));
         for (var p in styledProduct.productUnitOfMeasures!) {
           p = p.copyWith(
-              availability: AvailabilityEntityMapper()
-                  .toEntity(Availability(messageType: 0)));
+              availability: AvailabilityEntityMapper.toEntity(
+                  Availability(messageType: 0)));
         }
       } else {
         productEntity = productEntity.copyWith(
             availability:
-                AvailabilityEntityMapper().toEntity(newProductAvailability));
+                AvailabilityEntityMapper.toEntity(newProductAvailability));
         for (var p in productEntity.productUnitOfMeasures!) {
           p = p.copyWith(
-              availability: AvailabilityEntityMapper()
-                  .toEntity(Availability(messageType: 0)));
+              availability: AvailabilityEntityMapper.toEntity(
+                  Availability(messageType: 0)));
         }
       }
     }

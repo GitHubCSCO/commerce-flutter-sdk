@@ -17,7 +17,6 @@ import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BillingShippingWidget extends StatelessWidget {
-
   final BillingShippingEntity billingShippingEntity;
   final void Function(BuildContext, Object)? onCallBack;
 
@@ -44,7 +43,8 @@ class BillingShippingWidget extends StatelessWidget {
     list.add(_buildBillingAddress());
 
     if (billingShippingEntity.shippingMethod == ShippingOption.ship) {
-      list.add(_buildShippingAddress(context, billingShippingEntity.canChangeShipTo ?? true));
+      list.add(_buildShippingAddress(
+          context, billingShippingEntity.canChangeShipTo ?? true));
 
       if (billingShippingEntity.carriers != null &&
           billingShippingEntity.carriers!.isNotEmpty) {
@@ -376,7 +376,9 @@ class ShippingAddressWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title != null ? title! : LocalizationConstants.shippingAddress.localized(),
+            title != null
+                ? title!
+                : LocalizationConstants.shippingAddress.localized(),
             textAlign: TextAlign.start,
             style: OptiTextStyles.subtitle,
           ),

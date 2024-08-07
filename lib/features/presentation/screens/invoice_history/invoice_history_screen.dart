@@ -56,7 +56,7 @@ class InvoiceHistoryPage extends StatelessWidget {
             case InvoiceStatus.failure:
               return Center(
                 child: Text(
-                  SiteMessageConstants.defaultMobileAppAlertCommunicationError,
+                  state.errorMessage ?? '',
                 ),
               );
             default:
@@ -129,8 +129,7 @@ class InvoiceHistoryPage extends StatelessWidget {
                       ? Expanded(
                           child: Center(
                             child: Text(
-                              SiteMessageConstants
-                                  .defaultInvoiceNoResultsMessage,
+                              state.errorMessage ?? '',
                             ),
                           ),
                         )

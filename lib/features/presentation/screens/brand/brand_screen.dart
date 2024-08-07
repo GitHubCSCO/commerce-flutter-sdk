@@ -23,17 +23,13 @@ class BrandScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<BrandBloc>(
-      create: (context) =>
-      sl<BrandBloc>()
-        ..add(BrandSectionLoadEvent()),
+      create: (context) => sl<BrandBloc>()..add(BrandSectionLoadEvent()),
       child: BrandPage(),
     );
   }
-
 }
 
 class BrandPage extends StatelessWidget {
-
   final websitePath = WebsitePaths.brandsWebsitePath;
   final textEditingController = TextEditingController();
 
@@ -43,8 +39,8 @@ class BrandPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            LocalizationConstants.brands.localized(), style: OptiTextStyles.titleLarge),
+        title: Text(LocalizationConstants.brands.localized(),
+            style: OptiTextStyles.titleLarge),
         actions: [
           BottomMenuWidget(websitePath: websitePath),
         ],
@@ -52,8 +48,7 @@ class BrandPage extends StatelessWidget {
       body: Column(
         children: [
           Container(
-            padding:
-            const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
             child: Input(
               hintText: LocalizationConstants.search.localized(),
               suffixIcon: IconButton(
@@ -64,20 +59,18 @@ class BrandPage extends StatelessWidget {
                 ),
                 onPressed: () {
                   textEditingController.clear();
-                  context
-                      .read<BrandBloc>()
-                      .add(BrandSectionLoadEvent());
+                  context.read<BrandBloc>().add(BrandSectionLoadEvent());
                   context.closeKeyboard();
                 },
               ),
               onTapOutside: (p0) => context.closeKeyboard(),
               onChanged: (String searchQuery) {
                 if (searchQuery.isEmpty) {
+                  context.read<BrandBloc>().add(BrandSectionLoadEvent());
+                } else {
                   context
                       .read<BrandBloc>()
-                      .add(BrandSectionLoadEvent());
-                } else {
-                  context.read<BrandBloc>().add(BrandAutoCompleteLoadEvent(searchQuery));
+                      .add(BrandAutoCompleteLoadEvent(searchQuery));
                 }
               },
               textInputAction: TextInputAction.search,
@@ -87,7 +80,8 @@ class BrandPage extends StatelessWidget {
           BlocConsumer<BrandBloc, BrandState>(
             listener: (context, state) {
               if (state is BrandLoaded) {
-                AppRoute.shopBrandDetails.navigateBackStack(context, extra: state.brand);
+                AppRoute.shopBrandDetails
+                    .navigateBackStack(context, extra: state.brand);
               }
             },
             buildWhen: (previous, current) {
@@ -104,27 +98,33 @@ class BrandPage extends StatelessWidget {
                     child: SingleChildScrollView(
                       child: ExpansionPanelList(
                         expansionCallback: (int index, bool isExpanded) {
-                          context.read<BrandBloc>().add(BrandToggleEvent(index));
+                          context
+                              .read<BrandBloc>()
+                              .add(BrandToggleEvent(index));
                         },
                         children: list
                             .asMap()
                             .map((index, item) => MapEntry(
-                          index,
-                          ExpansionPanel(
-                            headerBuilder: (BuildContext context, bool isExpanded) {
-                              return ListTile(
-                                title: Text((item.letter ?? '').toUpperCase()),
-                              );
-                            },
-                            body: BlocProvider<BrandListCubit>(
-                              create: (context) =>
-                              sl<BrandListCubit>()..getBrands(item.letter ?? ''),
-                              child: BrandListWidget(name: item.letter ?? ''),
-                            ),
-                            isExpanded: state.currentPanelIndex == index,
-                            canTapOnHeader: true,
-                          ),
-                        ))
+                                  index,
+                                  ExpansionPanel(
+                                    headerBuilder: (BuildContext context,
+                                        bool isExpanded) {
+                                      return ListTile(
+                                        title: Text(
+                                            (item.letter ?? '').toUpperCase()),
+                                      );
+                                    },
+                                    body: BlocProvider<BrandListCubit>(
+                                      create: (context) => sl<BrandListCubit>()
+                                        ..getBrands(item.letter ?? ''),
+                                      child: BrandListWidget(
+                                          name: item.letter ?? ''),
+                                    ),
+                                    isExpanded:
+                                        state.currentPanelIndex == index,
+                                    canTapOnHeader: true,
+                                  ),
+                                ))
                             .values
                             .toList(),
                       ),
@@ -139,7 +139,9 @@ class BrandPage extends StatelessWidget {
                       callback: _handleAutoCompleteCallback);
                 case BrandAutoCompleteFailed():
                   return Center(
-                      child: Text(LocalizationConstants.noResultFoundMessage.localized(),
+                      child: Text(
+                          LocalizationConstants.noResultFoundMessage
+                              .localized(),
                           style: OptiTextStyles.body));
                 default:
                   return const Center();
@@ -151,21 +153,21 @@ class BrandPage extends StatelessWidget {
     );
   }
 
-  void _handleAutoCompleteCallback(BuildContext context, AutocompleteBrand brand) {
+  void _handleAutoCompleteCallback(
+      BuildContext context, AutocompleteBrand brand) {
     context.read<BrandBloc>().add(BrandLoadEvent(brand.id ?? ''));
   }
-
 }
 
 class BrandListWidget extends StatelessWidget {
-
   final String name;
 
   const BrandListWidget({super.key, required this.name});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BrandListCubit, BrandListState>(builder: (context, state) {
+    return BlocBuilder<BrandListCubit, BrandListState>(
+        builder: (context, state) {
       switch (state) {
         case BrandListInitial():
         case BrandListLoading():
@@ -186,7 +188,8 @@ class BrandListWidget extends StatelessWidget {
                 final brand = brandList[index];
                 return InkWell(
                   onTap: () {
-                    AppRoute.shopBrandDetails.navigateBackStack(context, extra: brand);
+                    AppRoute.shopBrandDetails
+                        .navigateBackStack(context, extra: brand);
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8),
@@ -210,7 +213,8 @@ class BrandListWidget extends StatelessWidget {
                                   StackTrace? stackTrace) {
                                 // This function is called when the image fails to load
                                 return Container(
-                                  color: OptiAppColors.backgroundGray, // Placeholder color
+                                  color: OptiAppColors
+                                      .backgroundGray, // Placeholder color
                                   alignment: Alignment.center,
                                   child: const Icon(
                                     Icons.image, // Icon to display
@@ -235,5 +239,4 @@ class BrandListWidget extends StatelessWidget {
       }
     });
   }
-
 }

@@ -8,7 +8,6 @@ part 'brand_state.dart';
 part 'brand_event.dart';
 
 class BrandBloc extends Bloc<BrandEvent, BrandState> {
-
   final BrandUseCase _brandUseCase;
 
   BrandBloc({required BrandUseCase brandUseCase})
@@ -20,7 +19,8 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
     on<BrandLoadEvent>(_onBrandLoadEvent);
   }
 
-  Future<void> _onBrandSectionLoadEvent(BrandSectionLoadEvent event, Emitter<BrandState> emit) async {
+  Future<void> _onBrandSectionLoadEvent(
+      BrandSectionLoadEvent event, Emitter<BrandState> emit) async {
     emit(BrandLoading());
 
     final response = await _brandUseCase.getAlphabet();
@@ -32,7 +32,8 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
     }
   }
 
-  Future<void> _onBrandAutoCompleteLoadEvent(BrandAutoCompleteLoadEvent event, Emitter<BrandState> emit) async {
+  Future<void> _onBrandAutoCompleteLoadEvent(
+      BrandAutoCompleteLoadEvent event, Emitter<BrandState> emit) async {
     if (event.query.isNotEmpty) {
       emit(BrandLoading());
       final result = await _brandUseCase.getAutoCompleteBrands(event.query);
@@ -41,10 +42,13 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
           if (data != null && data.isNotEmpty) {
             emit(BrandAutoCompleteLoaded(data));
           } else {
-            emit(BrandAutoCompleteFailed(error: LocalizationConstants.noResultFoundMessage.localized() ?? ''));
+            emit(BrandAutoCompleteFailed(
+                error: LocalizationConstants.noResultFoundMessage.localized() ??
+                    ''));
           }
         case Failure(errorResponse: final errorResponse):
-          emit(BrandAutoCompleteFailed(error: errorResponse.errorDescription ?? ''));
+          emit(BrandAutoCompleteFailed(
+              error: errorResponse.errorDescription ?? ''));
         default:
       }
     }
@@ -53,17 +57,18 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
   void _onBrandToggleEvent(BrandToggleEvent event, Emitter<BrandState> emit) {
     if (state is BrandSectionLoaded) {
       final currentState = state as BrandSectionLoaded;
-      final newIndex = currentState.currentPanelIndex == event.index ? -1 : event.index;
+      final newIndex =
+          currentState.currentPanelIndex == event.index ? -1 : event.index;
       emit(BrandSectionLoaded(currentState.alphabetResult, newIndex));
     }
   }
 
-  Future<void> _onBrandLoadEvent(BrandLoadEvent event, Emitter<BrandState> emit) async {
+  Future<void> _onBrandLoadEvent(
+      BrandLoadEvent event, Emitter<BrandState> emit) async {
     final result = await _brandUseCase.getBrand(event.brandId);
     final brand = result.getResultSuccessValue();
     if (brand != null) {
       emit(BrandLoaded(brand: brand));
     }
   }
-
 }

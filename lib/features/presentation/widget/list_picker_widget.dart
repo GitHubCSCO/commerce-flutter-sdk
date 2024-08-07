@@ -172,9 +172,9 @@ class _ListPickerState extends State<ListPicker> {
     } else if (item is ShipViaDto) {
       return item.description!;
     } else if (item is PaymentMethodDto) {
-      if(item.description! != ""){
+      if (item.description! != "") {
         return item.description!;
-      }else {
+      } else {
         return item.name ?? "";
       }
     } else if (item is ConfigSectionOptionEntity) {
@@ -189,6 +189,8 @@ class _ListPickerState extends State<ListPicker> {
       return item.name ?? "";
     } else if (item is StateModel) {
       return item.name ?? "";
+    } else if (item is CalculationMethod) {
+      return item.displayName ?? item.name ?? item.value ?? "";
     } else {
       return '';
     }

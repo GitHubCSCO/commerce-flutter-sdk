@@ -1,6 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/tracking_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
 import 'package:get_it/get_it.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import '../../sdk/services/mock_api_service_provider.dart';
@@ -37,5 +35,7 @@ Future<void> initInjectionContainerMock() async {
     ..registerLazySingleton<ISettingsService>(() => MockSettingsService())
     ..registerLazySingleton<IAdminClientService>(() => MockAdminClientService())
     ..registerLazySingleton<IAccountService>(() => MockAccountService())
-    ..registerLazySingleton<ITrackingService>(() => MockTrackingService());
+    ..registerLazySingleton<ITrackingService>(() => MockTrackingService())
+    ..registerLazySingleton<ILocalizationService>(
+        () => MockLocalizationService());
 }

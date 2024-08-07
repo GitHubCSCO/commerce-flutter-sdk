@@ -8,7 +8,6 @@ import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuickOrderItemEntity {
-
   ProductEntity productEntity;
   VmiBinModelEntity? vmiBinEntity;
   Availability? availability;
@@ -53,33 +52,42 @@ class QuickOrderItemEntity {
       } else {
         priceValueText = (productEntity.quoteRequired!)
             ? LocalizationConstants.requiresQuote.localized()
-            : pricing.getPriceValue(); // Assuming getPriceValue() returns a string
+            : pricing
+                .getPriceValue(); // Assuming getPriceValue() returns a string
         extendedPriceValueText = (productEntity.quoteRequired!)
             ? LocalizationConstants.requiresQuote.localized()
-            : pricing.getSubtotalValue(); // Assuming getSubtotalValue() returns a string
-        selectedUnitOfMeasureValueText = pricing.getUnitOfMeasure(uomText ?? ''); // Assuming getUnitOfMeasure() returns a string
+            : pricing
+                .getSubtotalValue(); // Assuming getSubtotalValue() returns a string
+        selectedUnitOfMeasureValueText = pricing.getUnitOfMeasure(
+            uomText ?? ''); // Assuming getUnitOfMeasure() returns a string
       }
 
-      discountValueText = pricing.getDiscountValue() ?? ''; // Assuming getDiscountValue() returns a string
-
+      discountValueText = pricing.getDiscountValue() ??
+          ''; // Assuming getDiscountValue() returns a string
     } else {
       priceValueText = SiteMessageConstants.valuePricingSignInForPrice;
     }
   }
 
-  void updateSelectedUnitOfMeasure(ProductUnitOfMeasureEntity? selectedUnitOfMeasure) {
+  void updateSelectedUnitOfMeasure(
+      ProductUnitOfMeasureEntity? selectedUnitOfMeasure) {
     this.selectedUnitOfMeasure = selectedUnitOfMeasure;
     if (selectedUnitOfMeasure == null) {
       selectedUnitOfMeasureTitle = '';
       selectedUnitOfMeasureValueText = '';
     } else if (selectedUnitOfMeasure.description?.trim().isNotEmpty ?? false) {
       selectedUnitOfMeasureTitle = selectedUnitOfMeasure.description;
-      selectedUnitOfMeasureValueText = (selectedUnitOfMeasure.qtyPerBaseUnitOfMeasure! > 1)
+      selectedUnitOfMeasureValueText = (selectedUnitOfMeasure
+                  .qtyPerBaseUnitOfMeasure! >
+              1)
           ? '${selectedUnitOfMeasure.description} /${selectedUnitOfMeasure.qtyPerBaseUnitOfMeasure}'
           : selectedUnitOfMeasure.description;
-    } else if (selectedUnitOfMeasure.unitOfMeasureDisplay?.trim().isNotEmpty ?? false) {
+    } else if (selectedUnitOfMeasure.unitOfMeasureDisplay?.trim().isNotEmpty ??
+        false) {
       selectedUnitOfMeasureTitle = selectedUnitOfMeasure.unitOfMeasureDisplay;
-      selectedUnitOfMeasureValueText = (selectedUnitOfMeasure.qtyPerBaseUnitOfMeasure! > 1)
+      selectedUnitOfMeasureValueText = (selectedUnitOfMeasure
+                  .qtyPerBaseUnitOfMeasure! >
+              1)
           ? '${selectedUnitOfMeasure.unitOfMeasureDisplay} /${selectedUnitOfMeasure.qtyPerBaseUnitOfMeasure}'
           : selectedUnitOfMeasure.unitOfMeasureDisplay;
     } else {
@@ -87,5 +95,4 @@ class QuickOrderItemEntity {
       selectedUnitOfMeasureValueText = '';
     }
   }
-
 }

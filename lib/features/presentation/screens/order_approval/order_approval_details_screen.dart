@@ -1,7 +1,6 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
@@ -91,7 +90,7 @@ class OrderApprovalDetailsPage extends StatelessWidget {
             : Text(LocalizationConstants.orderApproval.localized()),
       ),
       body: BlocConsumer<OrderApprovalDetailsCubit, OrderApprovalDetailsState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state.status == OrderStatus.addToCartLoading ||
               state.status == OrderStatus.deleteCartLoading) {
             showPleaseWait(context);
@@ -115,7 +114,7 @@ class OrderApprovalDetailsPage extends StatelessWidget {
             Navigator.of(context, rootNavigator: true).pop();
             CustomSnackBar.showSnackBarMessage(
               context,
-              SiteMessageConstants.defaultVaLueOrderApprovalBadRequest,
+              state.errorMessage ?? '',
             );
           }
 
@@ -133,7 +132,7 @@ class OrderApprovalDetailsPage extends StatelessWidget {
             Navigator.of(context, rootNavigator: true).pop();
             CustomSnackBar.showSnackBarMessage(
               context,
-              SiteMessageConstants.defaultValueDeleteCartFail,
+              state.errorMessage ?? '',
             );
           }
 

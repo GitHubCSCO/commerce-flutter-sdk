@@ -4,21 +4,28 @@ import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart'
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ActionLinkUseCase extends BaseUseCase {
-
-  Future<List<ActionLinkEntity>> getViewableActions(List<ActionLinkEntity>? actions) async {
+  Future<List<ActionLinkEntity>> getViewableActions(
+      List<ActionLinkEntity>? actions) async {
     List<ActionLinkEntity> list = [];
 
-    var session = commerceAPIServiceProvider.getSessionService().getCachedCurrentSession();
-    var authentication = await commerceAPIServiceProvider.getAuthenticationService().isAuthenticatedAsync();
+    var session = commerceAPIServiceProvider
+        .getSessionService()
+        .getCachedCurrentSession();
+    var authentication = await commerceAPIServiceProvider
+        .getAuthenticationService()
+        .isAuthenticatedAsync();
 
     bool? isAuthenticated = switch (authentication) {
       Success(value: final data) => Success(data).value,
       Failure() => false
     };
 
-    if(session == null) {
-      final Result<Session, ErrorResponse> currentSession = await commerceAPIServiceProvider.getSessionService().getCurrentSession();
-      session = switch(currentSession) {
+    if (session == null) {
+      final Result<Session, ErrorResponse> currentSession =
+          await commerceAPIServiceProvider
+              .getSessionService()
+              .getCurrentSession();
+      session = switch (currentSession) {
         Success(value: final data) => Success(data).value,
         Failure() => null
       };
@@ -30,19 +37,25 @@ class ActionLinkUseCase extends BaseUseCase {
         if (!isAuthenticated!) {
           continue;
         } else {
-          if (session == null || (session.isRequisitioner && !(action.type == ActionType.lists || action.type == ActionType.signOut))) {
+          if (session == null ||
+              (session.isRequisitioner &&
+                  !(action.type == ActionType.lists ||
+                      action.type == ActionType.signOut))) {
             continue;
           }
           if (action.type == ActionType.vmi && !session.isVMIUser) {
             continue;
           }
-          if (action.type == ActionType.orderApproval && !session.isOrderApprovalApplicableUser) {
+          if (action.type == ActionType.orderApproval &&
+              !session.isOrderApprovalApplicableUser) {
             continue;
           }
-          if (action.type == ActionType.showHidePricing && !session.displayPricingAndInventory!) {
+          if (action.type == ActionType.showHidePricing &&
+              !session.displayPricingAndInventory!) {
             continue;
           }
-          if (action.type == ActionType.showHideInventory && !session.displayPricingAndInventory!) {
+          if (action.type == ActionType.showHideInventory &&
+              !session.displayPricingAndInventory!) {
             continue;
           }
         }
@@ -87,5 +100,4 @@ class ActionLinkUseCase extends BaseUseCase {
         return false;
     }
   }
-
 }

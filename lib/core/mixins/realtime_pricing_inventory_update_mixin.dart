@@ -11,38 +11,42 @@ import 'package:commerce_flutter_app/features/presentation/cubit/product_carouse
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 mixin RealtimePricingInventoryUpdateMixin {
-
   Future<List<ProductEntity>> updateProductPricingAndInventoryAvailability(
       PricingInventoryUseCase pricingInventoryUseCase, List<Product>? products,
       {bool? hidePricing, bool? hideInventory}) async {
     final productPricingEnabled =
-    await pricingInventoryUseCase.getProductPricingEnable();
-    final productAvailabilityEnabled = await pricingInventoryUseCase.getProductInventoryAvailable();
+        await pricingInventoryUseCase.getProductPricingEnable();
+    final productAvailabilityEnabled =
+        await pricingInventoryUseCase.getProductInventoryAvailable();
 
     final productList = products
-        ?.map((product) => ProductEntityMapper().toEntity(product))
-        .toList() ??
+            ?.map((product) => ProductEntityMapper().toEntity(product))
+            .toList() ??
         [];
 
-    final realTimeResult = await pricingInventoryUseCase.getRealtimeSupportType();
+    final realTimeResult =
+        await pricingInventoryUseCase.getRealtimeSupportType();
 
-    if (!(hidePricing ?? false) && productPricingEnabled && realTimeResult != null) {
+    if (!(hidePricing ?? false) &&
+        productPricingEnabled &&
+        realTimeResult != null) {
       if (realTimeResult == RealTimeSupport.RealTimePricingOnly ||
           realTimeResult ==
               RealTimeSupport.RealTimePricingWithInventoryIncluded ||
           realTimeResult == RealTimeSupport.RealTimePricingAndInventory) {
         final productPriceParameters = productList
             .map((product) => ProductPriceQueryParameter(
-          productId: product.id,
-          qtyOrdered: 1,
-          unitOfMeasure: product.unitOfMeasure,
-        )).toList();
+                  productId: product.id,
+                  qtyOrdered: 1,
+                  unitOfMeasure: product.unitOfMeasure,
+                ))
+            .toList();
 
         final parameter = RealTimePricingParameters(
             productPriceParameters: productPriceParameters);
 
         final pricingResult =
-        await pricingInventoryUseCase.getRealTimePricing(parameter);
+            await pricingInventoryUseCase.getRealTimePricing(parameter);
 
         switch (pricingResult) {
           case Success():
@@ -50,7 +54,7 @@ mixin RealtimePricingInventoryUpdateMixin {
               var matchingPrice = pricingResult.value?.realTimePricingResults
                   ?.firstWhere((o) => o.productId == productEntity.id);
               productEntity.pricing =
-                  ProductPriceEntityMapper().toEntity(matchingPrice);
+                  ProductPriceEntityMapper.toEntity(matchingPrice);
             }
           case Failure():
           default:
@@ -58,20 +62,26 @@ mixin RealtimePricingInventoryUpdateMixin {
       }
     }
 
-    if (!(hideInventory ?? false) & productAvailabilityEnabled && realTimeResult != null) {
+    if (!(hideInventory ?? false) & productAvailabilityEnabled &&
+        realTimeResult != null) {
       if (realTimeResult == RealTimeSupport.NoRealTimePricingAndInventory ||
           realTimeResult == RealTimeSupport.RealTimePricingAndInventory ||
-          realTimeResult == RealTimeSupport.RealTimePricingWithInventoryIncluded ||
+          realTimeResult ==
+              RealTimeSupport.RealTimePricingWithInventoryIncluded ||
           realTimeResult == RealTimeSupport.RealTimeInventory) {
-        final inventoryProducts = productList.map((product) => product?.id ?? '').toList();
+        final inventoryProducts =
+            productList.map((product) => product?.id ?? '').toList();
         final parameters = RealTimeInventoryParameters(
           productIds: inventoryProducts,
         );
 
-        final realTimeInventoryResult = (await pricingInventoryUseCase.getRealTimeInventory(parameters)).getResultSuccessValue();
+        final realTimeInventoryResult =
+            (await pricingInventoryUseCase.getRealTimeInventory(parameters))
+                .getResultSuccessValue();
 
         if (realTimeInventoryResult?.realTimeInventoryResults != null) {
-          for (ProductInventory realTimeInventory in realTimeInventoryResult?.realTimeInventoryResults ?? []) {
+          for (ProductInventory realTimeInventory
+              in realTimeInventoryResult?.realTimeInventoryResults ?? []) {
             for (var productEntity in productList) {
               if (realTimeInventory.productId == productEntity?.id) {
                 var product = productEntity;
@@ -82,13 +92,17 @@ mixin RealtimePricingInventoryUpdateMixin {
                     realTimeInventory.inventoryAvailabilityDtos?.singleWhere(
                         (ia) => ia.unitOfMeasure == product.unitOfMeasure,
                         orElse: () => InventoryAvailability());
-                if (inventoryAvailability != null && inventoryAvailability.availability != null) {
-                  productAvailability = AvailabilityEntityMapper().toEntity(inventoryAvailability.availability);
+                if (inventoryAvailability != null &&
+                    inventoryAvailability.availability != null) {
+                  productAvailability = AvailabilityEntityMapper.toEntity(
+                      inventoryAvailability.availability);
                 } else {
-                  productAvailability = AvailabilityEntityMapper().toEntity(Availability(messageType: 0));
+                  productAvailability = AvailabilityEntityMapper.toEntity(
+                      Availability(messageType: 0));
                 }
 
-                product.productUnitOfMeasures?.forEach((productUnitOfMeasureEntity) {
+                product.productUnitOfMeasures
+                    ?.forEach((productUnitOfMeasureEntity) {
                   var unitOfMeasureAvailability =
                       realTimeInventory.inventoryAvailabilityDtos?.singleWhere(
                     (i) =>
@@ -98,14 +112,16 @@ mixin RealtimePricingInventoryUpdateMixin {
                   );
 
                   late Availability? availability;
-                  if (unitOfMeasureAvailability != null && unitOfMeasureAvailability.availability != null) {
+                  if (unitOfMeasureAvailability != null &&
+                      unitOfMeasureAvailability.availability != null) {
                     availability = unitOfMeasureAvailability.availability;
                   } else {
                     availability = Availability(messageType: 0);
                   }
 
                   productUnitOfMeasureEntity.copyWith(
-                    availability: AvailabilityEntityMapper().toEntity(availability),
+                    availability:
+                        AvailabilityEntityMapper.toEntity(availability),
                   );
                 });
 
@@ -132,10 +148,12 @@ mixin RealtimePricingInventoryUpdateMixin {
           for (var product in productList) {
             final productAvailability = Availability(
               messageType: 0,
-              message: LocalizationConstants.unableToRetrieveInventory.localized(),
+              message:
+                  LocalizationConstants.unableToRetrieveInventory.localized(),
             );
 
-            product.availability = AvailabilityEntityMapper().toEntity(productAvailability);
+            product.availability =
+                AvailabilityEntityMapper.toEntity(productAvailability);
           }
         }
       }
@@ -143,5 +161,4 @@ mixin RealtimePricingInventoryUpdateMixin {
 
     return productList;
   }
-
 }

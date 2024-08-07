@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/saved_order/saved_order_usecase.dart';
@@ -33,7 +34,10 @@ class SavedOrderCubit extends Cubit<SavedOrderState> {
     final settings = await _savedOrderUsecase.loadSettings();
 
     if (settings == null) {
-      emit(state.copyWith(status: OrderStatus.failure));
+      final message = await _savedOrderUsecase.getSiteMessage(
+          SiteMessageConstants.nameMobileAppAlertCommunicationError,
+          SiteMessageConstants.defaultMobileAppAlertCommunicationError);
+      emit(state.copyWith(status: OrderStatus.failure, errorMessage: message));
       return;
     }
 
@@ -52,7 +56,10 @@ class SavedOrderCubit extends Cubit<SavedOrderState> {
     );
 
     if (result == null) {
-      emit(state.copyWith(status: OrderStatus.failure));
+      final message = await _savedOrderUsecase.getSiteMessage(
+          SiteMessageConstants.nameMobileAppAlertCommunicationError,
+          SiteMessageConstants.defaultMobileAppAlertCommunicationError);
+      emit(state.copyWith(status: OrderStatus.failure, errorMessage: message));
       return;
     }
 

@@ -55,9 +55,9 @@ class LineItemPricingWidget extends StatelessWidget {
             if (!(hideInventoryEnable ?? false)) ...{
               availabilityText != null
                   ? _buildInventorySection(
-                context,
-                availabilityText: availabilityText,
-              )
+                      context,
+                      availabilityText: availabilityText,
+                    )
                   : Container(),
               // _buildInventorySection(context),
               // For "View Availability by Warehouse"

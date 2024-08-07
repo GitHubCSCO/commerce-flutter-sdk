@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SvgAssetImage extends StatelessWidget {
-
   final String assetName;
   final double? height;
   final double? width;
@@ -32,7 +31,5 @@ class SvgAssetImage extends StatelessWidget {
       fit: fit,
       semanticsLabel: semanticsLabel,
     );
-
   }
-
 }

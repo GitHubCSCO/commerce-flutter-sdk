@@ -14,7 +14,8 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 part 'search_products_state.dart';
 
-class SearchProductsCubit extends Cubit<SearchProductsState> with RealtimePricingInventoryUpdateMixin {
+class SearchProductsCubit extends Cubit<SearchProductsState>
+    with RealtimePricingInventoryUpdateMixin {
   final SearchUseCase _searchUseCase;
   final PricingInventoryUseCase _pricingInventoryUseCase;
   String? query;
@@ -60,15 +61,16 @@ class SearchProductsCubit extends Cubit<SearchProductsState> with RealtimePricin
             selectedBrandIds: [entity.brandEntity?.id ?? '']));
         break;
       case ProductParentType.brand:
-        emit(state.copyWith(selectedBrandIds: [entity.brandEntity?.id ?? entity.brandEntityId ?? '']));
+        emit(state.copyWith(selectedBrandIds: [
+          entity.brandEntity?.id ?? entity.brandEntityId ?? ''
+        ]));
       case ProductParentType.brandProductLine:
         emit(
-          state.copyWith(
-            selectedBrandIds: [
-              entity.brandEntity?.id ?? entity.brandEntityId ?? ''
-            ],
-            selectedProductLineIds: [entity.brandProductLine?.id ?? '']
-          ),
+          state.copyWith(selectedBrandIds: [
+            entity.brandEntity?.id ?? entity.brandEntityId ?? ''
+          ], selectedProductLineIds: [
+            entity.brandProductLine?.id ?? ''
+          ]),
         );
         break;
     }
@@ -86,11 +88,15 @@ class SearchProductsCubit extends Cubit<SearchProductsState> with RealtimePricin
     );
     final selectedSortOrder = _searchUseCase.getSelectedSortOrder(
       availableSortOrders: availableSortOrders,
-      selectedSortOrderType: productCollectionResult?.pagination?.sortType ?? '',
+      selectedSortOrderType:
+          productCollectionResult?.pagination?.sortType ?? '',
     );
 
-    final productSettings = (await _pricingInventoryUseCase.loadProductSettings()).getResultSuccessValue();
-    final productPricingEnabled = await _pricingInventoryUseCase.getProductPricingEnable();
+    final productSettings =
+        (await _pricingInventoryUseCase.loadProductSettings())
+            .getResultSuccessValue();
+    final productPricingEnabled =
+        await _pricingInventoryUseCase.getProductPricingEnable();
     hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
     hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
 
@@ -154,7 +160,8 @@ class SearchProductsCubit extends Cubit<SearchProductsState> with RealtimePricin
         emit(
           state.copyWith(
             productEntities: state.productEntities,
-            paginationEntity: PaginationEntityMapper.toEntity(data?.pagination ?? Pagination()),
+            paginationEntity: PaginationEntityMapper.toEntity(
+                data?.pagination ?? Pagination()),
             searchProductStatus: SearchProductStatus.success,
           ),
         );
@@ -213,7 +220,8 @@ class SearchProductsCubit extends Cubit<SearchProductsState> with RealtimePricin
         emit(
           state.copyWith(
             productEntities: productEntities,
-            paginationEntity: PaginationEntityMapper.toEntity(data.pagination ?? Pagination()),
+            paginationEntity: PaginationEntityMapper.toEntity(
+                data.pagination ?? Pagination()),
             searchProductStatus: SearchProductStatus.success,
             availableSortOrders: availableSortOrders,
             selectedSortOrder: selectedSortOrder,

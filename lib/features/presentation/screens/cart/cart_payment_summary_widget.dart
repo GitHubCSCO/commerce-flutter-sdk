@@ -146,7 +146,8 @@ class CartPaymentSummaryWidget extends StatelessWidget {
   Widget? _buildSubTotal() {
     String title = paymentSummaryEntity.cart == null
         ? LocalizationConstants.subtotal.localized()
-        : LocalizationConstants.subtotalItems.localized()
+        : LocalizationConstants.subtotalItems
+            .localized()
             .format([paymentSummaryEntity.cart?.totalCountDisplay ?? '']);
     String body = paymentSummaryEntity.cart?.orderSubTotalDisplay ?? '';
     TextStyle textStyle = OptiTextStyles.subtitle;
@@ -307,7 +308,8 @@ class CartPaymentSummaryWidget extends StatelessWidget {
   }
 
   Widget? _buildPromotion(Promotion promotion) {
-    String title = '${LocalizationConstants.promotion.localized()} : ${promotion.name!}';
+    String title =
+        '${LocalizationConstants.promotion.localized()} : ${promotion.name!}';
     String body = '-${promotion.amountDisplay!}';
     TextStyle textStyle = OptiTextStyles.bodyFade;
     return _buildRow(title, body, textStyle);

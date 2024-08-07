@@ -69,13 +69,19 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
 
     final result = await _orderApprovalUseCase.approveOrder(cart: state.cart);
 
-    emit(
-      state.copyWith(
-        status: result
-            ? OrderStatus.addToCartSuccess
-            : OrderStatus.addToCartFailure,
-      ),
-    );
+    if (result) {
+      emit(
+        state.copyWith(status: OrderStatus.addToCartSuccess),
+      );
+    } else {
+      final message = await _orderApprovalUseCase.getSiteMessage(
+          SiteMessageConstants.nameOrderApprovalBadRequest,
+          SiteMessageConstants.defaultVaLueOrderApprovalBadRequest);
+      emit(
+        state.copyWith(
+            status: OrderStatus.addToCartFailure, errorMessage: message),
+      );
+    }
   }
 
   Future<void> deleteOrder() async {
@@ -87,14 +93,18 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
     if (result) {
       emit(state.copyWith(status: OrderStatus.deleteCartSuccess));
     } else {
-      emit(state.copyWith(status: OrderStatus.deleteCartFailure));
+      final message = await _orderApprovalUseCase.getSiteMessage(
+          SiteMessageConstants.nameDeleteCart,
+          SiteMessageConstants.defaultValueDeleteCartFail);
+      emit(state.copyWith(
+          status: OrderStatus.deleteCartFailure, errorMessage: message));
     }
   }
 
   List<CartLineEntity> getCartLines() {
     List<CartLineEntity> cartlines = [];
     for (var cartLine in state.cart.cartLines ?? []) {
-      var cartLineEntity = CartLineEntityMapper().toEntity(cartLine);
+      var cartLineEntity = CartLineEntityMapper.toEntity(cartLine);
       var shouldShowWarehouseInventoryButton =
           InventoryUtils.isInventoryPerWarehouseButtonShownAsync(
                   productSettings) &&
@@ -124,18 +134,15 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
         ? SiteMessageConstants.defaultValueAddToCartFail
         : SiteMessageConstants.defaultValueAddToCartSuccess;
     addCartLineToCartMessage = await _orderApprovalUseCase.getSiteMessage(
-          messageName: addCartLineToCartMessageName,
-          defaultMessage: addCartLineToCartDefaultMessage,
-        ) ??
-        '';
+      addCartLineToCartMessageName,
+      addCartLineToCartDefaultMessage,
+    );
 
     if (newCartLine != null && newCartLine.isQtyAdjusted == true) {
       quantityAdjustedMessage = await _orderApprovalUseCase.getSiteMessage(
-            messageName: SiteMessageConstants.nameAddToCartQuantityAdjusted,
-            defaultMessage:
-                SiteMessageConstants.defaultValueAddToCartQuantityAdjusted,
-          ) ??
-          '';
+        SiteMessageConstants.nameAddToCartQuantityAdjusted,
+        SiteMessageConstants.defaultValueAddToCartQuantityAdjusted,
+      );
 
       emit(
         state.copyWith(

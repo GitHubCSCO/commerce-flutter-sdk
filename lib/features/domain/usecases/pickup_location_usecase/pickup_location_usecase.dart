@@ -10,7 +10,7 @@ class PickUpLocationUseCase extends BaseUseCase {
   PickUpLocationUseCase() : super();
 
   Future<List<WarehouseEntity>> getWarehouses(
-     {double? latitude, double? longitude}) async {
+      {double? latitude, double? longitude}) async {
     WarehousesQueryParameters param = WarehousesQueryParameters(
         pageSize: 16,
         page: 1,
@@ -29,7 +29,7 @@ class PickUpLocationUseCase extends BaseUseCase {
       case Success(value: final data):
         {
           for (var warehouse in data?.warehouses ?? []) {
-            var warehouseEntity = WarehouseEntityMapper().toEntity(warehouse);
+            var warehouseEntity = WarehouseEntityMapper.toEntity(warehouse);
             warehouseEntity = warehouseEntity.copyWith(
                 latLong: LatLong(
                     latitude: warehouse.latitude?.toDouble() ?? 0.0,

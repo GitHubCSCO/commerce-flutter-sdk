@@ -401,8 +401,11 @@ class AddCreditCardPage extends StatelessWidget {
   }
 
   Widget _buildNameField() {
-    return _createInputField(LocalizationConstants.name.localized(),
-        LocalizationConstants.name.localized(), nameController, true, validator: (value) {
+    return _createInputField(
+        LocalizationConstants.name.localized(),
+        LocalizationConstants.name.localized(),
+        nameController,
+        true, validator: (value) {
       if (nameController.text.isEmpty) {
         return SiteMessageConstants.defaultValueAddressNameRequired;
       }
@@ -550,8 +553,11 @@ class AddCreditCardPage extends StatelessWidget {
                 style: OptiTextStyles.subtitle,
               ),
               const SizedBox(height: 20),
-              _createInputField(LocalizationConstants.address.localized(),
-                  LocalizationConstants.address.localized(), addressController, true,
+              _createInputField(
+                  LocalizationConstants.address.localized(),
+                  LocalizationConstants.address.localized(),
+                  addressController,
+                  true,
                   validator: addCreditCardEntity.isAddNewCreditCard
                       ? (value) {
                           if (addressController.text.isEmpty) {
@@ -584,7 +590,8 @@ class AddCreditCardPage extends StatelessWidget {
                                     context
                                         .read<BillingAddressCubit>()
                                         .selectedCountry),
-                                descriptionText: LocalizationConstants.country.localized(),
+                                descriptionText:
+                                    LocalizationConstants.country.localized(),
                                 callback: _onCountrySelect)),
                       ],
                     ),
@@ -625,15 +632,19 @@ class AddCreditCardPage extends StatelessWidget {
                                     context
                                         .read<BillingAddressCubit>()
                                         .selectedState),
-                                descriptionText: LocalizationConstants.state.localized(),
+                                descriptionText:
+                                    LocalizationConstants.state.localized(),
                                 callback: _onStateSelect)),
                       ],
                     ),
                   ),
                 ],
               ),
-              _createInputField(LocalizationConstants.postalCode.localized(),
-                  LocalizationConstants.postalCode.localized(), postalCodeController, true,
+              _createInputField(
+                  LocalizationConstants.postalCode.localized(),
+                  LocalizationConstants.postalCode.localized(),
+                  postalCodeController,
+                  true,
                   validator: addCreditCardEntity.isAddNewCreditCard
                       ? (value) {
                           if (postalCodeController.text.isEmpty) {
@@ -744,7 +755,7 @@ class AddCreditCardPage extends StatelessWidget {
                 child: Text(
                   SiteMessageConstants
                       .defaultValueCreditCardInfoExpirationMonthRequired,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.red, // Change the color if needed
                   ),
                 )),
@@ -779,7 +790,8 @@ class AddCreditCardPage extends StatelessWidget {
                               items: (expirationYears != null)
                                   ? expirationYears as List<Object>
                                   : [],
-                              descriptionText: LocalizationConstants.selectYear.localized(),
+                              descriptionText:
+                                  LocalizationConstants.selectYear.localized(),
                               selectedIndex: getIndexForSelectedExpirationYears(
                                   expirationYears,
                                   context
@@ -797,14 +809,15 @@ class AddCreditCardPage extends StatelessWidget {
                 child: Text(
                   SiteMessageConstants
                       .defaultValueCreditCardInfoExpirationYearRequired,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.red, // Change the color if needed
                   ),
                 )),
           ],
         );
-      } else
+      } else {
         return Container();
+      }
     });
   }
 

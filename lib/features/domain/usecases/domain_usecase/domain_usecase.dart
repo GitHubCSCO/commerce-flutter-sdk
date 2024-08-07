@@ -133,4 +133,7 @@ class DomainUsecase extends BaseUseCase {
     await coreServiceProvider.getAppConfigurationService().loadRemoteSettings();
   }
 
+  void clearCache() async {
+    commerceAPIServiceProvider.getCacheService().clearAllCaches();
+  }
 }

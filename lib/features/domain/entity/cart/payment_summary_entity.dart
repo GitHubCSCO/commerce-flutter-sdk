@@ -1,7 +1,6 @@
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class PaymentSummaryEntity {
-
   final Cart? cart;
   final CartSettings? cartSettings;
   final PromotionCollectionModel? promotions;
@@ -24,8 +23,8 @@ class PaymentSummaryEntity {
       cart: cart ?? this.cart,
       cartSettings: cartSettings ?? this.cartSettings,
       promotions: promotions ?? this.promotions,
-      isCustomerOrderApproval: isCustomerOrderApproval ?? this.isCustomerOrderApproval,
+      isCustomerOrderApproval:
+          isCustomerOrderApproval ?? this.isCustomerOrderApproval,
     );
   }
-
 }

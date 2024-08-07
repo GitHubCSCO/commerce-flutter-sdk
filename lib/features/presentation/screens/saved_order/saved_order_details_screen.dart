@@ -1,6 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
@@ -69,7 +68,7 @@ class OrderDetailsPage extends StatelessWidget {
             context.read<SavedOrderHandlerCubit>().shouldRefreshSavedOrder();
             CustomSnackBar.showSnackBarMessage(
               context,
-              SiteMessageConstants.defaultValueAddToCartSuccess,
+              state.errorMessage ?? '',
             );
             context.pop();
           }
@@ -78,7 +77,7 @@ class OrderDetailsPage extends StatelessWidget {
             Navigator.of(context, rootNavigator: true).pop();
             CustomSnackBar.showSnackBarMessage(
               context,
-              SiteMessageConstants.defaultValueAddToCartFail,
+              state.errorMessage ?? '',
             );
           }
 
@@ -92,7 +91,7 @@ class OrderDetailsPage extends StatelessWidget {
             Navigator.of(context, rootNavigator: true).pop();
             CustomSnackBar.showSnackBarMessage(
               context,
-              SiteMessageConstants.defaultValueDeleteCartFail,
+              state.errorMessage ?? '',
             );
           }
 

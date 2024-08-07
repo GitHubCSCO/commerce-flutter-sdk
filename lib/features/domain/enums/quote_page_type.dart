@@ -1,0 +1,1 @@
+enum QuotePageType { pending, activejobs }

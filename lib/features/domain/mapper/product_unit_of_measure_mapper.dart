@@ -4,7 +4,7 @@ import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductUnitOfMeasureEntityMapper {
-  ProductUnitOfMeasureEntity toEntity(ProductUnitOfMeasure model) =>
+  static ProductUnitOfMeasureEntity toEntity(ProductUnitOfMeasure model) =>
       ProductUnitOfMeasureEntity(
         productUnitOfMeasureId: model.productUnitOfMeasureId,
         unitOfMeasure: model.unitOfMeasure,
@@ -13,11 +13,11 @@ class ProductUnitOfMeasureEntityMapper {
         qtyPerBaseUnitOfMeasure: model.qtyPerBaseUnitOfMeasure,
         roundingRule: model.roundingRule,
         isDefault: model.isDefault,
-        availability: AvailabilityEntityMapper().toEntity(model.availability ??
+        availability: AvailabilityEntityMapper.toEntity(model.availability ??
             Availability()), // Assuming AvailabilityEntityMapper is available
       );
 
-  ProductUnitOfMeasure toModel(ProductUnitOfMeasureEntity entity) =>
+  static ProductUnitOfMeasure toModel(ProductUnitOfMeasureEntity entity) =>
       ProductUnitOfMeasure(
         productUnitOfMeasureId: entity.productUnitOfMeasureId,
         unitOfMeasure: entity.unitOfMeasure,
@@ -26,7 +26,7 @@ class ProductUnitOfMeasureEntityMapper {
         qtyPerBaseUnitOfMeasure: entity.qtyPerBaseUnitOfMeasure,
         roundingRule: entity.roundingRule,
         isDefault: entity.isDefault,
-        availability: AvailabilityEntityMapper()
-            .toModel(entity.availability ?? AvailabilityEntity()),
+        availability: AvailabilityEntityMapper.toModel(
+            entity.availability ?? AvailabilityEntity()),
       );
 }

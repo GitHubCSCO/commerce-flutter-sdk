@@ -73,14 +73,4 @@ class OrderApprovalUseCase extends BaseUseCase {
         return newCartLine;
     }
   }
-
-  Future<String?> getSiteMessage({
-    required String messageName,
-    required String defaultMessage,
-  }) async {
-    return await commerceAPIServiceProvider.getWebsiteService().getSiteMessage(
-          messageName,
-          defaultMessage: defaultMessage,
-        );
-  }
 }

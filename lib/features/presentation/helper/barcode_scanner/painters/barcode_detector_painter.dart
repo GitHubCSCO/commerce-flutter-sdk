@@ -9,11 +9,11 @@ import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart
 
 class BarcodeDetectorPainter extends CustomPainter {
   BarcodeDetectorPainter(
-      this.barcodes,
-      this.imageSize,
-      this.rotation,
-      this.cameraLensDirection,
-      );
+    this.barcodes,
+    this.imageSize,
+    this.rotation,
+    this.cameraLensDirection,
+  );
 
   final List<Barcode> barcodes;
   final Size imageSize;
@@ -94,7 +94,7 @@ class BarcodeDetectorPainter extends CustomPainter {
           )),
         Offset(
             Platform.isAndroid &&
-                cameraLensDirection == CameraLensDirection.front
+                    cameraLensDirection == CameraLensDirection.front
                 ? right
                 : left,
             top),

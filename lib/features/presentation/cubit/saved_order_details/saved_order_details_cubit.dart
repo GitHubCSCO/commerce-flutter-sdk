@@ -62,8 +62,25 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
     emit(state.copyWith(status: OrderStatus.addToCartLoading));
 
     final result = await _savedOrderUsecase.placeOrder(cart: state.cart);
+    String message = '';
 
-    emit(state.copyWith(status: result));
+    switch (result) {
+      case OrderStatus.addToCartSuccess:
+        message = await _savedOrderUsecase.getSiteMessage(
+            SiteMessageConstants.nameAddToCartSuccess,
+            SiteMessageConstants.defaultValueAddToCartSuccess);
+      case OrderStatus.addToCartFailure:
+        message = await _savedOrderUsecase.getSiteMessage(
+            SiteMessageConstants.nameAddToCartFail,
+            SiteMessageConstants.defaultValueAddToCartFail);
+      case OrderStatus.deleteCartFailure:
+        message = await _savedOrderUsecase.getSiteMessage(
+            SiteMessageConstants.nameDeleteCart,
+            SiteMessageConstants.defaultValueDeleteCartFail);
+      default:
+    }
+
+    emit(state.copyWith(status: result, errorMessage: message));
   }
 
   Future<void> deleteSavedOrders() async {
@@ -75,14 +92,18 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
     if (result) {
       emit(state.copyWith(status: OrderStatus.deleteCartSuccess));
     } else {
-      emit(state.copyWith(status: OrderStatus.deleteCartFailure));
+      final message = await _savedOrderUsecase.getSiteMessage(
+          SiteMessageConstants.nameDeleteCart,
+          SiteMessageConstants.defaultValueDeleteCartFail);
+      emit(state.copyWith(
+          status: OrderStatus.deleteCartFailure, errorMessage: message));
     }
   }
 
   List<CartLineEntity> getCartLines() {
     List<CartLineEntity> cartlines = [];
     for (var cartLine in state.cart.cartLines ?? []) {
-      var cartLineEntity = CartLineEntityMapper().toEntity(cartLine);
+      var cartLineEntity = CartLineEntityMapper.toEntity(cartLine);
       var shouldShowWarehouseInventoryButton =
           InventoryUtils.isInventoryPerWarehouseButtonShownAsync(
                   productSettings) &&
@@ -112,18 +133,15 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
         ? SiteMessageConstants.defaultValueAddToCartFail
         : SiteMessageConstants.defaultValueAddToCartSuccess;
     addCartLineToCartMessage = await _savedOrderUsecase.getSiteMessage(
-          messageName: addCartLineToCartMessageName,
-          defaultMessage: addCartLineToCartDefaultMessage,
-        ) ??
-        '';
+      addCartLineToCartMessageName,
+      addCartLineToCartDefaultMessage,
+    );
 
     if (newCartLine != null && newCartLine.isQtyAdjusted == true) {
       quantityAdjustedMessage = await _savedOrderUsecase.getSiteMessage(
-            messageName: SiteMessageConstants.nameAddToCartQuantityAdjusted,
-            defaultMessage:
-                SiteMessageConstants.defaultValueAddToCartQuantityAdjusted,
-          ) ??
-          '';
+        SiteMessageConstants.nameAddToCartQuantityAdjusted,
+        SiteMessageConstants.defaultValueAddToCartQuantityAdjusted,
+      );
 
       emit(
         state.copyWith(

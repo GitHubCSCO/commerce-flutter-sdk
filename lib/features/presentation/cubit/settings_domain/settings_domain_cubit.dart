@@ -20,4 +20,8 @@ class SettingsDomainCubit extends Cubit<SettingsDomainState> {
 
     emit(SettingsDomainLoaded(domain));
   }
+
+  void clearCache() async {
+    _domainUsecase.clearCache();
+  }
 }

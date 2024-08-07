@@ -127,8 +127,10 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
       }
       return null;
     }));
-    list.add(_createInputField(LocalizationConstants.lastName.localized(),
-        LocalizationConstants.lastName.localized(), lastNameController, validator: (value) {
+    list.add(_createInputField(
+        LocalizationConstants.lastName.localized(),
+        LocalizationConstants.lastName.localized(),
+        lastNameController, validator: (value) {
       if (value == null || value.isEmpty) {
         return 'Last Name cannot be empty';
       }
@@ -150,8 +152,10 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
     }));
     list.add(_createInputField(LocalizationConstants.addressTwo.localized(),
         LocalizationConstants.addressTwo.localized(), addressTwoController));
-    list.add(_createInputField(LocalizationConstants.addressThree.localized(),
-        LocalizationConstants.addressThree.localized(), addressThreeController));
+    list.add(_createInputField(
+        LocalizationConstants.addressThree.localized(),
+        LocalizationConstants.addressThree.localized(),
+        addressThreeController));
     list.add(_createInputField(LocalizationConstants.addressFour.localized(),
         LocalizationConstants.addressFour.localized(), addressFourController));
     list.add(_createInputField(
@@ -164,8 +168,9 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
       return null;
     }));
     list.add(_createInputField(
-        LocalizationConstants.city.localized(), LocalizationConstants.city.localized(), cityController,
-        validator: (value) {
+        LocalizationConstants.city.localized(),
+        LocalizationConstants.city.localized(),
+        cityController, validator: (value) {
       if (value == null || value.isEmpty) {
         return 'City cannot be empty';
       }
@@ -281,7 +286,8 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
                           context
                               .read<AddShippingAddressCubit>()
                               .selectedCountry),
-                      descriptionText: LocalizationConstants.country.localized(),
+                      descriptionText:
+                          LocalizationConstants.country.localized(),
                       callback: _onCountrySelect)),
             ],
           ),

@@ -149,22 +149,41 @@ class _SettingsListWidget extends StatelessWidget {
 final settingsItems = [
   const _BiometricListTile(),
   _SettingsListItemWidget(
-    onTap: (BuildContext context) =>
-        CustomSnackBar.showComingSoonSnackBar(context),
+    onTap: (BuildContext context) => showClearCacheDialog(context),
     title: LocalizationConstants.clearCache.localized(),
   ),
   _SettingsListItemWidget(
     title: LocalizationConstants.languages.localized(),
-    onTap: (BuildContext context) =>
-        AppRoute.language.navigate(context),
+    onTap: (BuildContext context) => AppRoute.language.navigate(context),
     showTrailing: true,
   ),
-  _SettingsListItemWidget(
-    title: LocalizationConstants.adminLogin.localized(),
-    onTap: (BuildContext context) =>
-        CustomSnackBar.showComingSoonSnackBar(context),
-  ),
+  // TODO - Enable this later when we implement admin login
+  // _SettingsListItemWidget(
+  //   title: LocalizationConstants.adminLogin.localized(),
+  //   onTap: (BuildContext context) =>
+  //       CustomSnackBar.showComingSoonSnackBar(context),
+  // ),
 ];
+
+void showClearCacheDialog(BuildContext context) {
+  displayDialogWidget(
+    context: context,
+    title: LocalizationConstants.clearCache.localized(),
+    actions: [
+      DialogPlainButton(
+        onPressed: () => Navigator.of(context).pop(),
+        child: Text(LocalizationConstants.cancel.localized()),
+      ),
+      DialogPlainButton(
+        onPressed: () {
+          context.read<SettingsDomainCubit>().clearCache();
+          Navigator.of(context).pop();
+        },
+        child: Text(LocalizationConstants.oK.localized()),
+      ),
+    ],
+  );
+}
 
 class _SettingsListItemWidget extends StatelessWidget {
   final void Function(BuildContext context) onTap;

@@ -6,14 +6,18 @@ part 'brand_product_lines_state.dart';
 
 class BrandProductLinesCubit extends Cubit<BrandProductLinesState> {
   final BrandProductLinesUseCase _brandProductLinesUseCase;
-  BrandProductLinesCubit({required BrandProductLinesUseCase brandProductLinesUseCase}) : _brandProductLinesUseCase = brandProductLinesUseCase, super(BrandProductLinesInitial());
+  BrandProductLinesCubit(
+      {required BrandProductLinesUseCase brandProductLinesUseCase})
+      : _brandProductLinesUseCase = brandProductLinesUseCase,
+        super(BrandProductLinesInitial());
 
   Future<void> getBrandProductLines(Brand brand) async {
     emit(BrandProductLinesInitial());
-    final response = await _brandProductLinesUseCase.getBrandProductLines(brand);
-    if(response!=null){
+    final response =
+        await _brandProductLinesUseCase.getBrandProductLines(brand);
+    if (response != null) {
       emit(BrandProductLinesLoaded(list: response));
-    }else{
+    } else {
       emit(BrandProductLinesFailed(error: "No product lines found"));
     }
   }

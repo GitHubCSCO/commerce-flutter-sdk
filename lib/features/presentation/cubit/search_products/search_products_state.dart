@@ -90,7 +90,8 @@ class SearchProductsState extends Equatable {
       previouslyPurchased: previouslyPurchased ?? this.previouslyPurchased,
       selectedStockedItems: selectedStockedItems ?? this.selectedStockedItems,
       productSettings: productSettings ?? this.productSettings,
-      productPricingEnabled: productPricingEnabled ?? this.productPricingEnabled,
+      productPricingEnabled:
+          productPricingEnabled ?? this.productPricingEnabled,
       hidePricingEnabled: hidePricingEnabled ?? this.hidePricingEnabled,
       hideInventoryEnabled: hideInventoryEnabled ?? this.hideInventoryEnabled,
     );

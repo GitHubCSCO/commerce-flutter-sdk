@@ -1,12 +1,12 @@
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_state.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_header_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CartLineWidgetList extends StatelessWidget {
-
   final bool? showClearCart;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
@@ -37,11 +37,16 @@ class CartLineWidgetList extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CartContentHeaderWidget(cartCount: cartLineEntities.length, showClearCart: showClearCart),
+              CartContentHeaderWidget(
+                showClearCart: showClearCart,
+                cartCount: cartLineEntities.length,
+              ),
               Column(
                 children: cartLineEntities
                     .map((cartLineEntity) => CartLineWidget(
                           cartLineEntity: cartLineEntity,
+                          onCartQuantityChangedCallback: (quantity) {},
+                          onCartLineRemovedCallback: (p0) {},
                           hidePricingEnable: hidePricingEnable,
                           hideInventoryEnable: hideInventoryEnable,
                         ))
