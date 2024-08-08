@@ -23,6 +23,8 @@ class WebsitePaths {
       'redirectto/RfqQuoteDetailsPage?quoteId=%s';
   static const jobQuoteDetailsWebsitePath =
       'redirectto/RfqJobQuoteDetailsPage?jobQuoteId=%s';
+  static const quoteRequestWebsitePath = 'redirectto/QuoteRequestPage';
+  static const savedPaymentsWebsitePath = 'redirectto/MySavedPaymentsPage';
 }
 
 class PrintPaths {
