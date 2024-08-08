@@ -27,4 +27,6 @@ class WebsitePaths {
 
 class PrintPaths {
   static const invoiceDetailPrintPath = 'Invoice/GetPdf?invoiceNumber=%s';
+  static const orderDetailPrintPath =
+      'Order/GetPdf?orderNumber=%s&stPostalCode=%s';
 }
