@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/document._entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_carousel/product_carousel_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_detail_item_entity.dart';
@@ -7,6 +8,7 @@ import 'package:commerce_flutter_app/features/domain/entity/product_details/prod
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_base_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_cross_sell_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_description_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_documents_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_standard_configuration_entity.dart';
@@ -34,7 +36,8 @@ enum ProdcutDeatilsPageWidgets {
   productDetailsPrice,
   productDeatilsStanddardConfigurationSection,
   productDetailsCrossSellSection,
-  productDetailsStyleTraits
+  productDetailsStyleTraits,
+  productDetailsDocuments
 }
 
 class ProductDetailsUseCase extends BaseUseCase {
@@ -264,6 +267,10 @@ class ProductDetailsUseCase extends BaseUseCase {
       items.addAll(addSpecifications(product));
     }
 
+    if (product.documents != null && product.documents!.isNotEmpty) {
+      items.add(makeProductDetailsDocumentsEntity(product));
+    }
+
     if (product.crossSells != null && product.crossSells!.isNotEmpty) {
       var porductCarouselWidget = ProductCarouselWidgetEntity(
           carouselType: ProductCarouselType.webCrossSells,
@@ -350,6 +357,42 @@ class ProductDetailsUseCase extends BaseUseCase {
         htmlContent: product.htmlContent ?? '',
         detailsSectionType:
             ProdcutDeatilsPageWidgets.productDetailsDescription);
+  }
+
+  ProductDetailsDocumentsEntity makeProductDetailsDocumentsEntity(
+      ProductEntity product) {
+    return ProductDetailsDocumentsEntity(
+        title: LocalizationConstants.documents.localized(),
+        documents: product.documents,
+        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsDocuments,
+        documentPaths:
+            createDocumentPathsFromDocuments(product.documents ?? []));
+  }
+
+  List<String> createDocumentPathsFromDocuments(
+      List<DocumentEntity> documents) {
+    List<String> documentPaths = [];
+
+    for (var document in documents) {
+      if (document.filePath == null || document.filePath!.isEmpty) {
+        continue;
+      }
+
+      String documentPath = document.filePath ?? " ";
+
+      if (document.filePath != null && document.filePath!.startsWith('/')) {
+        String clientUrl =
+            commerceAPIServiceProvider.getClientService().url.toString();
+        if (clientUrl.endsWith('/')) {
+          clientUrl = clientUrl.substring(0, clientUrl.length - 1);
+        }
+        documentPath = '$clientUrl${document.filePath}';
+      }
+
+      documentPaths.add(documentPath);
+    }
+
+    return documentPaths;
   }
 
   ProductDetailsStandardConfigurationEntity addConfigSection(
