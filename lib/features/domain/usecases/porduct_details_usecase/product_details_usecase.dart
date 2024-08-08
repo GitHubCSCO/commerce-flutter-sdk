@@ -1,10 +1,13 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/attribute_type_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/attribute_value_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/document._entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_carousel/product_carousel_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_detail_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_attributes_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_base_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_cross_sell_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_description_entity.dart';
@@ -37,7 +40,8 @@ enum ProdcutDeatilsPageWidgets {
   productDeatilsStanddardConfigurationSection,
   productDetailsCrossSellSection,
   productDetailsStyleTraits,
-  productDetailsDocuments
+  productDetailsDocuments,
+  productDetailsAttributes
 }
 
 class ProductDetailsUseCase extends BaseUseCase {
@@ -259,6 +263,12 @@ class ProductDetailsUseCase extends BaseUseCase {
         isProductConfigurationCompleted);
     items.add(addToCartEntity);
 
+    var attributesEntity = makeProductDetailsAttributesEntity(product);
+
+    if (attributesEntity.productAttributes.isNotEmpty) {
+      items.add(attributesEntity);
+    }
+
     if (product.htmlContent != null) {
       items.add(makeProductDetailsDescriptionEntity(product));
     }
@@ -460,5 +470,29 @@ class ProductDetailsUseCase extends BaseUseCase {
     return ProductDetailsStyletraitsEntity(
         detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsStyleTraits,
         styleTraits: styleTraitsEntity);
+  }
+
+  ProductDetailsAttributesEntity makeProductDetailsAttributesEntity(
+      ProductEntity product) {
+    List<AttributeTypeEntity> attributes = [];
+
+    if (product.brand != null && product.brand!.name != null) {
+      var brandAttribute = AttributeTypeEntity(
+          label: LocalizationConstants.brand.localized(),
+          name: LocalizationConstants.brand.localized(),
+          attributeValues: [
+            AttributeValueEntity(
+                value: product.brand!.name, valueDisplay: product.brand!.name)
+          ]);
+      attributes.add(brandAttribute);
+    }
+
+    if (product.attributeTypes != null && product.attributeTypes!.isNotEmpty) {
+      attributes.addAll(product.attributeTypes!);
+    }
+
+    return ProductDetailsAttributesEntity(
+        detailsSectionType: ProdcutDeatilsPageWidgets.productDetailsAttributes,
+        productAttributes: attributes);
   }
 }

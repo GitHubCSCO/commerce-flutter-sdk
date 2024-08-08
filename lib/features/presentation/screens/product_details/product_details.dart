@@ -7,6 +7,7 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_detail_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_attributes_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_base_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_cross_sell_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_description_entity.dart';
@@ -33,6 +34,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/sty
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_add_to_cart_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_attributes_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_documents_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_general_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_pricing_widget.dart';
@@ -241,6 +243,11 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
               item as ProductDetailsDocumentsEntity;
           widgets.add(buildProductDetailsDocumentsWidget(
               productDetailsDocumentsEntity: productDetailsDocumentsEntity));
+        case ProdcutDeatilsPageWidgets.productDetailsAttributes:
+          final productDetailsAttributesEntity =
+              item as ProductDetailsAttributesEntity;
+          widgets.add(buildProductDetailsAttributesWidget(
+              productDetailsAttributesEntity: productDetailsAttributesEntity));
         default:
           break;
       }
@@ -340,5 +347,12 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
   }) {
     return ProductDetailsDocumentsWidget(
         productdetailsdocumentsEntity: productDetailsDocumentsEntity);
+  }
+
+  Widget buildProductDetailsAttributesWidget(
+      {required ProductDetailsAttributesEntity
+          productDetailsAttributesEntity}) {
+    return ProductDetailsAttributesWidget(
+        productDetailsAttributesEntity: productDetailsAttributesEntity);
   }
 }
