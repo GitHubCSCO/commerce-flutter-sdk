@@ -16,6 +16,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_c
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_product_lines_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/invoice_history/invoice_detail_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/invoice_history/invoice_history_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/landing/landing_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/language/language_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/order_approval/order_approval_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/job_quote_details_screen.dart';
@@ -94,6 +95,17 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.root.fullPath,
     name: AppRoute.root.name,
     builder: (context, state) => const RootScreen(),
+  );
+
+  // path: /landing
+  final landing = createNode(
+    name: AppRoute.landing.name,
+    path: AppRoute.landing.suffix,
+    builder: (context, state) {
+      final domainChangePossible = state.extra as bool;
+      return LandingScreen(domainChangePossible: domainChangePossible);
+    },
+    parent: null,
   );
 
   // path: /welcome
@@ -763,6 +775,7 @@ List<NavigationNode> _getNavigationRoot() {
 
   return [
     root,
+    landing,
     navbarRoot,
     welcome,
     domainSelection,

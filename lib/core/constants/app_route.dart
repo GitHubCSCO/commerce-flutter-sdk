@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 class RouteNames {
   static const String root = 'root';
+  static const String landing = 'landing';
   static const String welcome = 'welcome';
   static const String domainSelection = 'domainSelection';
   static const String login = 'login';
@@ -73,6 +74,7 @@ class RouteNames {
 
 class RoutePaths {
   static const String root = '/';
+  static const String landing = '/${RouteNames.landing}';
   static const String welcome = '/welcome';
   static const String domainSelection = '/${RouteNames.domainSelection}';
   static const String login = '/${RouteNames.login}';
@@ -156,6 +158,7 @@ class RoutePaths {
 
 enum AppRoute {
   root(name: RouteNames.root, fullPath: RoutePaths.root),
+  landing(name: RouteNames.landing, fullPath: RoutePaths.landing),
   welcome(name: RouteNames.welcome, fullPath: RoutePaths.welcome),
   domainSelection(
       name: RouteNames.domainSelection, fullPath: RoutePaths.domainSelection),
