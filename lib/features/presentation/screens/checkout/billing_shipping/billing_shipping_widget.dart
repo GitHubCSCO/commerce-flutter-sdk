@@ -18,10 +18,15 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BillingShippingWidget extends StatelessWidget {
   final BillingShippingEntity billingShippingEntity;
+  final bool? isVmiCheckout;
   final void Function(BuildContext, Object)? onCallBack;
 
-  const BillingShippingWidget(
-      {super.key, required this.billingShippingEntity, this.onCallBack});
+  const BillingShippingWidget({
+    super.key,
+    required this.billingShippingEntity,
+    this.onCallBack,
+    this.isVmiCheckout,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +49,9 @@ class BillingShippingWidget extends StatelessWidget {
 
     if (billingShippingEntity.shippingMethod == ShippingOption.ship) {
       list.add(_buildShippingAddress(
-          context, billingShippingEntity.canChangeShipTo ?? true));
+          context,
+          billingShippingEntity.allowCreateNewShipToAddress != false &&
+              isVmiCheckout != true));
 
       if (billingShippingEntity.carriers != null &&
           billingShippingEntity.carriers!.isNotEmpty) {
@@ -75,10 +82,10 @@ class BillingShippingWidget extends StatelessWidget {
           }
         }
 
-        if (billingShippingEntity.canChangeShipTo ?? true) {
+        if (billingShippingEntity.allowCreateNewShipToAddress != false &&
+            isVmiCheckout != true) {
           list.add(_buildAddShippingAddressButton(context));
         }
-
         list.add(_buildShippingMethod(
             billingShippingEntity.carriers!,
             billingShippingEntity.carriers![0].shipVias!,
