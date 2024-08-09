@@ -25,6 +25,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<SearchAutoCompleteLoadEvent>(_onSearchAutoCompleteLoadEvent);
     on<SearchFocusEvent>(_onSearchFocusEvent);
     on<SearchTypingEvent>(_onSearchTypingEvent);
+    on<SearchFieldPopulateEvent>(_onSearchFieldPopulateEvent);
     on<SearchUnFocusEvent>(_onSearchUnFocusEvent);
     on<SearchSearchEvent>(_onSearchSearchEvent);
     on<SearchCloseEvent>(_onSearchCloseEvent);
@@ -47,20 +48,29 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Future<void> _onSearchFocusEvent(
       SearchFocusEvent event, Emitter<SearchState> emit) async {
-    if (searchQuery.isEmpty) {
-      emit(SearchAutoCompleteInitialState());
-    } else {
-      emit(SearchLoadingState());
-      final result = await _searchUseCase.loadAutocompleteResults(searchQuery);
-      switch (result) {
-        case Success(value: final data):
-          emit(SearchAutoCompleteLoadedState(result: data));
-        case Failure(errorResponse: final errorResponse):
-          emit(SearchAutoCompleteFailureState(
-              errorResponse.errorDescription ?? ''));
-        default:
+    if (event.autoFocus == false) {
+      if (searchQuery.isEmpty) {
+        emit(SearchAutoCompleteInitialState());
+      } else {
+        emit(SearchLoadingState());
+        final result =
+            await _searchUseCase.loadAutocompleteResults(searchQuery);
+        switch (result) {
+          case Success(value: final data):
+            emit(SearchAutoCompleteLoadedState(result: data));
+          case Failure(errorResponse: final errorResponse):
+            emit(SearchAutoCompleteFailureState(
+                errorResponse.errorDescription ?? ''));
+          default:
+        }
       }
     }
+  }
+
+  Future<void> _onSearchFieldPopulateEvent(
+      SearchFieldPopulateEvent event, Emitter<SearchState> emit) async {
+    searchQuery = event.searchQuery;
+    emit(SearchQueryLoadedState(searchQuery: event.searchQuery));
   }
 
   Future<void> _onSearchTypingEvent(

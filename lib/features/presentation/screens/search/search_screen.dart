@@ -53,11 +53,26 @@ class SearchScreen extends StatelessWidget {
   }
 }
 
-class SearchPage extends StatelessWidget with BaseDynamicContentScreen {
+class SearchPage extends StatefulWidget {
   SearchPage({super.key});
 
+  @override
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
   final textEditingController = TextEditingController();
+
   final _delayer = Delayer(milliseconds: 500);
+
+  FocusNode autoFocusNode = FocusNode();
+  bool autoFocus = false;
+
+  @override
+  void dispose() {
+    autoFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +103,9 @@ class SearchPage extends StatelessWidget with BaseDynamicContentScreen {
                   textInputAction: TextInputAction.search,
                   focusListener: (bool hasFocus) {
                     if (hasFocus) {
-                      context.read<SearchBloc>().add(SearchFocusEvent());
+                      context
+                          .read<SearchBloc>()
+                          .add(SearchFocusEvent(autoFocus: autoFocus));
                     } else {
                       context.read<SearchBloc>().add(SearchUnFocusEvent());
                     }
@@ -105,6 +122,7 @@ class SearchPage extends StatelessWidget with BaseDynamicContentScreen {
                     context.read<SearchBloc>().add(SearchSearchEvent());
                   },
                   controller: textEditingController,
+                  autoFocusNode: autoFocusNode,
                 ),
               ),
               IconButton(
@@ -253,53 +271,94 @@ class SearchPage extends StatelessWidget with BaseDynamicContentScreen {
                         ),
                       );
                     case SearchLoadingState:
-                      return const Center(child: CircularProgressIndicator());
+                      {
+                        autoFocus = false;
+                        return const Center(child: CircularProgressIndicator());
+                      }
                     case SearchAutoCompleteInitialState:
-                      return Center(
-                        child: Text(
-                          LocalizationConstants.searchPrompt.localized(),
-                          style: OptiTextStyles.body,
-                        ),
-                      );
+                      {
+                        autoFocus = false;
+                        return Center(
+                          child: Text(
+                            LocalizationConstants.searchPrompt.localized(),
+                            style: OptiTextStyles.body,
+                          ),
+                        );
+                      }
                     case SearchAutoCompleteLoadedState:
-                      final autoCompleteResult =
-                          (state as SearchAutoCompleteLoadedState).result;
-                      return _buildSearchAutoComplete(autoCompleteResult);
+                      {
+                        autoFocus = false;
+                        final autoCompleteResult =
+                            (state as SearchAutoCompleteLoadedState).result;
+                        return _buildSearchAutoComplete(autoCompleteResult);
+                      }
+                    case SearchQueryLoadedState:
+                      {
+                        final autoSearchQuery =
+                            (state as SearchQueryLoadedState).searchQuery ?? '';
+                        textEditingController.clear();
+                        textEditingController.text = autoSearchQuery;
+                        autoFocus = true;
+                        autoFocusNode.requestFocus();
+                        context
+                            .read<SearchHistoryCubit>()
+                            .addSearchHistory(autoSearchQuery);
+                        context.read<SearchBloc>().add(SearchSearchEvent());
+                        return Center(
+                          child: Text(
+                            LocalizationConstants.searchPrompt.localized(),
+                            style: OptiTextStyles.body,
+                          ),
+                        );
+                      }
                     case SearchAutoCompleteFailureState:
-                      return Center(
-                          child: Text(
-                        LocalizationConstants.searchNoResults.localized(),
-                        style: OptiTextStyles.body,
-                      ));
+                      {
+                        autoFocus = false;
+                        return Center(
+                            child: Text(
+                          LocalizationConstants.searchNoResults.localized(),
+                          style: OptiTextStyles.body,
+                        ));
+                      }
                     case SearchProductsLoadedState:
-                      final productCollectionResult =
-                          (state as SearchProductsLoadedState).result;
-                      return MultiBlocProvider(
-                        providers: [
-                          BlocProvider<AddToCartCubit>(
-                            create: (context) => sl<AddToCartCubit>(),
+                      {
+                        autoFocus = false;
+                        final productCollectionResult =
+                            (state as SearchProductsLoadedState).result;
+                        return MultiBlocProvider(
+                          providers: [
+                            BlocProvider<AddToCartCubit>(
+                              create: (context) => sl<AddToCartCubit>(),
+                            ),
+                            BlocProvider(
+                              create: (context) => sl<SearchProductsCubit>()
+                                ..loadInitialSearchProducts(
+                                    productCollectionResult),
+                            ),
+                          ],
+                          child: SearchProductsWidget(
+                            onPageChanged: (int) {},
+                            productListType: ProductListType.searchProducts,
                           ),
-                          BlocProvider(
-                            create: (context) => sl<SearchProductsCubit>()
-                              ..loadInitialSearchProducts(
-                                  productCollectionResult),
-                          ),
-                        ],
-                        child: SearchProductsWidget(
-                          onPageChanged: (int) {},
-                          productListType: ProductListType.searchProducts,
-                        ),
-                      );
+                        );
+                      }
                     case SearchProductsFailureState:
-                      return Center(
-                          child: Text(
-                              LocalizationConstants.searchNoResults.localized(),
-                              style: OptiTextStyles.body));
+                      {
+                        autoFocus = false;
+                        return Center(
+                            child: Text(
+                                LocalizationConstants.searchNoResults
+                                    .localized(),
+                                style: OptiTextStyles.body));
+                      }
                     default:
-                      return Center(
-                          child: Text(LocalizationConstants
-                              .errorLoadingSearchLanding
-                              .localized()));
+                      {
+                        autoFocus = false;
+                        return Center(
+                            child: Text(LocalizationConstants
+                                .errorLoadingSearchLanding
+                                .localized()));
+                      }
                   }
                 }),
           ),

@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_history/search_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_history_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,14 @@ class SearchHistorySectionWidget extends StatelessWidget {
                       scrollDirection: Axis.vertical,
                       itemBuilder: (context, index) {
                         final history = state.historyList[index];
-                        return SearchHistoryItemWidget(history: history);
+                        return InkWell(
+                          onTap: () {
+                            context
+                                .read<SearchBloc>()
+                                .add(SearchFieldPopulateEvent(history));
+                          },
+                          child: SearchHistoryItemWidget(history: history),
+                        );
                       },
                     ),
                   );

@@ -9,6 +9,12 @@ class SearchCmsInitialState extends SearchState {}
 
 class SearchAutoCompleteInitialState extends SearchState {}
 
+class SearchQueryLoadedState extends SearchState {
+  final String? searchQuery;
+
+  SearchQueryLoadedState({required this.searchQuery});
+}
+
 class SearchAutoCompleteLoadedState extends SearchState {
   final AutocompleteResult? result;
 
