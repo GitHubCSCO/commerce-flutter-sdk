@@ -31,14 +31,17 @@ class SearchProductListItemWidget extends StatelessWidget {
   final bool? pricingEnable;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
+  final bool? canAddToCartInProductList;
 
-  const SearchProductListItemWidget(
-      {super.key,
-      required this.product,
-      required this.productSettings,
-      required this.pricingEnable,
-      this.hidePricingEnable,
-      this.hideInventoryEnable});
+  const SearchProductListItemWidget({
+    super.key,
+    required this.product,
+    required this.productSettings,
+    required this.pricingEnable,
+    this.hidePricingEnable,
+    this.hideInventoryEnable,
+    this.canAddToCartInProductList,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +163,8 @@ class SearchProductListItemWidget extends StatelessWidget {
                             ),
                           );
                         } else if (state is AddToCartEnable) {
-                          if (state.canAddToCart) {
+                          if (state.canAddToCart &&
+                              canAddToCartInProductList == true) {
                             return InkWell(
                               onTap: () {
                                 var productId =

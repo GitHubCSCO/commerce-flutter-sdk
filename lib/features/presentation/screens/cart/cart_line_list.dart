@@ -13,12 +13,13 @@ class CartLineWidgetList extends StatelessWidget {
   final List<CartLineEntity> cartLineEntities;
   final void Function(BuildContext) onCartChangeCallBack;
 
-  CartLineWidgetList(
-      {required this.cartLineEntities,
-      required this.onCartChangeCallBack,
-      this.showClearCart,
-      this.hidePricingEnable,
-      this.hideInventoryEnable});
+  CartLineWidgetList({
+    required this.cartLineEntities,
+    required this.onCartChangeCallBack,
+    this.showClearCart,
+    this.hidePricingEnable,
+    this.hideInventoryEnable,
+  });
 
   @override
   Widget build(BuildContext context) {
