@@ -621,7 +621,7 @@ Future<void> initInjectionContainer() async {
         () => LocationSearchHistoryService(commerceAPIServiceProvider: sl()))
     ..registerLazySingleton<IClientService>(() =>
         ClientService(localStorageService: sl(), secureStorageService: sl()))
-    ..registerLazySingleton<ICacheService>(() => FakeCacheService())
+    ..registerLazySingleton<ICacheService>(() => CacheService())
     ..registerLazySingleton<INetworkService>(() => NetworkService())
     ..registerLazySingleton<ISecureStorageService>(() => SecureStorageService())
     ..registerLazySingleton<ILocalStorageService>(() => LocalStorageService())
