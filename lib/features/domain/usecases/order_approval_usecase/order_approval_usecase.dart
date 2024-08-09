@@ -1,6 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
-import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -58,5 +57,20 @@ class OrderApprovalUseCase extends BaseUseCase {
     return await commerceAPIServiceProvider
         .getSettingsService()
         .getProductSettingsAsync();
+  }
+
+  Future<CartLine?> addLineItemToCart({
+    required AddCartLine addCartLine,
+  }) async {
+    final result = await commerceAPIServiceProvider
+        .getCartService()
+        .addCartLine(addCartLine);
+
+    switch (result) {
+      case Failure():
+        return null;
+      case Success(value: final newCartLine):
+        return newCartLine;
+    }
   }
 }

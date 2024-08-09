@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
@@ -8,6 +9,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/saved_payments/
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_payments/saved_payments_state.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/credit_card_add_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/add_credit_card_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,6 +23,11 @@ class SavedPaymentsScreen extends StatelessWidget {
           backgroundColor: OptiAppColors.backgroundWhite,
           title: Text(LocalizationConstants.mySavedPayments.localized()),
           centerTitle: false,
+          actions: [
+            BottomMenuWidget(
+              websitePath: WebsitePaths.savedPaymentsWebsitePath,
+            ),
+          ],
         ),
         body: MultiBlocProvider(providers: [
           BlocProvider<SavedPaymentsCubit>(
