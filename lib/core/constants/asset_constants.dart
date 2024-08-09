@@ -28,6 +28,8 @@ class AssetConstants {
   static const String wishListLineAddToCartIcon =
       'assets/images/wish_list_icons/wish_list_line_add_to_cart_icon.svg';
 
+  static const String pdfIcon = 'assets/images/pdf_icon.svg';
+
   static const String faceID =
       "assets/images/biometric_icons/icon_faceID_{0}.svg";
   static const String touchID =

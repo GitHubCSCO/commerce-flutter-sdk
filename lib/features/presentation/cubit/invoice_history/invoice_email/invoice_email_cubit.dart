@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/mixins/validator_mixin.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/invoice_usecase/invoice_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,7 +7,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 part 'invoice_email_state.dart';
 
-class InvoiceEmailCubit extends Cubit<InvoiceEmailState> {
+class InvoiceEmailCubit extends Cubit<InvoiceEmailState> with ValidatorMixin {
   final InvoiceUseCase _invoiceUseCase;
 
   InvoiceEmailCubit({required InvoiceUseCase invoiceUseCase})
@@ -42,7 +43,11 @@ class InvoiceEmailCubit extends Cubit<InvoiceEmailState> {
     if (result) {
       emit(InvoiceEmailSuccess());
     } else {
-      emit(InvoiceEmailFailure());
+      emit(
+        InvoiceEmailFailure(
+          message: LocalizationConstants.emailSentFailed.localized(),
+        ),
+      );
     }
   }
 }
