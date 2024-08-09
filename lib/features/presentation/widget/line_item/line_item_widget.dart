@@ -138,7 +138,7 @@ class LineItemWidget extends StatelessWidget {
           if (!lineNotes.isNullOrEmpty) ...[
             const SizedBox(height: 10),
             Text(
-              '${LocalizationConstants.itemNote}: ${lineNotes!}',
+              '${LocalizationConstants.itemNote.localized()}: ${lineNotes!}',
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.normal,
