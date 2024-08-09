@@ -46,10 +46,7 @@ jobs:
       - name: Run flutter doctor
         run: flutter doctor -v
 
-      - name: Clear packages
-        run: flutter pub cache clean --force
-
-      - name: Get packages
+      - name: Get missing packages
         run: flutter pub get
 
       - name: Verify formatting
