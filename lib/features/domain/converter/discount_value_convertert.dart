@@ -21,11 +21,11 @@ class DiscountValueConverter {
     } else if (value is InvoiceLine) {
       var savingsAmount = value.discountAmount;
       var discountMessage =
-          "${LocalizationConstants.regularPrice}: ${value.unitPriceDisplay}";
+          "${LocalizationConstants.regularPrice.localized()}: ${value.unitPriceDisplay}";
       if ((value.discountPercent ?? 0) > 0) {
         var savingPercent = (value.discountPercent ?? 0).round();
         discountMessage +=
-            ", ${LocalizationConstants.youSave} ${CoreConstants.currencySymbol}${savingsAmount?.toStringAsFixed(2)} ($savingPercent%)";
+            ", ${LocalizationConstants.youSave.localized()} ${CoreConstants.currencySymbol}${savingsAmount?.toStringAsFixed(2)} ($savingPercent%)";
       }
 
       return discountMessage;
