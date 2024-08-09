@@ -47,7 +47,7 @@ jobs:
         run: flutter doctor -v
 
       - name: Clear packages
-        run: flutter pub cache clean
+        run: flutter pub cache clean --force
 
       - name: Get packages
         run: flutter pub get
