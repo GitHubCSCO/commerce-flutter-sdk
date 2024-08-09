@@ -1,8 +1,10 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/search_history_widget_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/search_history/search_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_history_item_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchHistorySectionWidget extends StatelessWidget {
   final SearchHistoryWidgetEntity searchHistoryWidgetEntity;
@@ -27,21 +29,34 @@ class SearchHistorySectionWidget extends StatelessWidget {
               style: OptiTextStyles.titleLarge,
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: const BoxDecoration(color: Colors.white),
-            child: ListView.builder(
-              padding: const EdgeInsets.all(0.0),
-              itemCount: _historyListCount(searchHistoryWidgetEntity.itemsCount,
-                  searchHistoryWidgetEntity.histories?.length ?? 0),
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) {
-                final history = searchHistoryWidgetEntity.histories![index];
-                return SearchHistoryItemWidget(history: history);
-              },
-            ),
+          BlocBuilder<SearchHistoryCubit, SearchHistoryState>(
+            builder: (context, state) {
+              switch (state) {
+                case SearchHistoryInitialState():
+                case SearchHistoryLoadingState():
+                  return const Center(child: CircularProgressIndicator());
+                case SearchHistoryLoadedState():
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: const BoxDecoration(color: Colors.white),
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(0.0),
+                      itemCount: _historyListCount(
+                          searchHistoryWidgetEntity.itemsCount,
+                          state.historyList.length),
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (context, index) {
+                        final history = state.historyList[index];
+                        return SearchHistoryItemWidget(history: history);
+                      },
+                    ),
+                  );
+                default:
+                  return const Center();
+              }
+            },
           )
         ],
       ),

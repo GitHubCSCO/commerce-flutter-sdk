@@ -22,4 +22,21 @@ class SearchHistoryUseCase extends BaseUseCase {
       return [LocalizationConstants.searchNoHistoryAvailable.localized()];
     }
   }
+
+  Future<void> addSearchHistory(String query) async {
+    List<String>? list = [];
+
+    try {
+      list = await commerceAPIServiceProvider
+          .getCacheService()
+          .loadPersistedData<List<String>>(CacheServiceConstants.searchHistory);
+    } finally {
+      list?.add(query);
+
+      await commerceAPIServiceProvider
+          .getCacheService()
+          .persistData<List<String>>(
+              CacheServiceConstants.searchHistory, list ?? []);
+    }
+  }
 }

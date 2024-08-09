@@ -122,7 +122,7 @@ class LocalizationService implements ILocalizationService {
   Future<void> loadPersistedTranslationDictionaryIfAvailable() async {
     var persistedTranslationDictionary = await _commerceAPIServiceProvider
         .getCacheService()
-        .loadPersistedData<Map<String, String>?>(_translationDictionaryKey);
+        .loadPersistedData<Map<String, String>>(_translationDictionaryKey);
     if (persistedTranslationDictionary != null &&
         persistedTranslationDictionary.isNotEmpty) {
       _translationDictionary.clear();

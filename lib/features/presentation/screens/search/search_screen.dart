@@ -16,6 +16,7 @@ import 'package:commerce_flutter_app/features/presentation/components/input.dart
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/search_history/search_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/extra/delayer.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_auto_complete_widget.dart';
@@ -47,6 +48,9 @@ class SearchScreen extends StatelessWidget {
       ),
       BlocProvider<SearchBloc>(
         create: (context) => sl<SearchBloc>(),
+      ),
+      BlocProvider<SearchHistoryCubit>(
+        create: (context) => sl<SearchHistoryCubit>()..getSearchHistory(),
       ),
     ], child: SearchPage());
   }
@@ -100,6 +104,7 @@ class SearchPage extends StatelessWidget with BaseDynamicContentScreen {
                     });
                   },
                   onSubmitted: (String query) {
+                    context.read<SearchHistoryCubit>().addSearchHistory(query);
                     context.read<SearchBloc>().add(SearchSearchEvent());
                   },
                   controller: textEditingController,
