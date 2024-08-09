@@ -48,6 +48,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Future<void> _onSearchFocusEvent(
       SearchFocusEvent event, Emitter<SearchState> emit) async {
+    if (event.autoFocus) {
+      emit(SearchAutoFocusResetState());
+    }
     if (event.autoFocus == false) {
       if (searchQuery.isEmpty) {
         emit(SearchAutoCompleteInitialState());

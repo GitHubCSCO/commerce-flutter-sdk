@@ -272,12 +272,10 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                       );
                     case SearchLoadingState:
                       {
-                        autoFocus = false;
                         return const Center(child: CircularProgressIndicator());
                       }
                     case SearchAutoCompleteInitialState:
                       {
-                        autoFocus = false;
                         return Center(
                           child: Text(
                             LocalizationConstants.searchPrompt.localized(),
@@ -287,10 +285,15 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                       }
                     case SearchAutoCompleteLoadedState:
                       {
-                        autoFocus = false;
                         final autoCompleteResult =
                             (state as SearchAutoCompleteLoadedState).result;
                         return _buildSearchAutoComplete(autoCompleteResult);
+                      }
+                    case SearchAutoFocusResetState:
+                      {
+                        autoFocus = false;
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        return const Center(child: CircularProgressIndicator());
                       }
                     case SearchQueryLoadedState:
                       {
@@ -313,7 +316,6 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                       }
                     case SearchAutoCompleteFailureState:
                       {
-                        autoFocus = false;
                         return Center(
                             child: Text(
                           LocalizationConstants.searchNoResults.localized(),
@@ -322,7 +324,6 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                       }
                     case SearchProductsLoadedState:
                       {
-                        autoFocus = false;
                         final productCollectionResult =
                             (state as SearchProductsLoadedState).result;
                         return MultiBlocProvider(
@@ -344,7 +345,6 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                       }
                     case SearchProductsFailureState:
                       {
-                        autoFocus = false;
                         return Center(
                             child: Text(
                                 LocalizationConstants.searchNoResults
@@ -353,7 +353,6 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                       }
                     default:
                       {
-                        autoFocus = false;
                         return Center(
                             child: Text(LocalizationConstants
                                 .errorLoadingSearchLanding
