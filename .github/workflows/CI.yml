@@ -49,8 +49,11 @@ jobs:
       - name: Clear packages
         run: flutter pub cache clean --force
 
-      - name: Get packages
-        run: flutter pub get
+      - name: Clean and get flutter packages
+        run: |
+          rm -rf ../../../.pub-cache/git/commerce-*
+          flutter clean
+          flutter pub get
 
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .
