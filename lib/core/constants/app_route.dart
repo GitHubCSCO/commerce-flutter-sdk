@@ -69,6 +69,7 @@ class RouteNames {
   static const String jobQuoteDetails = 'jobQuoteDetails';
   static const String quoteLineNotes = 'quoteLineNotes';
   static const String language = 'language';
+  static const String invoiceEmail = 'invoiceEmail';
 }
 
 class RoutePaths {
@@ -152,6 +153,7 @@ class RoutePaths {
   static const String quoteLineNotes = '/${RouteNames.quoteLineNotes}';
   static const String language =
       '${RoutePaths.settings}/${RouteNames.language}';
+  static const String invoiceEmail = '/${RoutePaths.invoiceDetail}/email';
 }
 
 enum AppRoute {
@@ -288,6 +290,10 @@ enum AppRoute {
   language(
     name: RouteNames.language,
     fullPath: RoutePaths.language,
+  ),
+  invoiceEmail(
+    name: RouteNames.invoiceEmail,
+    fullPath: RoutePaths.invoiceEmail,
   ),
   ;
 

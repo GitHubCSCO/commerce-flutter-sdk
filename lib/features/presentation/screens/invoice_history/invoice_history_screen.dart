@@ -2,7 +2,6 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
@@ -73,7 +72,7 @@ class InvoiceHistoryPage extends StatelessWidget {
                           state.invoiceCollectionModel.pagination
                                       ?.totalItemCount !=
                                   null
-                              ? '${state.invoiceCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.invoices}'
+                              ? '${state.invoiceCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.invoices.localized()}'
                               : '',
                           style: OptiTextStyles.header3,
                         ),
@@ -236,11 +235,11 @@ class _InvoiceItem extends StatelessWidget {
         : '';
     final invoiceNumber = invoice.invoiceNumber ?? '';
     final poNumber =
-        '${LocalizationConstants.pONumberSign} ${invoice.customerPO ?? ''}';
+        '${LocalizationConstants.pONumberSign.localized()} ${invoice.customerPO ?? ''}';
     final invoiceTotal =
-        '${LocalizationConstants.total} ${invoice.invoiceTotalDisplay ?? ''}';
+        '${LocalizationConstants.total.localized()} ${invoice.invoiceTotalDisplay ?? ''}';
     final dueDate =
-        '${LocalizationConstants.due} ${invoice.dueDate != null ? DateFormat(CoreConstants.dateFormatString).format(invoice.dueDate!) : ''}';
+        '${LocalizationConstants.due.localized()} ${invoice.dueDate != null ? DateFormat(CoreConstants.dateFormatString).format(invoice.dueDate!) : ''}';
     final stCompany = invoice.stCompanyName ?? '';
     final balance = invoice.currentBalanceDisplay ?? '';
     final balanceTitle = LocalizationConstants.balance.localized();
