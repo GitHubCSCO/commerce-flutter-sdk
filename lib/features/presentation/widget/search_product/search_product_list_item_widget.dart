@@ -250,16 +250,18 @@ class SearchProductListItemWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SingleSelectionSwatchChip<StyleValueEntity>(
-                        values: styleTrait!.styleValues!
-                            .map((e) => e.styleValue!)
-                            .toList(),
+                        values: styleTrait?.styleValues
+                                ?.map((e) => e.styleValue!)
+                                .toList() ??
+                            [],
                         shouldIgnoreTitleAndLabelName: true,
-                        maxItemsToShow: styleTrait.numberOfSwatchesVisible!,
+                        maxItemsToShow:
+                            styleTrait?.numberOfSwatchesVisible ?? 0,
                         orientation: ChipOrientation.horizontal,
                         selectedValue: context
                                 .read<StyleTraitCubit>()
                                 .selectedStyleValues?[
-                            styleTrait.selectedStyleValue?.styleValue
+                            styleTrait?.selectedStyleValue?.styleValue
                                 ?.styleTraitValueId],
                         onSelectionChanged: (StyleValueEntity? selection) {})
                   ]));
