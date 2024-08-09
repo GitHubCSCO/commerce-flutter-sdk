@@ -7,7 +7,6 @@ import 'package:commerce_flutter_app/features/presentation/widget/line_item/line
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_quantity_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_title_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -28,7 +27,9 @@ class LineItemWidget extends StatelessWidget {
   final bool showViewQuantityPricing;
   final bool showViewAvailabilityByWarehouse;
   final bool canAddToCart;
+  final bool canAddToList;
   final bool isDeleteButtonVisible;
+  final void Function()? onAddToList;
   final void Function()? onAddToCart;
   final void Function()? onDelete;
   final String? unitOfMeasure;
@@ -60,6 +61,8 @@ class LineItemWidget extends StatelessWidget {
     this.lineNotes,
     this.hidePricingEnable,
     this.hideInventoryEnable,
+    this.onAddToList,
+    this.canAddToList = false,
   });
 
   @override
@@ -154,17 +157,33 @@ class LineItemWidget extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
+        if (canAddToList)
+          InkWell(
+            onTap: onAddToList,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 15).copyWith(left: 15),
+              child: SizedBox(
+                width: 30,
+                height: 30,
+                child: SvgPicture.asset(
+                  AssetConstants.addToWishListIcon,
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
+            ),
+          ),
         if (canAddToCart)
           InkWell(
             onTap: onAddToCart,
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 15).copyWith(left: 15),
-              child: const SizedBox(
+              child: SizedBox(
                 width: 30,
                 height: 30,
-                child: SvgAssetImage(
-                  assetName: AssetConstants.wishListLineAddToCartIcon,
+                child: SvgPicture.asset(
+                  AssetConstants.wishListLineAddToCartIcon,
                   fit: BoxFit.fitWidth,
                 ),
               ),
