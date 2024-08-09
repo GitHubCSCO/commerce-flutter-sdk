@@ -242,9 +242,9 @@ class _AccountLoggedInHeader extends StatelessWidget {
           context.read<AuthCubit>().loadAuthenticationState();
           if (state.isSignInRequired) {
             AppRoute.landing.navigateBackStack(
-                context,
-                extra: state.domain != null,
-              );
+              context,
+              extra: state.domain != null,
+            );
           }
         }
       },
