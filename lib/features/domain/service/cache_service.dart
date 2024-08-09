@@ -5,7 +5,6 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CacheService implements ICacheService {
-
   @override
   void clearAllCaches() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

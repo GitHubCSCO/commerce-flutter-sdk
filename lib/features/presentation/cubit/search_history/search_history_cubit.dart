@@ -23,5 +23,4 @@ class SearchHistoryCubit extends Cubit<SearchHistoryState> {
     await _searchHistoryUseCase.addSearchHistory(query);
     await getSearchHistory();
   }
-
 }

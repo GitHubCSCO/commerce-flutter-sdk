@@ -30,7 +30,7 @@ class SearchHistoryUseCase extends BaseUseCase {
       list = await commerceAPIServiceProvider
           .getCacheService()
           .loadPersistedData<List<String>>(CacheServiceConstants.searchHistory);
-    } catch(e) {
+    } catch (e) {
       list = [];
     } finally {
       list?.add(query);
