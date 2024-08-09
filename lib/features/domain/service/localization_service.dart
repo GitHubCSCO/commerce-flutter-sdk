@@ -131,6 +131,7 @@ class LocalizationService implements ILocalizationService {
   }
 
   Future<bool> loadTranslationDictionary(Language? language) async {
+    bool isFetched = false;
     _translationDictionary.clear();
 
     int count = 0;
@@ -145,7 +146,8 @@ class LocalizationService implements ILocalizationService {
         //remove the last character ',' from string buffer
         var modifiedString =
             sbFieldValue.toString().substring(0, sbFieldValue.length - 1);
-        await fetchTranslations(language, modifiedString, count);
+        bool result = await fetchTranslations(language, modifiedString, count);
+        isFetched = result ? result : isFetched;
         sbFieldValue.clear();
         count = 1;
       }
@@ -156,18 +158,21 @@ class LocalizationService implements ILocalizationService {
     if (sbFieldValue.length > 1) {
       var modifiedString =
           sbFieldValue.toString().substring(0, sbFieldValue.length - 1);
-      await fetchTranslations(language, modifiedString, count);
+      bool result = await fetchTranslations(language, modifiedString, count);
+      isFetched = result ? result : isFetched;
     }
 
     await _commerceAPIServiceProvider
         .getCacheService()
         .persistData(_translationDictionaryKey, _translationDictionary);
 
-    return _translationDictionary.isNotEmpty;
+    return isFetched;
   }
 
-  Future<void> fetchTranslations(
+  Future<bool> fetchTranslations(
       Language? language, String keywords, int pageSize) async {
+    bool isFetched = false;
+
     var translationParameters = TranslationQueryParameters(
       languageCode: language?.languageCode,
       source: 'Label',
@@ -197,6 +202,7 @@ class LocalizationService implements ILocalizationService {
                       ifAbsent: () => item.translation!);
                 }
               }
+              isFetched = true;
             }
           }
         }
@@ -207,6 +213,8 @@ class LocalizationService implements ILocalizationService {
               .trackError(errorResponse);
         }
     }
+
+    return isFetched;
   }
 
   @override
