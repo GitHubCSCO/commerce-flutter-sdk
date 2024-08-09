@@ -46,14 +46,8 @@ jobs:
       - name: Run flutter doctor
         run: flutter doctor -v
 
-      - name: Clear packages
-        run: flutter pub cache clean --force
-
-      - name: Clean and get flutter packages
-        run: |
-          rm -rf ../../../.pub-cache/git/commerce-*
-          flutter clean
-          flutter pub get
+      - name: Get missing packages
+        run: flutter pub get
 
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .
