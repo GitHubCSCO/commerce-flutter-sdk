@@ -5,12 +5,10 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CacheService implements ICacheService {
-  Map<String, dynamic> cache = {};
 
   @override
   void clearAllCaches() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    cache.clear();
     prefs.clear();
   }
 
@@ -26,23 +24,9 @@ class CacheService implements ICacheService {
 
   @override
   Future<T> getOrFetchObject<T>(String key, Future<T> Function() fetchFunc,
-      {DateTime? absoluteExpiration,
-      Function(Map<String, dynamic>)? fromJson}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey(key)) {
-      //1. convert store value to jsonMap. 2. extract model type from T. 3. convert jsonMap to model using fromJson(jsonMap) into value 4. return Success(value)
-      String rawValue = prefs.getString(key)!;
-      Map<String, dynamic> jsonMap = jsonDecode(rawValue);
-      return parseResult<T>(jsonMap);
-    } else {
-      final value = await fetchFunc();
-      if (value is Success) {
-        if (value.value != null) {
-          prefs.setString(key, jsonEncode(value.value));
-        }
-      }
-      return value;
-    }
+      {DateTime? absoluteExpiration}) async {
+    final value = await fetchFunc();
+    return value;
   }
 
   @override
@@ -104,7 +88,16 @@ class CacheService implements ICacheService {
   Future<T> loadPersistedData<T>(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey(key)) {
-      return Future.value(jsonDecode(prefs.getString(key)!) as T);
+      if (T == List<String>) {
+        List<dynamic> dynamicList = jsonDecode(prefs.getString(key)!);
+        List<String> stringList =
+            dynamicList.map((item) => item as String).toList();
+        return stringList as T;
+      } else {
+        String rawValue = prefs.getString(key)!;
+        Map<String, dynamic> jsonMap = jsonDecode(rawValue);
+        return parseResult<T>(jsonMap);
+      }
     } else {
       throw Exception('Data not found in cache');
     }
@@ -143,84 +136,11 @@ class CacheService implements ICacheService {
   }
 
   T parseResult<T>(Map<String, dynamic> jsonMap) {
-    // Map each type to its fromJson function
     final typeMap = <Type, Function>{
-      Result<AccountSettings, ErrorResponse>: (json) =>
-          Success(AccountSettings.fromJson(json)),
-      Result<AddressFieldCollection, ErrorResponse>: (json) =>
-          Success(AddressFieldCollection.fromJson(json)),
-      Result<AutocompleteProduct, ErrorResponse>: (json) =>
-          Success(AutocompleteProduct.fromJson(json)),
-      Result<AutocompleteResult, ErrorResponse>: (json) =>
-          Success(AutocompleteResult.fromJson(json)),
-      Result<Brand, ErrorResponse>: (json) => Success(Brand.fromJson(json)),
-      Result<BrandAlphabetResult, ErrorResponse>: (json) =>
-          Success(BrandAlphabetResult.fromJson(json)),
-      Result<CartSettings, ErrorResponse>: (json) =>
-          Success(CartSettings.fromJson(json)),
-      Result<CatalogPage, ErrorResponse>: (json) =>
-          Success(CatalogPage.fromJson(json)),
-      Result<Category, ErrorResponse>: (json) =>
-          Success(Category.fromJson(json)),
-      Result<CategoryResult, ErrorResponse>: (json) =>
-          Success(CategoryResult.fromJson(json)),
-      Result<Country, ErrorResponse>: (json) => Success(Country.fromJson(json)),
-      Result<CountryCollection, ErrorResponse>: (json) =>
-          Success(CountryCollection.fromJson(json)),
-      Result<Currency, ErrorResponse>: (json) =>
-          Success(Currency.fromJson(json)),
-      Result<CurrencyCollection, ErrorResponse>: (json) =>
-          Success(CurrencyCollection.fromJson(json)),
-      Result<GetBrandCategoriesResult, ErrorResponse>: (json) =>
-          Success(GetBrandCategoriesResult.fromJson(json)),
-      Result<GetBrandProductLinesResult, ErrorResponse>: (json) =>
-          Success(GetBrandProductLinesResult.fromJson(json)),
-      Result<GetBrandSubCategoriesResult, ErrorResponse>: (json) =>
-          Success(GetBrandSubCategoriesResult.fromJson(json)),
-      Result<GetBrandsResult, ErrorResponse>: (json) =>
-          Success(GetBrandsResult.fromJson(json)),
-      Result<GetDealerCollectionResult, ErrorResponse>: (json) =>
-          Success(GetDealerCollectionResult.fromJson(json)),
-      Result<GetOrderCollectionResult, ErrorResponse>: (json) =>
-          Success(GetOrderCollectionResult.fromJson(json)),
-      Result<GetOrderStatusMappingsResult, ErrorResponse>: (json) =>
-          Success(GetOrderStatusMappingsResult.fromJson(json)),
-      Result<GetProductCollectionResult, ErrorResponse>: (json) =>
-          Success(GetProductCollectionResult.fromJson(json)),
-      Result<GetProductResult, ErrorResponse>: (json) =>
-          Success(GetProductResult.fromJson(json)),
-      Result<GetWarehouseCollectionResult, ErrorResponse>: (json) =>
-          Success(GetWarehouseCollectionResult.fromJson(json)),
-      Result<GetSiteMessageCollectionResult, ErrorResponse>: (json) =>
-          Success(GetSiteMessageCollectionResult.fromJson(json)),
-      Result<Language, ErrorResponse>: (json) =>
-          Success(Language.fromJson(json)),
-      Result<LanguageCollection, ErrorResponse>: (json) =>
-          Success(LanguageCollection.fromJson(json)),
-      Result<MobileAppSettings, ErrorResponse>: (json) =>
-          Success(MobileAppSettings.fromJson(json)),
-      Result<Order, ErrorResponse>: (json) => Success(Order.fromJson(json)),
-      Result<PageContentManagement, ErrorResponse>: (json) =>
-          Success(PageContentManagement.fromJson(json)),
-      Result<ProductPrice, ErrorResponse>: (json) =>
-          Success(ProductPrice.fromJson(json)),
-      Result<ProductSettings, ErrorResponse>: (json) =>
-          Success(ProductSettings.fromJson(json)),
-      Result<StateModel, ErrorResponse>: (json) =>
-          Success(StateModel.fromJson(json)),
-      Result<StateCollection, ErrorResponse>: (json) =>
-          Success(StateCollection.fromJson(json)),
-      Result<Website, ErrorResponse>: (json) => Success(Website.fromJson(json)),
-      Result<WebsiteCrosssells, ErrorResponse>: (json) =>
-          Success(WebsiteCrosssells.fromJson(json)),
-      Result<WebsiteSettings, ErrorResponse>: (json) =>
-          Success(WebsiteSettings.fromJson(json)),
-      Result<WishList, ErrorResponse>: (json) =>
-          Success(WishList.fromJson(json)),
-      Result<WishListCollectionModel, ErrorResponse>: (json) =>
-          Success(WishListCollectionModel.fromJson(json)),
-      Result<WishListLineCollectionModel, ErrorResponse>: (json) =>
-          Success(WishListLineCollectionModel.fromJson(json)),
+      VmiLocationModel: (json) => VmiLocationModel.fromJson(jsonMap),
+      Map<String, String>: (json) => jsonMap.map((key, value) {
+            return MapEntry(key, value?.toString() ?? '');
+          }),
     };
 
     final creator = typeMap[T];

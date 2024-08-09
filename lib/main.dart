@@ -13,6 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_c
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_handler/order_approval_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/search_history/search_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -49,6 +50,9 @@ Future<void> main() async {
         BlocProvider<LoadWebsiteUrlBloc>(
             create: (context) => sl<LoadWebsiteUrlBloc>()),
         BlocProvider(create: (context) => sl<RootBloc>()),
+        BlocProvider<SearchHistoryCubit>(
+          create: (context) => sl<SearchHistoryCubit>()..getSearchHistory(),
+        ),
       ],
       child: const MyApp(),
     ),

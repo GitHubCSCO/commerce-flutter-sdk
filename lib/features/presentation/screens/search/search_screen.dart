@@ -49,9 +49,6 @@ class SearchScreen extends StatelessWidget {
       BlocProvider<SearchBloc>(
         create: (context) => sl<SearchBloc>(),
       ),
-      BlocProvider<SearchHistoryCubit>(
-        create: (context) => sl<SearchHistoryCubit>()..getSearchHistory(),
-      ),
     ], child: SearchPage());
   }
 }
