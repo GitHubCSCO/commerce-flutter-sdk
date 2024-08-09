@@ -25,12 +25,12 @@ class CheckoutPaymentDetails extends StatelessWidget {
   final OnCompleteCheckoutPaymentSection onCompleteCheckoutPaymentSection;
   final bool? isVmiCheckout;
 
-  CheckoutPaymentDetails(
-      {Key? key,
-      required this.cart,
-      required this.onCompleteCheckoutPaymentSection,
-      this.isVmiCheckout})
-      : super(key: key);
+  CheckoutPaymentDetails({
+    Key? key,
+    required this.cart,
+    required this.onCompleteCheckoutPaymentSection,
+    this.isVmiCheckout,
+  }) : super(key: key);
 
   PaymentMethodDto? getPaymenmentMedthodDtoFromCart(
       Cart cart, AccountPaymentProfile accountPaymentProfile) {
@@ -40,6 +40,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
         return mehtod;
       }
     }
+    return null;
   }
 
   @override
@@ -88,17 +89,23 @@ class CheckoutPaymentDetails extends StatelessWidget {
                       fromCartPage: false,
                     ),
                   _buildPaymentMethodPicker(state, context),
-                  if (state.cardDetails != null)
+                  if (state.cardDetails != null) ...{
                     Padding(
                       padding: const EdgeInsets.only(left: 24.0),
                       child:
                           Text(state.cardDetails!, style: OptiTextStyles.body),
-                    ),
-                  if (state.tokenExEntity != null)
+                    )
+                  },
+                  if (state.tokenExEntity != null) ...{
                     _buildTokenExWebView(state, context),
-                  if (state.showPOField!) _buildPOField(state, context),
-                  if (!(isVmiCheckout ?? false))
+                  },
+                  if (state.showPOField == true) ...{
+                    _buildPOField(state, context)
+                  },
+                  if (state.cart?.showCreditCard != false &&
+                      isVmiCheckout != true) ...{
                     _buildAddPaymentMethodButton(context)
+                  },
                 ],
               );
             default:
