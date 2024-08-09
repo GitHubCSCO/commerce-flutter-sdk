@@ -121,7 +121,9 @@ class BillingShippingWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         textStyle: OptiTextStyles.linkMedium,
       ),
-      child: const Text('+ New Address'),
+      child: Text(
+        LocalizationConstants.newAddress.localized(),
+      ),
     );
   }
 
