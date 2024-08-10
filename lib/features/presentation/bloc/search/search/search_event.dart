@@ -3,12 +3,21 @@ part of 'search_bloc.dart';
 @immutable
 abstract class SearchEvent {}
 
-class SearchFocusEvent extends SearchEvent {}
+class SearchFocusEvent extends SearchEvent {
+  final bool autoFocus;
+  SearchFocusEvent({this.autoFocus = false});
+}
 
 class SearchTypingEvent extends SearchEvent {
   final String searchQuery;
 
   SearchTypingEvent(this.searchQuery);
+}
+
+class SearchFieldPopulateEvent extends SearchEvent {
+  final String searchQuery;
+
+  SearchFieldPopulateEvent(this.searchQuery);
 }
 
 class SearchUnFocusEvent extends SearchEvent {}
