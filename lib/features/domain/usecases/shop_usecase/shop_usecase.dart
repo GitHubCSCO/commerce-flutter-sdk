@@ -1,11 +1,10 @@
-import 'package:commerce_flutter_app/core/constants/cache_service_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/content_management_usecase/cms_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ShopUseCase extends CmsUseCase {
-  ShopUseCase({PageContentType? contentType}) : super(contentType: contentType);
+  ShopUseCase({super.contentType});
 
   @override
   PageContentType get contentType => PageContentType.shop;
@@ -18,12 +17,5 @@ class ShopUseCase extends CmsUseCase {
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
     }
-  }
-
-  void addFakeSearchHistory() async {
-    final list = ["stapler", "tools", "battery"];
-    commerceAPIServiceProvider
-        .getCacheService()
-        .persistData<List<String>>(CacheServiceConstants.searchHistory, list);
   }
 }
