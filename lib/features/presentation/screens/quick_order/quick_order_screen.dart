@@ -84,11 +84,18 @@ class QuickOrderPage extends StatefulWidget {
 
 class _QuickOrderPageState extends State<QuickOrderPage> {
   late void Function(bool) callBack;
+  late FocusNode autoFocusNode;
 
   bool cameraFlash = false;
   bool canProcess = false;
   String subTotal = '';
   final textEditingController = TextEditingController();
+
+  @override
+  void dispose() {
+    autoFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,9 +152,11 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                 ),
                                 child: TextButton(
                                   onPressed: () {
+                                    autoFocusNode = FocusNode();
                                     context
                                         .read<QuickOrderAutoCompleteBloc>()
-                                        .add(QuickOrderStartSearchEvent());
+                                        .add(QuickOrderStartSearchEvent(
+                                            autoFocus: true));
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -454,6 +463,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                       //   context.read<QuickOrderAutoCompleteBloc>().add(SearchSearchEvent());
                       // },
                       controller: textEditingController,
+                      autoFocusNode: autoFocusNode,
                     ),
                   ),
                   Expanded(child: _buildAutoCompleteContainer(state)),
@@ -467,6 +477,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
 
   Widget _buildAutoCompleteContainer(QuickOrderAutoCompleteState state) {
     if (state is QuickOrderAutoCompleteInitialState) {
+      if (state.autoFocus) {
+        autoFocusNode.requestFocus();
+      }
       return Center(
         child: Text(
           LocalizationConstants.searchPrompt.localized(),
