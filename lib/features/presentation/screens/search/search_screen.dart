@@ -233,27 +233,32 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                                 return const Center(
                                     child: CircularProgressIndicator());
                               case CmsLoadedState():
-                                return MultiBlocListener(
-                                  listeners: [
-                                    BlocListener<AuthCubit, AuthState>(
-                                      listener: (context, state) {
-                                        _reloadSearchPage(context);
-                                      },
-                                    ),
-                                    BlocListener<DomainCubit, DomainState>(
-                                      listener: (context, state) {
-                                        if (state is DomainLoaded) {
+                                {
+                                  context
+                                      .read<SearchHistoryCubit>()
+                                      .getSearchHistory();
+                                  return MultiBlocListener(
+                                    listeners: [
+                                      BlocListener<AuthCubit, AuthState>(
+                                        listener: (context, state) {
                                           _reloadSearchPage(context);
-                                        }
-                                      },
+                                        },
+                                      ),
+                                      BlocListener<DomainCubit, DomainState>(
+                                        listener: (context, state) {
+                                          if (state is DomainLoaded) {
+                                            _reloadSearchPage(context);
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                    child: ListView(
+                                      padding: EdgeInsets.zero,
+                                      children: buildContentWidgets(
+                                          state.widgetEntities),
                                     ),
-                                  ],
-                                  child: ListView(
-                                    padding: EdgeInsets.zero,
-                                    children: buildContentWidgets(
-                                        state.widgetEntities),
-                                  ),
-                                );
+                                  );
+                                }
                               default:
                                 return CustomScrollView(
                                   slivers: <Widget>[
