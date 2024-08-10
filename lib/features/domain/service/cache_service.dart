@@ -5,17 +5,21 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CacheService implements ICacheService {
+  final SharedPreferences sharedPreferences;
+
+  CacheService({
+    required this.sharedPreferences,
+  });
+
   @override
-  void clearAllCaches() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
+  Future<void> clearAllCaches() async {
+    await sharedPreferences.clear();
   }
 
   @override
   Future<T> getObject<T>(String key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey(key)) {
-      return Future.value(jsonDecode(prefs.getString(key)!) as T);
+    if (sharedPreferences.containsKey(key)) {
+      return Future.value(jsonDecode(sharedPreferences.getString(key)!) as T);
     } else {
       throw Exception('Object not found in cache');
     }
@@ -30,54 +34,48 @@ class CacheService implements ICacheService {
 
   @override
   Future<bool> hasOnlineCache(String key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return Future.value(prefs.containsKey(key));
+    return Future.value(sharedPreferences.containsKey(key));
   }
 
   @override
   Future<void> insertObject<T>(String key, T value,
       {DateTime? absoluteExpiration}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(key, jsonEncode(value));
+    sharedPreferences.setString(key, jsonEncode(value));
     return Future.value();
   }
 
   @override
   Future<void> invalidate(String key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove(key);
+    sharedPreferences.remove(key);
     return Future.value();
   }
 
   @override
   Future<void> invalidateAllObjects<T>() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
+    sharedPreferences.clear();
     return Future.value();
   }
 
   @override
   Future<void> invalidateObject<T>(String key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove(key);
+    sharedPreferences.remove(key);
     return Future.value();
   }
 
   @override
   Future<void> invalidateObjectWithKeysStartingWith<T>(String keyPrefix) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final keys = prefs.getKeys().where((key) => key.startsWith(keyPrefix));
+    final keys =
+        sharedPreferences.getKeys().where((key) => key.startsWith(keyPrefix));
     for (var key in keys) {
-      prefs.remove(key);
+      sharedPreferences.remove(key);
     }
     return Future.value();
   }
 
   @override
   Future<Uint8List> loadPersistedBytesData(String key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey(key)) {
-      return Future.value(base64Decode(prefs.getString(key)!));
+    if (sharedPreferences.containsKey(key)) {
+      return Future.value(base64Decode(sharedPreferences.getString(key)!));
     } else {
       throw Exception('Bytes data not found in cache');
     }
@@ -85,15 +83,15 @@ class CacheService implements ICacheService {
 
   @override
   Future<T> loadPersistedData<T>(String key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey(key)) {
+    if (sharedPreferences.containsKey(key)) {
       if (T == List<String>) {
-        List<dynamic> dynamicList = jsonDecode(prefs.getString(key)!);
+        List<dynamic> dynamicList =
+            jsonDecode(sharedPreferences.getString(key)!);
         List<String> stringList =
             dynamicList.map((item) => item as String).toList();
         return stringList as T;
       } else {
-        String rawValue = prefs.getString(key)!;
+        String rawValue = sharedPreferences.getString(key)!;
         Map<String, dynamic> jsonMap = jsonDecode(rawValue);
         return parseResult<T>(jsonMap);
       }
@@ -110,22 +108,19 @@ class CacheService implements ICacheService {
 
   @override
   Future<bool> persistBytesData(String key, Uint8List value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(key, base64Encode(value));
+    sharedPreferences.setString(key, base64Encode(value));
     return Future.value(true);
   }
 
   @override
   Future<bool> persistData<T>(String key, T value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(key, jsonEncode(value));
+    sharedPreferences.setString(key, jsonEncode(value));
     return Future.value(true);
   }
 
   @override
   Future<void> removePersistedData(String key) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove(key);
+    sharedPreferences.remove(key);
     return Future.value();
   }
 

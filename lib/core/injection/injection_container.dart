@@ -180,6 +180,7 @@ import 'package:commerce_flutter_app/services/local_storage_service.dart';
 import 'package:commerce_flutter_app/services/secure_storage_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final sl = GetIt.instance;
 
@@ -626,7 +627,12 @@ Future<void> initInjectionContainer() async {
         () => LocationSearchHistoryService(commerceAPIServiceProvider: sl()))
     ..registerLazySingleton<IClientService>(() =>
         ClientService(localStorageService: sl(), secureStorageService: sl()))
-    ..registerLazySingleton<ICacheService>(() => CacheService())
+    ..registerSingletonAsync<ICacheService>(() async {
+      var pref = await SharedPreferences.getInstance();
+      return CacheService(
+        sharedPreferences: pref,
+      );
+    })
     ..registerLazySingleton<INetworkService>(() => NetworkService())
     ..registerLazySingleton<ISecureStorageService>(() => SecureStorageService())
     ..registerLazySingleton<ILocalStorageService>(() => LocalStorageService())
@@ -726,7 +732,7 @@ Future<void> initInjectionContainer() async {
       );
       await service.init();
       return service;
-    })
+    }, dependsOn: [ICacheService])
     ..registerLazySingleton<AnalyticsConfig>(() => AnalyticsConfig(
           appConfigurationService: sl(),
         ))
