@@ -6,6 +6,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/search_history/
 import 'package:commerce_flutter_app/features/presentation/widget/search_history_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class SearchHistorySectionWidget extends StatelessWidget {
   final SearchHistoryWidgetEntity searchHistoryWidgetEntity;
@@ -25,8 +26,9 @@ class SearchHistorySectionWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
-              searchHistoryWidgetEntity.title ??
-                  LocalizationConstants.searchHistory.localized(),
+              (searchHistoryWidgetEntity.title?.isNullOrEmpty == true)
+                  ? LocalizationConstants.searchHistory.localized()
+                  : searchHistoryWidgetEntity.title!,
               style: OptiTextStyles.titleLarge,
             ),
           ),
