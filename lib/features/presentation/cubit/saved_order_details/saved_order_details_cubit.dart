@@ -18,10 +18,10 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
   final PricingInventoryUseCase _pricingInventoryUseCase;
   ProductSettings? productSettings;
 
-  SavedOrderDetailsCubit(
-      {required SavedOrderUsecase savedOrderUsecase,
-      required PricingInventoryUseCase pricingInventoryUseCase})
-      : _savedOrderUsecase = savedOrderUsecase,
+  SavedOrderDetailsCubit({
+    required SavedOrderUsecase savedOrderUsecase,
+    required PricingInventoryUseCase pricingInventoryUseCase,
+  })  : _savedOrderUsecase = savedOrderUsecase,
         _pricingInventoryUseCase = pricingInventoryUseCase,
         super(
           SavedOrderDetailsState(
@@ -114,6 +114,53 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
     }
     return cartlines;
   }
+
+  Future<void> addToCart({required AddCartLine addCartLine}) async {
+    emit(
+      state.copyWith(
+        status: OrderStatus.lineItemAddToCartLoading,
+      ),
+    );
+
+    final newCartLine = await _savedOrderUsecase.addLineItemToCart(
+      addCartLine: addCartLine,
+    );
+
+    addCartLineToCartMessageName = newCartLine == null
+        ? SiteMessageConstants.nameAddToCartFail
+        : SiteMessageConstants.nameAddToCartSuccess;
+    addCartLineToCartDefaultMessage = newCartLine == null
+        ? SiteMessageConstants.defaultValueAddToCartFail
+        : SiteMessageConstants.defaultValueAddToCartSuccess;
+    addCartLineToCartMessage = await _savedOrderUsecase.getSiteMessage(
+      addCartLineToCartMessageName,
+      addCartLineToCartDefaultMessage,
+    );
+
+    if (newCartLine != null && newCartLine.isQtyAdjusted == true) {
+      quantityAdjustedMessage = await _savedOrderUsecase.getSiteMessage(
+        SiteMessageConstants.nameAddToCartQuantityAdjusted,
+        SiteMessageConstants.defaultValueAddToCartQuantityAdjusted,
+      );
+
+      emit(
+        state.copyWith(
+          status: OrderStatus.lineItemAddToCartQtyAdjusted,
+        ),
+      );
+    } else {
+      emit(
+        state.copyWith(
+          status: OrderStatus.lineItemAddToCartComplete,
+        ),
+      );
+    }
+  }
+
+  String addCartLineToCartMessageName = '';
+  String addCartLineToCartDefaultMessage = '';
+  String addCartLineToCartMessage = '';
+  String quantityAdjustedMessage = '';
 
   String get shipToLabel => state.cart.shipToLabel ?? '';
 
