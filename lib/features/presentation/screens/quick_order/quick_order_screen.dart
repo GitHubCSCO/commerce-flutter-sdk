@@ -692,8 +692,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
 
   List<ToolMenu> _buildToolMenu(BuildContext context) {
     List<ToolMenu> list = [];
-
-    if (widget.scanningMode == ScanningMode.count) {
+    bool isOrderListEmpty = context.read<OrderListBloc>().isOrderListEmpty();
+    if (widget.scanningMode == ScanningMode.count &&
+        isOrderListEmpty == false) {
       list.add(ToolMenu(
           title: LocalizationConstants.clearHistory.localized(),
           action: () {
@@ -705,11 +706,13 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
           action: () {
             _addToList(context);
           }));
-      list.add(ToolMenu(
-          title: LocalizationConstants.removeAllProducts.localized(),
-          action: () {
-            _clearAllCart(context);
-          }));
+      if (isOrderListEmpty == false) {
+        list.add(ToolMenu(
+            title: LocalizationConstants.removeAllProducts.localized(),
+            action: () {
+              _clearAllCart(context);
+            }));
+      }
     }
 
     return list;
