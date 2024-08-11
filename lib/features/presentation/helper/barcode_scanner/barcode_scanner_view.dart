@@ -6,14 +6,14 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
-import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/detector_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 
 class BarcodeScannerView extends StatefulWidget {
-  final Function(BuildContext, String) callback;
+  final Function(BuildContext, {String resultText, BarcodeFormat format})
+      callback;
   final bool barcodeFullView;
 
   BarcodeScannerView(
@@ -130,7 +130,11 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
 
     if (barCodesWithIn.isNotEmpty) {
       if (barCodesWithIn.length == 1) {
-        await widget.callback(context, barCodesWithIn[0].rawValue!);
+        await widget.callback(
+          context,
+          resultText: barCodesWithIn[0].rawValue!,
+          format: barCodesWithIn[0].format,
+        );
         _busyUpdate();
       } else if (!isDialogShowing) {
         isDialogShowing = true;

@@ -26,7 +26,7 @@ class SearchHistorySectionWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
-              (searchHistoryWidgetEntity.title?.isNullOrEmpty == true)
+              (searchHistoryWidgetEntity.title ?? "").isEmpty
                   ? LocalizationConstants.searchHistory.localized()
                   : searchHistoryWidgetEntity.title!,
               style: OptiTextStyles.titleLarge,
