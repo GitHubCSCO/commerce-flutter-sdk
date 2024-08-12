@@ -37,4 +37,18 @@ class BaseUseCase {
         .getSiteMessage(messageName, defaultMessage: defaultMessage);
     return result ?? defaultMessage ?? '';
   }
+
+  Future<bool> checkSignInRequired() async {
+    final productSettings = await commerceAPIServiceProvider
+        .getSettingsService()
+        .getProductSettingsAsync();
+
+    switch (productSettings) {
+      case Failure():
+        return false;
+      case Success(value: final productSettings):
+        return productSettings?.storefrontAccess ==
+            StorefrontAccessConstants.signInRequiredToBrowse;
+    }
+  }
 }

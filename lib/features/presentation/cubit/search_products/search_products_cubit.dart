@@ -21,6 +21,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
   String? query;
   bool? hidePricingEnable;
   bool? hideInventoryEnable;
+  bool? canAddToCartInProductList;
 
   SearchProductsCubit(
       {required SearchUseCase searchUseCase,
@@ -99,6 +100,8 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
         await _pricingInventoryUseCase.getProductPricingEnable();
     hidePricingEnable = _pricingInventoryUseCase.getHidePricingEnable();
     hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
+    canAddToCartInProductList =
+        await _searchUseCase.canAddToCartInProductList();
 
     List<ProductEntity> productEntities =
         await updateProductPricingAndInventoryAvailability(
@@ -118,6 +121,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
         productPricingEnabled: productPricingEnabled,
         hidePricingEnabled: hidePricingEnable,
         hideInventoryEnabled: hideInventoryEnable,
+        canAddToCartInProductList: canAddToCartInProductList,
       ),
     );
   }
