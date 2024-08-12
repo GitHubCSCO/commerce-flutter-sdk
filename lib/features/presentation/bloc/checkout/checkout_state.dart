@@ -17,6 +17,7 @@ class CheckoutDataLoaded extends CheckoutState {
   final CarrierDto? selectedCarrier;
   final ShipViaDto? selectedService;
   final DateTime? requestDeliveryDate;
+  final bool? allowCreateNewShipToAddress;
 
   CheckoutDataLoaded({
     required this.cart,
@@ -29,6 +30,7 @@ class CheckoutDataLoaded extends CheckoutState {
     required this.selectedCarrier,
     required this.selectedService,
     required this.requestDeliveryDate,
+    required this.allowCreateNewShipToAddress,
   });
 }
 

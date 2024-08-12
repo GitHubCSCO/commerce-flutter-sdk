@@ -6,9 +6,14 @@ class QuickOrderInitialState extends QuickOrderAutoCompleteState {}
 
 // class AutoCompleteInitialState extends QuickOrderAutoCompleteState {}
 
+class QuickOrderSearchAutoFocusResetState extends QuickOrderAutoCompleteState {}
+
 class QuickOrderAutoCompleteLoadingState extends QuickOrderAutoCompleteState {}
 
-class QuickOrderAutoCompleteInitialState extends QuickOrderAutoCompleteState {}
+class QuickOrderAutoCompleteInitialState extends QuickOrderAutoCompleteState {
+  final bool autoFocus;
+  QuickOrderAutoCompleteInitialState({this.autoFocus = false});
+}
 
 class QuickOrderAutoCompleteLoadedState extends QuickOrderAutoCompleteState {
   final AutocompleteResult? result;

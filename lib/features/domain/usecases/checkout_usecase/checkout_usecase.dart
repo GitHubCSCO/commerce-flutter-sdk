@@ -42,6 +42,10 @@ class CheckoutUsecase extends BaseUseCase {
         .getCartSettingAsync();
   }
 
+  Future<Result<Settings, ErrorResponse>> loadSettingsCollection() {
+    return commerceAPIServiceProvider.getSettingsService().getSettingsAsync();
+  }
+
   Future<Result<ShipTo, ErrorResponse>> postCurrentBillToShipToAsync(
       ShipTo shipTo) async {
     return commerceAPIServiceProvider
