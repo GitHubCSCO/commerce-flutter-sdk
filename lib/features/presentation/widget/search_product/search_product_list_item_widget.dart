@@ -51,7 +51,7 @@ class SearchProductListItemWidget extends StatelessWidget {
             extra: product);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.only(top: 8, bottom: 8, left: 16, right: 8),
         decoration: const BoxDecoration(color: Colors.white),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,15 +161,15 @@ class SearchProductListItemWidget extends StatelessWidget {
                           );
                         } else if (state is AddToCartEnable) {
                           if (state.canAddToCart) {
-                            return InkWell(
-                              onTap: () {
+                            return IconButton(
+                              onPressed: () {
                                 var productId =
                                     product.styleParentId ?? product.id;
                                 context
                                     .read<AddToCartCubit>()
                                     .searchPorductAddToCard(productId!);
                               },
-                              child: Container(
+                              icon: Container(
                                 width: 40,
                                 height: 40,
                                 padding: const EdgeInsets.all(10),

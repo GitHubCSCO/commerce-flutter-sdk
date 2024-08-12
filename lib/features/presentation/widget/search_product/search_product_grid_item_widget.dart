@@ -39,7 +39,7 @@ class SearchProductGridItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double itemWidth = MediaQuery.of(context).size.width / 2;
-    double imageItemLength = itemWidth ; // subtract horizontal padding
+    double imageItemLength = itemWidth; // subtract horizontal padding
 
     return InkWell(
       onTap: () {
@@ -57,7 +57,7 @@ class SearchProductGridItemWidget extends StatelessWidget {
             SizedBox(
               width: imageItemLength,
               height: imageItemLength - 40,
-              child: Container(
+              child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
@@ -65,22 +65,97 @@ class SearchProductGridItemWidget extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    product.smallImagePath.makeImageUrl(),
-                    fit: BoxFit.cover,
-                    errorBuilder: (BuildContext context, Object error,
-                        StackTrace? stackTrace) {
-                      // This function is called when the image fails to load
-                      return Container(
-                        color: OptiAppColors.backgroundGray, // Placeholder color
-                        alignment: Alignment.center,
-                        child: const Icon(
-                          Icons.image, // Icon to display
-                          color: Colors.grey, // Icon color
-                          size: 30, // Icon size
-                        ),
-                      );
-                    },
+                  child: Stack(
+                    children: [
+                      Image.network(
+                        product.smallImagePath.makeImageUrl(),
+                        fit: BoxFit.cover,
+                        width: double
+                            .infinity, // Ensure the image covers the entire container
+                        height: double.infinity,
+                        errorBuilder: (BuildContext context, Object error,
+                            StackTrace? stackTrace) {
+                          return Container(
+                            color: OptiAppColors
+                                .backgroundGray, // Placeholder color
+                            alignment: Alignment.center,
+                            child: const Icon(
+                              Icons.image, // Icon to display
+                              color: Colors.grey, // Icon color
+                              size: 30, // Icon size
+                            ),
+                          );
+                        },
+                      ),
+                      Positioned(
+                        bottom: 4,
+                        right: 4,
+                        child: BlocProvider<AddToCartCubit>(
+                            create: (context) => sl<AddToCartCubit>()
+                              ..updateAddToCartButton(product),
+                            child: BlocListener<AddToCartCubit, AddToCartState>(
+                                listener: (context, state) {
+                                  if (state is AddToCartSuccess) {
+                                    context
+                                        .read<CartCountCubit>()
+                                        .onCartItemChange();
+                                    CustomSnackBar.showProductAddedToCart(
+                                        context);
+                                  }
+                                },
+                                child:
+                                    BlocBuilder<AddToCartCubit, AddToCartState>(
+                                  buildWhen: (previous, current) =>
+                                      current is AddToCartEnable &&
+                                      previous is AddToCartButtonLoading,
+                                  builder: (context, state) {
+                                    if (state is AddToCartInitial) {
+                                      return Container();
+                                    } else if (state
+                                        is AddToCartButtonLoading) {
+                                      return Container(
+                                        alignment: Alignment.bottomLeft,
+                                        child: LoadingAnimationWidget
+                                            .prograssiveDots(
+                                          color: OptiAppColors.iconPrimary,
+                                          size: 30,
+                                        ),
+                                      );
+                                    } else if (state is AddToCartEnable) {
+                                      if (state.canAddToCart) {
+                                        return IconButton(
+                                          onPressed: () {
+                                            var productId =
+                                                product.styleParentId ??
+                                                    product.id;
+                                            context
+                                                .read<AddToCartCubit>()
+                                                .searchPorductAddToCard(
+                                                productId!);
+                                          },
+                                          icon: Container(
+                                            width: 40,
+                                            height: 40,
+                                            padding: const EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              color: OptiAppColors.backgroundInput,
+                                              borderRadius:
+                                                  BorderRadius.circular(32),
+                                            ),
+                                            child: const SvgAssetImage(
+                                              assetName:
+                                                  AssetConstants.addToCart,
+                                              fit: BoxFit.fitWidth,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    }
+                                    return Container();
+                                  },
+                                ))),
+                      ),
+                    ],
                   ),
                 ),
               ),
