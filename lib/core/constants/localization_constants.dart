@@ -252,7 +252,7 @@ enum LocalizationConstants {
   documents(keyword: "Documents"),
   recommendedProducts(keyword: "Recommended Products"),
   unableToRetrieveInventory(keyword: "Unable to retrieve inventory"),
-  addToCart(keyword: "Add to cart"),
+  addToCart(keyword: "Add to Cart"),
   pleaseSignInBeforeAddingToList(
       keyword: "Please sign in before adding to list."),
   noFiltersAvailable(keyword: "No Filters Available"),
