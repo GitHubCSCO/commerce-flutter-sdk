@@ -693,8 +693,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   }
 
   List<ToolMenu> _buildToolMenu(BuildContext context) {
+    bool isOrderListEmpty = context.watch<OrderListBloc>().isOrderListEmpty();
     List<ToolMenu> list = [];
-    bool isOrderListEmpty = context.read<OrderListBloc>().isOrderListEmpty();
     if (widget.scanningMode == ScanningMode.count &&
         isOrderListEmpty == false) {
       list.add(ToolMenu(
