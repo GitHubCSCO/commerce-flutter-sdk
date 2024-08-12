@@ -53,6 +53,11 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     var data = await _checkoutUseCase.getCart(event.cart.id!);
     session ??= _checkoutUseCase.getCurrentSession();
     var productSettingsResult = await _checkoutUseCase.loadProductSettings();
+    var settingsResult = (await _checkoutUseCase.loadSettingsCollection())
+        .getResultSuccessValue();
+    var allowCreateNewShipToAddress = settingsResult?.settingsCollection
+            ?.customerSettings?.allowCreateNewShipToAddress ??
+        false;
     productSettings = productSettingsResult is Success
         ? (productSettingsResult as Success).value as ProductSettings
         : null;
@@ -90,6 +95,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
             selectedCarrier: selectedCarrier,
             selectedService: selectedService,
             requestDeliveryDate: requestDeliveryDate,
+            allowCreateNewShipToAddress: allowCreateNewShipToAddress,
           ));
         } else {
           emit(CheckoutDataFetchFailed(

@@ -112,7 +112,8 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                     selectedCarrier: state.selectedCarrier,
                     selectedService: state.selectedService,
                     requestDeliveryDate: state.requestDeliveryDate,
-                    canChangeShipTo: false,
+                    allowCreateNewShipToAddress:
+                        state.allowCreateNewShipToAddress,
                   );
 
                   return Container(
@@ -127,6 +128,7 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                 BillingShippingWidget(
                                   billingShippingEntity: billingShippingEntity,
                                   onCallBack: _handleAddressSelectionCallBack,
+                                  isVmiCheckout: true,
                                 ),
                                 CheckoutPaymentDetails(
                                     cart: context.read<CheckoutBloc>().cart!,
@@ -263,7 +265,7 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
         context.read<CheckoutBloc>().cart?.paymentMethod != null;
     var isPaymentMethodSelectedasCreditCard =
         context.read<CheckoutBloc>().cart?.paymentMethod?.isCreditCard == true;
-    print(context.read<PaymentDetailsBloc>().selectedPaymentMethod);
+
     if (!isPaymentMethodSelectedInCard || isPaymentMethodSelectedasCreditCard) {
       context.read<CheckoutBloc>().add(SelectPaymentMethodEvent(
           context.read<PaymentDetailsBloc>().selectedPaymentMethod!));

@@ -11,31 +11,33 @@ class BillingShippingEntity {
   final CarrierDto? selectedCarrier;
   final ShipViaDto? selectedService;
   final DateTime? requestDeliveryDate;
-  final bool? canChangeShipTo;
+  final bool? allowCreateNewShipToAddress;
 
-  BillingShippingEntity(
-      {this.billTo,
-      this.shipTo,
-      this.warehouse,
-      this.shippingMethod,
-      this.carriers,
-      this.cartSettings,
-      this.selectedCarrier,
-      this.selectedService,
-      this.requestDeliveryDate,
-      this.canChangeShipTo = true});
+  BillingShippingEntity({
+    this.billTo,
+    this.shipTo,
+    this.warehouse,
+    this.shippingMethod,
+    this.carriers,
+    this.cartSettings,
+    this.selectedCarrier,
+    this.selectedService,
+    this.requestDeliveryDate,
+    this.allowCreateNewShipToAddress = true,
+  });
 
-  BillingShippingEntity copyWith(
-      {BillTo? billTo,
-      ShipTo? shipTo,
-      Warehouse? warehouse,
-      ShippingOption? shippingMethod,
-      List<CarrierDto>? carriers,
-      CartSettings? cartSettings,
-      CarrierDto? selectedCarrier,
-      ShipViaDto? selectedService,
-      DateTime? requestDeliveryDate,
-      bool? canChangeShipTo}) {
+  BillingShippingEntity copyWith({
+    BillTo? billTo,
+    ShipTo? shipTo,
+    Warehouse? warehouse,
+    ShippingOption? shippingMethod,
+    List<CarrierDto>? carriers,
+    CartSettings? cartSettings,
+    CarrierDto? selectedCarrier,
+    ShipViaDto? selectedService,
+    DateTime? requestDeliveryDate,
+    bool? allowCreateNewShipToAddress,
+  }) {
     return BillingShippingEntity(
       billTo: billTo ?? this.billTo,
       shipTo: shipTo ?? this.shipTo,
@@ -46,7 +48,8 @@ class BillingShippingEntity {
       selectedCarrier: selectedCarrier ?? this.selectedCarrier,
       selectedService: selectedService ?? this.selectedService,
       requestDeliveryDate: requestDeliveryDate ?? this.requestDeliveryDate,
-      canChangeShipTo: canChangeShipTo ?? this.canChangeShipTo,
+      allowCreateNewShipToAddress:
+          allowCreateNewShipToAddress ?? this.allowCreateNewShipToAddress,
     );
   }
 }

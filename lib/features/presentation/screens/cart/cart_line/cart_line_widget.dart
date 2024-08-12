@@ -1,24 +1,15 @@
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/cart_line_extentions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
-import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_image_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_quantity_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_title_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CartLineWidget extends StatelessWidget {
@@ -30,16 +21,17 @@ class CartLineWidget extends StatelessWidget {
   final void Function()? onShowMoreButtonClickedCallback;
   final void Function(int quantity) onCartQuantityChangedCallback;
   final void Function(CartLineEntity) onCartLineRemovedCallback;
-  const CartLineWidget(
-      {super.key,
-      required this.cartLineEntity,
-      this.hidePricingEnable,
-      this.hideInventoryEnable,
-      required this.onCartQuantityChangedCallback,
-      required this.onCartLineRemovedCallback,
-      this.onShowMoreButtonClickedCallback,
-      this.showRemoveButton = true,
-      this.moreButtonWidget});
+  const CartLineWidget({
+    super.key,
+    required this.cartLineEntity,
+    this.hidePricingEnable,
+    this.hideInventoryEnable,
+    required this.onCartQuantityChangedCallback,
+    required this.onCartLineRemovedCallback,
+    this.onShowMoreButtonClickedCallback,
+    this.showRemoveButton = true,
+    this.moreButtonWidget,
+  });
 
   @override
   Widget build(BuildContext context) {
