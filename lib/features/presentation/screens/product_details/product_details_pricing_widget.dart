@@ -13,6 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/view_warehouse
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductDetailsPricingWidget extends StatelessWidget {
   final ProductDetailsPriceEntity productDetailsPricingEntity;
@@ -162,10 +163,13 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                     productDetailsPriceEntity.product.updatePriceValueText(
                         productDetailsPriceEntity.productPricingEnabled),
                     style: OptiTextStyles.subtitle),
-                Text(
-                  " / ${productDetailsPriceEntity.selectedUnitOfMeasureValueText ?? ""}",
-                  style: OptiTextStyles.body,
-                ),
+                if (productDetailsPriceEntity
+                        .selectedUnitOfMeasureValueText.isNullOrEmpty ==
+                    false)
+                  Text(
+                    " / ${productDetailsPriceEntity.selectedUnitOfMeasureValueText ?? ""}",
+                    style: OptiTextStyles.body,
+                  ),
               ],
             ),
           );

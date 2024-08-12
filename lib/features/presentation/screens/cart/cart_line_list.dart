@@ -1,5 +1,7 @@
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_state.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_header_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_widget.dart';
@@ -45,8 +47,20 @@ class CartLineWidgetList extends StatelessWidget {
                 children: cartLineEntities
                     .map((cartLineEntity) => CartLineWidget(
                           cartLineEntity: cartLineEntity,
-                          onCartQuantityChangedCallback: (quantity) {},
-                          onCartLineRemovedCallback: (p0) {},
+                          onCartQuantityChangedCallback: (quantity) {
+                            context.read<CartContentBloc>().add(
+                                  CartContentQuantityChangedEvent(
+                                    cartLineEntity: cartLineEntity.copyWith(
+                                        qtyOrdered: quantity),
+                                  ),
+                                );
+                          },
+                          onCartLineRemovedCallback: (cartLineEntity) {
+                            context.read<CartContentBloc>().add(
+                                CartContentRemoveEvent(
+                                    cartLine: CartLineEntityMapper.toModel(
+                                        cartLineEntity)));
+                          },
                           hidePricingEnable: hidePricingEnable,
                           hideInventoryEnable: hideInventoryEnable,
                         ))

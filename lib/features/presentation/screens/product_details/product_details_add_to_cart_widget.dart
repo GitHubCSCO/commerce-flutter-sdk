@@ -295,15 +295,13 @@ class ProductDetailsAddCartRow extends StatelessWidget {
             ),
           ),
         ),
-        Visibility(
-          visible: detailsAddToCartEntity.productUnitOfMeasures != null &&
-              detailsAddToCartEntity.productUnitOfMeasures!.length == 1,
-          child: Text(
-              detailsAddToCartEntity.productUnitOfMeasures!.first
+        if (detailsAddToCartEntity.productUnitOfMeasures != null &&
+            detailsAddToCartEntity.productUnitOfMeasures!.length == 1)
+          Text(
+              detailsAddToCartEntity.productUnitOfMeasures?.first
                       .unitOfMeasureTextDisplayWithQuantity ??
                   "",
-              style: OptiTextStyles.header3),
-        )
+              style: OptiTextStyles.header3)
       ],
     );
   }
