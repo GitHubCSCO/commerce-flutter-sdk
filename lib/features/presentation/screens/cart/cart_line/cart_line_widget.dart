@@ -21,16 +21,17 @@ class CartLineWidget extends StatelessWidget {
   final void Function()? onShowMoreButtonClickedCallback;
   final void Function(int quantity) onCartQuantityChangedCallback;
   final void Function(CartLineEntity) onCartLineRemovedCallback;
-  const CartLineWidget(
-      {super.key,
-      required this.cartLineEntity,
-      this.hidePricingEnable,
-      this.hideInventoryEnable,
-      required this.onCartQuantityChangedCallback,
-      required this.onCartLineRemovedCallback,
-      this.onShowMoreButtonClickedCallback,
-      this.showRemoveButton = true,
-      this.moreButtonWidget});
+  const CartLineWidget({
+    super.key,
+    required this.cartLineEntity,
+    this.hidePricingEnable,
+    this.hideInventoryEnable,
+    required this.onCartQuantityChangedCallback,
+    required this.onCartLineRemovedCallback,
+    this.onShowMoreButtonClickedCallback,
+    this.showRemoveButton = true,
+    this.moreButtonWidget,
+  });
 
   @override
   Widget build(BuildContext context) {

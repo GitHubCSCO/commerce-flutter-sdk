@@ -110,14 +110,7 @@ class CmsCubit extends Cubit<CmsState> {
         {
           final SearchHistoryWidgetEntity searchHistoryWidgetEntity =
               widgetEntity as SearchHistoryWidgetEntity;
-          var result = await _searchHistoryUseCase.getSearchHistory();
-          if (result.isEmpty) {
-            return null;
-          } else {
-            searchHistoryWidgetEntity.histories?.clear();
-            searchHistoryWidgetEntity.histories?.addAll(result);
-            return searchHistoryWidgetEntity;
-          }
+          return searchHistoryWidgetEntity;
         }
       case CurrentLocationWidgetEntity:
         {
@@ -131,7 +124,6 @@ class CmsCubit extends Cubit<CmsState> {
               widgetEntity as PreviousOrdersWidgetEntity;
           return previousOrdersWidgetEntity;
         }
-
       case LocationNoteWidgetEntity:
         {
           final LocationNoteWidgetEntity locationNoteWidgetEntity =

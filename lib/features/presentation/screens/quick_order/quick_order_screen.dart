@@ -84,11 +84,18 @@ class QuickOrderPage extends StatefulWidget {
 
 class _QuickOrderPageState extends State<QuickOrderPage> {
   late void Function(bool) callBack;
+  late FocusNode autoFocusNode;
 
   bool cameraFlash = false;
   bool canProcess = false;
   String subTotal = '';
   final textEditingController = TextEditingController();
+
+  @override
+  void dispose() {
+    autoFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,9 +152,11 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                 ),
                                 child: TextButton(
                                   onPressed: () {
+                                    autoFocusNode = FocusNode();
                                     context
                                         .read<QuickOrderAutoCompleteBloc>()
-                                        .add(QuickOrderStartSearchEvent());
+                                        .add(QuickOrderStartSearchEvent(
+                                            autoFocus: true));
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -454,6 +463,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                       //   context.read<QuickOrderAutoCompleteBloc>().add(SearchSearchEvent());
                       // },
                       controller: textEditingController,
+                      autoFocusNode: autoFocusNode,
                     ),
                   ),
                   Expanded(child: _buildAutoCompleteContainer(state)),
@@ -467,6 +477,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
 
   Widget _buildAutoCompleteContainer(QuickOrderAutoCompleteState state) {
     if (state is QuickOrderAutoCompleteInitialState) {
+      if (state.autoFocus) {
+        autoFocusNode.requestFocus();
+      }
       return Center(
         child: Text(
           LocalizationConstants.searchPrompt.localized(),
@@ -679,8 +692,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
 
   List<ToolMenu> _buildToolMenu(BuildContext context) {
     List<ToolMenu> list = [];
-
-    if (widget.scanningMode == ScanningMode.count) {
+    bool isOrderListEmpty = context.read<OrderListBloc>().isOrderListEmpty();
+    if (widget.scanningMode == ScanningMode.count &&
+        isOrderListEmpty == false) {
       list.add(ToolMenu(
           title: LocalizationConstants.clearHistory.localized(),
           action: () {
@@ -692,11 +706,13 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
           action: () {
             _addToList(context);
           }));
-      list.add(ToolMenu(
-          title: LocalizationConstants.removeAllProducts.localized(),
-          action: () {
-            _clearAllCart(context);
-          }));
+      if (isOrderListEmpty == false) {
+        list.add(ToolMenu(
+            title: LocalizationConstants.removeAllProducts.localized(),
+            action: () {
+              _clearAllCart(context);
+            }));
+      }
     }
 
     return list;

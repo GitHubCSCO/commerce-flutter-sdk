@@ -38,4 +38,20 @@ class InvoiceUseCase extends BaseUseCase {
 
     return result.getResultSuccessValue();
   }
+
+  Session? getCurrentSession() {
+    return commerceAPIServiceProvider
+        .getSessionService()
+        .getCachedCurrentSession();
+  }
+
+  Future<bool> sendInvoiceEmail(
+      {required InvoiceEmailParameter parameter}) async {
+    final result =
+        await commerceAPIServiceProvider.getInvoiceService().sendEmail(
+              parameters: parameter,
+            );
+
+    return result.getResultSuccessValue() ?? false;
+  }
 }

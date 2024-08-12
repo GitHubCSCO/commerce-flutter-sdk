@@ -240,6 +240,12 @@ class _AccountLoggedInHeader extends StatelessWidget {
       listener: (context, state) {
         if (state is LogoutSuccess) {
           context.read<AuthCubit>().loadAuthenticationState();
+          if (state.isSignInRequired) {
+            AppRoute.landing.navigateBackStack(
+              context,
+              extra: state.domain != null,
+            );
+          }
         }
       },
       child: BlocProvider(

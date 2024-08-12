@@ -11,7 +11,16 @@ class SearchHistoryCubit extends Cubit<SearchHistoryState> {
         super(SearchHistoryInitialState());
 
   Future<void> getSearchHistory() async {
+    emit(SearchHistoryLoadingState());
     var result = await _searchHistoryUseCase.getSearchHistory();
     emit(SearchHistoryLoadedState(historyList: result));
+  }
+
+  Future<void> addSearchHistory(String query) async {
+    if (query.isEmpty) {
+      return;
+    }
+    await _searchHistoryUseCase.addSearchHistory(query);
+    await getSearchHistory();
   }
 }

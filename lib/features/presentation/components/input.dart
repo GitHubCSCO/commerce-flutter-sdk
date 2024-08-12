@@ -22,27 +22,30 @@ class Input extends StatefulWidget {
   final FormFieldValidator<String>? validator; // Added validator parameter
   final bool? isRequired;
   final int? maxLength;
+  final FocusNode? autoFocusNode;
 
-  const Input(
-      {super.key,
-      this.hintText,
-      this.onChanged,
-      this.onSubmitted,
-      this.controller,
-      this.keyboardType,
-      this.onEditingComplete,
-      this.onTap,
-      this.onTapOutside,
-      this.textDirection,
-      this.textInputAction,
-      this.label,
-      this.obscureText = false,
-      this.textAlign = TextAlign.start,
-      this.focusListener,
-      this.suffixIcon,
-      this.validator,
-      this.maxLength,
-      this.isRequired = false});
+  const Input({
+    super.key,
+    this.hintText,
+    this.onChanged,
+    this.onSubmitted,
+    this.controller,
+    this.keyboardType,
+    this.onEditingComplete,
+    this.onTap,
+    this.onTapOutside,
+    this.textDirection,
+    this.textInputAction,
+    this.label,
+    this.obscureText = false,
+    this.textAlign = TextAlign.start,
+    this.focusListener,
+    this.suffixIcon,
+    this.validator,
+    this.maxLength,
+    this.isRequired = false,
+    this.autoFocusNode,
+  });
 
   @override
   State<Input> createState() => _InputState();
@@ -70,7 +73,7 @@ class _InputState extends State<Input> {
 
   @override
   void initState() {
-    _focusNode = FocusNode();
+    _focusNode = widget.autoFocusNode ?? FocusNode();
     _focusNode.addListener(_setState);
 
     _scrollController = ScrollController();

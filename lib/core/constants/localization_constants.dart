@@ -225,8 +225,9 @@ enum LocalizationConstants {
   quickOrderBasketEmpty(keyword: "Quick order basket is empty"),
   removeAllQuickOrderProductsQuestion(
       keyword: "Remove all products from your quick order cart?"),
-  pleaseSignInCheckout(
-      keyword: "Please sign in before proceeding to checkout."),
+  signInBeforeList(keyword: "Please sign in before proceeding to add to list."),
+  signInBeforeSaveOrder(
+      keyword: "Please sign in before proceeding to save order."),
   quickOrderContents(keyword: "Quick Order Contents"),
   notFoundForSearch(keyword: "Not found for {0}"),
   tooManyResultsForSearch(
@@ -299,6 +300,8 @@ enum LocalizationConstants {
   clearAllItemsInCart(keyword: "Clear all items in cart?"),
   signInBeforeCheckout(
       keyword: "Please sign in before proceeding to checkout."),
+  signInBeforeSubmitQuote(
+      keyword: "Please sign in before proceeding to submit quote."),
   notSignedIn(keyword: "Not Signed In"),
   clearCart(keyword: "Clear Cart"),
   addDiscount(keyword: "Add Discount"),
@@ -370,8 +373,8 @@ enum LocalizationConstants {
   promotionNotAppliedContinue(
       keyword: "Promotion code not applied. Do you wish to continue?"),
   selectPaymentMethod(keyword: "Select Payment Method"),
-  newPaymentMethod(keyword: "New Payment Method"),
-  newAddress(keyword: "New address"),
+  newPaymentMethod(keyword: "+ New Payment Method"),
+  newAddress(keyword: "+ New address"),
   backToCountInventory(keyword: "Back to Count Inventory"),
   backToCreateOrder(keyword: "Back to Create Order"),
   backToVmiHome(keyword: "Back to VMI Home"),

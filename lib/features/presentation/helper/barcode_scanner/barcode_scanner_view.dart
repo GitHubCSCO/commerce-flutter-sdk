@@ -6,7 +6,6 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
-import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/detector_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,8 +15,11 @@ class BarcodeScannerView extends StatefulWidget {
   final Function(BuildContext, String) callback;
   final bool barcodeFullView;
 
-  BarcodeScannerView(
-      {required this.callback, required this.barcodeFullView, super.key});
+  const BarcodeScannerView({
+    super.key,
+    required this.callback,
+    required this.barcodeFullView,
+  });
 
   @override
   State<BarcodeScannerView> createState() => _BarcodeScannerViewState();
