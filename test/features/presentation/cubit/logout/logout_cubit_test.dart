@@ -24,6 +24,10 @@ void main() {
       'emits [LogoutLoading, LogoutSuccess] when logout is called successfully',
       build: () {
         when(() => mockLogoutUsecase.logout()).thenAnswer((_) async {});
+        when(() => mockLogoutUsecase.getDomainInSettingsScreen())
+            .thenAnswer((_) async => null);
+        when(() => mockLogoutUsecase.checkSignInRequired())
+            .thenAnswer((_) async => false);
         return sut;
       },
       act: (cubit) async {
@@ -31,7 +35,7 @@ void main() {
       },
       expect: () => [
         LogoutLoading(),
-        LogoutSuccess(),
+        isA<LogoutSuccess>(),
       ],
     );
     //TODO

@@ -136,4 +136,15 @@ class SearchUseCase extends BaseUseCase {
       selectedSortOrderType: selectedSortOrderType,
     );
   }
+
+  Future<bool> canAddToCartInProductList() async {
+    var mobileSettingsResponse = await commerceAPIServiceProvider
+        .getSettingsService()
+        .getMobileAppSettingAsync();
+    MobileAppSettings? mobileSettings = (mobileSettingsResponse is Success)
+        ? (mobileSettingsResponse as Success).value as MobileAppSettings
+        : null;
+
+    return mobileSettings?.addToCartInProductList ?? false;
+  }
 }

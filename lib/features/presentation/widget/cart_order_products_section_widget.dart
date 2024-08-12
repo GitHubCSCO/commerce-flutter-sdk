@@ -4,21 +4,23 @@ import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dar
 import 'package:commerce_flutter_app/features/domain/extensions/cart_line_extentions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class CartOrderProductsSectionWidget extends StatelessWidget {
   final List<CartLineEntity> cartLines;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
+  final void Function({required CartLineEntity cartLineEntity})? onAddToList;
+  final void Function({required CartLineEntity cartLineEntity})? onAddToCart;
 
   const CartOrderProductsSectionWidget({
     super.key,
     required this.cartLines,
     this.hidePricingEnable,
     this.hideInventoryEnable,
+    this.onAddToCart,
+    this.onAddToList,
   });
 
   @override
@@ -70,6 +72,18 @@ class CartOrderProductsSectionWidget extends StatelessWidget {
               unitOfMeasure: cartLineEntity.baseUnitOfMeasure,
               hidePricingEnable: hidePricingEnable,
               hideInventoryEnable: hideInventoryEnable,
+              canAddToCart: onAddToCart != null,
+              canAddToList: onAddToList != null,
+              onAddToCart: () {
+                if (onAddToCart != null) {
+                  onAddToCart!(cartLineEntity: cartLineEntity);
+                }
+              },
+              onAddToList: () {
+                if (onAddToList != null) {
+                  onAddToList!(cartLineEntity: cartLineEntity);
+                }
+              },
             );
           },
           separatorBuilder: (context, index) => const Divider(height: 1),

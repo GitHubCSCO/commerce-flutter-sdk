@@ -23,8 +23,12 @@ class WebsitePaths {
       'redirectto/RfqQuoteDetailsPage?quoteId=%s';
   static const jobQuoteDetailsWebsitePath =
       'redirectto/RfqJobQuoteDetailsPage?jobQuoteId=%s';
+  static const quoteRequestWebsitePath = 'redirectto/QuoteRequestPage';
+  static const savedPaymentsWebsitePath = 'redirectto/MySavedPaymentsPage';
 }
 
 class PrintPaths {
   static const invoiceDetailPrintPath = 'Invoice/GetPdf?invoiceNumber=%s';
+  static const orderDetailPrintPath =
+      'Order/GetPdf?orderNumber=%s&stPostalCode=%s';
 }

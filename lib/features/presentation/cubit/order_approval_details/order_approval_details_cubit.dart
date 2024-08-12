@@ -116,6 +116,53 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
     return cartlines;
   }
 
+  Future<void> addToCart({required AddCartLine addCartLine}) async {
+    emit(
+      state.copyWith(
+        status: OrderStatus.lineItemAddToCartLoading,
+      ),
+    );
+
+    final newCartLine = await _orderApprovalUseCase.addLineItemToCart(
+      addCartLine: addCartLine,
+    );
+
+    addCartLineToCartMessageName = newCartLine == null
+        ? SiteMessageConstants.nameAddToCartFail
+        : SiteMessageConstants.nameAddToCartSuccess;
+    addCartLineToCartDefaultMessage = newCartLine == null
+        ? SiteMessageConstants.defaultValueAddToCartFail
+        : SiteMessageConstants.defaultValueAddToCartSuccess;
+    addCartLineToCartMessage = await _orderApprovalUseCase.getSiteMessage(
+      addCartLineToCartMessageName,
+      addCartLineToCartDefaultMessage,
+    );
+
+    if (newCartLine != null && newCartLine.isQtyAdjusted == true) {
+      quantityAdjustedMessage = await _orderApprovalUseCase.getSiteMessage(
+        SiteMessageConstants.nameAddToCartQuantityAdjusted,
+        SiteMessageConstants.defaultValueAddToCartQuantityAdjusted,
+      );
+
+      emit(
+        state.copyWith(
+          status: OrderStatus.lineItemAddToCartQtyAdjusted,
+        ),
+      );
+    } else {
+      emit(
+        state.copyWith(
+          status: OrderStatus.lineItemAddToCartComplete,
+        ),
+      );
+    }
+  }
+
+  String addCartLineToCartMessageName = '';
+  String addCartLineToCartDefaultMessage = '';
+  String addCartLineToCartMessage = '';
+  String quantityAdjustedMessage = '';
+
   // header section
   String get subtotalValue => state.cart.orderSubTotalDisplay ?? '';
   String get shippingValue => state.cart.shippingAndHandlingDisplay ?? '';

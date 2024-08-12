@@ -12,6 +12,7 @@ class ReviewOrderEntity {
   final CarrierDto? selectedCarrier;
   final ShipViaDto? selectedService;
   final DateTime? requestDeliveryDate;
+  final bool? allowCreateNewShipToAddress;
 
   ReviewOrderEntity({
     this.billTo,
@@ -24,16 +25,19 @@ class ReviewOrderEntity {
     this.selectedCarrier,
     this.selectedService,
     this.requestDeliveryDate,
+    this.allowCreateNewShipToAddress,
   });
 
-  ReviewOrderEntity copyWith(
-      {BillTo? billTo,
-      ShipTo? shipTo,
-      Warehouse? warehouse,
-      ShippingOption? shippingMethod,
-      List<CarrierDto>? carriers,
-      CartSettings? cartSettings,
-      PaymentMethodDto? paymentMethod}) {
+  ReviewOrderEntity copyWith({
+    BillTo? billTo,
+    ShipTo? shipTo,
+    Warehouse? warehouse,
+    ShippingOption? shippingMethod,
+    List<CarrierDto>? carriers,
+    CartSettings? cartSettings,
+    PaymentMethodDto? paymentMethod,
+    bool? allowCreateNewShipToAddress,
+  }) {
     return ReviewOrderEntity(
       selectedCarrier: selectedCarrier,
       selectedService: selectedService,
@@ -45,6 +49,8 @@ class ReviewOrderEntity {
       carriers: carriers ?? this.carriers,
       cartSettings: cartSettings ?? this.cartSettings,
       paymentMethod: paymentMethod ?? this.paymentMethod,
+      allowCreateNewShipToAddress:
+          allowCreateNewShipToAddress ?? this.allowCreateNewShipToAddress,
     );
   }
 }

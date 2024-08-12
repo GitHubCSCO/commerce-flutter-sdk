@@ -175,8 +175,8 @@ void showClearCacheDialog(BuildContext context) {
         child: Text(LocalizationConstants.cancel.localized()),
       ),
       DialogPlainButton(
-        onPressed: () {
-          context.read<SettingsDomainCubit>().clearCache();
+        onPressed: () async {
+          await context.read<SettingsDomainCubit>().clearCache();
           Navigator.of(context).pop();
         },
         child: Text(LocalizationConstants.oK.localized()),

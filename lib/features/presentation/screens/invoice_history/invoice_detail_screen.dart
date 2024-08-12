@@ -1,6 +1,6 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
@@ -101,6 +101,17 @@ class InvoiceDetailPage extends StatelessWidget {
                         PrintPaths.invoiceDetailPrintPath
                             .format([invoiceNumber]),
                       );
+                },
+              ),
+              ToolMenu(
+                title: LocalizationConstants.email.localized(),
+                action: () {
+                  AppRoute.invoiceEmail.navigateBackStack(
+                    context,
+                    pathParameters: {
+                      'invoiceNumber': invoiceNumber,
+                    },
+                  );
                 },
               ),
             ],
