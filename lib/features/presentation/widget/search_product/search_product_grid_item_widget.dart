@@ -27,14 +27,17 @@ class SearchProductGridItemWidget extends StatelessWidget {
   final bool? pricingEnable;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
+  final bool? canAddToCartInProductList;
 
-  const SearchProductGridItemWidget(
-      {super.key,
-      required this.product,
-      required this.productSettings,
-      required this.pricingEnable,
-      this.hidePricingEnable,
-      this.hideInventoryEnable});
+  const SearchProductGridItemWidget({
+    super.key,
+    required this.product,
+    required this.productSettings,
+    required this.pricingEnable,
+    this.hidePricingEnable,
+    this.hideInventoryEnable,
+    this.canAddToCartInProductList,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -87,74 +90,77 @@ class SearchProductGridItemWidget extends StatelessWidget {
                           );
                         },
                       ),
-                      Positioned(
-                        bottom: 4,
-                        right: 4,
-                        child: BlocProvider<AddToCartCubit>(
+                      if (canAddToCartInProductList == true) ...{
+                        Positioned(
+                          bottom: 4,
+                          right: 4,
+                          child: BlocProvider<AddToCartCubit>(
                             create: (context) => sl<AddToCartCubit>()
                               ..updateAddToCartButton(product),
                             child: BlocListener<AddToCartCubit, AddToCartState>(
-                                listener: (context, state) {
-                                  if (state is AddToCartSuccess) {
-                                    context
-                                        .read<CartCountCubit>()
-                                        .onCartItemChange();
-                                    CustomSnackBar.showProductAddedToCart(
-                                        context);
-                                  }
-                                },
-                                child:
-                                    BlocBuilder<AddToCartCubit, AddToCartState>(
-                                  buildWhen: (previous, current) =>
-                                      current is AddToCartEnable &&
-                                      previous is AddToCartButtonLoading,
-                                  builder: (context, state) {
-                                    if (state is AddToCartInitial) {
-                                      return Container();
-                                    } else if (state
-                                        is AddToCartButtonLoading) {
-                                      return Container(
-                                        alignment: Alignment.bottomLeft,
-                                        child: LoadingAnimationWidget
-                                            .prograssiveDots(
-                                          color: OptiAppColors.iconPrimary,
-                                          size: 30,
+                              listener: (context, state) {
+                                if (state is AddToCartSuccess) {
+                                  context
+                                      .read<CartCountCubit>()
+                                      .onCartItemChange();
+                                  CustomSnackBar.showProductAddedToCart(
+                                      context);
+                                }
+                              },
+                              child:
+                                  BlocBuilder<AddToCartCubit, AddToCartState>(
+                                buildWhen: (previous, current) =>
+                                    current is AddToCartEnable &&
+                                    previous is AddToCartButtonLoading,
+                                builder: (context, state) {
+                                  if (state is AddToCartInitial) {
+                                    return Container();
+                                  } else if (state is AddToCartButtonLoading) {
+                                    return Container(
+                                      alignment: Alignment.bottomLeft,
+                                      child: LoadingAnimationWidget
+                                          .prograssiveDots(
+                                        color: OptiAppColors.iconPrimary,
+                                        size: 30,
+                                      ),
+                                    );
+                                  } else if (state is AddToCartEnable) {
+                                    if (state.canAddToCart) {
+                                      return IconButton(
+                                        onPressed: () {
+                                          var productId =
+                                              product.styleParentId ??
+                                                  product.id;
+                                          context
+                                              .read<AddToCartCubit>()
+                                              .searchPorductAddToCard(
+                                                  productId!);
+                                        },
+                                        icon: Container(
+                                          width: 40,
+                                          height: 40,
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                OptiAppColors.backgroundInput,
+                                            borderRadius:
+                                                BorderRadius.circular(32),
+                                          ),
+                                          child: const SvgAssetImage(
+                                            assetName: AssetConstants.addToCart,
+                                            fit: BoxFit.fitWidth,
+                                          ),
                                         ),
                                       );
-                                    } else if (state is AddToCartEnable) {
-                                      if (state.canAddToCart) {
-                                        return IconButton(
-                                          onPressed: () {
-                                            var productId =
-                                                product.styleParentId ??
-                                                    product.id;
-                                            context
-                                                .read<AddToCartCubit>()
-                                                .searchPorductAddToCard(
-                                                productId!);
-                                          },
-                                          icon: Container(
-                                            width: 40,
-                                            height: 40,
-                                            padding: const EdgeInsets.all(10),
-                                            decoration: BoxDecoration(
-                                              color: OptiAppColors.backgroundInput,
-                                              borderRadius:
-                                                  BorderRadius.circular(32),
-                                            ),
-                                            child: const SvgAssetImage(
-                                              assetName:
-                                                  AssetConstants.addToCart,
-                                              fit: BoxFit.fitWidth,
-                                            ),
-                                          ),
-                                        );
-                                      }
                                     }
-                                    return Container();
-                                  },
-                                ))),
-                      ),
+                                  }
+                                  return Container();
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      }
                     ],
                   ),
                 ),

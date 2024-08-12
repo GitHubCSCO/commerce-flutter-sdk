@@ -192,6 +192,8 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                                   hidePricingEnable: state.hidePricingEnabled,
                                   hideInventoryEnable:
                                       state.hideInventoryEnabled,
+                                  canAddToCartInProductList:
+                                      state.canAddToCartInProductList,
                                 );
                               },
                             )
