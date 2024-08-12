@@ -14,6 +14,16 @@ class LogoutCubit extends Cubit<LogoutState> {
   Future<void> logout() async {
     emit(LogoutLoading());
     await _logoutUsecase.logout();
-    emit(LogoutSuccess());
+
+    final domainIfChangePossible =
+        await _logoutUsecase.getDomainInSettingsScreen();
+    final isSignInRequired = await _logoutUsecase.checkSignInRequired();
+
+    emit(
+      LogoutSuccess(
+        domain: domainIfChangePossible,
+        isSignInRequired: isSignInRequired,
+      ),
+    );
   }
 }

@@ -11,4 +11,28 @@ final class LogoutInitial extends LogoutState {}
 
 final class LogoutLoading extends LogoutState {}
 
-final class LogoutSuccess extends LogoutState {}
+final class LogoutSuccess extends LogoutState {
+  final String? domain;
+  final bool isSignInRequired;
+
+  const LogoutSuccess({
+    this.domain,
+    this.isSignInRequired = false,
+  });
+
+  @override
+  List<Object> get props => [
+        domain ?? '',
+        isSignInRequired,
+      ];
+
+  LogoutSuccess copyWith({
+    String? domain,
+    bool? isSignInRequired,
+  }) {
+    return LogoutSuccess(
+      domain: domain ?? this.domain,
+      isSignInRequired: isSignInRequired ?? this.isSignInRequired,
+    );
+  }
+}

@@ -12,13 +12,15 @@ class AuthCubit extends Cubit<AuthState> {
       : _authUsecase = authUsecase,
         super(const AuthState(status: AuthStatus.unknown));
 
-  Future<void> loadAuthenticationState() async {
+  Future<bool> loadAuthenticationState() async {
     final isAuthenticated = await _authUsecase.isAuthenticated();
     //load as soon as we know auth status and it is safe to call get current session
     if (isAuthenticated) {
       authenticated();
+      return true;
     } else {
       unauthenticated();
+      return false;
     }
   }
 
