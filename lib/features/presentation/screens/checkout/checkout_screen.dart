@@ -31,19 +31,21 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 ReviewOrderEntity prepareReviewOrderEntiity(
     CheckoutDataLoaded state, BuildContext context) {
   return ReviewOrderEntity(
-      billTo: state.billToAddress,
-      shipTo: state.shipToAddress,
-      warehouse: state.wareHouse,
-      shippingMethod:
-          (state.shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)
-              ? ShippingOption.pickUp
-              : ShippingOption.ship),
-      carriers: state.cart.carriers,
-      cartSettings: state.cartSettings,
-      paymentMethod: context.read<CheckoutBloc>().cart!.paymentMethod,
-      selectedCarrier: state.selectedCarrier,
-      selectedService: state.selectedService,
-      requestDeliveryDate: state.requestDeliveryDate);
+    billTo: state.billToAddress,
+    shipTo: state.shipToAddress,
+    warehouse: state.wareHouse,
+    shippingMethod:
+        (state.shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)
+            ? ShippingOption.pickUp
+            : ShippingOption.ship),
+    carriers: state.cart.carriers,
+    cartSettings: state.cartSettings,
+    paymentMethod: context.read<CheckoutBloc>().cart!.paymentMethod,
+    selectedCarrier: state.selectedCarrier,
+    selectedService: state.selectedService,
+    requestDeliveryDate: state.requestDeliveryDate,
+    allowCreateNewShipToAddress: state.allowCreateNewShipToAddress,
+  );
 }
 
 class CheckoutScreen extends StatelessWidget {
@@ -179,6 +181,8 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                     selectedService: state.selectedService,
                                     requestDeliveryDate:
                                         state.requestDeliveryDate,
+                                    allowCreateNewShipToAddress:
+                                        state.allowCreateNewShipToAddress,
                                   );
 
                                   final reviewOrderEntity =

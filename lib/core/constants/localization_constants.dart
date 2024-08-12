@@ -370,8 +370,8 @@ enum LocalizationConstants {
   promotionNotAppliedContinue(
       keyword: "Promotion code not applied. Do you wish to continue?"),
   selectPaymentMethod(keyword: "Select Payment Method"),
-  newPaymentMethod(keyword: "New Payment Method"),
-  newAddress(keyword: "New address"),
+  newPaymentMethod(keyword: "+ New Payment Method"),
+  newAddress(keyword: "+ New address"),
   backToCountInventory(keyword: "Back to Count Inventory"),
   backToCreateOrder(keyword: "Back to Create Order"),
   backToVmiHome(keyword: "Back to VMI Home"),
