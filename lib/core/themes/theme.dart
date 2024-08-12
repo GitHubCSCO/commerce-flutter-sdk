@@ -14,6 +14,10 @@ const _disabled = Colors.grey;
 
 const _red = Colors.red;
 
+const _inStockColor = Color(0xFF333333);
+const _lowStockColor = Color(0xFFD0BF00);
+const _outOfStockColor = Color(0xFFFF3B30);
+
 final _lightColorScheme = ColorScheme(
   brightness: Brightness.light,
   // Primary

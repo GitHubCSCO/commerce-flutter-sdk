@@ -19,4 +19,3 @@ class AddToCartEvent extends ProductDetailsAddToCartEvent {
       {required this.productDetailsDataEntity,
       required this.productDetailsAddToCartEntity});
 }
-

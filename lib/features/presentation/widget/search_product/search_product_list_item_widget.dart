@@ -117,6 +117,7 @@ class SearchProductListItemWidget extends StatelessWidget {
                     unitOfMeasureValueText:
                         product.updateUnitOfMeasure(pricingEnable),
                     availabilityText: product.availability?.message,
+                    availabilityMessageType: product.availability?.messageType,
                     productId: product.id,
                     erpNumber: product.erpNumber,
                     unitOfMeasure: product.unitOfMeasure,
