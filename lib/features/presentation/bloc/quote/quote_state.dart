@@ -10,7 +10,29 @@ class QuoteLoading extends QuoteState {}
 class QuoteLoaded extends QuoteState {
   final QuotePageType quotePageType;
   final List<QuoteDto>? quotes;
-  QuoteLoaded({required this.quotePageType, required this.quotes});
+  final bool moreLoading;
+  final int page;
+
+  QuoteLoaded({
+    required this.quotePageType,
+    required this.quotes,
+    this.moreLoading = false,
+    this.page = 1,
+  });
+
+  QuoteLoaded copyWith({
+    QuotePageType? quotePageType,
+    List<QuoteDto>? quotes,
+    bool? moreLoading,
+    int? page,
+  }) {
+    return QuoteLoaded(
+      quotePageType: quotePageType ?? this.quotePageType,
+      quotes: quotes ?? this.quotes,
+      moreLoading: moreLoading ?? this.moreLoading,
+      page: page ?? this.page,
+    );
+  }
 }
 
 class JobQuoteLoaded extends QuoteState {
