@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
@@ -23,10 +24,16 @@ class ProductDetailsPricingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var event = context.read<ProductDetailsPricingBloc>();
     var productDetailsBloc = context.read<ProductDetailsBloc>();
+    var orderQuantity =
+        productDetailsBloc.productDetailDataEntity.product?.minimumOrderQty;
+
+    if (orderQuantity == 0) {
+      orderQuantity = 1;
+    }
 
     event.add(LoadProductDetailsPricing(
         productDetailsPricingEntity: productDetailsPricingEntity,
-        quantity: 1,
+        quantity: orderQuantity,
         productDetailsDataEntity: productDetailsBloc.productDetailDataEntity));
 
     return Padding(
@@ -97,7 +104,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                   state.productDetailsPriceEntity.product?.unitOfMeasure ?? "");
             },
             child: Text(
-              "View Availability by Warehouse",
+              LocalizationConstants.viewAvailabilityWarehouse.localized(),
               style: OptiTextStyles.link,
             ),
           );
@@ -156,8 +163,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                         productDetailsPriceEntity.productPricingEnabled),
                     style: OptiTextStyles.subtitle),
                 Text(
-                  productDetailsPriceEntity.product.updateUnitOfMeasure(
-                      productDetailsPriceEntity.productPricingEnabled),
+                  " / ${productDetailsPriceEntity.selectedUnitOfMeasureValueText ?? ""}",
                   style: OptiTextStyles.body,
                 ),
               ],

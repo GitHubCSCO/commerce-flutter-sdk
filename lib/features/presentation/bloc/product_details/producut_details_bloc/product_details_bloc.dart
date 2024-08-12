@@ -16,7 +16,7 @@ class ProductDetailsBloc
   final ProductDetailsUseCase _productDetailsUseCase;
   final ProductDetailsStyleTraitsUseCase _productDetailsStyleTraitsUseCase =
       ProductDetailsStyleTraitsUseCase();
-
+  ProductUnitOfMeasureEntity? chosenUnitOfMeasure;
   ProductDetailsDataEntity productDetailDataEntity = ProductDetailsDataEntity();
   late Session session;
   late AccountSettings accountSettings;
@@ -27,6 +27,7 @@ class ProductDetailsBloc
         super(ProductDetailsInitial()) {
     on<FetchProductDetailsEvent>(_fetchProductDetails);
     on<StyleTraitSelectedEvent>(_onStyleTraitSelected);
+    on<UnitOfMeasuteChangeEvent>(_changeUnitOfMeasureEvent);
   }
   List<AddCartLine> getAddCartLineForWistlist() {
     var cartLineOfProduct = AddCartLine(
@@ -109,6 +110,16 @@ class ProductDetailsBloc
     }
   }
 
+  Future<void> _changeUnitOfMeasureEvent(
+      UnitOfMeasuteChangeEvent event, Emitter<ProductDetailsState> emit) async {
+    chosenUnitOfMeasure = event.productunitOfMeasureEntity;
+    productDetailDataEntity = productDetailDataEntity.copyWith(
+      chosenUnitOfMeasure: chosenUnitOfMeasure,
+    );
+
+    await _makeAllDetailsItems(productDetailDataEntity.product!, emit);
+  }
+
   void _extractValuesFromData(ProductEntity productEntity) {
     var product = productEntity;
     StyledProductEntity? styledProduct;
@@ -118,7 +129,7 @@ class ProductDetailsBloc
             ?.firstWhere((o) => o.productId == product.id);
       }
     }
-    var chosenUnitOfMeasure = styledProduct != null &&
+    chosenUnitOfMeasure = styledProduct != null &&
             styledProduct.productUnitOfMeasures != null &&
             styledProduct.productUnitOfMeasures!.isNotEmpty
         ? styledProduct.productUnitOfMeasures?.first
@@ -204,7 +215,7 @@ class ProductDetailsBloc
             productDetailDataEntity.product!,
             productDetailDataEntity.availableStyleValues!,
             productDetailDataEntity.selectedStyleValues);
-    ProductUnitOfMeasureEntity? chosenUnitOfMeasure;
+
     if (styledProduct != null) {
       chosenUnitOfMeasure =
           styledProduct.productUnitOfMeasures?.firstWhere((element) => true);
