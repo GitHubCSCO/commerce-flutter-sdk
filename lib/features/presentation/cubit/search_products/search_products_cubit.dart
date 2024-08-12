@@ -107,7 +107,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
 
     emit(
       state.copyWith(
-        originalQuery: query,
+        originalQuery: query ?? '',
         productEntities: productEntities,
         paginationEntity: PaginationEntityMapper.toEntity(
             productCollectionResult?.pagination ?? Pagination()),
