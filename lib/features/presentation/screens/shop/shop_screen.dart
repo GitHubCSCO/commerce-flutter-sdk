@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
@@ -94,6 +95,12 @@ class ShopPage extends StatelessWidget with BaseDynamicContentScreen {
             listener: (context, state) {
               if (state is LogoutSuccess) {
                 context.read<AuthCubit>().loadAuthenticationState();
+                if (state.isSignInRequired) {
+                  AppRoute.landing.navigateBackStack(
+                    context,
+                    extra: state.domain != null,
+                  );
+                }
               }
             },
           ),
