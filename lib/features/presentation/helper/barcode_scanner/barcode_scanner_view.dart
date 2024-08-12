@@ -16,8 +16,11 @@ class BarcodeScannerView extends StatefulWidget {
       callback;
   final bool barcodeFullView;
 
-  BarcodeScannerView(
-      {required this.callback, required this.barcodeFullView, super.key});
+  const BarcodeScannerView({
+    super.key,
+    required this.callback,
+    required this.barcodeFullView,
+  });
 
   @override
   State<BarcodeScannerView> createState() => _BarcodeScannerViewState();

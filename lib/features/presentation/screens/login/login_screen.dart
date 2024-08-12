@@ -217,8 +217,9 @@ class _LoginPageState extends State<LoginPage> {
                           context.read<AuthCubit>().loadAuthenticationState();
                         }
                       }
-
-                      context.pop();
+                      if (context.mounted) {
+                        context.pop(true);
+                      }
                     } else if (state is LoginFailureState) {
                       displayDialogWidget(
                         context: context,

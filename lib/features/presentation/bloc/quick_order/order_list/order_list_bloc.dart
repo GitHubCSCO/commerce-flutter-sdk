@@ -404,6 +404,10 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     return reversedQuickOrderProductsList;
   }
 
+  bool isOrderListEmpty() {
+    return quickOrderItemList.isEmpty;
+  }
+
   List<AddCartLine> getAddCartLines(
       {required ScanningMode scanningMode,
       required List<QuickOrderItemEntity> reversedQuickOrderProductsList,

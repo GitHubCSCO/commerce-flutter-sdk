@@ -32,7 +32,7 @@ class QuickOrderAutoCompleteBloc
 
   Future<void> _onStartSearchEvent(QuickOrderStartSearchEvent event,
       Emitter<QuickOrderAutoCompleteState> emit) async {
-    emit(QuickOrderAutoCompleteInitialState());
+    emit(QuickOrderAutoCompleteInitialState(autoFocus: event.autoFocus));
   }
 
   Future<void> _onEndSearchEvent(QuickOrderEndSearchEvent event,
