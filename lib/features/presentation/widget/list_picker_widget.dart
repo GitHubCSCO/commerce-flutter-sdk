@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
@@ -97,6 +98,9 @@ class _ListPickerState extends State<ListPicker> {
   }
 
   void _selectItem(BuildContext context) {
+    FixedExtentScrollController scrollController =
+        FixedExtentScrollController(initialItem: selectedIndex);
+
     showCupertinoModalPopup(
       context: context,
       builder: (BuildContext innerContext) {
@@ -122,10 +126,11 @@ class _ListPickerState extends State<ListPicker> {
                                 }
                               }
                             : null,
-                    child: const Text("Done"),
+                    child: Text(LocalizationConstants.done.localized()),
                   ),
                   Expanded(
                     child: CupertinoPicker(
+                      scrollController: scrollController,
                       itemExtent: 40,
                       onSelectedItemChanged: (int index) {
                         setState(() {
