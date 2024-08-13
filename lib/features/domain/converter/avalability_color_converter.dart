@@ -5,13 +5,15 @@ import 'package:commerce_flutter_app/features/domain/enums/stock_availability.da
 
 class AvailabilityColorConverter {
   static Color convert(int? messageType) {
-    StockAvailability? availabilityEnum;
+    StockAvailability?  availabilityEnum = StockAvailability.inOfStock;
     if (messageType != null) {
-      availabilityEnum =
-          StockAvailability.values.firstWhere((e) => e.value == messageType);
-    } else {
-      availabilityEnum = StockAvailability.inOfStock;
-    }
+      for (var val in StockAvailability.values) {
+        if (val.value == messageType) {
+          availabilityEnum = val;
+          break;
+        }
+      }
+    } 
 
     switch (availabilityEnum) {
       case StockAvailability.inOfStock:
