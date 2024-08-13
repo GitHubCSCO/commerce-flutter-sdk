@@ -27,104 +27,193 @@ class SearchProductGridItemWidget extends StatelessWidget {
   final bool? pricingEnable;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
+  final bool? canAddToCartInProductList;
 
-  const SearchProductGridItemWidget(
-      {super.key,
-      required this.product,
-      required this.productSettings,
-      required this.pricingEnable,
-      this.hidePricingEnable,
-      this.hideInventoryEnable});
+  const SearchProductGridItemWidget({
+    super.key,
+    required this.product,
+    required this.productSettings,
+    required this.pricingEnable,
+    this.hidePricingEnable,
+    this.hideInventoryEnable,
+    this.canAddToCartInProductList,
+  });
 
   @override
   Widget build(BuildContext context) {
     double itemWidth = MediaQuery.of(context).size.width / 2;
-    double imageItemLength = itemWidth - 60; // subtract horizontal padding
+    double imageItemLength = itemWidth; // subtract horizontal padding
 
-    return Container(
-      width: itemWidth,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      decoration: const BoxDecoration(color: Colors.white),
-      child: Column(
-        children: [
-          SizedBox(
-            width: imageItemLength,
-            height: imageItemLength,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(width: 1, color: const Color(0xFFD6D6D6)),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  product.smallImagePath.makeImageUrl(),
-                  fit: BoxFit.cover,
-                  errorBuilder: (BuildContext context, Object error,
-                      StackTrace? stackTrace) {
-                    // This function is called when the image fails to load
-                    return Container(
-                      color: OptiAppColors.backgroundGray, // Placeholder color
-                      alignment: Alignment.center,
-                      child: const Icon(
-                        Icons.image, // Icon to display
-                        color: Colors.grey, // Icon color
-                        size: 30, // Icon size
+    return InkWell(
+      onTap: () {
+        var productId = product.styleParentId ?? product.id;
+        //TODO what if productid is null,
+        AppRoute.topLevelProductDetails.navigateBackStack(context,
+            pathParameters: {"productId": productId.toString()},
+            extra: product);
+      },
+      child: Container(
+        width: itemWidth,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        child: Column(
+          children: [
+            SizedBox(
+              width: imageItemLength,
+              height: imageItemLength - 40,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(width: 1, color: const Color(0xFFD6D6D6)),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Stack(
+                    children: [
+                      Image.network(
+                        product.smallImagePath.makeImageUrl(),
+                        fit: BoxFit.cover,
+                        width: double
+                            .infinity, // Ensure the image covers the entire container
+                        height: double.infinity,
+                        errorBuilder: (BuildContext context, Object error,
+                            StackTrace? stackTrace) {
+                          return Container(
+                            color: OptiAppColors
+                                .backgroundGray, // Placeholder color
+                            alignment: Alignment.center,
+                            child: const Icon(
+                              Icons.image, // Icon to display
+                              color: Colors.grey, // Icon color
+                              size: 30, // Icon size
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
+                      if (canAddToCartInProductList == true) ...{
+                        Positioned(
+                          bottom: 4,
+                          right: 4,
+                          child: BlocProvider<AddToCartCubit>(
+                            create: (context) => sl<AddToCartCubit>()
+                              ..updateAddToCartButton(product),
+                            child: BlocListener<AddToCartCubit, AddToCartState>(
+                              listener: (context, state) {
+                                if (state is AddToCartSuccess) {
+                                  context
+                                      .read<CartCountCubit>()
+                                      .onCartItemChange();
+                                  CustomSnackBar.showProductAddedToCart(
+                                      context);
+                                }
+                              },
+                              child:
+                                  BlocBuilder<AddToCartCubit, AddToCartState>(
+                                buildWhen: (previous, current) =>
+                                    current is AddToCartEnable &&
+                                    previous is AddToCartButtonLoading,
+                                builder: (context, state) {
+                                  if (state is AddToCartInitial) {
+                                    return Container();
+                                  } else if (state is AddToCartButtonLoading) {
+                                    return Container(
+                                      alignment: Alignment.bottomLeft,
+                                      child: LoadingAnimationWidget
+                                          .prograssiveDots(
+                                        color: OptiAppColors.iconPrimary,
+                                        size: 30,
+                                      ),
+                                    );
+                                  } else if (state is AddToCartEnable) {
+                                    if (state.canAddToCart) {
+                                      return IconButton(
+                                        onPressed: () {
+                                          var productId =
+                                              product.styleParentId ??
+                                                  product.id;
+                                          context
+                                              .read<AddToCartCubit>()
+                                              .searchPorductAddToCard(
+                                                  productId!);
+                                        },
+                                        icon: Container(
+                                          width: 40,
+                                          height: 40,
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                OptiAppColors.backgroundInput,
+                                            borderRadius:
+                                                BorderRadius.circular(32),
+                                          ),
+                                          child: const SvgAssetImage(
+                                            assetName: AssetConstants.addToCart,
+                                            fit: BoxFit.fitWidth,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  }
+                                  return Container();
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      }
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      product.shortDescription ?? "",
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      style: OptiTextStyles.bodySmall,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      LocalizationConstants.itemNumber
-                          .localized()
-                          .format([product.erpNumber ?? '']),
-                      style: OptiTextStyles.bodySmall.copyWith(
-                        color: OptiAppColors.textDisabledColor,
+            const SizedBox(height: 12),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        product.shortDescription ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: OptiTextStyles.bodySmall,
                       ),
-                    ),
-                    _getInfoWidget(),
-                    const SizedBox(height: 4),
-                    LineItemPricingWidget(
-                      discountMessage: product.pricing?.getDiscountValue(),
-                      priceValueText:
-                          product.updatePriceValueText(pricingEnable),
-                      unitOfMeasureValueText:
-                          product.updateUnitOfMeasure(pricingEnable),
-                      availabilityText: product.availability?.message,
-                      productId: product.id,
-                      erpNumber: product.erpNumber,
-                      unitOfMeasure: product.unitOfMeasure,
-                      showViewAvailabilityByWarehouse:
-                          _showWarehouseInventory(),
-                      hidePricingEnable: hidePricingEnable,
-                      hideInventoryEnable: hideInventoryEnable,
-                    ),
-                  ],
+                      const SizedBox(height: 4),
+                      Text(
+                        LocalizationConstants.itemNumber
+                            .localized()
+                            .format([product.erpNumber ?? '']),
+                        style: OptiTextStyles.bodySmall.copyWith(
+                          color: OptiAppColors.textDisabledColor,
+                        ),
+                      ),
+                      _getInfoWidget(),
+                      const SizedBox(height: 4),
+                      LineItemPricingWidget(
+                        discountMessage: product.pricing?.getDiscountValue(),
+                        priceValueText:
+                            product.updatePriceValueText(pricingEnable),
+                        unitOfMeasureValueText:
+                            product.updateUnitOfMeasure(pricingEnable),
+                        availabilityText: product.availability?.message,
+                        productId: product.id,
+                        erpNumber: product.erpNumber,
+                        unitOfMeasure: product.unitOfMeasure,
+                        showViewAvailabilityByWarehouse:
+                            _showWarehouseInventory(),
+                        hidePricingEnable: hidePricingEnable,
+                        hideInventoryEnable: hideInventoryEnable,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
