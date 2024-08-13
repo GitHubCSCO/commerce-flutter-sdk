@@ -97,7 +97,8 @@ class SortToolMenu extends StatelessWidget {
       context: context,
       builder: (context) {
         return CupertinoActionSheet(
-          title: Text('Sort by...', style: OptiTextStyles.bodySmall),
+          title: Text(LocalizationConstants.sortBy.localized(),
+              style: OptiTextStyles.bodySmall),
           actions: _getToolMenuWidgets(context, displayOptionsList),
           cancelButton: CupertinoActionSheetAction(
             child: Text(

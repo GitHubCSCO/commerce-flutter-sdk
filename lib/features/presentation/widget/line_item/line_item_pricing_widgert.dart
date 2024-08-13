@@ -65,7 +65,7 @@ class LineItemPricingWidget extends StatelessWidget {
               // _buildInventorySection(context),
               // For "View Availability by Warehouse"
               if (showViewAvailabilityByWarehouse)
-                GestureDetector(
+                InkWell(
                   onTap: () {
                     viewWarehouseWidget(context, productId, erpNumber ?? "",
                         unitOfMeasure ?? "");
