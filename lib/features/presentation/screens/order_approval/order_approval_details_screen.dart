@@ -13,6 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/components/two_texts_
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_handler/order_approval_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval_details/order_approval_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/cart_order_products_section_widget.dart';
@@ -20,6 +21,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/order_details_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class OrderApprovalDetailsScreen extends StatelessWidget {
   final String cartId;
@@ -133,6 +135,24 @@ class OrderApprovalDetailsPage extends StatelessWidget {
               state.errorMessage ?? '',
             );
           }
+
+          if (state.status == OrderStatus.lineItemAddToCartComplete) {
+            context.read<CartCountCubit>().onCartItemChange();
+            _displaySnackBarMessageFromCubit(context);
+          }
+
+          if (state.status == OrderStatus.lineItemAddToCartQtyAdjusted) {
+            context.read<CartCountCubit>().onCartItemChange();
+            confirmDialog(
+              context: context,
+              message: context
+                  .read<OrderApprovalDetailsCubit>()
+                  .quantityAdjustedMessage,
+              onConfirm: () {
+                _displaySnackBarMessageFromCubit(context);
+              },
+            );
+          }
         },
         builder: (context, state) {
           if (state.status == OrderStatus.loading) {
@@ -216,6 +236,50 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                               .getCartLines(),
                           hidePricingEnable: state.hidePricingEnable,
                           hideInventoryEnable: state.hideInventoryEnable,
+                          onAddToList: ({required cartLineEntity}) {
+                            WishListCallbackHelper.addItemsToWishList(
+                              context,
+                              addToCartCollection: WishListAddToCartCollection(
+                                wishListLines: [
+                                  AddCartLine(
+                                    productId: cartLineEntity.productId,
+                                    qtyOrdered: 1,
+                                    unitOfMeasure: cartLineEntity.unitOfMeasure,
+                                  ),
+                                ],
+                              ),
+                              onAddedToCart: null,
+                            );
+                          },
+                          onAddToCart: ({required cartLineEntity}) {
+                            void doAddToCart() {
+                              final addCartLine = AddCartLine(
+                                productId: cartLineEntity.productId,
+                                qtyOrdered: 1,
+                                sectionOptions: [],
+                                unitOfMeasure: cartLineEntity.unitOfMeasure,
+                              );
+
+                              context
+                                  .read<OrderApprovalDetailsCubit>()
+                                  .addToCart(addCartLine: addCartLine);
+                            }
+
+                            if (cartLineEntity.canAddToCart != true) {
+                              confirmDialog(
+                                context: context,
+                                title: LocalizationConstants.productsOutOfStock
+                                    .localized(),
+                                message: LocalizationConstants
+                                    .productsOutOfStockMessage
+                                    .localized(),
+                                onConfirm: doAddToCart,
+                              );
+                              return;
+                            }
+
+                            doAddToCart();
+                          },
                         ),
                       ],
                     ),
@@ -435,4 +499,11 @@ class _OrderApprovalInfoWidget extends StatelessWidget {
       ],
     );
   }
+}
+
+void _displaySnackBarMessageFromCubit(BuildContext context) {
+  CustomSnackBar.showSnackBarMessage(
+    context,
+    context.read<OrderApprovalDetailsCubit>().addCartLineToCartMessage,
+  );
 }

@@ -129,4 +129,19 @@ class SavedOrderUsecase extends BaseUseCase {
         .getSettingsService()
         .getProductSettingsAsync();
   }
+
+  Future<CartLine?> addLineItemToCart({
+    required AddCartLine addCartLine,
+  }) async {
+    final result = await commerceAPIServiceProvider
+        .getCartService()
+        .addCartLine(addCartLine);
+
+    switch (result) {
+      case Failure():
+        return null;
+      case Success(value: final newCartLine):
+        return newCartLine;
+    }
+  }
 }

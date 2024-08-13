@@ -31,14 +31,17 @@ class SearchProductListItemWidget extends StatelessWidget {
   final bool? pricingEnable;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
+  final bool? canAddToCartInProductList;
 
-  const SearchProductListItemWidget(
-      {super.key,
-      required this.product,
-      required this.productSettings,
-      required this.pricingEnable,
-      this.hidePricingEnable,
-      this.hideInventoryEnable});
+  const SearchProductListItemWidget({
+    super.key,
+    required this.product,
+    required this.productSettings,
+    required this.pricingEnable,
+    this.hidePricingEnable,
+    this.hideInventoryEnable,
+    this.canAddToCartInProductList,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +164,8 @@ class SearchProductListItemWidget extends StatelessWidget {
                             ),
                           );
                         } else if (state is AddToCartEnable) {
-                          if (state.canAddToCart) {
+                          if (state.canAddToCart &&
+                              canAddToCartInProductList == true) {
                             return InkWell(
                               onTap: () {
                                 var productId =
@@ -247,16 +251,18 @@ class SearchProductListItemWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SingleSelectionSwatchChip<StyleValueEntity>(
-                        values: styleTrait!.styleValues!
-                            .map((e) => e.styleValue!)
-                            .toList(),
+                        values: styleTrait?.styleValues
+                                ?.map((e) => e.styleValue!)
+                                .toList() ??
+                            [],
                         shouldIgnoreTitleAndLabelName: true,
-                        maxItemsToShow: styleTrait.numberOfSwatchesVisible!,
+                        maxItemsToShow:
+                            styleTrait?.numberOfSwatchesVisible ?? 0,
                         orientation: ChipOrientation.horizontal,
                         selectedValue: context
                                 .read<StyleTraitCubit>()
                                 .selectedStyleValues?[
-                            styleTrait.selectedStyleValue?.styleValue
+                            styleTrait?.selectedStyleValue?.styleValue
                                 ?.styleTraitValueId],
                         onSelectionChanged: (StyleValueEntity? selection) {})
                   ]));

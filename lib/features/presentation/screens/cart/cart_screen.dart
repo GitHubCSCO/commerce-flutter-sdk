@@ -165,17 +165,10 @@ class CartPage extends StatelessWidget {
                                     text: LocalizationConstants.addAllToList
                                         .localized(),
                                     onPressed: () {
-                                      final addCartLines = context
-                                          .read<CartPageBloc>()
-                                          .getAddCartLines();
-                                      WishListCallbackHelper.addItemsToWishList(
-                                        context,
-                                        addToCartCollection:
-                                            WishListAddToCartCollection(
-                                          wishListLines: addCartLines,
-                                        ),
-                                        onAddedToCart: null,
-                                      );
+                                      final currentState =
+                                          context.read<AuthCubit>().state;
+                                      handleAuthStatusForAddToWishList(
+                                          context, currentState.status);
                                     },
                                   ),
                                 ),
@@ -185,10 +178,10 @@ class CartPage extends StatelessWidget {
                                     text: LocalizationConstants.saveOrder
                                         .localized(),
                                     onPressed: () {
-                                      context
-                                          .read<SavedOrderHandlerCubit>()
-                                          .addCartToSavedOrders(
-                                              cart: state.cart);
+                                      final currentState =
+                                          context.read<AuthCubit>().state;
+                                      handleAuthStatusForSaveOrder(
+                                          context, currentState.status, state);
                                     },
                                   ),
                                 ),
@@ -200,9 +193,10 @@ class CartPage extends StatelessWidget {
                                   .canSubmitForQuote,
                               child: PrimaryButton(
                                 onPressed: () {
-                                  AppRoute.requestQuote.navigateBackStack(
-                                      context,
-                                      extra: state.cart);
+                                  final currentState =
+                                      context.read<AuthCubit>().state;
+                                  handleAuthStatusForSubmitQuote(
+                                      context, currentState.status, state);
                                 },
                                 text: LocalizationConstants.submitForQuote
                                     .localized(),
@@ -219,7 +213,9 @@ class CartPage extends StatelessWidget {
                                 onPressed: () {
                                   final currentState =
                                       context.read<AuthCubit>().state;
-                                  handleAuthStatus(context, currentState.status,
+                                  handleAuthStatusForCheckout(
+                                      context,
+                                      currentState.status,
                                       context.read<CartPageBloc>());
                                 },
                                 text: context
@@ -285,12 +281,52 @@ class CartPage extends StatelessWidget {
     );
   }
 
-  void handleAuthStatus(
+  void handleAuthStatusForCheckout(
       BuildContext context, AuthStatus status, CartPageBloc cartPageBloc) {
     if (status == AuthStatus.authenticated) {
       navigateToCheckout(context, cartPageBloc);
     } else {
-      showSignInDialog(context);
+      showSignInDialog(context,
+          message: LocalizationConstants.signInBeforeCheckout.localized());
+    }
+  }
+
+  void handleAuthStatusForSubmitQuote(
+      BuildContext context, AuthStatus status, CartPageLoadedState state) {
+    if (status == AuthStatus.authenticated) {
+      AppRoute.requestQuote.navigateBackStack(context, extra: state.cart);
+    } else {
+      showSignInDialog(context,
+          message: LocalizationConstants.signInBeforeSubmitQuote.localized());
+    }
+  }
+
+  void handleAuthStatusForAddToWishList(
+      BuildContext context, AuthStatus status) {
+    if (status == AuthStatus.authenticated) {
+      final addCartLines = context.read<CartPageBloc>().getAddCartLines();
+      WishListCallbackHelper.addItemsToWishList(
+        context,
+        addToCartCollection: WishListAddToCartCollection(
+          wishListLines: addCartLines,
+        ),
+        onAddedToCart: null,
+      );
+    } else {
+      showSignInDialog(context,
+          message: LocalizationConstants.signInBeforeList.localized());
+    }
+  }
+
+  void handleAuthStatusForSaveOrder(
+      BuildContext context, AuthStatus status, CartPageLoadedState state) {
+    if (status == AuthStatus.authenticated) {
+      context
+          .read<SavedOrderHandlerCubit>()
+          .addCartToSavedOrders(cart: state.cart);
+    } else {
+      showSignInDialog(context,
+          message: LocalizationConstants.signInBeforeSaveOrder.localized());
     }
   }
 
@@ -298,11 +334,11 @@ class CartPage extends StatelessWidget {
     AppRoute.checkout.navigateBackStack(context, extra: cartPageBloc.cart);
   }
 
-  void showSignInDialog(BuildContext context) {
+  void showSignInDialog(BuildContext context, {String? message}) {
     displayDialogWidget(
       context: context,
       title: LocalizationConstants.notSignedIn.localized(),
-      message: LocalizationConstants.pleaseSignInCheckout.localized(),
+      message: message,
       actions: [
         DialogPlainButton(
           onPressed: () {

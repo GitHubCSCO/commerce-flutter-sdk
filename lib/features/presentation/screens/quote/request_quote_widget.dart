@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
@@ -70,6 +71,11 @@ class RequestQuoteWidgetPage extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               title: Text(LocalizationConstants.requestQuote.localized()),
+              actions: [
+                BottomMenuWidget(
+                  websitePath: WebsitePaths.quoteRequestWebsitePath,
+                ),
+              ],
             ),
             body: Column(
               children: [

@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/enums/domain_redirect_status.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class RootPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<DomainRedirectCubit, DomainRedirectStatus>(
+    return BlocConsumer<DomainRedirectCubit, DomainRedirectState>(
       builder: (context, state) {
         return const Scaffold(
           body: Center(
@@ -31,11 +32,29 @@ class RootPage extends StatelessWidget {
           ),
         );
       },
-      listener: (context, state) {
-        if (state == DomainRedirectStatus.redirect) {
+      listener: (context, state) async {
+        if (state.status == DomainRedirectStatus.redirect) {
           context.read<RootBloc>().add(RootInitialEvent());
-          AppRoute.shop.navigate(context);
-        } else if (state == DomainRedirectStatus.doNotRedirect) {
+
+          if (state.isSignInRequired) {
+            final authenticated =
+                await context.read<AuthCubit>().loadAuthenticationState();
+
+            if (context.mounted) {
+              if (authenticated) {
+                AppRoute.shop.navigate(context);
+                return;
+              }
+
+              AppRoute.landing.navigateBackStack(
+                context,
+                extra: state.domain != null,
+              );
+            }
+          } else {
+            AppRoute.shop.navigate(context);
+          }
+        } else if (state.status == DomainRedirectStatus.doNotRedirect) {
           AppRoute.welcome.navigate(context);
         }
       },

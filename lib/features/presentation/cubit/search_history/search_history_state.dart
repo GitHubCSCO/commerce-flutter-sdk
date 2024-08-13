@@ -4,7 +4,7 @@ abstract class SearchHistoryState {}
 
 class SearchHistoryInitialState extends SearchHistoryState {}
 
-class SearchHistoryoadingState extends SearchHistoryState {}
+class SearchHistoryLoadingState extends SearchHistoryState {}
 
 class SearchHistoryLoadedState extends SearchHistoryState {
   final List<String> historyList;

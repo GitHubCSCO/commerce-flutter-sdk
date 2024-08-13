@@ -55,26 +55,23 @@ class ProductCarouselItemWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          SizedBox(
-            height: 30,
-            child: Text(productCarousel.product!.shortDescription ?? "",
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: OptiTextStyles.bodySmall),
+          Expanded(
+            child: SizedBox(
+              height: 30,
+              child: Text(productCarousel.product!.shortDescription ?? "",
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: OptiTextStyles.bodySmall),
+            ),
           ),
           if (!hidePricingEnable)
             Visibility(
               visible: isLoading,
-              replacement: Column(
-                children: [
-                  const SizedBox(height: 8),
-                  Text(
-                    '${productCarousel.product.updatePriceValueText(productCarousel.productPricingEnabled)} ${productCarousel.product.updateUnitOfMeasure(productCarousel.productPricingEnabled)}',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: OptiTextStyles.bodySmallHighlight,
-                  ),
-                ],
+              replacement: Text(
+                '${productCarousel.product.updatePriceValueText(productCarousel.productPricingEnabled)} ${productCarousel.product.updateUnitOfMeasure(productCarousel.productPricingEnabled)}',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: OptiTextStyles.bodySmallHighlight,
               ),
               child: Container(
                 alignment: Alignment.bottomLeft,
