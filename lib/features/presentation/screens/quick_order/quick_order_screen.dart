@@ -37,6 +37,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widg
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuickOrderScreen extends StatelessWidget {
@@ -56,6 +57,7 @@ class QuickOrderScreen extends StatelessWidget {
         create: (context) {
           return OrderListBloc(
             quickOrderUseCase: sl(),
+            searchUseCase: sl(),
             pricingInventoryUseCase: sl(),
             scanningMode: _scanningMode,
           )..add(OrderListLoadEvent());
@@ -662,7 +664,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
       context.read<OrderListBloc>().add(OrderListLoadEvent());
     } else if (orderCallBackType == OrderCallBackType.newCount) {
       context.read<OrderListBloc>().add(OrderListItemScanAddEvent(
-          quickOrderItemEntity.vmiBinEntity?.binNumber ?? ''));
+          resultText: quickOrderItemEntity.vmiBinEntity?.binNumber ?? ''));
     } else if (orderCallBackType == OrderCallBackType.itemDelete) {
       context
           .read<OrderListBloc>()
@@ -691,8 +693,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   }
 
   List<ToolMenu> _buildToolMenu(BuildContext context) {
+    bool isOrderListEmpty = context.watch<OrderListBloc>().isOrderListEmpty();
     List<ToolMenu> list = [];
-    bool isOrderListEmpty = context.read<OrderListBloc>().isOrderListEmpty();
     if (widget.scanningMode == ScanningMode.count &&
         isOrderListEmpty == false) {
       list.add(ToolMenu(
@@ -736,12 +738,16 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
     );
   }
 
-  _handleBarcodeValue(BuildContext context, String rawValue) {
+  _handleBarcodeValue(BuildContext context,
+      {String? resultText, BarcodeFormat? format}) {
     cameraFlash = false;
     canProcess = false;
     context.read<BarcodeScanBloc>().add(ScannerFlashOnOffEvent(cameraFlash));
     context.read<BarcodeScanBloc>().add(ScannerScanEvent(canProcess));
-    context.read<OrderListBloc>().add(OrderListItemScanAddEvent(rawValue));
+    context.read<OrderListBloc>().add(OrderListItemScanAddEvent(
+          resultText: resultText,
+          barcodeFormat: format,
+        ));
   }
 
   void handleStyleProductAdd(ProductEntity productEntity) {

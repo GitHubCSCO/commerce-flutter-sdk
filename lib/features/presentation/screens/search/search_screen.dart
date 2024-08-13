@@ -27,6 +27,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widg
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 void _reloadSearchPage(BuildContext context) {
@@ -133,9 +134,13 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                 ),
                 onPressed: () async {
                   final result = await GoRouter.of(context)
-                      .pushNamed(AppRoute.barcodeSearch.name) as String;
-                  if (!result.isNullOrEmpty) {
-                    context.read<SearchBloc>().searchQuery = result;
+                      .pushNamed(AppRoute.barcodeSearch.name) as (
+                    String,
+                    BarcodeFormat
+                  );
+                  if (!result.$1.isNullOrEmpty) {
+                    context.read<SearchBloc>().searchQuery = result.$1;
+                    context.read<SearchBloc>().barcodeFormat = result.$2;
                     context.read<SearchBloc>().add(SearchSearchEvent());
                   }
                 },
