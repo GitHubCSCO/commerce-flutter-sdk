@@ -6,6 +6,7 @@ import 'package:commerce_flutter_app/features/domain/mapper/order_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/vmi_bin_model_entity_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
+import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuickOrderUseCase extends BaseUseCase {
@@ -85,7 +86,7 @@ class QuickOrderUseCase extends BaseUseCase {
   }
 
   Future<Result<ProductEntity, ErrorResponse>> getScanProduct(
-      String? name) async {
+      String? name, BarcodeFormat? barcodeFormat) async {
     var parameters = ProductsQueryParameters(
       extendedNames: [name ?? ''],
     );
@@ -93,11 +94,38 @@ class QuickOrderUseCase extends BaseUseCase {
     var resultResponse = await commerceAPIServiceProvider
         .getProductService()
         .getProducts(parameters);
+    int totalItemCount =
+        resultResponse.getResultSuccessValue()?.pagination?.totalItemCount ?? 0;
+    //This is a workaround for ICM-4422 where leading 0 in EAN-13 code gets dropped by the MLKit
+    if (totalItemCount == 0 && barcodeFormat != null) {
+      /*
+        For example we have a product: 012546011099
+        It's UPC-A will be: 0-12546-01109-9
+        It's EAN-13 will be: 0-125460-110998
+        When we scan UPC-A, it return successfully and we get 012546011099 and barcode format is BarcodeFormat.upca
+        But, when we scan EAN-13, it returns 125460110998 and barcode format is BarcodeFormat.upca
+        */
+      if ((barcodeFormat == BarcodeFormat.ean13 ||
+              barcodeFormat == BarcodeFormat.upca) &&
+          name?.length == 12) {
+        //since in both cases result text is 12 digit it's difficult to know whether it's upc-a or ean13
+        //upc-a can also have non-zero leading digit, since we didn't find any result with that
+        //let's assume it's ean-13
+        if (name?[0] != '0') {
+          parameters = ProductsQueryParameters(
+            extendedNames: ["0$name"],
+          );
+          resultResponse = await commerceAPIServiceProvider
+              .getProductService()
+              .getProducts(parameters);
+        }
+      }
+    }
 
     switch (resultResponse) {
       case Success(value: final data):
         final products = data?.products ?? [];
-        if (products.isNotEmpty && products.length == 1) {
+        if (products.isNotEmpty) {
           final product = products[0];
           if (product.isStyleProductParent ?? false) {
             var parameters = ProductQueryParameters(expand: "styledproducts");
