@@ -8,20 +8,31 @@ abstract class QuoteEvent extends Equatable {}
 
 class QuoteLoadEvent extends QuoteEvent {
   final QuotePageType quotePageType;
-  QuoteQueryParameters? quoteParameters;
+  final QuoteQueryParameters? quoteParameters;
+  final bool loadMore;
 
-  QuoteLoadEvent({required this.quoteParameters, required this.quotePageType});
+  QuoteLoadEvent({
+    required this.quoteParameters,
+    required this.quotePageType,
+    this.loadMore = false,
+  });
 
   @override
-  List<Object?> get props => [quotePageType, quoteParameters];
+  List<Object?> get props => [
+        quotePageType,
+        quoteParameters,
+        loadMore,
+      ];
 
-  QuoteLoadEvent copyWith({
+  QuoteEvent copyWith({
     QuotePageType? quotePageType,
     QuoteQueryParameters? quoteParameters,
+    bool? loadMore,
   }) {
     return QuoteLoadEvent(
       quotePageType: quotePageType ?? this.quotePageType,
       quoteParameters: quoteParameters ?? this.quoteParameters,
+      loadMore: loadMore ?? this.loadMore,
     );
   }
 }
