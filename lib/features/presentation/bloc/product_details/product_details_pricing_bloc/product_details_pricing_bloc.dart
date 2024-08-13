@@ -75,8 +75,18 @@ class ProductDetailsPricingBloc
               ? data.unitNetPriceDisplay
               : data.getPriceValue();
       var discountMessage = data.getDiscountValue();
-      var selectedUnitOfMeasureValueText =
-          data.getUnitOfMeasure(data?.unitOfMeasure ?? '');
+
+      var selectedUnitOfMeasureValueText = '';
+      if (chosenUnitOfMeasure?.description?.isNotEmpty ?? false) {
+        selectedUnitOfMeasureValueText = chosenUnitOfMeasure!.description!;
+      } else if (chosenUnitOfMeasure?.unitOfMeasureDisplay?.isNotEmpty ??
+          false) {
+        selectedUnitOfMeasureValueText =
+            chosenUnitOfMeasure!.unitOfMeasureDisplay!;
+      } else {
+        selectedUnitOfMeasureValueText = '';
+      }
+
       product = product.copyWith(pricing: data);
       productDetailsPricingEntity = productDetailsPricingEntity.copyWith(
           priceValueText: priceValueText,

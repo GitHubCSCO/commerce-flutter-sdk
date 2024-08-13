@@ -1,5 +1,7 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/converter/avalability_color_converter.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
@@ -12,6 +14,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/view_warehouse
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductDetailsPricingWidget extends StatelessWidget {
   final ProductDetailsPriceEntity productDetailsPricingEntity;
@@ -23,10 +26,16 @@ class ProductDetailsPricingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var event = context.read<ProductDetailsPricingBloc>();
     var productDetailsBloc = context.read<ProductDetailsBloc>();
+    var orderQuantity =
+        productDetailsBloc.productDetailDataEntity.product?.minimumOrderQty;
+
+    if (orderQuantity == 0) {
+      orderQuantity = 1;
+    }
 
     event.add(LoadProductDetailsPricing(
         productDetailsPricingEntity: productDetailsPricingEntity,
-        quantity: 1,
+        quantity: orderQuantity,
         productDetailsDataEntity: productDetailsBloc.productDetailDataEntity));
 
     return Padding(
@@ -97,7 +106,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                   state.productDetailsPriceEntity.product?.unitOfMeasure ?? "");
             },
             child: Text(
-              "View Availability by Warehouse",
+              LocalizationConstants.viewAvailabilityWarehouse.localized(),
               style: OptiTextStyles.link,
             ),
           );
@@ -155,11 +164,13 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                     productDetailsPriceEntity.product.updatePriceValueText(
                         productDetailsPriceEntity.productPricingEnabled),
                     style: OptiTextStyles.subtitle),
-                Text(
-                  productDetailsPriceEntity.product.updateUnitOfMeasure(
-                      productDetailsPriceEntity.productPricingEnabled),
-                  style: OptiTextStyles.body,
-                ),
+                if (productDetailsPriceEntity
+                        .selectedUnitOfMeasureValueText.isNullOrEmpty ==
+                    false)
+                  Text(
+                    " / ${productDetailsPriceEntity.selectedUnitOfMeasureValueText ?? ""}",
+                    style: OptiTextStyles.body,
+                  ),
               ],
             ),
           );
@@ -183,7 +194,9 @@ class ProductDetailsPricingWidget extends StatelessWidget {
           return Container(
             child: Text(
               productDetailsPriceEntity.availability?.message ?? '',
-              style: OptiTextStyles.body,
+              style: OptiTextStyles.body.copyWith(
+                  color: AvailabilityColorConverter.convert(
+                      productDetailsPriceEntity.availability?.messageType)),
             ),
           );
         } else if (state is ProductDetailsPricingLoading) {

@@ -110,16 +110,37 @@ class ProductDetailsAddToCartUseCase extends BaseUseCase {
         ? product?.productUnitOfMeasures
         : styledProduct.productUnitOfMeasures;
 
+    if (productUnitOfMeasures != null) {
+      for (int i = 0; i < productUnitOfMeasures.length; i++) {
+        var productUnitOfMeasure = productUnitOfMeasures[i];
+        String? dataSouceItem;
+
+        if (productUnitOfMeasure.description != null &&
+            productUnitOfMeasure.description!.isNotEmpty) {
+          dataSouceItem = productUnitOfMeasure.qtyPerBaseUnitOfMeasure! > 1
+              ? '${productUnitOfMeasure.description} /${productUnitOfMeasure.qtyPerBaseUnitOfMeasure}'
+              : productUnitOfMeasure.description;
+        } else if (productUnitOfMeasure.unitOfMeasureDisplay != null &&
+            productUnitOfMeasure.unitOfMeasureDisplay!.isNotEmpty) {
+          dataSouceItem = productUnitOfMeasure.qtyPerBaseUnitOfMeasure! > 1
+              ? '${productUnitOfMeasure.unitOfMeasureDisplay} /${productUnitOfMeasure.qtyPerBaseUnitOfMeasure}'
+              : productUnitOfMeasure.unitOfMeasureDisplay;
+        }
+
+        productUnitOfMeasures[i] = productUnitOfMeasure.copyWith(
+            unitOfMeasureTextDisplayWithQuantity: dataSouceItem);
+      }
+    }
+
     if (productUnitOfMeasures != null && productUnitOfMeasures.isNotEmpty) {
       productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
-        isUnitOfMeasuresVisible: productUnitOfMeasures.length > 1,
-        // productUnitOfMeasures: List<ProductUnitOfMeasure>.from(productUnitOfMeasures),
-        // selectedUnitOfMeasure: chosenUnitOfMeasure
-      );
+          isUnitOfMeasuresVisible: productUnitOfMeasures.length > 1,
+          productUnitOfMeasures: productUnitOfMeasures,
+          selectedUnitOfMeasure: productUnitOfMeasures.first);
     } else {
       productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
           isUnitOfMeasuresVisible: false,
-          // productUnitOfMeasures: <ProductUnitOfMeasure>[],
+          productUnitOfMeasures: [],
           selectedUnitOfMeasure: null);
     }
 
