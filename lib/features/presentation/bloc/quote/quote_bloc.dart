@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/enums/quote_page_type.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_usecase.dart';
@@ -9,9 +10,11 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
   final QuoteUsecase _quoteUsecase;
   QuotePageType pageType = QuotePageType.pending;
+  int? numberOfPages;
+  int totalQuotes = 0;
 
   QuoteQueryParameters parameter = QuoteQueryParameters(
-    pageSize: 16,
+    pageSize: CoreConstants.defaultPageSize,
     expand: ['saleslist'],
   );
 
@@ -22,25 +25,79 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
   }
 
   Future<void> _onQuoteLoadEvent(
-      QuoteLoadEvent event, Emitter<QuoteState> emit) async {
-    emit(QuoteLoading());
-
+    QuoteLoadEvent event,
+    Emitter<QuoteState> emit,
+  ) async {
     parameter = event.quoteParameters ?? parameter;
-    pageType = event.quotePageType;
+    if (event.quotePageType != pageType) {
+      totalQuotes = 0;
+      parameter.page = 1;
+      numberOfPages = null;
+      pageType = event.quotePageType;
+    }
+
+    int page = parameter.page ?? 1;
+    final newParameter = parameter;
+
+    if (!event.loadMore) {
+      emit(QuoteLoading());
+    } else {
+      if (state is QuoteLoaded) {
+        if ((state as QuoteLoaded).moreLoading) {
+          return;
+        }
+
+        page = (state as QuoteLoaded).page + 1;
+        if (page > (numberOfPages ?? 0)) {
+          return;
+        }
+        newParameter.page = page;
+
+        emit((state as QuoteLoaded).copyWith(moreLoading: true));
+      }
+    }
 
     switch (event.quotePageType) {
       case QuotePageType.pending:
-        var result = await _quoteUsecase.getQuotes(parameter);
+        var result = (!event.loadMore)
+            ? await _quoteUsecase.getQuotes(parameter)
+            : await _quoteUsecase.getQuotes(newParameter);
+
         switch (result) {
           case Success(value: final data):
-            emit(QuoteLoaded(
-                quotePageType: QuotePageType.pending,
-                quotes: data?.quotes ?? []));
+            parameter.page = data?.pagination?.page ?? 1;
+            numberOfPages = data?.pagination?.numberOfPages;
+            totalQuotes = data?.pagination?.totalItemCount ?? 0;
+
+            if (!event.loadMore) {
+              emit(
+                QuoteLoaded(
+                  quotePageType: QuotePageType.pending,
+                  quotes: data?.quotes ?? [],
+                  page: 1,
+                ),
+              );
+            } else {
+              final newQuotes = (state as QuoteLoaded).quotes;
+              newQuotes?.addAll(data?.quotes ?? []);
+
+              emit(
+                (state as QuoteLoaded).copyWith(
+                  quotes: newQuotes,
+                  moreLoading: false,
+                  page: page,
+                ),
+              );
+            }
+
             break;
           case Failure(errorResponse: final errorResponse):
-            emit(QuoteFailed(
+            emit(
+              QuoteFailed(
                 error: errorResponse.errorDescription ?? '',
-                quotePageType: QuotePageType.pending));
+                quotePageType: QuotePageType.pending,
+              ),
+            );
             break;
         }
         break;
@@ -65,7 +122,7 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
 
   String get title {
     if (state is QuoteLoaded) {
-      final length = ((state as QuoteLoaded).quotes ?? []).length;
+      final length = totalQuotes;
       return '$length ${length == 1 ? LocalizationConstants.quote.localized() : LocalizationConstants.quotes.localized()}';
     } else if (state is JobQuoteLoaded) {
       final length = ((state as JobQuoteLoaded).jobQuotes ?? []).length;

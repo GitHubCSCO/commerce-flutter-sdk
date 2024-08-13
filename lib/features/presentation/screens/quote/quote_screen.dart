@@ -104,7 +104,9 @@ class QuotePageState extends State<QuotePage> {
                     child: CircularProgressIndicator(),
                   );
                 } else if (state is QuoteLoaded) {
-                  return _buildPendingQuotesWidget(state.quotes, context);
+                  return _PendingQuotesWidget(
+                    goToQuoteDetails: goToQuoteDetails,
+                  );
                 } else {
                   return Container();
                 }
@@ -140,41 +142,6 @@ class QuotePageState extends State<QuotePage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildPendingQuotesWidget(
-      List<QuoteDto>? quotes, BuildContext context) {
-    return Expanded(
-      child: ListView.separated(
-        separatorBuilder: (context, index) => const Divider(
-          color: Colors.grey,
-        ),
-        shrinkWrap: true,
-        // physics: const NeverScrollableScrollPhysics(),
-        scrollDirection: Axis.vertical,
-        itemCount: quotes?.length ?? 0,
-        itemBuilder: (_, index) {
-          return InkWell(
-            onTap: () {
-              goToQuoteDetails(context, quotes[index]);
-              // AppRoute.quoteDetails
-              //     .navigateBackStack(context, extra: quotes[index]);
-            },
-            child: QuoteItemWidget(
-              typeDisplay: quotes![index].typeDisplay ?? '',
-              quoteNumber: quotes[index].quoteNumber ?? '',
-              companyName: quotes[index].customerName ?? '',
-              address: quotes[index].shipToFullAddress ?? '',
-              status: quotes[index].status ?? '',
-              requestDate:
-                  quotes[index].orderDate.formatDate(format: 'MM/dd/yyyy'),
-              expiryDate:
-                  quotes[index].expirationDate.formatDate(format: 'MM/dd/yyyy'),
-            ),
-          );
-        },
       ),
     );
   }
@@ -233,6 +200,114 @@ class QuotePageState extends State<QuotePage> {
           );
         },
       ),
+    );
+  }
+}
+
+class _PendingQuotesWidget extends StatefulWidget {
+  const _PendingQuotesWidget({
+    required this.goToQuoteDetails,
+  });
+
+  final void Function(BuildContext context, QuoteDto quoteDto) goToQuoteDetails;
+
+  @override
+  State<_PendingQuotesWidget> createState() => __PendingQuotesWidgetState();
+}
+
+class __PendingQuotesWidgetState extends State<_PendingQuotesWidget> {
+  final _scrollController = ScrollController();
+
+  void _onScroll() {
+    if (_isBottom) {
+      context.read<QuoteBloc>().add(
+            QuoteLoadEvent(
+              quotePageType: QuotePageType.pending,
+              quoteParameters: null,
+              loadMore: true,
+            ),
+          );
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) {
+      return false;
+    }
+
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= (maxScroll * 0.9);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<QuoteBloc, QuoteState>(
+      builder: (context, state) {
+        // State is definitely QuoteLoaded
+        // Used this to avoid writing (state as QuoteLoaded) everywhere
+        if (state is! QuoteLoaded) {
+          return const Placeholder();
+        }
+
+        return Expanded(
+          child: ListView.separated(
+            separatorBuilder: (context, index) => const Divider(
+              color: Colors.grey,
+            ),
+            shrinkWrap: true,
+            controller: _scrollController,
+            scrollDirection: Axis.vertical,
+            itemCount: (state.moreLoading == true)
+                ? (state.quotes ?? []).length + 1
+                : (state.quotes ?? []).length,
+            itemBuilder: (_, index) {
+              if (state.moreLoading == true &&
+                  index >= (state.quotes ?? []).length) {
+                return const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+
+              return InkWell(
+                onTap: () {
+                  widget.goToQuoteDetails(context, (state.quotes ?? [])[index]);
+                  // AppRoute.quoteDetails
+                  //     .navigateBackStack(context, extra: quotes[index]);
+                },
+                child: QuoteItemWidget(
+                  typeDisplay: (state.quotes ?? [])[index].typeDisplay ?? '',
+                  quoteNumber: (state.quotes ?? [])[index].quoteNumber ?? '',
+                  companyName: (state.quotes ?? [])[index].customerName ?? '',
+                  address: (state.quotes ?? [])[index].shipToFullAddress ?? '',
+                  status: (state.quotes ?? [])[index].status ?? '',
+                  requestDate: (state.quotes ?? [])[index]
+                      .orderDate
+                      .formatDate(format: 'MM/dd/yyyy'),
+                  expiryDate: (state.quotes ?? [])[index]
+                      .expirationDate
+                      .formatDate(format: 'MM/dd/yyyy'),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
