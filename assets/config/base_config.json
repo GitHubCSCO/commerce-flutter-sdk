@@ -4,6 +4,5 @@
     "checkoutUrl": null,
     "startingCategoryForBrowsing": null,
     "hasCheckout": true,
-    "viewOnWebsiteEnabled": true,
-    "customHideCheckoutOrderNotes": false
+    "viewOnWebsiteEnabled": true
 }
