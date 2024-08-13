@@ -1,7 +1,6 @@
 {
     "shouldUseStaticDomain": false,
     "domain": "",
-    "sandboxDomain": "",
     "checkoutUrl": null,
     "startingCategoryForBrowsing": null,
     "hasCheckout": true,

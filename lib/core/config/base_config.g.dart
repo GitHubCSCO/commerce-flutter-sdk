@@ -10,7 +10,6 @@ BaseConfiguration _$BaseConfigurationFromJson(Map<String, dynamic> json) =>
     BaseConfiguration(
       shouldUseStaticDomain: json['shouldUseStaticDomain'] as bool?,
       domain: json['domain'] as String?,
-      sandboxDomain: json['sandboxDomain'] as String?,
       checkoutUrl: json['checkoutUrl'] as String?,
       startingCategoryForBrowsing:
           json['startingCategoryForBrowsing'] as String?,
@@ -40,7 +39,6 @@ Map<String, dynamic> _$BaseConfigurationToJson(BaseConfiguration instance) =>
     <String, dynamic>{
       'shouldUseStaticDomain': instance.shouldUseStaticDomain,
       'domain': instance.domain,
-      'sandboxDomain': instance.sandboxDomain,
       'checkoutUrl': instance.checkoutUrl,
       'startingCategoryForBrowsing': instance.startingCategoryForBrowsing,
       'hasCheckout': instance.hasCheckout,

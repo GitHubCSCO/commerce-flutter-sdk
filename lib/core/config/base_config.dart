@@ -7,7 +7,6 @@ class BaseConfiguration {
   BaseConfiguration({
     this.shouldUseStaticDomain,
     this.domain,
-    this.sandboxDomain,
     this.checkoutUrl,
     this.startingCategoryForBrowsing,
     this.hasCheckout,
@@ -31,8 +30,6 @@ class BaseConfiguration {
   bool? shouldUseStaticDomain;
 
   String? domain;
-
-  String? sandboxDomain;
 
   String? checkoutUrl;
 
