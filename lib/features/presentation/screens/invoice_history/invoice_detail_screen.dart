@@ -245,7 +245,13 @@ class _InvoiceProductsSectionWidget extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                '(${invoiceLines.length} item)',
+                invoiceLines.length == 1
+                    ? LocalizationConstants.item.localized().format(
+                        ['1'],
+                      )
+                    : LocalizationConstants.items.localized().format(
+                        [invoiceLines.length.toString()],
+                      ),
                 style: OptiTextStyles.body,
               ),
             ],
@@ -306,41 +312,35 @@ class _InvoiceInfoSection extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (!cubit.invoiceDateValue.isNullorWhitespace) ...[
-            _TextEntries(
-              title: cubit.invoiceDate,
-              value: cubit.invoiceDateValue,
-            ),
-            const SizedBox(height: 10),
-          ],
-          if (!cubit.invoiceDueDateValue.isNullorWhitespace) ...[
-            _TextEntries(
-              title: cubit.invoiceDueDate,
-              value: cubit.invoiceDueDateValue,
-            ),
-            const SizedBox(height: 10),
-          ],
-          if (!cubit.termsValue.isNullorWhitespace) ...[
-            _TextEntries(
-              title: cubit.terms,
-              value: cubit.termsValue,
-            ),
-            const SizedBox(height: 10),
-          ],
-          if (!cubit.poNumberValue.isNullorWhitespace) ...[
-            _TextEntries(
-              title: cubit.poNumber,
-              value: cubit.poNumberValue,
-            ),
-            const SizedBox(height: 10),
-          ],
-          if (!cubit.statusValue.isNullorWhitespace) ...[
-            _TextEntries(
-              title: cubit.status,
-              value: cubit.statusValue,
-            ),
-            const SizedBox(height: 10),
-          ],
+          _TextEntries(
+            title: cubit.invoiceDate,
+            value: cubit.invoiceDateValue,
+          ),
+          const SizedBox(height: 10),
+
+          _TextEntries(
+            title: cubit.invoiceDueDate,
+            value: cubit.invoiceDueDateValue,
+          ),
+          const SizedBox(height: 10),
+
+          _TextEntries(
+            title: cubit.terms,
+            value: cubit.termsValue,
+          ),
+          const SizedBox(height: 10),
+
+          _TextEntries(
+            title: cubit.poNumber,
+            value: cubit.poNumberValue,
+          ),
+          const SizedBox(height: 10),
+
+          _TextEntries(
+            title: cubit.status,
+            value: cubit.statusValue,
+          ),
+          const SizedBox(height: 10),
 
           // Billing Address
           _TextEntries(
@@ -405,13 +405,11 @@ class _InvoiceInfoSection extends StatelessWidget {
           const SizedBox(height: 10),
 
           // Shipping Method
-          if (!cubit.shippingMethod.isNullorWhitespace) ...[
-            _TextEntries(
-              title: cubit.shippingMethodTitle,
-              value: cubit.shippingMethod,
-            ),
-            const SizedBox(height: 10),
-          ],
+          _TextEntries(
+            title: cubit.shippingMethodTitle,
+            value: cubit.shippingMethod,
+          ),
+          const SizedBox(height: 10),
 
           // Order Notes
           if (!cubit.orderNotes.isNullorWhitespace) ...[

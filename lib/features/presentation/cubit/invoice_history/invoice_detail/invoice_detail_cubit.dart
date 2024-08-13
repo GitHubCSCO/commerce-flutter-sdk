@@ -82,13 +82,13 @@ class InvoiceDetailCubit extends Cubit<InvoiceDetailState> {
   String get billLineTwo => state.invoice.btAddress2 ?? '';
   String get billCountry => state.invoice.btCountry ?? '';
   String get billFormat =>
-      '${state.invoice.billToCity ?? ''}, ${state.invoice.billToState ?? ''} ${state.invoice.billToPostalCode ?? ''}';
+      '${!state.invoice.billToCity.isNullOrEmpty ? ('${state.invoice.billToCity!}, ') : ''}${state.invoice.billToState ?? ''} ${state.invoice.billToPostalCode ?? ''}';
   String get shipCompany => state.invoice.stCompanyName ?? '';
   String get shipLineOne => state.invoice.stAddress1 ?? '';
   String get shipLineTwo => state.invoice.stAddress2 ?? '';
   String get shipCountry => state.invoice.stCountry ?? '';
   String get shipFormat =>
-      '${state.invoice.shipToCity ?? ''}, ${state.invoice.shipToState ?? ''} ${state.invoice.shipToPostalCode ?? ''}';
+      '${!state.invoice.shipToCity.isNullOrEmpty ? ('${state.invoice.shipToCity!}, ') : ''}${state.invoice.shipToState ?? ''} ${state.invoice.shipToPostalCode ?? ''}';
   String get shippingMethod =>
       _shippingMethod.toLowerCase() == 'hidden' ? '' : _shippingMethod;
   String get orderNotes => state.invoice.notes ?? '';
@@ -108,7 +108,7 @@ class InvoiceDetailCubit extends Cubit<InvoiceDetailState> {
   String get shippingValue => state.invoice.shippingAndHandlingDisplay ?? '';
   String get discountTitle => LocalizationConstants.discounts.localized();
   String get discountValue => state.invoice.discountAmountDisplay ?? '';
-  String get totalTitle => LocalizationConstants.total.localized();
+  String get totalTitle => LocalizationConstants.invoiceTotal.localized();
   String get totalValue => state.invoice.invoiceTotalDisplay ?? '';
   String get otherChargesTitle =>
       LocalizationConstants.otherCharges.localized();
