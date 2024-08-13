@@ -90,14 +90,18 @@ class _CategoryPageState extends State<CategoryPage> {
   List<ToolMenu> _getToolMenu(BuildContext context) {
     List<ToolMenu> list = [];
     list.add(ToolMenu(
-        title: LocalizationConstants.listView.localized(),
+        title: !isGridView
+            ? '${LocalizationConstants.listView.localized()} \u2713'
+            : LocalizationConstants.listView.localized(),
         action: () {
           setState(() {
             isGridView = false;
           });
         }));
     list.add(ToolMenu(
-        title: LocalizationConstants.gridView.localized(),
+        title: isGridView
+            ? '${LocalizationConstants.gridView.localized()} \u2713'
+            : LocalizationConstants.gridView.localized(),
         action: () {
           setState(() {
             isGridView = true;

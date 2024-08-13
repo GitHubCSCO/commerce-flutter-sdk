@@ -169,7 +169,7 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                                   : state.productEntities?.length ?? 0,
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
-                                      childAspectRatio: 0.60,
+                                      childAspectRatio: 0.58,
                                       crossAxisCount: 2),
                               itemBuilder: (context, index) {
                                 if (index >=
@@ -192,6 +192,8 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                                   hidePricingEnable: state.hidePricingEnabled,
                                   hideInventoryEnable:
                                       state.hideInventoryEnabled,
+                                  canAddToCartInProductList:
+                                      state.canAddToCartInProductList,
                                 );
                               },
                             )
