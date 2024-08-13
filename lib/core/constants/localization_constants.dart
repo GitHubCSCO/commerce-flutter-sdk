@@ -156,6 +156,7 @@ enum LocalizationConstants {
   sharedWith(keyword: "Shared with %s others"),
   sharedBy(keyword: "Shared by %s"),
   items(keyword: "%s Items"),
+  item(keyword: "%s Item"),
   itemNumber(keyword: "Item # %s"),
   removeItem(keyword: "Remove Item"),
   removeItemInfoMessage(
@@ -213,6 +214,7 @@ enum LocalizationConstants {
   orderDeleted(keyword: "Order Deleted"),
   orderApproved(keyword: "Order Approved"),
   orderTotal(keyword: "Order Total"),
+  invoiceTotal(keyword: "Invoice Total"),
   selectTotalType(keyword: "Select Total Type"),
   selectType(keyword: "Select Type"),
   enterAmount(keyword: "Enter Amount"),
