@@ -11,7 +11,8 @@ class DomainUsecase extends BaseUseCase {
   Future<String?> getDomainInSettingsScreen() async {
     bool isStaticDomain = coreServiceProvider
             .getAppConfigurationService()
-            .shouldUseStaticDomain ??
+            .baseConfig
+            ?.shouldUseStaticDomain ??
         false;
 
     return isStaticDomain ? null : (await getDomain());
@@ -24,12 +25,17 @@ class DomainUsecase extends BaseUseCase {
 
     if (coreServiceProvider
             .getAppConfigurationService()
-            .shouldUseStaticDomain ??
+            .baseConfig
+            ?.shouldUseStaticDomain ??
         false) {
-      domain =
-          coreServiceProvider.getAppConfigurationService().domain.isNullOrEmpty
-              ? domain
-              : coreServiceProvider.getAppConfigurationService().domain;
+      domain = (coreServiceProvider
+                      .getAppConfigurationService()
+                      .baseConfig
+                      ?.domain ??
+                  "")
+              .isEmpty
+          ? domain
+          : coreServiceProvider.getAppConfigurationService().baseConfig?.domain;
     }
 
     if (domain.isNullOrEmpty) {
