@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
@@ -173,4 +174,12 @@ class RequestQuoteBloc extends Bloc<RequestQuoteEvent, RequestQuoteState> {
   }
 
   bool get isSalesPerson => session != null && session?.isSalesPerson == true;
+
+  String get submitQuoteTitle {
+    if (isSalesPerson) {
+      return LocalizationConstants.createQuote.localized();
+    } else {
+      return LocalizationConstants.submitQuote.localized();
+    }
+  }
 }
