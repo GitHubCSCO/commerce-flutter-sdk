@@ -51,7 +51,7 @@ class QuoteDetailsUsecase extends BaseUseCase {
         .getQuoteSettingAsync();
   }
 
-  Future<String> getCheckoutUrl() async {
+  Future<String?> getCheckoutUrl() async {
     return await coreServiceProvider.getAppConfigurationService().checkoutUrl();
   }
 

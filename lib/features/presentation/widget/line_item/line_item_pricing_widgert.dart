@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/converter/avalability_color_converter.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/view_warehouse_availability_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -16,21 +17,22 @@ class LineItemPricingWidget extends StatelessWidget {
   final String? unitOfMeasure;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
+  final int? availabilityMessageType;
 
-  const LineItemPricingWidget({
-    super.key,
-    this.discountMessage,
-    this.priceValueText,
-    this.unitOfMeasureValueText,
-    this.availabilityText,
-    this.showViewQuantityPricing = true,
-    this.showViewAvailabilityByWarehouse = false,
-    this.productId,
-    this.erpNumber,
-    this.unitOfMeasure,
-    this.hidePricingEnable,
-    this.hideInventoryEnable,
-  });
+  const LineItemPricingWidget(
+      {super.key,
+      this.discountMessage,
+      this.priceValueText,
+      this.unitOfMeasureValueText,
+      this.availabilityText,
+      this.showViewQuantityPricing = true,
+      this.showViewAvailabilityByWarehouse = false,
+      this.productId,
+      this.erpNumber,
+      this.unitOfMeasure,
+      this.hidePricingEnable,
+      this.hideInventoryEnable,
+      this.availabilityMessageType});
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +59,13 @@ class LineItemPricingWidget extends StatelessWidget {
                   ? _buildInventorySection(
                       context,
                       availabilityText: availabilityText,
+                      availabilityMessageType: availabilityMessageType,
                     )
                   : Container(),
               // _buildInventorySection(context),
               // For "View Availability by Warehouse"
               if (showViewAvailabilityByWarehouse)
-                GestureDetector(
+                InkWell(
                   onTap: () {
                     viewWarehouseWidget(context, productId, erpNumber ?? "",
                         unitOfMeasure ?? "");
@@ -112,12 +115,11 @@ Widget _buildPricingSection(
   );
 }
 
-Widget _buildInventorySection(
-  BuildContext context, {
-  String? availabilityText,
-}) {
+Widget _buildInventorySection(BuildContext context,
+    {String? availabilityText, int? availabilityMessageType}) {
   return Text(
     availabilityText ?? '',
-    style: OptiTextStyles.body,
+    style: OptiTextStyles.body.copyWith(
+        color: AvailabilityColorConverter.convert(availabilityMessageType)),
   );
 }

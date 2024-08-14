@@ -1,0 +1,8 @@
+{
+    "shouldUseStaticDomain": false,
+    "domain": "",
+    "checkoutUrl": null,
+    "startingCategoryForBrowsing": null,
+    "hasCheckout": true,
+    "viewOnWebsiteEnabled": true
+}

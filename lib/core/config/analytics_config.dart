@@ -18,24 +18,34 @@ class AnalyticsConfig {
       switch (defaultTargetPlatform) {
         case TargetPlatform.android:
           return FirebaseOptions(
-            apiKey: appConfigurationService.firebaseAndroidApiKey ?? "",
-            appId: appConfigurationService.firebaseAndroidAppId ?? "",
-            messagingSenderId:
-                appConfigurationService.firebaseAndroidMessagingSenderId ?? "",
-            projectId: appConfigurationService.firebaseAndroidProjectId ?? "",
-            storageBucket:
-                appConfigurationService.firebaseAndroidStorageBucket ?? "",
+            apiKey:
+                appConfigurationService.baseConfig?.firebaseAndroidApiKey ?? "",
+            appId:
+                appConfigurationService.baseConfig?.firebaseAndroidAppId ?? "",
+            messagingSenderId: appConfigurationService
+                    .baseConfig?.firebaseAndroidMessagingSenderId ??
+                "",
+            projectId:
+                appConfigurationService.baseConfig?.firebaseAndroidProjectId ??
+                    "",
+            storageBucket: appConfigurationService
+                    .baseConfig?.firebaseAndroidStorageBucket ??
+                "",
           );
         case TargetPlatform.iOS:
           return FirebaseOptions(
-            apiKey: appConfigurationService.firebaseIOSApiKey ?? "",
-            appId: appConfigurationService.firebaseIOSAppId ?? "",
-            messagingSenderId:
-                appConfigurationService.firebaseIOSMessagingSenderId ?? "",
-            projectId: appConfigurationService.firebaseIOSProjectId ?? "",
+            apiKey: appConfigurationService.baseConfig?.firebaseIOSApiKey ?? "",
+            appId: appConfigurationService.baseConfig?.firebaseIOSAppId ?? "",
+            messagingSenderId: appConfigurationService
+                    .baseConfig?.firebaseIOSMessagingSenderId ??
+                "",
+            projectId:
+                appConfigurationService.baseConfig?.firebaseIOSProjectId ?? "",
             storageBucket:
-                appConfigurationService.firebaseIOSStorageBucket ?? "",
-            iosBundleId: appConfigurationService.firebaseIOSBundleId ?? "",
+                appConfigurationService.baseConfig?.firebaseIOSStorageBucket ??
+                    "",
+            iosBundleId:
+                appConfigurationService.baseConfig?.firebaseIOSBundleId ?? "",
           );
         default:
           return const FirebaseOptions(
@@ -45,10 +55,12 @@ class AnalyticsConfig {
 
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        _appCenterSecret = appConfigurationService.appCenterSecretAndroid ?? "";
+        _appCenterSecret =
+            appConfigurationService.baseConfig?.appCenterSecretAndroid ?? "";
         break;
       case TargetPlatform.iOS:
-        _appCenterSecret = appConfigurationService.appCenterSecretiOS ?? "";
+        _appCenterSecret =
+            appConfigurationService.baseConfig?.appCenterSecretiOS ?? "";
         break;
       default:
         _appCenterSecret = "";

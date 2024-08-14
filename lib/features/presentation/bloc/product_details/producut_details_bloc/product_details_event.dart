@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
 
 abstract class ProductDetailsEvent {}
@@ -15,4 +15,10 @@ class StyleTraitSelectedEvent extends ProductDetailsEvent {
   final StyleValueEntity selectedStyleValue;
 
   StyleTraitSelectedEvent(this.selectedStyleValue);
+}
+
+class UnitOfMeasuteChangeEvent extends ProductDetailsEvent {
+  final ProductUnitOfMeasureEntity productunitOfMeasureEntity;
+
+  UnitOfMeasuteChangeEvent({required this.productunitOfMeasureEntity});
 }

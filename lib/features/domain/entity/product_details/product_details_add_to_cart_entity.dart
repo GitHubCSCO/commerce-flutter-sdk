@@ -18,6 +18,7 @@ class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
   final bool? isLoadingPrice;
   final String? subtotalValueText;
   final ProductDetailsPriceEntity? productDetailsPriceEntity;
+  final List<ProductUnitOfMeasureEntity>? productUnitOfMeasures;
 
   const ProductDetailsAddtoCartEntity({
     this.hidePricing,
@@ -34,6 +35,7 @@ class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
     this.isLoadingPrice,
     this.subtotalValueText,
     this.productDetailsPriceEntity,
+    this.productUnitOfMeasures,
     required super.detailsSectionType,
   });
 
@@ -54,6 +56,7 @@ class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
     String? subtotalValueText,
     ProductDetailsPriceEntity? productDetailsPriceEntity,
     ProdcutDeatilsPageWidgets? detailsSectionType,
+    List<ProductUnitOfMeasureEntity>? productUnitOfMeasures,
   }) {
     return ProductDetailsAddtoCartEntity(
       hidePricing: hidePricing ?? this.hidePricing,
@@ -77,6 +80,8 @@ class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
       detailsSectionType: detailsSectionType ?? this.detailsSectionType,
       productDetailsPriceEntity:
           productDetailsPriceEntity ?? this.productDetailsPriceEntity,
+      productUnitOfMeasures:
+          productUnitOfMeasures ?? this.productUnitOfMeasures,
     );
   }
 
