@@ -1159,9 +1159,11 @@ packages:
   optimizely_commerce_api:
     dependency: "direct main"
     description:
-      path: commerce-dart-sdk
-      relative: true
-    source: path
+      path: "."
+      ref: develop
+      resolved-ref: "631ab6529d4585cc224d23ad61482bc2333ee419"
+      url: "git@github.com:InsiteSoftware/commerce-dart-sdk.git"
+    source: git
     version: "0.1.1"
   package_config:
     dependency: transitive
