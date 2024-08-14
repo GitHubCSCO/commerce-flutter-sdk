@@ -186,7 +186,7 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
       }
 
       if (quoteDto.expirationDate != null &&
-          quoteDto.expirationDate!.isBefore(DateTime.now())) {
+          quoteDto.expirationDate!.day < DateTime.now().day) {
         var pastExpirationDateMessageResponse =
             await _quoteDetailsUsecase.getSiteMessage(
                 SiteMessageConstants.nameRfqPastExpirationDate,
