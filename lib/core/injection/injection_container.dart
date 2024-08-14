@@ -314,7 +314,7 @@ Future<void> initInjectionContainer() async {
 
     //search
     ..registerFactory(
-        () => SearchBloc(searchUseCase: sl(), searchHistoryUseCase: sl()))
+        () => SearchBloc(searchUseCase: sl()))
     ..registerFactory(() => SearchPageCmsBloc(searchUseCase: sl()))
     ..registerFactory(() => SearchCmsUseCase())
     ..registerFactory(() => SearchUseCase())
