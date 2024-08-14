@@ -184,6 +184,8 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                         state.requestDeliveryDate,
                                     allowCreateNewShipToAddress:
                                         state.allowCreateNewShipToAddress,
+                                    requestDateWarningMessage:
+                                        state.requestDateWarningMessage,
                                   );
 
                                   final reviewOrderEntity =

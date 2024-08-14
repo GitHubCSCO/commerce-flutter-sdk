@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/features/domain/entity/checkout/review_orde
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -80,24 +81,34 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
                 .getResultSuccessValue();
         CartSettings? cartSettings =
             (await _checkoutUseCase.getCartSetting()).getResultSuccessValue();
+        final message = shippingMethod
+                .equalsIgnoreCase(ShippingOption.pickUp.name)
+            ? await _checkoutUseCase.getSiteMessage(
+                SiteMessageConstants.nameCheckoutRequestedPickUpDateMessage,
+                SiteMessageConstants
+                    .defaultValueCheckoutRequestedPickUpDateMessage)
+            : await _checkoutUseCase.getSiteMessage(
+                SiteMessageConstants.nameCheckoutRequestedDeliveryDateMessage,
+                SiteMessageConstants
+                    .defaultValueCheckoutRequestedDeliveryDateMessage);
 
         if (billToAddress != null &&
             shipToAddress != null &&
             wareHouse != null &&
             shippingMethod != null) {
           emit(CheckoutDataLoaded(
-            cart: cartData,
-            billToAddress: billToAddress,
-            shipToAddress: shipToAddress,
-            wareHouse: wareHouse,
-            promotions: promotionCollection,
-            shippingMethod: shippingMethod,
-            cartSettings: cartSettings,
-            selectedCarrier: selectedCarrier,
-            selectedService: selectedService,
-            requestDeliveryDate: requestDeliveryDate,
-            allowCreateNewShipToAddress: allowCreateNewShipToAddress,
-          ));
+              cart: cartData,
+              billToAddress: billToAddress,
+              shipToAddress: shipToAddress,
+              wareHouse: wareHouse,
+              promotions: promotionCollection,
+              shippingMethod: shippingMethod,
+              cartSettings: cartSettings,
+              selectedCarrier: selectedCarrier,
+              selectedService: selectedService,
+              requestDeliveryDate: requestDeliveryDate,
+              allowCreateNewShipToAddress: allowCreateNewShipToAddress,
+              requestDateWarningMessage: message));
         } else {
           emit(CheckoutDataFetchFailed(
               error:
