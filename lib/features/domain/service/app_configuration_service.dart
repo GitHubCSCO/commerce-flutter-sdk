@@ -8,7 +8,7 @@ import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/core/extensions/url_string_extension.dart';
 import 'package:commerce_flutter_app/core/config/custom_config.dart';
 import 'package:commerce_flutter_app/core/config/base_config.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/app_configuration_service_interface.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:flutter/services.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -206,12 +206,6 @@ class AppConfigurationService extends ServiceBase
   }
 
   @override
-  Future<bool> isSignInRequired() {
-    // TODO: implement isSignInRequired
-    throw UnimplementedError();
-  }
-
-  @override
   Future<void> loadRemoteSettings() async {
     var getWebsiteResult =
         await _commerceAPIServiceProvider.getWebsiteService().getWebsite();
@@ -250,7 +244,13 @@ class AppConfigurationService extends ServiceBase
 
   @override
   Future<String?> startingCategoryForBrowsing() async {
-    return baseConfig?.startingCategoryForBrowsing;
+    var mobileSettingsResponse = await _commerceAPIServiceProvider
+        .getSettingsService()
+        .getMobileAppSettingAsync();
+    return mobileSettingsResponse
+            .getResultSuccessValue()
+            ?.startingCategoryForBrowsing ??
+        baseConfig?.startingCategoryForBrowsing;
   }
 
   @override

@@ -39,8 +39,6 @@ abstract class IAppConfigurationService {
 
   Future<RealTimeSupport?> getRealtimeSupportType();
 
-  Future<bool> isSignInRequired();
-
   void setHidePricingEnable(bool enable);
 
   void setHideInventoryEnable(bool enable);
