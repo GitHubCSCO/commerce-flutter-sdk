@@ -427,9 +427,7 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
   }
 
   bool get shouldShowExpirationDate {
-    return isSalesPerson &&
-        quoteDto?.status != null &&
-        compareStatus(QuoteStatus.QuoteRequested);
+    return isSalesPerson;
   }
 
   bool get isQuoteProposed {

@@ -216,7 +216,7 @@ class RequestQuoteWidgetPage extends StatelessWidget {
                     ]),
                   ),
                 ),
-                _buildSubmitButton(() {
+                _buildSubmitButton(context, () {
                   context.read<RequestQuoteBloc>().add(SubmitQuoteEvent(
                       requestQuoteType: selectedRequestQuoteType!,
                       jobName: jobNameInputTextEditingController.text,
@@ -229,10 +229,10 @@ class RequestQuoteWidgetPage extends StatelessWidget {
         listener: (_, state) {});
   }
 
-  Widget _buildSubmitButton(VoidCallback onPressed) {
+  Widget _buildSubmitButton(BuildContext context, VoidCallback onPressed) {
     return ListInformationBottomSubmitWidget(actions: [
       PrimaryButton(
-        text: LocalizationConstants.submitQuote.localized(),
+        text: context.watch<RequestQuoteBloc>().submitQuoteTitle,
         onPressed: onPressed,
       ),
     ]);

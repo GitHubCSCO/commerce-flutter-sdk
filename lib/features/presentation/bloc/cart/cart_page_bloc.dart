@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
@@ -17,6 +18,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
   final CartUseCase _cartUseCase;
   final PricingInventoryUseCase _pricingInventoryUseCase;
   Cart? cart;
+  Session? session;
   bool hasCheckout = true;
   ProductSettings? productSettings;
   CartPageBloc(
@@ -45,6 +47,11 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
       var productSettingsResult = await _cartUseCase.loadProductSettings();
       productSettings = productSettingsResult is Success
           ? (productSettingsResult as Success).value as ProductSettings
+          : null;
+
+      var sessionResponse = await _cartUseCase.getCurrentSession();
+      session = sessionResponse is Success
+          ? (sessionResponse as Success).value as Session
           : null;
 
       switch (result) {
@@ -244,5 +251,13 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
     return cart?.canRequestQuote == true &&
         cart?.isAwaitingApproval == false &&
         !isCartEmpty;
+  }
+
+  String get submitForQuoteTitle {
+    if (session != null && session?.isSalesPerson == true) {
+      return LocalizationConstants.createAQuote.localized();
+    } else {
+      return LocalizationConstants.submitForQuote.localized();
+    }
   }
 }
