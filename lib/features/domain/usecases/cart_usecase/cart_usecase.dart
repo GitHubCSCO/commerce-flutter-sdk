@@ -64,4 +64,10 @@ class CartUseCase extends BaseUseCase {
   Future<bool> hasCheckout() async {
     return await coreServiceProvider.getAppConfigurationService().hasCheckout();
   }
+
+  Future<Result<Session, ErrorResponse>> getCurrentSession() async {
+    return await commerceAPIServiceProvider
+        .getSessionService()
+        .getCurrentSession();
+  }
 }

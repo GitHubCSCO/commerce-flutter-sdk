@@ -14,5 +14,8 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     on<RootConfigChangeEvent>((event, emit) {
       emit(RootConfigReload());
     });
+    on<RootCartUpdateEvent>((event, emit) {
+      emit(RootCartReload());
+    });
   }
 }
