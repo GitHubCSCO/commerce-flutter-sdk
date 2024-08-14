@@ -46,11 +46,13 @@ class CheckoutPlaceOrder extends CheckoutState {
   final String orderNumber;
   final Cart cart;
   final ReviewOrderEntity? reviewOrderEntity;
+  final String? message;
 
   CheckoutPlaceOrder({
     required this.orderNumber,
     required this.cart,
     this.reviewOrderEntity,
+    this.message,
   });
 }
 

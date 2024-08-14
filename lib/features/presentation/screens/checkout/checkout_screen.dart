@@ -134,7 +134,8 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                     isOrderApproval:
                         context.read<CheckoutBloc>().cart?.requiresApproval ??
                             false,
-                    reviewOrderEntity: state.reviewOrderEntity));
+                    reviewOrderEntity: state.reviewOrderEntity,
+                    message: state.message));
           }
         },
         builder: (_, state) {

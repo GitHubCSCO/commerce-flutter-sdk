@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/review_order_entity.dart';
@@ -127,10 +128,23 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
 
         await _checkoutUseCase.removeOrderApprovalCookieIfAvailable();
 
+        String? message;
+
+        if (cart?.requiresApproval ?? false) {
+          message = SiteMessageConstants.defaultVaLueOrderApprovalOrderPlaced;
+        } else {
+          message = await _checkoutUseCase.getSiteMessage(
+              SiteMessageConstants.nameMobileAppOrderConfirmationSuccessMessage,
+              SiteMessageConstants
+                  .defaultMobileAppOrderConfirmationSuccessMessage);
+        }
+
         emit(CheckoutPlaceOrder(
-            orderNumber: orderNumber,
-            reviewOrderEntity: event.reviewOrderEntity,
-            cart: cartData!));
+          orderNumber: orderNumber,
+          reviewOrderEntity: event.reviewOrderEntity,
+          cart: cartData!,
+          message: message,
+        ));
 
         break;
       case Failure(errorResponse: final errorResponse):
