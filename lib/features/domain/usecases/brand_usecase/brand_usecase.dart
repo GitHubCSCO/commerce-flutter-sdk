@@ -1,3 +1,6 @@
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/exceptions/brand_exceptions.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/brand_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
@@ -43,19 +46,66 @@ class BrandUseCase extends BaseUseCase {
     return result;
   }
 
-  Future<List<BrandCategory>?> _getBrandCategories(Brand brand) async {
-    final brandCategoriesQueryParameter = BrandCategoriesQueryParameter(
-        brandId: brand.id,
-        page: 1,
-        pageSize: numberOfInitiallyVisibleCategories,
-        maximumDepth: 2);
-    final brandCategoriesResultResponse = await commerceAPIServiceProvider
-        .getBrandService()
-        .getBrandCategories(brandCategoriesQueryParameter);
-    final brandCategories =
-        brandCategoriesResultResponse.getResultSuccessValue();
+  Future<dynamic> _getBrandCategories(Brand brand) async {
+    var startingCategoryId = await coreServiceProvider
+        .getAppConfigurationService()
+        .startingCategoryForBrowsing();
+    if (startingCategoryId.isNullOrEmpty ||
+        startingCategoryId == CoreConstants.emptyGuidString) {
+      final brandCategoriesResultResponse =
+          await commerceAPIServiceProvider.getBrandService().getBrandCategories(
+                BrandCategoriesQueryParameter(
+                  brandId: brand.id,
+                  page: 1,
+                  pageSize: numberOfInitiallyVisibleCategories,
+                  maximumDepth: 2,
+                ),
+              );
+      return brandCategoriesResultResponse
+          .getResultSuccessValue()
+          ?.brandCategories;
+    } else {
+      final brandCategoriesResultResponse = await commerceAPIServiceProvider
+          .getBrandService()
+          .getBrandCategorySubCategories(
+            BrandCategoriesQueryParameter(
+              brandId: brand.id,
+              categoryId: startingCategoryId,
+              page: 1,
+              pageSize: numberOfInitiallyVisibleCategories,
+              maximumDepth: 2,
+            ),
+          );
+      final brandCategoriesResult =
+          brandCategoriesResultResponse.getResultSuccessValue();
+      final brandCategories = brandCategoriesResult?.subCategories
+          ?.map((c) => BrandCategory.mapCategoryToBrandCategory(c))
+          .toList();
 
-    return brandCategories?.brandCategories;
+      if (brandCategories != null && brandCategories.isNotEmpty) {
+        for (var brandCategory in brandCategories) {
+          var brandSubCategoriesResultResponse =
+              await commerceAPIServiceProvider
+                  .getBrandService()
+                  .getBrandCategorySubCategories(
+                    BrandCategoriesQueryParameter(
+                      brandId: brandCategory?.brandId,
+                      categoryId: brandCategory?.categoryId,
+                      page: 1,
+                      pageSize: numberOfInitiallyVisibleCategories,
+                      maximumDepth: 2,
+                    ),
+                  );
+
+          var brandSubCategoriesResult =
+              brandSubCategoriesResultResponse.getResultSuccessValue();
+          brandCategory?.subCategories = brandSubCategoriesResult?.subCategories
+              ?.map((c) => BrandCategory.mapCategoryToBrandCategory(c))
+              .toList();
+        }
+      }
+      return brandCategories;
+    }
   }
 
   Future<List<BrandProductLine>?> _getBrandProductLines(Brand brand) async {
@@ -73,7 +123,8 @@ class BrandUseCase extends BaseUseCase {
     return brandProductLines?.productLines;
   }
 
-  Future<BrandDetailsEntity> getBrandDetails(Brand brand) async {
+  Future<Result<BrandDetailsEntity, ErrorResponse>> getBrandDetails(
+      Brand brand) async {
     final detailsEntity = BrandDetailsEntity();
 
     final brandQueryParameters = BrandQueryParameters(
@@ -83,13 +134,26 @@ class BrandUseCase extends BaseUseCase {
     final brandInfosResponse = await commerceAPIServiceProvider
         .getBrandService()
         .getBrand(brand.id ?? '', brandParameters: brandQueryParameters);
-    final brandEntity =
-        BrandEntityMapper.toEntity(brandInfosResponse.getResultSuccessValue());
-    detailsEntity.brandEntity = brandEntity;
+    switch (brandInfosResponse) {
+      case Success(value: final value):
+        {
+          if (value != null) {
+            final brandEntity = BrandEntityMapper.toEntity(value);
+            detailsEntity.brandEntity = brandEntity;
 
-    detailsEntity.brandCategories = await _getBrandCategories(brand);
-    detailsEntity.brandProductLines = await _getBrandProductLines(brand);
+            detailsEntity.brandCategories = await _getBrandCategories(brand);
+            detailsEntity.brandProductLines =
+                await _getBrandProductLines(brand);
 
-    return detailsEntity;
+            return Success(detailsEntity);
+          } else {
+            return Failure(ErrorResponse(
+                message: LocalizationConstants.noBrandDetailsFound.localized(),
+                exception: BrandDetailsException()));
+          }
+        }
+      case Failure(errorResponse: final errorResponse):
+        return Failure(errorResponse);
+    }
   }
 }
