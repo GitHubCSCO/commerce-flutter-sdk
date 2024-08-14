@@ -292,7 +292,7 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
     List<QuoteLinePricingEntity> quoteLinePricingEntityList = [];
 
     for (int i = 0;
-        i < quoteLineEntity.pricing!.unitListBreakPrices!.length;
+        i < (quoteLineEntity.pricing?.unitListBreakPrices ?? []).length;
         i++) {
       var quoteLinePricingEntity = QuoteLinePricingEntity(
         qty: quoteLineEntity.pricing?.unitListBreakPrices![i].breakQty!
