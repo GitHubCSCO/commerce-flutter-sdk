@@ -203,6 +203,10 @@ mixin BaseActionItemWidget {
         return () {
           AppRoute.myQuote.navigateBackStack(context);
         };
+      case ActionType.search:
+        return () {
+          AppRoute.search.navigate(context);
+        };
       default:
         return () {
           CustomSnackBar.showComingSoonSnackBar(context);

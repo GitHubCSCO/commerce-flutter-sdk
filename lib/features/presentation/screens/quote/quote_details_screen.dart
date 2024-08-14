@@ -196,29 +196,46 @@ class QuoteDetailsPage extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.all(20.0),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            flex: 1,
-            child: Text(
-              LocalizationConstants.quoteExpiration.localized(),
-              textAlign: TextAlign.start,
-              style: OptiTextStyles.subtitle,
-            ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Text(
+                  LocalizationConstants.quoteExpiration.localized(),
+                  textAlign: TextAlign.start,
+                  style: OptiTextStyles.subtitle,
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: DatePickerWidget(
+                            maxDate: maximumDate,
+                            selectedDateTime: quoteDto?.expirationDate,
+                            callback: _onSelectDate)),
+                  ],
+                ),
+              ),
+            ],
           ),
-          Expanded(
-            flex: 2,
-            child: Row(
-              children: [
-                Expanded(
-                    child: DatePickerWidget(
-                        maxDate: maximumDate,
-                        selectedDateTime: quoteDto?.expirationDate,
-                        callback: _onSelectDate)),
-              ],
-            ),
+          BlocBuilder<QuoteDetailsBloc, QuoteDetailsState>(
+            builder: (_, state) {
+              if (state is ExpirationDateRequiredState) {
+                return Text(
+                  state.message,
+                  style: OptiTextStyles.body.copyWith(color: Colors.red),
+                );
+              } else {
+                return Container();
+              }
+            },
           ),
         ],
       ),
