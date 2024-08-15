@@ -54,7 +54,7 @@ class SearchProductGridItemWidget extends StatelessWidget {
       },
       child: Container(
         width: itemWidth,
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         child: Column(
           children: [
             SizedBox(

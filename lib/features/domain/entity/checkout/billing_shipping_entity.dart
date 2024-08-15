@@ -12,6 +12,7 @@ class BillingShippingEntity {
   final ShipViaDto? selectedService;
   final DateTime? requestDeliveryDate;
   final bool? allowCreateNewShipToAddress;
+  final String? requestDateWarningMessage;
 
   BillingShippingEntity({
     this.billTo,
@@ -24,6 +25,7 @@ class BillingShippingEntity {
     this.selectedService,
     this.requestDeliveryDate,
     this.allowCreateNewShipToAddress = true,
+    this.requestDateWarningMessage,
   });
 
   BillingShippingEntity copyWith({
@@ -37,6 +39,7 @@ class BillingShippingEntity {
     ShipViaDto? selectedService,
     DateTime? requestDeliveryDate,
     bool? allowCreateNewShipToAddress,
+    String? requestDateWarningMessage,
   }) {
     return BillingShippingEntity(
       billTo: billTo ?? this.billTo,
@@ -50,6 +53,8 @@ class BillingShippingEntity {
       requestDeliveryDate: requestDeliveryDate ?? this.requestDeliveryDate,
       allowCreateNewShipToAddress:
           allowCreateNewShipToAddress ?? this.allowCreateNewShipToAddress,
+      requestDateWarningMessage:
+          requestDateWarningMessage ?? this.requestDateWarningMessage,
     );
   }
 }

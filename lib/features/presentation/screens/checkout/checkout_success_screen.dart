@@ -23,6 +23,7 @@ class CheckoutSuccessEntity {
   final bool isVmiCheckout;
   final bool isOrderApproval;
   final ReviewOrderEntity? reviewOrderEntity;
+  final String? message;
 
   const CheckoutSuccessEntity({
     required this.orderNumber,
@@ -30,6 +31,7 @@ class CheckoutSuccessEntity {
     required this.cart,
     this.reviewOrderEntity,
     this.isOrderApproval = false,
+    this.message,
   });
 }
 
@@ -110,50 +112,48 @@ class CheckoutSuccessPage extends StatelessWidget {
     int itemCount = checkoutSuccessEntity.cart.cartLines?.length ?? 0;
     String itemText = itemCount == 1 ? 'Item' : 'Items';
 
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
-              "${LocalizationConstants.orderSummary.localized()} ($itemCount $itemText)",
-              textAlign: TextAlign.start,
-              style: OptiTextStyles.subtitle,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(
+            "${LocalizationConstants.orderSummary.localized()} ($itemCount $itemText)",
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.subtitle,
           ),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              final orderLine = checkoutSuccessEntity.cart.cartLines?[index];
-              return LineItemWidget(
-                productId: orderLine?.productId,
-                imagePath: orderLine?.smallImagePath,
-                shortDescription: orderLine?.shortDescription,
-                manufacturerItem: orderLine?.manufacturerItem,
-                productNumber: orderLine?.erpNumber,
-                discountMessage: (orderLine?.pricing?.unitNetPrice == 0)
-                    ? ''
-                    : (DiscountValueConverter().convert(orderLine) ?? '')
-                        .toString(),
-                priceValueText: orderLine?.pricing?.unitNetPriceDisplay ?? '',
-                unitOfMeasureValueText: orderLine?.unitOfMeasureDisplay != null
-                    ? ' / ${orderLine?.unitOfMeasureDisplay}'
-                    : null,
-                qtyOrdered: orderLine?.qtyOrdered?.round().toString(),
-                subtotalPriceText:
-                    orderLine?.pricing?.extendedUnitNetPriceDisplay,
-                canEditQty: false,
-                showViewAvailabilityByWarehouse: false,
-                showViewQuantityPricing: false,
-              );
-            },
-            separatorBuilder: (context, index) => const Divider(height: 1),
-            itemCount: checkoutSuccessEntity.cart.cartLines?.length ?? 0,
-          ),
-        ],
-      ),
+        ),
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            final orderLine = checkoutSuccessEntity.cart.cartLines?[index];
+            return LineItemWidget(
+              productId: orderLine?.productId,
+              imagePath: orderLine?.smallImagePath,
+              shortDescription: orderLine?.shortDescription,
+              manufacturerItem: orderLine?.manufacturerItem,
+              productNumber: orderLine?.erpNumber,
+              discountMessage: (orderLine?.pricing?.unitNetPrice == 0)
+                  ? ''
+                  : (DiscountValueConverter().convert(orderLine) ?? '')
+                      .toString(),
+              priceValueText: orderLine?.pricing?.unitNetPriceDisplay ?? '',
+              unitOfMeasureValueText: orderLine?.unitOfMeasureDisplay != null
+                  ? ' / ${orderLine?.unitOfMeasureDisplay}'
+                  : null,
+              qtyOrdered: orderLine?.qtyOrdered?.round().toString(),
+              subtotalPriceText:
+                  orderLine?.pricing?.extendedUnitNetPriceDisplay,
+              canEditQty: false,
+              showViewAvailabilityByWarehouse: false,
+              showViewQuantityPricing: false,
+            );
+          },
+          separatorBuilder: (context, index) => const Divider(height: 1),
+          itemCount: checkoutSuccessEntity.cart.cartLines?.length ?? 0,
+        ),
+      ],
     );
   }
 
@@ -167,15 +167,13 @@ class CheckoutSuccessPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              isOrderApproval
-                  ? SiteMessageConstants.defaultVaLueOrderApprovalOrderPlaced
-                  : "Thank you for your order!",
+              checkoutSuccessEntity.message ?? '',
               style: OptiTextStyles.subtitle,
             ),
             const SizedBox(height: 8.0),
             if (!isOrderApproval)
               Text(
-                "We have received your order and have sent you an email confirmation to  ${checkoutSuccessEntity.cart.shipTo?.email}",
+                "We have received your order and have sent you an email confirmation to ${checkoutSuccessEntity.cart.shipTo?.email}",
                 style: OptiTextStyles.bodySmall,
                 textAlign: TextAlign.left,
               ),
