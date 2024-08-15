@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.da
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_details/quote_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_details/quote_details_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_details/quote_details_state.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
@@ -81,17 +82,21 @@ class QuoteDetailsPage extends StatelessWidget {
           _displayDialogPastExpirationDate(context, state.message);
         } else if (state is QuoteSubmissionSuccessState) {
           CustomSnackBar.showSuccesss(context);
+          context.read<RootBloc>().add(RootCartUpdateEvent());
           Navigator.of(context).pop();
         } else if (state is QuoteSubmissionFailedState) {
           CustomSnackBar.showFailure(context);
+          context.read<RootBloc>().add(RootCartUpdateEvent());
           Navigator.of(context).pop();
         } else if (state is QuoteDeletionSuccessState) {
           CustomSnackBar.showSuccesss(context);
+          context.read<RootBloc>().add(RootCartUpdateEvent());
           Navigator.of(context).pop();
         } else if (state is QuoteDeletionFailedState) {
           CustomSnackBar.showFailure(context);
         } else if (state is QuoteDeclineSuccessState) {
           CustomSnackBar.showSuccesss(context);
+          context.read<RootBloc>().add(RootCartUpdateEvent());
           Navigator.of(context).pop();
         } else if (state is QuoteDeclineFailedState) {
           CustomSnackBar.showFailure(context);
@@ -191,29 +196,46 @@ class QuoteDetailsPage extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.all(20.0),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            flex: 1,
-            child: Text(
-              LocalizationConstants.quoteExpiration.localized(),
-              textAlign: TextAlign.start,
-              style: OptiTextStyles.subtitle,
-            ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Text(
+                  LocalizationConstants.quoteExpiration.localized(),
+                  textAlign: TextAlign.start,
+                  style: OptiTextStyles.subtitle,
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: DatePickerWidget(
+                            maxDate: maximumDate,
+                            selectedDateTime: quoteDto?.expirationDate,
+                            callback: _onSelectDate)),
+                  ],
+                ),
+              ),
+            ],
           ),
-          Expanded(
-            flex: 2,
-            child: Row(
-              children: [
-                Expanded(
-                    child: DatePickerWidget(
-                        maxDate: maximumDate,
-                        selectedDateTime: quoteDto?.expirationDate,
-                        callback: _onSelectDate)),
-              ],
-            ),
+          BlocBuilder<QuoteDetailsBloc, QuoteDetailsState>(
+            builder: (_, state) {
+              if (state is ExpirationDateRequiredState) {
+                return Text(
+                  state.message,
+                  style: OptiTextStyles.body.copyWith(color: Colors.red),
+                );
+              } else {
+                return Container();
+              }
+            },
           ),
         ],
       ),

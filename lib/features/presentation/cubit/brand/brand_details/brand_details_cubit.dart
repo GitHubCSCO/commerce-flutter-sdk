@@ -1,3 +1,5 @@
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/brand_usecase/brand_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_details_screen.dart';
@@ -17,7 +19,20 @@ class BrandDetailsCubit extends Cubit<BrandDetailsState> {
     emit(BrandDetailsLLoading());
 
     final response = await _brandUseCase.getBrandDetails(brand);
-    emit(BrandDetailsLoaded(brandDetailsEntity: response));
+
+    switch (response) {
+      case Success(value: final value):
+        {
+          emit(BrandDetailsLoaded(brandDetailsEntity: value!));
+        }
+      case Failure(errorResponse: final errorResponse):
+        {
+          _brandUseCase.trackError(errorResponse);
+          emit(BrandDetailsFailed(
+              error: errorResponse.message ??
+                  LocalizationConstants.noBrandDetailsFound.localized()));
+        }
+    }
   }
 
   Future<GetBrandSubCategoriesResult?> onSelectBrandCategory(
@@ -27,5 +42,16 @@ class BrandDetailsCubit extends Cubit<BrandDetailsState> {
     final response = await _brandUseCase
         .getBrandCategorySubCategories(brandCategoriesQueryParameter);
     return response.getResultSuccessValue();
+  }
+
+  Future<BrandCategory?> getShopAllBrandStartingCategory() async {
+    var startingCategoryId = await _brandUseCase.coreServiceProvider
+        .getAppConfigurationService()
+        .startingCategoryForBrowsing();
+    if (startingCategoryId.isNullOrEmpty ||
+        startingCategoryId == CoreConstants.emptyGuidString) {
+      return null;
+    }
+    return BrandCategory(categoryId: startingCategoryId);
   }
 }

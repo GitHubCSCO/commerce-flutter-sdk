@@ -671,6 +671,7 @@ enum LocalizationConstants {
   noSavedPaymentsFound(keyword: "No saved payments found."),
   invalidUrl(keyword: "Invalid url."),
   failedToLoadUrl(keyword: "Failed to load url."),
+  noBrandDetailsFound(keyword: "No details found for this brand"),
   ;
 
   const LocalizationConstants({

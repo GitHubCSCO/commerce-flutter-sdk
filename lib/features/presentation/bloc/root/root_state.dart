@@ -7,3 +7,5 @@ class RootInitial extends RootState {}
 class RootPricingInventoryReload extends RootState {}
 
 class RootConfigReload extends RootState {}
+
+class RootCartReload extends RootState {}
