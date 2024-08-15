@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/core/mixins/cart_checkout_helper_mixin.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/review_order_entity.dart';
@@ -12,7 +13,8 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 part 'checkout_state.dart';
 part 'checkout_event.dart';
 
-class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
+class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
+    with CartCheckoutHelperMixin {
   final CheckoutUsecase _checkoutUseCase;
   DateTime? requestDeliveryDate;
   Cart? cart;
@@ -67,7 +69,10 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     switch (data) {
       case Success(value: final cartData):
         if (cartData?.cartLines == null || cartData!.cartLines!.isEmpty) {
-          emit(CheckoutNoDataState());
+          final message = await _checkoutUseCase.getSiteMessage(
+              SiteMessageConstants.nameNoOrderLines,
+              SiteMessageConstants.defaultValueNoOrderLines);
+          emit(CheckoutNoDataState(message));
           return;
         }
         updateCheckoutData(cartData);
@@ -81,6 +86,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
                 .getResultSuccessValue();
         CartSettings? cartSettings =
             (await _checkoutUseCase.getCartSetting()).getResultSuccessValue();
+        final cartWarningMsg = await getCartWarningMessage(
+            cartData, shippingMethod, _checkoutUseCase);
         final message = shippingMethod
                 .equalsIgnoreCase(ShippingOption.pickUp.name)
             ? await _checkoutUseCase.getSiteMessage(
@@ -96,7 +103,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
             shipToAddress != null &&
             wareHouse != null &&
             shippingMethod != null) {
-          emit(CheckoutDataLoaded(
+          emit(
+            CheckoutDataLoaded(
               cart: cartData,
               billToAddress: billToAddress,
               shipToAddress: shipToAddress,
@@ -108,11 +116,16 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
               selectedService: selectedService,
               requestDeliveryDate: requestDeliveryDate,
               allowCreateNewShipToAddress: allowCreateNewShipToAddress,
-              requestDateWarningMessage: message));
+              requestDateWarningMessage: message,
+              cartWarningMsg: cartWarningMsg,
+            ),
+          );
         } else {
-          emit(CheckoutDataFetchFailed(
-              error:
-                  'BillTo: $billToAddress, ShipTo: $shipToAddress, WareHouse: ${wareHouse?.toJson()}, ShippingMethod: $shippingMethod'));
+          emit(
+            CheckoutDataFetchFailed(
+                error:
+                    'BillTo: $billToAddress, ShipTo: $shipToAddress, WareHouse: ${wareHouse?.toJson()}, ShippingMethod: $shippingMethod'),
+          );
         }
         break;
       case Failure(errorResponse: final errorResponse):

@@ -16,10 +16,13 @@ class CartContentDefaultState extends CartContentState {
 }
 
 class CartContentQuantityChangedSuccessState extends CartContentState {
-  const CartContentQuantityChangedSuccessState();
+
+  final String? message;
+
+  const CartContentQuantityChangedSuccessState(this.message);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [message];
 }
 
 class CartContentQuantityChangedFailureState extends CartContentState {

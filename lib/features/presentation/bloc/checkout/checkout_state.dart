@@ -19,6 +19,7 @@ class CheckoutDataLoaded extends CheckoutState {
   final DateTime? requestDeliveryDate;
   final bool? allowCreateNewShipToAddress;
   final String? requestDateWarningMessage;
+  final String cartWarningMsg;
 
   CheckoutDataLoaded({
     required this.cart,
@@ -33,10 +34,17 @@ class CheckoutDataLoaded extends CheckoutState {
     required this.requestDeliveryDate,
     required this.allowCreateNewShipToAddress,
     required this.requestDateWarningMessage,
+    required this.cartWarningMsg,
   });
 }
 
-class CheckoutNoDataState extends CheckoutState {}
+class CheckoutNoDataState extends CheckoutState {
+
+  final String? message;
+
+  CheckoutNoDataState(this.message);
+
+}
 
 class CheckoutDataFetchFailed extends CheckoutState {
   final String error;
