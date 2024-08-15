@@ -5,7 +5,6 @@ import 'package:commerce_flutter_app/core/mixins/cart_checkout_helper_mixin.dart
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/fullfillment_method_type.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
@@ -134,69 +133,6 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
     } else {
       emit(CartProceedToCheckoutState());
     }
-  }
-
-  Future<String> _getCartWarningMessage(String? shippingMethod) async {
-    final errorMessageBuilder = StringBuffer();
-    if (cart!.hasInsufficientInventory!) {
-      if (shippingMethod == FulfillmentMethodType.Ship.name) {
-        errorMessageBuilder.write(await _cartUseCase.getSiteMessage(
-            SiteMessageConstants.nameCartInsufficientInventoryAtCheckout,
-            SiteMessageConstants.defaultCartInsufficientInventoryAtCheckout));
-      } else if (shippingMethod == FulfillmentMethodType.PickUp.name) {
-        errorMessageBuilder.write(await _cartUseCase.getSiteMessage(
-            SiteMessageConstants.nameCartInsufficientPickupInventory,
-            SiteMessageConstants.defaultCartInsufficientPickupInventory));
-      }
-    }
-
-    var productsCannotBePurchased = false;
-    for (var cartLine in cart!.cartLines!) {
-      if (!productsCannotBePurchased &&
-          (!cartLine.isActive! || cartLine.isRestricted!)) {
-        productsCannotBePurchased = true;
-      }
-    }
-    if (productsCannotBePurchased) {
-      var msg = await _cartUseCase.getSiteMessage(
-          SiteMessageConstants.nameCartProductCannotBePurchased,
-          SiteMessageConstants.defaultValueCartProductCannotBePurchased);
-      errorMessageBuilder.write(msg);
-    }
-
-    if (cart!.cartLines!.isNotEmpty && cart!.cartNotPriced!) {
-      var msg = await _cartUseCase.getSiteMessage(
-          SiteMessageConstants.nameCartNoPriceAvailableAtCheckout,
-          SiteMessageConstants.defaultValueCartNoPriceAvailableAtCheckout);
-      errorMessageBuilder.write(msg);
-    }
-
-    if (_hasIncompleteStock()) {
-      var msg = await _cartUseCase.getSiteMessage(
-          SiteMessageConstants
-              .nameReviewAndPayNotEnoughInventoryInLocalWarehouse,
-          SiteMessageConstants
-              .nameReviewAndPayNotEnoughInventoryInLocalWarehouse);
-      errorMessageBuilder.write(msg);
-    }
-
-    return Future.value(errorMessageBuilder.toString());
-  }
-
-  bool _hasIncompleteStock() {
-    String? incompleteStock;
-    incompleteStock = cart?.properties?["incompleteStock"];
-
-    if (incompleteStock == null || incompleteStock.isEmpty) {
-      return false;
-    }
-
-    bool? isIncompleteStock = bool.tryParse(incompleteStock);
-    if (isIncompleteStock != null) {
-      return !cart!.hasInsufficientInventory! && isIncompleteStock;
-    }
-
-    return false;
   }
 
   List<CartLineEntity> getCartLines() {
