@@ -19,7 +19,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BrandDetailsEntity {
   BrandEntity? brandEntity;
-  List<BrandCategory>? brandCategories;
+  List<BrandCategory?>? brandCategories;
   List<BrandProductLine>? brandProductLines;
 
   BrandDetailsEntity(
@@ -98,6 +98,9 @@ class BrandDetailsPage extends StatelessWidget {
               ),
             );
           case BrandDetailsFailed():
+            return Center(
+              child: Text(state.error),
+            );
           default:
             return const Center();
         }
@@ -171,7 +174,7 @@ class BrandInfoWidget extends StatelessWidget {
 }
 
 class CategoryCarouselWidget extends StatelessWidget {
-  final List<BrandCategory>? list;
+  final List<BrandCategory?>? list;
   final Brand brand;
 
   const CategoryCarouselWidget(
@@ -254,13 +257,15 @@ class CategoryCarouselWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
             child: TertiaryButton(
-              onPressed: () {
+              onPressed: () async {
                 //! TODO caution
                 //! TODO we are passing multiple objects through extra using record
                 //! TODO either we need to organize this record in a better way or use any other data structure
+                var result = await context
+                    .read<BrandDetailsCubit>()
+                    .getShopAllBrandStartingCategory();
                 AppRoute.brandCategory
-                    .navigateBackStack(context, extra: (brand, null, null));
-                // CustomSnackBar.showComingSoonSnackBar(context);
+                    .navigateBackStack(context, extra: (brand, result, null));
               },
               text: LocalizationConstants.shopAllBrandCategories.localized(),
             ),

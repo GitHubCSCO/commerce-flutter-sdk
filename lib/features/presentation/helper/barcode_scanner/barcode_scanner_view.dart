@@ -12,7 +12,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 
 class BarcodeScannerView extends StatefulWidget {
-  final Function(BuildContext, String) callback;
+  final Function(BuildContext, {String resultText, BarcodeFormat format})
+      callback;
   final bool barcodeFullView;
 
   const BarcodeScannerView({
@@ -132,7 +133,11 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
 
     if (barCodesWithIn.isNotEmpty) {
       if (barCodesWithIn.length == 1) {
-        await widget.callback(context, barCodesWithIn[0].rawValue!);
+        await widget.callback(
+          context,
+          resultText: barCodesWithIn[0].rawValue!,
+          format: barCodesWithIn[0].format,
+        );
         _busyUpdate();
       } else if (!isDialogShowing) {
         isDialogShowing = true;

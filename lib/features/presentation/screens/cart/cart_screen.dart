@@ -72,7 +72,9 @@ class CartPage extends StatelessWidget {
         listeners: [
           BlocListener<RootBloc, RootState>(
             listener: (context, state) async {
-              if (state is RootConfigReload) {
+              if (state is RootConfigReload ||
+                  state is RootCartReload ||
+                  state is RootPricingInventoryReload) {
                 _reloadCartPage(context);
               }
             },
@@ -80,13 +82,6 @@ class CartPage extends StatelessWidget {
           BlocListener<PullToRefreshBloc, PullToRefreshState>(
             listener: (context, state) {
               if (state is PullToRefreshLoadState) {
-                _reloadCartPage(context);
-              }
-            },
-          ),
-          BlocListener<RootBloc, RootState>(
-            listener: (context, state) {
-              if (state is RootPricingInventoryReload) {
                 _reloadCartPage(context);
               }
             },
@@ -133,7 +128,7 @@ class CartPage extends StatelessWidget {
                   return Column(
                     children: [
                       if (state.cartWarningMsg.isNotEmpty)
-                        _buildCartEroorWidget(
+                        BuildCartErrorWidget(
                             cartErrorMsg: state.cartWarningMsg),
                       Expanded(
                         child: ListView(
@@ -198,8 +193,9 @@ class CartPage extends StatelessWidget {
                                   handleAuthStatusForSubmitQuote(
                                       context, currentState.status, state);
                                 },
-                                text: LocalizationConstants.submitForQuote
-                                    .localized(),
+                                text: context
+                                    .watch<CartPageBloc>()
+                                    .submitForQuoteTitle,
                               ),
                             ),
                             Visibility(
@@ -441,9 +437,9 @@ class CartPage extends StatelessWidget {
   }
 }
 
-class _buildCartEroorWidget extends StatelessWidget {
+class BuildCartErrorWidget extends StatelessWidget {
   final String cartErrorMsg;
-  const _buildCartEroorWidget({
+  const BuildCartErrorWidget({
     required this.cartErrorMsg,
     super.key,
   });

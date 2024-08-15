@@ -156,6 +156,7 @@ enum LocalizationConstants {
   sharedWith(keyword: "Shared with %s others"),
   sharedBy(keyword: "Shared by %s"),
   items(keyword: "%s Items"),
+  item(keyword: "%s Item"),
   itemNumber(keyword: "Item # %s"),
   removeItem(keyword: "Remove Item"),
   removeItemInfoMessage(
@@ -213,6 +214,7 @@ enum LocalizationConstants {
   orderDeleted(keyword: "Order Deleted"),
   orderApproved(keyword: "Order Approved"),
   orderTotal(keyword: "Order Total"),
+  invoiceTotal(keyword: "Invoice Total"),
   selectTotalType(keyword: "Select Total Type"),
   selectType(keyword: "Select Type"),
   enterAmount(keyword: "Enter Amount"),
@@ -252,7 +254,7 @@ enum LocalizationConstants {
   documents(keyword: "Documents"),
   recommendedProducts(keyword: "Recommended Products"),
   unableToRetrieveInventory(keyword: "Unable to retrieve inventory"),
-  addToCart(keyword: "Add to cart"),
+  addToCart(keyword: "Add to Cart"),
   pleaseSignInBeforeAddingToList(
       keyword: "Please sign in before adding to list."),
   noFiltersAvailable(keyword: "No Filters Available"),
@@ -669,6 +671,7 @@ enum LocalizationConstants {
   noSavedPaymentsFound(keyword: "No saved payments found."),
   invalidUrl(keyword: "Invalid url."),
   failedToLoadUrl(keyword: "Failed to load url."),
+  noBrandDetailsFound(keyword: "No details found for this brand"),
   ;
 
   const LocalizationConstants({

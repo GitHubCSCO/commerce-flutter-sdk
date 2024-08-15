@@ -12,6 +12,7 @@ class ProductUnitOfMeasureEntity extends Equatable {
   final String? roundingRule;
   final bool? isDefault;
   final AvailabilityEntity? availability;
+  final String? unitOfMeasureTextDisplayWithQuantity;
 
   const ProductUnitOfMeasureEntity({
     this.productUnitOfMeasureId,
@@ -22,6 +23,7 @@ class ProductUnitOfMeasureEntity extends Equatable {
     this.roundingRule,
     this.isDefault,
     this.availability,
+    this.unitOfMeasureTextDisplayWithQuantity,
   });
 
   ProductUnitOfMeasureEntity copyWith({
@@ -33,6 +35,7 @@ class ProductUnitOfMeasureEntity extends Equatable {
     String? roundingRule,
     bool? isDefault,
     AvailabilityEntity? availability,
+    String? unitOfMeasureTextDisplayWithQuantity,
   }) {
     return ProductUnitOfMeasureEntity(
       productUnitOfMeasureId:
@@ -45,6 +48,9 @@ class ProductUnitOfMeasureEntity extends Equatable {
       roundingRule: roundingRule ?? this.roundingRule,
       isDefault: isDefault ?? this.isDefault,
       availability: availability ?? this.availability,
+      unitOfMeasureTextDisplayWithQuantity:
+          unitOfMeasureTextDisplayWithQuantity ??
+              this.unitOfMeasureTextDisplayWithQuantity,
     );
   }
 
@@ -58,5 +64,6 @@ class ProductUnitOfMeasureEntity extends Equatable {
         roundingRule,
         isDefault,
         availability,
+        unitOfMeasureTextDisplayWithQuantity,
       ];
 }

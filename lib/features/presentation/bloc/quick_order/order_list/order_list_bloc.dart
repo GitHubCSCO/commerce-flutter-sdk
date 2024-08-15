@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
@@ -10,10 +9,13 @@ import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_ent
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/quick_order_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 part 'order_list_event.dart';
@@ -22,16 +24,19 @@ part 'order_list_state.dart';
 class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   List<QuickOrderItemEntity> quickOrderItemList = [];
   final QuickOrderUseCase _quickOrderUseCase;
+  final SearchUseCase _searchUseCase;
   final PricingInventoryUseCase _pricingInventoryUseCase;
   final ScanningMode scanningMode;
   bool isPreviouslyScannedItem = false;
   ProductSettings? productSettings;
 
-  OrderListBloc(
-      {required QuickOrderUseCase quickOrderUseCase,
-      required PricingInventoryUseCase pricingInventoryUseCase,
-      required this.scanningMode})
-      : _quickOrderUseCase = quickOrderUseCase,
+  OrderListBloc({
+    required QuickOrderUseCase quickOrderUseCase,
+    required SearchUseCase searchUseCase,
+    required PricingInventoryUseCase pricingInventoryUseCase,
+    required this.scanningMode,
+  })  : _quickOrderUseCase = quickOrderUseCase,
+        _searchUseCase = searchUseCase,
         _pricingInventoryUseCase = pricingInventoryUseCase,
         super(OrderListInitialState()) {
     _createAlternateCart();
@@ -98,16 +103,77 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   Future<void> _onOrderLisScanItemAddEvent(
       OrderListItemScanAddEvent event, Emitter<OrderListState> emit) async {
     emit(OrderListLoadingState());
-
     if (scanningMode == ScanningMode.count ||
         scanningMode == ScanningMode.create) {
-      final result = await _quickOrderUseCase.getVmiBin(event.name);
-
+      final result = await _quickOrderUseCase.getVmiBin(event.resultText);
       await _addVmiOrderItem(result, emit);
     } else {
-      final result = await _quickOrderUseCase.getScanProduct(event.name);
+      final result = await _quickOrderUseCase.getScanProduct(
+          event.resultText, event.barcodeFormat);
+      if (result.getResultSuccessValue() != null) {
+        await _addOrderItem(result, emit);
+      } else {
+        await _findProductWithRegularSearch(
+            event.resultText, event.barcodeFormat, emit);
+      }
+    }
+  }
 
-      await _addOrderItem(result, emit);
+  Future<void> _findProductWithRegularSearch(String? searchQuery,
+      BarcodeFormat? barcodeFormat, Emitter<OrderListState> emit) async {
+    if (searchQuery == null) {
+      emit(OrderListAddFailedState("No product found"));
+    } else {
+      var result =
+          await _searchUseCase.loadSearchProductsResults(searchQuery, 1);
+      int totalItemCount =
+          result?.getResultSuccessValue()?.pagination?.totalItemCount ?? 0;
+      //This is a workaround for ICM-4422 where leading 0 in EAN-13 code gets dropped by the MLKit
+      if (totalItemCount == 0 && barcodeFormat != null) {
+        /*
+        For example we have a product: 012546011099
+        It's UPC-A will be: 0-12546-01109-9
+        It's EAN-13 will be: 0-125460-110998
+        When we scan UPC-A, it return successfully and we get 012546011099 and barcode format is BarcodeFormat.upca
+        But, when we scan EAN-13, it returns 125460110998 and barcode format is BarcodeFormat.upca
+        */
+        if ((barcodeFormat == BarcodeFormat.ean13 ||
+                barcodeFormat == BarcodeFormat.upca) &&
+            searchQuery.length == 12) {
+          //since in both cases result text is 12 digit it's difficult to know whether it's upc-a or ean13
+          //upc-a can also have non-zero leading digit, since we didn't find any result with that
+          //let's assume it's ean-13
+          if (searchQuery[0] != '0') {
+            var modifiedSearchQuery = "0$searchQuery";
+            result = await _searchUseCase.loadSearchProductsResults(
+                modifiedSearchQuery, 1);
+          }
+        }
+      }
+      var data = result?.getResultSuccessValue();
+      final products = data?.products ?? [];
+      if (products.isNotEmpty) {
+        final product = products[0];
+        if (product.isStyleProductParent ?? false) {
+          var parameters = ProductQueryParameters(expand: "styledproducts");
+
+          var result = (await _searchUseCase.commerceAPIServiceProvider
+                  .getProductService()
+                  .getProduct(product.id ?? '', parameters: parameters))
+              .getResultSuccessValue();
+
+          if (result?.product != null) {
+            final productEntity =
+                ProductEntityMapper().toEntity(result!.product!);
+            await _addOrderItem(Success(productEntity), emit);
+          }
+        } else {
+          final productEntity = ProductEntityMapper().toEntity(product);
+          await _addOrderItem(Success(productEntity), emit);
+        }
+      } else {
+        await _addOrderItem(const Success(null), emit);
+      }
     }
   }
 

@@ -23,8 +23,12 @@ class StyleTraitCubit extends Cubit<StyleTraitState> {
 
     if (product.styledProducts != null) {
       if (product.styleParentId != null) {
-        styledProductEntity = product.styledProducts
-            ?.firstWhere((o) => o.productId == product.id);
+        for (var styledProduct in product.styledProducts ?? []) {
+          if (styledProduct.productId == product.id) {
+            styledProductEntity = styledProduct;
+            break;
+          }
+        }
       }
     }
     availableStyleValues = _styleTraitsUseCase.getAvailableStyleValues(product);

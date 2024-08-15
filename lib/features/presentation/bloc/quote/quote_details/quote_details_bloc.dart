@@ -186,7 +186,7 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
       }
 
       if (quoteDto.expirationDate != null &&
-          quoteDto.expirationDate!.isBefore(DateTime.now())) {
+          quoteDto.expirationDate!.day < DateTime.now().day) {
         var pastExpirationDateMessageResponse =
             await _quoteDetailsUsecase.getSiteMessage(
                 SiteMessageConstants.nameRfqPastExpirationDate,
@@ -292,7 +292,7 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
     List<QuoteLinePricingEntity> quoteLinePricingEntityList = [];
 
     for (int i = 0;
-        i < quoteLineEntity.pricing!.unitListBreakPrices!.length;
+        i < (quoteLineEntity.pricing?.unitListBreakPrices ?? []).length;
         i++) {
       var quoteLinePricingEntity = QuoteLinePricingEntity(
         qty: quoteLineEntity.pricing?.unitListBreakPrices![i].breakQty!
@@ -427,9 +427,7 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
   }
 
   bool get shouldShowExpirationDate {
-    return isSalesPerson &&
-        quoteDto?.status != null &&
-        compareStatus(QuoteStatus.QuoteRequested);
+    return isSalesPerson;
   }
 
   bool get isQuoteProposed {

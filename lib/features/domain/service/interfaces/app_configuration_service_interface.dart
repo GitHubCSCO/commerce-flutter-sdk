@@ -1,54 +1,20 @@
+import 'package:commerce_flutter_app/core/config/custom_config.dart';
+import 'package:commerce_flutter_app/core/config/base_config.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 abstract class IAppConfigurationService {
-  String? get domain;
+  BaseConfiguration? get baseConfig;
 
-  String? get sandboxDomain;
-
-  bool get hasCheckoutConfiguration;
-
-  bool? get shouldUseStaticDomain;
+  CustomConfiguration? get customConfig;
 
   String? get tokenExIFrameUrl;
 
-  String? get checkoutUrlConfiguration;
-
   bool? get hasOrderHistory;
-
-  bool? get viewOnWebsiteEnabled;
-
-  bool? get customHideCheckoutOrderNotes;
 
   String? get privacyPolicyUrl;
 
   String? get termsOfUseUrl;
-
-  String? get firebaseAndroidApiKey;
-
-  String? get firebaseAndroidAppId;
-
-  String? get firebaseAndroidMessagingSenderId;
-
-  String? get firebaseAndroidProjectId;
-
-  String? get firebaseAndroidStorageBucket;
-
-  String? get firebaseIOSApiKey;
-
-  String? get firebaseIOSAppId;
-
-  String? get firebaseIOSMessagingSenderId;
-
-  String? get firebaseIOSProjectId;
-
-  String? get firebaseIOSStorageBucket;
-
-  String? get firebaseIOSBundleId;
-
-  String? get appCenterSecretiOS;
-
-  String? get appCenterSecretAndroid;
 
   Future<void> loadRemoteSettings();
 
@@ -60,9 +26,9 @@ abstract class IAppConfigurationService {
 
   Future<bool> hasCheckout();
 
-  Future<String> checkoutUrl();
+  Future<String?> checkoutUrl();
 
-  Future<String> startingCategoryForBrowsing();
+  Future<String?> startingCategoryForBrowsing();
 
   Future<Result<TokenExDto, ErrorResponse>> getTokenExConfiguration(
       String token);
@@ -72,8 +38,6 @@ abstract class IAppConfigurationService {
   Future<bool?> addToCartEnabled();
 
   Future<RealTimeSupport?> getRealtimeSupportType();
-
-  Future<bool> isSignInRequired();
 
   void setHidePricingEnable(bool enable);
 

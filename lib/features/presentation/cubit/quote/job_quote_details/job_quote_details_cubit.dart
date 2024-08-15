@@ -136,7 +136,7 @@ class JobQuoteDetailsCubit extends Cubit<JobQuoteDetailsState> {
 
     final checkoutUrl = await _quoteDetailsUsecase.getCheckoutUrl();
     if (!checkoutUrl.isNullOrEmpty) {
-      final url = await _quoteDetailsUsecase.getAuthorizedURL(checkoutUrl);
+      final url = await _quoteDetailsUsecase.getAuthorizedURL(checkoutUrl!);
       if (url.isNullOrEmpty) {
         state.copyWith(status: JobQuoteDetailsStatus.generateOrderFailure);
         return;

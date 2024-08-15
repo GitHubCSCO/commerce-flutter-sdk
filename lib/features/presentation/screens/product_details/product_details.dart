@@ -1,6 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
-import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
@@ -161,6 +160,15 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
       BuildContext context, ProductDetailsBloc productDetailsBloc) {
     final addCartLineForWishList =
         productDetailsBloc.getAddCartLineForWistlist();
+
+    addCartLineForWishList[0].qtyOrdered = context
+            .read<ProductDetailsPricingBloc>()
+            .state is ProductDetailsPricingLoaded
+        ? (context.read<ProductDetailsPricingBloc>().state
+                as ProductDetailsPricingLoaded)
+            .productDetailsPriceEntity
+            .quantity
+        : addCartLineForWishList[0].qtyOrdered;
     WishListCallbackHelper.addItemsToWishList(
       context,
       addToCartCollection: WishListAddToCartCollection(

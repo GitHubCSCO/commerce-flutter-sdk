@@ -11,9 +11,10 @@ class OrderListItemAddEvent extends OrderListEvent {
 }
 
 class OrderListItemScanAddEvent extends OrderListEvent {
-  final String? name;
+  final String? resultText;
+  final BarcodeFormat? barcodeFormat;
 
-  OrderListItemScanAddEvent(this.name);
+  OrderListItemScanAddEvent({this.resultText, this.barcodeFormat});
 }
 
 class OrderListItemRemoveEvent extends OrderListEvent {
