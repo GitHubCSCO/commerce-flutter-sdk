@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:flutter/services.dart';
@@ -56,7 +57,9 @@ class BiometricUsecase extends BaseUseCase {
     await coreServiceProvider
         .getBiometricAuthenticationService()
         .logoutWithStoredCredentials();
-
+    await commerceAPIServiceProvider
+        .getCacheService()
+        .invalidateAllObjectsExcept([CoreConstants.domainKey]);
     await commerceAPIServiceProvider.getAuthenticationService().logoutAsync();
   }
 
