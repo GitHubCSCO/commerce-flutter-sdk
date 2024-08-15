@@ -16,7 +16,6 @@ class CartContentDefaultState extends CartContentState {
 }
 
 class CartContentQuantityChangedSuccessState extends CartContentState {
-
   final String? message;
 
   const CartContentQuantityChangedSuccessState(this.message);

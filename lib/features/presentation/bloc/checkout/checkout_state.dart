@@ -39,11 +39,9 @@ class CheckoutDataLoaded extends CheckoutState {
 }
 
 class CheckoutNoDataState extends CheckoutState {
-
   final String? message;
 
   CheckoutNoDataState(this.message);
-
 }
 
 class CheckoutDataFetchFailed extends CheckoutState {

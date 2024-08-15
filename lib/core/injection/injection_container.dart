@@ -313,8 +313,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ShopUseCase())
 
     //search
-    ..registerFactory(
-        () => SearchBloc(searchUseCase: sl()))
+    ..registerFactory(() => SearchBloc(searchUseCase: sl()))
     ..registerFactory(() => SearchPageCmsBloc(searchUseCase: sl()))
     ..registerFactory(() => SearchCmsUseCase())
     ..registerFactory(() => SearchUseCase())
