@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shipping_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/address_type.dart';
@@ -103,12 +104,18 @@ class BillingShippingWidget extends StatelessWidget {
           maximumDate = DateTime.now().add(duration);
         }
         list.add(_buildRequestDeliveryDate(
-            maximumDate, billingShippingEntity.requestDeliveryDate));
+            maximumDate,
+            billingShippingEntity.requestDeliveryDate,
+            billingShippingEntity.shippingMethod,
+            billingShippingEntity.requestDateWarningMessage));
       }
     } else {
       list.add(_buildPickUpAddress());
       list.add(_buildRequestDeliveryDate(
-          null, billingShippingEntity.requestDeliveryDate));
+          null,
+          billingShippingEntity.requestDeliveryDate,
+          billingShippingEntity.shippingMethod,
+          billingShippingEntity.requestDateWarningMessage));
     }
 
     return list;
@@ -286,7 +293,8 @@ class BillingShippingWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildRequestDeliveryDate(DateTime? maxDate, DateTime? selectedDate) {
+  Widget _buildRequestDeliveryDate(DateTime? maxDate, DateTime? selectedDate,
+      ShippingOption? shippingOption, String? requestDateWarningMessage) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -294,7 +302,9 @@ class BillingShippingWidget extends StatelessWidget {
       children: [
         const SizedBox(height: 12),
         Text(
-          LocalizationConstants.requestDeliveryDateOptional.localized(),
+          (shippingOption == ShippingOption.ship)
+              ? LocalizationConstants.requestPickUpDateOptional.localized()
+              : LocalizationConstants.requestDeliveryDateOptional.localized(),
           textAlign: TextAlign.center,
           style: OptiTextStyles.subtitle,
         ),
@@ -325,7 +335,7 @@ class BillingShippingWidget extends StatelessWidget {
           ],
         ),
         Text(
-          'This date is only a request and may not be fulfilled',
+          requestDateWarningMessage ?? '',
           textAlign: TextAlign.center,
           style: OptiTextStyles.bodySmall,
         ),
