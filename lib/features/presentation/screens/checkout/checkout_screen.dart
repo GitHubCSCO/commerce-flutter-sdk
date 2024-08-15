@@ -88,11 +88,6 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
         (cart.cartLines ?? []).every((x) => x.quoteRequired ?? false);
   }
 
-  bool get hasQuoteRequiredProducts {
-    return cart.cartLines != null &&
-        (cart.cartLines ?? []).any((x) => x.quoteRequired ?? false);
-  }
-
   bool get isCartCheckoutDisabled {
     return (!(cart.canCheckOut ?? true) && !(cart.canRequisition ?? true)) ||
         isCartEmpty ||

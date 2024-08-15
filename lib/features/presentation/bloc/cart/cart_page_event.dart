@@ -9,3 +9,5 @@ class CartPagePickUpLocationChangeEvent extends CartPageEvent {
 
   CartPagePickUpLocationChangeEvent(this.wareHouse);
 }
+
+class CartPageCheckoutEvent extends CartPageEvent {}

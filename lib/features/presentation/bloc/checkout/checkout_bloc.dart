@@ -38,6 +38,15 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     on<UpdateShiptoAddressEvent>((event, emit) => _onUpdateShipto(event, emit));
   }
 
+  Cart removeQuoteRequiredProductsIfNeeded(Cart cart) {
+    if (hasQuoteRequiredProducts) {
+      cart.cartLines =
+          cart.cartLines?.where((x) => !(x.quoteRequired == true)).toList();
+    }
+    updateCheckoutData(cart);
+    return cart;
+  }
+
   void updateCheckoutData(Cart cart) {
     this.cart = cart;
     selectedCarrier = cart.carrier;
@@ -52,6 +61,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
 
     var data = await _checkoutUseCase.getCart(event.cart.id!);
     session ??= _checkoutUseCase.getCurrentSession();
+
     var productSettingsResult = await _checkoutUseCase.loadProductSettings();
     var settingsResult = (await _checkoutUseCase.loadSettingsCollection())
         .getResultSuccessValue();
@@ -63,12 +73,14 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         : null;
 
     switch (data) {
-      case Success(value: final cartData):
+      case Success(value: var cartData):
         if (cartData?.cartLines == null || cartData!.cartLines!.isEmpty) {
           emit(CheckoutNoDataState());
           return;
         }
+
         updateCheckoutData(cartData);
+        cartData = removeQuoteRequiredProductsIfNeeded(cartData);
 
         final billToAddress = session?.billTo;
         final shipToAddress = session?.shipTo;
@@ -251,6 +263,11 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
 
     /// TODO - check if all required data is entered
     return !_isCartCheckoutDisabled || !_hasOnlyQuoteRequiredProducts;
+  }
+
+  bool get hasQuoteRequiredProducts {
+    return cart?.cartLines != null &&
+        (cart?.cartLines ?? []).any((x) => x.quoteRequired ?? false);
   }
 
   bool get checkoutButtonVisible {
