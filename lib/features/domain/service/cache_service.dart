@@ -40,25 +40,25 @@ class CacheService implements ICacheService {
   @override
   Future<void> insertObject<T>(String key, T value,
       {DateTime? absoluteExpiration}) async {
-    sharedPreferences.setString(key, jsonEncode(value));
+    await sharedPreferences.setString(key, jsonEncode(value));
     return Future.value();
   }
 
   @override
   Future<void> invalidate(String key) async {
-    sharedPreferences.remove(key);
+    await sharedPreferences.remove(key);
     return Future.value();
   }
 
   @override
   Future<void> invalidateAllObjects<T>() async {
-    sharedPreferences.clear();
+    await sharedPreferences.clear();
     return Future.value();
   }
 
   @override
   Future<void> invalidateObject<T>(String key) async {
-    sharedPreferences.remove(key);
+    await sharedPreferences.remove(key);
     return Future.value();
   }
 
@@ -67,7 +67,18 @@ class CacheService implements ICacheService {
     final keys =
         sharedPreferences.getKeys().where((key) => key.startsWith(keyPrefix));
     for (var key in keys) {
-      sharedPreferences.remove(key);
+      await sharedPreferences.remove(key);
+    }
+    return Future.value();
+  }
+
+  @override
+  Future<void> invalidateAllObjectsExcept(List<String> keysToKeep) async {
+    final allKeys = sharedPreferences.getKeys();
+    for (var key in allKeys) {
+      if (!keysToKeep.contains(key)) {
+        await sharedPreferences.remove(key);
+      }
     }
     return Future.value();
   }
@@ -108,19 +119,19 @@ class CacheService implements ICacheService {
 
   @override
   Future<bool> persistBytesData(String key, Uint8List value) async {
-    sharedPreferences.setString(key, base64Encode(value));
+    await sharedPreferences.setString(key, base64Encode(value));
     return Future.value(true);
   }
 
   @override
   Future<bool> persistData<T>(String key, T value) async {
-    sharedPreferences.setString(key, jsonEncode(value));
+    await sharedPreferences.setString(key, jsonEncode(value));
     return Future.value(true);
   }
 
   @override
   Future<void> removePersistedData(String key) async {
-    sharedPreferences.remove(key);
+    await sharedPreferences.remove(key);
     return Future.value();
   }
 

@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/url_string_extension.dart';
 import 'package:commerce_flutter_app/features/domain/enums/domain_change_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
@@ -5,8 +6,6 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class DomainUsecase extends BaseUseCase {
   DomainUsecase() : super();
-
-  static const _domainKey = 'DomainKey';
 
   Future<String?> getDomainInSettingsScreen() async {
     bool isStaticDomain = coreServiceProvider
@@ -21,7 +20,7 @@ class DomainUsecase extends BaseUseCase {
   Future<String?> getDomain() async {
     var domain = await commerceAPIServiceProvider
         .getLocalStorageService()
-        .load(_domainKey);
+        .load(CoreConstants.domainKey);
 
     if (coreServiceProvider
             .getAppConfigurationService()
@@ -75,8 +74,9 @@ class DomainUsecase extends BaseUseCase {
       return domainSelectionStatus;
     }
     if (commerceAPIServiceProvider.getClientService().host != null) {
-      commerceAPIServiceProvider.getLocalStorageService().save(
-          _domainKey, commerceAPIServiceProvider.getClientService().host!);
+      await commerceAPIServiceProvider.getLocalStorageService().save(
+          CoreConstants.domainKey,
+          commerceAPIServiceProvider.getClientService().host!);
     }
     return DomainChangeStatus.success;
   }
@@ -140,6 +140,8 @@ class DomainUsecase extends BaseUseCase {
   }
 
   Future<void> clearCache() async {
-    await commerceAPIServiceProvider.getCacheService().clearAllCaches();
+    await commerceAPIServiceProvider
+        .getCacheService()
+        .invalidateAllObjectsExcept([CoreConstants.domainKey]);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
@@ -161,6 +162,9 @@ class LoginUsecase extends BiometricUsecase {
   }
 
   Future<void> loginCancel() async {
+    await commerceAPIServiceProvider
+        .getCacheService()
+        .invalidateAllObjectsExcept([CoreConstants.domainKey]);
     await commerceAPIServiceProvider.getAuthenticationService().logoutAsync();
   }
 }
