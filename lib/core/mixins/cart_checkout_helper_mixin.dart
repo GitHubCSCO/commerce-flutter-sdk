@@ -44,7 +44,7 @@ mixin CartCheckoutHelperMixin {
           SiteMessageConstants
               .nameReviewAndPayNotEnoughInventoryInLocalWarehouse,
           SiteMessageConstants
-              .nameReviewAndPayNotEnoughInventoryInLocalWarehouse);
+              .defaultReviewAndPayNotEnoughInventoryInLocalWarehouse);
       errorMessageBuilder.write(msg);
     }
 
