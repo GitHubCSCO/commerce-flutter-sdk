@@ -147,7 +147,7 @@ class CartPage extends StatelessWidget {
                   return Column(
                     children: [
                       if (state.cartWarningMsg.isNotEmpty)
-                        _buildCartErrorWidget(
+                        BuildCartErrorWidget(
                             cartErrorMsg: state.cartWarningMsg),
                       Expanded(
                         child: ListView(
@@ -480,9 +480,9 @@ class CartPage extends StatelessWidget {
   }
 }
 
-class _buildCartErrorWidget extends StatelessWidget {
+class BuildCartErrorWidget extends StatelessWidget {
   final String cartErrorMsg;
-  const _buildCartErrorWidget({
+  const BuildCartErrorWidget({
     required this.cartErrorMsg,
     super.key,
   });

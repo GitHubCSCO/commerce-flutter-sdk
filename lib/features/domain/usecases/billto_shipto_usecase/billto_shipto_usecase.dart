@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/enums/fullfillment_method_type.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
@@ -54,7 +55,9 @@ class BillToShipToUseCase extends BaseUseCase {
     //TODO we need to make it better:
     //TODO follow webflow
     if (result is Success) {
-      commerceAPIServiceProvider.getCacheService().clearAllCaches();
+      await commerceAPIServiceProvider
+          .getCacheService()
+          .invalidateAllObjectsExcept([CoreConstants.domainKey]);
       Session patchedSession = (result as Success).value as Session;
       return patchedSession;
     } else {

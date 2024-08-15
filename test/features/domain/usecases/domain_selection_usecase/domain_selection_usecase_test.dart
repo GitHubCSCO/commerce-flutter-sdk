@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/features/domain/enums/domain_change_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
 import 'package:get_it/get_it.dart';
@@ -41,9 +42,8 @@ void main() async {
 
         when(() => sut.commerceAPIServiceProvider.getClientService().host)
             .thenReturn(null);
-        when(() => sut.commerceAPIServiceProvider
-            .getLocalStorageService()
-            .save("DomainKey", extractedDomain)).thenAnswer((_) async {});
+        when(() => sut.commerceAPIServiceProvider.getLocalStorageService().save(
+            CoreConstants.domainKey, extractedDomain)).thenAnswer((_) async {});
 
         final result = await sut.domainSelectHandler(domain);
 
@@ -137,7 +137,7 @@ void main() async {
             .thenReturn(null);
         when(() => sut.commerceAPIServiceProvider
             .getLocalStorageService()
-            .save("DomainKey", domain)).thenAnswer((_) async {});
+            .save(CoreConstants.domainKey, domain)).thenAnswer((_) async {});
 
         final result = await sut.domainSelectHandler(domain);
 

@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/core/mixins/cart_checkout_helper_mixin.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
@@ -14,7 +15,8 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 part 'cart_page_event.dart';
 part 'cart_page_state.dart';
 
-class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
+class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
+    with CartCheckoutHelperMixin {
   final CartUseCase _cartUseCase;
   final PricingInventoryUseCase _pricingInventoryUseCase;
   Cart? cart;
@@ -70,7 +72,8 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
               await _cartUseCase.isCustomerOrderApproval();
           var shippingMethod = _cartUseCase.getShippingMethod();
           var promotionsResult = await _cartUseCase.loadCartPromotions();
-          var cartWarningMsg = await _getCartWarningMessage(shippingMethod);
+          var cartWarningMsg =
+              await getCartWarningMessage(cart, shippingMethod, _cartUseCase);
           PromotionCollectionModel? promotionCollection =
               promotionsResult is Success
                   ? (promotionsResult as Success).value

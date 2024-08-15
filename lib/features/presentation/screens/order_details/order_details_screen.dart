@@ -179,15 +179,6 @@ class OrderDetailsPage extends StatelessWidget {
                           otherChargesTitle: context
                               .watch<OrderDetailsCubit>()
                               .otherChargesTitle,
-                          promotions: state.order.orderPromotions
-                                  ?.map(
-                                    (e) => PromotionItem(
-                                      promotionLabel: e.name ?? '',
-                                      promotionValue: e.amountDisplay ?? '',
-                                    ),
-                                  )
-                                  .toList() ??
-                              [],
                           shippingHandling: context
                               .watch<OrderDetailsCubit>()
                               .shippingHandlingValue,

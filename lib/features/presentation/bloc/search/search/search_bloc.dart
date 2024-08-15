@@ -1,5 +1,4 @@
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
 import 'package:flutter/material.dart';
@@ -12,17 +11,13 @@ part 'search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final SearchUseCase _searchUseCase;
-  final SearchHistoryUseCase _searchHistoryUseCase;
 
   String searchQuery = "";
   BarcodeFormat? barcodeFormat;
   bool isSearchProductActive = false;
 
-  SearchBloc(
-      {required SearchUseCase searchUseCase,
-      required SearchHistoryUseCase searchHistoryUseCase})
+  SearchBloc({required SearchUseCase searchUseCase})
       : _searchUseCase = searchUseCase,
-        _searchHistoryUseCase = searchHistoryUseCase,
         super(SearchCmsInitialState()) {
     on<SearchAutoCompleteLoadEvent>(_onSearchAutoCompleteLoadEvent);
     on<SearchFocusEvent>(_onSearchFocusEvent);
