@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_content_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
@@ -26,7 +27,13 @@ class CartContentBloc extends Bloc<CartContentEvent, CartContentState> {
 
     switch (result) {
       case Success(value: final data):
-        emit(CartContentQuantityChangedSuccessState());
+        String? message;
+        if (data?.isQtyAdjusted == true) {
+          message = await _contentUseCase.getSiteMessage(
+              SiteMessageConstants.nameAddToCartQuantityAdjusted,
+              SiteMessageConstants.defaultValueAddToCartQuantityAdjusted);
+        }
+        emit(CartContentQuantityChangedSuccessState(message));
         break;
       case Failure(errorResponse: final errorResponse):
         emit(CartContentQuantityChangedFailureState(

@@ -14,6 +14,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/search_product
 import 'package:commerce_flutter_app/features/presentation/widget/search_product/search_product_list_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class SearchProductsWidget extends StatefulWidget {
   final Function(int) onPageChanged; // Callback to handle page changes
@@ -161,41 +162,44 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                     ),
                     Expanded(
                       child: (widget.isGridView == true)
-                          ? GridView.builder(
-                              controller: _scrollController,
-                              itemCount: state.searchProductStatus ==
-                                      SearchProductStatus.moreLoading
-                                  ? (state.productEntities?.length ?? 0) + 1
-                                  : state.productEntities?.length ?? 0,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                      childAspectRatio: 0.58,
-                                      crossAxisCount: 2),
-                              itemBuilder: (context, index) {
-                                if (index >=
-                                        (state.productEntities?.length ?? 0) &&
-                                    state.searchProductStatus ==
-                                        SearchProductStatus.moreLoading) {
-                                  return const Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Center(
-                                        child: CircularProgressIndicator()),
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4),
+                              child: AlignedGridView.count(
+                                controller: _scrollController,
+                                itemCount: state.searchProductStatus ==
+                                        SearchProductStatus.moreLoading
+                                    ? (state.productEntities?.length ?? 0) + 1
+                                    : state.productEntities?.length ?? 0,
+                                itemBuilder: (context, index) {
+                                  if (index >=
+                                          (state.productEntities?.length ??
+                                              0) &&
+                                      state.searchProductStatus ==
+                                          SearchProductStatus.moreLoading) {
+                                    return const Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Center(
+                                          child: CircularProgressIndicator()),
+                                    );
+                                  }
+
+                                  final product = state.productEntities![index];
+
+                                  return SearchProductGridItemWidget(
+                                    product: product,
+                                    productSettings: state.productSettings,
+                                    pricingEnable: state.productPricingEnabled,
+                                    hidePricingEnable: state.hidePricingEnabled,
+                                    hideInventoryEnable:
+                                        state.hideInventoryEnabled,
+                                    canAddToCartInProductList:
+                                        state.canAddToCartInProductList,
                                   );
-                                }
-
-                                final product = state.productEntities![index];
-
-                                return SearchProductGridItemWidget(
-                                  product: product,
-                                  productSettings: state.productSettings,
-                                  pricingEnable: state.productPricingEnabled,
-                                  hidePricingEnable: state.hidePricingEnabled,
-                                  hideInventoryEnable:
-                                      state.hideInventoryEnabled,
-                                  canAddToCartInProductList:
-                                      state.canAddToCartInProductList,
-                                );
-                              },
+                                },
+                                shrinkWrap: true,
+                                crossAxisCount: 2,
+                              ),
                             )
                           : ListView.separated(
                               controller: _scrollController,

@@ -16,6 +16,7 @@ import 'package:commerce_flutter_app/features/presentation/components/snackbar_c
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line_list.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/base_checkout.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
@@ -124,6 +125,9 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                           child: SingleChildScrollView(
                             child: Column(
                               children: [
+                                if (state.cartWarningMsg.isNotEmpty)
+                                  BuildCartErrorWidget(
+                                      cartErrorMsg: state.cartWarningMsg),
                                 buildSummary(state.cart, state.promotions),
                                 BillingShippingWidget(
                                   billingShippingEntity: billingShippingEntity,
@@ -217,7 +221,7 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                               fit: BoxFit.fitWidth,
                             ),
                           ),
-                          const Text('There are no items in your cart'),
+                          Text(state.message ?? ''),
                           Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 32, vertical: 16),

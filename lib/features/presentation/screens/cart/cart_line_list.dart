@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dar
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_state.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_header_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_widget.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +31,15 @@ class CartLineWidgetList extends StatelessWidget {
       return current is CartContentDefaultState;
     }, listener: (context, state) {
       if (state is CartContentClearAllSuccessState ||
-          state is CartContentItemRemovedSuccessState ||
-          state is CartContentQuantityChangedSuccessState) {
+          state is CartContentItemRemovedSuccessState) {
+        onCartChangeCallBack.call(context);
+      } else if (state is CartContentQuantityChangedSuccessState) {
+        if (state.message != null) {
+          CustomSnackBar.showSnackBarMessage(
+            context,
+            state.message ?? '',
+          );
+        }
         onCartChangeCallBack.call(context);
       }
     }, builder: (context, state) {
