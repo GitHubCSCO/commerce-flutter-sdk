@@ -40,3 +40,13 @@ class CartPageFailureState extends CartPageState {
 
   CartPageFailureState({required this.error});
 }
+
+class CartPageCheckoutButtonLoadingState extends CartPageState {}
+
+class CartPageWarningDialogShowState extends CartPageState {
+  final String warningMsg;
+
+  CartPageWarningDialogShowState(this.warningMsg);
+}
+
+class CartProceedToCheckoutState extends CartPageState {}
