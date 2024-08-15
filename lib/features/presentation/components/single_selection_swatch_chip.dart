@@ -12,6 +12,7 @@ class SingleSelectionSwatchChip<T> extends StatefulWidget {
     required this.onSelectionChanged,
     this.chipTitle,
     required this.maxItemsToShow,
+    this.isSelectionEnabled = true,
     this.orientation = ChipOrientation.horizontal,
     this.shouldIgnoreTitleAndLabelName = false,
   });
@@ -22,6 +23,7 @@ class SingleSelectionSwatchChip<T> extends StatefulWidget {
   final String? chipTitle;
   final int maxItemsToShow;
   final ChipOrientation orientation;
+  bool? isSelectionEnabled;
   bool? shouldIgnoreTitleAndLabelName;
   @override
   _SingleSelectionSwatchChipState<T> createState() =>
@@ -146,8 +148,10 @@ class _SingleSelectionSwatchChipState<T>
                 onTap: isAvailable
                     ? () {
                         setState(() {
-                          selectedValue = value;
-                          widget.onSelectionChanged(selectedValue);
+                          if (widget.isSelectionEnabled!) {
+                            selectedValue = value;
+                            widget.onSelectionChanged(selectedValue);
+                          }
                         });
                       }
                     : null, // If not available, onTap is null (disabling onTap)

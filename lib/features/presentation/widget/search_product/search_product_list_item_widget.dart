@@ -259,15 +259,20 @@ class SearchProductListItemWidget extends StatelessWidget {
                                 .toList() ??
                             [],
                         shouldIgnoreTitleAndLabelName: true,
-                        maxItemsToShow:
-                            styleTrait?.numberOfSwatchesVisible ?? 0,
+                        maxItemsToShow: 4,
                         orientation: ChipOrientation.horizontal,
                         selectedValue: context
                                 .read<StyleTraitCubit>()
                                 .selectedStyleValues?[
                             styleTrait?.selectedStyleValue?.styleValue
                                 ?.styleTraitValueId],
-                        onSelectionChanged: (StyleValueEntity? selection) {})
+                        isSelectionEnabled: false,
+                        onSelectionChanged: (StyleValueEntity? selection) {}),
+                    if ((styleTrait?.styleValues?.length ?? 0) > 4)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Text("View more", style: OptiTextStyles.link),
+                      )
                   ]));
         }
         return Container();
