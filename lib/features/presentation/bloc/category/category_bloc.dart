@@ -11,7 +11,23 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   CategoryBloc({required CategoryUseCase categoryUseCase})
       : _categoryUseCase = categoryUseCase,
         super(CategoryInitial()) {
+    on<TopCategoryLoadEvent>(
+        (event, emit) => _onTopCategoryLoadEvent(event, emit));
     on<CategoryLoadEvent>((event, emit) => _onCategoryLoadEvent(event, emit));
+  }
+
+  Future<void> _onTopCategoryLoadEvent(
+      TopCategoryLoadEvent event, Emitter<CategoryState> emit) async {
+    emit(CategoryLoading());
+
+    final response = await _categoryUseCase.getTopCategories();
+
+    switch (response) {
+      case Success(value: final data):
+        emit(CategoryLoaded(list: data ?? []));
+      case Failure(errorResponse: final error):
+        emit(CategoryFailed(error: error.message ?? ''));
+    }
   }
 
   Future<void> _onCategoryLoadEvent(
