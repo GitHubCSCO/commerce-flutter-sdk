@@ -149,6 +149,7 @@ class QuotePricingPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           TertiaryBlackButton(
+            isEnabled: context.watch<QuotePricingBloc>().isAddPriceBreakEnabled,
             text: LocalizationConstants.addPriceBreak.localized(),
             onPressed: () {
               context.read<QuotePricingBloc>().add(AddQuotePriceBreakEvent());
@@ -283,24 +284,30 @@ class PriceBreakwidget extends StatelessWidget {
                 },
               ),
             ),
-            InkWell(
-              onTap: () {
-                context
-                    .read<QuotePricingBloc>()
-                    .add(QuotePiricngBreakDeletionEvent(id: index));
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: SvgPicture.asset(
-                    AssetConstants.cartItemRemoveIcon,
-                    fit: BoxFit.fitWidth,
+            if (index != 0)
+              InkWell(
+                onTap: () {
+                  context
+                      .read<QuotePricingBloc>()
+                      .add(QuotePiricngBreakDeletionEvent(id: index));
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: SvgPicture.asset(
+                      AssetConstants.cartItemRemoveIcon,
+                      fit: BoxFit.fitWidth,
+                    ),
                   ),
                 ),
+              )
+            else
+              const Padding(
+                padding: EdgeInsets.all(15.0),
+                child: SizedBox(width: 30),
               ),
-            )
           ],
         ),
       ),
