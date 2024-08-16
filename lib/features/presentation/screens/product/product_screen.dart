@@ -41,13 +41,13 @@ class ProductPageEntity {
 
   ProductPageEntity(this.query, this.parentType,
       {this.pageTitle,
-      this.category,
-      this.categoryId,
-      this.categoryTitle,
-      this.brandEntity,
-      this.brandEntityId,
-      this.brandEntityTitle,
-      this.brandProductLine});
+        this.category,
+        this.categoryId,
+        this.categoryTitle,
+        this.brandEntity,
+        this.brandEntityId,
+        this.brandEntityTitle,
+        this.brandProductLine});
 
   ProductPageEntity copyWith({
     String? query,
@@ -81,7 +81,7 @@ class ProductScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<ProductBloc>(
       create: (context) =>
-          sl<ProductBloc>()..add(ProductLoadEvent(entity: pageEntity)),
+      sl<ProductBloc>()..add(ProductLoadEvent(entity: pageEntity)),
       child: ProductPage(pageEntity: pageEntity),
     );
   }
@@ -141,32 +141,31 @@ class _ProductPageState extends State<ProductPage> {
               controller: textEditingController,
             ),
           ),
-          MultiBlocProvider(
-            providers: [
-              BlocProvider<AddToCartCubit>(
-                create: (context) => sl<AddToCartCubit>(),
-              ),
-              BlocProvider(
-                create: (context) => sl<SearchProductsCubit>()
-                  ..setProductFilter(widget.pageEntity),
-              ),
-            ],
-            child: Expanded(
-              child: BlocBuilder<ProductBloc, ProductState>(
-                  builder: (context, state) {
+          Expanded(
+            child: BlocBuilder<ProductBloc, ProductState>(
+              builder: (context, state) {
                 switch (state) {
                   case ProductInitial():
                   case ProductLoading():
                     return const Center(child: CircularProgressIndicator());
                   case ProductLoaded():
                     final productCollectionResult = state.result;
-                    context
-                        .read<SearchProductsCubit>()
-                        .loadInitialSearchProducts(productCollectionResult);
-                    return SearchProductsWidget(
-                      onPageChanged: (page) {},
-                      productListType: _getProductListType(widget.pageEntity),
-                      isGridView: isGridView,
+                    return MultiBlocProvider(
+                      providers: [
+                        BlocProvider<AddToCartCubit>(
+                          create: (context) => sl<AddToCartCubit>(),
+                        ),
+                        BlocProvider(
+                          create: (context) => sl<SearchProductsCubit>()
+                            ..setProductFilter(widget.pageEntity)
+                            ..loadInitialSearchProducts(productCollectionResult),
+                        ),
+                      ],
+                      child: SearchProductsWidget(
+                        onPageChanged: (page) {},
+                        productListType: _getProductListType(widget.pageEntity),
+                        isGridView: isGridView,
+                      ),
                     );
                   case ProductFailed():
                   default:
@@ -175,7 +174,7 @@ class _ProductPageState extends State<ProductPage> {
                             LocalizationConstants.searchNoResults.localized(),
                             style: OptiTextStyles.body));
                 }
-              }),
+              },
             ),
           ),
         ],
