@@ -141,8 +141,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         }
       }
 
-      if (state is SearchCmsInitialState ||
-          state is SearchAutoCompleteLoadedState) {
+      if (state is SearchCmsInitialState) {
         return;
       }
 
