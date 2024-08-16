@@ -191,17 +191,32 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
   }
 
   String _wareHouseAddress() {
-    String address = shippingEntity.warehouse!.address2 == null ||
-            shippingEntity.warehouse!.address2!.isEmpty
-        ? shippingEntity.warehouse!.address1!
-        : '${shippingEntity.warehouse!.address1}, ${shippingEntity.warehouse!.address2}';
-    return address;
+    final warehouse = shippingEntity.warehouse;
+    if (warehouse == null) {
+      return '';
+    }
+
+    final address1 = warehouse.address1 ?? '';
+    final address2 = warehouse.address2;
+
+    if (address2 == null || address2.isEmpty) {
+      return address1;
+    } else {
+      return '$address1, $address2';
+    }
   }
 
   String _wareHouseCity() {
-    String city =
-        '${shippingEntity.warehouse!.city}, ${shippingEntity.warehouse!.state} ${shippingEntity.warehouse!.postalCode}';
-    return city;
+    final warehouse = shippingEntity.warehouse;
+    if (warehouse == null) {
+      return '';
+    }
+
+    final city = warehouse.city ?? '';
+    final state = warehouse.state ?? '';
+    final postalCode = warehouse.postalCode ?? '';
+
+    return '$city, $state $postalCode'.trim().replaceAll(RegExp(r'\s+'), ' ');
   }
 
   void _onHoursClick(BuildContext context) {

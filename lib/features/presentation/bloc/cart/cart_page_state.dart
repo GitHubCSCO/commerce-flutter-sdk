@@ -9,7 +9,7 @@ class CartPageLoadingState extends CartPageState {}
 class CartPageLoadedState extends CartPageState {
   final Cart cart;
   final CartSettings cartSettings;
-  final Warehouse warehouse;
+  final Warehouse? warehouse;
   final PromotionCollectionModel promotions;
   final bool isCustomerOrderApproval;
   final String shippingMethod;

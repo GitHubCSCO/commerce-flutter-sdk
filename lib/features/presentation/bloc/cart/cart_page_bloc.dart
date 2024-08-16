@@ -88,7 +88,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
 
               emit(CartPageLoadedState(
                 cart: data!,
-                warehouse: wareHouse!,
+                warehouse: wareHouse,
                 promotions: promotionCollection!,
                 isCustomerOrderApproval: isCustomerOrderApproval,
                 cartSettings: setting!,
