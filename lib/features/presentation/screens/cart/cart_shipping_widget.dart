@@ -74,7 +74,8 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                         visible: shippingEntity.hasWillCall,
                         child: Expanded(
                           child: RadioListTile<ShippingOption>(
-                            title: Text(LocalizationConstants.pickUp.localized()),
+                            title:
+                                Text(LocalizationConstants.pickUp.localized()),
                             value: ShippingOption.pickUp,
                             groupValue: shippingOption,
                             onChanged: (value) {
@@ -97,7 +98,7 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                                   onCallBack?.call(context, wareHouse);
                                 },
                                 locationSearchType:
-                                LocationSearchType.pickUpLocation));
+                                    LocationSearchType.pickUpLocation));
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(

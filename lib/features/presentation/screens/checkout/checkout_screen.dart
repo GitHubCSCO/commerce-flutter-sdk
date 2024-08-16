@@ -308,10 +308,11 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                       .selectedService;
 
                                   if ((state.shippingMethod.equalsIgnoreCase(
-                                          ShippingOption.ship.name) &&
-                                      carrier != null &&
-                                      service != null) || state.shippingMethod.equalsIgnoreCase(
-                                      ShippingOption.pickUp.name)) {
+                                              ShippingOption.ship.name) &&
+                                          carrier != null &&
+                                          service != null) ||
+                                      state.shippingMethod.equalsIgnoreCase(
+                                          ShippingOption.pickUp.name)) {
                                     context
                                         .read<ExpansionPanelCubit>()
                                         .onContinueClick();
