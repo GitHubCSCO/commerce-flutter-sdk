@@ -30,6 +30,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
         super(CartPageInitialState()) {
     on<CartPageLoadEvent>(_onCurrentCartLoadEvent);
     on<CartPagePickUpLocationChangeEvent>(_onCartPagePickUpLocationChangeEvent);
+    on<CartPageCheckoutEvent>(_onCartCheckoutSubmitEvent);
   }
 
   Future<void> _onCurrentCartLoadEvent(
@@ -120,6 +121,20 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
     add(CartPageLoadEvent());
   }
 
+  Future<void> _onCartCheckoutSubmitEvent(
+      CartPageCheckoutEvent event, Emitter<CartPageState> emit) async {
+    emit(CartPageCheckoutButtonLoadingState());
+    if (_hasQuoteRequiredProducts) {
+      var warningMsg = await _cartUseCase.getSiteMessage(
+          SiteMessageConstants.orderApprovalRequiresQuoteMessage,
+          SiteMessageConstants.defaultOrderApprovalRequiresQuoteMessage);
+
+      emit(CartPageWarningDialogShowState(warningMsg));
+    } else {
+      emit(CartProceedToCheckoutState());
+    }
+  }
+
   List<CartLineEntity> getCartLines() {
     List<CartLineEntity> cartlines = [];
     for (var cartLine in cart?.cartLines ?? []) {
@@ -160,6 +175,11 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
   bool get _hasOnlyQuoteRequiredProducts =>
       (cart?.cartLines != null || cart!.cartLines!.isNotEmpty) &&
       cart!.cartLines!.every((x) => x.quoteRequired == true);
+
+  bool get _hasQuoteRequiredProducts {
+    return cart?.cartLines != null &&
+        cart!.cartLines!.any((line) => line.quoteRequired == true);
+  }
 
   bool get _isCartCheckoutDisabled =>
       cart != null &&
