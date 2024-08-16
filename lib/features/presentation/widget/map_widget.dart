@@ -63,7 +63,7 @@ class _MapWidgetState extends State<MapWidget> {
   Widget build(BuildContext context) {
     return BlocListener<GMapCubit, GMapState>(
       listener: (context, state) async {
-        if (state is GMapMarkesUpdated) {
+        if (state is GMapMarkersUpdated) {
           final GoogleMapController controller = await _controller.future;
           final firstMarker = state.focusMarker;
           final CameraPosition newPosition = CameraPosition(
@@ -92,7 +92,7 @@ class _MapWidgetState extends State<MapWidget> {
               onMapCreated: (GoogleMapController controller) async {
                 _controller.complete(controller);
                 controller.setMapStyle('[]');
-                if (state is GMapMarkesUpdated) {
+                if (state is GMapMarkersUpdated) {
                   final firstMarker = state.focusMarker;
                   final CameraPosition newPosition = CameraPosition(
                     target: firstMarker.position,
@@ -106,7 +106,7 @@ class _MapWidgetState extends State<MapWidget> {
                   }
                 }
               },
-              markers: (state is GMapMarkesUpdated) ? state.markers : {},
+              markers: (state is GMapMarkersUpdated) ? state.markers : {},
               onCameraMove: (CameraPosition position) {
                 // debugPrint(
                 //   'Camera position: ${position.target.latitude}, ${position.target.longitude}',
