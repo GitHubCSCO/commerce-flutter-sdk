@@ -146,7 +146,7 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
 
   Future<void> _onAddPriceBreakEvent(
       AddQuotePriceBreakEvent event, Emitter<QuotePricingState> emit) async {
-    if (quoteLinePricingBreakItemEntities.length > 5) {
+    if (quoteLinePricingBreakItemEntities.length >= 5) {
       return;
     }
     var errorMessage =
@@ -361,5 +361,13 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
       priceDisplay = '';
     }
     return priceDisplay;
+  }
+
+  bool get isAddPriceBreakEnabled {
+    if (quoteLinePricingBreakItemEntities.length >= 5) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }
