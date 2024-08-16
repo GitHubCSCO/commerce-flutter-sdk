@@ -151,7 +151,6 @@ class QuotePricingPage extends StatelessWidget {
           TertiaryBlackButton(
             isEnabled: context.watch<QuotePricingBloc>().isAddPriceBreakEnabled,
             text: LocalizationConstants.addPriceBreak.localized(),
-            
             onPressed: () {
               context.read<QuotePricingBloc>().add(AddQuotePriceBreakEvent());
             },
