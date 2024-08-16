@@ -41,13 +41,13 @@ class ProductPageEntity {
 
   ProductPageEntity(this.query, this.parentType,
       {this.pageTitle,
-        this.category,
-        this.categoryId,
-        this.categoryTitle,
-        this.brandEntity,
-        this.brandEntityId,
-        this.brandEntityTitle,
-        this.brandProductLine});
+      this.category,
+      this.categoryId,
+      this.categoryTitle,
+      this.brandEntity,
+      this.brandEntityId,
+      this.brandEntityTitle,
+      this.brandProductLine});
 
   ProductPageEntity copyWith({
     String? query,
@@ -81,7 +81,7 @@ class ProductScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<ProductBloc>(
       create: (context) =>
-      sl<ProductBloc>()..add(ProductLoadEvent(entity: pageEntity)),
+          sl<ProductBloc>()..add(ProductLoadEvent(entity: pageEntity)),
       child: ProductPage(pageEntity: pageEntity),
     );
   }
@@ -158,7 +158,8 @@ class _ProductPageState extends State<ProductPage> {
                         BlocProvider(
                           create: (context) => sl<SearchProductsCubit>()
                             ..setProductFilter(widget.pageEntity)
-                            ..loadInitialSearchProducts(productCollectionResult),
+                            ..loadInitialSearchProducts(
+                                productCollectionResult),
                         ),
                       ],
                       child: SearchProductsWidget(
