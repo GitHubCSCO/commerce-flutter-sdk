@@ -21,7 +21,7 @@ class GMapCubit extends Cubit<GMapState> {
     }
     this.markers = markers;
     if (markers.isNotEmpty) {
-      emit(GMapMarkesUpdated(markers: markers, focusMarker: markers.first));
+      emit(GMapMarkersUpdated(markers: markers, focusMarker: markers.first));
     }
   }
 
@@ -34,7 +34,7 @@ class GMapCubit extends Cubit<GMapState> {
           markerId: MarkerId(dealer.name ?? "")));
     }
     this.markers = markers;
-    emit(GMapMarkesUpdated(markers: markers, focusMarker: markers.first));
+    emit(GMapMarkersUpdated(markers: markers, focusMarker: markers.first));
   }
 
   Future<void> updateMarkersFromPickUpLocation(
@@ -47,11 +47,15 @@ class GMapCubit extends Cubit<GMapState> {
           markerId: MarkerId(warehouse.name ?? "")));
     }
     this.markers = markers;
-    emit(GMapMarkesUpdated(markers: markers, focusMarker: markers.first));
+    if (this.markers.isNotEmpty) {
+      emit(GMapMarkersUpdated(markers: markers, focusMarker: markers.first));
+    } else {
+      emit(GMapNoMarkerFound());
+    }
   }
 
-  Future<void> onSeachPlaceMarked(GooglePlace? searchedLocation) async {
-    emit(GMapMarkesUpdated(
+  Future<void> onSearchPlaceMarked(GooglePlace? searchedLocation) async {
+    emit(GMapMarkersUpdated(
         markers: markers,
         focusMarker: Marker(
             markerId: MarkerId(searchedLocation?.formattedName ?? ""),

@@ -9,11 +9,16 @@ class GMapInitial extends GMapState {
   List<Object?> get props => throw UnimplementedError();
 }
 
-class GMapMarkesUpdated extends GMapState {
+class GMapMarkersUpdated extends GMapState {
   final Set<Marker> markers;
   final Marker focusMarker;
-  GMapMarkesUpdated({required this.focusMarker, required this.markers});
+  GMapMarkersUpdated({required this.focusMarker, required this.markers});
 
   @override
   List<Object?> get props => [focusMarker, markers];
+}
+
+class GMapNoMarkerFound extends GMapState {
+  @override
+  List<Object?> get props => [];
 }
