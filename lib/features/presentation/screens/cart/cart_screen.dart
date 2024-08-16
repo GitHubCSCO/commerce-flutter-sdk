@@ -400,7 +400,7 @@ class CartPage extends StatelessWidget {
       Cart? cart,
       CartSettings? settings,
       Warehouse? warehouse,
-      PromotionCollectionModel promotions,
+      PromotionCollectionModel? promotions,
       bool isCustomerOrderApproval,
       String shippingMethod,
       bool? hidePricingEnable,

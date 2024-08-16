@@ -7,10 +7,10 @@ class CartPageInitialState extends CartPageState {}
 class CartPageLoadingState extends CartPageState {}
 
 class CartPageLoadedState extends CartPageState {
-  final Cart cart;
-  final CartSettings cartSettings;
+  final Cart? cart;
+  final CartSettings? cartSettings;
   final Warehouse? warehouse;
-  final PromotionCollectionModel promotions;
+  final PromotionCollectionModel? promotions;
   final bool isCustomerOrderApproval;
   final String shippingMethod;
   String cartWarningMsg;

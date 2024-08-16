@@ -87,11 +87,11 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
                   _pricingInventoryUseCase.getHideInventoryEnable();
 
               emit(CartPageLoadedState(
-                cart: data!,
+                cart: data,
                 warehouse: wareHouse,
-                promotions: promotionCollection!,
+                promotions: promotionCollection,
                 isCustomerOrderApproval: isCustomerOrderApproval,
-                cartSettings: setting!,
+                cartSettings: setting,
                 shippingMethod: shippingMethod ?? '',
                 cartWarningMsg: cartWarningMsg,
                 hidePricingEnable: hidePricingEnable,
