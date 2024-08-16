@@ -113,7 +113,6 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
 
         if (billToAddress != null &&
             shipToAddress != null &&
-            wareHouse != null &&
             shippingMethod != null) {
           emit(
             CheckoutDataLoaded(
