@@ -107,39 +107,41 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  LocalizationConstants.pickUpLocation
-                                      .localized(),
-                                  textAlign: TextAlign.center,
-                                  style: OptiTextStyles.subtitle,
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  shippingEntity.warehouse?.description ?? '',
-                                  textAlign: TextAlign.center,
-                                  style: OptiTextStyles.subtitle,
-                                ),
-                                Text(
-                                  _wareHouseAddress(),
-                                  textAlign: TextAlign.center,
-                                  style: OptiTextStyles.body,
-                                ),
-                                Text(
-                                  _wareHouseCity(),
-                                  textAlign: TextAlign.center,
-                                  style: OptiTextStyles.body,
-                                ),
-                                Text(
-                                  shippingEntity.warehouse?.phone ?? '',
-                                  textAlign: TextAlign.center,
-                                  style: OptiTextStyles.body,
-                                ),
-                              ],
+                            Expanded(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    LocalizationConstants.pickUpLocation
+                                        .localized(),
+                                    textAlign: TextAlign.start,
+                                    style: OptiTextStyles.subtitle,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    shippingEntity.warehouse?.description ?? '',
+                                    textAlign: TextAlign.start,
+                                    style: OptiTextStyles.subtitle,
+                                  ),
+                                  Text(
+                                    _wareHouseAddress(),
+                                    textAlign: TextAlign.start,
+                                    style: OptiTextStyles.body,
+                                  ),
+                                  Text(
+                                    _wareHouseCity(),
+                                    textAlign: TextAlign.start,
+                                    style: OptiTextStyles.body,
+                                  ),
+                                  Text(
+                                    shippingEntity.warehouse?.phone ?? '',
+                                    textAlign: TextAlign.start,
+                                    style: OptiTextStyles.body,
+                                  ),
+                                ],
+                              ),
                             ),
                             const Icon(
                               Icons.arrow_forward_ios,
@@ -158,7 +160,7 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                           InkWell(
                             child: Text(
                               LocalizationConstants.hours.localized(),
-                              textAlign: TextAlign.center,
+                              textAlign: TextAlign.start,
                               style: OptiTextStyles.link,
                             ),
                             onTap: () {
@@ -169,7 +171,7 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                           InkWell(
                             child: Text(
                               LocalizationConstants.directions.localized(),
-                              textAlign: TextAlign.center,
+                              textAlign: TextAlign.start,
                               style: OptiTextStyles.link,
                             ),
                             onTap: () {
