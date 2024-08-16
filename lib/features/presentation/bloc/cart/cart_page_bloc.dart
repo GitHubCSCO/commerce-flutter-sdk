@@ -67,10 +67,10 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
             return;
           }
           final hasWillCall = await _cartUseCase.hasWillCall();
-          var wareHouse = _cartUseCase.getPickUpWareHouse();
+          var wareHouse = session?.pickUpWarehouse;
           var isCustomerOrderApproval =
               await _cartUseCase.isCustomerOrderApproval();
-          var shippingMethod = _cartUseCase.getShippingMethod();
+          var shippingMethod = session?.fulfillmentMethod;
           var promotionsResult = await _cartUseCase.loadCartPromotions();
           var cartWarningMsg =
               await getCartWarningMessage(cart, shippingMethod, _cartUseCase);

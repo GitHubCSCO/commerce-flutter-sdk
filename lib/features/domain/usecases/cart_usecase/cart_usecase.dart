@@ -35,20 +35,6 @@ class CartUseCase extends BaseUseCase {
         .patchSession(newSession!);
   }
 
-  Warehouse? getPickUpWareHouse() {
-    return commerceAPIServiceProvider
-        .getSessionService()
-        .getCachedCurrentSession()
-        ?.pickUpWarehouse;
-  }
-
-  String? getShippingMethod() {
-    return commerceAPIServiceProvider
-        .getSessionService()
-        .getCachedCurrentSession()
-        ?.fulfillmentMethod;
-  }
-
   Future<bool> isCustomerOrderApproval() async {
     return await commerceAPIServiceProvider
         .getClientService()
