@@ -1,3 +1,4 @@
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
@@ -26,7 +27,7 @@ class QuickOrderAutoCompleteBloc
     on<QuickOrderEndSearchEvent>(
         (event, emit) => _onEndSearchEvent(event, emit));
     on<QuickOrderFocusEvent>(_onSearchFocusEvent);
-    on<QuickOrderTypingEvent>(_onSearchTypingEvent);
+    on<QuickOrderTypingEvent>(_onSearchTypingEvent, transformer: restartable());
     on<QuickOrderUnFocusEvent>(_onSearchUnFocusEvent);
   }
 

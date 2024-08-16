@@ -120,6 +120,7 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                   },
                   onSubmitted: (String query) {
                     context.read<SearchHistoryCubit>().addSearchHistory(query);
+                    context.read<SearchBloc>().searchQuery = query;
                     context.read<SearchBloc>().add(SearchSearchEvent());
                   },
                   controller: textEditingController,
