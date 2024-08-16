@@ -70,4 +70,8 @@ class CartUseCase extends BaseUseCase {
         .getSessionService()
         .getCurrentSession();
   }
+
+  Future<bool> hasWillCall() async {
+    return await coreServiceProvider.getAppConfigurationService().hasWillCall();
+  }
 }

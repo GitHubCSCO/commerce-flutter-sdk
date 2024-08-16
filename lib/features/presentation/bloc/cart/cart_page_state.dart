@@ -13,6 +13,7 @@ class CartPageLoadedState extends CartPageState {
   final PromotionCollectionModel? promotions;
   final bool isCustomerOrderApproval;
   final String shippingMethod;
+  final bool hasWillCall;
   String cartWarningMsg;
   bool? hidePricingEnable;
   bool? hideInventoryEnable;
@@ -24,6 +25,7 @@ class CartPageLoadedState extends CartPageState {
       required this.isCustomerOrderApproval,
       required this.cartSettings,
       required this.shippingMethod,
+      required this.hasWillCall,
       this.cartWarningMsg = "",
       this.hidePricingEnable,
       this.hideInventoryEnable});

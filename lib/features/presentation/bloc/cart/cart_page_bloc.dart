@@ -66,6 +66,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
             emit(CartPageNoDataState(message));
             return;
           }
+          final hasWillCall = await _cartUseCase.hasWillCall();
           var wareHouse = _cartUseCase.getPickUpWareHouse();
           var isCustomerOrderApproval =
               await _cartUseCase.isCustomerOrderApproval();
@@ -93,6 +94,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
                 isCustomerOrderApproval: isCustomerOrderApproval,
                 cartSettings: setting,
                 shippingMethod: shippingMethod ?? '',
+                hasWillCall: hasWillCall,
                 cartWarningMsg: cartWarningMsg,
                 hidePricingEnable: hidePricingEnable,
                 hideInventoryEnable: hideInventoryEnable,

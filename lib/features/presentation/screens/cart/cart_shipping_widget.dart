@@ -70,16 +70,19 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                           },
                         ),
                       ),
-                      Expanded(
-                        child: RadioListTile<ShippingOption>(
-                          title: Text(LocalizationConstants.pickUp.localized()),
-                          value: ShippingOption.pickUp,
-                          groupValue: shippingOption,
-                          onChanged: (value) {
-                            context
-                                .read<CartShippingSelectionBloc>()
-                                .add(CartShippingOptionChangeEvent(value!));
-                          },
+                      Visibility(
+                        visible: shippingEntity.hasWillCall,
+                        child: Expanded(
+                          child: RadioListTile<ShippingOption>(
+                            title: Text(LocalizationConstants.pickUp.localized()),
+                            value: ShippingOption.pickUp,
+                            groupValue: shippingOption,
+                            onChanged: (value) {
+                              context
+                                  .read<CartShippingSelectionBloc>()
+                                  .add(CartShippingOptionChangeEvent(value!));
+                            },
+                          ),
                         ),
                       )
                     ],
