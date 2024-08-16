@@ -93,15 +93,41 @@ class QuotePricingPage extends StatelessWidget {
                     showViewBreakPricing: false,
                     showQuantityAndSubtotalField: false,
                     moreButtonWidget: Container(),
+                    hidePricingWidget: true,
                     onCartLineRemovedCallback: (cartLineEntity) {},
                     onCartQuantityChangedCallback: (quantity) {}),
                 _buildQuoteItemPirincgWidget(context, state.quoteLineEntity),
                 ...state.quoteLinePricingBreakItemEntities.map((item) {
-                  return PriceBreakwidget(
-                    index: item.id,
-                    startQtyDisplay: item.startQuantityDisplay!,
-                    endQtyDisplay: item.endQuantityDisplay!,
-                    priceDisplay: item.priceDisplay!,
+                  return Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                30.0, 20.0, 20.0, 20.0),
+                            child: Text(
+                              LocalizationConstants.quantity.localized(),
+                              style: OptiTextStyles.body,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                20.0, 20.0, 120.0, 20.0),
+                            child: Text(
+                              LocalizationConstants.price.localized(),
+                              style: OptiTextStyles.body,
+                            ),
+                          ),
+                        ],
+                      ),
+                      PriceBreakwidget(
+                        index: item.id,
+                        startQtyDisplay: item.startQuantityDisplay!,
+                        endQtyDisplay: item.endQuantityDisplay!,
+                        priceDisplay: item.priceDisplay!,
+                      ),
+                    ],
                   );
                 }),
                 const Spacer(),
@@ -143,7 +169,16 @@ class QuotePricingPage extends StatelessWidget {
   Widget _buildQuoteItemPirincgWidget(
       BuildContext context, QuoteLineEntity quoteLineEntity) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20.0, 30.0, 0.0, 10.0),
+          child: Text(
+            LocalizationConstants.itemPricing.localized(),
+            style: OptiTextStyles.body,
+          ),
+        ),
         PriceRowWidget(
             label: LocalizationConstants.unitCost.localized(),
             price: quoteLineEntity.pricingRfq?.unitCostDisplay ?? ''),
