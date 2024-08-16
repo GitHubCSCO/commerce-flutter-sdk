@@ -87,9 +87,8 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                       )
                     ],
                   ),
-                  Visibility(
-                    visible: shippingOption == ShippingOption.pickUp,
-                    child: InkWell(
+                  if (shippingOption == ShippingOption.pickUp) ...{
+                    InkWell(
                       onTap: () {
                         AppRoute.locationSearch.navigateBackStack(context,
                             extra: VMILocationSelectCallbackHelper(
@@ -98,7 +97,7 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                                   onCallBack?.call(context, wareHouse);
                                 },
                                 locationSearchType:
-                                    LocationSearchType.pickUpLocation));
+                                LocationSearchType.pickUpLocation));
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
@@ -151,10 +150,7 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                         ),
                       ),
                     ),
-                  ),
-                  Visibility(
-                    visible: shippingOption == ShippingOption.pickUp,
-                    child: Container(
+                    Container(
                       padding: const EdgeInsets.only(
                           top: 12, bottom: 24, left: 24, right: 24),
                       child: Row(
@@ -182,8 +178,8 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                           )
                         ],
                       ),
-                    ),
-                  )
+                    )
+                  }
                 ],
               ),
             );
