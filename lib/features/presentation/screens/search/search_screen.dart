@@ -138,10 +138,12 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                     String,
                     BarcodeFormat
                   );
-                  if (!result.$1.isNullOrEmpty) {
+                  if (!result.$1.isNullOrEmpty && context.mounted) {
                     context.read<SearchBloc>().searchQuery = result.$1;
                     context.read<SearchBloc>().barcodeFormat = result.$2;
                     context.read<SearchBloc>().add(SearchSearchEvent());
+
+                    textEditingController.text = result.$1;
                   }
                 },
               )
