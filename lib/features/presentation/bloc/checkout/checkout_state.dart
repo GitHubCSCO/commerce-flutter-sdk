@@ -10,7 +10,7 @@ class CheckoutDataLoaded extends CheckoutState {
   final Cart cart;
   final BillTo billToAddress;
   final ShipTo shipToAddress;
-  final Warehouse wareHouse;
+  final Warehouse? wareHouse;
   final PromotionCollectionModel? promotions;
   final String shippingMethod;
   final CartSettings? cartSettings;

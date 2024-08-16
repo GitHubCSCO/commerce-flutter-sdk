@@ -8,6 +8,7 @@ class TabSwitchWidget extends StatefulWidget {
   final Widget tabWidget0;
   final Widget tabWidget1;
   final int selectedIndex;
+  final bool? showDefaultOnly;
   final void Function(int)? onTabSelectionChange;
 
   const TabSwitchWidget(
@@ -17,7 +18,8 @@ class TabSwitchWidget extends StatefulWidget {
       required this.tabWidget0,
       required this.tabWidget1,
       this.selectedIndex = 0,
-      this.onTabSelectionChange});
+      this.onTabSelectionChange,
+      this.showDefaultOnly});
 
   @override
   State<TabSwitchWidget> createState() => _TabSwitchWidgetState();
@@ -37,47 +39,49 @@ class _TabSwitchWidgetState extends State<TabSwitchWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: OptiAppColors.backgroundGray,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildSelectableContainer(
-                    text: widget.tabTitle0,
-                    isSelected: selectedIndex == 0,
-                    onTap: () {
-                      if (selectedIndex != 0) {
-                        widget.onTabSelectionChange?.call(0);
-                        setState(() {
-                          selectedIndex = 0;
-                        });
-                      }
-                    },
-                  ),
-                  _buildSelectableContainer(
-                    text: widget.tabTitle1,
-                    isSelected: selectedIndex == 1,
-                    onTap: () {
-                      if (selectedIndex != 1) {
-                        widget.onTabSelectionChange?.call(1);
-                        setState(() {
-                          selectedIndex = 1;
-                        });
-                      }
-                    },
-                  ),
-                ],
+        if (widget.showDefaultOnly == false) ...{
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: OptiAppColors.backgroundGray,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildSelectableContainer(
+                      text: widget.tabTitle0,
+                      isSelected: selectedIndex == 0,
+                      onTap: () {
+                        if (selectedIndex != 0) {
+                          widget.onTabSelectionChange?.call(0);
+                          setState(() {
+                            selectedIndex = 0;
+                          });
+                        }
+                      },
+                    ),
+                    _buildSelectableContainer(
+                      text: widget.tabTitle1,
+                      isSelected: selectedIndex == 1,
+                      onTap: () {
+                        if (selectedIndex != 1) {
+                          widget.onTabSelectionChange?.call(1);
+                          setState(() {
+                            selectedIndex = 1;
+                          });
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
+        },
         const SizedBox(height: 8.0),
         selectedIndex == 0 ? widget.tabWidget0 : widget.tabWidget1
       ],
