@@ -56,6 +56,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         emit(SearchLoadingState());
         final result =
             await _searchUseCase.loadAutocompleteResults(searchQuery);
+
+        if (state is SearchCmsInitialState) {
+          return;
+        }
         switch (result) {
           case Success(value: final data):
             emit(SearchAutoCompleteLoadedState(result: data));
@@ -82,6 +86,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     } else {
       emit(SearchLoadingState());
       final result = await _searchUseCase.loadAutocompleteResults(searchQuery);
+
+      if (state is SearchCmsInitialState) {
+        return;
+      }
+
       switch (result) {
         case Success(value: final data):
           emit(SearchAutoCompleteLoadedState(result: data));
@@ -132,6 +141,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         }
       }
 
+      if (state is SearchCmsInitialState ||
+          state is SearchAutoCompleteLoadedState) {
+        return;
+      }
+
       switch (result) {
         case Success(value: final data):
           emit(SearchProductsLoadedState(result: data));
@@ -180,6 +194,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         emit(AutoCompleteCategoryState(category));
       }
     }
+
+    if (state is SearchCmsInitialState) {
+      return;
+    }
+
     add(SearchAutoCompleteLoadEvent(searchQuery));
   }
 
@@ -212,6 +231,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     } else {
       emit(AutoCompleteBrandState(brand));
     }
+
+    if (state is SearchCmsInitialState) {
+      return;
+    }
+
     add(SearchAutoCompleteLoadEvent(searchQuery));
   }
 }
