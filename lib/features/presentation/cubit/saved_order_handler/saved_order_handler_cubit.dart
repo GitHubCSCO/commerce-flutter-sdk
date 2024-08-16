@@ -17,8 +17,14 @@ class SavedOrderHandlerCubit extends Cubit<SavedOrderHandlerState> {
           ),
         );
 
-  Future<void> addCartToSavedOrders({required Cart cart}) async {
+  Future<void> addCartToSavedOrders({required Cart? cart}) async {
     emit(state.copyWith(status: SavedOrderHandlerStatus.loading));
+
+    if (cart == null) {
+      emit(state.copyWith(status: SavedOrderHandlerStatus.failure));
+      return;
+    }
+
     final result = await _savedOrderUsecase.addCartToSavedOrders(cart: cart);
 
     if (result == null) {

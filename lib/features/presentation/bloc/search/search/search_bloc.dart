@@ -1,3 +1,4 @@
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
@@ -21,7 +22,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         super(SearchCmsInitialState()) {
     on<SearchAutoCompleteLoadEvent>(_onSearchAutoCompleteLoadEvent);
     on<SearchFocusEvent>(_onSearchFocusEvent);
-    on<SearchTypingEvent>(_onSearchTypingEvent);
+    on<SearchTypingEvent>(_onSearchTypingEvent, transformer: restartable());
     on<SearchFieldPopulateEvent>(_onSearchFieldPopulateEvent);
     on<SearchUnFocusEvent>(_onSearchUnFocusEvent);
     on<SearchSearchEvent>(_onSearchSearchEvent);
@@ -55,6 +56,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         emit(SearchLoadingState());
         final result =
             await _searchUseCase.loadAutocompleteResults(searchQuery);
+
+        if (state is SearchCmsInitialState) {
+          return;
+        }
         switch (result) {
           case Success(value: final data):
             emit(SearchAutoCompleteLoadedState(result: data));
@@ -81,6 +86,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     } else {
       emit(SearchLoadingState());
       final result = await _searchUseCase.loadAutocompleteResults(searchQuery);
+
+      if (state is SearchCmsInitialState) {
+        return;
+      }
+
       switch (result) {
         case Success(value: final data):
           emit(SearchAutoCompleteLoadedState(result: data));
@@ -131,6 +141,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         }
       }
 
+      if (state is SearchCmsInitialState) {
+        return;
+      }
+
       switch (result) {
         case Success(value: final data):
           emit(SearchProductsLoadedState(result: data));
@@ -179,6 +193,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         emit(AutoCompleteCategoryState(category));
       }
     }
+
+    if (state is SearchCmsInitialState) {
+      return;
+    }
+
     add(SearchAutoCompleteLoadEvent(searchQuery));
   }
 
@@ -211,6 +230,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     } else {
       emit(AutoCompleteBrandState(brand));
     }
+
+    if (state is SearchCmsInitialState) {
+      return;
+    }
+
     add(SearchAutoCompleteLoadEvent(searchQuery));
   }
 }
