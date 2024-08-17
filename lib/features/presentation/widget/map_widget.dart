@@ -107,11 +107,7 @@ class _MapWidgetState extends State<MapWidget> {
                 }
               },
               markers: (state is GMapMarkersUpdated) ? state.markers : {},
-              onCameraMove: (CameraPosition position) {
-                // debugPrint(
-                //   'Camera position: ${position.target.latitude}, ${position.target.longitude}',
-                // );
-              },
+              onCameraMove: (CameraPosition position) {},
             ),
           );
         },

@@ -235,10 +235,6 @@ void _showProductFilterWidget(
                           isSelected: !(v.isSelected ?? false),
                         );
 
-                        if (kDebugMode) {
-                          debugPrint('Selected value: $changedValue');
-                        }
-
                         if (onFilterSelected != null) {
                           onFilterSelected(changedValue);
                         }

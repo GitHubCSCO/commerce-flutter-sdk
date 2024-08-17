@@ -188,7 +188,7 @@ final sl = GetIt.instance;
 Future<void> initInjectionContainer() async {
   sl
     //router
-    ..registerLazySingleton(() => getRouter())
+    ..registerLazySingleton(() => getRouter(loggerService: sl()))
 
     //root
     ..registerFactory(() => RootBloc())
