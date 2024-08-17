@@ -13,6 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/line_item/line
 import 'package:commerce_flutter_app/features/presentation/widget/view_quote_line_break_price_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuoteLineWidget extends StatelessWidget {
   final QuoteLineEntity quoteLineEntity;
@@ -23,6 +24,7 @@ class QuoteLineWidget extends StatelessWidget {
   final bool? canEditQuantity;
   final bool hidePricingEnable;
   final bool hideInventoryEnable;
+  final bool? hidePricingWidget;
   final void Function()? onShowMoreButtonClickedCallback;
   final void Function(int quantity) onCartQuantityChangedCallback;
   final void Function(CartLineEntity) onCartLineRemovedCallback;
@@ -35,6 +37,7 @@ class QuoteLineWidget extends StatelessWidget {
       required this.hideInventoryEnable,
       this.onShowMoreButtonClickedCallback,
       this.showRemoveButton = true,
+      this.hidePricingWidget = false,
       this.showViewBreakPricing = false,
       this.showQuantityAndSubtotalField = true,
       this.canEditQuantity = true,
@@ -75,25 +78,30 @@ class QuoteLineWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          LineItemTitleWidget(
+          QuoteLineItemTitleWidget(
             shortDescription: quoteLineEntity.shortDescription,
             manufacturerItem: quoteLineEntity.manufacturerItem,
             productNumber: quoteLineEntity.getProductNumber(),
+            myPartNumberValueLabel: quoteLineEntity.customerName,
+            quantityValueLabel: quoteLineEntity.qtyOrdered?.toInt().toString(),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: LineItemPricingWidget(
-              hideInventoryEnable: hideInventoryEnable,
-              hidePricingEnable: hidePricingEnable,
-              discountMessage: quoteLineEntity.pricing?.getDiscountValue(),
-              priceValueText: quoteLineEntity.updatePriceValueText(),
-              unitOfMeasureValueText:
-                  quoteLineEntity.updateUnitOfMeasureValueText(),
-              availabilityText: quoteLineEntity.availability?.message,
-              productId: quoteLineEntity.productId,
-              erpNumber: quoteLineEntity.erpNumber,
-              unitOfMeasure: quoteLineEntity.baseUnitOfMeasure,
-              showViewAvailabilityByWarehouse: false,
+          Visibility(
+            visible: !hidePricingWidget!,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: LineItemPricingWidget(
+                hideInventoryEnable: hideInventoryEnable,
+                hidePricingEnable: hidePricingEnable,
+                discountMessage: quoteLineEntity.pricing?.getDiscountValue(),
+                priceValueText: quoteLineEntity.updatePriceValueText(),
+                unitOfMeasureValueText:
+                    quoteLineEntity.updateUnitOfMeasureValueText(),
+                availabilityText: quoteLineEntity.availability?.message,
+                productId: quoteLineEntity.productId,
+                erpNumber: quoteLineEntity.erpNumber,
+                unitOfMeasure: quoteLineEntity.baseUnitOfMeasure,
+                showViewAvailabilityByWarehouse: false,
+              ),
             ),
           ),
           Visibility(
@@ -148,6 +156,98 @@ class QuoteLineWidget extends StatelessWidget {
             fit: BoxFit.fitWidth,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class QuoteLineItemTitleWidget extends StatelessWidget {
+  final String? shortDescription;
+  final String? productNumber;
+  final String? manufacturerItem;
+  final String? myPartNumberValueLabel;
+  final String? quantityValueLabel;
+
+  const QuoteLineItemTitleWidget({
+    super.key,
+    this.shortDescription,
+    this.productNumber,
+    this.manufacturerItem,
+    this.myPartNumberValueLabel,
+    this.quantityValueLabel,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: Text(
+                    shortDescription ?? '',
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: OptiTextStyles.body,
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                if (!productNumber.isNullOrEmpty)
+                  Text(
+                    productNumber!,
+                    style: OptiTextStyles.bodySmall,
+                    textAlign: TextAlign.left,
+                  ),
+                if (!manufacturerItem.isNullOrEmpty)
+                  Row(
+                    children: [
+                      Text(
+                        "${LocalizationConstants.mFGNumberSign.localized()} ",
+                        style: OptiTextStyles.subtitle.copyWith(fontSize: 12),
+                      ),
+                      Text(
+                        manufacturerItem ?? '',
+                        style: OptiTextStyles.bodySmall,
+                        textAlign: TextAlign.left,
+                      ),
+                    ],
+                  ),
+                if (!myPartNumberValueLabel.isNullOrEmpty)
+                  Row(
+                    children: [
+                      Text(
+                        myPartNumberValueLabel ?? '',
+                        style: OptiTextStyles.bodySmall,
+                        textAlign: TextAlign.left,
+                      ),
+                    ],
+                  ),
+                if (!quantityValueLabel.isNullOrEmpty)
+                  Row(
+                    children: [
+                      Text(
+                        LocalizationConstants.qTY.localized(),
+                        style: OptiTextStyles.subtitle.copyWith(fontSize: 12),
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        quantityValueLabel ?? '',
+                        style: OptiTextStyles.bodySmall,
+                        textAlign: TextAlign.left,
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_documents_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -43,8 +44,10 @@ class ProductDetailsDocumentsWidget extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return InkWell(
                           onTap: () {
-                            _launchURL(productdetailsdocumentsEntity
-                                .documentPaths[index]);
+                            _launchURL(
+                                productdetailsdocumentsEntity
+                                    .documentPaths[index],
+                                context);
                           },
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(
@@ -71,13 +74,17 @@ class ProductDetailsDocumentsWidget extends StatelessWidget {
     );
   }
 
-  void _launchURL(String url) async {
+  void _launchURL(String url, BuildContext context) async {
     var uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
-      // Handle the error here if the URL cannot be launched
-      print('Could not launch $url');
+      if (context.mounted) {
+        CustomSnackBar.showSnackBarMessage(
+          context,
+          'Could not launch $url',
+        );
+      }
     }
   }
 }

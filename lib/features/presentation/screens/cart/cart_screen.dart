@@ -157,6 +157,7 @@ class CartPage extends StatelessWidget {
                               state.warehouse,
                               state.promotions,
                               state.isCustomerOrderApproval,
+                              state.hasWillCall,
                               state.shippingMethod,
                               state.hidePricingEnable,
                               state.hideInventoryEnable,
@@ -400,8 +401,9 @@ class CartPage extends StatelessWidget {
       Cart? cart,
       CartSettings? settings,
       Warehouse? warehouse,
-      PromotionCollectionModel promotions,
+      PromotionCollectionModel? promotions,
       bool isCustomerOrderApproval,
+      bool hasWillCall,
       String shippingMethod,
       bool? hidePricingEnable,
       bool? hideInventoryEnable,
@@ -414,6 +416,7 @@ class CartPage extends StatelessWidget {
         promotions: promotions,
         isCustomerOrderApproval: isCustomerOrderApproval);
     final shippingEntity = ShippingEntity(
+        hasWillCall: hasWillCall,
         warehouse: warehouse,
         shippingMethod:
             (shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)

@@ -41,8 +41,8 @@ class CommerceAPIServiceProvider implements ICommerceAPIServiceProvider {
   IJobQuoteService getJobQuoteService() => sl<IJobQuoteService>();
   @override
   ILocalStorageService getLocalStorageService() => sl<ILocalStorageService>();
-  // @override
-  // ILoggerService getLoggerService() => sl<ILoggerService>();
+  @override
+  ILoggerService getLoggerService() => sl<ILoggerService>();
   @override
   IMessageService getMessageService() => sl<IMessageService>();
   @override

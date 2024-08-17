@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/config/prod_config_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/firebase_options_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/core/utils/bloc_observer.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/load_website_url/load_website_url_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
@@ -34,6 +35,10 @@ Future<void> main() async {
   await initInjectionContainer();
 
   await initAnalyticsTracker();
+
+  if (sl<ILoggerService>().isEnabled()) {
+    Bloc.observer = const AppBlocObserver();
+  }
 
   runApp(
     MultiBlocProvider(

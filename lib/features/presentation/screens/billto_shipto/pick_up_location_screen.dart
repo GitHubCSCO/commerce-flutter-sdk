@@ -49,35 +49,47 @@ class PickUpLocationScreen extends StatelessWidget {
             return Column(
               children: [
                 const MapWidget(),
-                Expanded(
-                  child: ListView(
-                    controller:
-                        scrollController, // Attach the ScrollController here
-                    children: state.wareHouselist
-                        .map((wareHouse) => PickupLocationLocationWidgetItem(
-                              warehouse: wareHouse,
-                              isSelectionOn: true,
-                              selectedWarehouseid: state.selectedWarehouse?.id,
-                            ))
-                        .toList(),
+                if (state.wareHouselist.isEmpty) ...[
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        LocalizationConstants.noLocationFound.localized(),
+                      ),
+                    ),
                   ),
-                ),
-                ListInformationBottomSubmitWidget(actions: [
-                  PrimaryButton(
-                    text: LocalizationConstants.selectLocation.localized(),
-                    onPressed: () async {
-                      var selectedLocation =
-                          context.read<PickupLocationBloc>().selectedWarehouse;
-                      if (selectedLocation != null) {
-                        // context
-                        //     .read<CurrentLocationCubit>()
-                        //     .onLocationSelectEvent(selectedLocation);
-                        onWarehouseLocationSelected(selectedLocation);
-                      }
-                      context.pop();
-                    },
+                ] else ...[
+                  Expanded(
+                    child: ListView(
+                      controller:
+                          scrollController, // Attach the ScrollController here
+                      children: state.wareHouselist
+                          .map((wareHouse) => PickupLocationLocationWidgetItem(
+                                warehouse: wareHouse,
+                                isSelectionOn: true,
+                                selectedWarehouseid:
+                                    state.selectedWarehouse?.id,
+                              ))
+                          .toList(),
+                    ),
                   ),
-                ]),
+                  ListInformationBottomSubmitWidget(actions: [
+                    PrimaryButton(
+                      text: LocalizationConstants.selectLocation.localized(),
+                      onPressed: () async {
+                        var selectedLocation = context
+                            .read<PickupLocationBloc>()
+                            .selectedWarehouse;
+                        if (selectedLocation != null) {
+                          // context
+                          //     .read<CurrentLocationCubit>()
+                          //     .onLocationSelectEvent(selectedLocation);
+                          onWarehouseLocationSelected(selectedLocation);
+                        }
+                        context.pop();
+                      },
+                    ),
+                  ]),
+                ],
               ],
             );
           } else {
