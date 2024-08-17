@@ -70,7 +70,6 @@ class SortToolMenu extends StatelessWidget {
 
   Future<void> _onSortOrderChanged(SortOrderAttribute sortOrder,
       SortOrderAttribute? oppositeSortOrder) async {
-    debugPrint('SortOrder: $sortOrder');
     if (sortOrder != selectedSortOrder) {
       await onSortOrderChanged(sortOrder);
     } else {

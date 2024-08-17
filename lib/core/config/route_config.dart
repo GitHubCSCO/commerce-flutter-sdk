@@ -81,11 +81,11 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 final GlobalKey<NavigatorState> _rootNavigator = GlobalKey(debugLabel: 'root');
 
-GoRouter getRouter() {
+GoRouter getRouter({required ILoggerService loggerService}) {
   return GoRouter(
     navigatorKey: _rootNavigator,
     initialLocation: AppRoute.root.fullPath,
-    debugLogDiagnostics: true,
+    debugLogDiagnostics: loggerService.isEnabled(),
     routes: _getNavigationRoot().map((e) => generateRoutes(e)).toList(),
   );
 }

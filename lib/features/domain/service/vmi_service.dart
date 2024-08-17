@@ -45,29 +45,27 @@ class VMIService extends ServiceBase implements IVmiService {
       return closestVmiLocationPersisted;
     }
     VmiLocationModel? closestVmiLocation;
-    if (closestVmiLocation == null) {
-      VmiLocationQueryParameters param = VmiLocationQueryParameters(
-        pageSize: 1,
-        page: 1,
-        expand: ['customer'],
-      );
+    VmiLocationQueryParameters param = VmiLocationQueryParameters(
+      pageSize: 1,
+      page: 1,
+      expand: ['customer'],
+    );
 
-      var result = await _commerceAPIServiceProvider
-          .getVmiLocationsService()
-          .getVmiLocations(parameters: param);
+    var result = await _commerceAPIServiceProvider
+        .getVmiLocationsService()
+        .getVmiLocations(parameters: param);
 
-      switch (result) {
-        case Success(value: final data):
-          closestVmiLocation = data?.vmiLocations?.first;
-          currentVmiLocation = closestVmiLocation;
-          await _commerceAPIServiceProvider
-              .getCacheService()
-              .persistData<VmiLocationModel>(key, closestVmiLocation!);
-          break;
-        case Failure(errorResponse: final errorResponse):
-          print(errorResponse);
-          break;
-      }
+    switch (result) {
+      case Success(value: final data):
+        closestVmiLocation = data?.vmiLocations.first;
+        currentVmiLocation = closestVmiLocation;
+        await _commerceAPIServiceProvider
+            .getCacheService()
+            .persistData<VmiLocationModel>(key, closestVmiLocation!);
+        break;
+      case Failure(errorResponse: final errorResponse):
+        _coreServiceProvider.getTrackingService().trackError(errorResponse);
+        break;
     }
 
     return closestVmiLocation;
