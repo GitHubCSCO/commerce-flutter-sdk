@@ -144,7 +144,7 @@ class AppConfigurationService extends ServiceBase
         : '$_tokenExConfigurationUrl?token=$token';
 
     var tokenExDtoResponse =
-        await getAsyncWithCachedResponse<TokenExDto>(url, TokenExDto.fromJson);
+        await getAsyncNoCache<TokenExDto>(url, TokenExDto.fromJson);
 
     switch (tokenExDtoResponse) {
       case Success(value: final value):
