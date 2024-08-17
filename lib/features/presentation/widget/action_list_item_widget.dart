@@ -103,7 +103,6 @@ class ActionListItemWidget extends StatelessWidget with BaseActionItemWidget {
                       alignment: Alignment.center,
                       width: 24,
                       height: 24,
-                      padding: const EdgeInsets.all(7),
                       child: const Icon(
                         Icons.keyboard_arrow_right,
                         color: Colors.grey,

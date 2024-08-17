@@ -7,12 +7,13 @@ class CartPageInitialState extends CartPageState {}
 class CartPageLoadingState extends CartPageState {}
 
 class CartPageLoadedState extends CartPageState {
-  final Cart cart;
-  final CartSettings cartSettings;
-  final Warehouse warehouse;
-  final PromotionCollectionModel promotions;
+  final Cart? cart;
+  final CartSettings? cartSettings;
+  final Warehouse? warehouse;
+  final PromotionCollectionModel? promotions;
   final bool isCustomerOrderApproval;
   final String shippingMethod;
+  final bool hasWillCall;
   String cartWarningMsg;
   bool? hidePricingEnable;
   bool? hideInventoryEnable;
@@ -24,6 +25,7 @@ class CartPageLoadedState extends CartPageState {
       required this.isCustomerOrderApproval,
       required this.cartSettings,
       required this.shippingMethod,
+      required this.hasWillCall,
       this.cartWarningMsg = "",
       this.hidePricingEnable,
       this.hideInventoryEnable});
@@ -40,3 +42,13 @@ class CartPageFailureState extends CartPageState {
 
   CartPageFailureState({required this.error});
 }
+
+class CartPageCheckoutButtonLoadingState extends CartPageState {}
+
+class CartPageWarningDialogShowState extends CartPageState {
+  final String warningMsg;
+
+  CartPageWarningDialogShowState(this.warningMsg);
+}
+
+class CartProceedToCheckoutState extends CartPageState {}

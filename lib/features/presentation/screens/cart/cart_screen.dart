@@ -72,7 +72,9 @@ class CartPage extends StatelessWidget {
         listeners: [
           BlocListener<RootBloc, RootState>(
             listener: (context, state) async {
-              if (state is RootConfigReload) {
+              if (state is RootConfigReload ||
+                  state is RootCartReload ||
+                  state is RootPricingInventoryReload) {
                 _reloadCartPage(context);
               }
             },
@@ -80,13 +82,6 @@ class CartPage extends StatelessWidget {
           BlocListener<PullToRefreshBloc, PullToRefreshState>(
             listener: (context, state) {
               if (state is PullToRefreshLoadState) {
-                _reloadCartPage(context);
-              }
-            },
-          ),
-          BlocListener<RootBloc, RootState>(
-            listener: (context, state) {
-              if (state is RootPricingInventoryReload) {
                 _reloadCartPage(context);
               }
             },
@@ -117,6 +112,17 @@ class CartPage extends StatelessWidget {
               }
             },
           ),
+          BlocListener<CartPageBloc, CartPageState>(
+            listener: (_, state) {
+              if (state is CartPageWarningDialogShowState) {
+                showRequestQuoteWarningDialog(context,
+                    message: state.warningMsg);
+              } else if (state is CartProceedToCheckoutState) {
+                var cartPageBloc = context.read<CartPageBloc>();
+                navigateToCheckout(context, cartPageBloc);
+              }
+            },
+          )
         ],
         child: RefreshIndicator(
           onRefresh: () async {
@@ -124,6 +130,14 @@ class CartPage extends StatelessWidget {
                 .add(PullToRefreshInitialEvent());
           },
           child: BlocBuilder<CartPageBloc, CartPageState>(
+            buildWhen: (previous, current) {
+              if (current is CartPageWarningDialogShowState ||
+                  current is CartProceedToCheckoutState ||
+                  current is CartPageCheckoutButtonLoadingState) {
+                return false;
+              }
+              return true;
+            },
             builder: (_, state) {
               switch (state) {
                 case CartPageInitialState():
@@ -133,7 +147,7 @@ class CartPage extends StatelessWidget {
                   return Column(
                     children: [
                       if (state.cartWarningMsg.isNotEmpty)
-                        _buildCartEroorWidget(
+                        BuildCartErrorWidget(
                             cartErrorMsg: state.cartWarningMsg),
                       Expanded(
                         child: ListView(
@@ -143,6 +157,7 @@ class CartPage extends StatelessWidget {
                               state.warehouse,
                               state.promotions,
                               state.isCustomerOrderApproval,
+                              state.hasWillCall,
                               state.shippingMethod,
                               state.hidePricingEnable,
                               state.hideInventoryEnable,
@@ -198,35 +213,12 @@ class CartPage extends StatelessWidget {
                                   handleAuthStatusForSubmitQuote(
                                       context, currentState.status, state);
                                 },
-                                text: LocalizationConstants.submitForQuote
-                                    .localized(),
-                              ),
-                            ),
-                            Visibility(
-                              visible: context
-                                  .watch<CartPageBloc>()
-                                  .checkoutButtonVisible,
-                              child: PrimaryButton(
-                                isEnabled: context
-                                    .watch<CartPageBloc>()
-                                    .isCheckoutButtonEnabled,
-                                onPressed: () {
-                                  final currentState =
-                                      context.read<AuthCubit>().state;
-                                  handleAuthStatusForCheckout(
-                                      context,
-                                      currentState.status,
-                                      context.read<CartPageBloc>());
-                                },
                                 text: context
-                                        .watch<CartPageBloc>()
-                                        .approvalButtonVisible
-                                    ? LocalizationConstants.checkoutForApproval
-                                        .localized()
-                                    : LocalizationConstants.checkout
-                                        .localized(),
+                                    .watch<CartPageBloc>()
+                                    .submitForQuoteTitle,
                               ),
                             ),
+                            _buildCheckoutButton(context),
                           ],
                         ),
                       ),
@@ -281,10 +273,35 @@ class CartPage extends StatelessWidget {
     );
   }
 
+  Widget _buildCheckoutButton(BuildContext context) {
+    return BlocBuilder<CartPageBloc, CartPageState>(
+      builder: (_, state) {
+        if (state is CartPageCheckoutButtonLoadingState) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return Visibility(
+            visible: context.watch<CartPageBloc>().checkoutButtonVisible,
+            child: PrimaryButton(
+              isEnabled: context.watch<CartPageBloc>().isCheckoutButtonEnabled,
+              onPressed: () {
+                final currentState = context.read<AuthCubit>().state;
+                handleAuthStatusForCheckout(
+                    context, currentState.status, context.read<CartPageBloc>());
+              },
+              text: context.watch<CartPageBloc>().approvalButtonVisible
+                  ? LocalizationConstants.checkoutForApproval.localized()
+                  : LocalizationConstants.checkout.localized(),
+            ),
+          );
+        }
+      },
+    );
+  }
+
   void handleAuthStatusForCheckout(
       BuildContext context, AuthStatus status, CartPageBloc cartPageBloc) {
     if (status == AuthStatus.authenticated) {
-      navigateToCheckout(context, cartPageBloc);
+      cartPageBloc.add(CartPageCheckoutEvent());
     } else {
       showSignInDialog(context,
           message: LocalizationConstants.signInBeforeCheckout.localized());
@@ -334,6 +351,29 @@ class CartPage extends StatelessWidget {
     AppRoute.checkout.navigateBackStack(context, extra: cartPageBloc.cart);
   }
 
+  void showRequestQuoteWarningDialog(BuildContext context, {String? message}) {
+    displayDialogWidget(
+      context: context,
+      message: message,
+      actions: [
+        DialogPlainButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text(LocalizationConstants.cancel.localized()),
+        ),
+        DialogPlainButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            var cartPageBloc = context.read<CartPageBloc>();
+            navigateToCheckout(context, cartPageBloc);
+          },
+          child: Text(LocalizationConstants.oK.localized()),
+        ),
+      ],
+    );
+  }
+
   void showSignInDialog(BuildContext context, {String? message}) {
     displayDialogWidget(
       context: context,
@@ -361,8 +401,9 @@ class CartPage extends StatelessWidget {
       Cart? cart,
       CartSettings? settings,
       Warehouse? warehouse,
-      PromotionCollectionModel promotions,
+      PromotionCollectionModel? promotions,
       bool isCustomerOrderApproval,
+      bool hasWillCall,
       String shippingMethod,
       bool? hidePricingEnable,
       bool? hideInventoryEnable,
@@ -375,6 +416,7 @@ class CartPage extends StatelessWidget {
         promotions: promotions,
         isCustomerOrderApproval: isCustomerOrderApproval);
     final shippingEntity = ShippingEntity(
+        hasWillCall: hasWillCall,
         warehouse: warehouse,
         shippingMethod:
             (shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)
@@ -441,9 +483,9 @@ class CartPage extends StatelessWidget {
   }
 }
 
-class _buildCartEroorWidget extends StatelessWidget {
+class BuildCartErrorWidget extends StatelessWidget {
   final String cartErrorMsg;
-  const _buildCartEroorWidget({
+  const BuildCartErrorWidget({
     required this.cartErrorMsg,
     super.key,
   });

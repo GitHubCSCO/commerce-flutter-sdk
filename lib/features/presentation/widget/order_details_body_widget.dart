@@ -489,7 +489,7 @@ class OrderPaymentSectionWidget extends StatelessWidget {
                   ),
                 ],
                 if (!discount.isNullOrEmpty) const SizedBox(height: 10),
-                if (promotions != null || promotions!.isNotEmpty)
+                if (promotions != null && promotions!.isNotEmpty)
                   ...promotions!.map((promotion) {
                     if (promotion.promotionLabel.isNullOrEmpty ||
                         promotion.promotionValue.isNullOrEmpty) {

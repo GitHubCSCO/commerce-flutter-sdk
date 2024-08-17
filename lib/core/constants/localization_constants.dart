@@ -64,6 +64,7 @@ enum LocalizationConstants {
       keyword: "There was an error communicating with the server."),
   incorrectLoginOrPassword(keyword: "Incorrect Login or Password."),
   unableToGetCurrentSession(keyword: "Unable to get current session."),
+  noLocationFound(keyword: "No location found."),
   authenticationFailed(keyword: "Authentication failed."),
   invalidUsernameAndPasswordCombination(
       keyword: "Invalid Username/Password combination"),
@@ -671,6 +672,7 @@ enum LocalizationConstants {
   noSavedPaymentsFound(keyword: "No saved payments found."),
   invalidUrl(keyword: "Invalid url."),
   failedToLoadUrl(keyword: "Failed to load url."),
+  noBrandDetailsFound(keyword: "No details found for this brand"),
   ;
 
   const LocalizationConstants({

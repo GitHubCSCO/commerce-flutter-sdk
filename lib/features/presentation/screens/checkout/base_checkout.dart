@@ -117,7 +117,7 @@ mixin BaseCheckout {
               padding: const EdgeInsets.only(right: 8),
               child: Text(
                 title,
-                maxLines: 1,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.start,
                 style: textStyle,

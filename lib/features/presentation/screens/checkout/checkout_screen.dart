@@ -88,11 +88,6 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
         (cart.cartLines ?? []).every((x) => x.quoteRequired ?? false);
   }
 
-  bool get hasQuoteRequiredProducts {
-    return cart.cartLines != null &&
-        (cart.cartLines ?? []).any((x) => x.quoteRequired ?? false);
-  }
-
   bool get isCartCheckoutDisabled {
     return (!(cart.canCheckOut ?? true) && !(cart.canRequisition ?? true)) ||
         isCartEmpty ||
@@ -134,7 +129,8 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                     isOrderApproval:
                         context.read<CheckoutBloc>().cart?.requiresApproval ??
                             false,
-                    reviewOrderEntity: state.reviewOrderEntity));
+                    reviewOrderEntity: state.reviewOrderEntity,
+                    message: state.message));
           }
         },
         builder: (_, state) {
@@ -146,7 +142,9 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                   return const Center(child: CircularProgressIndicator());
                 case CheckoutDataFetchFailed():
                   //Send some analytics event here from state.error so we can analyze what was the root cause
-                  return const Center(child: Text("Something went wrong"));
+                  return Center(
+                      child: Text(LocalizationConstants.somethingWentWrong
+                          .localized()));
                 case CheckoutDataLoaded():
                   return Column(
                     children: [
@@ -183,6 +181,8 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                         state.requestDeliveryDate,
                                     allowCreateNewShipToAddress:
                                         state.allowCreateNewShipToAddress,
+                                    requestDateWarningMessage:
+                                        state.requestDateWarningMessage,
                                   );
 
                                   final reviewOrderEntity =
@@ -307,7 +307,12 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                       .read<CheckoutBloc>()
                                       .selectedService;
 
-                                  if (carrier != null && service != null) {
+                                  if ((state.shippingMethod.equalsIgnoreCase(
+                                              ShippingOption.ship.name) &&
+                                          carrier != null &&
+                                          service != null) ||
+                                      state.shippingMethod.equalsIgnoreCase(
+                                          ShippingOption.pickUp.name)) {
                                     context
                                         .read<ExpansionPanelCubit>()
                                         .onContinueClick();

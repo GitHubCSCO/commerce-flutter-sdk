@@ -186,7 +186,7 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                 )
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 5.0,
             ),
             Row(
@@ -222,23 +222,19 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                         }
                       }),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 15.0,
                 ),
                 Expanded(
                     flex: 2, child: _buildUnitOFMeasureChangeWidget(context)),
-
-                // ProductDetailsAddCartTtitleSubTitleColumn('U/M', 'E/A')
               ],
             ),
             if (!(detailsAddToCartEntity.hidePricing ?? false))
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
-                child: Expanded(
-                  child: ProductDetailsAddCartTtitleSubTitleColumn(
-                      LocalizationConstants.subtotal.localized(),
-                      detailsAddToCartEntity.subtotalValueText ?? ''),
-                ),
+                child: ProductDetailsAddCartTtitleSubTitleColumn(
+                    LocalizationConstants.subtotal.localized(),
+                    detailsAddToCartEntity.subtotalValueText ?? ''),
               ),
           ],
         ),

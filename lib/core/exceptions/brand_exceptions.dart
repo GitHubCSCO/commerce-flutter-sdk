@@ -1,0 +1,1 @@
+class BrandDetailsException implements Exception {}

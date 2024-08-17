@@ -72,7 +72,7 @@ class _VMILocationScreenState extends State<VMILocationScreen> {
                   _scrollController.jumpTo(0);
                 } // Scroll to the top when new data is loaded
               } else {
-                context.read<GMapCubit>().onSeachPlaceMarked(searchedLocation);
+                context.read<GMapCubit>().onSearchPlaceMarked(searchedLocation);
               }
             }
           },

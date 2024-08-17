@@ -35,20 +35,6 @@ class CartUseCase extends BaseUseCase {
         .patchSession(newSession!);
   }
 
-  Warehouse? getPickUpWareHouse() {
-    return commerceAPIServiceProvider
-        .getSessionService()
-        .getCachedCurrentSession()
-        ?.pickUpWarehouse;
-  }
-
-  String? getShippingMethod() {
-    return commerceAPIServiceProvider
-        .getSessionService()
-        .getCachedCurrentSession()
-        ?.fulfillmentMethod;
-  }
-
   Future<bool> isCustomerOrderApproval() async {
     return await commerceAPIServiceProvider
         .getClientService()
@@ -63,5 +49,15 @@ class CartUseCase extends BaseUseCase {
 
   Future<bool> hasCheckout() async {
     return await coreServiceProvider.getAppConfigurationService().hasCheckout();
+  }
+
+  Future<Result<Session, ErrorResponse>> getCurrentSession() async {
+    return await commerceAPIServiceProvider
+        .getSessionService()
+        .getCurrentSession();
+  }
+
+  Future<bool> hasWillCall() async {
+    return await coreServiceProvider.getAppConfigurationService().hasWillCall();
   }
 }

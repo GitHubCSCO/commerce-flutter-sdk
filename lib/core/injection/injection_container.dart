@@ -177,6 +177,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_information/wish_list_information_cubit.dart';
 import 'package:commerce_flutter_app/services/local_storage_service.dart';
+import 'package:commerce_flutter_app/services/logger_service.dart';
 import 'package:commerce_flutter_app/services/secure_storage_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -187,7 +188,7 @@ final sl = GetIt.instance;
 Future<void> initInjectionContainer() async {
   sl
     //router
-    ..registerLazySingleton(() => getRouter())
+    ..registerLazySingleton(() => getRouter(loggerService: sl()))
 
     //root
     ..registerFactory(() => RootBloc())
@@ -313,8 +314,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => ShopUseCase())
 
     //search
-    ..registerFactory(
-        () => SearchBloc(searchUseCase: sl(), searchHistoryUseCase: sl()))
+    ..registerFactory(() => SearchBloc(searchUseCase: sl()))
     ..registerFactory(() => SearchPageCmsBloc(searchUseCase: sl()))
     ..registerFactory(() => SearchCmsUseCase())
     ..registerFactory(() => SearchUseCase())
@@ -626,8 +626,11 @@ Future<void> initInjectionContainer() async {
         () => SearchHistoryService(commerceAPIServiceProvider: sl()))
     ..registerLazySingleton<ILocationSearchHistoryService>(
         () => LocationSearchHistoryService(commerceAPIServiceProvider: sl()))
-    ..registerLazySingleton<IClientService>(() =>
-        ClientService(localStorageService: sl(), secureStorageService: sl()))
+    ..registerLazySingleton<IClientService>(() => ClientService(
+          localStorageService: sl(),
+          secureStorageService: sl(),
+          loggerService: sl(),
+        ))
     ..registerSingletonAsync<ICacheService>(() async {
       var pref = await SharedPreferences.getInstance();
       return CacheService(
@@ -637,6 +640,7 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<INetworkService>(() => NetworkService())
     ..registerLazySingleton<ISecureStorageService>(() => SecureStorageService())
     ..registerLazySingleton<ILocalStorageService>(() => LocalStorageService())
+    ..registerLazySingleton<ILoggerService>(() => OptiLoggerService(false))
     ..registerLazySingleton<IGeoLocationService>(() => GeoLocationService())
     ..registerLazySingleton<IMessageService>(() => MessageService(
         cacheService: sl(), networkService: sl(), clientService: sl()))
@@ -648,6 +652,7 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<IAdminClientService>(() => AdminClientService(
           localStorageService: sl(),
           secureStorageService: sl(),
+          loggerService: sl(),
         ))
     ..registerLazySingleton<IAccountService>(() => AccountService(
           clientService: sl(),

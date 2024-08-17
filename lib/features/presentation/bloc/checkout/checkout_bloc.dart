@@ -1,16 +1,20 @@
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/core/mixins/cart_checkout_helper_mixin.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 part 'checkout_state.dart';
 part 'checkout_event.dart';
 
-class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
+class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
+    with CartCheckoutHelperMixin {
   final CheckoutUsecase _checkoutUseCase;
   DateTime? requestDeliveryDate;
   Cart? cart;
@@ -38,6 +42,15 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     on<UpdateShiptoAddressEvent>((event, emit) => _onUpdateShipto(event, emit));
   }
 
+  Cart removeQuoteRequiredProductsIfNeeded(Cart cart) {
+    if (hasQuoteRequiredProducts) {
+      cart.cartLines =
+          cart.cartLines?.where((x) => !(x.quoteRequired == true)).toList();
+    }
+    updateCheckoutData(cart);
+    return cart;
+  }
+
   void updateCheckoutData(Cart cart) {
     this.cart = cart;
     selectedCarrier = cart.carrier;
@@ -52,6 +65,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
 
     var data = await _checkoutUseCase.getCart(event.cart.id!);
     session ??= _checkoutUseCase.getCurrentSession();
+
     var productSettingsResult = await _checkoutUseCase.loadProductSettings();
     var settingsResult = (await _checkoutUseCase.loadSettingsCollection())
         .getResultSuccessValue();
@@ -63,12 +77,17 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         : null;
 
     switch (data) {
-      case Success(value: final cartData):
+      case Success(value: var cartData):
         if (cartData?.cartLines == null || cartData!.cartLines!.isEmpty) {
-          emit(CheckoutNoDataState());
+          final message = await _checkoutUseCase.getSiteMessage(
+              SiteMessageConstants.nameNoOrderLines,
+              SiteMessageConstants.defaultValueNoOrderLines);
+          emit(CheckoutNoDataState(message));
           return;
         }
+
         updateCheckoutData(cartData);
+        cartData = removeQuoteRequiredProductsIfNeeded(cartData);
 
         final billToAddress = session?.billTo;
         final shipToAddress = session?.shipTo;
@@ -79,28 +98,45 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
                 .getResultSuccessValue();
         CartSettings? cartSettings =
             (await _checkoutUseCase.getCartSetting()).getResultSuccessValue();
+        final cartWarningMsg = await getCartWarningMessage(
+            cartData, shippingMethod, _checkoutUseCase);
+        final message = shippingMethod
+                .equalsIgnoreCase(ShippingOption.pickUp.name)
+            ? await _checkoutUseCase.getSiteMessage(
+                SiteMessageConstants.nameCheckoutRequestedPickUpDateMessage,
+                SiteMessageConstants
+                    .defaultValueCheckoutRequestedPickUpDateMessage)
+            : await _checkoutUseCase.getSiteMessage(
+                SiteMessageConstants.nameCheckoutRequestedDeliveryDateMessage,
+                SiteMessageConstants
+                    .defaultValueCheckoutRequestedDeliveryDateMessage);
 
         if (billToAddress != null &&
             shipToAddress != null &&
-            wareHouse != null &&
             shippingMethod != null) {
-          emit(CheckoutDataLoaded(
-            cart: cartData,
-            billToAddress: billToAddress,
-            shipToAddress: shipToAddress,
-            wareHouse: wareHouse,
-            promotions: promotionCollection,
-            shippingMethod: shippingMethod,
-            cartSettings: cartSettings,
-            selectedCarrier: selectedCarrier,
-            selectedService: selectedService,
-            requestDeliveryDate: requestDeliveryDate,
-            allowCreateNewShipToAddress: allowCreateNewShipToAddress,
-          ));
+          emit(
+            CheckoutDataLoaded(
+              cart: cartData,
+              billToAddress: billToAddress,
+              shipToAddress: shipToAddress,
+              wareHouse: wareHouse,
+              promotions: promotionCollection,
+              shippingMethod: shippingMethod,
+              cartSettings: cartSettings,
+              selectedCarrier: selectedCarrier,
+              selectedService: selectedService,
+              requestDeliveryDate: requestDeliveryDate,
+              allowCreateNewShipToAddress: allowCreateNewShipToAddress,
+              requestDateWarningMessage: message,
+              cartWarningMsg: cartWarningMsg,
+            ),
+          );
         } else {
-          emit(CheckoutDataFetchFailed(
-              error:
-                  'BillTo: $billToAddress, ShipTo: $shipToAddress, WareHouse: ${wareHouse?.toJson()}, ShippingMethod: $shippingMethod'));
+          emit(
+            CheckoutDataFetchFailed(
+                error:
+                    'BillTo: $billToAddress, ShipTo: $shipToAddress, WareHouse: ${wareHouse?.toJson()}, ShippingMethod: $shippingMethod'),
+          );
         }
         break;
       case Failure(errorResponse: final errorResponse):
@@ -127,10 +163,23 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
 
         await _checkoutUseCase.removeOrderApprovalCookieIfAvailable();
 
+        String? message;
+
+        if (cart?.requiresApproval ?? false) {
+          message = SiteMessageConstants.defaultVaLueOrderApprovalOrderPlaced;
+        } else {
+          message = await _checkoutUseCase.getSiteMessage(
+              SiteMessageConstants.nameMobileAppOrderConfirmationSuccessMessage,
+              SiteMessageConstants
+                  .defaultMobileAppOrderConfirmationSuccessMessage);
+        }
+
         emit(CheckoutPlaceOrder(
-            orderNumber: orderNumber,
-            reviewOrderEntity: event.reviewOrderEntity,
-            cart: cartData!));
+          orderNumber: orderNumber,
+          reviewOrderEntity: event.reviewOrderEntity,
+          cart: cartData!,
+          message: message,
+        ));
 
         break;
       case Failure(errorResponse: final errorResponse):
@@ -251,6 +300,11 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
 
     /// TODO - check if all required data is entered
     return !_isCartCheckoutDisabled || !_hasOnlyQuoteRequiredProducts;
+  }
+
+  bool get hasQuoteRequiredProducts {
+    return cart?.cartLines != null &&
+        (cart?.cartLines ?? []).any((x) => x.quoteRequired ?? false);
   }
 
   bool get checkoutButtonVisible {
