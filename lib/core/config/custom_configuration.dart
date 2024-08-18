@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-
 part 'custom_configuration.g.dart';
 
 /// {@template custom_configuration}
@@ -10,13 +9,14 @@ part 'custom_configuration.g.dart';
 @JsonSerializable()
 class CustomConfiguration extends Equatable {
   /// {@macro custom_configuration}
-  const CustomConfiguration({ 
-  required this.newStringConfig,
-  required this.newBoolConfig,
+  const CustomConfiguration({
+    required this.newStringConfig,
+    required this.newBoolConfig,
   });
 
-    /// Creates a CustomConfiguration from Json map
-  factory CustomConfiguration.fromJson(Map<String, dynamic> data) => _$CustomConfigurationFromJson(data);
+  /// Creates a CustomConfiguration from Json map
+  factory CustomConfiguration.fromJson(Map<String, dynamic> data) =>
+      _$CustomConfigurationFromJson(data);
 
   /// A description for newStringConfig
   @JsonKey(name: 'newStringConfig')
@@ -26,8 +26,8 @@ class CustomConfiguration extends Equatable {
   @JsonKey(name: 'newBoolConfig')
   final bool newBoolConfig;
 
-    /// Creates a copy of the current CustomConfiguration with property changes
-  CustomConfiguration copyWith({ 
+  /// Creates a copy of the current CustomConfiguration with property changes
+  CustomConfiguration copyWith({
     String? newStringConfig,
     bool? newBoolConfig,
   }) {
@@ -37,17 +37,17 @@ class CustomConfiguration extends Equatable {
     );
   }
 
-
-    @override
+  @override
   List<Object?> get props => [
         newStringConfig,
         newBoolConfig,
       ];
 
-    /// Creates a Json map from a CustomConfiguration
+  /// Creates a Json map from a CustomConfiguration
   Map<String, dynamic> toJson() => _$CustomConfigurationToJson(this);
 
-    /// Creates a toString() override for CustomConfiguration
+  /// Creates a toString() override for CustomConfiguration
   @override
-  String toString() => 'CustomConfiguration(newStringConfig: $newStringConfig, newBoolConfig: $newBoolConfig)';
+  String toString() =>
+      'CustomConfiguration(newStringConfig: $newStringConfig, newBoolConfig: $newBoolConfig)';
 }
