@@ -1,9 +1,8 @@
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class OptiLoggerService implements ILoggerService {
-  bool _isEnabled;
-  OptiLoggerService(this._isEnabled);
-
+  final bool enableDebugLog;
+  OptiLoggerService({required this.enableDebugLog});
   @override
-  bool isEnabled() => _isEnabled;
+  bool isEnabled() => enableDebugLog;
 }
