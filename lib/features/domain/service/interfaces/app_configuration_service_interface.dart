@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/core/config/custom_config.dart';
-import 'package:commerce_flutter_app/core/config/base_config.dart';
+import 'package:commerce_flutter_app/core/config/base_configuration.dart';
+import 'package:commerce_flutter_app/core/config/custom_configuration.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

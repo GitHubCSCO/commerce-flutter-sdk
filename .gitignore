@@ -127,3 +127,6 @@ google-play.json
 macos/*
 linux/*
 firebase_options.dart
+mason-lock.json
+mason.yaml
+.mason

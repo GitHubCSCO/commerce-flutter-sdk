@@ -14,20 +14,10 @@ abstract class ICoreServiceProvider {
   IBiometricAuthenticationService getBiometricAuthenticationService();
   IContentConfigurationService getContentConfigurationService();
   IDeviceService getDeviceService();
-  // IFlashlightService getFlashlightService();
   IGeoLocationService getGeoLocationService();
-  // IHapticFeedbackService getHapticFeedbackService();
-  // IKeyboardService getKeyboardService();
   ILocalizationService getLocalizationService();
   ILocationSearchHistoryService getLocationSearchHistoryService();
-  // ILocatorService getLocatorService();
-  // IMapService getMapService();
-  // IPermissionsService getPermissionsService();
-  // IPhoneDialerService getPhoneDialerService();
-  // IPlatformService getPlatformService();
   ISearchHistoryService getSearchHistoryService();
   IVmiService getVmiService();
   ITrackingService getTrackingService();
-  // INavigationState getNavigationState();
-  // IOptiLogger getOptiLogger();
 }
