@@ -1,5 +1,4 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
-import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/biometric_usecase/biometric_usecase.dart';
@@ -34,21 +33,17 @@ class LoginUsecase extends BiometricUsecase {
                   return LoginStatus.loginErrorUnknown;
                 }
 
-                final accountResult = await commerceAPIServiceProvider
+                await commerceAPIServiceProvider
                     .getAccountService()
                     .getCurrentAccountAsync();
 
-                if (accountResult is Failure) {
-                  return LoginStatus.loginErrorUnknown;
+                if (await _showBiometricOptionView()) {
+                  await coreServiceProvider
+                      .getBiometricAuthenticationService()
+                      .markCurrentUserAsSeenEnableBiometricOptionView();
+                  return LoginStatus.loginSuccessBiometric;
                 } else {
-                  if (await _showBiometricOptionView()) {
-                    await coreServiceProvider
-                        .getBiometricAuthenticationService()
-                        .markCurrentUserAsSeenEnableBiometricOptionView();
-                    return LoginStatus.loginSuccessBiometric;
-                  } else {
-                    return LoginStatus.loginSuccessBillToShipTo;
-                  }
+                  return LoginStatus.loginSuccessBillToShipTo;
                 }
               }
             case Failure():
