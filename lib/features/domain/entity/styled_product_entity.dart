@@ -48,8 +48,25 @@ class StyledProductEntity extends Equatable {
   });
 
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [
+        productId,
+        name,
+        shortDescription,
+        erpNumber,
+        mediumImagePath,
+        smallImagePath,
+        largeImagePath,
+        qtyOnHand,
+        numberInCart,
+        pricing,
+        quoteRequired,
+        styleValues,
+        availability,
+        productUnitOfMeasures,
+        productImages,
+        warehouses,
+        trackInventory,
+  ];
 
   StyledProductEntity copyWith({
     String? productId,
