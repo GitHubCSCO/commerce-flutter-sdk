@@ -1,0 +1,1 @@
+class RootFolderException implements Exception {}
