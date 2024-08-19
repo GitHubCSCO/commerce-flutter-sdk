@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/mixins/product_list_item_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
@@ -25,7 +26,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class SearchProductListItemWidget extends StatelessWidget {
+class SearchProductListItemWidget extends StatelessWidget
+    with ProductListItemMixIn {
   final ProductEntity product;
   final ProductSettings? productSettings;
   final bool? pricingEnable;
@@ -112,7 +114,7 @@ class SearchProductListItemWidget extends StatelessWidget {
                       color: OptiAppColors.textDisabledColor,
                     ),
                   ),
-                  _getInfoWidget(),
+                  getInfoWidget(product),
                   const SizedBox(height: 4),
                   LineItemPricingWidget(
                     discountMessage: product.pricing?.getDiscountValue(),
@@ -124,7 +126,8 @@ class SearchProductListItemWidget extends StatelessWidget {
                     productId: product.id,
                     erpNumber: product.erpNumber,
                     unitOfMeasure: product.unitOfMeasure,
-                    showViewAvailabilityByWarehouse: _showWarehouseInventory(),
+                    showViewAvailabilityByWarehouse:
+                        showWarehouseInventory(product, productSettings),
                     hidePricingEnable: hidePricingEnable,
                     hideInventoryEnable: hideInventoryEnable,
                   ),
@@ -134,7 +137,7 @@ class SearchProductListItemWidget extends StatelessWidget {
                           ..initSelectedAvailableTraitValues(product)
                           ..fetchStyleTraitValues(product);
                       },
-                      child: getSwatcesWidget()),
+                      child: getSwatchesWidget()),
                 ],
               ),
             ),
@@ -200,129 +203,5 @@ class SearchProductListItemWidget extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _getInfoWidget() {
-    List<Widget> list = [];
-
-    final myPart = _buildRow(
-        LocalizationConstants.myPartNumberSign.localized(),
-        OptiTextStyles.bodySmall,
-        product.customerName ?? '',
-        OptiTextStyles.bodyExtraSmall);
-    final mfg = _buildRow(
-        LocalizationConstants.mFGNumberSign.localized(),
-        OptiTextStyles.bodySmall,
-        product.manufacturerItem ?? '',
-        OptiTextStyles.bodyExtraSmall);
-
-    final pack = _buildRow(
-        LocalizationConstants.packSign.localized(),
-        OptiTextStyles.bodySmall,
-        product.packDescription ?? '',
-        OptiTextStyles.bodyExtraSmall);
-
-    if (myPart != null) {
-      list.add(myPart);
-    }
-    if (mfg != null) {
-      list.add(mfg);
-    }
-    if (pack != null) {
-      list.add(pack);
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: list,
-    );
-  }
-
-  Widget getSwatcesWidget() {
-    return BlocBuilder<StyleTraitCubit, StyleTraitState>(
-      builder: (context, state) {
-        if (state is StyleTraitStateLoaded &&
-            state.styleTraitsEntity.isNotEmpty) {
-          var styleTrait = context
-              .read<StyleTraitCubit>()
-              .getProductListColorTrait(state.styleTraitsEntity);
-
-          return Visibility(
-              visible: styleTrait != null,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SingleSelectionSwatchChip<StyleValueEntity>(
-                        values: styleTrait?.styleValues
-                                ?.map((e) => e.styleValue!)
-                                .toList() ??
-                            [],
-                        shouldIgnoreTitleAndLabelName: true,
-                        maxItemsToShow: 4,
-                        orientation: ChipOrientation.horizontal,
-                        selectedValue: context
-                                .read<StyleTraitCubit>()
-                                .selectedStyleValues?[
-                            styleTrait?.selectedStyleValue?.styleValue
-                                ?.styleTraitValueId],
-                        isSelectionEnabled: false,
-                        onSelectionChanged: (StyleValueEntity? selection) {}),
-                    if ((styleTrait?.styleValues?.length ?? 0) > 4)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Text("View more", style: OptiTextStyles.link),
-                      )
-                  ]));
-        }
-        return Container();
-      },
-    );
-  }
-
-  Widget? _buildRow(String title, TextStyle titleTextStyle, String body,
-      TextStyle bodyTextStyle) {
-    if (title.isEmpty || body.isEmpty) {
-      return null;
-    }
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          padding: const EdgeInsets.only(right: 8),
-          child: Text(
-            title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.start,
-            style: titleTextStyle,
-          ),
-        ),
-        Text(
-          body,
-          textAlign: TextAlign.start,
-          style: bodyTextStyle,
-        )
-      ],
-    );
-  }
-
-  bool _showWarehouseInventory() {
-    var warehouseInventoryButtonEnabled =
-        InventoryUtils.isInventoryPerWarehouseButtonShownAsync(productSettings);
-    var showWarehouseInventoryButton = false;
-
-    if (!(product.isConfigured ?? false) ||
-        (product.isFixedConfiguration ?? false) &&
-            !(product.isStyleProductParent ?? false)) {
-      if (product.availability != null &&
-          !(product.availability?.requiresRealTimeInventory ?? false) &&
-          (product.availability?.messageType ?? 0) != 0) {
-        showWarehouseInventoryButton = (product.trackInventory ?? false) &&
-            warehouseInventoryButtonEnabled;
-      }
-    }
-
-    return showWarehouseInventoryButton;
   }
 }

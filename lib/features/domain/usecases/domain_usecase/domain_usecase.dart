@@ -13,8 +13,11 @@ class DomainUsecase extends BaseUseCase {
             .baseConfig
             ?.shouldUseStaticDomain ??
         false;
+    var devMode = await commerceAPIServiceProvider
+        .getLocalStorageService()
+        .load(CoreConstants.devMode);
 
-    return isStaticDomain ? null : (await getDomain());
+    return isStaticDomain && devMode == null ? null : (await getDomain());
   }
 
   Future<String?> getDomain() async {
@@ -34,7 +37,12 @@ class DomainUsecase extends BaseUseCase {
                   "")
               .isEmpty
           ? domain
-          : coreServiceProvider.getAppConfigurationService().baseConfig?.domain;
+          : (domain != null && domain.isNotEmpty
+              ? domain
+              : coreServiceProvider
+                  .getAppConfigurationService()
+                  .baseConfig
+                  ?.domain);
     }
 
     if (domain.isNullOrEmpty) {

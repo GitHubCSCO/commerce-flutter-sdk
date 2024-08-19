@@ -1,0 +1,6 @@
+name: config_updater
+description: This brick will update custom configuration based on custom_config.json
+version: 0.1.0+1
+
+environment:
+  mason: ">=0.1.0-dev.57 <0.1.0"

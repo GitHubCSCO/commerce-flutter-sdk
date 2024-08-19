@@ -64,6 +64,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  var tapCount = 0;
 
   @override
   void dispose() {
@@ -121,18 +122,27 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
-                Image.asset(
-                  AssetConstants.logo,
-                  width: 100,
-                  height: 100,
+                GestureDetector(
+                  onTap: () async {
+                    tapCount++;
+                    if (tapCount == 10) {
+                      await context.read<RemoteConfigCubit>().fetchDevMode();
+                    }
+                  },
+                  child: Image.asset(
+                    AssetConstants.logo,
+                    width: 100,
+                    height: 100,
+                  ),
                 ),
                 const SizedBox(height: 50),
                 BlocListener<SettingsDomainCubit, SettingsDomainState>(
-                  listener: (context, state) {
+                  listener: (context, state) async {
                     if (state is SettingsDomainLoaded) {
                       final remoteConfigCubit =
                           context.read<RemoteConfigCubit>();
-                      remoteConfigCubit.fetchDebugCredential(state.domain);
+                      await remoteConfigCubit
+                          .fetchDebugCredential(state.domain);
                     }
                   },
                   child: BlocBuilder<RemoteConfigCubit, RemoteConfigState>(

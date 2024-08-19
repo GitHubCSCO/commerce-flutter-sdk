@@ -101,16 +101,20 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
                 case ProductDetailsLoaded():
                   return BottomMenuWidget(
                       toolMenuList: [
-                        ToolMenu(
-                            title: LocalizationConstants.addToList.localized(),
-                            action: () {
-                              final currentState =
-                                  context.read<AuthCubit>().state;
-                              handleAuthStatusInProductDetails(
-                                  context,
-                                  currentState.status,
-                                  context.read<ProductDetailsBloc>());
-                            }),
+                        if (context
+                            .watch<ProductDetailsBloc>()
+                            .shouldShowAddToList)
+                          ToolMenu(
+                              title:
+                                  LocalizationConstants.addToList.localized(),
+                              action: () {
+                                final currentState =
+                                    context.read<AuthCubit>().state;
+                                handleAuthStatusInProductDetails(
+                                    context,
+                                    currentState.status,
+                                    context.read<ProductDetailsBloc>());
+                              }),
                       ],
                       websitePath: context
                           .read<ProductDetailsBloc>()

@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/mixins/product_list_item_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
@@ -14,6 +15,7 @@ import 'package:commerce_flutter_app/features/presentation/components/snackbar_c
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/style_trait_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +23,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class SearchProductGridItemWidget extends StatelessWidget {
+class SearchProductGridItemWidget extends StatelessWidget
+    with ProductListItemMixIn {
   final ProductEntity product;
   final ProductSettings? productSettings;
   final bool? pricingEnable;
@@ -190,7 +193,7 @@ class SearchProductGridItemWidget extends StatelessWidget {
                           color: OptiAppColors.textDisabledColor,
                         ),
                       ),
-                      _getInfoWidget(),
+                      getInfoWidget(product),
                       const SizedBox(height: 4),
                       LineItemPricingWidget(
                         discountMessage: product.pricing?.getDiscountValue(),
@@ -205,10 +208,17 @@ class SearchProductGridItemWidget extends StatelessWidget {
                         erpNumber: product.erpNumber,
                         unitOfMeasure: product.unitOfMeasure,
                         showViewAvailabilityByWarehouse:
-                            _showWarehouseInventory(),
+                            showWarehouseInventory(product, productSettings),
                         hidePricingEnable: hidePricingEnable,
                         hideInventoryEnable: hideInventoryEnable,
                       ),
+                      BlocProvider<StyleTraitCubit>(
+                          create: (context) {
+                            return sl<StyleTraitCubit>()
+                              ..initSelectedAvailableTraitValues(product)
+                              ..fetchStyleTraitValues(product);
+                          },
+                          child: getSwatchesWidget()),
                     ],
                   ),
                 ),
@@ -218,87 +228,5 @@ class SearchProductGridItemWidget extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _getInfoWidget() {
-    List<Widget> list = [];
-
-    final myPart = _buildRow(
-        LocalizationConstants.myPartNumberSign.localized(),
-        OptiTextStyles.bodySmall,
-        product.customerName ?? '',
-        OptiTextStyles.bodyExtraSmall);
-    final mfg = _buildRow(
-        LocalizationConstants.mFGNumberSign.localized(),
-        OptiTextStyles.bodySmall,
-        product.manufacturerItem ?? '',
-        OptiTextStyles.bodyExtraSmall);
-
-    final pack = _buildRow(
-        LocalizationConstants.packSign.localized(),
-        OptiTextStyles.bodySmall,
-        product.packDescription ?? '',
-        OptiTextStyles.bodyExtraSmall);
-
-    if (myPart != null) {
-      list.add(myPart);
-    }
-    if (mfg != null) {
-      list.add(mfg);
-    }
-    if (pack != null) {
-      list.add(pack);
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: list,
-    );
-  }
-
-  Widget? _buildRow(String title, TextStyle titleTextStyle, String body,
-      TextStyle bodyTextStyle) {
-    if (title.isEmpty || body.isEmpty) {
-      return null;
-    }
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          padding: const EdgeInsets.only(right: 8),
-          child: Text(
-            title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.start,
-            style: titleTextStyle,
-          ),
-        ),
-        Text(
-          body,
-          textAlign: TextAlign.start,
-          style: bodyTextStyle,
-        )
-      ],
-    );
-  }
-
-  bool _showWarehouseInventory() {
-    var warehouseInventoryButtonEnabled =
-        InventoryUtils.isInventoryPerWarehouseButtonShownAsync(productSettings);
-    var showWarehouseInventoryButton = false;
-
-    if (!(product.isConfigured ?? false) ||
-        (product.isFixedConfiguration ?? false) &&
-            !(product.isStyleProductParent ?? false)) {
-      if (product.availability != null &&
-          !(product.availability?.requiresRealTimeInventory ?? false) &&
-          (product.availability?.messageType ?? 0) != 0) {
-        showWarehouseInventoryButton = (product.trackInventory ?? false) &&
-            warehouseInventoryButtonEnabled;
-      }
-    }
-
-    return showWarehouseInventoryButton;
   }
 }
