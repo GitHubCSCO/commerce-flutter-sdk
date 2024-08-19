@@ -44,7 +44,8 @@ mixin ProductListItemMixIn {
                     if ((styleTrait?.styleValues?.length ?? 0) > 4)
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Text("View more", style: OptiTextStyles.link),
+                        child: Text(LocalizationConstants.viewMore.localized(),
+                            style: OptiTextStyles.link),
                       )
                   ]));
         }
