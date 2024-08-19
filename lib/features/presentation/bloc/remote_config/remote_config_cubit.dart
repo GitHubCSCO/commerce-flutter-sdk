@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/remote_config/remote_config_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -16,6 +17,14 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
     var debugCredentials =
         await _remoteConfigUsecase.fetchDebugCredential(domain);
     emit(RemoteConfigDebugCredentialsLoaded(creds: debugCredentials));
+  }
+
+  Future<void> fetchDevMode() async {
+    if (await _remoteConfigUsecase.fetchDevMode()) {
+      await _remoteConfigUsecase.commerceAPIServiceProvider
+          .getLocalStorageService()
+          .save(CoreConstants.devMode, CoreConstants.devMode);
+    }
   }
 
   Future<void> fetchDebugDomains() async {

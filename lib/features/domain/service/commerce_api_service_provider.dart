@@ -45,8 +45,6 @@ class CommerceAPIServiceProvider implements ICommerceAPIServiceProvider {
   ILoggerService getLoggerService() => sl<ILoggerService>();
   @override
   IMessageService getMessageService() => sl<IMessageService>();
-  // @override
-  // IMessengerService getMessengerService() => sl<IMessengerService>();
   @override
   IMobileContentService getMobileContentService() =>
       sl<IMobileContentService>();

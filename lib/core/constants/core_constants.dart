@@ -44,4 +44,5 @@ class CoreConstants {
   static const int maximumOrderQuantity = 999999;
   static const double barcodeRectangleSize = 180;
   static const String domainKey = 'DomainKey';
+  static const String devMode = 'DevMode';
 }
