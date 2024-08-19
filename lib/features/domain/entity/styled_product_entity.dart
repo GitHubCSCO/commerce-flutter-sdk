@@ -66,7 +66,7 @@ class StyledProductEntity extends Equatable {
         productImages,
         warehouses,
         trackInventory,
-  ];
+      ];
 
   StyledProductEntity copyWith({
     String? productId,
