@@ -210,6 +210,13 @@ class ProductDetailsBloc
       StyleTraitSelectedEvent event, Emitter<ProductDetailsState> emit) async {
     var selectedStyleValue = event.selectedStyleValue;
     var product = productDetailDataEntity.product!;
+
+    if (event.selectedStyleValue.styleTraitId == null) {
+      productDetailDataEntity.styledProduct = null;
+      await _makeAllDetailsItems(product, emit);
+      return;
+    }
+
     var styledProduct =
         _productDetailsStyleTraitsUseCase.getStyledProductBasedOnSelection(
             selectedStyleValue,
