@@ -213,6 +213,9 @@ class ProductDetailsBloc
 
     if (event.selectedStyleValue.styleTraitId == null) {
       productDetailDataEntity.styledProduct = null;
+      productDetailDataEntity.selectedStyleValues =
+          _productDetailsStyleTraitsUseCase.getSelectedStyleValues(
+              product, null);
       await _makeAllDetailsItems(product, emit);
       return;
     }
