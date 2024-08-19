@@ -10,7 +10,7 @@ class BillToShipToUseCase extends BaseUseCase {
         .getSessionService()
         .getCurrentSession();
     Session? currentSession =
-    result is Success ? (result as Success).value : null;
+        result is Success ? (result as Success).value : null;
     return Future.value(currentSession);
   }
 
