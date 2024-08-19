@@ -249,4 +249,11 @@ class ProductDetailsBloc
     return selectedConfigurations.keys
         .every((k) => selectedConfigurations[k] != null);
   }
+
+  bool get shouldShowAddToList {
+    return productDetailDataEntity.product != null &&
+        (productDetailDataEntity.product?.canAddToWishlist == true ||
+            _productDetailsStyleTraitsUseCase.isProductStyleSelectionCompleted(
+                productDetailDataEntity.selectedStyleValues));
+  }
 }
