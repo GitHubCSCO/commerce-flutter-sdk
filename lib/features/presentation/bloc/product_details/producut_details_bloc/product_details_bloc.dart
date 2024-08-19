@@ -31,7 +31,8 @@ class ProductDetailsBloc
   }
   List<AddCartLine> getAddCartLineForWistlist() {
     var cartLineOfProduct = AddCartLine(
-      productId: productDetailDataEntity.product?.id,
+      productId: productDetailDataEntity.styledProduct?.productId ??
+          productDetailDataEntity.product?.id,
       qtyOrdered: productDetailDataEntity.product?.qtyOrdered,
       unitOfMeasure: productDetailDataEntity.product?.unitOfMeasure,
     );
