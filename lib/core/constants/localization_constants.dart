@@ -673,6 +673,7 @@ enum LocalizationConstants {
   invalidUrl(keyword: "Invalid url."),
   failedToLoadUrl(keyword: "Failed to load url."),
   noBrandDetailsFound(keyword: "No details found for this brand"),
+  viewMore(keyword: "View More"),
   ;
 
   const LocalizationConstants({
