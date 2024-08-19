@@ -49,6 +49,17 @@ class RemoteConfigUsecase extends BaseUseCase {
     }
   }
 
+  Future<bool> fetchDevMode() async {
+    if (sl<AnalyticsConfig>().firebaseOptions?.isValid() == true) {
+      await _syncRemoteConfig();
+      final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
+      final bool devMode = remoteConfig.getBool('dev_mode');
+      return devMode;
+    } else {
+      return false;
+    }
+  }
+
   Future<Map<String, String>> fetchDebugDomains() async {
     if (sl<AnalyticsConfig>().firebaseOptions?.isValid() == true) {
       await _syncRemoteConfig();

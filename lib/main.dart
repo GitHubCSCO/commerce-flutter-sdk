@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:appcenter_analytics/appcenter_analytics.dart';
 import 'package:commerce_flutter_app/core/config/analytics_config.dart';
 import 'package:commerce_flutter_app/core/config/prod_config_constants.dart';
@@ -83,7 +85,16 @@ Future<void> initAnalyticsTracker() async {
     FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
 
     FlutterError.onError = (errorDetails) {
-      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+      //Some products does not have valid publicly accessible image url
+      //We should not report those to crashlytics but console logging them for debug purposes
+      //We can stop that log as well with LoggerService
+      if (errorDetails.exception is NetworkImageLoadException) {
+        if (sl<ILoggerService>().isEnabled()) {
+          log("Could not load image for ${(errorDetails.exception as NetworkImageLoadException).toString()}");
+        }
+      } else {
+        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+      }
     };
     // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
     PlatformDispatcher.instance.onError = (error, stack) {
