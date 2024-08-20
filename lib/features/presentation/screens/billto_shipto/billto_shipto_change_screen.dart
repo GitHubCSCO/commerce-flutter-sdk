@@ -10,9 +10,11 @@ import 'package:commerce_flutter_app/features/domain/enums/location_search_type.
 import 'package:commerce_flutter_app/features/domain/extensions/warehouse_extension.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/warehouse_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/billto_shipto/billto_shipto_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
@@ -74,6 +76,8 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
       body: BlocListener<BillToShipToBloc, BillToShipToState>(
         listener: (context, state) {
           if (state is SaveBillToShipToSuccess) {
+            context.read<CartCountCubit>().loadCurrentCartCount();
+            context.read<RootBloc>().add(RootCartUpdateEvent());
             CustomSnackBar.showBilltoShipToSuccess(context);
             context.pop(false);
           } else if (state is SaveBillToShipToFailed) {
