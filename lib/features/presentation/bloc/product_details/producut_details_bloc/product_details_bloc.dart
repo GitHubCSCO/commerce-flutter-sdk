@@ -31,7 +31,8 @@ class ProductDetailsBloc
   }
   List<AddCartLine> getAddCartLineForWistlist() {
     var cartLineOfProduct = AddCartLine(
-      productId: productDetailDataEntity.product?.id,
+      productId: productDetailDataEntity.styledProduct?.productId ??
+          productDetailDataEntity.product?.id,
       qtyOrdered: productDetailDataEntity.product?.qtyOrdered,
       unitOfMeasure: productDetailDataEntity.product?.unitOfMeasure,
     );
@@ -209,6 +210,16 @@ class ProductDetailsBloc
       StyleTraitSelectedEvent event, Emitter<ProductDetailsState> emit) async {
     var selectedStyleValue = event.selectedStyleValue;
     var product = productDetailDataEntity.product!;
+
+    if (event.selectedStyleValue.styleTraitId == null) {
+      productDetailDataEntity.styledProduct = null;
+      productDetailDataEntity.selectedStyleValues =
+          _productDetailsStyleTraitsUseCase.getSelectedStyleValues(
+              product, null);
+      await _makeAllDetailsItems(product, emit);
+      return;
+    }
+
     var styledProduct =
         _productDetailsStyleTraitsUseCase.getStyledProductBasedOnSelection(
             selectedStyleValue,

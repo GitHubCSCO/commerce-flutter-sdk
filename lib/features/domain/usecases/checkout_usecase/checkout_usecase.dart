@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -34,6 +35,18 @@ class CheckoutUsecase extends BaseUseCase {
     return commerceAPIServiceProvider
         .getSessionService()
         .getCachedCurrentSession();
+  }
+
+  Future<Session?> updateCurrentSession(Session? session) async {
+    if (session == null) {
+      return null;
+    }
+    final result = (await commerceAPIServiceProvider
+            .getSessionService()
+            .patchCustomerSession(session))
+        .getResultSuccessValue();
+
+    return result;
   }
 
   Future<Result<CartSettings, ErrorResponse>> getCartSetting() {
