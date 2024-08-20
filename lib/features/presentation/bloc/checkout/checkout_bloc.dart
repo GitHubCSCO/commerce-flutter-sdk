@@ -265,6 +265,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
         : event.shipTo;
 
     session?.shipTo = cart?.shipTo;
+    session = await _checkoutUseCase.updateCurrentSession(session);
+
     emit(CheckoutShipToAddressAddedState());
   }
 
@@ -272,6 +274,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
       UpdateShiptoAddressEvent event, Emitter<CheckoutState> emit) async {
     cart?.shipTo = event.shipTo;
     session?.shipTo = cart?.shipTo;
+    session = await _checkoutUseCase.updateCurrentSession(session);
+
     emit(CheckoutShipToAddressAddedState());
   }
 
