@@ -6,20 +6,12 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BillToShipToUseCase extends BaseUseCase {
   Future<Session?> getCurrentSession() async {
-    Session? cachedCurrentSession = commerceAPIServiceProvider
+    final result = await commerceAPIServiceProvider
         .getSessionService()
-        .getCachedCurrentSession();
-
-    if (cachedCurrentSession == null) {
-      final result = await commerceAPIServiceProvider
-          .getSessionService()
-          .getCurrentSession();
-      Session? currentSession =
-          result is Success ? (result as Success).value : null;
-      return Future.value(currentSession);
-    }
-
-    return Future.value(cachedCurrentSession);
+        .getCurrentSession();
+    Session? currentSession =
+        result is Success ? (result as Success).value : null;
+    return Future.value(currentSession);
   }
 
   Future<Session?> updateCurrentSession(

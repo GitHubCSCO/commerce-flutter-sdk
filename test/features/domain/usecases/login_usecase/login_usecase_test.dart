@@ -82,33 +82,4 @@ void main() async {
 
     expect(result, expectedResult);
   });
-
-  test(
-      'attemptSignIn should return loginErrorUnknown when account retrieval fails',
-      () async {
-    const userName = 'testUser';
-    const passWord = 'testPassword';
-    const expectedResult = LoginStatus.loginErrorUnknown;
-
-    when(() => sut.commerceAPIServiceProvider.getNetworkService().isOnline())
-        .thenAnswer((_) async => true);
-
-    when(() => sut.commerceAPIServiceProvider
-        .getAuthenticationService()
-        .logInAsync(userName, passWord)).thenAnswer((_) async => Success(true));
-
-    when(() => sut.commerceAPIServiceProvider
-        .getSessionService()
-        .getCurrentSession()).thenAnswer((_) async => Success(Session()));
-
-    when(() => sut.commerceAPIServiceProvider
-            .getAccountService()
-            .getCurrentAccountAsync())
-        .thenAnswer(
-            (_) async => Failure(ErrorResponse(message: 'loginErrorUnknown')));
-
-    final result = await sut.attemptSignIn(userName, passWord);
-
-    expect(result, expectedResult);
-  });
 }

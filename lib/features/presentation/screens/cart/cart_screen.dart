@@ -35,7 +35,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 void _reloadCartPage(BuildContext context) {
-  context.read<CartCountCubit>().onCartItemChange();
+  context.read<CartCountCubit>().loadCurrentCartCount();
   context.read<CartPageBloc>().add(CartPageLoadEvent());
 }
 
