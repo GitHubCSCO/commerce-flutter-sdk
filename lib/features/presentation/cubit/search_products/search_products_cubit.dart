@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/core/mixins/realtime_pricing_inventory_update_mixin.dart';
 import 'package:commerce_flutter_app/features/domain/entity/pagination_entity.dart';
@@ -108,6 +109,9 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
     hideInventoryEnable = _pricingInventoryUseCase.getHideInventoryEnable();
     canAddToCartInProductList =
         await _searchUseCase.canAddToCartInProductList();
+    final message = await _searchUseCase.getSiteMessage(
+        SiteMessageConstants.nameMobileAppSearchNoResults,
+        SiteMessageConstants.defaultMobileAppSearchNoResults);
 
     List<ProductEntity> productEntities =
         await updateProductPricingAndInventoryAvailability(
@@ -128,6 +132,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
         hidePricingEnabled: hidePricingEnable,
         hideInventoryEnabled: hideInventoryEnable,
         canAddToCartInProductList: canAddToCartInProductList,
+        message: message,
       ),
     );
   }
