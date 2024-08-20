@@ -93,40 +93,61 @@ class QuotePageState extends State<QuotePage> {
             child: TabSwitchWidget(
               tabTitle0: LocalizationConstants.pending.localized(),
               tabTitle1: LocalizationConstants.activeJobs.localized(),
-              tabWidget0:
-                  BlocBuilder<QuoteBloc, QuoteState>(builder: (_, state) {
-                if (state is QuoteFailed) {
-                  return const Center(
-                    child: Text("No data found"),
-                  );
-                } else if (state is QuoteLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state is QuoteLoaded) {
-                  return _PendingQuotesWidget(
-                    goToQuoteDetails: goToQuoteDetails,
-                  );
-                } else {
-                  return Container();
-                }
-              }),
-              tabWidget1:
-                  BlocBuilder<QuoteBloc, QuoteState>(builder: (context, state) {
-                if (state is QuoteFailed) {
-                  return const Center(
-                    child: Text("No data found"),
-                  );
-                } else if (state is QuoteLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state is JobQuoteLoaded) {
-                  return _buildActiveJobsWidget(state.jobQuotes, context);
-                } else {
-                  return Container();
-                }
-              }),
+              tabWidget0: Expanded(
+                child: BlocBuilder<QuoteBloc, QuoteState>(builder: (_, state) {
+                  if (state is QuoteFailed) {
+                    return const Center(
+                      child: Text("No data found"),
+                    );
+                  } else if (state is QuoteLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is QuoteLoaded) {
+                    if (state.quotes == null || state.quotes!.isEmpty) {
+                      return Center(
+                        child: Text(
+                          state.notFoundInfoText ?? "",
+                          style: OptiTextStyles.subtitle,
+                        ),
+                      );
+                    } else {
+                      return _PendingQuotesWidget(
+                        goToQuoteDetails: goToQuoteDetails,
+                      );
+                    }
+                  } else {
+                    return Container();
+                  }
+                }),
+              ),
+              tabWidget1: Expanded(
+                child: BlocBuilder<QuoteBloc, QuoteState>(
+                    builder: (context, state) {
+                  if (state is QuoteFailed) {
+                    return const Center(
+                      child: Text("No data found"),
+                    );
+                  } else if (state is QuoteLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is JobQuoteLoaded) {
+                    if (state.jobQuotes == null || state.jobQuotes!.isEmpty) {
+                      return Center(
+                        child: Text(
+                          state.notFoundInfoText ?? "",
+                          style: OptiTextStyles.subtitle,
+                        ),
+                      );
+                    } else {
+                      return _buildActiveJobsWidget(state.jobQuotes, context);
+                    }
+                  } else {
+                    return Container();
+                  }
+                }),
+              ),
               selectedIndex: selectedIndex,
               onTabSelectionChange: (index) {
                 setState(() {
