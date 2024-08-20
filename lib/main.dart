@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:appcenter_analytics/appcenter_analytics.dart';
 import 'package:commerce_flutter_app/core/config/analytics_config.dart';
 import 'package:commerce_flutter_app/core/config/prod_config_constants.dart';
@@ -7,6 +5,7 @@ import 'package:commerce_flutter_app/core/extensions/firebase_options_extension.
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/core/utils/bloc_observer.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/load_website_url/load_website_url_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
@@ -36,11 +35,17 @@ Future<void> main() async {
   initCommerceSDK();
   await initInjectionContainer();
 
-  await initAnalyticsTracker();
+  //If error log is not enabled we should not do anything when an error is presented
+  //By default if isErrorLogEnabled is true: FlutterError.presentError = FlutterError.dumpErrorToConsole
+  if (sl<OptiLoggerService>().isErrorLogEnabled == false) {
+    FlutterError.presentError = (_) => {};
+  }
 
-  if (sl<ILoggerService>().isEnabled()) {
+  if (sl<OptiLoggerService>().isDebugLogEnabled) {
     Bloc.observer = const AppBlocObserver();
   }
+
+  await initAnalyticsTracker();
 
   runApp(
     MultiBlocProvider(
@@ -69,13 +74,6 @@ Future<void> main() async {
 Future<void> initAnalyticsTracker() async {
   if (sl<AnalyticsConfig>().appCenterSecret?.isNullOrEmpty == false) {
     await AppCenter.start(secret: sl<AnalyticsConfig>().appCenterSecret!);
-    FlutterError.onError = (final details) async {
-      await AppCenterCrashes.trackException(
-        message: details.exception.toString(),
-        type: details.exception.runtimeType,
-        stackTrace: details.stack,
-      );
-    };
   }
   if (sl<AnalyticsConfig>().firebaseOptions?.isValid() == true) {
     await Firebase.initializeApp(
@@ -84,24 +82,33 @@ Future<void> initAnalyticsTracker() async {
 
     FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
 
-    FlutterError.onError = (errorDetails) {
-      //Some products does not have valid publicly accessible image url
-      //We should not report those to crashlytics but console logging them for debug purposes
-      //We can stop that log as well with LoggerService
-      if (errorDetails.exception is NetworkImageLoadException) {
-        if (sl<ILoggerService>().isEnabled()) {
-          log("Could not load image for ${(errorDetails.exception as NetworkImageLoadException).toString()}");
-        }
-      } else {
-        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-      }
-    };
     // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
     PlatformDispatcher.instance.onError = (error, stack) {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       return true;
     };
   }
+
+  FlutterError.onError = (errorDetails) async {
+    //Some products does not have valid publicly accessible image url
+    //We should not report those to crashlytics or in appcenter
+    if (errorDetails.exception is NetworkImageLoadException) {
+      //if sl<OptiLoggerService>().isErrorLogEnabled is true
+      //console logging through FlutterError.presentError
+      FlutterError.presentError(errorDetails);
+    } else {
+      if (sl<AnalyticsConfig>().firebaseOptions?.isValid() == true) {
+        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+      }
+      if (sl<AnalyticsConfig>().appCenterSecret?.isNullOrEmpty == false) {
+        await AppCenterCrashes.trackException(
+          message: errorDetails.exception.toString(),
+          type: errorDetails.exception.runtimeType,
+          stackTrace: errorDetails.stack,
+        );
+      }
+    }
+  };
 }
 
 void initialHiveDatabase() async {
