@@ -48,31 +48,37 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
             selectedStockedItems: false,
             productSettings: null,
             productPricingEnabled: false,
+            parentType: ProductParentType.search,
           ),
         );
 
   void setProductFilter(ProductPageEntity entity) {
     switch (entity.parentType) {
       case ProductParentType.category:
-        emit(state.copyWith(selectedCategoryId: entity.category?.id));
+        emit(state.copyWith(
+            selectedCategoryId: entity.category?.id,
+            parentType: entity.parentType));
         break;
       case ProductParentType.brandCategory:
         emit(state.copyWith(
             selectedCategoryId: entity.categoryId,
-            selectedBrandIds: [entity.brandEntity?.id ?? '']));
+            selectedBrandIds: [entity.brandEntity?.id ?? ''],
+            parentType: entity.parentType));
         break;
       case ProductParentType.brand:
         emit(state.copyWith(selectedBrandIds: [
-          entity.brandEntity?.id ?? entity.brandEntityId ?? ''
-        ]));
+          entity.brandEntity?.id ?? entity.brandEntityId ?? '',
+        ], parentType: entity.parentType));
       case ProductParentType.brandProductLine:
         emit(
           state.copyWith(selectedBrandIds: [
             entity.brandEntity?.id ?? entity.brandEntityId ?? ''
           ], selectedProductLineIds: [
             entity.brandProductLine?.id ?? ''
-          ]),
+          ], parentType: entity.parentType),
         );
+        break;
+      case ProductParentType.search:
         break;
     }
   }
@@ -268,26 +274,28 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
   }
 
   int get selectedFiltersCount {
-    /// Depending on the product list type, the number of selected filters will be different
-    /// For now, we are only supporting search products
     var valueIdsCount = state.selectedAttributeValueIds.length +
         (state.previouslyPurchased ? 1 : 0) +
         (state.selectedStockedItems ? 1 : 0);
-    // if (state.productListType == ProductListType.searchProducts) {
-    return valueIdsCount +
-        state.selectedBrandIds.length +
-        state.selectedProductLineIds.length +
-        (state.selectedCategoryId.isNotEmpty ? 1 : 0);
-    // } else if (state.productListType == ProductListType.categoryProducts) {
-    //   return valueIdsCount + state.selectedBrandIds.length + state.selectedProductLineIds.length;
-    // } else if (state.productListType == ProductListType.shopBrandProducts) {
-    //   return valueIdsCount + state.selectedProductLineIds.length + (state.selectedCategoryId.isNotEmpty ? 1 : 0);
-    // } else if (state.productListType == ProductListType.shopBrandCategoryProducts) {
-    //   return valueIdsCount + state.selectedProductLineIds.length;
-    // } else if (state.productListType == ProductListType.shopBrandProductLineProducts) {
-    //   return valueIdsCount + (state.selectedCategoryId.isNotEmpty ? 1 : 0);
-    // } else {
-    //   return 0;
-    // }
+    if (state.parentType == ProductParentType.search) {
+      return valueIdsCount +
+          state.selectedBrandIds.length +
+          state.selectedProductLineIds.length +
+          (state.selectedCategoryId.isNotEmpty ? 1 : 0);
+    } else if (state.parentType == ProductParentType.category) {
+      return valueIdsCount +
+          state.selectedBrandIds.length +
+          state.selectedProductLineIds.length;
+    } else if (state.parentType == ProductParentType.brand) {
+      return valueIdsCount +
+          state.selectedProductLineIds.length +
+          (state.selectedCategoryId.isNotEmpty ? 1 : 0);
+    } else if (state.parentType == ProductParentType.brandCategory) {
+      return valueIdsCount + state.selectedProductLineIds.length;
+    } else if (state.parentType == ProductParentType.brandProductLine) {
+      return valueIdsCount + (state.selectedCategoryId.isNotEmpty ? 1 : 0);
+    } else {
+      return 0;
+    }
   }
 }

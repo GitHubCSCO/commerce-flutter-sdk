@@ -14,6 +14,7 @@ class SearchProductsState extends Equatable {
   final bool previouslyPurchased;
   final bool selectedStockedItems;
   final ProductSettings? productSettings;
+  final ProductParentType? parentType;
   final bool productPricingEnabled;
   final bool? hidePricingEnabled;
   final bool? hideInventoryEnabled;
@@ -34,6 +35,7 @@ class SearchProductsState extends Equatable {
     required this.selectedStockedItems,
     required this.productSettings,
     required this.productPricingEnabled,
+    required this.parentType,
     this.hidePricingEnabled,
     this.hideInventoryEnabled,
     this.canAddToCartInProductList,
@@ -54,6 +56,7 @@ class SearchProductsState extends Equatable {
         selectedStockedItems,
         productSettings ?? ProductSettings(),
         productPricingEnabled,
+        parentType == ProductParentType.search,
         hidePricingEnabled ?? false,
         hideInventoryEnabled ?? false,
         canAddToCartInProductList ?? false,
@@ -77,6 +80,7 @@ class SearchProductsState extends Equatable {
     bool? hidePricingEnabled,
     bool? hideInventoryEnabled,
     bool? canAddToCartInProductList,
+    ProductParentType? parentType,
   }) {
     return SearchProductsState(
       originalQuery: originalQuery ?? this.originalQuery,
@@ -100,6 +104,7 @@ class SearchProductsState extends Equatable {
       hideInventoryEnabled: hideInventoryEnabled ?? this.hideInventoryEnabled,
       canAddToCartInProductList:
           canAddToCartInProductList ?? this.canAddToCartInProductList,
+      parentType: parentType ?? this.parentType,
     );
   }
 }
