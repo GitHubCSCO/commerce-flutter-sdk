@@ -128,6 +128,7 @@ class QuotePricingPage extends StatelessWidget {
                       ...state.quoteLinePricingBreakItemEntities.map((item) {
                         return PriceBreakwidget(
                           index: item.id,
+                          key: ValueKey(item.id),
                           startQtyDisplay: item.startQuantityDisplay!,
                           endQtyDisplay: item.endQuantityDisplay!,
                           priceDisplay: item.priceDisplay!,

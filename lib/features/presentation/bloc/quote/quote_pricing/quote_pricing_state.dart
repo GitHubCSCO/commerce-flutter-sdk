@@ -1,12 +1,19 @@
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_pricing_break_item_entity.dart';
+import 'package:equatable/equatable.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-abstract class QuotePricingState {}
+abstract class QuotePricingState extends Equatable {}
 
-class QuotePricingInitialState extends QuotePricingState {}
+class QuotePricingInitialState extends QuotePricingState {
+  @override
+  List<Object?> get props => [];
+}
 
-class QuotePricingLoadingState extends QuotePricingState {}
+class QuotePricingLoadingState extends QuotePricingState {
+  @override
+  List<Object?> get props => [];
+}
 
 class QuotePricingLoadedState extends QuotePricingState {
   final QuoteLineEntity quoteLineEntity;
@@ -15,6 +22,10 @@ class QuotePricingLoadedState extends QuotePricingState {
   QuotePricingLoadedState(
       {required this.quoteLineEntity,
       required this.quoteLinePricingBreakItemEntities});
+
+  @override
+  List<Object?> get props =>
+      [quoteLineEntity, quoteLinePricingBreakItemEntities];
 }
 
 class QuotePriceBreakValidationState extends QuotePricingState {
@@ -23,12 +34,21 @@ class QuotePriceBreakValidationState extends QuotePricingState {
 
   QuotePriceBreakValidationState(
       {required this.isValid, required this.message});
+
+  @override
+  List<Object?> get props => [isValid, message];
 }
 
 class QuoteLinePricingApplySuccessState extends QuotePricingState {
   final QuoteDto quoteDto;
 
   QuoteLinePricingApplySuccessState({required this.quoteDto});
+
+  @override
+  List<Object?> get props => [quoteDto];
 }
 
-class QuoteLinePricingApplyFailureState extends QuotePricingState {}
+class QuoteLinePricingApplyFailureState extends QuotePricingState {
+  @override
+  List<Object?> get props => [];
+}
