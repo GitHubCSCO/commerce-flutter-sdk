@@ -641,7 +641,7 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<ISecureStorageService>(() => SecureStorageService())
     ..registerLazySingleton<ILocalStorageService>(() => LocalStorageService())
     ..registerLazySingleton<ILoggerService>(() => OptiLoggerService(
-          enableDebugLog: false,
+          enableDebugLog: true,
         ))
     ..registerLazySingleton<IGeoLocationService>(() => GeoLocationService())
     ..registerLazySingleton<IMessageService>(() => MessageService(

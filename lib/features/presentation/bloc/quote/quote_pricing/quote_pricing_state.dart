@@ -10,7 +10,7 @@ class QuotePricingLoadingState extends QuotePricingState {}
 
 class QuotePricingLoadedState extends QuotePricingState {
   final QuoteLineEntity quoteLineEntity;
-  List<QuoteLinePricingBreakItemEntity> quoteLinePricingBreakItemEntities;
+  final List<QuoteLinePricingBreakItemEntity> quoteLinePricingBreakItemEntities;
 
   QuotePricingLoadedState(
       {required this.quoteLineEntity,

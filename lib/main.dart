@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:appcenter_analytics/appcenter_analytics.dart';
 import 'package:commerce_flutter_app/core/config/analytics_config.dart';
 import 'package:commerce_flutter_app/core/config/prod_config_constants.dart';
