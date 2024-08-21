@@ -1,9 +1,9 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/mixins/list_grid_view_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/category/category_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_grid_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_list_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
@@ -40,8 +40,7 @@ class SubCategoryPage extends StatefulWidget {
   State<SubCategoryPage> createState() => _SubCategoryPageState();
 }
 
-class _SubCategoryPageState extends State<SubCategoryPage> {
-  bool isGridView = true;
+class _SubCategoryPageState extends State<SubCategoryPage> with ListGridViewMenuMixIn {
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +53,7 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
         actions: [
           BottomMenuWidget(
               websitePath: widget.categoryPath,
-              toolMenuList: _getToolMenu(context)),
+              toolMenuList: getToolMenu(context)),
         ],
       ),
       body: BlocBuilder<CategoryBloc, CategoryState>(
@@ -97,22 +96,4 @@ class _SubCategoryPageState extends State<SubCategoryPage> {
     }
   }
 
-  List<ToolMenu> _getToolMenu(BuildContext context) {
-    List<ToolMenu> list = [];
-    list.add(ToolMenu(
-        title: LocalizationConstants.listView.localized(),
-        action: () {
-          setState(() {
-            isGridView = false;
-          });
-        }));
-    list.add(ToolMenu(
-        title: LocalizationConstants.gridView.localized(),
-        action: () {
-          setState(() {
-            isGridView = true;
-          });
-        }));
-    return list;
-  }
 }

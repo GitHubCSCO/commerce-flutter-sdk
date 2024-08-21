@@ -1,9 +1,9 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/mixins/list_grid_view_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_product_line/brand_product_line_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_grid_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_list_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
@@ -36,8 +36,7 @@ class BrandProductLinesPage extends StatefulWidget {
   State<BrandProductLinesPage> createState() => _BrandProductLinesPageState();
 }
 
-class _BrandProductLinesPageState extends State<BrandProductLinesPage> {
-  bool isGridView = true;
+class _BrandProductLinesPageState extends State<BrandProductLinesPage> with ListGridViewMenuMixIn {
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +47,7 @@ class _BrandProductLinesPageState extends State<BrandProductLinesPage> {
         actions: [
           BottomMenuWidget(
               isViewOnWebsiteEnable: false,
-              toolMenuList: _getToolMenu(context)),
+              toolMenuList: getToolMenu(context)),
         ],
       ),
       body: BlocBuilder<BrandProductLinesCubit, BrandProductLinesState>(
@@ -98,22 +97,4 @@ class _BrandProductLinesPageState extends State<BrandProductLinesPage> {
     AppRoute.product.navigateBackStack(context, extra: productPageEntity);
   }
 
-  List<ToolMenu> _getToolMenu(BuildContext context) {
-    List<ToolMenu> list = [];
-    list.add(ToolMenu(
-        title: LocalizationConstants.listView.localized(),
-        action: () {
-          setState(() {
-            isGridView = false;
-          });
-        }));
-    list.add(ToolMenu(
-        title: LocalizationConstants.gridView.localized(),
-        action: () {
-          setState(() {
-            isGridView = true;
-          });
-        }));
-    return list;
-  }
 }

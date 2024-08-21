@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/mixins/list_grid_view_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
 import 'package:commerce_flutter_app/features/domain/enums/product_list_type.dart';
@@ -9,7 +10,6 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product/product_
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_product/search_products_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
@@ -97,9 +97,14 @@ class ProductPage extends StatefulWidget {
   State<ProductPage> createState() => _ProductPageState();
 }
 
-class _ProductPageState extends State<ProductPage> {
+class _ProductPageState extends State<ProductPage> with ListGridViewMenuMixIn {
   final textEditingController = TextEditingController();
-  bool isGridView = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isGridView = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +115,7 @@ class _ProductPageState extends State<ProductPage> {
         actions: [
           BottomMenuWidget(
               websitePath: _getWebsitePath(widget.pageEntity),
-              toolMenuList: _getToolMenu(context)),
+              toolMenuList: getToolMenu(context)),
         ],
       ),
       body: Column(
@@ -223,26 +228,4 @@ class _ProductPageState extends State<ProductPage> {
     return null;
   }
 
-  List<ToolMenu> _getToolMenu(BuildContext context) {
-    List<ToolMenu> list = [];
-    list.add(ToolMenu(
-        title: !isGridView
-            ? '${LocalizationConstants.listView.localized()} \u2713'
-            : LocalizationConstants.listView.localized(),
-        action: () {
-          setState(() {
-            isGridView = false;
-          });
-        }));
-    list.add(ToolMenu(
-        title: isGridView
-            ? '${LocalizationConstants.gridView.localized()} \u2713'
-            : LocalizationConstants.gridView.localized(),
-        action: () {
-          setState(() {
-            isGridView = true;
-          });
-        }));
-    return list;
-  }
 }
