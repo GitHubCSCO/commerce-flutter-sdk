@@ -46,8 +46,6 @@ class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
-      BlocProvider<PullToRefreshBloc>(
-          create: (context) => sl<PullToRefreshBloc>()),
       BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
       BlocProvider<AccountPageBloc>(
           create: (context) =>
@@ -67,13 +65,6 @@ class AccountPage extends StatelessWidget with BaseDynamicContentScreen {
           listener: (context, state) async {
             if (state is RootConfigReload) {
               _reloadAccountPage(context);
-            }
-          },
-        ),
-        BlocListener<PullToRefreshBloc, PullToRefreshState>(
-          listener: (context, state) async {
-            if (state is PullToRefreshLoadState) {
-              await _reloadAccountPageWithAuthStatus(context);
             }
           },
         ),
@@ -98,8 +89,7 @@ class AccountPage extends StatelessWidget with BaseDynamicContentScreen {
       ],
       child: RefreshIndicator(
         onRefresh: () async {
-          BlocProvider.of<PullToRefreshBloc>(context)
-              .add(PullToRefreshInitialEvent());
+          await _reloadAccountPageWithAuthStatus(context);
         },
         child: BlocBuilder<CmsCubit, CmsState>(
           builder: (context, state) {
