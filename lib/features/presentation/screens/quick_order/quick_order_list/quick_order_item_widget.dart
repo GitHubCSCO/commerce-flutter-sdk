@@ -7,10 +7,10 @@ import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart'
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
+import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/order_widgets/order_product_image_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_screen.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -287,7 +287,7 @@ class OrderProductPricingWidget extends StatelessWidget {
   }
 }
 
-class OrderProductQuantityGroupWidget extends StatelessWidget {
+class OrderProductQuantityGroupWidget extends StatefulWidget {
   final Function(BuildContext context, QuickOrderItemEntity,
       OrderCallBackType orderCallBackType) callback;
   final QuickOrderItemEntity quickOrderItemEntity;
@@ -297,6 +297,32 @@ class OrderProductQuantityGroupWidget extends StatelessWidget {
       this.callback, this.quickOrderItemEntity, this.setting);
 
   @override
+  State<OrderProductQuantityGroupWidget> createState() =>
+      _OrderProductQuantityGroupWidgetState();
+}
+
+class _OrderProductQuantityGroupWidgetState
+    extends State<OrderProductQuantityGroupWidget> {
+  final TextEditingController _textController = TextEditingController();
+
+  String _displayOrderedCount = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Listen to changes in the TextEditingController
+    _textController.addListener(() {
+      setState(() {
+        _displayOrderedCount = _textController.text;
+      });
+    });
+
+    _displayOrderedCount =
+        widget.quickOrderItemEntity.quantityOrdered.toString();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, bottom: 20.0),
@@ -304,21 +330,23 @@ class OrderProductQuantityGroupWidget extends StatelessWidget {
         children: [
           Expanded(
             flex: 1,
-            child: NumberTextField(
-                initialtText: quickOrderItemEntity.quantityOrdered.toString(),
-                shouldShowIncrementDecermentIcon: false,
-                onChanged: (int? quantity) {
-                  if ((quantity ?? 0) == 0) {
-                    quickOrderItemEntity.previousQty =
-                        quickOrderItemEntity.quantityOrdered;
-                  }
-                  quickOrderItemEntity.quantityOrdered = quantity ?? 0;
-                  context
-                      .read<OrderItemPricingInventoryCubit>()
-                      .getPricingAndInventory(quickOrderItemEntity, setting);
-                }),
+            child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(AppStyle.borderRadius),
+                  color: AppStyle.neutral100,
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    _showInputDialog(context);
+                  },
+                  child: Text(
+                    _displayOrderedCount,
+                    style: OptiTextStyles.body,
+                  ),
+                )),
           ),
-          if (!(quickOrderItemEntity.hidePricingEnable ?? false)) ...{
+          if (!(widget.quickOrderItemEntity.hidePricingEnable ?? false)) ...{
             BlocBuilder<OrderItemPricingInventoryCubit,
                 OrderItemPricingInventoryState>(
               buildWhen: (previous, current) =>
@@ -344,7 +372,8 @@ class OrderProductQuantityGroupWidget extends StatelessWidget {
                   case OrderItemPricingInventoryLoaded:
                     return OrderProductSubTitleColumn(
                         LocalizationConstants.subtotal.localized(),
-                        quickOrderItemEntity.extendedPriceValueText ?? '');
+                        widget.quickOrderItemEntity.extendedPriceValueText ??
+                            '');
                   case OrderItemPricingInventoryFailed:
                   default:
                     return Container();
@@ -359,6 +388,64 @@ class OrderProductQuantityGroupWidget extends StatelessWidget {
           }
         ],
       ),
+    );
+  }
+
+  void _showInputDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            LocalizationConstants.updateQuantity.localized(),
+            style: OptiTextStyles.titleSmall
+                .copyWith(color: OptiAppColors.primaryColor),
+            textAlign: TextAlign.left,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.quickOrderItemEntity.productEntity.shortDescription ??
+                    '',
+                style: OptiTextStyles.body,
+                textAlign: TextAlign.left,
+              ),
+              const SizedBox(height: 12.0),
+              NumberTextField(
+                controller: _textController,
+                initialtText:
+                    widget.quickOrderItemEntity.quantityOrdered.toString(),
+                shouldShowIncrementDecermentIcon: false,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(LocalizationConstants.cancel.localized()),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                int? quantity = int.tryParse(_textController.text);
+                if ((quantity ?? 0) == 0) {
+                  _textController.text = '0';
+                  widget.quickOrderItemEntity.previousQty =
+                      widget.quickOrderItemEntity.quantityOrdered;
+                }
+                widget.quickOrderItemEntity.quantityOrdered = quantity ?? 0;
+                context
+                    .read<OrderItemPricingInventoryCubit>()
+                    .getPricingAndInventory(
+                        widget.quickOrderItemEntity, widget.setting);
+              },
+              child: Text(LocalizationConstants.save.localized()),
+            )
+          ],
+        );
+      },
     );
   }
 }

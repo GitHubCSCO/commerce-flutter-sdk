@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/features/domain/enums/product_list_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/search_product_status.dart';
@@ -161,87 +162,100 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                       ),
                     ),
                     Expanded(
-                      child: (widget.isGridView == true)
-                          ? Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4),
-                              child: AlignedGridView.count(
-                                controller: _scrollController,
-                                itemCount: state.searchProductStatus ==
-                                        SearchProductStatus.moreLoading
-                                    ? (state.productEntities?.length ?? 0) + 1
-                                    : state.productEntities?.length ?? 0,
-                                itemBuilder: (context, index) {
-                                  if (index >=
-                                          (state.productEntities?.length ??
-                                              0) &&
-                                      state.searchProductStatus ==
-                                          SearchProductStatus.moreLoading) {
-                                    return const Padding(
-                                      padding: EdgeInsets.all(10),
-                                      child: Center(
-                                          child: CircularProgressIndicator()),
-                                    );
-                                  }
-
-                                  final product = state.productEntities![index];
-
-                                  return SearchProductGridItemWidget(
-                                    product: product,
-                                    productSettings: state.productSettings,
-                                    pricingEnable: state.productPricingEnabled,
-                                    hidePricingEnable: state.hidePricingEnabled,
-                                    hideInventoryEnable:
-                                        state.hideInventoryEnabled,
-                                    canAddToCartInProductList:
-                                        state.canAddToCartInProductList,
-                                  );
-                                },
-                                shrinkWrap: true,
-                                crossAxisCount: 2,
-                              ),
+                      child: (state.paginationEntity?.totalItemCount == 0)
+                          ? Center(
+                              child: Text(state.message ?? ''),
                             )
-                          : ListView.separated(
-                              controller: _scrollController,
-                              padding: EdgeInsets.zero,
-                              separatorBuilder: (context, index) =>
-                                  const Divider(
-                                height: 1,
-                                indent: 16,
-                                endIndent: 16,
-                                color: Color(0xFFF5F5F5),
-                              ),
-                              itemCount: state.searchProductStatus ==
-                                      SearchProductStatus.moreLoading
-                                  ? (state.productEntities?.length ?? 0) + 1
-                                  : state.productEntities?.length ?? 0,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                if (index >=
-                                        (state.productEntities?.length ?? 0) &&
-                                    state.searchProductStatus ==
-                                        SearchProductStatus.moreLoading) {
-                                  return const Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Center(
-                                        child: CircularProgressIndicator()),
-                                  );
-                                }
+                          : (widget.isGridView == true)
+                              ? Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 4),
+                                  child: AlignedGridView.count(
+                                    controller: _scrollController,
+                                    itemCount: state.searchProductStatus ==
+                                            SearchProductStatus.moreLoading
+                                        ? (state.productEntities?.length ?? 0) +
+                                            1
+                                        : state.productEntities?.length ?? 0,
+                                    itemBuilder: (context, index) {
+                                      if (index >=
+                                              (state.productEntities?.length ??
+                                                  0) &&
+                                          state.searchProductStatus ==
+                                              SearchProductStatus.moreLoading) {
+                                        return const Padding(
+                                          padding: EdgeInsets.all(10),
+                                          child: Center(
+                                              child:
+                                                  CircularProgressIndicator()),
+                                        );
+                                      }
 
-                                final product = state.productEntities![index];
+                                      final product =
+                                          state.productEntities![index];
 
-                                return SearchProductListItemWidget(
-                                  product: product,
-                                  productSettings: state.productSettings,
-                                  pricingEnable: state.productPricingEnabled,
-                                  hidePricingEnable: state.hidePricingEnabled,
-                                  hideInventoryEnable:
-                                      state.hideInventoryEnabled,
-                                  canAddToCartInProductList:
-                                      state.canAddToCartInProductList,
-                                );
-                              },
-                            ),
+                                      return SearchProductGridItemWidget(
+                                        product: product,
+                                        productSettings: state.productSettings,
+                                        pricingEnable:
+                                            state.productPricingEnabled,
+                                        hidePricingEnable:
+                                            state.hidePricingEnabled,
+                                        hideInventoryEnable:
+                                            state.hideInventoryEnabled,
+                                        canAddToCartInProductList:
+                                            state.canAddToCartInProductList,
+                                      );
+                                    },
+                                    shrinkWrap: true,
+                                    crossAxisCount: 2,
+                                  ),
+                                )
+                              : ListView.separated(
+                                  controller: _scrollController,
+                                  padding: EdgeInsets.zero,
+                                  separatorBuilder: (context, index) =>
+                                      const Divider(
+                                    height: 1,
+                                    indent: 16,
+                                    endIndent: 16,
+                                    color: Color(0xFFF5F5F5),
+                                  ),
+                                  itemCount: state.searchProductStatus ==
+                                          SearchProductStatus.moreLoading
+                                      ? (state.productEntities?.length ?? 0) + 1
+                                      : state.productEntities?.length ?? 0,
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    if (index >=
+                                            (state.productEntities?.length ??
+                                                0) &&
+                                        state.searchProductStatus ==
+                                            SearchProductStatus.moreLoading) {
+                                      return const Padding(
+                                        padding: EdgeInsets.all(10),
+                                        child: Center(
+                                            child: CircularProgressIndicator()),
+                                      );
+                                    }
+
+                                    final product =
+                                        state.productEntities![index];
+
+                                    return SearchProductListItemWidget(
+                                      product: product,
+                                      productSettings: state.productSettings,
+                                      pricingEnable:
+                                          state.productPricingEnabled,
+                                      hidePricingEnable:
+                                          state.hidePricingEnabled,
+                                      hideInventoryEnable:
+                                          state.hideInventoryEnabled,
+                                      canAddToCartInProductList:
+                                          state.canAddToCartInProductList,
+                                    );
+                                  },
+                                ),
                     ),
                   ],
                 ),
