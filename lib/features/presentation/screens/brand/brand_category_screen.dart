@@ -47,8 +47,8 @@ class BrandCategoryPage extends StatefulWidget {
   State<BrandCategoryPage> createState() => _BrandCategoryPageState();
 }
 
-class _BrandCategoryPageState extends State<BrandCategoryPage> with ListGridViewMenuMixIn {
-
+class _BrandCategoryPageState extends State<BrandCategoryPage>
+    with ListGridViewMenuMixIn {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,5 +155,4 @@ class _BrandCategoryPageState extends State<BrandCategoryPage> with ListGridView
     //   AppRoute.product.navigateBackStack(context, extra: productPageEntity);
     // }
   }
-
 }

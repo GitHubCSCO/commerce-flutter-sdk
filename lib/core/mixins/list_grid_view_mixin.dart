@@ -3,7 +3,6 @@ import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu
 import 'package:flutter/material.dart';
 
 mixin ListGridViewMenuMixIn<T extends StatefulWidget> on State<T> {
-
   bool isGridView = true;
 
   List<ToolMenu> getToolMenu(BuildContext context) {
@@ -28,5 +27,4 @@ mixin ListGridViewMenuMixIn<T extends StatefulWidget> on State<T> {
         }));
     return list;
   }
-
 }

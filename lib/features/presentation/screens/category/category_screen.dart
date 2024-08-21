@@ -31,8 +31,8 @@ class CategoryPage extends StatefulWidget {
   State<CategoryPage> createState() => _CategoryPageState();
 }
 
-class _CategoryPageState extends State<CategoryPage> with ListGridViewMenuMixIn {
-
+class _CategoryPageState extends State<CategoryPage>
+    with ListGridViewMenuMixIn {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +41,7 @@ class _CategoryPageState extends State<CategoryPage> with ListGridViewMenuMixIn 
             style: OptiTextStyles.titleLarge),
         actions: [
           BottomMenuWidget(
-              isViewOnWebsiteEnable: false,
-              toolMenuList: getToolMenu(context)),
+              isViewOnWebsiteEnable: false, toolMenuList: getToolMenu(context)),
         ],
       ),
       body: BlocBuilder<CategoryBloc, CategoryState>(
@@ -85,5 +84,4 @@ class _CategoryPageState extends State<CategoryPage> with ListGridViewMenuMixIn 
       AppRoute.product.navigateBackStack(context, extra: productPageEntity);
     }
   }
-
 }

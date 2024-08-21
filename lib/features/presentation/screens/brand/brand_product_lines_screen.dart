@@ -36,8 +36,8 @@ class BrandProductLinesPage extends StatefulWidget {
   State<BrandProductLinesPage> createState() => _BrandProductLinesPageState();
 }
 
-class _BrandProductLinesPageState extends State<BrandProductLinesPage> with ListGridViewMenuMixIn {
-
+class _BrandProductLinesPageState extends State<BrandProductLinesPage>
+    with ListGridViewMenuMixIn {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,8 +46,7 @@ class _BrandProductLinesPageState extends State<BrandProductLinesPage> with List
             style: OptiTextStyles.titleLarge),
         actions: [
           BottomMenuWidget(
-              isViewOnWebsiteEnable: false,
-              toolMenuList: getToolMenu(context)),
+              isViewOnWebsiteEnable: false, toolMenuList: getToolMenu(context)),
         ],
       ),
       body: BlocBuilder<BrandProductLinesCubit, BrandProductLinesState>(
@@ -96,5 +95,4 @@ class _BrandProductLinesPageState extends State<BrandProductLinesPage> with List
     );
     AppRoute.product.navigateBackStack(context, extra: productPageEntity);
   }
-
 }

@@ -227,5 +227,4 @@ class _ProductPageState extends State<ProductPage> with ListGridViewMenuMixIn {
     }
     return null;
   }
-
 }
