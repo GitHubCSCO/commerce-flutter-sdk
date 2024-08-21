@@ -57,7 +57,7 @@ class ProductCarouselSectionWidget extends StatelessWidget {
                                 productCarousel.product!.id;
                         return InkWell(
                           onTap: () {
-                            AppRoute.topLevelProductDetails.navigateBackStack(
+                            AppRoute.productDetails.navigateBackStack(
                               context,
                               pathParameters: {
                                 "productId": productId.toString()

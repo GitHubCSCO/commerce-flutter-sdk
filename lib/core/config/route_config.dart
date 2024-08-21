@@ -528,7 +528,7 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.shopCategory.name,
     path: AppRoute.shopCategory.suffix,
     builder: (context, state) => const CategoryScreen(),
-    parent: null,
+    parent: account,
   );
 
   final shopSubCatagory = createNode(
@@ -543,7 +543,7 @@ List<NavigationNode> _getNavigationRoot() {
           categoryTitle: categoryTitle,
           categoryPath: categoryPath);
     },
-    parent: null,
+    parent: shopCategory,
   );
 
   // path: /shopBrand
@@ -551,7 +551,7 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.shopBrand.name,
     path: AppRoute.shopBrand.suffix,
     builder: (context, state) => const BrandScreen(),
-    parent: null,
+    parent: account,
   );
 
   // path: /shopBrandDetails
@@ -562,7 +562,7 @@ List<NavigationNode> _getNavigationRoot() {
       final brand = state.extra as Brand;
       return BrandDetailsScreen(brand: brand);
     },
-    parent: null,
+    parent: shopBrand,
   );
 
   // path: /brandCategory
@@ -580,7 +580,7 @@ List<NavigationNode> _getNavigationRoot() {
           brandCategory: brandCategory.$2,
           brandSubCategories: brandCategory.$3);
     },
-    parent: null,
+    parent: shopBrandDetails,
   );
 
   // path: /brandProductLines
@@ -592,18 +592,18 @@ List<NavigationNode> _getNavigationRoot() {
       final brand = state.extra as Brand;
       return BrandProductLinesScreen(brand: brand);
     },
-    parent: null,
+    parent: shopBrandDetails,
   );
 
   // path: /product
   final product = createNode(
     name: AppRoute.product.name,
-    path: AppRoute.product.suffix,
+    path: AppRoute.product.fullPath,
     builder: (_, state) {
       final entity = state.extra as ProductPageEntity;
       return ProductScreen(pageEntity: entity);
     },
-    parent: null,
+    parent: brandCategory,
   );
 
   // path: /account/savedOrders
@@ -808,13 +808,6 @@ List<NavigationNode> _getNavigationRoot() {
     locationSearch,
     billToShipToChange,
     billToShipToSelection,
-    shopBrand,
-    shopBrandDetails,
-    brandCategory,
-    brandProductLines,
-    shopCategory,
-    shopSubCatagory,
-    product,
     topLevelProductDetails,
     addCreditCard,
     addShippingAddress,
