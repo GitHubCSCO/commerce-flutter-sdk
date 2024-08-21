@@ -21,6 +21,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 //TODO these classes are associated with category or brand product list page
 
 enum ProductParentType {
+  search,
   category,
   brand,
   brandProductLine,
