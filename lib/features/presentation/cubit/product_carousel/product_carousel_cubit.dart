@@ -77,10 +77,11 @@ class ProductCarouselCubit extends Cubit<ProductCarouselState> {
           }
         }
       }
-
-      emit(ProductCarouselLoadedState(
-          productCarouselList: widgetEntity.productCarouselList!,
-          isPricingLoading: false));
+      if (!isClosed) {
+        emit(ProductCarouselLoadedState(
+            productCarouselList: widgetEntity.productCarouselList!,
+            isPricingLoading: false));
+      }
     }
   }
 }
