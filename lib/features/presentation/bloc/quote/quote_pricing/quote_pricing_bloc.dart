@@ -51,6 +51,7 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
     quoteLine = event.quoteLineEntity;
     quoteLinePricingBreakItemEntities =
         getQuoteLinePricingBreakItemEntities(event.quoteLineEntity);
+    updatePriceBreakRule();
     emit(QuotePricingLoadedState(
         quoteLineEntity:
             updateQuoteLineForHidePricingAndInventory(event.quoteLineEntity),
@@ -158,6 +159,8 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
       return;
     }
 
+    emit(QuotePricingLoadingState());
+
     QuoteLinePricingBreakItemEntity? lastItem =
         quoteLinePricingBreakItemEntities.isNotEmpty
             ? quoteLinePricingBreakItemEntities.last
@@ -193,6 +196,8 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
     if (quoteLinePricingBreakItemEntities.isNotEmpty) {
       quoteLinePricingBreakItemEntities.first.deletionEnabled = false;
     }
+
+    updateIDs();
     updatePriceBreakRule();
     emit(QuotePricingLoadedState(
         quoteLineEntity: updateQuoteLineForHidePricingAndInventory(quoteLine!),
@@ -220,6 +225,7 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
 
   Future<void> _onUpdateEndQuantityEvent(QuoteEndQuantityUpdateEvent event,
       Emitter<QuotePricingState> emit) async {
+    emit(QuotePricingLoadingState());
     int index = getIndexOFQuoteLinePricingBreakItemEntity(event.id);
     quoteLinePricingBreakItemEntities[index].endQuantity =
         event.endQuantity == '' ? 0 : double.parse(event.endQuantity);
@@ -233,6 +239,7 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
 
   Future<void> _onUpdatePriceEvent(
       QuotePriceUpdateEvent event, Emitter<QuotePricingState> emit) async {
+    emit(QuotePricingLoadingState());
     int index = getIndexOFQuoteLinePricingBreakItemEntity(event.id);
     quoteLinePricingBreakItemEntities[index].price =
         event.price == '' ? 0 : double.parse(event.price);
@@ -246,8 +253,24 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
   Future<void> _onQuotePriceBreakDeletionEvent(
       QuotePiricngBreakDeletionEvent event,
       Emitter<QuotePricingState> emit) async {
+    emit(QuotePricingLoadingState());
+
+    if (event.id == quoteLinePricingBreakItemEntities.length - 1) {
+      if (quoteLinePricingBreakItemEntities.length > 1) {
+        quoteLinePricingBreakItemEntities[
+                quoteLinePricingBreakItemEntities.length - 2]
+            .endQuantity = 0;
+        quoteLinePricingBreakItemEntities[
+                quoteLinePricingBreakItemEntities.length - 2]
+            .endQuantityDisplay = endQuantityDisplay(0);
+        quoteLinePricingBreakItemEntities[
+                quoteLinePricingBreakItemEntities.length - 2]
+            .endQuantityEnabled = true;
+      }
+    }
     quoteLinePricingBreakItemEntities
         .removeWhere((element) => element.id == event.id);
+    updateIDs();
     updatePriceBreakRule();
     emit(QuotePricingLoadedState(
         quoteLineEntity: updateQuoteLineForHidePricingAndInventory(quoteLine!),
@@ -359,6 +382,12 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
       priceDisplay = '';
     }
     return priceDisplay;
+  }
+
+  void updateIDs() {
+    for (int i = 0; i < quoteLinePricingBreakItemEntities.length; i++) {
+      quoteLinePricingBreakItemEntities[i].id = i;
+    }
   }
 
   bool get isAddPriceBreakEnabled {

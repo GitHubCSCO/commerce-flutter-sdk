@@ -250,7 +250,7 @@ class PriceBreakwidget extends StatelessWidget {
             Expanded(
               flex: 1,
               child: NumberTextField(
-                // isEnabled: endQtyEnabled,
+                isEnabled: endQtyEnabled,
                 max: CoreConstants.maximumOrderQuantity,
                 initialtText: endQtyDisplay,
                 shouldShowIncrementDecermentIcon: false,
