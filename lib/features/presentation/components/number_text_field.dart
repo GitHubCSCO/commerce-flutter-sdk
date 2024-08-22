@@ -69,6 +69,18 @@ class _NumberTextFieldState extends State<NumberTextField> {
     }
   }
 
+
+  @override
+  void dispose() {
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+    if (widget.focusNode == null) {
+      _focusNode.dispose();
+    }
+    super.dispose();
+  }
+
   void _onFocusChange() {
     if (!_focusNode.hasFocus) {
       _handleSubmitted(_controller.text);
@@ -78,8 +90,15 @@ class _NumberTextFieldState extends State<NumberTextField> {
   @override
   void didUpdateWidget(covariant NumberTextField oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _controller = widget.controller ?? _controller;
-    _focusNode = widget.focusNode ?? _focusNode;
+    if (widget.controller != oldWidget.controller) {
+      _controller = widget.controller ?? _controller;
+    }
+    if (widget.focusNode != oldWidget.focusNode) {
+      _focusNode = widget.focusNode ?? _focusNode;
+    }
+    _controller.text = widget.initialtText ?? _controller.text;
+    _shouldShowIncrementDecermentIcon =
+        widget.shouldShowIncrementDecermentIcon;
     _updateArrows(int.tryParse(_controller.text));
   }
 
@@ -130,6 +149,12 @@ class _NumberTextFieldState extends State<NumberTextField> {
                     vertical: AppStyle.defaultVerticalPadding,
                   ),
                   enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      AppStyle.textFieldborderRadius,
+                    ),
+                    borderSide: BorderSide.none,
+                  ),
+                  disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(
                       AppStyle.textFieldborderRadius,
                     ),
