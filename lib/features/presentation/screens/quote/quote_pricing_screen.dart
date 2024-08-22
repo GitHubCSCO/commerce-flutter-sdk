@@ -4,12 +4,10 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_communication/quote_communication_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_pricing/quote_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_pricing/quote_pricing_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_pricing/quote_pricing_state.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
-import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_line_widget.dart';
 import 'package:flutter/material.dart';
@@ -241,21 +239,6 @@ class PriceBreakwidget extends StatelessWidget {
                   }
                 },
               ),
-
-              // Input(
-              //   controller: startQtycontroller,
-              //   onSubmitted: (p0) {
-              //     context.read<QuotePricingBloc>().add(
-              //         QuoteStartQuantityUpdateEvent(
-              //             startQuantity: p0, id: index));
-              //   },
-              //   onTapOutside: (_) {
-              //     FocusManager.instance.primaryFocus?.unfocus();
-              //   },
-              //   onEditingComplete: () {
-              //     FocusManager.instance.primaryFocus?.nextFocus();
-              //   },
-              // ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -279,20 +262,6 @@ class PriceBreakwidget extends StatelessWidget {
                   } else {}
                 },
               ),
-
-              //     Input(
-              //   controller: endQtycontroller,
-              //   onSubmitted: (p0) {
-              //     context.read<QuotePricingBloc>().add(
-              //         QuoteEndQuantityUpdateEvent(endQuantity: p0, id: index));
-              //   },
-              //   onTapOutside: (_) {
-              //     FocusManager.instance.primaryFocus?.unfocus();
-              //   },
-              //   onEditingComplete: () {
-              //     FocusManager.instance.primaryFocus?.nextFocus();
-              //   },
-              // ),
             ),
             SizedBox(width: 30),
             Expanded(
@@ -308,21 +277,6 @@ class PriceBreakwidget extends StatelessWidget {
                   }
                 },
               ),
-
-              // Input(
-              //   controller: priceQtycontroller,
-              //   onSubmitted: (p0) {
-              //     context
-              //         .read<QuotePricingBloc>()
-              //         .add(QuotePriceUpdateEvent(price: p0, id: index));
-              //   },
-              //   onTapOutside: (_) {
-              //     FocusManager.instance.primaryFocus?.unfocus();
-              //   },
-              //   onEditingComplete: () {
-              //     FocusManager.instance.primaryFocus?.nextFocus();
-              //   },
-              // ),
             ),
             if (index != 0)
               InkWell(
