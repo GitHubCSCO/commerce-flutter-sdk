@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_state.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
@@ -51,10 +52,23 @@ class NavBarPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
-      bottomNavigationBar: bottomNavigationBar(context),
-      body: navigationShell,
+    return BlocListener<RootBloc, RootState>(
+      listener: (context, state) {
+        if (state is RootInitiateSearch) {
+          //Navigate to search tab
+          int index = 1;
+          navigationShell.goBranch(
+            index,
+            initialLocation: index == navigationShell.currentIndex,
+          );
+          context.read<RootBloc>().add(RootSearchProductEvent(state.query));
+        }
+      },
+      child: Scaffold(
+        backgroundColor: OptiAppColors.backgroundGray,
+        bottomNavigationBar: bottomNavigationBar(context),
+        body: navigationShell,
+      ),
     );
   }
 
@@ -114,12 +128,10 @@ class NavBarPage extends StatelessWidget {
     ];
   }
 
-  BottomNavigationBarItem _buildBottomNavigationBarItem(
-    int index,
-    String unselectedIconPath,
-    String selectedIconPath,
-    String label,
-  ) {
+  BottomNavigationBarItem _buildBottomNavigationBarItem(int index,
+      String unselectedIconPath,
+      String selectedIconPath,
+      String label,) {
     return BottomNavigationBarItem(
       icon: Padding(
         padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
@@ -133,13 +145,13 @@ class NavBarPage extends StatelessWidget {
       [int cartCount = 0]) {
     Widget icon = navigationShell.currentIndex == index
         ? SvgAssetImage(
-            assetName: selectedIconPath,
-            fit: BoxFit.fitWidth,
-          )
+      assetName: selectedIconPath,
+      fit: BoxFit.fitWidth,
+    )
         : SvgAssetImage(
-            assetName: unselectedIconPath,
-            fit: BoxFit.fitWidth,
-          );
+      assetName: unselectedIconPath,
+      fit: BoxFit.fitWidth,
+    );
 
     if (index == 3 && cartCount > 0) {
       return badges.Badge(
@@ -151,7 +163,7 @@ class NavBarPage extends StatelessWidget {
           elevation: 0,
         ),
         badgeContent:
-            Text(cartCount.toString(), style: OptiTextStyles.badgesStyle),
+        Text(cartCount.toString(), style: OptiTextStyles.badgesStyle),
         child: icon,
       );
     } else {

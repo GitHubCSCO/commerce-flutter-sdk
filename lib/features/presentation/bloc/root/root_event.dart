@@ -9,3 +9,19 @@ class RootHidePricingInventoryEvent extends RootEvent {}
 class RootConfigChangeEvent extends RootEvent {}
 
 class RootCartUpdateEvent extends RootEvent {}
+
+class RootInitiateSearchEvent extends RootEvent {
+
+  final String query;
+
+  RootInitiateSearchEvent(this.query);
+
+}
+
+class RootSearchProductEvent extends RootEvent {
+
+  final String query;
+
+  RootSearchProductEvent(this.query);
+
+}

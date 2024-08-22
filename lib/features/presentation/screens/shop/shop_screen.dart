@@ -52,7 +52,7 @@ class ShopPage extends StatelessWidget with BaseDynamicContentScreen {
       body: MultiBlocListener(
         listeners: [
           BlocListener<RootBloc, RootState>(
-            listener: (context, state) async {
+            listener: (context, state) {
               if (state is RootConfigReload) {
                 _reloadShopPage(context);
               }
