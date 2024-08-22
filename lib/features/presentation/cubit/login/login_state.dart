@@ -4,7 +4,7 @@ sealed class LoginState extends Equatable {
   const LoginState();
 
   @override
-  List<Object?> get props => [];
+  List<Object> get props => [];
 }
 
 class LoginInitialState extends LoginState {}
@@ -17,7 +17,7 @@ class LoginSuccessState extends LoginState {
   const LoginSuccessState({required this.loginStatus});
 
   @override
-  List<Object?> get props => [loginStatus];
+  List<Object> get props => [loginStatus];
 }
 
 class LoginFailureState extends LoginState {
@@ -32,7 +32,7 @@ class LoginFailureState extends LoginState {
   });
 
   @override
-  List<Object?> get props => [
+  List<Object> get props => [
         title ?? '',
         message ?? '',
         buttonText ?? '',

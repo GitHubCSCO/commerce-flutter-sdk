@@ -215,9 +215,9 @@ class _LoginPageState extends State<LoginPage> {
                           );
 
                           if (context.mounted) {
-                            context.read<LoginCubit>().handleBillToShipTo();
                             context.read<LoginCubit>().showSpinner = true;
                             showPleaseWait(context);
+                            context.read<LoginCubit>().handleBillToShipTo();
                           }
 
                           return;
