@@ -1,10 +1,7 @@
 part of 'login_cubit.dart';
 
-sealed class LoginState extends Equatable {
+sealed class LoginState {
   const LoginState();
-
-  @override
-  List<Object> get props => [];
 }
 
 class LoginInitialState extends LoginState {}

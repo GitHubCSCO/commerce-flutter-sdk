@@ -189,6 +189,11 @@ class _LoginPageState extends State<LoginPage> {
                 BlocConsumer<LoginCubit, LoginState>(
                   listener: (context, state) async {
                     if (state is LoginSuccessState) {
+                      if (context.read<LoginCubit>().showSpinner) {
+                        Navigator.of(context, rootNavigator: true).pop();
+                        context.read<LoginCubit>().showSpinner = false;
+                        context.pop();
+                      }
                       context.read<AuthCubit>().loadAuthenticationState();
 
                       if (state.loginStatus ==
@@ -201,19 +206,30 @@ class _LoginPageState extends State<LoginPage> {
                                 : DeviceAuthenticationOption.none;
 
                         if (options != DeviceAuthenticationOption.none) {
-                          AppRoute.biometricLogin.navigate(
-                            context,
+                          final _ = await context.pushNamed(
+                            AppRoute.biometricLogin.name,
                             extra: BiometricInfoEntity(
                               biometricOption: options,
                               password: _passwordController.text,
                             ),
                           );
 
+                          if (context.mounted) {
+                            context.read<LoginCubit>().handleBillToShipTo();
+                            context.read<LoginCubit>().showSpinner = true;
+                            showPleaseWait(context);
+                          }
+
                           return;
                         }
                         return;
                       } else if (state.loginStatus ==
                           LoginStatus.loginSuccessBillToShipTo) {
+                        if (context.read<LoginCubit>().showSpinner) {
+                          Navigator.of(context, rootNavigator: true).pop();
+                          context.read<LoginCubit>().showSpinner = false;
+                        }
+
                         final isCancel = await context.pushNamed<bool>(
                           AppRoute.billToShipToChange.name,
                         );
@@ -231,6 +247,11 @@ class _LoginPageState extends State<LoginPage> {
                         context.pop(true);
                       }
                     } else if (state is LoginFailureState) {
+                      if (context.read<LoginCubit>().showSpinner) {
+                        Navigator.of(context, rootNavigator: true).pop();
+                        context.read<LoginCubit>().showSpinner = false;
+                      }
+
                       displayDialogWidget(
                         context: context,
                         title: state.title,

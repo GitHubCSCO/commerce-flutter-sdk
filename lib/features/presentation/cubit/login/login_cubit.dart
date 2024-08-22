@@ -5,12 +5,13 @@ import 'package:commerce_flutter_app/features/domain/enums/device_authentication
 import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
+  bool showSpinner = false;
+
   final LoginUsecase loginUsecase;
   LoginCubit({required this.loginUsecase}) : super(LoginInitialState());
 
@@ -27,72 +28,7 @@ class LoginCubit extends Cubit<LoginState> {
             loginStatus: LoginStatus.loginSuccessBiometric));
         break;
       case LoginStatus.loginSuccessBillToShipTo:
-        final fullSession =
-            (await loginUsecase.getCurrentSession()).getResultSuccessValue();
-        if (fullSession == null) {
-          emit(
-            LoginFailureState(
-              title: LocalizationConstants.errorCommunicatingWithTheServer
-                  .localized(),
-              buttonText: LocalizationConstants.dismiss.localized(),
-            ),
-          );
-          return;
-        }
-        final currentBillTo = fullSession.billTo;
-        final currentShipTo = fullSession.shipTo;
-
-        if (currentBillTo?.id == null || currentShipTo?.id == null) {
-          emit(const LoginSuccessState(
-              loginStatus: LoginStatus.loginSuccessBillToShipTo));
-          return;
-        }
-
-        if (!(fullSession.redirectToChangeCustomerPageOnSignIn ?? false)) {
-          emit(const LoginSuccessState(loginStatus: LoginStatus.loginSuccess));
-          return;
-        }
-
-        final parameters = BillTosQueryParameters(
-          exclude: ['excludeshowall'],
-        );
-
-        final billToResultResponse =
-            (await loginUsecase.getBillTo(parameters)).getResultSuccessValue();
-        if (billToResultResponse == null) {
-          emit(
-            LoginFailureState(
-              title: LocalizationConstants.errorCommunicatingWithTheServer
-                  .localized(),
-              buttonText: LocalizationConstants.dismiss.localized(),
-            ),
-          );
-          return;
-        }
-        final hasOneBillTo = billToResultResponse.billTos?.length == 1 &&
-            billToResultResponse.billTos?[0].id != null;
-        final isBillToTheSameAsCurrent = hasOneBillTo &&
-            billToResultResponse.billTos?[0].id == currentBillTo?.id;
-
-        if (isBillToTheSameAsCurrent) {
-          final shipToParameters = ShipTosQueryParameters(
-            exclude: ['excludeshowall'],
-          );
-          final shipToResultResponse = (await loginUsecase.getShipTo(
-                  currentBillTo?.id ?? '', shipToParameters))
-              .getResultSuccessValue();
-          var hasOneShipTo = shipToResultResponse?.shipTos?.length == 1 &&
-              shipToResultResponse?.shipTos?[0].id != null;
-          var isShipToTheSameAsCurrent = hasOneShipTo &&
-              shipToResultResponse?.shipTos?[0].id == currentShipTo?.id;
-          if (isShipToTheSameAsCurrent) {
-            emit(
-                const LoginSuccessState(loginStatus: LoginStatus.loginSuccess));
-            return;
-          }
-        }
-        emit(const LoginSuccessState(
-            loginStatus: LoginStatus.loginSuccessBillToShipTo));
+        await handleBillToShipTo();
         break;
       case LoginStatus.loginErrorOffline:
         final title = await loginUsecase.getSiteMessage(
@@ -142,8 +78,7 @@ class LoginCubit extends Cubit<LoginState> {
     final loginStatus = await loginUsecase.authenticateBiometrically(option);
     switch (loginStatus) {
       case LoginStatus.loginSuccessBillToShipTo:
-        emit(const LoginSuccessState(
-            loginStatus: LoginStatus.loginSuccessBillToShipTo));
+        await handleBillToShipTo();
         break;
       case LoginStatus.loginErrorOffline:
         final title = await loginUsecase.getSiteMessage(
@@ -192,6 +127,74 @@ class LoginCubit extends Cubit<LoginState> {
           ),
         );
     }
+  }
+
+  Future<void> handleBillToShipTo() async {
+    final fullSession =
+        (await loginUsecase.getCurrentSession()).getResultSuccessValue();
+    if (fullSession == null) {
+      emit(
+        LoginFailureState(
+          title:
+              LocalizationConstants.errorCommunicatingWithTheServer.localized(),
+          buttonText: LocalizationConstants.dismiss.localized(),
+        ),
+      );
+      return;
+    }
+    final currentBillTo = fullSession.billTo;
+    final currentShipTo = fullSession.shipTo;
+
+    if (currentBillTo?.id == null || currentShipTo?.id == null) {
+      emit(const LoginSuccessState(
+          loginStatus: LoginStatus.loginSuccessBillToShipTo));
+      return;
+    }
+
+    if (!(fullSession.redirectToChangeCustomerPageOnSignIn ?? false)) {
+      emit(const LoginSuccessState(loginStatus: LoginStatus.loginSuccess));
+      return;
+    }
+
+    final parameters = BillTosQueryParameters(
+      exclude: ['excludeshowall'],
+    );
+
+    final billToResultResponse =
+        (await loginUsecase.getBillTo(parameters)).getResultSuccessValue();
+    if (billToResultResponse == null) {
+      emit(
+        LoginFailureState(
+          title:
+              LocalizationConstants.errorCommunicatingWithTheServer.localized(),
+          buttonText: LocalizationConstants.dismiss.localized(),
+        ),
+      );
+      return;
+    }
+    final hasOneBillTo = billToResultResponse.billTos?.length == 1 &&
+        billToResultResponse.billTos?[0].id != null;
+    final isBillToTheSameAsCurrent = hasOneBillTo &&
+        billToResultResponse.billTos?[0].id == currentBillTo?.id;
+
+    if (isBillToTheSameAsCurrent) {
+      final shipToParameters = ShipTosQueryParameters(
+        exclude: ['excludeshowall'],
+      );
+      final shipToResultResponse = (await loginUsecase.getShipTo(
+              currentBillTo?.id ?? '', shipToParameters))
+          .getResultSuccessValue();
+      var hasOneShipTo = shipToResultResponse?.shipTos?.length == 1 &&
+          shipToResultResponse?.shipTos?[0].id != null;
+      var isShipToTheSameAsCurrent = hasOneShipTo &&
+          shipToResultResponse?.shipTos?[0].id == currentShipTo?.id;
+      if (isShipToTheSameAsCurrent) {
+        emit(const LoginSuccessState(loginStatus: LoginStatus.loginSuccess));
+        return;
+      }
+    }
+    emit(const LoginSuccessState(
+        loginStatus: LoginStatus.loginSuccessBillToShipTo));
   }
 
   Future<void> onCancelLogin() async {
