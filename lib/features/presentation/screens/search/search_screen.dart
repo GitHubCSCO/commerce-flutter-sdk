@@ -69,16 +69,13 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
   FocusNode autoFocusNode = FocusNode();
   bool autoFocus = false;
 
-
   @override
   void initState() {
     super.initState();
 
     final state = context.read<RootBloc>().state;
     if (state is RootSearchProduct) {
-      context
-          .read<SearchBloc>()
-          .add(SearchFieldPopulateEvent(state.query));
+      context.read<SearchBloc>().add(SearchFieldPopulateEvent(state.query));
     }
   }
 

@@ -11,18 +11,13 @@ class RootConfigReload extends RootState {}
 class RootCartReload extends RootState {}
 
 class RootInitiateSearch extends RootState {
-
   final String query;
 
   RootInitiateSearch(this.query);
-
 }
 
 class RootSearchProduct extends RootState {
-
   final String query;
 
   RootSearchProduct(this.query);
-
 }
-

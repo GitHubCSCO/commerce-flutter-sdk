@@ -128,10 +128,12 @@ class NavBarPage extends StatelessWidget {
     ];
   }
 
-  BottomNavigationBarItem _buildBottomNavigationBarItem(int index,
-      String unselectedIconPath,
-      String selectedIconPath,
-      String label,) {
+  BottomNavigationBarItem _buildBottomNavigationBarItem(
+    int index,
+    String unselectedIconPath,
+    String selectedIconPath,
+    String label,
+  ) {
     return BottomNavigationBarItem(
       icon: Padding(
         padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
@@ -145,13 +147,13 @@ class NavBarPage extends StatelessWidget {
       [int cartCount = 0]) {
     Widget icon = navigationShell.currentIndex == index
         ? SvgAssetImage(
-      assetName: selectedIconPath,
-      fit: BoxFit.fitWidth,
-    )
+            assetName: selectedIconPath,
+            fit: BoxFit.fitWidth,
+          )
         : SvgAssetImage(
-      assetName: unselectedIconPath,
-      fit: BoxFit.fitWidth,
-    );
+            assetName: unselectedIconPath,
+            fit: BoxFit.fitWidth,
+          );
 
     if (index == 3 && cartCount > 0) {
       return badges.Badge(
@@ -163,7 +165,7 @@ class NavBarPage extends StatelessWidget {
           elevation: 0,
         ),
         badgeContent:
-        Text(cartCount.toString(), style: OptiTextStyles.badgesStyle),
+            Text(cartCount.toString(), style: OptiTextStyles.badgesStyle),
         child: icon,
       );
     } else {
