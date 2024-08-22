@@ -22,19 +22,19 @@ class QuoteLinePricingBreakItemEntity extends Equatable {
     this.deletionEnabled,
     required this.id,
   });
-  
+
   @override
   List<Object?> get props => [
-    startQuantity,
-    startQuantityDisplay,
-    endQuantity,
-    endQuantityDisplay,
-    price,
-    priceDisplay,
-    endQuantityEnabled,
-    deletionEnabled,
-    id,
-  ];
+        startQuantity,
+        startQuantityDisplay,
+        endQuantity,
+        endQuantityDisplay,
+        price,
+        priceDisplay,
+        endQuantityEnabled,
+        deletionEnabled,
+        id,
+      ];
 
   QuoteLinePricingBreakItemEntity copyWith({
     num? startQuantity,

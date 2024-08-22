@@ -69,7 +69,6 @@ class _NumberTextFieldState extends State<NumberTextField> {
     }
   }
 
-
   @override
   void dispose() {
     if (widget.controller == null) {
@@ -97,8 +96,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
       _focusNode = widget.focusNode ?? _focusNode;
     }
     _controller.text = widget.initialtText ?? _controller.text;
-    _shouldShowIncrementDecermentIcon =
-        widget.shouldShowIncrementDecermentIcon;
+    _shouldShowIncrementDecermentIcon = widget.shouldShowIncrementDecermentIcon;
     _updateArrows(int.tryParse(_controller.text));
   }
 
