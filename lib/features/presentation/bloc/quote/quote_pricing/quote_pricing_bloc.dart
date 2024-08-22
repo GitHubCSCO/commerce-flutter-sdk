@@ -306,40 +306,43 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
 
     for (int i = 0; i < quoteLinePricingBreakItemEntities.length; i++) {
       if (quoteLinePricingBreakItemEntities[i].startQuantity == null) {
-        errorMessage.writeln(LocalizationConstants.startQtyRequired);
+        errorMessage
+            .writeln(LocalizationConstants.startQtyRequired.localized());
       } else {
         if (i == 0) {
           // First item
           if (quoteLinePricingBreakItemEntities[i].startQuantity != 1) {
-            errorMessage.writeln(LocalizationConstants.startQtyInvalid);
+            errorMessage
+                .writeln(LocalizationConstants.startQtyInvalid.localized());
           }
         } else if (quoteLinePricingBreakItemEntities[i].startQuantity! <=
             quoteLinePricingBreakItemEntities[i - 1].startQuantity!) {
-          errorMessage.writeln(LocalizationConstants.qtyRangeInvalid);
+          errorMessage
+              .writeln(LocalizationConstants.qtyRangeInvalid.localized());
         }
       }
 
       if (quoteLinePricingBreakItemEntities[i].endQuantity == null) {
-        errorMessage.writeln(LocalizationConstants.endQtyRequired);
+        errorMessage.writeln(LocalizationConstants.endQtyRequired.localized());
       } else if (i == quoteLinePricingBreakItemEntities.length - 1) {
         // Last item
         var maxQty = quoteLinePricingBreakItemEntities[i].endQuantity!;
         if (maxQty > 0 &&
             maxQty < quoteLinePricingBreakItemEntities[i].startQuantity!) {
-          errorMessage.writeln(LocalizationConstants.endQtyInvalid);
+          errorMessage.writeln(LocalizationConstants.endQtyInvalid.localized());
         } else if (isDone && maxQty != 0) {
-          errorMessage.writeln(LocalizationConstants.endQtyInvalid);
+          errorMessage.writeln(LocalizationConstants.endQtyInvalid.localized());
         }
       }
 
       if (quoteLinePricingBreakItemEntities[i].price == null) {
-        errorMessage.writeln(LocalizationConstants.priceRequired);
+        errorMessage.writeln(LocalizationConstants.priceRequired.localized());
       } else {
         if (quoteLinePricingBreakItemEntities[i].price! < 0 ||
             (quoteLine?.pricingRfq?.minimumPriceAllowed != null &&
                 quoteLinePricingBreakItemEntities[i].price! <
                     quoteLine!.pricingRfq!.minimumPriceAllowed!)) {
-          errorMessage.writeln(LocalizationConstants.priceInvalid);
+          errorMessage.writeln(LocalizationConstants.priceInvalid.localized());
         }
       }
 
