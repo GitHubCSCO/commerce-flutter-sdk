@@ -1,9 +1,9 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/mixins/list_grid_view_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/category/category_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_grid_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_list_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
@@ -31,9 +31,8 @@ class CategoryPage extends StatefulWidget {
   State<CategoryPage> createState() => _CategoryPageState();
 }
 
-class _CategoryPageState extends State<CategoryPage> {
-  bool isGridView = true;
-
+class _CategoryPageState extends State<CategoryPage>
+    with ListGridViewMenuMixIn {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,8 +41,7 @@ class _CategoryPageState extends State<CategoryPage> {
             style: OptiTextStyles.titleLarge),
         actions: [
           BottomMenuWidget(
-              isViewOnWebsiteEnable: false,
-              toolMenuList: _getToolMenu(context)),
+              isViewOnWebsiteEnable: false, toolMenuList: getToolMenu(context)),
         ],
       ),
       body: BlocBuilder<CategoryBloc, CategoryState>(
@@ -85,28 +83,5 @@ class _CategoryPageState extends State<CategoryPage> {
           ProductPageEntity('', ProductParentType.category, category: category);
       AppRoute.product.navigateBackStack(context, extra: productPageEntity);
     }
-  }
-
-  List<ToolMenu> _getToolMenu(BuildContext context) {
-    List<ToolMenu> list = [];
-    list.add(ToolMenu(
-        title: !isGridView
-            ? '${LocalizationConstants.listView.localized()} \u2713'
-            : LocalizationConstants.listView.localized(),
-        action: () {
-          setState(() {
-            isGridView = false;
-          });
-        }));
-    list.add(ToolMenu(
-        title: isGridView
-            ? '${LocalizationConstants.gridView.localized()} \u2713'
-            : LocalizationConstants.gridView.localized(),
-        action: () {
-          setState(() {
-            isGridView = true;
-          });
-        }));
-    return list;
   }
 }
