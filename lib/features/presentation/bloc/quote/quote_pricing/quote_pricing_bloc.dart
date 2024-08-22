@@ -51,6 +51,7 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
     quoteLine = event.quoteLineEntity;
     quoteLinePricingBreakItemEntities =
         getQuoteLinePricingBreakItemEntities(event.quoteLineEntity);
+    updatePriceBreakRule();
     emit(QuotePricingLoadedState(
         quoteLineEntity:
             updateQuoteLineForHidePricingAndInventory(event.quoteLineEntity),
@@ -158,6 +159,8 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
       return;
     }
 
+    emit(QuotePricingLoadingState());
+
     QuoteLinePricingBreakItemEntity? lastItem =
         quoteLinePricingBreakItemEntities.isNotEmpty
             ? quoteLinePricingBreakItemEntities.last
@@ -193,6 +196,8 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
     if (quoteLinePricingBreakItemEntities.isNotEmpty) {
       quoteLinePricingBreakItemEntities.first.deletionEnabled = false;
     }
+
+    updateIDs();
     updatePriceBreakRule();
     emit(QuotePricingLoadedState(
         quoteLineEntity: updateQuoteLineForHidePricingAndInventory(quoteLine!),
@@ -201,13 +206,17 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
 
   Future<void> _onUpdateStartQuantityEvent(QuoteStartQuantityUpdateEvent event,
       Emitter<QuotePricingState> emit) async {
+    emit(QuotePricingLoadingState());
+
     int index = getIndexOFQuoteLinePricingBreakItemEntity(event.id);
-    quoteLinePricingBreakItemEntities[index].endQuantity =
+    quoteLinePricingBreakItemEntities[index].startQuantity =
         event.startQuantity == '' ? 0 : double.parse(event.startQuantity);
 
     quoteLinePricingBreakItemEntities[index].startQuantityDisplay =
         startQuantityDisplay(
             quoteLinePricingBreakItemEntities[index].startQuantity);
+
+    updatePriceBreakRule();
 
     emit(QuotePricingLoadedState(
         quoteLineEntity: updateQuoteLineForHidePricingAndInventory(quoteLine!),
@@ -216,6 +225,7 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
 
   Future<void> _onUpdateEndQuantityEvent(QuoteEndQuantityUpdateEvent event,
       Emitter<QuotePricingState> emit) async {
+    emit(QuotePricingLoadingState());
     int index = getIndexOFQuoteLinePricingBreakItemEntity(event.id);
     quoteLinePricingBreakItemEntities[index].endQuantity =
         event.endQuantity == '' ? 0 : double.parse(event.endQuantity);
@@ -229,6 +239,7 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
 
   Future<void> _onUpdatePriceEvent(
       QuotePriceUpdateEvent event, Emitter<QuotePricingState> emit) async {
+    emit(QuotePricingLoadingState());
     int index = getIndexOFQuoteLinePricingBreakItemEntity(event.id);
     quoteLinePricingBreakItemEntities[index].price =
         event.price == '' ? 0 : double.parse(event.price);
@@ -242,8 +253,24 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
   Future<void> _onQuotePriceBreakDeletionEvent(
       QuotePiricngBreakDeletionEvent event,
       Emitter<QuotePricingState> emit) async {
+    emit(QuotePricingLoadingState());
+
+    if (event.id == quoteLinePricingBreakItemEntities.length - 1) {
+      if (quoteLinePricingBreakItemEntities.length > 1) {
+        quoteLinePricingBreakItemEntities[
+                quoteLinePricingBreakItemEntities.length - 2]
+            .endQuantity = 0;
+        quoteLinePricingBreakItemEntities[
+                quoteLinePricingBreakItemEntities.length - 2]
+            .endQuantityDisplay = endQuantityDisplay(0);
+        quoteLinePricingBreakItemEntities[
+                quoteLinePricingBreakItemEntities.length - 2]
+            .endQuantityEnabled = true;
+      }
+    }
     quoteLinePricingBreakItemEntities
         .removeWhere((element) => element.id == event.id);
+    updateIDs();
     updatePriceBreakRule();
     emit(QuotePricingLoadedState(
         quoteLineEntity: updateQuoteLineForHidePricingAndInventory(quoteLine!),
@@ -261,10 +288,11 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
 
   void updatePriceBreakRule() {
     for (int i = 0; i < quoteLinePricingBreakItemEntities.length - 1; i++) {
-      var vm = quoteLinePricingBreakItemEntities[i];
-      vm.endQuantity =
+      quoteLinePricingBreakItemEntities[i].endQuantity =
           quoteLinePricingBreakItemEntities[i + 1].startQuantity! - 1;
-      vm.endQuantityEnabled = false;
+      quoteLinePricingBreakItemEntities[i].endQuantityDisplay =
+          endQuantityDisplay(quoteLinePricingBreakItemEntities[i].endQuantity);
+      quoteLinePricingBreakItemEntities[i].endQuantityEnabled = false;
     }
 
     if (quoteLinePricingBreakItemEntities.isNotEmpty) {
@@ -278,40 +306,43 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
 
     for (int i = 0; i < quoteLinePricingBreakItemEntities.length; i++) {
       if (quoteLinePricingBreakItemEntities[i].startQuantity == null) {
-        errorMessage.writeln(LocalizationConstants.startQtyRequired);
+        errorMessage
+            .writeln(LocalizationConstants.startQtyRequired.localized());
       } else {
         if (i == 0) {
           // First item
           if (quoteLinePricingBreakItemEntities[i].startQuantity != 1) {
-            errorMessage.writeln(LocalizationConstants.startQtyInvalid);
+            errorMessage
+                .writeln(LocalizationConstants.startQtyInvalid.localized());
           }
         } else if (quoteLinePricingBreakItemEntities[i].startQuantity! <=
             quoteLinePricingBreakItemEntities[i - 1].startQuantity!) {
-          errorMessage.writeln(LocalizationConstants.qtyRangeInvalid);
+          errorMessage
+              .writeln(LocalizationConstants.qtyRangeInvalid.localized());
         }
       }
 
       if (quoteLinePricingBreakItemEntities[i].endQuantity == null) {
-        errorMessage.writeln(LocalizationConstants.endQtyRequired);
+        errorMessage.writeln(LocalizationConstants.endQtyRequired.localized());
       } else if (i == quoteLinePricingBreakItemEntities.length - 1) {
         // Last item
         var maxQty = quoteLinePricingBreakItemEntities[i].endQuantity!;
         if (maxQty > 0 &&
             maxQty < quoteLinePricingBreakItemEntities[i].startQuantity!) {
-          errorMessage.writeln(LocalizationConstants.endQtyInvalid);
+          errorMessage.writeln(LocalizationConstants.endQtyInvalid.localized());
         } else if (isDone && maxQty != 0) {
-          errorMessage.writeln(LocalizationConstants.endQtyInvalid);
+          errorMessage.writeln(LocalizationConstants.endQtyInvalid.localized());
         }
       }
 
       if (quoteLinePricingBreakItemEntities[i].price == null) {
-        errorMessage.writeln(LocalizationConstants.priceRequired);
+        errorMessage.writeln(LocalizationConstants.priceRequired.localized());
       } else {
         if (quoteLinePricingBreakItemEntities[i].price! < 0 ||
             (quoteLine?.pricingRfq?.minimumPriceAllowed != null &&
                 quoteLinePricingBreakItemEntities[i].price! <
                     quoteLine!.pricingRfq!.minimumPriceAllowed!)) {
-          errorMessage.writeln(LocalizationConstants.priceInvalid);
+          errorMessage.writeln(LocalizationConstants.priceInvalid.localized());
         }
       }
 
@@ -324,15 +355,11 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
   }
 
   String startQuantityDisplay(num? startQty) {
-    String startQtyDisplay;
     if (startQty != null) {
-      startQtyDisplay = startQty
-          .toStringAsFixed(2)
-          .replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => ',');
+      return startQty.toInt().toString();
     } else {
-      startQtyDisplay = '';
+      return '';
     }
-    return startQtyDisplay;
   }
 
   String endQuantityDisplay(num? endQty) {
@@ -341,9 +368,7 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
     if (endQty != null && endQty == 0) {
       return LocalizationConstants.max.localized();
     } else if (endQty != null) {
-      endQtyDisplay = endQty
-          .toStringAsFixed(2)
-          .replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => ',');
+      endQtyDisplay = endQty.toInt().toString();
     } else {
       endQtyDisplay = '';
     }
@@ -351,7 +376,6 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
   }
 
   String priceDisplay(num? price) {
-    // const String currencySymbol = CoreConstants.currencySymbol;
     String priceDisplay;
     if (price != null) {
       priceDisplay = price
@@ -361,6 +385,12 @@ class QuotePricingBloc extends Bloc<QuotePricingEvent, QuotePricingState> {
       priceDisplay = '';
     }
     return priceDisplay;
+  }
+
+  void updateIDs() {
+    for (int i = 0; i < quoteLinePricingBreakItemEntities.length; i++) {
+      quoteLinePricingBreakItemEntities[i].id = i;
+    }
   }
 
   bool get isAddPriceBreakEnabled {

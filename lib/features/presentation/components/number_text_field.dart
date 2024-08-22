@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class NumberTextField extends StatefulWidget {
   final String? initialtText;
   final bool shouldShowIncrementDecermentIcon;
   final void Function(bool hasFocus)? focusListener;
+  final bool? isEnabled;
 
   const NumberTextField({
     Key? key,
@@ -35,6 +37,7 @@ class NumberTextField extends StatefulWidget {
     this.borderWidth = 2,
     this.onChanged,
     this.focusListener,
+    this.isEnabled = true,
     this.onSubmitted,
   }) : super(key: key);
 
@@ -66,6 +69,17 @@ class _NumberTextFieldState extends State<NumberTextField> {
     }
   }
 
+  @override
+  void dispose() {
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+    if (widget.focusNode == null) {
+      _focusNode.dispose();
+    }
+    super.dispose();
+  }
+
   void _onFocusChange() {
     if (!_focusNode.hasFocus) {
       _handleSubmitted(_controller.text);
@@ -75,8 +89,14 @@ class _NumberTextFieldState extends State<NumberTextField> {
   @override
   void didUpdateWidget(covariant NumberTextField oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _controller = widget.controller ?? _controller;
-    _focusNode = widget.focusNode ?? _focusNode;
+    if (widget.controller != oldWidget.controller) {
+      _controller = widget.controller ?? _controller;
+    }
+    if (widget.focusNode != oldWidget.focusNode) {
+      _focusNode = widget.focusNode ?? _focusNode;
+    }
+    _controller.text = widget.initialtText ?? _controller.text;
+    _shouldShowIncrementDecermentIcon = widget.shouldShowIncrementDecermentIcon;
     _updateArrows(int.tryParse(_controller.text));
   }
 
@@ -112,6 +132,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
           // TextField
           Expanded(
             child: TextField(
+                enabled: widget.isEnabled,
                 controller: _controller,
                 focusNode: _focusNode,
                 textAlign: TextAlign.center,
@@ -126,6 +147,12 @@ class _NumberTextFieldState extends State<NumberTextField> {
                     vertical: AppStyle.defaultVerticalPadding,
                   ),
                   enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      AppStyle.textFieldborderRadius,
+                    ),
+                    borderSide: BorderSide.none,
+                  ),
+                  disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(
                       AppStyle.textFieldborderRadius,
                     ),
@@ -227,7 +254,7 @@ class _NumberTextInputFormatter extends TextInputFormatter {
       TextEditingValue oldValue, TextEditingValue newValue) {
     if (const ['-', ''].contains(newValue.text)) return newValue;
     final intValue = int.tryParse(newValue.text);
-    if (intValue == null) return oldValue;
+    if (intValue == null) return newValue;
     if (intValue < min) return newValue.copyWith(text: min.toString());
     if (intValue > max) return newValue.copyWith(text: max.toString());
     return newValue.copyWith(text: intValue.toString());
