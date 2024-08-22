@@ -7,12 +7,12 @@ abstract class VMILocationState extends Equatable {}
 
 class VMILocationInitialState extends VMILocationState {
   @override
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }
 
 class VMILocationLoadingState extends VMILocationState {
   @override
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }
 
 class VMILocationLoadedState extends VMILocationState {
@@ -44,10 +44,10 @@ class VMILocationLoadedState extends VMILocationState {
 
 class VMILocationFailureState extends VMILocationState {
   @override
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }
 
 class VMISeachPlaceLocationUpdatedState extends VMILocationState {
   @override
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }
