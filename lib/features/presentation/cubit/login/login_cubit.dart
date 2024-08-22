@@ -134,7 +134,9 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginInitialState());
 
     final fullSession =
-        (await loginUsecase.getCurrentSession()).getResultSuccessValue();
+        (await loginUsecase.getCurrentSession()).getResultSuccessValue(
+      trackError: true,
+    );
     if (fullSession == null) {
       emit(
         LoginFailureState(
@@ -164,7 +166,9 @@ class LoginCubit extends Cubit<LoginState> {
     );
 
     final billToResultResponse =
-        (await loginUsecase.getBillTo(parameters)).getResultSuccessValue();
+        (await loginUsecase.getBillTo(parameters)).getResultSuccessValue(
+      trackError: true,
+    );
     if (billToResultResponse == null) {
       emit(
         LoginFailureState(
@@ -186,7 +190,9 @@ class LoginCubit extends Cubit<LoginState> {
       );
       final shipToResultResponse = (await loginUsecase.getShipTo(
               currentBillTo?.id ?? '', shipToParameters))
-          .getResultSuccessValue();
+          .getResultSuccessValue(
+        trackError: true,
+      );
       var hasOneShipTo = shipToResultResponse?.shipTos?.length == 1 &&
           shipToResultResponse?.shipTos?[0].id != null;
       var isShipToTheSameAsCurrent = hasOneShipTo &&
