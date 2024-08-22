@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -130,6 +131,8 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   Future<void> handleBillToShipTo() async {
+    emit(LoginInitialState());
+
     final fullSession =
         (await loginUsecase.getCurrentSession()).getResultSuccessValue();
     if (fullSession == null) {
