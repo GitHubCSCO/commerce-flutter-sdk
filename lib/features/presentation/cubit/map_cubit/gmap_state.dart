@@ -5,8 +5,7 @@ abstract class GMapState extends Equatable {}
 
 class GMapInitial extends GMapState {
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }
 
 class GMapMarkersUpdated extends GMapState {
