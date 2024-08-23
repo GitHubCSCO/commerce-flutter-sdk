@@ -391,11 +391,20 @@ class QuoteDetailsPage extends StatelessWidget {
         Column(
           children: quoteLineEntities
               .map((quoteLineEntity) => QuoteLineWidget(
+                  canEditQuantity:
+                      context.watch<QuoteDetailsBloc>().canEditQuantity,
+                  showQuantityAndSubtotalField: context
+                      .watch<QuoteDetailsBloc>()
+                      .showQuoteQuantityAndSubtotal,
                   hideInventoryEnable:
                       quoteLineEntity.hideInventoryEnable ?? false,
                   hidePricingEnable: quoteLineEntity.hidePricingEnable ?? false,
                   quoteLineEntity: quoteLineEntity,
-                  showViewBreakPricing: true,
+                  showViewBreakPricing:
+                      context.watch<QuoteDetailsBloc>().showViewQuotedPricing,
+                  viewQuotedPricingTitle: context
+                      .read<QuoteDetailsBloc>()
+                      .viewQuotedPricingTitle(quoteLineEntity),
                   showRemoveButton: false,
                   moreButtonWidget:
                       _buildMenuButtonForQuoteLine(context, quoteLineEntity),
@@ -439,13 +448,14 @@ class QuoteDetailsPage extends StatelessWidget {
         },
       ),
     );
-    list.add(ToolMenu(
-        title: LocalizationConstants.quote.localized(),
-        action: () {
-          gotoQuotePricing(context, quoteLineEntity);
-          // AppRoute.quotePricing
-          //     .navigateBackStack(context, extra: quoteLineEntity);
-        }));
+    if (context.watch<QuoteDetailsBloc>().showQuoteOption) {
+      list.add(ToolMenu(
+          title: LocalizationConstants.quote.localized(),
+          action: () {
+            gotoQuotePricing(context, quoteLineEntity);
+          }));
+    }
+
     return list;
   }
 
@@ -465,7 +475,7 @@ class QuoteDetailsPage extends StatelessWidget {
 
   Widget _buildQuoteMessageWidget(BuildContext context, QuoteDto? quoteDto) {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: InkWell(
           onTap: () {
             AppRoute.quoteCommunication
@@ -479,7 +489,7 @@ class QuoteDetailsPage extends StatelessWidget {
                 LocalizationConstants.message.localized(),
                 style: OptiTextStyles.bodyFade,
               ),
-              SizedBox(height: 10.0),
+              const SizedBox(height: 10.0),
               if (quoteDto != null &&
                   quoteDto.messageCollection != null &&
                   quoteDto.messageCollection!.isNotEmpty &&
@@ -490,16 +500,16 @@ class QuoteDetailsPage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(quoteDto?.messageCollection?.last.displayName ??
-                            ""),
+                        Text(
+                            quoteDto.messageCollection?.last.displayName ?? ""),
                         Row(
                           children: [
-                            Text(quoteDto?.messageCollection?.last.createdDate
+                            Text(quoteDto.messageCollection?.last.createdDate
                                     .formatDate(
                                         format: CoreConstants
                                             .dateFormatFullString) ??
                                 ""),
-                            SizedBox(width: 10.0),
+                            const SizedBox(width: 10.0),
                             Container(
                               alignment: Alignment.center,
                               width: 25,
@@ -515,8 +525,8 @@ class QuoteDetailsPage extends StatelessWidget {
                         )
                       ],
                     ),
-                    SizedBox(height: 10.0),
-                    Text(quoteDto?.messageCollection?.last.body ?? ""),
+                    const SizedBox(height: 10.0),
+                    Text(quoteDto.messageCollection?.last.body ?? ""),
                   ],
                 )
               else
@@ -524,7 +534,7 @@ class QuoteDetailsPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(LocalizationConstants.noMessageItem.localized()),
-                    SizedBox(width: 10.0),
+                    const SizedBox(width: 10.0),
                     Container(
                       alignment: Alignment.center,
                       width: 25,

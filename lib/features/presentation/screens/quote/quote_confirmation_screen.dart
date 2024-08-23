@@ -86,11 +86,11 @@ class QuoteConfirmationPage extends StatelessWidget {
         Column(
           children: quoteLineEntities
               .map((quoteLineEntity) => QuoteLineWidget(
+                  showViewBreakPricing: false,
                   hideInventoryEnable:
                       quoteLineEntity.hideInventoryEnable ?? false,
                   hidePricingEnable: quoteLineEntity.hidePricingEnable ?? false,
                   quoteLineEntity: quoteLineEntity,
-                  showViewBreakPricing: true,
                   showRemoveButton: false,
                   canEditQuantity: false,
                   onCartLineRemovedCallback: (cartLineEntity) {},
