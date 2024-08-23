@@ -62,40 +62,50 @@ void viewWarehouseWidget(BuildContext context, String? id, String productNumber,
                   var cellHeight = state.warehouses.length > 1 ? 40 : 20;
                   return SizedBox(
                     height: state.warehouses.length * cellHeight +
-                        100.0, // adjust the value as needed
+                        100.0, // Adjust this value to limit the height of the dialog
                     width: 300.0,
                     child: Column(
                       children: [
                         Flexible(
-                          child: ListView.builder(
-                            itemCount: state.warehouses.length,
-                            itemBuilder: (context, index) {
-                              final warehouse = state.warehouses[index];
-                              return Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        0.0, 10.0, 0.0, 10.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                ListView.builder(
+                                  shrinkWrap:
+                                      true, // Important to make ListView scrollable inside a scrollable container
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: state.warehouses.length,
+                                  itemBuilder: (context, index) {
+                                    final warehouse = state.warehouses[index];
+                                    return Column(
                                       children: [
-                                        Text(warehouse.name!),
-                                        Text(warehouse.qty.toString()),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              0.0, 10.0, 0.0, 10.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(warehouse.name!),
+                                              Text(warehouse.qty.toString()),
+                                            ],
+                                          ),
+                                        ),
+                                        const Divider(
+                                          color: OptiAppColors.border,
+                                          thickness: 1.0,
+                                        )
                                       ],
-                                    ),
-                                  ),
-                                  const Divider(
-                                    color: OptiAppColors.border,
-                                    thickness: 1.0,
-                                  )
-                                ],
-                              );
-                            },
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         ),
+                        const SizedBox(height: 10.0),
                         PrimaryButton(
-                            text: "OK",
+                            text: LocalizationConstants.oK.localized(),
                             onPressed: () {
                               Navigator.of(context).pop();
                             })
