@@ -134,9 +134,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                     reviewOrderEntity: state.reviewOrderEntity,
                     message: state.message));
           } else if (state is CheckoutPlaceOrderFailed) {
-            context
-                .read<ExpansionPanelCubit>()
-                .onPanelExpansionChange(0);
+            context.read<ExpansionPanelCubit>().onPanelExpansionChange(0);
             showAlert(context,
                 message: LocalizationConstants.orderFailed.localized());
           }
