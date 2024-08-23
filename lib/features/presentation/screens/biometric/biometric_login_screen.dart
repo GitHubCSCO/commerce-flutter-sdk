@@ -13,6 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/biometric_contr
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class BiometricLoginScreen extends StatelessWidget {
   const BiometricLoginScreen({
@@ -91,7 +92,7 @@ class BiometricLoginPage extends StatelessWidget {
         actions: [
           PlainButton(
             onPressed: () {
-              AppRoute.account.navigate(context);
+              context.pop();
             },
             style: OptiTextStyles.subtitle.copyWith(
               color: OptiAppColors.primaryColor,
@@ -152,7 +153,7 @@ class BiometricLoginPage extends StatelessWidget {
                       ? PrimaryButton(
                           text: LocalizationConstants.continueText.localized(),
                           onPressed: () async {
-                            AppRoute.account.navigate(context);
+                            context.pop();
                           },
                         )
                       : PrimaryButton(
@@ -169,7 +170,7 @@ class BiometricLoginPage extends StatelessWidget {
                       : PlainButton(
                           text: 'No Thanks',
                           onPressed: () {
-                            AppRoute.account.navigate(context);
+                            context.pop();
                           },
                         ),
                 ],
