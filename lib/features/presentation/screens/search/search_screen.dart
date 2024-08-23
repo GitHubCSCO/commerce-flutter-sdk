@@ -222,8 +222,9 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                     );
                     if (!result.$1.isNullOrEmpty && context.mounted) {
                       context
-                        .read<SearchHistoryCubit>()
-                        .addSearchHistory(result.$1);context.read<SearchBloc>().searchQuery = result.$1;
+                          .read<SearchHistoryCubit>()
+                          .addSearchHistory(result.$1);
+                      context.read<SearchBloc>().searchQuery = result.$1;
                       context.read<SearchBloc>().barcodeFormat = result.$2;
                       context.read<SearchBloc>().add(SearchSearchEvent());
 
