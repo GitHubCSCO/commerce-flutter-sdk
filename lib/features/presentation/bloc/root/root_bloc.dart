@@ -17,5 +17,11 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     on<RootCartUpdateEvent>((event, emit) {
       emit(RootCartReload());
     });
+    on<RootInitiateSearchEvent>((event, emit) {
+      emit(RootInitiateSearch(event.query));
+    });
+    on<RootSearchProductEvent>((event, emit) {
+      emit(RootSearchProduct(event.query));
+    });
   }
 }
