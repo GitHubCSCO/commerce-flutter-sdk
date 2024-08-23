@@ -1,8 +1,11 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 mixin BaseCheckout {
@@ -36,7 +39,10 @@ mixin BaseCheckout {
     Promotion? promotion;
 
     var promotions = promotionCollectionModel?.promotions
-        ?.where((x) => x.amount != 0)
+        ?.where((x) =>
+            (x.promotionResultType?.toLowerCase() == "amountofforder" ||
+                x.promotionResultType?.toLowerCase() == "percentofforder") &&
+            x.amount != 0)
         .toList();
 
     if (promotions == null || promotions.isEmpty) {
@@ -132,5 +138,25 @@ mixin BaseCheckout {
         ],
       );
     }
+  }
+
+  void showAlert(BuildContext context, {String? title, String? message}) {
+    displayDialogWidget(
+        context: context,
+        title: title,
+        message: message,
+        actions: [
+          DialogPlainButton(
+            onPressed: () {
+              context.read<CheckoutBloc>().add(
+                  LoadCheckoutEvent(cart: context.read<CheckoutBloc>().cart!));
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              LocalizationConstants.oK.localized(),
+              textAlign: TextAlign.start,
+            ),
+          ),
+        ]);
   }
 }
