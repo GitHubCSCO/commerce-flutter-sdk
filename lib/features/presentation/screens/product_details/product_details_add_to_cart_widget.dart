@@ -116,9 +116,7 @@ class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
     return Column(
       children: [
         ProductDetailsAddCartRow(widget.detailsAddToCartEntity, (int? value) {
-          setState(() {
-            quantity = value;
-          });
+          quantity = value;
         }),
         if (widget.detailsAddToCartEntity.isAddToCartAllowed == true)
           PrimaryButton(
@@ -159,7 +157,7 @@ class ProductDetailsAddCartRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 165.0,
+      height: 170,
       width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 20.0),
@@ -199,7 +197,10 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                       max: CoreConstants.maximumOrderQuantity,
                       initialtText: detailsAddToCartEntity.quantityText,
                       shouldShowIncrementDecermentIcon: true,
-                      onChanged: (int? quantity) {
+                      onSubmitted: (int? quantity) {
+                        if (quantity == null) {
+                          return;
+                        }
                         onQuantityChanged(quantity);
                         var pricingState =
                             context.read<ProductDetailsPricingBloc>().state;
@@ -208,7 +209,7 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                               pricingState.productDetailsPriceEntity;
                           var productDetailsBloc =
                               context.read<ProductDetailsBloc>();
-                          productDetailsBloc.updateQuantity(quantity!);
+                          productDetailsBloc.updateQuantity(quantity);
 
                           context
                               .read<ProductDetailsPricingBloc>()
