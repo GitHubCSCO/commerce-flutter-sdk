@@ -30,10 +30,6 @@ import 'package:go_router/go_router.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-void _reloadSearchPage(BuildContext context) {
-  context.read<SearchPageCmsBloc>().add(SearchPageCmsLoadEvent());
-}
-
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
 
@@ -70,6 +66,16 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
   bool autoFocus = false;
 
   @override
+  void initState() {
+    super.initState();
+
+    final state = context.read<RootBloc>().state;
+    if (state is RootSearchProduct) {
+      context.read<SearchBloc>().add(SearchFieldPopulateEvent(state.query));
+    }
+  }
+
+  @override
   void dispose() {
     autoFocusNode.dispose();
     super.dispose();
@@ -77,152 +83,155 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 36),
-        Container(
-          color: Colors.white,
-          padding: const EdgeInsets.only(left: 16, top: 16, bottom: 16),
-          child: Row(
-            children: [
-              Expanded(
-                child: Input(
-                  hintText: LocalizationConstants.search.localized(),
-                  suffixIcon: IconButton(
-                    icon: const SvgAssetImage(
-                      assetName: AssetConstants.iconClear,
-                      semanticsLabel: 'search query clear icon',
-                      fit: BoxFit.fitWidth,
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<RootBloc, RootState>(
+          listener: (context, state) {
+            if (state is RootConfigReload) {
+              _reloadSearchPage(context);
+            } else if (state is RootSearchProduct) {
+              context
+                  .read<SearchBloc>()
+                  .add(SearchFieldPopulateEvent(state.query));
+            }
+          },
+        ),
+        BlocListener<PullToRefreshBloc, PullToRefreshState>(
+          listener: (context, state) {
+            if (state is PullToRefreshLoadState) {
+              _reloadSearchPage(context);
+            }
+          },
+        ),
+        BlocListener<AuthCubit, AuthState>(
+          listenWhen: (previous, current) =>
+              authCubitChangeTrigger(previous, current),
+          listener: (context, state) {
+            _reloadSearchPage(context);
+          },
+        ),
+        BlocListener<DomainCubit, DomainState>(
+          listener: (context, state) {
+            if (state is DomainLoaded) {
+              _reloadSearchPage(context);
+            }
+          },
+        ),
+        BlocListener<SearchPageCmsBloc, SearchPageCmsState>(
+          listener: (context, state) {
+            switch (state) {
+              case SearchPageCmsLoadingState():
+                context.read<CmsCubit>().loading();
+              case SearchPageCmsLoadedState():
+                context.read<CmsCubit>().buildCMSWidgets(state.pageWidgets);
+              case SearchPageCmsFailureState():
+                context.read<CmsCubit>().failedLoading();
+            }
+          },
+        ),
+        BlocListener<SearchBloc, SearchState>(
+          listener: (context, state) {
+            if (state is AutoCompleteCategoryState) {
+              AppRoute.shopSubCategory.navigateBackStack(
+                context,
+                pathParameters: {
+                  "categoryId": state.category.id.toString(),
+                  "categoryTitle": state.category.shortDescription.toString(),
+                  "categoryPath": state.category.path.toString()
+                },
+              );
+            } else if (state is AutoCompleteBrandState) {
+              AppRoute.shopBrandDetails.navigateBackStack(
+                context,
+                extra: state.brand,
+              );
+            } else if (state is AutoCompleteProductListState) {
+              AppRoute.product
+                  .navigateBackStack(context, extra: state.pageEntity);
+            }
+          },
+        ),
+      ],
+      child: Column(
+        children: [
+          const SizedBox(height: 36),
+          Container(
+            color: Colors.white,
+            padding: const EdgeInsets.only(left: 16, top: 16, bottom: 16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Input(
+                    hintText: LocalizationConstants.search.localized(),
+                    suffixIcon: IconButton(
+                      icon: const SvgAssetImage(
+                        assetName: AssetConstants.iconClear,
+                        semanticsLabel: 'search query clear icon',
+                        fit: BoxFit.fitWidth,
+                      ),
+                      onPressed: () {
+                        textEditingController.clear();
+                        context.read<SearchBloc>().add(SearchTypingEvent(''));
+                        context.closeKeyboard();
+                      },
                     ),
-                    onPressed: () {
-                      textEditingController.clear();
-                      context.read<SearchBloc>().add(SearchTypingEvent(''));
-                      context.closeKeyboard();
+                    onTapOutside: (p0) => context.closeKeyboard(),
+                    textInputAction: TextInputAction.search,
+                    focusListener: (bool hasFocus) {
+                      if (hasFocus) {
+                        context
+                            .read<SearchBloc>()
+                            .add(SearchFocusEvent(autoFocus: autoFocus));
+                      } else {
+                        context.read<SearchBloc>().add(SearchUnFocusEvent());
+                      }
                     },
-                  ),
-                  onTapOutside: (p0) => context.closeKeyboard(),
-                  textInputAction: TextInputAction.search,
-                  focusListener: (bool hasFocus) {
-                    if (hasFocus) {
+                    onChanged: (String searchQuery) {
+                      _delayer.run(() {
+                        context
+                            .read<SearchBloc>()
+                            .add(SearchTypingEvent(searchQuery));
+                      });
+                    },
+                    onSubmitted: (String query) {
                       context
-                          .read<SearchBloc>()
-                          .add(SearchFocusEvent(autoFocus: autoFocus));
-                    } else {
-                      context.read<SearchBloc>().add(SearchUnFocusEvent());
+                          .read<SearchHistoryCubit>()
+                          .addSearchHistory(query);
+                      context.read<SearchBloc>().searchQuery = query;
+                      context.read<SearchBloc>().add(SearchSearchEvent());
+                    },
+                    controller: textEditingController,
+                    autoFocusNode: autoFocusNode,
+                  ),
+                ),
+                IconButton(
+                  icon: const SvgAssetImage(
+                    assetName: AssetConstants.iconBarcodeScan,
+                    semanticsLabel: 'barcode scan icon',
+                    fit: BoxFit.fitWidth,
+                  ),
+                  onPressed: () async {
+                    final result = await GoRouter.of(context)
+                        .pushNamed(AppRoute.barcodeSearch.name) as (
+                      String,
+                      BarcodeFormat
+                    );
+                    if (!result.$1.isNullOrEmpty && context.mounted) {
+                      context
+                          .read<SearchHistoryCubit>()
+                          .addSearchHistory(result.$1);
+                      context.read<SearchBloc>().searchQuery = result.$1;
+                      context.read<SearchBloc>().barcodeFormat = result.$2;
+                      context.read<SearchBloc>().add(SearchSearchEvent());
+
+                      textEditingController.text = result.$1;
                     }
                   },
-                  onChanged: (String searchQuery) {
-                    _delayer.run(() {
-                      context
-                          .read<SearchBloc>()
-                          .add(SearchTypingEvent(searchQuery));
-                    });
-                  },
-                  onSubmitted: (String query) {
-                    context.read<SearchHistoryCubit>().addSearchHistory(query);
-                    context.read<SearchBloc>().searchQuery = query;
-                    context.read<SearchBloc>().add(SearchSearchEvent());
-                  },
-                  controller: textEditingController,
-                  autoFocusNode: autoFocusNode,
-                ),
-              ),
-              IconButton(
-                icon: const SvgAssetImage(
-                  assetName: AssetConstants.iconBarcodeScan,
-                  semanticsLabel: 'barcode scan icon',
-                  fit: BoxFit.fitWidth,
-                ),
-                onPressed: () async {
-                  final result = await GoRouter.of(context)
-                      .pushNamed(AppRoute.barcodeSearch.name) as (
-                    String,
-                    BarcodeFormat
-                  );
-                  if (!result.$1.isNullOrEmpty && context.mounted) {
-                    context
-                        .read<SearchHistoryCubit>()
-                        .addSearchHistory(result.$1);
-                    context.read<SearchBloc>().searchQuery = result.$1;
-                    context.read<SearchBloc>().barcodeFormat = result.$2;
-                    context.read<SearchBloc>().add(SearchSearchEvent());
-
-                    textEditingController.text = result.$1;
-                  }
-                },
-              )
-            ],
+                )
+              ],
+            ),
           ),
-        ),
-        Expanded(
-          child: MultiBlocListener(
-            listeners: [
-              BlocListener<RootBloc, RootState>(
-                listener: (context, state) async {
-                  if (state is RootConfigReload) {
-                    _reloadSearchPage(context);
-                  }
-                },
-              ),
-              BlocListener<PullToRefreshBloc, PullToRefreshState>(
-                listener: (context, state) {
-                  if (state is PullToRefreshLoadState) {
-                    _reloadSearchPage(context);
-                  }
-                },
-              ),
-              BlocListener<AuthCubit, AuthState>(
-                listenWhen: (previous, current) =>
-                    authCubitChangeTrigger(previous, current),
-                listener: (context, state) {
-                  _reloadSearchPage(context);
-                },
-              ),
-              BlocListener<DomainCubit, DomainState>(
-                listener: (context, state) {
-                  if (state is DomainLoaded) {
-                    _reloadSearchPage(context);
-                  }
-                },
-              ),
-              BlocListener<SearchPageCmsBloc, SearchPageCmsState>(
-                listener: (context, state) {
-                  switch (state) {
-                    case SearchPageCmsLoadingState():
-                      context.read<CmsCubit>().loading();
-                    case SearchPageCmsLoadedState():
-                      context
-                          .read<CmsCubit>()
-                          .buildCMSWidgets(state.pageWidgets);
-                    case SearchPageCmsFailureState():
-                      context.read<CmsCubit>().failedLoading();
-                  }
-                },
-              ),
-              BlocListener<SearchBloc, SearchState>(
-                listener: (context, state) {
-                  if (state is AutoCompleteCategoryState) {
-                    AppRoute.shopSubCategory.navigateBackStack(
-                      context,
-                      pathParameters: {
-                        "categoryId": state.category.id.toString(),
-                        "categoryTitle":
-                            state.category.shortDescription.toString(),
-                        "categoryPath": state.category.path.toString()
-                      },
-                    );
-                  } else if (state is AutoCompleteBrandState) {
-                    AppRoute.shopBrandDetails.navigateBackStack(
-                      context,
-                      extra: state.brand,
-                    );
-                  } else if (state is AutoCompleteProductListState) {
-                    AppRoute.product
-                        .navigateBackStack(context, extra: state.pageEntity);
-                  }
-                },
-              ),
-            ],
+          Expanded(
             child: BlocBuilder<SearchBloc, SearchState>(
                 buildWhen: (previous, current) =>
                     current is! AutoCompleteCategoryState ||
@@ -248,26 +257,10 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                                   context
                                       .read<SearchHistoryCubit>()
                                       .getSearchHistory();
-                                  return MultiBlocListener(
-                                    listeners: [
-                                      BlocListener<AuthCubit, AuthState>(
-                                        listener: (context, state) {
-                                          _reloadSearchPage(context);
-                                        },
-                                      ),
-                                      BlocListener<DomainCubit, DomainState>(
-                                        listener: (context, state) {
-                                          if (state is DomainLoaded) {
-                                            _reloadSearchPage(context);
-                                          }
-                                        },
-                                      ),
-                                    ],
-                                    child: ListView(
-                                      padding: EdgeInsets.zero,
-                                      children: buildContentWidgets(
-                                          state.widgetEntities),
-                                    ),
+                                  return ListView(
+                                    padding: EdgeInsets.zero,
+                                    children: buildContentWidgets(
+                                        state.widgetEntities),
                                   );
                                 }
                               default:
@@ -376,9 +369,9 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                       }
                   }
                 }),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 
@@ -453,5 +446,13 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
     AppRoute.productDetails.navigateBackStack(context,
         pathParameters: {"productId": product.id.toString()},
         extra: ProductEntity());
+  }
+
+  void _reloadSearchPage(BuildContext context) {
+    if (textEditingController.text.isNotEmpty) {
+      textEditingController.clear();
+      context.read<SearchBloc>().add(SearchCloseEvent());
+    }
+    context.read<SearchPageCmsBloc>().add(SearchPageCmsLoadEvent());
   }
 }

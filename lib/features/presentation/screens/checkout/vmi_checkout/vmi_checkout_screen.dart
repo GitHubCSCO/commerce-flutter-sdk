@@ -84,7 +84,7 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                     isVmiCheckout: true,
                     cart: context.read<CheckoutBloc>().cart!));
           } else if (state is CheckoutPlaceOrderFailed) {
-            _showAlert(context,
+            showAlert(context,
                 message: LocalizationConstants.orderFailed.localized());
           }
         },
@@ -291,20 +291,5 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
             reviewOrderEntity: prepareReviewOrderEntiity(state, context)));
       }
     }
-  }
-
-  void _showAlert(BuildContext context, {String? title, String? message}) {
-    displayDialogWidget(
-        context: context,
-        title: title,
-        message: message,
-        actions: [
-          DialogPlainButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(LocalizationConstants.oK.localized()),
-          ),
-        ]);
   }
 }

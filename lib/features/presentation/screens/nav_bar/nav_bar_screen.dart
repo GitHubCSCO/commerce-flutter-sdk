@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_state.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
@@ -51,10 +52,23 @@ class NavBarPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: OptiAppColors.backgroundGray,
-      bottomNavigationBar: bottomNavigationBar(context),
-      body: navigationShell,
+    return BlocListener<RootBloc, RootState>(
+      listener: (context, state) {
+        if (state is RootInitiateSearch) {
+          //Navigate to search tab
+          int index = 1;
+          navigationShell.goBranch(
+            index,
+            initialLocation: index == navigationShell.currentIndex,
+          );
+          context.read<RootBloc>().add(RootSearchProductEvent(state.query));
+        }
+      },
+      child: Scaffold(
+        backgroundColor: OptiAppColors.backgroundGray,
+        bottomNavigationBar: bottomNavigationBar(context),
+        body: navigationShell,
+      ),
     );
   }
 
