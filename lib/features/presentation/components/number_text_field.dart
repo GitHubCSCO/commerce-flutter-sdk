@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
@@ -84,7 +86,9 @@ class _NumberTextFieldState extends State<NumberTextField> {
 
   void _onFocusChange() {
     if (_focusNode.hasFocus) {
-      _showDoneButton();
+      if (Platform.isIOS) {
+        _showDoneButton();
+      }
     } else {
       _handleSubmitted(_controller.text);
       _removeOverlay();

@@ -54,7 +54,6 @@ class ProductDetailsStandardConfigurationWidget extends StatelessWidget {
                             borderRadius:
                                 BorderRadius.circular(AppStyle.borderRadius),
                           ),
-                          height: 50,
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [

@@ -157,7 +157,7 @@ class ProductDetailsAddCartRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 165.0,
+      height: 170,
       width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 20.0),
