@@ -30,10 +30,6 @@ import 'package:go_router/go_router.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-void _reloadSearchPage(BuildContext context) {
-  context.read<SearchPageCmsBloc>().add(SearchPageCmsLoadEvent());
-}
-
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
 
@@ -261,26 +257,10 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                                   context
                                       .read<SearchHistoryCubit>()
                                       .getSearchHistory();
-                                  return MultiBlocListener(
-                                    listeners: [
-                                      BlocListener<AuthCubit, AuthState>(
-                                        listener: (context, state) {
-                                          _reloadSearchPage(context);
-                                        },
-                                      ),
-                                      BlocListener<DomainCubit, DomainState>(
-                                        listener: (context, state) {
-                                          if (state is DomainLoaded) {
-                                            _reloadSearchPage(context);
-                                          }
-                                        },
-                                      ),
-                                    ],
-                                    child: ListView(
-                                      padding: EdgeInsets.zero,
-                                      children: buildContentWidgets(
-                                          state.widgetEntities),
-                                    ),
+                                  return ListView(
+                                    padding: EdgeInsets.zero,
+                                    children: buildContentWidgets(
+                                        state.widgetEntities),
                                   );
                                 }
                               default:
@@ -466,5 +446,13 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
     AppRoute.productDetails.navigateBackStack(context,
         pathParameters: {"productId": product.id.toString()},
         extra: ProductEntity());
+  }
+
+  void _reloadSearchPage(BuildContext context) {
+    if (textEditingController.text.isNotEmpty) {
+      textEditingController.clear();
+      context.read<SearchBloc>().add(SearchCloseEvent());
+    }
+    context.read<SearchPageCmsBloc>().add(SearchPageCmsLoadEvent());
   }
 }
