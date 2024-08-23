@@ -439,5 +439,4 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
     }
     context.read<SearchPageCmsBloc>().add(SearchPageCmsLoadEvent());
   }
-
 }
