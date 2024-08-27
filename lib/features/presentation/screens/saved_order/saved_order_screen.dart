@@ -61,54 +61,65 @@ class SavedOrderPage extends StatelessWidget {
                 );
 
               case OrderStatus.failure:
-                return Center(
-                  child: Text(
-                    state.errorMessage ?? '',
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<SavedOrderCubit>().initialize();
+                  },
+                  child: Center(
+                    child: Text(
+                      state.errorMessage ?? '',
+                    ),
                   ),
                 );
 
               default:
-                return Column(
-                  children: [
-                    Container(
-                      height: 50,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            ((state.cartCollectionModel.pagination
-                                            ?.totalItemCount ??
-                                        0) !=
-                                    0)
-                                ? '${state.cartCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.orders.localized()}'
-                                : '',
-                            style: OptiTextStyles.header3,
-                          ),
-                          SortToolMenu(
-                            availableSortOrders: CartSortOrder.values,
-                            onSortOrderChanged: (selectedSortOrder) async {
-                              context.read<SavedOrderCubit>().changeSortOrder(
-                                    selectedSortOrder as CartSortOrder,
-                                  );
-                            },
-                            selectedSortOrder: state.sortOrder,
-                          )
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: (state.cartCollectionModel.carts ?? []).isNotEmpty
-                          ? _SavedOrderListWidget(
-                              savedOrders:
-                                  state.cartCollectionModel.carts ?? [],
-                            )
-                          : Center(
-                              child: Text(LocalizationConstants.noSavedOrders
-                                  .localized()),
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<SavedOrderCubit>().initialize();
+                  },
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 50,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              ((state.cartCollectionModel.pagination
+                                              ?.totalItemCount ??
+                                          0) !=
+                                      0)
+                                  ? '${state.cartCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.orders.localized()}'
+                                  : '',
+                              style: OptiTextStyles.header3,
                             ),
-                    ),
-                  ],
+                            SortToolMenu(
+                              availableSortOrders: CartSortOrder.values,
+                              onSortOrderChanged: (selectedSortOrder) async {
+                                context.read<SavedOrderCubit>().changeSortOrder(
+                                      selectedSortOrder as CartSortOrder,
+                                    );
+                              },
+                              selectedSortOrder: state.sortOrder,
+                            )
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: (state.cartCollectionModel.carts ?? [])
+                                .isNotEmpty
+                            ? _SavedOrderListWidget(
+                                savedOrders:
+                                    state.cartCollectionModel.carts ?? [],
+                              )
+                            : Center(
+                                child: Text(LocalizationConstants.noSavedOrders
+                                    .localized()),
+                              ),
+                      ),
+                    ],
+                  ),
                 );
             }
           },
@@ -167,6 +178,7 @@ class _SavedOrderListWidgetState extends State<_SavedOrderListWidget> {
     return BlocBuilder<SavedOrderCubit, SavedOrderState>(
       builder: (context, state) {
         return ListView.separated(
+          physics: const AlwaysScrollableScrollPhysics(),
           controller: _scrollController,
           itemBuilder: (context, index) {
             if (index >= (state.cartCollectionModel.carts?.length ?? 0) &&
