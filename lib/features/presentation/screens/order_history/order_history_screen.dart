@@ -25,7 +25,7 @@ import 'package:badges/badges.dart' as badges;
 
 class OrderHistoryScreen extends StatelessWidget {
   final bool? isFromVMI;
-  OrderHistoryScreen({super.key, this.isFromVMI});
+  const OrderHistoryScreen({super.key, this.isFromVMI});
 
   @override
   Widget build(BuildContext context) {
@@ -105,56 +105,70 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
                   );
 
                 case OrderStatus.failure:
-                  return const Expanded(
-                    child: Center(
-                      child: Text('Error loading orders'),
+                  return Expanded(
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        context.read<OrderHistoryCubit>().initialize(
+                              isFromVMI: isFromVMI ?? false,
+                            );
+                      },
+                      child: const Center(
+                        child: Text('Error loading orders'),
+                      ),
                     ),
                   );
                 default:
                   return Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Container(
-                          height: 50,
-                          padding: const EdgeInsetsDirectional.symmetric(
-                              horizontal: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '${state.orderEntities.pagination?.totalItemCount ?? ' '} Orders',
-                                style: OptiTextStyles.header3,
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SortToolMenu(
-                                    selectedSortOrder: state.orderSortOrder,
-                                    availableSortOrders: context
-                                        .read<OrderHistoryCubit>()
-                                        .availableSortOrders,
-                                    onSortOrderChanged:
-                                        (SortOrderAttribute sortOrder) async {
-                                      await context
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        context.read<OrderHistoryCubit>().initialize(
+                              isFromVMI: isFromVMI ?? false,
+                            );
+                      },
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Container(
+                            height: 50,
+                            padding: const EdgeInsetsDirectional.symmetric(
+                                horizontal: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  '${state.orderEntities.pagination?.totalItemCount ?? ' '} Orders',
+                                  style: OptiTextStyles.header3,
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SortToolMenu(
+                                      selectedSortOrder: state.orderSortOrder,
+                                      availableSortOrders: context
                                           .read<OrderHistoryCubit>()
-                                          .changeSortOrder(
-                                            sortOrder as OrderSortOrder,
-                                          );
-                                    },
-                                  ),
-                                  const SizedBox(width: 10),
-                                  const _OrderHistoryFilter(),
-                                ],
-                              )
-                            ],
+                                          .availableSortOrders,
+                                      onSortOrderChanged:
+                                          (SortOrderAttribute sortOrder) async {
+                                        await context
+                                            .read<OrderHistoryCubit>()
+                                            .changeSortOrder(
+                                              sortOrder as OrderSortOrder,
+                                            );
+                                      },
+                                    ),
+                                    const SizedBox(width: 10),
+                                    const _OrderHistoryFilter(),
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                        _OrderHistoryListWidget(
-                          orderEntities: state.orderEntities.orders ?? [],
-                          hidePricingEnable: state.hidePricingEnable,
-                        ),
-                      ],
+                          _OrderHistoryListWidget(
+                            orderEntities: state.orderEntities.orders ?? [],
+                            hidePricingEnable: state.hidePricingEnable,
+                          ),
+                        ],
+                      ),
                     ),
                   );
               }
