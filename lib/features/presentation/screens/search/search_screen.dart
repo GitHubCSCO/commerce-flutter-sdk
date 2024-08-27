@@ -93,13 +93,6 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
             }
           },
         ),
-        BlocListener<PullToRefreshBloc, PullToRefreshState>(
-          listener: (context, state) {
-            if (state is PullToRefreshLoadState) {
-              _reloadSearchPage(context);
-            }
-          },
-        ),
         BlocListener<AuthCubit, AuthState>(
           listenWhen: (previous, current) =>
               authCubitChangeTrigger(previous, current),
