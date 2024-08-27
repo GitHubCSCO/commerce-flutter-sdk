@@ -60,6 +60,7 @@ class WishListDetailsScreen extends StatelessWidget {
           child: WishListDetailsPage(
             onWishListUpdated: onWishListUpdated,
             onWishListDeleted: onWishListDeleted,
+            wishListId: wishListId,
           ),
         );
       }),
@@ -72,8 +73,10 @@ class WishListDetailsPage extends StatefulWidget {
     super.key,
     this.onWishListUpdated,
     this.onWishListDeleted,
+    required this.wishListId,
   });
 
+  final String wishListId;
   final void Function()? onWishListUpdated;
   final void Function()? onWishListDeleted;
 
@@ -318,13 +321,28 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                     child: Center(child: CircularProgressIndicator()));
               } else if (state.status == WishListStatus.failure) {
                 return Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      context
+                          .read<WishListDetailsCubit>()
+                          .loadWishListDetails(widget.wishListId);
+                    },
                     child: Center(
-                        child: Text(LocalizationConstants.error.localized())));
+                        child: Text(LocalizationConstants.error.localized())),
+                  ),
+                );
               } else if (context.read<WishListDetailsCubit>().emptyWishList) {
                 return Expanded(
-                  child: Center(
-                    child: Text(
-                        SiteMessageConstants.defaultValueWishListNoProducts),
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      context
+                          .read<WishListDetailsCubit>()
+                          .loadWishListDetails(widget.wishListId);
+                    },
+                    child: Center(
+                      child: Text(
+                          SiteMessageConstants.defaultValueWishListNoProducts),
+                    ),
                   ),
                 );
               } else if (context.read<WishListDetailsCubit>().noSearchResult) {
@@ -337,63 +355,70 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                 );
               }
               return Expanded(
-                child: Column(
-                  children: [
-                    if (!context.read<WishListDetailsCubit>().emptyWishList)
-                      Container(
-                        height: 50,
-                        padding: const EdgeInsetsDirectional.symmetric(
-                            horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '${state.wishListLines.pagination?.totalItemCount ?? ' '} Products',
-                              style: OptiTextStyles.header3,
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const SizedBox(width: 10),
-                                SortToolMenu(
-                                  availableSortOrders: context
-                                      .read<WishListDetailsCubit>()
-                                      .availableSortOrders,
-                                  onSortOrderChanged:
-                                      (SortOrderAttribute sortOrder) async {
-                                    context
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    context
+                        .read<WishListDetailsCubit>()
+                        .loadWishListDetails(widget.wishListId);
+                  },
+                  child: Column(
+                    children: [
+                      if (!context.read<WishListDetailsCubit>().emptyWishList)
+                        Container(
+                          height: 50,
+                          padding: const EdgeInsetsDirectional.symmetric(
+                              horizontal: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${state.wishListLines.pagination?.totalItemCount ?? ' '} Products',
+                                style: OptiTextStyles.header3,
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const SizedBox(width: 10),
+                                  SortToolMenu(
+                                    availableSortOrders: context
                                         .read<WishListDetailsCubit>()
-                                        .changeSortOrder(
-                                          sortOrder as WishListLineSortOrder,
-                                        );
-                                  },
-                                  selectedSortOrder: state.sortOrder,
-                                )
-                              ],
-                            )
-                          ],
+                                        .availableSortOrders,
+                                    onSortOrderChanged:
+                                        (SortOrderAttribute sortOrder) async {
+                                      context
+                                          .read<WishListDetailsCubit>()
+                                          .changeSortOrder(
+                                            sortOrder as WishListLineSortOrder,
+                                          );
+                                    },
+                                    selectedSortOrder: state.sortOrder,
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      _WishListLinesSection(
+                        wishListLines: state.wishListLines.wishListLines ?? [],
+                      ),
+                      Container(
+                        height: 80,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 32, vertical: 16),
+                        clipBehavior: Clip.antiAlias,
+                        decoration: const BoxDecoration(color: Colors.white),
+                        child: PrimaryButton(
+                          isEnabled: state.wishList.canAddAllToCart == true,
+                          onPressed: () {
+                            context
+                                .read<WishListDetailsCubit>()
+                                .addWishListToCart();
+                          },
+                          text: LocalizationConstants.addListToCart.localized(),
                         ),
                       ),
-                    _WishListLinesSection(
-                      wishListLines: state.wishListLines.wishListLines ?? [],
-                    ),
-                    Container(
-                      height: 80,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 32, vertical: 16),
-                      clipBehavior: Clip.antiAlias,
-                      decoration: const BoxDecoration(color: Colors.white),
-                      child: PrimaryButton(
-                        isEnabled: state.wishList.canAddAllToCart == true,
-                        onPressed: () {
-                          context
-                              .read<WishListDetailsCubit>()
-                              .addWishListToCart();
-                        },
-                        text: LocalizationConstants.addListToCart.localized(),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },
@@ -451,49 +476,38 @@ class _WishListLinesSectionState extends State<_WishListLinesSection> {
     return Expanded(
       child: BlocBuilder<WishListDetailsCubit, WishListDetailsState>(
         builder: (context, state) {
-          if (state.status == WishListStatus.loading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state.status == WishListStatus.failure) {
-            return const Center(
-              child: Text('Failed to load wish list details'),
-            );
-          } else {
-            return ListView.separated(
-              controller: _scrollController,
-              shrinkWrap: true,
-              itemCount: state.status == WishListStatus.moreLoading
-                  ? widget.wishListLines.length + 1
-                  : widget.wishListLines.length,
-              itemBuilder: (context, index) {
-                if (index >= state.wishListLines.wishListLines!.length &&
-                    state.status == WishListStatus.moreLoading) {
-                  return const Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                }
-
-                final canEditWishList =
-                    (state.wishList.allowEditingBySharedWithUsers == true ||
-                            state.wishList.isSharedList != true) &&
-                        state.wishList.isAutogenerated != true;
-
-                final line = state.wishListLines.wishListLines?[index];
-
-                return WishListLineWidget(
-                  wishListLineEntity: line!,
-                  realTimeLoading:
-                      state.status == WishListStatus.realTimeAttributesLoading,
-                  isDeleteButtonVisible: canEditWishList,
-                  canEditQuantity:
-                      line.canEnterQuantity == true && canEditWishList,
+          return ListView.separated(
+            controller: _scrollController,
+            itemCount: state.status == WishListStatus.moreLoading
+                ? widget.wishListLines.length + 1
+                : widget.wishListLines.length,
+            itemBuilder: (context, index) {
+              if (index >= state.wishListLines.wishListLines!.length &&
+                  state.status == WishListStatus.moreLoading) {
+                return const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Center(child: CircularProgressIndicator()),
                 );
-              },
-              separatorBuilder: (context, index) => const Divider(),
-            );
-          }
+              }
+
+              final canEditWishList =
+                  (state.wishList.allowEditingBySharedWithUsers == true ||
+                          state.wishList.isSharedList != true) &&
+                      state.wishList.isAutogenerated != true;
+
+              final line = state.wishListLines.wishListLines?[index];
+
+              return WishListLineWidget(
+                wishListLineEntity: line!,
+                realTimeLoading:
+                    state.status == WishListStatus.realTimeAttributesLoading,
+                isDeleteButtonVisible: canEditWishList,
+                canEditQuantity:
+                    line.canEnterQuantity == true && canEditWishList,
+              );
+            },
+            separatorBuilder: (context, index) => const Divider(),
+          );
         },
       ),
     );
