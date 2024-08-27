@@ -231,6 +231,7 @@ class __OrderHistoryListWidgetState extends State<_OrderHistoryListWidget> {
       child: BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
         builder: (context, state) {
           return ListView.separated(
+            physics: const AlwaysScrollableScrollPhysics(),
             controller: _scrollController,
             itemCount: state.orderStatus == OrderStatus.moreLoading
                 ? widget.orderEntities.length + 1

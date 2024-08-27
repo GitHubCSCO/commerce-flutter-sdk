@@ -477,6 +477,7 @@ class _WishListLinesSectionState extends State<_WishListLinesSection> {
       child: BlocBuilder<WishListDetailsCubit, WishListDetailsState>(
         builder: (context, state) {
           return ListView.separated(
+            physics: const AlwaysScrollableScrollPhysics(),
             controller: _scrollController,
             itemCount: state.status == WishListStatus.moreLoading
                 ? widget.wishListLines.length + 1

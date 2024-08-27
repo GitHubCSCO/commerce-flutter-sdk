@@ -282,6 +282,7 @@ class _WishListsSectionState extends State<_WishListsSection> {
       child: BlocBuilder<WishListCubit, WishListState>(
         builder: (context, state) {
           return ListView.separated(
+            physics: const AlwaysScrollableScrollPhysics(),
             controller: _scrollController,
             itemBuilder: (context, index) {
               if (index >= state.wishLists.wishListCollection!.length &&
