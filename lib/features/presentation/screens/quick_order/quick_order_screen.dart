@@ -86,18 +86,12 @@ class QuickOrderPage extends StatefulWidget {
 
 class _QuickOrderPageState extends State<QuickOrderPage> {
   late void Function(bool) callBack;
-  late FocusNode autoFocusNode;
+  FocusNode? autoFocusNode;
 
   bool cameraFlash = false;
   bool canProcess = false;
   String subTotal = '';
   final textEditingController = TextEditingController();
-
-  @override
-  void dispose() {
-    autoFocusNode.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -480,7 +474,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   Widget _buildAutoCompleteContainer(QuickOrderAutoCompleteState state) {
     if (state is QuickOrderAutoCompleteInitialState) {
       if (state.autoFocus) {
-        autoFocusNode.requestFocus();
+        autoFocusNode?.requestFocus();
       }
       return Center(
         child: Text(

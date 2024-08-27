@@ -27,7 +27,6 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
   QuoteDto? quoteDto;
   Cart? cart;
   QuoteSettings? quoteSettings;
-
   String? deleteQuoteConfirmation;
 
   QuoteDetailsBloc(
@@ -440,5 +439,45 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
 
   bool get isQuoteCreated {
     return compareStatus(QuoteStatus.QuoteCreated);
+  }
+
+  bool get isQuoteRejected {
+    return compareStatus(QuoteStatus.QuoteRejected);
+  }
+
+  String viewQuotedPricingTitle(QuoteLineEntity? quoteLine) {
+    if (isQuoteCreated || isQuoteRequested) {
+      var priceDisplay = (quoteLine != null &&
+              quoteLine.pricingRfq != null &&
+              quoteLine.pricingRfq?.priceBreaks != null &&
+              quoteLine.pricingRfq!.priceBreaks!.isNotEmpty &&
+              !quoteLine.pricingRfq!.priceBreaks![0].priceDisplay.isNullOrEmpty)
+          ? quoteLine.pricingRfq?.priceBreaks![0].priceDisplay
+          : quoteLine?.pricingRfq?.customerPriceDisplay;
+      return '1+         $priceDisplay';
+    } else {
+      return LocalizationConstants.viewQuotedPricing.localized();
+    }
+  }
+
+  bool get showViewQuotedPricing {
+    return isSalesPerson || isQuoteProposed;
+  }
+
+  bool get showQuoteQuantityAndSubtotal {
+    return !isSalesPerson && (isQuoteRequested || isQuoteProposed);
+  }
+
+  bool get canEditQuantity {
+    return isQuoteProposed;
+  }
+
+  bool get showQuoteOption {
+    if (isSalesPerson &&
+        (isQuoteCreated || isQuoteRequested || isQuoteRejected)) {
+      return true;
+    }
+
+    return false;
   }
 }

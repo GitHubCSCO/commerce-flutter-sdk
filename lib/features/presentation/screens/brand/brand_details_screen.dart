@@ -503,7 +503,7 @@ class TopSellerProductsWidget extends StatelessWidget {
                     var productId = topSellerProductEntityLine?.styleParentId ??
                         topSellerProductEntityLine?.id;
                     //TODO what if productid is null,
-                    AppRoute.topLevelProductDetails.navigateBackStack(context,
+                    AppRoute.productDetails.navigateBackStack(context,
                         pathParameters: {"productId": productId.toString()},
                         extra: topSellerProductEntityLine);
                   },

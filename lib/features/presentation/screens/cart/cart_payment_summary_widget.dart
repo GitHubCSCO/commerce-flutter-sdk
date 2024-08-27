@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/promotion_type.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/add_promotion_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -44,15 +45,19 @@ class CartPaymentSummaryWidget extends StatelessWidget {
         paymentSummaryEntity.cartSettings?.showTaxAndShipping ?? false;
     var orderPromotions = paymentSummaryEntity.promotions?.promotions
         ?.where((x) =>
-            (x.promotionResultType?.toLowerCase() == "amountofforder" ||
-                x.promotionResultType?.toLowerCase() == "percentofforder") &&
+            (x.promotionResultType?.toLowerCase() ==
+                    PromotionType.amountofforder.name ||
+                x.promotionResultType?.toLowerCase() ==
+                    PromotionType.percentofforder.name) &&
             x.amount != 0)
         .toList();
 
     var shippingPromotions = paymentSummaryEntity.promotions?.promotions
         ?.where((x) =>
-            (x.promotionResultType?.toLowerCase() == "amountoffshipping" ||
-                x.promotionResultType?.toLowerCase() == "percentoffshipping") &&
+            (x.promotionResultType?.toLowerCase() ==
+                    PromotionType.amountoffshipping.name ||
+                x.promotionResultType?.toLowerCase() ==
+                    PromotionType.percentoffshipping.name) &&
             x.amount != 0)
         .toList();
 

@@ -116,20 +116,25 @@ class RoutePaths {
   static const String forgotPassword = '/${RouteNames.forgotPassword}';
   static const String orderDetails = '${RoutePaths.orderHistory}/:orderNumber';
 
-  static const String shopBrand = '/${RouteNames.shopBrand}';
-  static const String shopBrandDetails = '/${RouteNames.shopBrandDetails}';
-  static const String brandCategory = '/${RouteNames.brandCategory}';
-  static const String brandProductLines = '/${RouteNames.brandProductLines}';
+  static const String shopBrand =
+      '${RoutePaths.account}/${RouteNames.shopBrand}';
+  static const String shopBrandDetails =
+      '${RoutePaths.shopBrand}/${RouteNames.shopBrandDetails}';
+  static const String brandCategory =
+      '${RoutePaths.shopBrandDetails}/${RouteNames.brandCategory}';
+  static const String brandProductLines =
+      '${RoutePaths.shopBrandDetails}/${RouteNames.brandProductLines}';
   static const String billToShipToChange = '/${RouteNames.billToShipToChange}';
   static const String billToShipToSelection =
       '/${RouteNames.billToShipToSelection}';
   static const String savedOrders =
       '${RoutePaths.account}/${RouteNames.savedOrders}';
   static const String savedOrderDetails = '${RoutePaths.savedOrders}/:cartId';
-  static const String shopCategory = '/${RouteNames.shopCategory}';
+  static const String shopCategory =
+      '${RoutePaths.account}/${RouteNames.shopCategory}';
   static const String shopSubCategory =
-      '/${RouteNames.shopSubCategory}/:categoryId/:categoryTitle/:categoryPath';
-  static const String product = '/${RouteNames.product}';
+      '${RouteNames.shopSubCategory}/:categoryId/:categoryTitle/:categoryPath';
+  static const String product = RouteNames.product;
   static const String addCreditCard = '/${RouteNames.addCreditCard}';
   static const String addShippingAddress = '/${RouteNames.addShippingAddress}';
   static const String savedPayments =

@@ -17,6 +17,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuoteLineWidget extends StatelessWidget {
   final QuoteLineEntity quoteLineEntity;
+  final String? viewQuotedPricingTitle;
   final bool? showRemoveButton;
   final bool? showViewBreakPricing;
   final bool? showQuantityAndSubtotalField;
@@ -35,6 +36,7 @@ class QuoteLineWidget extends StatelessWidget {
       required this.onCartLineRemovedCallback,
       required this.hidePricingEnable,
       required this.hideInventoryEnable,
+      this.viewQuotedPricingTitle = "",
       this.onShowMoreButtonClickedCallback,
       this.showRemoveButton = true,
       this.hidePricingWidget = false,
@@ -114,7 +116,8 @@ class QuoteLineWidget extends StatelessWidget {
                       context, quoteLineEntity.quoteLinePricingBreakList ?? []);
                 },
                 child: Text(
-                  LocalizationConstants.viewQuotedPricing.localized(),
+                  viewQuotedPricingTitle ??
+                      LocalizationConstants.viewQuotedPricing.localized(),
                   style: OptiTextStyles.link,
                 ),
               ),
@@ -133,7 +136,8 @@ class QuoteLineWidget extends StatelessWidget {
 
                 onCartQuantityChangedCallback(qty);
               },
-              subtotalPriceText: quoteLineEntity.updateSubtotalPriceValueText(),
+              subtotalPriceText:
+                  quoteLineEntity.pricing?.extendedUnitNetPriceDisplay ?? "",
             ),
           ),
         ],
