@@ -51,7 +51,7 @@ class SearchProductGridItemWidget extends StatelessWidget
       onTap: () {
         var productId = product.styleParentId ?? product.id;
         //TODO what if productid is null,
-        AppRoute.topLevelProductDetails.navigateBackStack(context,
+        AppRoute.productDetails.navigateBackStack(context,
             pathParameters: {"productId": productId.toString()},
             extra: product);
       },

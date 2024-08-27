@@ -19,7 +19,7 @@ class TabSwitchWidget extends StatefulWidget {
       required this.tabWidget1,
       this.selectedIndex = 0,
       this.onTabSelectionChange,
-      this.showDefaultOnly});
+      this.showDefaultOnly = false});
 
   @override
   State<TabSwitchWidget> createState() => _TabSwitchWidgetState();

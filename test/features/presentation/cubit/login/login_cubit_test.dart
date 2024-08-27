@@ -56,7 +56,7 @@ void main() async {
       expect: () => [
         LoginLoadingState(),
         LoginFailureState(
-          message: LocalizationConstants.incorrectLoginOrPassword.localized(),
+          title: LocalizationConstants.incorrectLoginOrPassword.localized(),
           buttonText: LocalizationConstants.dismiss.localized(),
         ),
       ],

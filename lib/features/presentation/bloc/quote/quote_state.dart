@@ -12,9 +12,11 @@ class QuoteLoaded extends QuoteState {
   final List<QuoteDto>? quotes;
   final bool moreLoading;
   final int page;
+  final String? notFoundInfoText;
 
   QuoteLoaded({
     required this.quotePageType,
+    required this.notFoundInfoText,
     required this.quotes,
     this.moreLoading = false,
     this.page = 1,
@@ -25,8 +27,10 @@ class QuoteLoaded extends QuoteState {
     List<QuoteDto>? quotes,
     bool? moreLoading,
     int? page,
+    String? notFoundInfoText,
   }) {
     return QuoteLoaded(
+      notFoundInfoText: notFoundInfoText ?? this.notFoundInfoText,
       quotePageType: quotePageType ?? this.quotePageType,
       quotes: quotes ?? this.quotes,
       moreLoading: moreLoading ?? this.moreLoading,
@@ -38,8 +42,13 @@ class QuoteLoaded extends QuoteState {
 class JobQuoteLoaded extends QuoteState {
   final QuotePageType quotePageType;
   final List<JobQuoteDto>? jobQuotes;
+  final String? notFoundInfoText;
 
-  JobQuoteLoaded({required this.quotePageType, required this.jobQuotes});
+  JobQuoteLoaded({
+    required this.quotePageType,
+    required this.jobQuotes,
+    required this.notFoundInfoText,
+  });
 }
 
 class QuoteFailed extends QuoteState {

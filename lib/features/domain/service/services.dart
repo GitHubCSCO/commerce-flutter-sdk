@@ -14,3 +14,4 @@ export 'location_search_history_service.dart';
 export 'network_service.dart';
 export 'search_history_service.dart';
 export 'vmi_service.dart';
+export 'opti_logger_service.dart';

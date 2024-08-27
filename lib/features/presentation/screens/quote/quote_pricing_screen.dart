@@ -1,14 +1,14 @@
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_communication/quote_communication_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_pricing/quote_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_pricing/quote_pricing_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_pricing/quote_pricing_state.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
-import 'package:commerce_flutter_app/features/presentation/components/input.dart';
+import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_line_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -81,25 +81,27 @@ class QuotePricingPage extends StatelessWidget {
           } else if (state is QuotePricingLoadedState) {
             return Container(
               color: Colors.white,
-              child:
-                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-                QuoteLineWidget(
-                    hidePricingEnable:
-                        state.quoteLineEntity.hidePricingEnable ?? false,
-                    hideInventoryEnable:
-                        state.quoteLineEntity.hideInventoryEnable ?? false,
-                    quoteLineEntity: state.quoteLineEntity,
-                    showRemoveButton: false,
-                    showViewBreakPricing: false,
-                    showQuantityAndSubtotalField: false,
-                    moreButtonWidget: Container(),
-                    hidePricingWidget: true,
-                    onCartLineRemovedCallback: (cartLineEntity) {},
-                    onCartQuantityChangedCallback: (quantity) {}),
-                _buildQuoteItemPirincgWidget(context, state.quoteLineEntity),
-                ...state.quoteLinePricingBreakItemEntities.map((item) {
-                  return Column(
+              child: SingleChildScrollView(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
+                      QuoteLineWidget(
+                          hidePricingEnable:
+                              state.quoteLineEntity.hidePricingEnable ?? false,
+                          hideInventoryEnable:
+                              state.quoteLineEntity.hideInventoryEnable ??
+                                  false,
+                          quoteLineEntity: state.quoteLineEntity,
+                          showRemoveButton: false,
+                          showViewBreakPricing: false,
+                          showQuantityAndSubtotalField: false,
+                          moreButtonWidget: Container(),
+                          hidePricingWidget: true,
+                          onCartLineRemovedCallback: (cartLineEntity) {},
+                          onCartQuantityChangedCallback: (quantity) {}),
+                      _buildQuoteItemPirincgWidget(
+                          context, state.quoteLineEntity),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -121,18 +123,19 @@ class QuotePricingPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      PriceBreakwidget(
-                        index: item.id,
-                        startQtyDisplay: item.startQuantityDisplay!,
-                        endQtyDisplay: item.endQuantityDisplay!,
-                        priceDisplay: item.priceDisplay!,
-                      ),
-                    ],
-                  );
-                }),
-                const Spacer(),
-                _buildQuoteButtonsWidget(context),
-              ]),
+                      ...state.quoteLinePricingBreakItemEntities.map((item) {
+                        return PriceBreakwidget(
+                          index: item.id,
+                          key: ValueKey(item.id),
+                          startQtyDisplay: item.startQuantityDisplay!,
+                          endQtyDisplay: item.endQuantityDisplay!,
+                          priceDisplay: item.priceDisplay!,
+                          endQtyEnabled: item.endQuantityEnabled ?? true,
+                        );
+                      }),
+                      _buildQuoteButtonsWidget(context),
+                    ]),
+              ),
             );
           } else {
             return Container();
@@ -203,22 +206,18 @@ class PriceBreakwidget extends StatelessWidget {
   final String endQtyDisplay;
   final String priceDisplay;
   final int index;
-  final TextEditingController startQtycontroller = TextEditingController();
-  final TextEditingController endQtycontroller = TextEditingController();
-  final TextEditingController priceQtycontroller = TextEditingController();
+  final bool endQtyEnabled;
 
-  PriceBreakwidget(
+  const PriceBreakwidget(
       {super.key,
       required this.index,
       required this.startQtyDisplay,
       required this.endQtyDisplay,
+      required this.endQtyEnabled,
       required this.priceDisplay});
 
   @override
   Widget build(BuildContext context) {
-    startQtycontroller.text = startQtyDisplay;
-    endQtycontroller.text = endQtyDisplay;
-    priceQtycontroller.text = priceDisplay;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Padding(
@@ -228,18 +227,16 @@ class PriceBreakwidget extends StatelessWidget {
           children: [
             Expanded(
               flex: 1,
-              child: Input(
-                controller: startQtycontroller,
+              child: NumberTextField(
+                max: CoreConstants.maximumOrderQuantity,
+                initialtText: startQtyDisplay,
+                shouldShowIncrementDecermentIcon: false,
                 onSubmitted: (p0) {
-                  context.read<QuotePricingBloc>().add(
-                      QuoteStartQuantityUpdateEvent(
-                          startQuantity: p0, id: index));
-                },
-                onTapOutside: (_) {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                },
-                onEditingComplete: () {
-                  FocusManager.instance.primaryFocus?.nextFocus();
+                  if (p0 != null) {
+                    context.read<QuotePricingBloc>().add(
+                        QuoteStartQuantityUpdateEvent(
+                            startQuantity: p0.toString(), id: index));
+                  }
                 },
               ),
             ),
@@ -252,35 +249,32 @@ class PriceBreakwidget extends StatelessWidget {
             ),
             Expanded(
               flex: 1,
-              child: Input(
-                controller: endQtycontroller,
+              child: NumberTextField(
+                isEnabled: endQtyEnabled,
+                max: CoreConstants.maximumOrderQuantity,
+                initialtText: endQtyDisplay,
+                shouldShowIncrementDecermentIcon: false,
                 onSubmitted: (p0) {
-                  context.read<QuotePricingBloc>().add(
-                      QuoteEndQuantityUpdateEvent(endQuantity: p0, id: index));
-                },
-                onTapOutside: (_) {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                },
-                onEditingComplete: () {
-                  FocusManager.instance.primaryFocus?.nextFocus();
+                  if (p0 != null) {
+                    context.read<QuotePricingBloc>().add(
+                        QuoteEndQuantityUpdateEvent(
+                            endQuantity: p0.toString(), id: index));
+                  } else {}
                 },
               ),
             ),
             SizedBox(width: 30),
             Expanded(
               flex: 1,
-              child: Input(
-                controller: priceQtycontroller,
+              child: NumberTextField(
+                max: CoreConstants.maximumOrderQuantity,
+                initialtText: priceDisplay,
+                shouldShowIncrementDecermentIcon: false,
                 onSubmitted: (p0) {
-                  context
-                      .read<QuotePricingBloc>()
-                      .add(QuotePriceUpdateEvent(price: p0, id: index));
-                },
-                onTapOutside: (_) {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                },
-                onEditingComplete: () {
-                  FocusManager.instance.primaryFocus?.nextFocus();
+                  if (p0 != null) {
+                    context.read<QuotePricingBloc>().add(
+                        QuotePriceUpdateEvent(price: p0.toString(), id: index));
+                  }
                 },
               ),
             ),

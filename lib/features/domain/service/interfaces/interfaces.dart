@@ -9,3 +9,4 @@ export 'location_search_history_service.dart';
 export 'search_history_service_interface.dart';
 export 'tracking_service_interface.dart';
 export 'vmi_service_interface.dart';
+export 'opti_logger_service_interface.dart';

@@ -88,8 +88,8 @@ class BillingShippingWidget extends StatelessWidget {
           list.add(_buildAddShippingAddressButton(context));
         }
         list.add(_buildShippingMethod(
-            billingShippingEntity.carriers!,
-            billingShippingEntity.carriers![0].shipVias!,
+            billingShippingEntity.carriers,
+            billingShippingEntity.carriers?[selectedCarrierIndex].shipVias,
             selectedCarrierIndex,
             selectedServiceIndex));
       }
@@ -206,26 +206,19 @@ class BillingShippingWidget extends StatelessWidget {
   Widget _buildPickUpAddress() {
     return Visibility(
       visible: billingShippingEntity.shippingMethod == ShippingOption.pickUp,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          PickupLocationWidget(
-            description: billingShippingEntity.warehouse?.description,
-            address: billingShippingEntity.warehouse?.wareHouseAddress(),
-            city: billingShippingEntity.warehouse?.wareHouseCity(),
-            phone: billingShippingEntity.warehouse?.phone,
-            buildSeperator: true,
-          ),
-        ],
+      child: PickupLocationWidget(
+        description: billingShippingEntity.warehouse?.description,
+        address: billingShippingEntity.warehouse?.wareHouseAddress(),
+        city: billingShippingEntity.warehouse?.wareHouseCity(),
+        phone: billingShippingEntity.warehouse?.phone,
+        buildSeperator: true,
       ),
     );
   }
 
   Widget _buildShippingMethod(
-      List<CarrierDto> carriers,
-      List<ShipViaDto> services,
+      List<CarrierDto>? carriers,
+      List<ShipViaDto>? services,
       int selectedCarrierIndex,
       int selectedServiceIndex) {
     return Column(
@@ -256,7 +249,7 @@ class BillingShippingWidget extends StatelessWidget {
                 children: [
                   Expanded(
                       child: ListPickerWidget(
-                          items: carriers,
+                          items: carriers ?? [],
                           selectedIndex: selectedCarrierIndex,
                           callback: _onCarrierSelect)),
                 ],
@@ -281,7 +274,7 @@ class BillingShippingWidget extends StatelessWidget {
                 children: [
                   Expanded(
                       child: ListPickerWidget(
-                          items: services,
+                          items: services ?? [],
                           selectedIndex: selectedServiceIndex,
                           callback: _onServiceSelect)),
                 ],

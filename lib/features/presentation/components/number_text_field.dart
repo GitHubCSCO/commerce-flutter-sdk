@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +22,8 @@ class NumberTextField extends StatefulWidget {
   final String? initialtText;
   final bool shouldShowIncrementDecermentIcon;
   final void Function(bool hasFocus)? focusListener;
+  final bool? isEnabled;
+  final bool? showWarningHighlighted;
 
   const NumberTextField({
     Key? key,
@@ -35,7 +40,9 @@ class NumberTextField extends StatefulWidget {
     this.borderWidth = 2,
     this.onChanged,
     this.focusListener,
+    this.isEnabled = true,
     this.onSubmitted,
+    this.showWarningHighlighted = false,
   }) : super(key: key);
 
   @override
@@ -48,13 +55,14 @@ class _NumberTextFieldState extends State<NumberTextField> {
   bool _canGoUp = false;
   bool _canGoDown = false;
   bool _shouldShowIncrementDecermentIcon = false;
+  OverlayEntry? _overlayEntry;
 
   @override
   void initState() {
     super.initState();
     _controller = widget.controller ?? TextEditingController();
     _focusNode = widget.focusNode ?? FocusNode();
-    _controller.text = widget.initialtText!;
+    _controller.text = widget.initialtText ?? "1";
     _shouldShowIncrementDecermentIcon =
         widget.shouldShowIncrementDecermentIcon!;
     _updateArrows(int.tryParse(_controller.text));
@@ -66,17 +74,82 @@ class _NumberTextFieldState extends State<NumberTextField> {
     }
   }
 
-  void _onFocusChange() {
-    if (!_focusNode.hasFocus) {
-      _handleSubmitted(_controller.text);
+  @override
+  void dispose() {
+    _removeOverlay();
+    if (widget.controller == null) {
+      _controller.dispose();
     }
+    if (widget.focusNode == null) {
+      _focusNode.dispose();
+    }
+    super.dispose();
+  }
+
+  void _onFocusChange() {
+    if (_focusNode.hasFocus) {
+      if (Platform.isIOS) {
+        _showDoneButton();
+      }
+    } else {
+      _handleSubmitted(_controller.text);
+      _removeOverlay();
+    }
+  }
+
+  void _showDoneButton() {
+    final overlay = Overlay.of(context);
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+        left: 0,
+        right: 0,
+        child: Material(
+          elevation: 4.0,
+          color: Colors.grey[200],
+          child: Container(
+            height: 40.0,
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    _focusNode.unfocus(); // Dismiss the keyboard
+                  },
+                  child: Text(
+                    LocalizationConstants.done.localized(),
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    overlay?.insert(_overlayEntry!);
+  }
+
+  void _removeOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
   }
 
   @override
   void didUpdateWidget(covariant NumberTextField oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _controller = widget.controller ?? _controller;
-    _focusNode = widget.focusNode ?? _focusNode;
+    if (widget.controller != oldWidget.controller) {
+      _controller = widget.controller ?? _controller;
+    }
+    if (widget.focusNode != oldWidget.focusNode) {
+      _focusNode = widget.focusNode ?? _focusNode;
+    }
+    _controller.text = widget.initialtText ?? _controller.text;
+    _shouldShowIncrementDecermentIcon = widget.shouldShowIncrementDecermentIcon;
     _updateArrows(int.tryParse(_controller.text));
   }
 
@@ -112,52 +185,62 @@ class _NumberTextFieldState extends State<NumberTextField> {
           // TextField
           Expanded(
             child: TextField(
-                controller: _controller,
-                focusNode: _focusNode,
-                textAlign: TextAlign.center,
-                textInputAction: TextInputAction.done,
-                keyboardType: TextInputType.number,
-                maxLength: widget.max.toString().length +
-                    (widget.min.isNegative ? 1 : 0),
-                decoration: InputDecoration(
-                  counterText: '',
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: AppStyle.textFieldDefaultHorizontalPadding,
-                    vertical: AppStyle.defaultVerticalPadding,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      AppStyle.textFieldborderRadius,
-                    ),
-                    borderSide: BorderSide.none,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                      AppStyle.textFieldborderRadius,
-                    ),
-                    borderSide: const BorderSide(
-                      color: AppStyle.neutral500,
-                    ),
-                  ),
-                  filled: true,
-                  fillColor: _focusNode.hasFocus
-                      ? AppStyle.neutral00
-                      : AppStyle.neutral100,
+              enabled: widget.isEnabled,
+              controller: _controller,
+              focusNode: _focusNode,
+              textAlign: TextAlign.center,
+              textInputAction: TextInputAction.done,
+              keyboardType: TextInputType.number,
+              maxLength: widget.max.toString().length +
+                  (widget.min.isNegative ? 1 : 0),
+              decoration: InputDecoration(
+                counterText: '',
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: AppStyle.textFieldDefaultHorizontalPadding,
+                  vertical: AppStyle.defaultVerticalPadding,
                 ),
-                maxLines: 1,
-                onTapOutside: (p0) => context.closeKeyboard(),
-                onSubmitted: (value) {
-                  _handleSubmitted(value);
-                  _focusNode.unfocus();
-                },
-                onChanged: (value) {
-                  final intValue = int.tryParse(value);
-                  widget.onChanged?.call(intValue);
-                  _updateArrows(intValue);
-                },
-                inputFormatters: [
-                  _NumberTextInputFormatter(widget.min, widget.max)
-                ]),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                    AppStyle.textFieldborderRadius,
+                  ),
+                  borderSide: widget.showWarningHighlighted!
+                      ? BorderSide(color: Color.fromARGB(255, 244, 0, 0))
+                      : BorderSide.none,
+                ),
+                disabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                    AppStyle.textFieldborderRadius,
+                  ),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                    AppStyle.textFieldborderRadius,
+                  ),
+                  borderSide: const BorderSide(
+                    color: AppStyle.neutral500,
+                  ),
+                ),
+                filled: true,
+                fillColor: _focusNode.hasFocus
+                    ? AppStyle.neutral00
+                    : AppStyle.neutral100,
+              ),
+              maxLines: 1,
+              onTapOutside: (p0) => context.closeKeyboard(),
+              onSubmitted: (value) {
+                _handleSubmitted(value);
+                _focusNode.unfocus();
+              },
+              onChanged: (value) {
+                final intValue = int.tryParse(value);
+                widget.onChanged?.call(intValue);
+                _updateArrows(intValue);
+              },
+              inputFormatters: [
+                _NumberTextInputFormatter(widget.min, widget.max)
+              ],
+            ),
           ),
           // Plus button
           if (_shouldShowIncrementDecermentIcon)
@@ -184,13 +267,13 @@ class _NumberTextFieldState extends State<NumberTextField> {
                   ),
                 ),
               ),
-            )
+            ),
         ],
       );
+
   void _handleSubmitted(String value) {
     final intValue = int.tryParse(value);
     widget.onSubmitted?.call(intValue);
-    _updateArrows(intValue);
     _updateArrows(intValue);
   }
 
@@ -227,7 +310,7 @@ class _NumberTextInputFormatter extends TextInputFormatter {
       TextEditingValue oldValue, TextEditingValue newValue) {
     if (const ['-', ''].contains(newValue.text)) return newValue;
     final intValue = int.tryParse(newValue.text);
-    if (intValue == null) return oldValue;
+    if (intValue == null) return newValue;
     if (intValue < min) return newValue.copyWith(text: min.toString());
     if (intValue > max) return newValue.copyWith(text: max.toString());
     return newValue.copyWith(text: intValue.toString());

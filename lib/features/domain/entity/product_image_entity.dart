@@ -24,8 +24,16 @@ class ProductImageEntity extends Equatable {
   });
 
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [
+        id,
+        sortOrder,
+        name,
+        smallImagePath,
+        mediumImagePath,
+        largeImagePath,
+        altText,
+        imageType,
+      ];
 
   ProductImageEntity copyWith({
     String? id,

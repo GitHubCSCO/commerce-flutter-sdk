@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/enums/quote_page_type.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_event.dart';
@@ -12,6 +13,7 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
   QuotePageType pageType = QuotePageType.pending;
   int? numberOfPages;
   int totalQuotes = 0;
+  String? notFoundInfoText;
 
   QuoteQueryParameters parameter = QuoteQueryParameters(
     pageSize: CoreConstants.defaultPageSize,
@@ -63,6 +65,10 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
             ? await _quoteUsecase.getQuotes(parameter)
             : await _quoteUsecase.getQuotes(newParameter);
 
+        notFoundInfoText = await _quoteUsecase.getSiteMessage(
+            SiteMessageConstants.quoteNotFoundMessage,
+            SiteMessageConstants.defaultNoQuotesFoundMessage);
+
         switch (result) {
           case Success(value: final data):
             parameter.page = data?.pagination?.page ?? 1;
@@ -72,6 +78,7 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
             if (!event.loadMore) {
               emit(
                 QuoteLoaded(
+                  notFoundInfoText: notFoundInfoText,
                   quotePageType: QuotePageType.pending,
                   quotes: data?.quotes ?? [],
                   page: 1,
@@ -104,9 +111,13 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
 
       case QuotePageType.activejobs:
         var result = await _quoteUsecase.getJobQuotes();
+        notFoundInfoText = await _quoteUsecase.getSiteMessage(
+            SiteMessageConstants.jobQuoteNotFoundMessage,
+            SiteMessageConstants.defaultNoJobQuotesFoundMessage);
         switch (result) {
           case Success(value: final data):
             emit(JobQuoteLoaded(
+                notFoundInfoText: notFoundInfoText,
                 quotePageType: QuotePageType.activejobs,
                 jobQuotes: data?.jobQuotes ?? []));
             break;

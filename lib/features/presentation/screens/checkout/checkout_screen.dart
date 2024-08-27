@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
@@ -116,6 +117,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
           if (state is CheckoutShipToAddressAddedState) {
             context.read<CheckoutBloc>().add(
                 LoadCheckoutEvent(cart: context.read<CheckoutBloc>().cart!));
+            context.read<RootBloc>().add(RootCartUpdateEvent());
           } else if (state is CheckoutPlaceOrder) {
             context.read<CartCountCubit>().onCartItemChange();
             context
@@ -131,6 +133,10 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                             false,
                     reviewOrderEntity: state.reviewOrderEntity,
                     message: state.message));
+          } else if (state is CheckoutPlaceOrderFailed) {
+            context.read<ExpansionPanelCubit>().onPanelExpansionChange(0);
+            showAlert(context,
+                message: LocalizationConstants.orderFailed.localized());
           }
         },
         builder: (_, state) {

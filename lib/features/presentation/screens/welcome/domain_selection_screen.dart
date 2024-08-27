@@ -124,6 +124,7 @@ class _DomainPageState extends State<DomainPage> {
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
       child: DropdownButton<String>(
+        isExpanded: true,
         hint: const Text('Select domain'),
         onChanged: (String? newValue) {
           setState(() {
