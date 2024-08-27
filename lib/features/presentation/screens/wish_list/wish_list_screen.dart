@@ -158,55 +158,72 @@ class _WishListsPageState extends State<WishListsPage> {
                     child: Center(child: CircularProgressIndicator()));
               } else if (state.status == WishListStatus.failure) {
                 return Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      context.read<WishListCubit>().loadWishLists();
+                    },
                     child: Center(
-                        child: Text(LocalizationConstants.error.localized())));
+                        child: Text(LocalizationConstants.error.localized())),
+                  ),
+                );
               } else if (context.read<WishListCubit>().noWishListFound) {
                 return Expanded(
-                  child: Center(
-                    child: Text(
-                        LocalizationConstants.noListsAvailable.localized()),
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      context.read<WishListCubit>().loadWishLists();
+                    },
+                    child: Center(
+                      child: Text(
+                          LocalizationConstants.noListsAvailable.localized()),
+                    ),
                   ),
                 );
               }
               return Expanded(
-                child: Column(
-                  children: [
-                    if (!context.read<WishListCubit>().noWishListFound)
-                      Container(
-                        height: 50,
-                        padding: const EdgeInsetsDirectional.symmetric(
-                            horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const SizedBox(width: 10),
-                                SortToolMenu(
-                                  availableSortOrders: context
-                                      .read<WishListCubit>()
-                                      .availableSortOrders,
-                                  onSortOrderChanged:
-                                      (SortOrderAttribute sortOrder) async {
-                                    await context
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<WishListCubit>().loadWishLists();
+                  },
+                  child: Column(
+                    children: [
+                      if (!context.read<WishListCubit>().noWishListFound)
+                        Container(
+                          height: 50,
+                          padding: const EdgeInsetsDirectional.symmetric(
+                            horizontal: 16,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const SizedBox(width: 10),
+                                  SortToolMenu(
+                                    availableSortOrders: context
                                         .read<WishListCubit>()
-                                        .changeSortOrder(
-                                          sortOrder as WishListSortOrder,
-                                        );
-                                  },
-                                  selectedSortOrder: state.sortOrder,
-                                ),
-                              ],
-                            )
-                          ],
+                                        .availableSortOrders,
+                                    onSortOrderChanged:
+                                        (SortOrderAttribute sortOrder) async {
+                                      await context
+                                          .read<WishListCubit>()
+                                          .changeSortOrder(
+                                            sortOrder as WishListSortOrder,
+                                          );
+                                    },
+                                    selectedSortOrder: state.sortOrder,
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                         ),
+                      _WishListsSection(
+                        wishListEntities:
+                            state.wishLists.wishListCollection ?? [],
                       ),
-                    _WishListsSection(
-                      wishListEntities:
-                          state.wishLists.wishListCollection ?? [],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },
