@@ -310,6 +310,7 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
           detailsAddToCartEntity = detailsAddToCartEntity.copyWith(
               productDetailsPriceEntity: priceEntity,
               isAddToCartAllowed: priceEntity.addToCartVisible,
+              quantityText: priceEntity.quantity.toString(),
               addToCartButtonEnabled: priceEntity.addToCartEnabled);
 
           buildContext.read<ProductDetailsAddToCartBloc>().add(

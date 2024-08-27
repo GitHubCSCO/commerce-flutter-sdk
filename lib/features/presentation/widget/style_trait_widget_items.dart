@@ -125,7 +125,6 @@ Widget _buildStyleTraitDropdownWidget(
             color: OptiAppColors.backgroundInput,
             borderRadius: BorderRadius.circular(AppStyle.borderRadius),
           ),
-          height: 50,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [

@@ -36,7 +36,16 @@ class CartLineWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => _navigateToProductDetails(context),
+      onTap: () {
+        // Check if the keyboard is in focus
+        if (!FocusScope.of(context).hasPrimaryFocus) {
+          // Unfocus the current text field to dismiss the keyboard
+          FocusScope.of(context).unfocus();
+          return;
+        }
+        // Navigate to product details after ensuring keyboard is not in focus
+        _navigateToProductDetails(context);
+      },
       child: Container(
         color: Colors.white,
         child: Row(
@@ -104,6 +113,9 @@ class CartLineWidget extends StatelessWidget {
             qtyOrdered: cartLineEntity.qtyOrdered?.toInt().toString(),
             onQtyChanged: (int? qty) {
               if (qty == null) {
+                return;
+              }
+              if (cartLineEntity.qtyOrdered?.toInt() == qty) {
                 return;
               }
 
