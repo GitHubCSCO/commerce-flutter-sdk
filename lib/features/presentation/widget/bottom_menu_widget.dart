@@ -122,9 +122,7 @@ class BottomMenu extends StatelessWidget {
         onPressed: () {
           Navigator.pop(mContext);
           if (value.isUrl == true && value.url != null) {
-            context
-                .read<BottomMenuCubit>()
-                .loadWebsiteUrl(value.url!, isAuthorizedURL: true);
+            context.read<BottomMenuCubit>().loadWebsiteUrl(value.url!);
           } else {
             value.action();
           }

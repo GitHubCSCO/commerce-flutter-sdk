@@ -11,10 +11,8 @@ class BottomMenuCubit extends Cubit<BottomMenuState> {
       : _platformUseCase = platformUseCase,
         super(BottomMenuInitial());
 
-  Future<void> loadWebsiteUrl(String path, {bool? isAuthorizedURL}) async {
-    final result = (isAuthorizedURL == true)
-        ? path
-        : await _platformUseCase.getAuthorizedURL(path);
+  Future<void> loadWebsiteUrl(String path) async {
+    final result = await _platformUseCase.getAuthorizedURL(path);
     if (result != null) {
       emit(BottomMenuWebsiteUrlLoaded(result));
     } else {
