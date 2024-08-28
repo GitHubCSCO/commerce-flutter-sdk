@@ -195,6 +195,8 @@ class __OrderApprovalListWidgetState extends State<_OrderApprovalListWidget> {
     return BlocBuilder<OrderApprovalCubit, OrderApprovalState>(
       builder: (context, state) {
         return ListView.separated(
+          controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             if (index >=
                     (state.orderApprovalCollectionModel.cartCollection
