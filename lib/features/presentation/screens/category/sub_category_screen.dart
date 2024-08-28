@@ -13,19 +13,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class SubCategoryScreen extends StatelessWidget {
-  String? categoryId;
-  String? categoryTitle;
-  String? categoryPath;
-  SubCategoryScreen(
-      {super.key, this.categoryId, this.categoryTitle, this.categoryPath});
+  Category? category;
+  SubCategoryScreen({
+    super.key,
+    this.category,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<CategoryBloc>(
       create: (context) =>
-          sl<CategoryBloc>()..add(CategoryLoadEvent(categoryId: categoryId)),
+          sl<CategoryBloc>()..add(CategoryLoadEvent(category: category)),
       child: SubCategoryPage(
-          categoryTitle: categoryTitle, categoryPath: categoryPath),
+        categoryTitle: category?.shortDescription,
+        categoryPath: category?.path,
+      ),
     );
   }
 }
@@ -81,14 +83,10 @@ class _SubCategoryPageState extends State<SubCategoryPage>
 
   void _handleCategoryClick(BuildContext context, Category category) {
     if ((category.subCategories?.length ?? 0) > 0) {
-      AppRoute.shopSubCategory.navigateBackStack(context,
-          //TODO SubCategoryScreen might be redundant, we might be able to use categoryscreen do the same thing
-          //TODO what if id and name is null, we need to take care of that
-          pathParameters: {
-            "categoryId": category.id.toString(),
-            "categoryTitle": category.shortDescription.toString(),
-            "categoryPath": category.path.toString()
-          });
+      AppRoute.shopSubCategory.navigateBackStack(
+        context,
+        extra: category,
+      );
     } else {
       final productPageEntity =
           ProductPageEntity('', ProductParentType.category, category: category);

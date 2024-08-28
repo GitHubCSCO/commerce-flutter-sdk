@@ -134,11 +134,7 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
             if (state is AutoCompleteCategoryState) {
               AppRoute.shopSubCategory.navigateBackStack(
                 context,
-                pathParameters: {
-                  "categoryId": state.category.id.toString(),
-                  "categoryTitle": state.category.shortDescription.toString(),
-                  "categoryPath": state.category.path.toString()
-                },
+                extra: state.category,
               );
             } else if (state is AutoCompleteBrandState) {
               AppRoute.shopBrandDetails.navigateBackStack(
