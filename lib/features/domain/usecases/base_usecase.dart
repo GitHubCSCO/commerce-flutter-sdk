@@ -11,23 +11,27 @@ class BaseUseCase {
       : commerceAPIServiceProvider = sl<ICommerceAPIServiceProvider>(),
         coreServiceProvider = sl<ICoreServiceProvider>();
 
-  Future<void> trackEvent(AnalyticsEvent analyticsEvent) async {
-    await coreServiceProvider.getTrackingService().trackEvent(analyticsEvent);
-  }
-
-  Future<void> trackError(dynamic e,
-      {StackTrace? trace, Map<String, String>? reason}) async {
-    await coreServiceProvider
+  void trackEvent(AnalyticsEvent analyticsEvent) async {
+    coreServiceProvider
         .getTrackingService()
-        .trackError(e, trace: trace, reason: reason);
+        .trackEvent(analyticsEvent)
+        .ignore();
   }
 
-  Future<void> forceCrash() async {
-    await coreServiceProvider.getTrackingService().forceCrash();
+  void trackError(dynamic e,
+      {StackTrace? trace, Map<String, String>? reason}) async {
+    coreServiceProvider
+        .getTrackingService()
+        .trackError(e, trace: trace, reason: reason)
+        .ignore();
   }
 
-  Future<void> setUserID(String userId) async {
-    await coreServiceProvider.getTrackingService().setUserID(userId);
+  void forceCrash() async {
+    coreServiceProvider.getTrackingService().forceCrash().ignore();
+  }
+
+  void setUserID(String userId) async {
+    coreServiceProvider.getTrackingService().setUserID(userId).ignore();
   }
 
   Future<String> getSiteMessage(

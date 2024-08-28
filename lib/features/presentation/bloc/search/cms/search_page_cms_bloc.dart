@@ -21,7 +21,7 @@ class SearchPageCmsBloc extends Bloc<SearchPageCmsEvent, SearchPageCmsState> {
       SearchPageCmsLoadEvent event, Emitter<SearchPageCmsState> emit) async {
     emit(SearchPageCmsLoadingState());
     var result = await _searchUseCase.loadData();
-    await _searchUseCase.trackEvent(AnalyticsEvent(
+    _searchUseCase.trackEvent(AnalyticsEvent(
       AnalyticsConstants.eventViewScreen,
       AnalyticsConstants.screenNameSearchLanding,
     ));

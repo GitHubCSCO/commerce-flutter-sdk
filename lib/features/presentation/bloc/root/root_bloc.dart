@@ -30,7 +30,7 @@ class RootBloc extends Bloc<RootEvent, RootState> {
       emit(RootSearchProduct(event.query));
     });
     on<RootAnalyticsEvent>((event, emit) {
-      _rootUsecase.trackEvent(event.analyticsEvent).ignore();
+      _rootUsecase.trackEvent(event.analyticsEvent);
     });
   }
 }

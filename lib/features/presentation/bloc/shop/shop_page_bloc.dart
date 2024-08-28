@@ -21,7 +21,7 @@ class ShopPageBloc extends Bloc<ShopPageEvent, ShopPageState> {
   Future<void> _onShopPageLoadEvent(
       ShopPageLoadEvent event, Emitter<ShopPageState> emit) async {
     emit(ShopPageLoadingState());
-    await _shopUseCase.trackEvent(AnalyticsEvent(
+    _shopUseCase.trackEvent(AnalyticsEvent(
       AnalyticsConstants.eventViewScreen,
       AnalyticsConstants.screenNameShop,
     ));

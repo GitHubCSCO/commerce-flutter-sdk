@@ -21,12 +21,10 @@ class AccountPageBloc extends Bloc<AccountPageEvent, AccountPageState> {
       AccountPageLoadEvent event, Emitter<AccountPageState> emit) async {
     emit(AccountPageLoadingState());
 
-    _accountUseCase
-        .trackEvent(AnalyticsEvent(
-          AnalyticsConstants.eventViewScreen,
-          AnalyticsConstants.screenNameAccount,
-        ))
-        .ignore();
+    _accountUseCase.trackEvent(AnalyticsEvent(
+      AnalyticsConstants.eventViewScreen,
+      AnalyticsConstants.screenNameAccount,
+    ));
 
     var result = await _accountUseCase.loadData();
     switch (result) {

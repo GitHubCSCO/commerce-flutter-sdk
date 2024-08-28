@@ -27,18 +27,16 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     switch (response) {
       case Success(value: final data):
         {
-          _categoryUseCase
-              .trackEvent(AnalyticsEvent(
-                AnalyticsConstants.eventViewScreen,
-                AnalyticsConstants.screenNameTopCategories,
-              ))
-              .ignore();
+          _categoryUseCase.trackEvent(AnalyticsEvent(
+            AnalyticsConstants.eventViewScreen,
+            AnalyticsConstants.screenNameTopCategories,
+          ));
           emit(CategoryLoaded(list: data ?? []));
         }
 
       case Failure(errorResponse: final error):
         {
-          _categoryUseCase.trackError(error).ignore();
+          _categoryUseCase.trackError(error);
           emit(CategoryFailed(error: error.message ?? ''));
         }
     }
@@ -63,12 +61,12 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
               .withProperty(
                   name: AnalyticsConstants.eventPropertyReferenceName,
                   strValue: event.category?.name);
-          _categoryUseCase.trackEvent(viewScreenEvent).ignore();
+          _categoryUseCase.trackEvent(viewScreenEvent);
           emit(CategoryLoaded(list: data ?? []));
         }
       case Failure(errorResponse: final error):
         {
-          _categoryUseCase.trackError(error).ignore();
+          _categoryUseCase.trackError(error);
           emit(CategoryFailed(error: error.message ?? ''));
         }
     }

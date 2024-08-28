@@ -37,7 +37,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
       CartPageLoadEvent event, Emitter<CartPageState> emit) async {
     emit(CartPageLoadingState());
 
-    await _cartUseCase.trackEvent(AnalyticsEvent(
+    _cartUseCase.trackEvent(AnalyticsEvent(
       AnalyticsConstants.eventViewScreen,
       AnalyticsConstants.screenNameCart,
     ));
