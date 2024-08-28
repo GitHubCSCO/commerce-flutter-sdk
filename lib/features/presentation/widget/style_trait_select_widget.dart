@@ -14,6 +14,8 @@ void showStyleTraitFilter(
   BuildContext context, {
   required void Function(StyledProductEntity? styledProductEntity) ongetProduct,
 }) {
+  final isApplyEnabledNotifier = ValueNotifier(false);
+
   context.read<StyleTraitCubit>().initSelectedAvailableTraitValues(product);
   context.read<StyleTraitCubit>().fetchStyleTraitValues(product);
   showFilterModalSheet(
@@ -25,9 +27,15 @@ void showStyleTraitFilter(
       }
     },
     onReset: null,
+    isApplyEnabledNotifier: isApplyEnabledNotifier,
     child: BlocProvider.value(
       value: BlocProvider.of<StyleTraitCubit>(context),
-      child: BlocBuilder<StyleTraitCubit, StyleTraitState>(
+      child: BlocConsumer<StyleTraitCubit, StyleTraitState>(
+        listener: (BuildContext _, StyleTraitState state) {
+          // Update the ValueNotifier based on whether all traits are selected
+          isApplyEnabledNotifier.value =
+              context.read<StyleTraitCubit>().isAllTraitSelected();
+        },
         builder: (context, state) {
           if (state is StyleTraitStateLoading) {
             return const Center(

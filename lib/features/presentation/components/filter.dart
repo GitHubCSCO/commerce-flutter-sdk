@@ -86,6 +86,7 @@ void showFilterModalSheet(
   required void Function() onApply,
   required void Function()? onReset,
   required Widget child,
+  ValueNotifier<bool>? isApplyEnabledNotifier,
 }) {
   showModalBottomSheet(
     useRootNavigator: true,
@@ -99,90 +100,96 @@ void showFilterModalSheet(
     ),
     context: context,
     builder: (innerContext) {
-      return SafeArea(
-        child: Container(
-          decoration: const BoxDecoration(
-            color: OptiAppColors.backgroundWhite,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
+      return ValueListenableBuilder<bool>(
+        valueListenable: isApplyEnabledNotifier ?? ValueNotifier(true),
+        builder: (context, isApplyEnabled, _) {
+          return SafeArea(
+            child: Container(
+              decoration: const BoxDecoration(
+                color: OptiAppColors.backgroundWhite,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10,
+                              ),
+                              child: Text(
+                                LocalizationConstants.filter.localized(),
+                                style: OptiTextStyles.titleLarge,
+                              ),
+                            ),
+                            child,
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                      color: OptiAppColors.backgroundWhite,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.05),
+                          blurRadius: 5,
+                          offset: Offset(0, -4),
+                        ),
+                      ],
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 13.5,
+                      horizontal: 31.5,
+                    ),
+                    child: Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10,
+                        if (onReset != null)
+                          Expanded(
+                            child: SizedBox(
+                              height: 48,
+                              child: SecondaryButton(
+                                onPressed: onReset,
+                                text: LocalizationConstants.reset.localized(),
+                              ),
+                            ),
                           ),
-                          child: Text(
-                            LocalizationConstants.filter.localized(),
-                            style: OptiTextStyles.titleLarge,
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: SizedBox(
+                            width: 176,
+                            height: 48,
+                            child: PrimaryButton(
+                              text: LocalizationConstants.apply.localized(),
+                              isEnabled: isApplyEnabled,
+                              onPressed: () {
+                                onApply();
+                                Navigator.pop(innerContext);
+                              },
+                            ),
                           ),
                         ),
-                        child,
                       ],
                     ),
                   ),
-                ),
+                ],
               ),
-              Container(
-                decoration: const BoxDecoration(
-                  color: OptiAppColors.backgroundWhite,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromRGBO(0, 0, 0, 0.05),
-                      blurRadius: 5,
-                      offset: Offset(0, -4),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 13.5,
-                  horizontal: 31.5,
-                ),
-                child: Row(
-                  children: [
-                    if (onReset != null)
-                      Expanded(
-                        child: SizedBox(
-                          height: 48,
-                          child: SecondaryButton(
-                            onPressed: onReset,
-                            text: LocalizationConstants.reset.localized(),
-                          ),
-                        ),
-                      ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: SizedBox(
-                        width: 176,
-                        height: 48,
-                        child: PrimaryButton(
-                          text: LocalizationConstants.apply.localized(),
-                          onPressed: () {
-                            onApply();
-                            Navigator.pop(innerContext);
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       );
     },
   );
