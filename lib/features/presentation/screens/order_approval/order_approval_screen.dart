@@ -2,7 +2,6 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
@@ -66,62 +65,78 @@ class OrderApprovalPage extends StatelessWidget {
               );
 
             case OrderStatus.failure:
-              return Center(
-                child: Text(
-                  state.errorMessage ?? '',
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<OrderApprovalCubit>().loadOrderApprovalList();
+                },
+                child: CustomScrollView(
+                  slivers: <Widget>[
+                    SliverFillRemaining(
+                      child: Center(
+                        child: Text(
+                          state.errorMessage ?? '',
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               );
             default:
-              return Column(
-                children: [
-                  Container(
-                    height: 50,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          state.orderApprovalCollectionModel.pagination
-                                      ?.totalItemCount !=
-                                  null
-                              ? '${state.orderApprovalCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.orders.localized()}'
-                              : '',
-                          style: OptiTextStyles.header3,
-                        ),
-                        OrderApprovalFilterWidget(
-                          orderApprovalParameters:
-                              state.orderApprovalParameters,
-                          onApply: ({
-                            orderNumber,
-                            orderTotal,
-                            orderTotalOperator,
-                            fromDate,
-                            toDate,
-                            shipTo,
-                          }) {
-                            context.read<OrderApprovalCubit>().applyFilter(
-                                  orderNumber: orderNumber,
-                                  orderTotal: orderTotal,
-                                  orderTotalOperator: orderTotalOperator,
-                                  fromDate: fromDate,
-                                  toDate: toDate,
-                                  shipTo: shipTo,
-                                );
-                          },
-                          hasFilter:
-                              context.read<OrderApprovalCubit>().hasFilter,
-                        ),
-                      ],
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<OrderApprovalCubit>().loadOrderApprovalList();
+                },
+                child: Column(
+                  children: [
+                    Container(
+                      height: 50,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            state.orderApprovalCollectionModel.pagination
+                                        ?.totalItemCount !=
+                                    null
+                                ? '${state.orderApprovalCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.orders.localized()}'
+                                : '',
+                            style: OptiTextStyles.header3,
+                          ),
+                          OrderApprovalFilterWidget(
+                            orderApprovalParameters:
+                                state.orderApprovalParameters,
+                            onApply: ({
+                              orderNumber,
+                              orderTotal,
+                              orderTotalOperator,
+                              fromDate,
+                              toDate,
+                              shipTo,
+                            }) {
+                              context.read<OrderApprovalCubit>().applyFilter(
+                                    orderNumber: orderNumber,
+                                    orderTotal: orderTotal,
+                                    orderTotalOperator: orderTotalOperator,
+                                    fromDate: fromDate,
+                                    toDate: toDate,
+                                    shipTo: shipTo,
+                                  );
+                            },
+                            hasFilter:
+                                context.read<OrderApprovalCubit>().hasFilter,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: _OrderApprovalListWidget(
-                      cartList:
-                          state.orderApprovalCollectionModel.cartCollection ??
-                              [],
-                    ),
-                  )
-                ],
+                    Expanded(
+                      child: _OrderApprovalListWidget(
+                        cartList:
+                            state.orderApprovalCollectionModel.cartCollection ??
+                                [],
+                      ),
+                    )
+                  ],
+                ),
               );
           }
         },
