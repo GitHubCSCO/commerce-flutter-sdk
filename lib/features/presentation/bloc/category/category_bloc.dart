@@ -1,3 +1,5 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/category_usecase/category_useacase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -24,9 +26,21 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
 
     switch (response) {
       case Success(value: final data):
-        emit(CategoryLoaded(list: data ?? []));
+        {
+          _categoryUseCase
+              .trackEvent(AnalyticsEvent(
+                AnalyticsConstants.eventViewScreen,
+                AnalyticsConstants.screenNameTopCategories,
+              ))
+              .ignore();
+          emit(CategoryLoaded(list: data ?? []));
+        }
+
       case Failure(errorResponse: final error):
-        emit(CategoryFailed(error: error.message ?? ''));
+        {
+          _categoryUseCase.trackError(error).ignore();
+          emit(CategoryFailed(error: error.message ?? ''));
+        }
     }
   }
 
@@ -35,13 +49,28 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
     emit(CategoryLoading());
 
     final response =
-        await _categoryUseCase.getCategories(categoryId: event.categoryId);
+        await _categoryUseCase.getCategories(categoryId: event.category?.id);
 
     switch (response) {
       case Success(value: final data):
-        emit(CategoryLoaded(list: data ?? []));
+        {
+          var viewScreenEvent = AnalyticsEvent(
+                  AnalyticsConstants.eventViewScreen,
+                  AnalyticsConstants.screenNameCategory)
+              .withProperty(
+                  name: AnalyticsConstants.eventPropertyReferenceId,
+                  strValue: event.category?.id.toString())
+              .withProperty(
+                  name: AnalyticsConstants.eventPropertyReferenceName,
+                  strValue: event.category?.name);
+          _categoryUseCase.trackEvent(viewScreenEvent).ignore();
+          emit(CategoryLoaded(list: data ?? []));
+        }
       case Failure(errorResponse: final error):
-        emit(CategoryFailed(error: error.message ?? ''));
+        {
+          _categoryUseCase.trackError(error).ignore();
+          emit(CategoryFailed(error: error.message ?? ''));
+        }
     }
   }
 }

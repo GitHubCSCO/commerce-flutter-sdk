@@ -1,8 +1,10 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
@@ -138,6 +140,15 @@ class AccountPage extends StatelessWidget with BaseDynamicContentScreen {
                               horizontal: 15.0, vertical: 4.0),
                           child: GestureDetector(
                             onTap: () {
+                              context.read<RootBloc>().add(
+                                    RootAnalyticsEvent(
+                                      AnalyticsEvent(
+                                        AnalyticsConstants
+                                            .eventViewPrivacyPolicy,
+                                        AnalyticsConstants.screenNameAccount,
+                                      ),
+                                    ),
+                                  );
                               launchUrlString(context
                                   .read<AccountPageBloc>()
                                   .getPrivacyPolicyUrl()!);
@@ -158,6 +169,14 @@ class AccountPage extends StatelessWidget with BaseDynamicContentScreen {
                               horizontal: 15.0, vertical: 4.0),
                           child: GestureDetector(
                             onTap: () {
+                              context.read<RootBloc>().add(
+                                    RootAnalyticsEvent(
+                                      AnalyticsEvent(
+                                        AnalyticsConstants.eventViewTermsOfUse,
+                                        AnalyticsConstants.screenNameAccount,
+                                      ),
+                                    ),
+                                  );
                               launchUrlString(context
                                   .read<AccountPageBloc>()
                                   .getTermsOfUseUrl()!);
