@@ -1,9 +1,12 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/mixins/list_grid_view_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/category/category_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_grid_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_list_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
@@ -12,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class SubCategoryScreen extends StatelessWidget {
+class SubCategoryScreen extends BaseStatelessWidget {
   Category? category;
   SubCategoryScreen({
     super.key,
@@ -20,7 +23,7 @@ class SubCategoryScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return BlocProvider<CategoryBloc>(
       create: (context) =>
           sl<CategoryBloc>()..add(CategoryLoadEvent(category: category)),
@@ -29,6 +32,19 @@ class SubCategoryScreen extends StatelessWidget {
         categoryPath: category?.path,
       ),
     );
+  }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() {
+    var viewScreenEvent = AnalyticsEvent(AnalyticsConstants.eventViewScreen,
+            AnalyticsConstants.screenNameCategory)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyCategoryId,
+            strValue: category?.id.toString())
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyCategoryName,
+            strValue: category?.name);
+    return viewScreenEvent;
   }
 }
 

@@ -1,15 +1,18 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/html_string_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/brand_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_details/brand_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
@@ -26,18 +29,30 @@ class BrandDetailsEntity {
       {this.brandEntity, this.brandCategories, this.brandProductLines});
 }
 
-class BrandDetailsScreen extends StatelessWidget {
+class BrandDetailsScreen extends BaseStatelessWidget {
   final Brand brand;
 
   const BrandDetailsScreen({super.key, required this.brand});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return BlocProvider<BrandDetailsCubit>(
       create: (context) => sl<BrandDetailsCubit>()..getBrandDetails(brand),
       child: BrandDetailsPage(brand: brand),
     );
   }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() => AnalyticsEvent(
+        AnalyticsConstants.eventViewScreen,
+        AnalyticsConstants.screenNameBrandDetail,
+      )
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyBrandName,
+              strValue: brand.name)
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyBrandId,
+              strValue: brand.id);
 }
 
 class BrandDetailsPage extends StatelessWidget {

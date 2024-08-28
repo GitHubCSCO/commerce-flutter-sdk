@@ -18,6 +18,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/account_header/
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -42,19 +43,28 @@ void _reloadAccountPage(BuildContext context) {
   context.read<AccountPageBloc>().add(AccountPageLoadEvent());
 }
 
-class AccountScreen extends StatelessWidget {
+class AccountScreen extends BaseStatelessWidget {
   const AccountScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MultiBlocProvider(providers: [
-      BlocProvider<PullToRefreshBloc>(
-          create: (context) => sl<PullToRefreshBloc>()),
-      BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
-      BlocProvider<AccountPageBloc>(
-          create: (context) =>
-              sl<AccountPageBloc>()..add(AccountPageLoadEvent())),
-    ], child: const AccountPage());
+  AnalyticsEvent getAnalyticsEvent() => AnalyticsEvent(
+        AnalyticsConstants.eventViewScreen,
+        AnalyticsConstants.screenNameAccount,
+      );
+
+  @override
+  Widget buildContent(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<PullToRefreshBloc>(
+            create: (context) => sl<PullToRefreshBloc>()),
+        BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
+        BlocProvider<AccountPageBloc>(
+            create: (context) =>
+                sl<AccountPageBloc>()..add(AccountPageLoadEvent())),
+      ],
+      child: const AccountPage(),
+    );
   }
 }
 
