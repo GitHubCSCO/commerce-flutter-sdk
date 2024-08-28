@@ -47,6 +47,7 @@ class AssetConstants {
   static const String filterIcon = "assets/images/icon_filter.svg";
 
   static const String iconArrowDown = "assets/images/icon_arrow_down.svg";
+  static const String iconError = "assets/images/error_icon.svg";
 
   static const String jsonPath = "assets/config/";
 }

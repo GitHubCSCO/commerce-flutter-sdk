@@ -103,6 +103,7 @@ class CartLineWidget extends StatelessWidget {
               productId: cartLineEntity.productId,
               erpNumber: cartLineEntity.erpNumber,
               unitOfMeasure: cartLineEntity.baseUnitOfMeasure,
+              availabilityMessageType: cartLineEntity.availability?.messageType,
               showViewAvailabilityByWarehouse:
                   cartLineEntity.showInventoryAvailability ?? false,
               hidePricingEnable: hidePricingEnable,
@@ -111,6 +112,7 @@ class CartLineWidget extends StatelessWidget {
           ),
           LineItemQuantityGroupWidget(
             qtyOrdered: cartLineEntity.qtyOrdered?.toInt().toString(),
+            hasInsufficientInventory: cartLineEntity.hasInsufficientInventory,
             onQtyChanged: (int? qty) {
               if (qty == null) {
                 return;

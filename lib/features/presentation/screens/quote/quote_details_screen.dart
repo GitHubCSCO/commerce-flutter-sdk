@@ -19,6 +19,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_i
 import 'package:commerce_flutter_app/features/presentation/screens/quote/quote_line_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/date_picker_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/error_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -61,7 +62,8 @@ class QuoteDetailsPage extends StatelessWidget {
       body: BlocConsumer<QuoteDetailsBloc, QuoteDetailsState>(
           buildWhen: (previous, current) {
         if (current is QuoteDetailsLoadedState ||
-            current is QuoteDetailsLoadingState) {
+            current is QuoteDetailsLoadingState ||
+            current is QuoteDetailsFailedState) {
           return true;
         }
         return false;
@@ -109,8 +111,10 @@ class QuoteDetailsPage extends StatelessWidget {
         }
       }, builder: (_, state) {
         if (state is QuoteDetailsFailedState) {
-          return Center(
-            child: Text(state.error),
+          return OptiErrorWidget(
+            onRetry: () {
+              context.read<QuoteDetailsBloc>().add(QuoteDetailsInitEvent());
+            },
           );
         } else if (state is QuoteDetailsLoadingState) {
           return Center(
@@ -128,8 +132,8 @@ class QuoteDetailsPage extends StatelessWidget {
                           visible: context
                               .read<QuoteDetailsBloc>()
                               .shouldShowExpirationDate,
-                          child:
-                              _buildQuoteExpirationWidget(context, quoteDto)),
+                          child: _buildQuoteExpirationWidget(
+                              context, state.quoteDto)),
                       _buildQuoteMessageWidget(context, state.quoteDto),
                       QuoteInformationWidget(quoteDto: state.quoteDto),
                       _buildQuoteLinesWidget(context, state.quoteLines),
