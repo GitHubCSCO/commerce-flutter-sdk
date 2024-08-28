@@ -130,3 +130,6 @@ firebase_options.dart
 mason-lock.json
 mason.yaml
 .mason
+ios/adhoc.plist
+ios/appstore.plist
+ios/development.plist
