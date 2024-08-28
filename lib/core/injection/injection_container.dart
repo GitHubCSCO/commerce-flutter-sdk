@@ -56,6 +56,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quot
 import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/request_quote_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/remote_config/remote_config_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/root_usecase/root_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/saved_order/saved_order_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/saved_payments_usecase/saved_payments_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
@@ -190,7 +191,8 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton(() => getRouter(loggerService: sl()))
 
     //root
-    ..registerFactory(() => RootBloc())
+    ..registerFactory(() => RootBloc(rootUsecase: sl()))
+    ..registerFactory(() => RootUsecase())
 
     //auth
     ..registerFactory(() => AuthCubit(authUsecase: sl()))

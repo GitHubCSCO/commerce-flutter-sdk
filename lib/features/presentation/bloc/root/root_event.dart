@@ -12,12 +12,15 @@ class RootCartUpdateEvent extends RootEvent {}
 
 class RootInitiateSearchEvent extends RootEvent {
   final String query;
-
   RootInitiateSearchEvent(this.query);
 }
 
 class RootSearchProductEvent extends RootEvent {
   final String query;
-
   RootSearchProductEvent(this.query);
+}
+
+class RootAnalyticsEvent extends RootEvent {
+  final AnalyticsEvent analyticsEvent;
+  RootAnalyticsEvent(this.analyticsEvent);
 }
