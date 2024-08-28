@@ -38,7 +38,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   })  : _quickOrderUseCase = quickOrderUseCase,
         _searchUseCase = searchUseCase,
         _pricingInventoryUseCase = pricingInventoryUseCase,
-        super(OrderListInitialState(
+        super(OrderListInitialState(instructionText:
             SiteMessageConstants.defaultValueQuickOrderInstructions)) {
     _createAlternateCart();
     on<OrderListLoadEvent>(_onOrderListLoadEvent);
@@ -82,7 +82,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
       final instructionText = await _quickOrderUseCase.getSiteMessage(
           SiteMessageConstants.nameQuickOrderInstructions,
           SiteMessageConstants.defaultValueQuickOrderInstructions);
-      emit(OrderListInitialState(instructionText));
+      emit(OrderListInitialState(instructionText: instructionText));
     }
   }
 
@@ -197,7 +197,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
       final instructionText = await _quickOrderUseCase.getSiteMessage(
           SiteMessageConstants.nameQuickOrderInstructions,
           SiteMessageConstants.defaultValueQuickOrderInstructions);
-      emit(OrderListInitialState(instructionText));
+      emit(OrderListInitialState(instructionText: instructionText));
     }
   }
 
@@ -207,7 +207,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     final instructionText = await _quickOrderUseCase.getSiteMessage(
         SiteMessageConstants.nameQuickOrderInstructions,
         SiteMessageConstants.defaultValueQuickOrderInstructions);
-    emit(OrderListInitialState(instructionText));
+    emit(OrderListInitialState(instructionText: instructionText));
   }
 
   Future<void> _onOrderListAddToListEvent(
@@ -499,7 +499,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         final message = await _quickOrderUseCase.getSiteMessage(
             SiteMessageConstants.nameQuickOrderInstructions,
             SiteMessageConstants.defaultValueQuickOrderInstructions);
-        emit(OrderListFailedState(message));
+        emit(OrderListFailedState(instructionText: message));
       }
     } else {
       emit(OrderListNavigateToCartState());

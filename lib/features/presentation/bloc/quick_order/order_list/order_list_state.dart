@@ -1,11 +1,16 @@
 part of 'order_list_bloc.dart';
 
-abstract class OrderListState extends Equatable {}
+abstract class OrderListState extends Equatable {
 
-class OrderListInitialState extends OrderListState {
   final String? instructionText;
 
-  OrderListInitialState(this.instructionText);
+  OrderListState({this.instructionText});
+
+}
+
+class OrderListInitialState extends OrderListState {
+
+  OrderListInitialState({super.instructionText});
 
   @override
   // TODO: implement props
@@ -29,9 +34,8 @@ class OrderListLoadedState extends OrderListState {
 }
 
 class OrderListFailedState extends OrderListState {
-  final String? message;
 
-  OrderListFailedState(this.message);
+  OrderListFailedState({super.instructionText});
 
   @override
   List<Object?> get props => [];
