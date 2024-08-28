@@ -124,11 +124,17 @@ class QuotePageState extends State<QuotePage> {
                                 ),
                               );
                         },
-                        child: Center(
-                          child: Text(
-                            state.notFoundInfoText ?? "",
-                            style: OptiTextStyles.subtitle,
-                          ),
+                        child: CustomScrollView(
+                          slivers: <Widget>[
+                            SliverFillRemaining(
+                              child: Center(
+                                child: Text(
+                                  state.notFoundInfoText ?? "",
+                                  style: OptiTextStyles.subtitle,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     } else {
@@ -183,11 +189,17 @@ class QuotePageState extends State<QuotePage> {
                                 ),
                               );
                         },
-                        child: Center(
-                          child: Text(
-                            state.notFoundInfoText ?? "",
-                            style: OptiTextStyles.subtitle,
-                          ),
+                        child: CustomScrollView(
+                          slivers: <Widget>[
+                            SliverFillRemaining(
+                              child: Center(
+                                child: Text(
+                                  state.notFoundInfoText ?? "",
+                                  style: OptiTextStyles.subtitle,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     } else {
