@@ -25,7 +25,10 @@ class SubCategoryScreen extends StatelessWidget {
       create: (context) =>
           sl<CategoryBloc>()..add(CategoryLoadEvent(categoryId: categoryId)),
       child: SubCategoryPage(
-          categoryTitle: categoryTitle, categoryPath: categoryPath),
+        categoryTitle: categoryTitle,
+        categoryPath: categoryPath,
+        categoryId: categoryId,
+      ),
     );
   }
 }
@@ -33,8 +36,14 @@ class SubCategoryScreen extends StatelessWidget {
 class SubCategoryPage extends StatefulWidget {
   late final String? categoryTitle;
   late final String? categoryPath;
+  final String? categoryId;
 
-  SubCategoryPage({super.key, this.categoryTitle, this.categoryPath});
+  SubCategoryPage({
+    super.key,
+    this.categoryTitle,
+    this.categoryPath,
+    required this.categoryId,
+  });
 
   @override
   State<SubCategoryPage> createState() => _SubCategoryPageState();
@@ -63,16 +72,34 @@ class _SubCategoryPageState extends State<SubCategoryPage>
             case CategoryLoading():
               return const Center(child: CircularProgressIndicator());
             case CategoryLoaded():
-              return Container(
-                child: isGridView
-                    ? CategoryGridWidget(
-                        list: state.list, callback: _handleCategoryClick)
-                    : CategoryListWidget(
-                        list: state.list, callback: _handleCategoryClick),
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<CategoryBloc>().add(
+                        CategoryLoadEvent(categoryId: widget.categoryId),
+                      );
+                },
+                child: Container(
+                  child: isGridView
+                      ? CategoryGridWidget(
+                          list: state.list, callback: _handleCategoryClick)
+                      : CategoryListWidget(
+                          list: state.list, callback: _handleCategoryClick),
+                ),
               );
             case CategoryFailed():
             default:
-              return const Center();
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<CategoryBloc>().add(
+                        CategoryLoadEvent(categoryId: widget.categoryId),
+                      );
+                },
+                child: const CustomScrollView(
+                  slivers: <Widget>[
+                    SliverFillRemaining(child: Center()),
+                  ],
+                ),
+              );
           }
         },
       ),

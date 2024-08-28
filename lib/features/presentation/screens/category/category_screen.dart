@@ -51,16 +51,30 @@ class _CategoryPageState extends State<CategoryPage>
             case CategoryLoading():
               return const Center(child: CircularProgressIndicator());
             case CategoryLoaded():
-              return Container(
-                child: isGridView
-                    ? CategoryGridWidget(
-                        list: state.list, callback: _handleCategoryClick)
-                    : CategoryListWidget(
-                        list: state.list, callback: _handleCategoryClick),
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<CategoryBloc>().add(TopCategoryLoadEvent());
+                },
+                child: Container(
+                  child: isGridView
+                      ? CategoryGridWidget(
+                          list: state.list, callback: _handleCategoryClick)
+                      : CategoryListWidget(
+                          list: state.list, callback: _handleCategoryClick),
+                ),
               );
             case CategoryFailed():
             default:
-              return const Center();
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<CategoryBloc>().add(TopCategoryLoadEvent());
+                },
+                child: const CustomScrollView(
+                  slivers: <Widget>[
+                    SliverFillRemaining(child: Center()),
+                  ],
+                ),
+              );
           }
         },
       ),
