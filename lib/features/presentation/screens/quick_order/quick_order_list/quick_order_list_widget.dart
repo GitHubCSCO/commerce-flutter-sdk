@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
@@ -20,7 +21,6 @@ class QuickOrderListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String? instructionsMessage;
     return BlocConsumer<OrderListBloc, OrderListState>(
         listener: (context, state) {},
         buildWhen: (previous, current) =>
@@ -32,13 +32,12 @@ class QuickOrderListWidget extends StatelessWidget {
           switch (state) {
             case OrderListInitialState():
             case OrderListFailedState():
-              instructionsMessage = state.instructionText;
-              return _instructionWidget(instructionsMessage);
+              return _instructionWidget(context);
             case OrderListLoadingState():
               return const Center(child: CircularProgressIndicator());
             case OrderListLoadedState():
               return state.quickOrderItemList.isEmpty
-                  ? _instructionWidget(instructionsMessage)
+                  ? _instructionWidget(context)
                   : ListView.builder(
                       itemCount: state.quickOrderItemList.length,
                       itemBuilder: (context, index) {
@@ -66,13 +65,14 @@ class QuickOrderListWidget extends StatelessWidget {
         });
   }
 
-  Widget _instructionWidget(String? message) {
+  Widget _instructionWidget(BuildContext context) {
+    final message = context.read<OrderListBloc>().instructionsMessage;
     return Column(
       children: [
         const SizedBox(height: 20),
         Expanded(
           child: Text(
-            message ?? '',
+            message ?? SiteMessageConstants.defaultValueQuickOrderInstructions,
             style: OptiTextStyles.bodySmall,
           ),
         )
