@@ -172,9 +172,15 @@ class _WishListsPageState extends State<WishListsPage> {
                     onRefresh: () async {
                       context.read<WishListCubit>().loadWishLists();
                     },
-                    child: Center(
-                      child: Text(
-                          LocalizationConstants.noListsAvailable.localized()),
+                    child: CustomScrollView(
+                      slivers: <Widget>[
+                        SliverFillRemaining(
+                          child: Center(
+                            child: Text(LocalizationConstants.noListsAvailable
+                                .localized()),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 );

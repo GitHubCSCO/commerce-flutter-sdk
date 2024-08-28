@@ -339,9 +339,15 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                           .read<WishListDetailsCubit>()
                           .loadWishListDetails(widget.wishListId);
                     },
-                    child: Center(
-                      child: Text(
-                          SiteMessageConstants.defaultValueWishListNoProducts),
+                    child: CustomScrollView(
+                      slivers: <Widget>[
+                        SliverFillRemaining(
+                          child: Center(
+                            child: Text(SiteMessageConstants
+                                .defaultValueWishListNoProducts),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 );
