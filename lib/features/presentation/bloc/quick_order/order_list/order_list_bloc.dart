@@ -40,7 +40,6 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         _searchUseCase = searchUseCase,
         _pricingInventoryUseCase = pricingInventoryUseCase,
         super(OrderListInitialState()) {
-    _initial();
     on<OrderListLoadEvent>(_onOrderListLoadEvent);
     on<OrderListItemAddEvent>(_onOrderLisItemAddEvent);
     on<OrderListItemScanAddEvent>(_onOrderLisScanItemAddEvent);
@@ -53,7 +52,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     on<OrderListAddVmiBinEvent>(_onOrderListAddVmiBinEvent);
   }
 
-  Future<void> _initial() async {
+  void initial() async {
     instructionsMessage = await _quickOrderUseCase.getSiteMessage(
         SiteMessageConstants.nameQuickOrderInstructions,
         SiteMessageConstants.defaultValueQuickOrderInstructions);
