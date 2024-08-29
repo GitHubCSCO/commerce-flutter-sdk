@@ -1,21 +1,24 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/mixins/validator_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/invoice_history/invoice_email/invoice_email_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/order_details_body_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class InvoiceEmailScreen extends StatelessWidget {
+class InvoiceEmailScreen extends BaseStatelessWidget {
   final String invoiceNumber;
 
   const InvoiceEmailScreen({
@@ -24,11 +27,21 @@ class InvoiceEmailScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<InvoiceEmailCubit>()..initialize(),
       child: InvoiceEmailPage(invoiceNumber: invoiceNumber),
     );
+  }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() {
+    var viewScreenEvent = AnalyticsEvent(AnalyticsConstants.eventViewScreen,
+            AnalyticsConstants.screenNameInvoiceEmail)
+        .withProperty(
+            name: AnalyticsConstants.screenNameInvoiceEmail,
+            strValue: invoiceNumber);
+    return viewScreenEvent;
   }
 }
 

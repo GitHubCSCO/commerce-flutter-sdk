@@ -1,9 +1,8 @@
-import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/core/mixins/cart_checkout_helper_mixin.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
-import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_usecase.dart';
@@ -22,6 +21,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
   Session? session;
   bool hasCheckout = true;
   ProductSettings? productSettings;
+  String? promoItemMessage;
   CartPageBloc(
       {required CartUseCase cartUseCase,
       required PricingInventoryUseCase pricingInventoryUseCase})
@@ -37,19 +37,15 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
       CartPageLoadEvent event, Emitter<CartPageState> emit) async {
     emit(CartPageLoadingState());
 
-    await _cartUseCase.trackEvent(AnalyticsEvent(
-      AnalyticsConstants.eventViewScreen,
-      AnalyticsConstants.screenNameCart,
-    ));
-
+    promoItemMessage = await _cartUseCase.getSiteMessage(
+        SiteMessageConstants.nameCartProductPromotionItem,
+        SiteMessageConstants.defaultValueCartPromotionItem);
     hasCheckout = await _cartUseCase.hasCheckout();
 
     try {
       var result = await _cartUseCase.loadCurrentCart();
       var productSettingsResult = await _cartUseCase.loadProductSettings();
-      productSettings = productSettingsResult is Success
-          ? (productSettingsResult as Success).value as ProductSettings
-          : null;
+      productSettings = productSettingsResult.getResultSuccessValue();
 
       var sessionResponse = await _cartUseCase.getCurrentSession();
       session = sessionResponse is Success
@@ -75,9 +71,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
           var cartWarningMsg =
               await getCartWarningMessage(cart, shippingMethod, _cartUseCase);
           PromotionCollectionModel? promotionCollection =
-              promotionsResult is Success
-                  ? (promotionsResult as Success).value
-                  : null;
+              promotionsResult.getResultSuccessValue();
 
           var settingResult = await _cartUseCase.loadCartSetting();
           switch (settingResult) {
@@ -101,17 +95,24 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
               ));
               break;
             case Failure(errorResponse: final errorResponse):
-              emit(CartPageFailureState(
-                  error: errorResponse.errorDescription ?? ''));
-              break;
+              {
+                _cartUseCase.trackError(errorResponse);
+                emit(CartPageFailureState(
+                    error: errorResponse.errorDescription ?? ''));
+                break;
+              }
           }
           break;
         case Failure(errorResponse: final errorResponse):
-          emit(CartPageFailureState(
-              error: errorResponse.errorDescription ?? ''));
-          break;
+          {
+            _cartUseCase.trackError(errorResponse);
+            emit(CartPageFailureState(
+                error: errorResponse.errorDescription ?? ''));
+            break;
+          }
       }
     } catch (e) {
+      _cartUseCase.trackError(e);
       emit(CartPageFailureState(error: 'An unexpected error occurred'));
     }
   }
@@ -146,7 +147,8 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
                   productSettings) &&
               cartLine.availability.messageType != 0;
       cartLineEntity = cartLineEntity.copyWith(
-          showInventoryAvailability: shouldShowWarehouseInventoryButton);
+          showInventoryAvailability: shouldShowWarehouseInventoryButton,
+          promoItemMessage: promoItemMessage);
       cartlines.add(cartLineEntity);
     }
     return cartlines;

@@ -5,6 +5,6 @@ abstract class CategoryEvent {}
 class TopCategoryLoadEvent extends CategoryEvent {}
 
 class CategoryLoadEvent extends CategoryEvent {
-  String? categoryId;
-  CategoryLoadEvent({this.categoryId});
+  Category? category;
+  CategoryLoadEvent({this.category});
 }

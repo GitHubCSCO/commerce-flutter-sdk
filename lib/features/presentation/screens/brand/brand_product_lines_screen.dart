@@ -1,9 +1,12 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/mixins/list_grid_view_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_product_line/brand_product_line_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_grid_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_list_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
@@ -12,19 +15,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class BrandProductLinesScreen extends StatelessWidget {
+class BrandProductLinesScreen extends BaseStatelessWidget {
   final Brand brand;
 
   BrandProductLinesScreen({super.key, required this.brand});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return BlocProvider<BrandProductLinesCubit>(
       create: (context) =>
           sl<BrandProductLinesCubit>()..getBrandProductLines(brand),
       child: BrandProductLinesPage(brand: brand),
     );
   }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() => AnalyticsEvent(
+        AnalyticsConstants.eventViewScreen,
+        AnalyticsConstants.screenNameBrandProductLine,
+      )
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyBrandId, strValue: brand.id)
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyBrandName,
+              strValue: brand.name);
 }
 
 class BrandProductLinesPage extends StatefulWidget {
@@ -80,10 +94,11 @@ class _BrandProductLinesPageState extends State<BrandProductLinesPage>
     );
   }
 
-  //TODO need to fix it. This is anti pattern
-  //! TODO caution
-  //! TODO we are passing multiple objects through extra using record
-  //! TODO either we need to organize this record in a better way or use any other data structure
+  //! TODO need to fix it. This is anti pattern
+  //! ProductPageEntity does not have toJson or fromJson which is needed
+  //! for serialization and deserialization
+  //! there is a possibility of these extra getting lost and gorouter
+  //! has no way of retrieving them
   Future<void> _handleCategoryClick(BuildContext context, Brand brand,
       {BrandProductLine? brandProductLine}) async {
     final productPageEntity = ProductPageEntity(

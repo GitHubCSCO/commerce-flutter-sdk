@@ -1,8 +1,10 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
@@ -11,6 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,11 +23,11 @@ void _reloadShopPage(BuildContext context) {
   context.read<ShopPageBloc>().add(const ShopPageLoadEvent());
 }
 
-class ShopScreen extends StatelessWidget {
+class ShopScreen extends BaseStatelessWidget {
   const ShopScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return MultiBlocProvider(providers: [
       BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
       BlocProvider<ShopPageBloc>(
@@ -32,6 +35,12 @@ class ShopScreen extends StatelessWidget {
       ),
     ], child: const ShopPage());
   }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() => AnalyticsEvent(
+        AnalyticsConstants.eventViewScreen,
+        AnalyticsConstants.screenNameShop,
+      );
 }
 
 class ShopPage extends StatelessWidget with BaseDynamicContentScreen {

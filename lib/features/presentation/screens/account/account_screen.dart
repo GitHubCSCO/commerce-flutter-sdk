@@ -1,14 +1,15 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
@@ -16,6 +17,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/account_header/
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -40,17 +42,26 @@ void _reloadAccountPage(BuildContext context) {
   context.read<AccountPageBloc>().add(AccountPageLoadEvent());
 }
 
-class AccountScreen extends StatelessWidget {
+class AccountScreen extends BaseStatelessWidget {
   const AccountScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MultiBlocProvider(providers: [
-      BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
-      BlocProvider<AccountPageBloc>(
-          create: (context) =>
-              sl<AccountPageBloc>()..add(AccountPageLoadEvent())),
-    ], child: const AccountPage());
+  AnalyticsEvent getAnalyticsEvent() => AnalyticsEvent(
+        AnalyticsConstants.eventViewScreen,
+        AnalyticsConstants.screenNameAccount,
+      );
+
+  @override
+  Widget buildContent(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
+        BlocProvider<AccountPageBloc>(
+            create: (context) =>
+                sl<AccountPageBloc>()..add(AccountPageLoadEvent())),
+      ],
+      child: const AccountPage(),
+    );
   }
 }
 
@@ -128,6 +139,15 @@ class AccountPage extends StatelessWidget with BaseDynamicContentScreen {
                               horizontal: 15.0, vertical: 4.0),
                           child: GestureDetector(
                             onTap: () {
+                              context.read<RootBloc>().add(
+                                    RootAnalyticsEvent(
+                                      AnalyticsEvent(
+                                        AnalyticsConstants
+                                            .eventViewPrivacyPolicy,
+                                        AnalyticsConstants.screenNameAccount,
+                                      ),
+                                    ),
+                                  );
                               launchUrlString(context
                                   .read<AccountPageBloc>()
                                   .getPrivacyPolicyUrl()!);
@@ -148,6 +168,14 @@ class AccountPage extends StatelessWidget with BaseDynamicContentScreen {
                               horizontal: 15.0, vertical: 4.0),
                           child: GestureDetector(
                             onTap: () {
+                              context.read<RootBloc>().add(
+                                    RootAnalyticsEvent(
+                                      AnalyticsEvent(
+                                        AnalyticsConstants.eventViewTermsOfUse,
+                                        AnalyticsConstants.screenNameAccount,
+                                      ),
+                                    ),
+                                  );
                               launchUrlString(context
                                   .read<AccountPageBloc>()
                                   .getTermsOfUseUrl()!);

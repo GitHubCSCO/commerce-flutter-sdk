@@ -536,13 +536,10 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.shopSubCategory.name,
     path: AppRoute.shopSubCategory.fullPath,
     builder: (context, state) {
-      final categoryId = state.pathParameters['categoryId'];
-      final categoryTitle = state.pathParameters['categoryTitle'] ?? '';
-      final categoryPath = state.pathParameters['categoryPath'] ?? '';
+      final category = state.extra as Category;
       return SubCategoryScreen(
-          categoryId: categoryId,
-          categoryTitle: categoryTitle,
-          categoryPath: categoryPath);
+        category: category,
+      );
     },
     parent: shopCategory,
   );

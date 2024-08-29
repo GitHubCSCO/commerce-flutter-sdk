@@ -38,6 +38,7 @@ class AnalyticsConstants {
   static const String screenNameInvoices = "Invoices";
   static const String screenNameSavedPayments = "My Saved Payments";
   static const String screenNameInvoiceDetail = "Invoice Detail";
+  static const String screenNameInvoiceHistory = "Invoice History";
   static const String screenNameQuotes = "Quotes";
   static const String screenNameQuoteDetails = "QuoteDetails";
   static const String screenNameQuoteRequest = "Quote Request";
@@ -160,6 +161,8 @@ class AnalyticsConstants {
   static const String eventPropertyReferenceType = "reference_type";
   static const String eventPropertyBrandId = "brand_id";
   static const String eventPropertyBrandName = "brand_name";
+  static const String eventPropertyCategoryId = "category_id";
+  static const String eventPropertyCategoryName = "category_name";
   static const String eventPropertyProductLineId = "product_line_id";
   static const String eventPropertyProductLineName = "product_line_name";
   static const String eventPropertyFilterCount = "filter_count";

@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/cart_line_extentions.dart';
@@ -111,21 +112,29 @@ class CartLineWidget extends StatelessWidget {
             ),
           ),
           LineItemQuantityGroupWidget(
-            qtyOrdered: cartLineEntity.qtyOrdered?.toInt().toString(),
-            hasInsufficientInventory: cartLineEntity.hasInsufficientInventory,
-            onQtyChanged: (int? qty) {
-              if (qty == null) {
-                return;
-              }
-              if (cartLineEntity.qtyOrdered?.toInt() == qty) {
-                return;
-              }
+              qtyOrdered: cartLineEntity.qtyOrdered?.toInt().toString(),
+              hasInsufficientInventory: cartLineEntity.hasInsufficientInventory,
+              onQtyChanged: (int? qty) {
+                if (qty == null) {
+                  return;
+                }
+                if (cartLineEntity.qtyOrdered?.toInt() == qty) {
+                  return;
+                }
 
-              onCartQuantityChangedCallback(qty);
-            },
-            subtotalPriceText: cartLineEntity.updateSubtotalPriceValueText(),
-            hidePricingEnable: hidePricingEnable,
-          ),
+                onCartQuantityChangedCallback(qty);
+              },
+              subtotalPriceText: cartLineEntity.updateSubtotalPriceValueText(),
+              hidePricingEnable: hidePricingEnable,
+              isEditFieldDisabled: cartLineEntity.isPromotionItem == true),
+          Visibility(
+              visible: cartLineEntity.isPromotionItem ?? false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20.0, 0, 0, 10.0),
+                child: Text(cartLineEntity.promoItemMessage ?? "",
+                    style: OptiTextStyles.subtitle
+                        .copyWith(fontSize: 12.0, color: Colors.black54)),
+              )),
         ],
       ),
     );

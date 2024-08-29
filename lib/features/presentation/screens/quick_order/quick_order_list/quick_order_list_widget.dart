@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
@@ -31,43 +32,51 @@ class QuickOrderListWidget extends StatelessWidget {
           switch (state) {
             case OrderListInitialState():
             case OrderListFailedState():
-              return Column(
-                children: [
-                  const SizedBox(height: 20),
-                  Expanded(
-                    child: Text(
-                      'To add an item to your quick order form, search by keyword or item # then click on the item',
-                      style: OptiTextStyles.bodySmall,
-                    ),
-                  )
-                ],
-              );
+              return _instructionWidget(context);
             case OrderListLoadingState():
               return const Center(child: CircularProgressIndicator());
             case OrderListLoadedState():
-              return ListView.builder(
-                itemCount: state.quickOrderItemList.length,
-                itemBuilder: (context, index) {
-                  var entity = state.quickOrderItemList[index];
-                  var setting = state.productSettings!;
-                  return BlocProvider(
-                      create: (context) => sl<OrderItemPricingInventoryCubit>()
-                        ..getPricingAndInventory(entity, setting),
-                      child: scanningMode == ScanningMode.count
-                          ? CountInventoryItemWidget(
-                              callback: callback,
-                              quickOrderItemEntity: entity,
-                            )
-                          : QuickOrderItemWidget(
-                              callback: callback,
-                              quickOrderItemEntity: entity,
-                              setting: setting,
-                            ));
-                },
-              );
+              return state.quickOrderItemList.isEmpty
+                  ? _instructionWidget(context)
+                  : ListView.builder(
+                      itemCount: state.quickOrderItemList.length,
+                      itemBuilder: (context, index) {
+                        var entity = state.quickOrderItemList[index];
+                        var setting = state.productSettings!;
+                        return BlocProvider(
+                            create: (context) =>
+                                sl<OrderItemPricingInventoryCubit>()
+                                  ..getPricingAndInventory(entity, setting),
+                            child: scanningMode == ScanningMode.count
+                                ? CountInventoryItemWidget(
+                                    callback: callback,
+                                    quickOrderItemEntity: entity,
+                                  )
+                                : QuickOrderItemWidget(
+                                    callback: callback,
+                                    quickOrderItemEntity: entity,
+                                    setting: setting,
+                                  ));
+                      },
+                    );
             default:
               return Container();
           }
         });
+  }
+
+  Widget _instructionWidget(BuildContext context) {
+    final message = context.read<OrderListBloc>().instructionsMessage;
+    return Column(
+      children: [
+        const SizedBox(height: 20),
+        Expanded(
+          child: Text(
+            message ?? SiteMessageConstants.defaultValueQuickOrderInstructions,
+            style: OptiTextStyles.bodySmall,
+          ),
+        )
+      ],
+    );
   }
 }
