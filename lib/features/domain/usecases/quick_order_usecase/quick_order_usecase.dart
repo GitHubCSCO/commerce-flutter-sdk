@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/order_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
@@ -24,10 +25,45 @@ class QuickOrderUseCase extends BaseUseCase {
         .createAlternateCart(addCartModel);
   }
 
-  Future<void> removeAlternateCart() async {
+  void removeAlternateCart() async {
     await commerceAPIServiceProvider
         .getClientService()
         .removeAlternateCartCookie();
+  }
+
+  Future<List<QuickOrderItemEntity>> getPersistedData() async {
+    final quickOrderItemList = await commerceAPIServiceProvider
+        .getCacheService()
+        .loadPersistedData<List<QuickOrderItemEntity>>('quick_order')
+        .catchError((onError) {
+      return Future.value(<QuickOrderItemEntity>[]);
+    });
+    return quickOrderItemList;
+  }
+
+  void persistedData(QuickOrderItemEntity item,
+      {int? index, bool? replace}) async {
+    final quickOrderItemList = await commerceAPIServiceProvider
+        .getCacheService()
+        .loadPersistedData<List<QuickOrderItemEntity>>('quick_order')
+        .catchError((onError) {
+      return Future.value(<QuickOrderItemEntity>[]);
+    });
+
+    if (index != null) {
+      if (replace == true) {
+        quickOrderItemList[index] == item;
+      } else {
+        quickOrderItemList.insert(index, item);
+      }
+    } else {
+      quickOrderItemList.add(item);
+    }
+
+    await commerceAPIServiceProvider
+        .getCacheService()
+        .persistData<List<QuickOrderItemEntity>>(
+            'quick_order', quickOrderItemList);
   }
 
   Future<Result<ProductEntity, ErrorResponse>> getProduct(

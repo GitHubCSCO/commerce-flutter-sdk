@@ -57,6 +57,9 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         SiteMessageConstants.nameQuickOrderInstructions,
         SiteMessageConstants.defaultValueQuickOrderInstructions);
     _createAlternateCart();
+    final list = await _quickOrderUseCase.getPersistedData();
+    quickOrderItemList = list;
+    add(OrderListLoadEvent());
   }
 
   void _createAlternateCart() {
@@ -72,7 +75,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         scanningMode == ScanningMode.create) {
       _quickOrderUseCase.removeAlternateCart();
     }
-    super.close();
+    await super.close();
   }
 
   Future<void> _getProductSetting() async {
@@ -353,7 +356,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         }
 
         emit(OrderListLoadedState(quickOrderItemList, productSettings));
-      case Failure(errorResponse: final errorResponse):
+      case Failure():
         emit(OrderListLoadedState(quickOrderItemList, productSettings));
     }
   }
@@ -410,7 +413,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
           emit(OrderListLoadedState(quickOrderItemList, productSettings));
         }
-      case Failure(errorResponse: final errorResponse):
+      case Failure():
         emit(OrderListLoadedState(quickOrderItemList, productSettings));
     }
   }
@@ -573,6 +576,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
       if (scanningMode == ScanningMode.count) {
         quickOrderItemList[itemIndexToFocus] = item;
+        _quickOrderUseCase.persistedData(item,
+            index: itemIndexToFocus, replace: true);
       } else {
         isPreviouslyScannedItem = true;
         // scrollToItemIndex = itemIndexToFocus;
@@ -581,9 +586,11 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     } else {
       if (scanned) {
         quickOrderItemList.insert(0, item);
+        _quickOrderUseCase.persistedData(item, index: 0);
         // item.shouldFocusOnQuantity = true;
       } else {
         quickOrderItemList.add(item);
+        _quickOrderUseCase.persistedData(item);
       }
     }
   }
