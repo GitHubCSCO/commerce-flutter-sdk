@@ -76,12 +76,16 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     super.close();
   }
 
-  Future<void> _onOrderListLoadEvent(
-      OrderListLoadEvent event, Emitter<OrderListState> emit) async {
+  Future<void> _getProductSetting() async {
     if (productSettings == null) {
       var result = await _quickOrderUseCase.getProductSetting();
       productSettings = result is Success ? (result as Success).value : null;
     }
+  }
+
+  Future<void> _onOrderListLoadEvent(
+      OrderListLoadEvent event, Emitter<OrderListState> emit) async {
+    await _getProductSetting();
 
     if (quickOrderItemList.isNotEmpty) {
       emit(OrderListLoadedState(quickOrderItemList, productSettings));
@@ -190,10 +194,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     emit(OrderListLoadingState());
     quickOrderItemList
         .removeWhere((e) => e.productEntity == event.productEntity);
-    if (productSettings == null) {
-      var result = await _quickOrderUseCase.getProductSetting();
-      productSettings = result is Success ? (result as Success).value : null;
-    }
+    await _getProductSetting();
 
     if (quickOrderItemList.isNotEmpty) {
       emit(OrderListLoadedState(quickOrderItemList, productSettings));
@@ -241,6 +242,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   Future<void> _onOrderListAddStyleProductEvent(
       OrderListAddStyleProductEvent event, Emitter<OrderListState> emit) async {
     emit(OrderListLoadingState());
+    await _getProductSetting();
+
     final result = await _quickOrderUseCase
         .getStyleProduct(event.styledProductEntity.productId!);
     switch (result) {
@@ -268,6 +271,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
       OrderListAddVmiStyleProductEvent event,
       Emitter<OrderListState> emit) async {
     emit(OrderListLoadingState());
+    await _getProductSetting();
+
     final result = await _quickOrderUseCase
         .getStyleProduct(event.styledProductEntity.productId!);
     switch (result) {
@@ -297,6 +302,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   Future<void> _onOrderListAddVmiBinEvent(
       OrderListAddVmiBinEvent event, Emitter<OrderListState> emit) async {
     emit(OrderListLoadingState());
+    await _getProductSetting();
 
     var newItem = _convertVmiBinProductToQuickOrderItemEntity(
         event.vmiBinEntity, event.quantity);
@@ -307,6 +313,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
   Future<void> _addOrderItem(Result<ProductEntity, ErrorResponse> result,
       Emitter<OrderListState> emit) async {
+    await _getProductSetting();
+
     switch (result) {
       case Success(value: final product):
         if (product == null) {
@@ -353,6 +361,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
   Future<void> _addVmiOrderItem(Result<VmiBinModelEntity, ErrorResponse> result,
       Emitter<OrderListState> emit) async {
+    await _getProductSetting();
+
     switch (result) {
       case Success(value: final vmiBin):
         if (vmiBin == null || vmiBin.productEntity == null) {
