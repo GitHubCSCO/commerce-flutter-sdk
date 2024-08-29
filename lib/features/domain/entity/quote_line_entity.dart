@@ -77,7 +77,8 @@ class QuoteLineEntity extends CartLineEntity {
       this.maxQty,
       this.hideInventoryEnable,
       this.hidePricingEnable,
-      this.quoteLinePricingBreakList})
+      this.quoteLinePricingBreakList,
+      super.promoItemMessage})
       : super();
   @override
   List<Object?> get props => [pricingRfq, maxQty];
@@ -135,7 +136,8 @@ class QuoteLineEntity extends CartLineEntity {
       String? quoteId,
       List<QuoteLinePricingEntity>? quoteLinePricingBreakList,
       bool? hidePricingEnable,
-      bool? hideInventoryEnable}) {
+      bool? hideInventoryEnable,
+      String? promoItemMessage}) {
     return QuoteLineEntity(
         quoteLinePricingBreakList:
             quoteLinePricingBreakList ?? this.quoteLinePricingBreakList,
@@ -194,6 +196,7 @@ class QuoteLineEntity extends CartLineEntity {
         unitOfMeasureDisplay: unitOfMeasureDisplay ?? this.unitOfMeasureDisplay,
         vmiBinId: vmiBinId ?? this.vmiBinId,
         hidePricingEnable: hidePricingEnable ?? this.hidePricingEnable,
-        hideInventoryEnable: hideInventoryEnable ?? this.hideInventoryEnable);
+        hideInventoryEnable: hideInventoryEnable ?? this.hideInventoryEnable,
+        promoItemMessage: promoItemMessage ?? this.promoItemMessage);
   }
 }

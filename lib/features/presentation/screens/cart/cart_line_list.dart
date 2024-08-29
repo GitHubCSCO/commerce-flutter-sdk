@@ -56,6 +56,9 @@ class CartLineWidgetList extends StatelessWidget {
                 children: cartLineEntities
                     .map((cartLineEntity) => CartLineWidget(
                           cartLineEntity: cartLineEntity,
+                          showRemoveButton: context
+                              .read<CartContentBloc>()
+                              .showRemoveButtonForPromotionItem(cartLineEntity),
                           onCartQuantityChangedCallback: (quantity) {
                             context.read<CartContentBloc>().add(
                                   CartContentQuantityChangedEvent(
