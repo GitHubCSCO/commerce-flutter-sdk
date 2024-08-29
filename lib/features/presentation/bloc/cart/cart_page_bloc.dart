@@ -21,6 +21,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
   Session? session;
   bool hasCheckout = true;
   ProductSettings? productSettings;
+  String? promoItemMessage;
   CartPageBloc(
       {required CartUseCase cartUseCase,
       required PricingInventoryUseCase pricingInventoryUseCase})
@@ -36,6 +37,9 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
       CartPageLoadEvent event, Emitter<CartPageState> emit) async {
     emit(CartPageLoadingState());
 
+    promoItemMessage = await _cartUseCase.getSiteMessage(
+        SiteMessageConstants.nameCartProductPromotionItem,
+        SiteMessageConstants.defaultValueCartPromotionItem);
     hasCheckout = await _cartUseCase.hasCheckout();
 
     try {
@@ -143,7 +147,8 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
                   productSettings) &&
               cartLine.availability.messageType != 0;
       cartLineEntity = cartLineEntity.copyWith(
-          showInventoryAvailability: shouldShowWarehouseInventoryButton);
+          showInventoryAvailability: shouldShowWarehouseInventoryButton,
+          promoItemMessage: promoItemMessage);
       cartlines.add(cartLineEntity);
     }
     return cartlines;
