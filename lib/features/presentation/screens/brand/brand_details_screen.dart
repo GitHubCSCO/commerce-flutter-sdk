@@ -10,6 +10,7 @@ import 'package:commerce_flutter_app/features/domain/extensions/url_string_exten
 import 'package:commerce_flutter_app/features/domain/mapper/brand_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/brand/brand_details/brand_details_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,9 @@ class BrandDetailsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(brand.name ?? '', style: OptiTextStyles.titleLarge),
         actions: [
-          BottomMenuWidget(websitePath: brand.detailPagePath),
+          BottomMenuWidget(
+              websitePath: brand.detailPagePath,
+              toolMenuList: getToolMenu(context, brand)),
         ],
       ),
       body: BlocBuilder<BrandDetailsCubit, BrandDetailsState>(
@@ -106,6 +109,20 @@ class BrandDetailsPage extends StatelessWidget {
         }
       }),
     );
+  }
+
+  List<ToolMenu> getToolMenu(BuildContext context, Brand brand) {
+    List<ToolMenu> list = [];
+    if (brand.externalUrl != null && brand.externalUrl!.isNotEmpty) {
+      list.add(
+        ToolMenu(
+            title: LocalizationConstants.viewBrandWebsite.localized(),
+            action: () {},
+            isUrl: true,
+            url: brand.externalUrl),
+      );
+    }
+    return list;
   }
 }
 
