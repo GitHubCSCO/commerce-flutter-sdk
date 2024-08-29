@@ -1,9 +1,11 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/product_list_type.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
@@ -19,6 +21,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_c
 import 'package:commerce_flutter_app/features/presentation/cubit/search_history/search_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/extra/delayer.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
@@ -30,11 +33,11 @@ import 'package:go_router/go_router.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class SearchScreen extends StatelessWidget {
+class SearchScreen extends BaseStatelessWidget {
   const SearchScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return MultiBlocProvider(providers: [
       BlocProvider<PullToRefreshBloc>(
           create: (context) => sl<PullToRefreshBloc>()),
@@ -48,6 +51,12 @@ class SearchScreen extends StatelessWidget {
       ),
     ], child: SearchPage());
   }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() => AnalyticsEvent(
+        AnalyticsConstants.eventViewScreen,
+        AnalyticsConstants.screenNameSearchLanding,
+      );
 }
 
 class SearchPage extends StatefulWidget {
@@ -134,11 +143,7 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
             if (state is AutoCompleteCategoryState) {
               AppRoute.shopSubCategory.navigateBackStack(
                 context,
-                pathParameters: {
-                  "categoryId": state.category.id.toString(),
-                  "categoryTitle": state.category.shortDescription.toString(),
-                  "categoryPath": state.category.path.toString()
-                },
+                extra: state.category,
               );
             } else if (state is AutoCompleteBrandState) {
               AppRoute.shopBrandDetails.navigateBackStack(

@@ -1,10 +1,13 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/mixins/list_grid_view_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/brand_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/brand_category/brand_category_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_grid_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_list_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
@@ -13,18 +16,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class BrandCategoryScreen extends StatelessWidget {
+class BrandCategoryScreen extends BaseStatelessWidget {
   Brand brand;
   BrandCategory? brandCategory;
   GetBrandSubCategoriesResult? brandSubCategories;
-  BrandCategoryScreen(
-      {super.key,
-      required this.brand,
-      this.brandCategory,
-      this.brandSubCategories});
+  BrandCategoryScreen({
+    super.key,
+    required this.brand,
+    this.brandCategory,
+    this.brandSubCategories,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return BlocProvider<BrandCategoryBloc>(
       create: (context) => sl<BrandCategoryBloc>()
         ..add(BrandCategoryLoadEvent(
@@ -34,6 +38,27 @@ class BrandCategoryScreen extends StatelessWidget {
       child: BrandCategoryPage(
           brand: brand, categoryTitle: brandCategory?.categoryName),
     );
+  }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() {
+    var viewScreenEvent = AnalyticsEvent(
+      AnalyticsConstants.eventViewScreen,
+      AnalyticsConstants.screenNameBrandCategory,
+    );
+    viewScreenEvent.withProperty(
+        name: AnalyticsConstants.eventPropertyBrandId, strValue: brand.id);
+    viewScreenEvent.withProperty(
+        name: AnalyticsConstants.eventPropertyBrandName, strValue: brand.name);
+    if (brandCategory != null) {
+      viewScreenEvent.withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceId,
+          strValue: brandCategory!.categoryId);
+      viewScreenEvent.withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceName,
+          strValue: brandCategory!.categoryName);
+    }
+    return viewScreenEvent;
   }
 }
 

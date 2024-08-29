@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
@@ -6,12 +7,15 @@ import 'package:commerce_flutter_app/core/extensions/string_format_extension.dar
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/converter/discount_value_convertert.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/enums/invoice_status.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/two_texts_row.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/bottom_menu_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/invoice_history/invoice_detail/invoice_detail_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +23,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class InvoiceDetailScreen extends StatelessWidget {
+class InvoiceDetailScreen extends BaseStatelessWidget {
   final String invoiceNumber;
 
   const InvoiceDetailScreen({
@@ -28,7 +32,7 @@ class InvoiceDetailScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -71,6 +75,16 @@ class InvoiceDetailScreen extends StatelessWidget {
       }),
     );
   }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() {
+    var viewScreenEvent = AnalyticsEvent(AnalyticsConstants.eventViewScreen,
+            AnalyticsConstants.screenNameInvoiceDetail)
+        .withProperty(
+            name: AnalyticsConstants.screenNameInvoiceDetail,
+            strValue: invoiceNumber);
+    return viewScreenEvent;
+  }
 }
 
 class InvoiceDetailPage extends StatelessWidget {
@@ -97,6 +111,17 @@ class InvoiceDetailPage extends StatelessWidget {
               ToolMenu(
                 title: LocalizationConstants.print.localized(),
                 action: () {
+                  context.read<RootBloc>().add(
+                        RootAnalyticsEvent(
+                          AnalyticsEvent(
+                            AnalyticsConstants.eventPrintPdf,
+                            AnalyticsConstants.screenNameInvoiceDetail,
+                          ).withProperty(
+                              name: AnalyticsConstants.eventPropertyUrl,
+                              strValue: PrintPaths.invoiceDetailPrintPath
+                                  .format([invoiceNumber])),
+                        ),
+                      );
                   context.read<BottomMenuCubit>().loadWebsiteUrl(
                         PrintPaths.invoiceDetailPrintPath
                             .format([invoiceNumber]),

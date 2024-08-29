@@ -30,7 +30,7 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
         }
         break;
       case Failure(errorResponse: final errorResponse):
-        await _languageUsecase.trackError(errorResponse);
+        _languageUsecase.trackError(errorResponse);
         emit(LanguageFailedToLoad(errorResponse.extractErrorMessage() ??
             "Language could not be loaded."));
         break;
@@ -52,7 +52,7 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
         }
         break;
       case Failure(errorResponse: final errorResponse):
-        await _languageUsecase.trackError(errorResponse);
+        _languageUsecase.trackError(errorResponse);
         emit(LanguageFailedToLoad(errorResponse.extractErrorMessage() ??
             "Language could not be loaded."));
         break;
@@ -75,7 +75,7 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
         }
         break;
       case Failure(errorResponse: final errorResponse):
-        await _languageUsecase.trackError(errorResponse);
+        _languageUsecase.trackError(errorResponse);
         emit(LanguageFailedToLoad(errorResponse.extractErrorMessage() ??
             "Language could not be changed."));
         break;

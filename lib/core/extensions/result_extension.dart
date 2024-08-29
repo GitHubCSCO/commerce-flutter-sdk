@@ -11,7 +11,7 @@ extension GetResultSuccessValue<S, E> on Result<S, E> {
     if (trackError && this is Failure<S, E>) {
       sl<ITrackingService>()
           .trackError((this as Failure<S, E>).errorResponse)
-          .catchError((e, s) {});
+          .ignore();
     }
 
     return null;

@@ -227,8 +227,10 @@ mixin BaseActionItemWidget {
           ),
           DialogPlainButton(
             onPressed: () {
+              context.read<LogoutCubit>().logout().catchError((e) {
+                FlutterError.reportError(e);
+              });
               Navigator.of(context).pop();
-              context.read<LogoutCubit>().logout();
             },
             child: Text(LocalizationConstants.oK.localized()),
           ),
