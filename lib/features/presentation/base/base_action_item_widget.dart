@@ -226,11 +226,11 @@ mixin BaseActionItemWidget {
             child: Text(LocalizationConstants.cancel.localized()),
           ),
           DialogPlainButton(
-            onPressed: () async {
-              await context.read<LogoutCubit>().logout();
-              if (context.mounted) {
-                Navigator.of(context).pop();
-              }
+            onPressed: () {
+              context.read<LogoutCubit>().logout().catchError((e) {
+                FlutterError.reportError(e);
+              });
+              Navigator.of(context).pop();
             },
             child: Text(LocalizationConstants.oK.localized()),
           ),
