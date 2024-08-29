@@ -138,208 +138,203 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
               },
             ),
           ),
-          BlocConsumer<WishListDetailsCubit, WishListDetailsState>(
-            listener: (context, state) {
-              if (state.status == WishListStatus.listAddToCartSuccess) {
-                context.read<CartCountCubit>().onCartItemChange();
-                CustomSnackBar.showWishListAddToCart(context);
-              }
-
-              if (state.status == WishListStatus.listAddToCartFailure) {
-                CustomSnackBar.showWishListAddToCartError(context);
-              }
-
-              if (state.status == WishListStatus.listAddToCartFailureTimeOut) {
-                CustomSnackBar.showSnackBarMessage(
-                  context,
-                  LocalizationConstants.addWishListToCartTimeoutCheckCartAgain
-                      .localized(),
-                  seconds: 3,
-                );
-              }
-
-              if (state.status ==
-                  WishListStatus.listAddToCartFailureOutOfStock) {
-                displayDialogWidget(
-                  context: context,
-                  title: LocalizationConstants.productsOutOfStock.localized(),
-                  message: LocalizationConstants.productsOutOfStockMessage
-                      .localized(),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        context
-                            .read<WishListDetailsCubit>()
-                            .addWishListToCart(ignoreOutOfStock: true);
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(LocalizationConstants.oK.localized()),
-                    )
-                  ],
-                );
-              }
-
-              if (state.status == WishListStatus.errorModification) {
-                displayDialogWidget(
-                  context: context,
-                  title: LocalizationConstants.error.localized(),
-                  message: state.message ?? '',
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(LocalizationConstants.oK.localized()),
-                    )
-                  ],
-                );
-              }
-
-              if (state.status == WishListStatus.listLineAddToCartSuccess) {
-                CustomSnackBar.showProductAddedToCart(context);
-                context.read<CartCountCubit>().onCartItemChange();
-              }
-
-              if (state.status == WishListStatus.listLineAddToCartFailure) {
-                CustomSnackBar.showAddToCartFailed(context);
-              }
-
-              if (state.status == WishListStatus.listLineDeleteSuccess) {
-                CustomSnackBar.showProductDeleted(context);
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
                 context
                     .read<WishListDetailsCubit>()
-                    .loadWishListLines(state.wishList);
-              }
+                    .loadWishListDetails(widget.wishListId);
+              },
+              child: BlocConsumer<WishListDetailsCubit, WishListDetailsState>(
+                listener: (context, state) {
+                  if (state.status == WishListStatus.listAddToCartSuccess) {
+                    context.read<CartCountCubit>().onCartItemChange();
+                    CustomSnackBar.showWishListAddToCart(context);
+                  }
 
-              if (state.status == WishListStatus.listLineDeleteFailure) {
-                CustomSnackBar.showAddToCartFailed(context);
-              }
+                  if (state.status == WishListStatus.listAddToCartFailure) {
+                    CustomSnackBar.showWishListAddToCartError(context);
+                  }
 
-              if (state.status == WishListStatus.listUpdateSuccess) {
-                CustomSnackBar.showSnackBarMessage(
-                  context,
-                  LocalizationConstants.listSaved.localized(),
-                );
-                if (widget.onWishListUpdated != null) {
-                  widget.onWishListUpdated!();
-                }
-              }
+                  if (state.status ==
+                      WishListStatus.listAddToCartFailureTimeOut) {
+                    CustomSnackBar.showSnackBarMessage(
+                      context,
+                      LocalizationConstants
+                          .addWishListToCartTimeoutCheckCartAgain
+                          .localized(),
+                      seconds: 3,
+                    );
+                  }
 
-              if (state.status == WishListStatus.listUpdateFailure) {
-                CustomSnackBar.showSnackBarMessage(
-                  context,
-                  LocalizationConstants.renameFailed.localized(),
-                );
-              }
+                  if (state.status ==
+                      WishListStatus.listAddToCartFailureOutOfStock) {
+                    displayDialogWidget(
+                      context: context,
+                      title:
+                          LocalizationConstants.productsOutOfStock.localized(),
+                      message: LocalizationConstants.productsOutOfStockMessage
+                          .localized(),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            context
+                                .read<WishListDetailsCubit>()
+                                .addWishListToCart(ignoreOutOfStock: true);
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(LocalizationConstants.oK.localized()),
+                        )
+                      ],
+                    );
+                  }
 
-              if (state.status == WishListStatus.listDeleteLoading) {
-                showPleaseWait(context);
-              }
+                  if (state.status == WishListStatus.errorModification) {
+                    displayDialogWidget(
+                      context: context,
+                      title: LocalizationConstants.error.localized(),
+                      message: state.message ?? '',
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(LocalizationConstants.oK.localized()),
+                        )
+                      ],
+                    );
+                  }
 
-              if (state.status == WishListStatus.listDeleteSuccess) {
-                Navigator.of(context, rootNavigator: true).pop();
-                CustomSnackBar.showSnackBarMessage(
-                  context,
-                  LocalizationConstants.listDeleted.localized(),
-                );
-                if (widget.onWishListDeleted != null) {
-                  widget.onWishListDeleted!();
-                }
+                  if (state.status == WishListStatus.listLineAddToCartSuccess) {
+                    CustomSnackBar.showProductAddedToCart(context);
+                    context.read<CartCountCubit>().onCartItemChange();
+                  }
 
-                Navigator.of(context).pop();
-              }
+                  if (state.status == WishListStatus.listLineAddToCartFailure) {
+                    CustomSnackBar.showAddToCartFailed(context);
+                  }
 
-              if (state.status == WishListStatus.listDeleteFailure) {
-                Navigator.of(context, rootNavigator: true).pop();
-                displayDialogWidget(
-                  context: context,
-                  title: LocalizationConstants.error.localized(),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(LocalizationConstants.oK.localized()),
-                    )
-                  ],
-                );
-              }
+                  if (state.status == WishListStatus.listLineDeleteSuccess) {
+                    CustomSnackBar.showProductDeleted(context);
+                    context
+                        .read<WishListDetailsCubit>()
+                        .loadWishListLines(state.wishList);
+                  }
 
-              if (state.status == WishListStatus.listCopySuccess) {
-                Navigator.of(context, rootNavigator: true).pop();
-                CustomSnackBar.showSnackBarMessage(
-                  context,
-                  LocalizationConstants.listCopied.localized(),
-                );
+                  if (state.status == WishListStatus.listLineDeleteFailure) {
+                    CustomSnackBar.showAddToCartFailed(context);
+                  }
 
-                if (widget.onWishListUpdated != null) {
-                  widget.onWishListUpdated!();
-                }
-              }
+                  if (state.status == WishListStatus.listUpdateSuccess) {
+                    CustomSnackBar.showSnackBarMessage(
+                      context,
+                      LocalizationConstants.listSaved.localized(),
+                    );
+                    if (widget.onWishListUpdated != null) {
+                      widget.onWishListUpdated!();
+                    }
+                  }
 
-              if (state.status == WishListStatus.listCopyLoading) {
-                showPleaseWait(context);
-              }
+                  if (state.status == WishListStatus.listUpdateFailure) {
+                    CustomSnackBar.showSnackBarMessage(
+                      context,
+                      LocalizationConstants.renameFailed.localized(),
+                    );
+                  }
 
-              if (state.status == WishListStatus.listCopyFailure) {
-                Navigator.of(context, rootNavigator: true).pop();
-                CustomSnackBar.showSnackBarMessage(
-                  context,
-                  LocalizationConstants.copyFailed.localized(),
-                );
-              }
+                  if (state.status == WishListStatus.listDeleteLoading) {
+                    showPleaseWait(context);
+                  }
 
-              if (state.status == WishListStatus.listLeaveSuccess) {
-                if (widget.onWishListUpdated != null) {
-                  widget.onWishListUpdated!();
-                }
+                  if (state.status == WishListStatus.listDeleteSuccess) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    CustomSnackBar.showSnackBarMessage(
+                      context,
+                      LocalizationConstants.listDeleted.localized(),
+                    );
+                    if (widget.onWishListDeleted != null) {
+                      widget.onWishListDeleted!();
+                    }
 
-                Navigator.of(context).pop();
-              }
+                    Navigator.of(context).pop();
+                  }
 
-              if (state.status == WishListStatus.listLeaveFailure) {
-                displayDialogWidget(
-                  context: context,
-                  title: LocalizationConstants.error.localized(),
-                  message: SiteMessageConstants
-                      .defaultMobileAppAlertCommunicationError,
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(LocalizationConstants.oK.localized()),
-                    )
-                  ],
-                );
-              }
-            },
-            builder: (context, state) {
-              if (state.status == WishListStatus.loading ||
-                  state.status == WishListStatus.listAddToCartLoading) {
-                return const Expanded(
-                    child: Center(child: CircularProgressIndicator()));
-              } else if (state.status == WishListStatus.failure) {
-                return Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () async {
-                      context
-                          .read<WishListDetailsCubit>()
-                          .loadWishListDetails(widget.wishListId);
-                    },
-                    child: Center(
-                        child: Text(LocalizationConstants.error.localized())),
-                  ),
-                );
-              } else if (context.read<WishListDetailsCubit>().emptyWishList) {
-                return Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () async {
-                      context
-                          .read<WishListDetailsCubit>()
-                          .loadWishListDetails(widget.wishListId);
-                    },
-                    child: CustomScrollView(
+                  if (state.status == WishListStatus.listDeleteFailure) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    displayDialogWidget(
+                      context: context,
+                      title: LocalizationConstants.error.localized(),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(LocalizationConstants.oK.localized()),
+                        )
+                      ],
+                    );
+                  }
+
+                  if (state.status == WishListStatus.listCopySuccess) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    CustomSnackBar.showSnackBarMessage(
+                      context,
+                      LocalizationConstants.listCopied.localized(),
+                    );
+
+                    if (widget.onWishListUpdated != null) {
+                      widget.onWishListUpdated!();
+                    }
+                  }
+
+                  if (state.status == WishListStatus.listCopyLoading) {
+                    showPleaseWait(context);
+                  }
+
+                  if (state.status == WishListStatus.listCopyFailure) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    CustomSnackBar.showSnackBarMessage(
+                      context,
+                      LocalizationConstants.copyFailed.localized(),
+                    );
+                  }
+
+                  if (state.status == WishListStatus.listLeaveSuccess) {
+                    if (widget.onWishListUpdated != null) {
+                      widget.onWishListUpdated!();
+                    }
+
+                    Navigator.of(context).pop();
+                  }
+
+                  if (state.status == WishListStatus.listLeaveFailure) {
+                    displayDialogWidget(
+                      context: context,
+                      title: LocalizationConstants.error.localized(),
+                      message: SiteMessageConstants
+                          .defaultMobileAppAlertCommunicationError,
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(LocalizationConstants.oK.localized()),
+                        )
+                      ],
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  if (state.status == WishListStatus.loading ||
+                      state.status == WishListStatus.listAddToCartLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state.status == WishListStatus.failure) {
+                    return Center(
+                        child: Text(LocalizationConstants.error.localized()));
+                  } else if (context
+                      .read<WishListDetailsCubit>()
+                      .emptyWishList) {
+                    return CustomScrollView(
                       slivers: <Widget>[
                         SliverFillRemaining(
                           child: Center(
@@ -348,26 +343,18 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                );
-              } else if (context.read<WishListDetailsCubit>().noSearchResult) {
-                return Expanded(
-                  child: Center(
-                    child: Text(
-                      SiteMessageConstants.defaultDealerLocatorNoResultsMessage,
-                    ),
-                  ),
-                );
-              }
-              return Expanded(
-                child: RefreshIndicator(
-                  onRefresh: () async {
-                    context
-                        .read<WishListDetailsCubit>()
-                        .loadWishListDetails(widget.wishListId);
-                  },
-                  child: Column(
+                    );
+                  } else if (context
+                      .read<WishListDetailsCubit>()
+                      .noSearchResult) {
+                    return Center(
+                      child: Text(
+                        SiteMessageConstants
+                            .defaultDealerLocatorNoResultsMessage,
+                      ),
+                    );
+                  }
+                  return Column(
                     children: [
                       if (!context.read<WishListDetailsCubit>().emptyWishList)
                         Container(
@@ -424,10 +411,10 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                         ),
                       ),
                     ],
-                  ),
-                ),
-              );
-            },
+                  );
+                },
+              ),
+            ),
           ),
         ],
       ),

@@ -65,43 +65,36 @@ class _SubCategoryPageState extends State<SubCategoryPage>
               toolMenuList: getToolMenu(context)),
         ],
       ),
-      body: BlocBuilder<CategoryBloc, CategoryState>(
-        builder: (context, state) {
-          switch (state) {
-            case CategoryInitial():
-            case CategoryLoading():
-              return const Center(child: CircularProgressIndicator());
-            case CategoryLoaded():
-              return RefreshIndicator(
-                onRefresh: () async {
-                  context.read<CategoryBloc>().add(
-                        CategoryLoadEvent(categoryId: widget.categoryId),
-                      );
-                },
-                child: Container(
+      body: RefreshIndicator(
+        onRefresh: () async {
+          context.read<CategoryBloc>().add(
+                CategoryLoadEvent(categoryId: widget.categoryId),
+              );
+        },
+        child: BlocBuilder<CategoryBloc, CategoryState>(
+          builder: (context, state) {
+            switch (state) {
+              case CategoryInitial():
+              case CategoryLoading():
+                return const Center(child: CircularProgressIndicator());
+              case CategoryLoaded():
+                return Container(
                   child: isGridView
                       ? CategoryGridWidget(
                           list: state.list, callback: _handleCategoryClick)
                       : CategoryListWidget(
                           list: state.list, callback: _handleCategoryClick),
-                ),
-              );
-            case CategoryFailed():
-            default:
-              return RefreshIndicator(
-                onRefresh: () async {
-                  context.read<CategoryBloc>().add(
-                        CategoryLoadEvent(categoryId: widget.categoryId),
-                      );
-                },
-                child: const CustomScrollView(
+                );
+              case CategoryFailed():
+              default:
+                return const CustomScrollView(
                   slivers: <Widget>[
                     SliverFillRemaining(child: Center()),
                   ],
-                ),
-              );
-          }
-        },
+                );
+            }
+          },
+        ),
       ),
     );
   }

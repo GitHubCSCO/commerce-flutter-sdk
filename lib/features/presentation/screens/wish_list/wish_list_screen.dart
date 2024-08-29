@@ -121,58 +121,50 @@ class _WishListsPageState extends State<WishListsPage> {
               },
             ),
           ),
-          BlocConsumer<WishListCubit, WishListState>(
-            listener: (context, state) {
-              if (state.status == WishListStatus.listDeleteLoading) {
-                showPleaseWait(context);
-              }
-
-              if (state.status == WishListStatus.listDeleteSuccess) {
-                Navigator.of(context, rootNavigator: true).pop();
-                CustomSnackBar.showSnackBarMessage(
-                  context,
-                  LocalizationConstants.listDeleted.localized(),
-                );
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
                 context.read<WishListCubit>().loadWishLists();
-              }
+              },
+              child: BlocConsumer<WishListCubit, WishListState>(
+                listener: (context, state) {
+                  if (state.status == WishListStatus.listDeleteLoading) {
+                    showPleaseWait(context);
+                  }
 
-              if (state.status == WishListStatus.listDeleteFailure) {
-                Navigator.of(context, rootNavigator: true).pop();
-                displayDialogWidget(
-                  context: context,
-                  title: LocalizationConstants.error.localized(),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(LocalizationConstants.oK.localized()),
-                    )
-                  ],
-                );
-              }
-            },
-            builder: (context, state) {
-              if (state.status == WishListStatus.loading) {
-                return const Expanded(
-                    child: Center(child: CircularProgressIndicator()));
-              } else if (state.status == WishListStatus.failure) {
-                return Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () async {
-                      context.read<WishListCubit>().loadWishLists();
-                    },
-                    child: Center(
-                        child: Text(LocalizationConstants.error.localized())),
-                  ),
-                );
-              } else if (context.read<WishListCubit>().noWishListFound) {
-                return Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () async {
-                      context.read<WishListCubit>().loadWishLists();
-                    },
-                    child: CustomScrollView(
+                  if (state.status == WishListStatus.listDeleteSuccess) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    CustomSnackBar.showSnackBarMessage(
+                      context,
+                      LocalizationConstants.listDeleted.localized(),
+                    );
+                    context.read<WishListCubit>().loadWishLists();
+                  }
+
+                  if (state.status == WishListStatus.listDeleteFailure) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    displayDialogWidget(
+                      context: context,
+                      title: LocalizationConstants.error.localized(),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(LocalizationConstants.oK.localized()),
+                        )
+                      ],
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  if (state.status == WishListStatus.loading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state.status == WishListStatus.failure) {
+                    return Center(
+                        child: Text(LocalizationConstants.error.localized()));
+                  } else if (context.read<WishListCubit>().noWishListFound) {
+                    return CustomScrollView(
                       slivers: <Widget>[
                         SliverFillRemaining(
                           child: Center(
@@ -181,16 +173,9 @@ class _WishListsPageState extends State<WishListsPage> {
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                );
-              }
-              return Expanded(
-                child: RefreshIndicator(
-                  onRefresh: () async {
-                    context.read<WishListCubit>().loadWishLists();
-                  },
-                  child: Column(
+                    );
+                  }
+                  return Column(
                     children: [
                       if (!context.read<WishListCubit>().noWishListFound)
                         Container(
@@ -229,10 +214,10 @@ class _WishListsPageState extends State<WishListsPage> {
                             state.wishLists.wishListCollection ?? [],
                       ),
                     ],
-                  ),
-                ),
-              );
-            },
+                  );
+                },
+              ),
+            ),
           )
         ],
       ),

@@ -94,38 +94,33 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
               },
             ),
           ),
-          BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
-            builder: (context, state) {
-              switch (state.orderStatus) {
-                case OrderStatus.loading || OrderStatus.initial:
-                  return const Expanded(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                context.read<OrderHistoryCubit>().initialize(
+                      isFromVMI: isFromVMI ?? false,
+                    );
+              },
+              child: BlocBuilder<OrderHistoryCubit, OrderHistoryState>(
+                builder: (context, state) {
+                  switch (state.orderStatus) {
+                    case OrderStatus.loading || OrderStatus.initial:
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
 
-                case OrderStatus.failure:
-                  return Expanded(
-                    child: RefreshIndicator(
-                      onRefresh: () async {
-                        context.read<OrderHistoryCubit>().initialize(
-                              isFromVMI: isFromVMI ?? false,
-                            );
-                      },
-                      child: const Center(
-                        child: Text('Error loading orders'),
-                      ),
-                    ),
-                  );
-                default:
-                  return Expanded(
-                    child: RefreshIndicator(
-                      onRefresh: () async {
-                        context.read<OrderHistoryCubit>().initialize(
-                              isFromVMI: isFromVMI ?? false,
-                            );
-                      },
-                      child: Column(
+                    case OrderStatus.failure:
+                      return const CustomScrollView(
+                        slivers: <Widget>[
+                          SliverFillRemaining(
+                            child: Center(
+                              child: Text('Error loading orders'),
+                            ),
+                          ),
+                        ],
+                      );
+                    default:
+                      return Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Container(
@@ -168,11 +163,11 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
                             hidePricingEnable: state.hidePricingEnable,
                           ),
                         ],
-                      ),
-                    ),
-                  );
-              }
-            },
+                      );
+                  }
+                },
+              ),
+            ),
           ),
         ],
       ),

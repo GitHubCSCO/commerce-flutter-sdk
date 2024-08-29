@@ -94,37 +94,28 @@ class QuotePageState extends State<QuotePage> {
               tabTitle0: LocalizationConstants.pending.localized(),
               tabTitle1: LocalizationConstants.activeJobs.localized(),
               tabWidget0: Expanded(
-                child: BlocBuilder<QuoteBloc, QuoteState>(builder: (_, state) {
-                  if (state is QuoteFailed) {
-                    return RefreshIndicator(
-                      onRefresh: () async {
-                        context.read<QuoteBloc>().add(
-                              QuoteLoadEvent(
-                                quotePageType: QuotePageType.pending,
-                                quoteParameters: null,
-                              ),
-                            );
-                      },
-                      child: const Center(
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<QuoteBloc>().add(
+                          QuoteLoadEvent(
+                            quotePageType: QuotePageType.pending,
+                            quoteParameters: null,
+                          ),
+                        );
+                  },
+                  child:
+                      BlocBuilder<QuoteBloc, QuoteState>(builder: (_, state) {
+                    if (state is QuoteFailed) {
+                      return const Center(
                         child: Text("No data found"),
-                      ),
-                    );
-                  } else if (state is QuoteLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (state is QuoteLoaded) {
-                    if (state.quotes == null || state.quotes!.isEmpty) {
-                      return RefreshIndicator(
-                        onRefresh: () async {
-                          context.read<QuoteBloc>().add(
-                                QuoteLoadEvent(
-                                  quotePageType: QuotePageType.pending,
-                                  quoteParameters: null,
-                                ),
-                              );
-                        },
-                        child: CustomScrollView(
+                      );
+                    } else if (state is QuoteLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state is QuoteLoaded) {
+                      if (state.quotes == null || state.quotes!.isEmpty) {
+                        return CustomScrollView(
                           slivers: <Widget>[
                             SliverFillRemaining(
                               child: Center(
@@ -135,61 +126,41 @@ class QuotePageState extends State<QuotePage> {
                               ),
                             ),
                           ],
-                        ),
-                      );
-                    } else {
-                      return RefreshIndicator(
-                        onRefresh: () async {
-                          context.read<QuoteBloc>().add(
-                                QuoteLoadEvent(
-                                  quotePageType: QuotePageType.pending,
-                                  quoteParameters: null,
-                                ),
-                              );
-                        },
-                        child: _PendingQuotesWidget(
+                        );
+                      } else {
+                        return _PendingQuotesWidget(
                           goToQuoteDetails: goToQuoteDetails,
-                        ),
-                      );
+                        );
+                      }
+                    } else {
+                      return Container();
                     }
-                  } else {
-                    return Container();
-                  }
-                }),
+                  }),
+                ),
               ),
               tabWidget1: Expanded(
-                child: BlocBuilder<QuoteBloc, QuoteState>(
-                    builder: (context, state) {
-                  if (state is QuoteFailed) {
-                    return RefreshIndicator(
-                      onRefresh: () async {
-                        context.read<QuoteBloc>().add(
-                              QuoteLoadEvent(
-                                quotePageType: QuotePageType.activejobs,
-                                quoteParameters: null,
-                              ),
-                            );
-                      },
-                      child: const Center(
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<QuoteBloc>().add(
+                          QuoteLoadEvent(
+                            quotePageType: QuotePageType.activejobs,
+                            quoteParameters: null,
+                          ),
+                        );
+                  },
+                  child: BlocBuilder<QuoteBloc, QuoteState>(
+                      builder: (context, state) {
+                    if (state is QuoteFailed) {
+                      return const Center(
                         child: Text("No data found"),
-                      ),
-                    );
-                  } else if (state is QuoteLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (state is JobQuoteLoaded) {
-                    if (state.jobQuotes == null || state.jobQuotes!.isEmpty) {
-                      return RefreshIndicator(
-                        onRefresh: () async {
-                          context.read<QuoteBloc>().add(
-                                QuoteLoadEvent(
-                                  quotePageType: QuotePageType.activejobs,
-                                  quoteParameters: null,
-                                ),
-                              );
-                        },
-                        child: CustomScrollView(
+                      );
+                    } else if (state is QuoteLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state is JobQuoteLoaded) {
+                      if (state.jobQuotes == null || state.jobQuotes!.isEmpty) {
+                        return CustomScrollView(
                           slivers: <Widget>[
                             SliverFillRemaining(
                               child: Center(
@@ -200,25 +171,15 @@ class QuotePageState extends State<QuotePage> {
                               ),
                             ),
                           ],
-                        ),
-                      );
+                        );
+                      } else {
+                        return _buildActiveJobsWidget(state.jobQuotes, context);
+                      }
                     } else {
-                      return RefreshIndicator(
-                          onRefresh: () async {
-                            context.read<QuoteBloc>().add(
-                                  QuoteLoadEvent(
-                                    quotePageType: QuotePageType.activejobs,
-                                    quoteParameters: null,
-                                  ),
-                                );
-                          },
-                          child:
-                              _buildActiveJobsWidget(state.jobQuotes, context));
+                      return Container();
                     }
-                  } else {
-                    return Container();
-                  }
-                }),
+                  }),
+                ),
               ),
               selectedIndex: selectedIndex,
               onTabSelectionChange: (index) {

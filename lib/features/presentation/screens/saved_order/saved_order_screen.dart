@@ -52,32 +52,33 @@ class SavedOrderPage extends StatelessWidget {
             context.read<SavedOrderHandlerCubit>().resetState();
           }
         },
-        child: BlocBuilder<SavedOrderCubit, SavedOrderState>(
-          builder: (context, state) {
-            switch (state.status) {
-              case OrderStatus.loading || OrderStatus.initial:
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+        child: RefreshIndicator(
+          onRefresh: () async {
+            context.read<SavedOrderCubit>().initialize();
+          },
+          child: BlocBuilder<SavedOrderCubit, SavedOrderState>(
+            builder: (context, state) {
+              switch (state.status) {
+                case OrderStatus.loading || OrderStatus.initial:
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
 
-              case OrderStatus.failure:
-                return RefreshIndicator(
-                  onRefresh: () async {
-                    context.read<SavedOrderCubit>().initialize();
-                  },
-                  child: Center(
-                    child: Text(
-                      state.errorMessage ?? '',
-                    ),
-                  ),
-                );
+                case OrderStatus.failure:
+                  return CustomScrollView(
+                    slivers: <Widget>[
+                      SliverFillRemaining(
+                        child: Center(
+                          child: Text(
+                            state.errorMessage ?? '',
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
 
-              default:
-                return RefreshIndicator(
-                  onRefresh: () async {
-                    context.read<SavedOrderCubit>().initialize();
-                  },
-                  child: Column(
+                default:
+                  return Column(
                     children: [
                       Container(
                         height: 50,
@@ -119,10 +120,10 @@ class SavedOrderPage extends StatelessWidget {
                               ),
                       ),
                     ],
-                  ),
-                );
-            }
-          },
+                  );
+              }
+            },
+          ),
         ),
       ),
     );
