@@ -23,6 +23,7 @@ class NumberTextField extends StatefulWidget {
   final bool shouldShowIncrementDecermentIcon;
   final void Function(bool hasFocus)? focusListener;
   final bool? isEnabled;
+  final bool? showWarningHighlighted;
 
   const NumberTextField({
     Key? key,
@@ -41,6 +42,7 @@ class NumberTextField extends StatefulWidget {
     this.focusListener,
     this.isEnabled = true,
     this.onSubmitted,
+    this.showWarningHighlighted = false,
   }) : super(key: key);
 
   @override
@@ -201,7 +203,9 @@ class _NumberTextFieldState extends State<NumberTextField> {
                   borderRadius: BorderRadius.circular(
                     AppStyle.textFieldborderRadius,
                   ),
-                  borderSide: BorderSide.none,
+                  borderSide: widget.showWarningHighlighted!
+                      ? BorderSide(color: Color.fromARGB(255, 244, 0, 0))
+                      : BorderSide.none,
                 ),
                 disabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(
