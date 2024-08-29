@@ -82,6 +82,10 @@ class StyleTraitCubit extends Cubit<StyleTraitState> {
     return styledProductEntity != null;
   }
 
+  bool isAllTraitSelected() {
+    return selectedStyleValues?.values.every((value) => value != null) ?? false;
+  }
+
   ProductDetailStyleTrait? getProductListColorTrait(
       List<ProductDetailStyleTrait> styleTraitsEntities) {
     if (styleTraitsEntities.isNotEmpty) {
