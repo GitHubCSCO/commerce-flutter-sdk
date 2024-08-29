@@ -29,6 +29,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   final ScanningMode scanningMode;
   bool isPreviouslyScannedItem = false;
   ProductSettings? productSettings;
+  String? instructionsMessage;
 
   OrderListBloc({
     required QuickOrderUseCase quickOrderUseCase,
@@ -38,9 +39,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   })  : _quickOrderUseCase = quickOrderUseCase,
         _searchUseCase = searchUseCase,
         _pricingInventoryUseCase = pricingInventoryUseCase,
-        super(OrderListInitialState(
-            SiteMessageConstants.defaultValueQuickOrderInstructions)) {
-    _createAlternateCart();
+        super(OrderListInitialState()) {
     on<OrderListLoadEvent>(_onOrderListLoadEvent);
     on<OrderListItemAddEvent>(_onOrderLisItemAddEvent);
     on<OrderListItemScanAddEvent>(_onOrderLisScanItemAddEvent);
@@ -51,6 +50,13 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     on<OrderListAddStyleProductEvent>(_onOrderListAddStyleProductEvent);
     on<OrderListAddVmiStyleProductEvent>(_onOrderListAddVmiStyleProductEvent);
     on<OrderListAddVmiBinEvent>(_onOrderListAddVmiBinEvent);
+  }
+
+  void initial() async {
+    instructionsMessage = await _quickOrderUseCase.getSiteMessage(
+        SiteMessageConstants.nameQuickOrderInstructions,
+        SiteMessageConstants.defaultValueQuickOrderInstructions);
+    _createAlternateCart();
   }
 
   void _createAlternateCart() {
@@ -69,20 +75,21 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     super.close();
   }
 
-  Future<void> _onOrderListLoadEvent(
-      OrderListLoadEvent event, Emitter<OrderListState> emit) async {
+  Future<void> _getProductSetting() async {
     if (productSettings == null) {
       var result = await _quickOrderUseCase.getProductSetting();
       productSettings = result is Success ? (result as Success).value : null;
     }
+  }
+
+  Future<void> _onOrderListLoadEvent(
+      OrderListLoadEvent event, Emitter<OrderListState> emit) async {
+    await _getProductSetting();
 
     if (quickOrderItemList.isNotEmpty) {
       emit(OrderListLoadedState(quickOrderItemList, productSettings));
     } else {
-      final instructionText = await _quickOrderUseCase.getSiteMessage(
-          SiteMessageConstants.nameQuickOrderInstructions,
-          SiteMessageConstants.defaultValueQuickOrderInstructions);
-      emit(OrderListInitialState(instructionText));
+      emit(OrderListInitialState());
     }
   }
 
@@ -186,28 +193,19 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     emit(OrderListLoadingState());
     quickOrderItemList
         .removeWhere((e) => e.productEntity == event.productEntity);
-    if (productSettings == null) {
-      var result = await _quickOrderUseCase.getProductSetting();
-      productSettings = result is Success ? (result as Success).value : null;
-    }
+    await _getProductSetting();
 
     if (quickOrderItemList.isNotEmpty) {
       emit(OrderListLoadedState(quickOrderItemList, productSettings));
     } else {
-      final instructionText = await _quickOrderUseCase.getSiteMessage(
-          SiteMessageConstants.nameQuickOrderInstructions,
-          SiteMessageConstants.defaultValueQuickOrderInstructions);
-      emit(OrderListInitialState(instructionText));
+      emit(OrderListInitialState());
     }
   }
 
   Future<void> _onOrderListRemoveEvent(
       OrderListRemoveEvent event, Emitter<OrderListState> emit) async {
     quickOrderItemList.clear();
-    final instructionText = await _quickOrderUseCase.getSiteMessage(
-        SiteMessageConstants.nameQuickOrderInstructions,
-        SiteMessageConstants.defaultValueQuickOrderInstructions);
-    emit(OrderListInitialState(instructionText));
+    emit(OrderListInitialState());
   }
 
   Future<void> _onOrderListAddToListEvent(
@@ -243,6 +241,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   Future<void> _onOrderListAddStyleProductEvent(
       OrderListAddStyleProductEvent event, Emitter<OrderListState> emit) async {
     emit(OrderListLoadingState());
+    await _getProductSetting();
+
     final result = await _quickOrderUseCase
         .getStyleProduct(event.styledProductEntity.productId!);
     switch (result) {
@@ -270,6 +270,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
       OrderListAddVmiStyleProductEvent event,
       Emitter<OrderListState> emit) async {
     emit(OrderListLoadingState());
+    await _getProductSetting();
+
     final result = await _quickOrderUseCase
         .getStyleProduct(event.styledProductEntity.productId!);
     switch (result) {
@@ -299,6 +301,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   Future<void> _onOrderListAddVmiBinEvent(
       OrderListAddVmiBinEvent event, Emitter<OrderListState> emit) async {
     emit(OrderListLoadingState());
+    await _getProductSetting();
 
     var newItem = _convertVmiBinProductToQuickOrderItemEntity(
         event.vmiBinEntity, event.quantity);
@@ -309,6 +312,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
   Future<void> _addOrderItem(Result<ProductEntity, ErrorResponse> result,
       Emitter<OrderListState> emit) async {
+    await _getProductSetting();
+
     switch (result) {
       case Success(value: final product):
         if (product == null) {
@@ -355,6 +360,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
   Future<void> _addVmiOrderItem(Result<VmiBinModelEntity, ErrorResponse> result,
       Emitter<OrderListState> emit) async {
+    await _getProductSetting();
+
     switch (result) {
       case Success(value: final vmiBin):
         if (vmiBin == null || vmiBin.productEntity == null) {
@@ -496,10 +503,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         quickOrderItemList.clear();
         emit(OrderListNavigateToVmiCheckoutState(cart: cartResult));
       } else {
-        final message = await _quickOrderUseCase.getSiteMessage(
-            SiteMessageConstants.nameQuickOrderInstructions,
-            SiteMessageConstants.defaultValueQuickOrderInstructions);
-        emit(OrderListFailedState(message));
+        emit(OrderListFailedState());
       }
     } else {
       emit(OrderListNavigateToCartState());
