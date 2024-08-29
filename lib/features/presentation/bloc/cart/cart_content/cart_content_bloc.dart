@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_content_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
@@ -68,5 +69,12 @@ class CartContentBloc extends Bloc<CartContentEvent, CartContentState> {
             errorResponse.errorDescription ?? ''));
         break;
     }
+  }
+
+  bool showRemoveButtonForPromotionItem(CartLineEntity cartLineEntity) {
+    if (cartLineEntity.isPromotionItem ?? false) {
+      return false;
+    }
+    return true;
   }
 }

@@ -11,6 +11,7 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
   final void Function(int?)? onQtyChanged;
   final String? subtotalPriceText;
   final bool canEdit;
+  final bool isEditFieldDisabled;
   final bool realTimeLoading;
   final bool? hidePricingEnable;
   final bool? hasInsufficientInventory;
@@ -23,6 +24,7 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
     this.canEdit = true,
     this.realTimeLoading = false,
     this.hasInsufficientInventory = false,
+    this.isEditFieldDisabled = false,
     this.hidePricingEnable,
   });
 
@@ -41,6 +43,7 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
                     shouldShowIncrementDecermentIcon: false,
                     onSubmitted: onQtyChanged,
                     showWarningHighlighted: hasInsufficientInventory ?? false,
+                    isEnabled: !isEditFieldDisabled,
                   )
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
