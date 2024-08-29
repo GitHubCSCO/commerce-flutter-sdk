@@ -121,7 +121,11 @@ class BottomMenu extends StatelessWidget {
       return CupertinoActionSheetAction(
         onPressed: () {
           Navigator.pop(mContext);
-          value.action();
+          if (value.isUrl == true && value.url != null) {
+            context.read<BottomMenuCubit>().loadWebsiteUrl(value.url!);
+          } else {
+            value.action();
+          }
         },
         child: Text(
           value.title,
