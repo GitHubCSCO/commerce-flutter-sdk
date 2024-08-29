@@ -3,7 +3,6 @@ part of 'order_list_bloc.dart';
 abstract class OrderListState extends Equatable {}
 
 class OrderListInitialState extends OrderListState {
-
   @override
   // TODO: implement props
   List<Object?> get props => [];
@@ -26,7 +25,6 @@ class OrderListLoadedState extends OrderListState {
 }
 
 class OrderListFailedState extends OrderListState {
-
   @override
   List<Object?> get props => [];
 }
