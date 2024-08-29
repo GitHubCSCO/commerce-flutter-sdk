@@ -10,7 +10,6 @@ import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
@@ -56,8 +55,6 @@ class AccountScreen extends BaseStatelessWidget {
   Widget buildContent(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<PullToRefreshBloc>(
-            create: (context) => sl<PullToRefreshBloc>()),
         BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
         BlocProvider<AccountPageBloc>(
             create: (context) =>
@@ -82,13 +79,6 @@ class AccountPage extends StatelessWidget with BaseDynamicContentScreen {
             }
           },
         ),
-        BlocListener<PullToRefreshBloc, PullToRefreshState>(
-          listener: (context, state) async {
-            if (state is PullToRefreshLoadState) {
-              await _reloadAccountPageWithAuthStatus(context);
-            }
-          },
-        ),
         BlocListener<AccountPageBloc, AccountPageState>(
             listener: (context, state) {
           switch (state) {
@@ -110,8 +100,7 @@ class AccountPage extends StatelessWidget with BaseDynamicContentScreen {
       ],
       child: RefreshIndicator(
         onRefresh: () async {
-          BlocProvider.of<PullToRefreshBloc>(context)
-              .add(PullToRefreshInitialEvent());
+          await _reloadAccountPageWithAuthStatus(context);
         },
         child: BlocBuilder<CmsCubit, CmsState>(
           builder: (context, state) {

@@ -10,7 +10,6 @@ import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart'
 import 'package:commerce_flutter_app/features/domain/enums/product_list_type.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
@@ -39,8 +38,6 @@ class SearchScreen extends BaseStatelessWidget {
   @override
   Widget buildContent(BuildContext context) {
     return MultiBlocProvider(providers: [
-      BlocProvider<PullToRefreshBloc>(
-          create: (context) => sl<PullToRefreshBloc>()),
       BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
       BlocProvider<SearchPageCmsBloc>(
         create: (context) =>
@@ -102,13 +99,6 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
               context
                   .read<SearchBloc>()
                   .add(SearchFieldPopulateEvent(state.query));
-            }
-          },
-        ),
-        BlocListener<PullToRefreshBloc, PullToRefreshState>(
-          listener: (context, state) {
-            if (state is PullToRefreshLoadState) {
-              _reloadSearchPage(context);
             }
           },
         ),
@@ -247,8 +237,7 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                     case SearchCmsInitialState:
                       return RefreshIndicator(
                         onRefresh: () async {
-                          BlocProvider.of<PullToRefreshBloc>(context)
-                              .add(PullToRefreshInitialEvent());
+                          _reloadSearchPage(context);
                         },
                         child: BlocBuilder<CmsCubit, CmsState>(
                           builder: (context, state) {

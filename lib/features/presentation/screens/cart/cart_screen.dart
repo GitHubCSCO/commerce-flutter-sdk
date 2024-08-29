@@ -17,7 +17,6 @@ import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_conten
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
@@ -48,8 +47,6 @@ class CartScreen extends BaseStatelessWidget {
   @override
   Widget buildContent(BuildContext context) {
     return MultiBlocProvider(providers: [
-      BlocProvider<PullToRefreshBloc>(
-          create: (context) => sl<PullToRefreshBloc>()),
       BlocProvider<CartPageBloc>(
           create: (context) => sl<CartPageBloc>()..add(CartPageLoadEvent())),
       BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
@@ -85,13 +82,6 @@ class CartPage extends StatelessWidget {
               if (state is RootConfigReload ||
                   state is RootCartReload ||
                   state is RootPricingInventoryReload) {
-                _reloadCartPage(context);
-              }
-            },
-          ),
-          BlocListener<PullToRefreshBloc, PullToRefreshState>(
-            listener: (context, state) {
-              if (state is PullToRefreshLoadState) {
                 _reloadCartPage(context);
               }
             },
@@ -136,8 +126,7 @@ class CartPage extends StatelessWidget {
         ],
         child: RefreshIndicator(
           onRefresh: () async {
-            BlocProvider.of<PullToRefreshBloc>(context)
-                .add(PullToRefreshInitialEvent());
+            _reloadCartPage(context);
           },
           child: BlocBuilder<CartPageBloc, CartPageState>(
             buildWhen: (previous, current) {

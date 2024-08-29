@@ -54,7 +54,8 @@ class OrderApprovalCubit extends Cubit<OrderApprovalState> {
   Future<void> loadMoreOrderApprovalList() async {
     if (state.orderApprovalCollectionModel.pagination?.page == null ||
         state.orderApprovalCollectionModel.pagination!.page! + 1 >
-            state.orderApprovalCollectionModel.pagination!.numberOfPages!) {
+            state.orderApprovalCollectionModel.pagination!.numberOfPages! ||
+        state.status == OrderStatus.moreLoading) {
       return;
     }
 
