@@ -42,7 +42,7 @@ class ProductCarouselUseCase extends BaseUseCase {
     switch (result) {
       case Success(value: final data):
         return Success(data?.products
-            ?.map((e) => ProductEntityMapper().toEntity(e))
+            ?.map((e) => ProductEntityMapper.toEntity(e))
             .toList());
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
@@ -57,7 +57,7 @@ class ProductCarouselUseCase extends BaseUseCase {
     switch (result) {
       case Success(value: final data):
         return Success(data?.products
-            ?.map((e) => ProductEntityMapper().toEntity(e))
+            ?.map((e) => ProductEntityMapper.toEntity(e))
             .toList());
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
@@ -72,7 +72,7 @@ class ProductCarouselUseCase extends BaseUseCase {
     switch (result) {
       case Success(value: final data):
         return Success(data?.products
-            ?.map((e) => ProductEntityMapper().toEntity(e))
+            ?.map((e) => ProductEntityMapper.toEntity(e))
             .toList());
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);
@@ -87,7 +87,7 @@ class ProductCarouselUseCase extends BaseUseCase {
     switch (result) {
       case Success(value: final data):
         return Success(data?.products
-            ?.map((e) => ProductEntityMapper().toEntity(e))
+            ?.map((e) => ProductEntityMapper.toEntity(e))
             .toList());
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);

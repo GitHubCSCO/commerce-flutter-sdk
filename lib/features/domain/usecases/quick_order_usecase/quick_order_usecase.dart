@@ -50,13 +50,13 @@ class QuickOrderUseCase extends BaseUseCase {
     });
 
     List<QuickOrderItemEntity> list = quickOrderItemList.map((item) {
-      final productEntity = ProductEntityMapper().toEntity(item.product);
+      final productEntity = ProductEntityMapper.toEntity(item.product);
       final unitOfMeasureEntity = item.selectedUnitOfMeasure != null
           ? ProductUnitOfMeasureEntityMapper.toEntity(
               item.selectedUnitOfMeasure!)
           : null;
       final vmiBinEntity = item.vmiBinModel != null
-          ? VmiBinModelEntityMapper().toEntity(item.vmiBinModel!)
+          ? VmiBinModelEntityMapper.toEntity(item.vmiBinModel!)
           : null;
       final itemEntity = QuickOrderItemEntity(
           productEntity, item.quantityOrdered ?? 1,
@@ -72,12 +72,12 @@ class QuickOrderUseCase extends BaseUseCase {
 
   void persistedData(QuickOrderItemEntity item,
       {int? index, bool? replace}) async {
-    final product = ProductEntityMapper().toModel(item.productEntity);
+    final product = ProductEntityMapper.toModel(item.productEntity);
     final unitOfMeasure = item.selectedUnitOfMeasure != null
         ? ProductUnitOfMeasureEntityMapper.toModel(item.selectedUnitOfMeasure!)
         : null;
     final vmiBin = item.vmiBinEntity != null
-        ? VmiBinModelEntityMapper().toModel(item.vmiBinEntity!)
+        ? VmiBinModelEntityMapper.toModel(item.vmiBinEntity!)
         : null;
 
     final orderItem = QuickOrderItem(
@@ -192,7 +192,7 @@ class QuickOrderUseCase extends BaseUseCase {
     switch (resultResponse) {
       case Success(value: final data):
         final productEntity =
-            ProductEntityMapper().toEntity(data?.product ?? Product());
+            ProductEntityMapper.toEntity(data?.product ?? Product());
         // if (productEntity.styledProducts != null) {
         //   if (productEntity.styleParentId != null) {
         //     styledProduct = productEntity.styledProducts
@@ -222,7 +222,7 @@ class QuickOrderUseCase extends BaseUseCase {
       case Success(value: final data):
         if ((data?.vmiBins ?? []).isNotEmpty &&
             (data?.vmiBins ?? []).length == 1) {
-          final vmiBin = VmiBinModelEntityMapper().toEntity(data!.vmiBins[0]);
+          final vmiBin = VmiBinModelEntityMapper.toEntity(data!.vmiBins[0]);
           return Success(vmiBin);
         } else {
           return const Success(null);
@@ -284,11 +284,11 @@ class QuickOrderUseCase extends BaseUseCase {
 
             if (result?.product != null) {
               final productEntity =
-                  ProductEntityMapper().toEntity(result!.product!);
+                  ProductEntityMapper.toEntity(result!.product!);
               return Success(productEntity);
             }
           } else {
-            final productEntity = ProductEntityMapper().toEntity(product);
+            final productEntity = ProductEntityMapper.toEntity(product);
             return Success(productEntity);
           }
         }
@@ -308,7 +308,7 @@ class QuickOrderUseCase extends BaseUseCase {
     switch (result) {
       case Success(value: final data):
         final productEntity =
-            ProductEntityMapper().toEntity(data?.product ?? Product());
+            ProductEntityMapper.toEntity(data?.product ?? Product());
         return Success(productEntity);
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);

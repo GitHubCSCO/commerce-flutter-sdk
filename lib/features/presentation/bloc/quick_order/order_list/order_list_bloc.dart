@@ -199,11 +199,11 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
           if (result?.product != null) {
             final productEntity =
-                ProductEntityMapper().toEntity(result!.product!);
+                ProductEntityMapper.toEntity(result!.product!);
             await _addOrderItem(Success(productEntity), emit);
           }
         } else {
-          final productEntity = ProductEntityMapper().toEntity(product);
+          final productEntity = ProductEntityMapper.toEntity(product);
           await _addOrderItem(Success(productEntity), emit);
         }
       } else {
