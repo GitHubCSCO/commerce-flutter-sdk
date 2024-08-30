@@ -104,9 +104,9 @@ class CacheService implements ICacheService {
         return stringList as T;
       } else if (T == List<QuickOrderItem>) {
         List<dynamic> dynamicList =
-        jsonDecode(sharedPreferences.getString(key)!);
+            jsonDecode(sharedPreferences.getString(key)!);
         List<QuickOrderItem> stringList =
-        dynamicList.map((item) => QuickOrderItem.fromJson(item)).toList();
+            dynamicList.map((item) => QuickOrderItem.fromJson(item)).toList();
         return stringList as T;
       } else {
         String rawValue = sharedPreferences.getString(key)!;

@@ -60,8 +60,7 @@ class QuickOrderScreen extends StatelessWidget {
             searchUseCase: sl(),
             pricingInventoryUseCase: sl(),
             scanningMode: _scanningMode,
-          )
-            ..add(OrderListInitialEvent());
+          )..add(OrderListInitialEvent());
         },
       ),
       BlocProvider<QuickOrderAutoCompleteBloc>(

@@ -148,8 +148,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   }
 
   void _onOrderListItemQuantityChangeEvent(
-      OrderListItemQuantityChangeEvent event,
-      Emitter<OrderListState> emit) {
+      OrderListItemQuantityChangeEvent event, Emitter<OrderListState> emit) {
     _quickOrderUseCase.updateQuantityOfPersistedData(
         event.productId, event.quantityOrdered);
   }

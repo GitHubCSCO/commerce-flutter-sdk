@@ -41,13 +41,19 @@ class QuickOrderUseCase extends BaseUseCase {
         .removeAlternateCartCookie();
   }
 
-  Future<List<QuickOrderItemEntity>> getPersistedData() async {
+  Future<List<QuickOrderItem>> _getQuickOrderPersistedList() async {
     final quickOrderItemList = await commerceAPIServiceProvider
         .getCacheService()
         .loadPersistedData<List<QuickOrderItem>>(_getStorageQueueKey())
         .catchError((onError) {
       return Future.value(<QuickOrderItem>[]);
     });
+
+    return quickOrderItemList;
+  }
+
+  Future<List<QuickOrderItemEntity>> getPersistedData() async {
+    final quickOrderItemList = await _getQuickOrderPersistedList();
 
     List<QuickOrderItemEntity> list = quickOrderItemList.map((item) {
       final productEntity = ProductEntityMapper.toEntity(item.product);
@@ -58,6 +64,7 @@ class QuickOrderUseCase extends BaseUseCase {
       final vmiBinEntity = item.vmiBinModel != null
           ? VmiBinModelEntityMapper.toEntity(item.vmiBinModel!)
           : null;
+
       final itemEntity = QuickOrderItemEntity(
           productEntity, item.quantityOrdered ?? 1,
           selectedUnitOfMeasure: unitOfMeasureEntity,
@@ -89,12 +96,7 @@ class QuickOrderUseCase extends BaseUseCase {
       quantityOrdered: item.quantityOrdered,
     );
 
-    final quickOrderItemList = await commerceAPIServiceProvider
-        .getCacheService()
-        .loadPersistedData<List<QuickOrderItem>>(_getStorageQueueKey())
-        .catchError((onError) {
-      return Future.value(<QuickOrderItem>[]);
-    });
+    final quickOrderItemList = await _getQuickOrderPersistedList();
 
     if (index != null) {
       if (replace == true) {
@@ -110,12 +112,7 @@ class QuickOrderUseCase extends BaseUseCase {
   }
 
   void updateQuantityOfPersistedData(String? id, int? quantity) async {
-    final quickOrderItemList = await commerceAPIServiceProvider
-        .getCacheService()
-        .loadPersistedData<List<QuickOrderItem>>(_getStorageQueueKey())
-        .catchError((onError) {
-      return Future.value(<QuickOrderItem>[]);
-    });
+    final quickOrderItemList = await _getQuickOrderPersistedList();
 
     for (int i = 0; i < quickOrderItemList.length; i++) {
       if (quickOrderItemList[i].product.id == id) {
@@ -129,12 +126,7 @@ class QuickOrderUseCase extends BaseUseCase {
   }
 
   Future<void> removePersistedData(ProductEntity entity) async {
-    final quickOrderItemList = await commerceAPIServiceProvider
-        .getCacheService()
-        .loadPersistedData<List<QuickOrderItem>>(_getStorageQueueKey())
-        .catchError((onError) {
-      return Future.value(<QuickOrderItem>[]);
-    });
+    final quickOrderItemList = await _getQuickOrderPersistedList();
 
     quickOrderItemList.removeWhere((item) => item.product.id == entity.id);
 
