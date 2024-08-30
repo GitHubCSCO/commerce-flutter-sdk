@@ -26,15 +26,17 @@ class QuickOrderItemEntity {
 
   //need to add SelectedUnitOfMeasure
 
-  QuickOrderItemEntity(this.productEntity, this.quantityOrdered);
+  QuickOrderItemEntity(this.productEntity, this.quantityOrdered, {ProductUnitOfMeasureEntity? selectedUnitOfMeasure});
 
   QuickOrderItemEntity copyWith({
     ProductEntity? productEntity,
     int? quantityOrdered,
+    ProductUnitOfMeasureEntity? selectedUnitOfMeasure,
   }) {
     return QuickOrderItemEntity(
       productEntity ?? this.productEntity,
       quantityOrdered ?? this.quantityOrdered,
+      selectedUnitOfMeasure: selectedUnitOfMeasure ?? this.selectedUnitOfMeasure,
     );
   }
 

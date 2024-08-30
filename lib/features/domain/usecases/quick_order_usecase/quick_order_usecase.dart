@@ -1,10 +1,13 @@
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_app/core/models/quick_order_item.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/order_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/product_unit_of_measure_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/vmi_bin_model_entity_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
@@ -34,36 +37,51 @@ class QuickOrderUseCase extends BaseUseCase {
   Future<List<QuickOrderItemEntity>> getPersistedData() async {
     final quickOrderItemList = await commerceAPIServiceProvider
         .getCacheService()
-        .loadPersistedData<List<QuickOrderItemEntity>>('quick_order')
+        .loadPersistedData<List<QuickOrderItem>>('quick_order')
         .catchError((onError) {
-      return Future.value(<QuickOrderItemEntity>[]);
+      return Future.value(<QuickOrderItem>[]);
     });
-    return quickOrderItemList;
+
+    List<QuickOrderItemEntity> list = quickOrderItemList.map((item) {
+      final productEntity = ProductEntityMapper().toEntity(item.product);
+      final unitOfMeasureEntity = ProductUnitOfMeasureEntityMapper.toEntity(item.selectedUnitOfMeasure ?? ProductUnitOfMeasure());
+      final itemEntity = QuickOrderItemEntity(productEntity, 1, selectedUnitOfMeasure: unitOfMeasureEntity);
+      return itemEntity;
+    }).toList();
+
+    return list;
   }
 
   void persistedData(QuickOrderItemEntity item,
       {int? index, bool? replace}) async {
+    final product = ProductEntityMapper().toModel(item.productEntity);
+    final unitOfMeasure = ProductUnitOfMeasureEntityMapper.toModel(item.selectedUnitOfMeasure ?? const ProductUnitOfMeasureEntity());
+
+    final orderItem = QuickOrderItem(product, selectedUnitOfMeasure: unitOfMeasure);
+
     final quickOrderItemList = await commerceAPIServiceProvider
         .getCacheService()
-        .loadPersistedData<List<QuickOrderItemEntity>>('quick_order')
+        .loadPersistedData<List<QuickOrderItem>>('quick_order')
         .catchError((onError) {
-      return Future.value(<QuickOrderItemEntity>[]);
+      return Future.value(<QuickOrderItem>[]);
     });
 
     if (index != null) {
       if (replace == true) {
-        quickOrderItemList[index] == item;
+        quickOrderItemList[index] == orderItem;
       } else {
-        quickOrderItemList.insert(index, item);
+        quickOrderItemList.insert(index, orderItem);
       }
     } else {
-      quickOrderItemList.add(item);
+      quickOrderItemList.add(orderItem);
     }
+
+    List<Map<String, dynamic>> jsonList = quickOrderItemList.map((item) => item.toJson()).toList();
 
     await commerceAPIServiceProvider
         .getCacheService()
-        .persistData<List<QuickOrderItemEntity>>(
-            'quick_order', quickOrderItemList);
+        .persistData<List<Map<String, dynamic>>>(
+            'quick_order', jsonList);
   }
 
   Future<Result<ProductEntity, ErrorResponse>> getProduct(

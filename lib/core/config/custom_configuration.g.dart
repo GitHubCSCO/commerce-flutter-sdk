@@ -1,4 +1,10 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
 part of 'custom_configuration.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
 
 CustomConfiguration _$CustomConfigurationFromJson(Map<String, dynamic> json) =>
     CustomConfiguration(
