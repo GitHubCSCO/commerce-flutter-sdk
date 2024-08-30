@@ -134,9 +134,11 @@ class _ListPickerState extends State<ListPicker> {
                       itemExtent: 40,
                       onSelectedItemChanged: (int index) {
                         setState(() {
-                          selectedIndex = index;
-                          isButtonEnabled =
-                              _isOptionAvailable(widget.items[index]);
+                          if (widget.items.isNotEmpty) {
+                            selectedIndex = index;
+                            isButtonEnabled =
+                                _isOptionAvailable(widget.items[index]);
+                          }
                         });
                       },
                       children: widget.items.map((Object option) {
