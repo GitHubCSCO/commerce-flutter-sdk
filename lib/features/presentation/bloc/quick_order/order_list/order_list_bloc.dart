@@ -57,6 +57,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         SiteMessageConstants.nameQuickOrderInstructions,
         SiteMessageConstants.defaultValueQuickOrderInstructions);
     _createAlternateCart();
+    _quickOrderUseCase.setScanningMode(scanningMode);
     final list = await _quickOrderUseCase.getPersistedData();
     quickOrderItemList = list;
     add(OrderListLoadEvent());

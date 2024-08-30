@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart'
 import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/order_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_unit_of_measure_mapper.dart';
@@ -14,7 +15,13 @@ import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuickOrderUseCase extends BaseUseCase {
+  ScanningMode scanningMode = ScanningMode.quick;
+
   QuickOrderUseCase() : super();
+
+  void setScanningMode(ScanningMode scanningMode) {
+    this.scanningMode = scanningMode;
+  }
 
   Future<void> createAlternateCart() async {
     final vmiLocationId =
@@ -37,7 +44,7 @@ class QuickOrderUseCase extends BaseUseCase {
   Future<List<QuickOrderItemEntity>> getPersistedData() async {
     final quickOrderItemList = await commerceAPIServiceProvider
         .getCacheService()
-        .loadPersistedData<List<QuickOrderItem>>('quick_order')
+        .loadPersistedData<List<QuickOrderItem>>(_getStorageQueueKey())
         .catchError((onError) {
       return Future.value(<QuickOrderItem>[]);
     });
@@ -75,7 +82,7 @@ class QuickOrderUseCase extends BaseUseCase {
 
     final quickOrderItemList = await commerceAPIServiceProvider
         .getCacheService()
-        .loadPersistedData<List<QuickOrderItem>>('quick_order')
+        .loadPersistedData<List<QuickOrderItem>>(_getStorageQueueKey())
         .catchError((onError) {
       return Future.value(<QuickOrderItem>[]);
     });
@@ -96,7 +103,7 @@ class QuickOrderUseCase extends BaseUseCase {
   Future<void> removePersistedData(ProductEntity entity) async {
     final quickOrderItemList = await commerceAPIServiceProvider
         .getCacheService()
-        .loadPersistedData<List<QuickOrderItem>>('quick_order')
+        .loadPersistedData<List<QuickOrderItem>>(_getStorageQueueKey())
         .catchError((onError) {
       return Future.value(<QuickOrderItem>[]);
     });
@@ -106,18 +113,39 @@ class QuickOrderUseCase extends BaseUseCase {
     await _saveDataAsJson(quickOrderItemList);
   }
 
+  void clearAllPersistedData() async {
+    await commerceAPIServiceProvider
+        .getCacheService()
+        .removePersistedData(_getStorageQueueKey());
+  }
+
   Future<void> _saveDataAsJson(List<QuickOrderItem> quickOrderItemList) async {
     List<Map<String, dynamic>> jsonList =
-    quickOrderItemList.map((item) => item.toJson()).toList();
+        quickOrderItemList.map((item) => item.toJson()).toList();
 
     await commerceAPIServiceProvider
         .getCacheService()
-        .persistData<List<Map<String, dynamic>>>('quick_order', jsonList);
+        .persistData<List<Map<String, dynamic>>>(
+            _getStorageQueueKey(), jsonList);
   }
 
-  void clearAllPersistedData() async {
-    await commerceAPIServiceProvider
-        .getCacheService().removePersistedData('quick_order');
+  String _getStorageQueueKey() {
+    final clientHost = commerceAPIServiceProvider.getClientService().host ?? '';
+    final userName = commerceAPIServiceProvider
+        .getSessionService()
+        .getCachedCurrentSession()
+        ?.userName ?? '';
+    final vmiLocationId =
+        coreServiceProvider.getVmiService().currentVmiLocation?.id ?? '';
+
+    switch (scanningMode) {
+      case ScanningMode.quick:
+        return 'quick_order-$clientHost:$userName';
+      case ScanningMode.count:
+        return 'vmi_quick_count-$vmiLocationId:$clientHost:$userName';
+      case ScanningMode.create:
+        return 'vmi_quick_create-$vmiLocationId:$clientHost:$userName';
+    }
   }
 
   Future<Result<ProductEntity, ErrorResponse>> getProduct(
