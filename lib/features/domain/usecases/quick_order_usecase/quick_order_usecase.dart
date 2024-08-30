@@ -44,8 +44,13 @@ class QuickOrderUseCase extends BaseUseCase {
 
     List<QuickOrderItemEntity> list = quickOrderItemList.map((item) {
       final productEntity = ProductEntityMapper().toEntity(item.product);
-      final unitOfMeasureEntity = ProductUnitOfMeasureEntityMapper.toEntity(item.selectedUnitOfMeasure ?? ProductUnitOfMeasure());
-      final itemEntity = QuickOrderItemEntity(productEntity, 1, selectedUnitOfMeasure: unitOfMeasureEntity);
+      final unitOfMeasureEntity = ProductUnitOfMeasureEntityMapper.toEntity(
+          item.selectedUnitOfMeasure ?? ProductUnitOfMeasure());
+      final itemEntity = QuickOrderItemEntity(
+          productEntity, item.quantityOrdered ?? 1,
+          selectedUnitOfMeasure: unitOfMeasureEntity,
+          selectedUnitOfMeasureTitle: item.selectedUnitOfMeasureTitle,
+          selectedUnitOfMeasureValueText: item.selectedUnitOfMeasureValueText);
       return itemEntity;
     }).toList();
 
@@ -55,9 +60,18 @@ class QuickOrderUseCase extends BaseUseCase {
   void persistedData(QuickOrderItemEntity item,
       {int? index, bool? replace}) async {
     final product = ProductEntityMapper().toModel(item.productEntity);
-    final unitOfMeasure = ProductUnitOfMeasureEntityMapper.toModel(item.selectedUnitOfMeasure ?? const ProductUnitOfMeasureEntity());
+    final unitOfMeasure = item.selectedUnitOfMeasure != null
+        ? ProductUnitOfMeasureEntityMapper.toModel(
+            item.selectedUnitOfMeasure ?? const ProductUnitOfMeasureEntity())
+        : null;
 
-    final orderItem = QuickOrderItem(product, selectedUnitOfMeasure: unitOfMeasure);
+    final orderItem = QuickOrderItem(
+      product,
+      selectedUnitOfMeasure: unitOfMeasure,
+      selectedUnitOfMeasureTitle: item.selectedUnitOfMeasureTitle,
+      selectedUnitOfMeasureValueText: item.selectedUnitOfMeasureValueText,
+      quantityOrdered: item.quantityOrdered,
+    );
 
     final quickOrderItemList = await commerceAPIServiceProvider
         .getCacheService()
@@ -76,12 +90,34 @@ class QuickOrderUseCase extends BaseUseCase {
       quickOrderItemList.add(orderItem);
     }
 
-    List<Map<String, dynamic>> jsonList = quickOrderItemList.map((item) => item.toJson()).toList();
+    await _saveDataAsJson(quickOrderItemList);
+  }
+
+  Future<void> removePersistedData(ProductEntity entity) async {
+    final quickOrderItemList = await commerceAPIServiceProvider
+        .getCacheService()
+        .loadPersistedData<List<QuickOrderItem>>('quick_order')
+        .catchError((onError) {
+      return Future.value(<QuickOrderItem>[]);
+    });
+
+    quickOrderItemList.removeWhere((item) => item.product.id == entity.id);
+
+    await _saveDataAsJson(quickOrderItemList);
+  }
+
+  Future<void> _saveDataAsJson(List<QuickOrderItem> quickOrderItemList) async {
+    List<Map<String, dynamic>> jsonList =
+    quickOrderItemList.map((item) => item.toJson()).toList();
 
     await commerceAPIServiceProvider
         .getCacheService()
-        .persistData<List<Map<String, dynamic>>>(
-            'quick_order', jsonList);
+        .persistData<List<Map<String, dynamic>>>('quick_order', jsonList);
+  }
+
+  void clearAllPersistedData() async {
+    await commerceAPIServiceProvider
+        .getCacheService().removePersistedData('quick_order');
   }
 
   Future<Result<ProductEntity, ErrorResponse>> getProduct(

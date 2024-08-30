@@ -196,6 +196,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     emit(OrderListLoadingState());
     quickOrderItemList
         .removeWhere((e) => e.productEntity == event.productEntity);
+    await _quickOrderUseCase.removePersistedData(event.productEntity);
     await _getProductSetting();
 
     if (quickOrderItemList.isNotEmpty) {
@@ -208,6 +209,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   Future<void> _onOrderListRemoveEvent(
       OrderListRemoveEvent event, Emitter<OrderListState> emit) async {
     quickOrderItemList.clear();
+    _quickOrderUseCase.clearAllPersistedData();
     emit(OrderListInitialState());
   }
 
