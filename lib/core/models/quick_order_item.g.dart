@@ -13,6 +13,9 @@ QuickOrderItem _$QuickOrderItemFromJson(Map<String, dynamic> json) =>
           ? null
           : ProductUnitOfMeasure.fromJson(
               json['selectedUnitOfMeasure'] as Map<String, dynamic>),
+      vmiBinModel: json['vmiBinModel'] == null
+          ? null
+          : VmiBinModel.fromJson(json['vmiBinModel'] as Map<String, dynamic>),
       quantityOrdered: (json['quantityOrdered'] as num?)?.toInt(),
       selectedUnitOfMeasureTitle: json['selectedUnitOfMeasureTitle'] as String?,
       selectedUnitOfMeasureValueText:
@@ -23,6 +26,7 @@ Map<String, dynamic> _$QuickOrderItemToJson(QuickOrderItem instance) =>
     <String, dynamic>{
       'product': instance.product.toJson(),
       'selectedUnitOfMeasure': instance.selectedUnitOfMeasure?.toJson(),
+      'vmiBinModel': instance.vmiBinModel?.toJson(),
       'quantityOrdered': instance.quantityOrdered,
       'selectedUnitOfMeasureTitle': instance.selectedUnitOfMeasureTitle,
       'selectedUnitOfMeasureValueText': instance.selectedUnitOfMeasureValueText,

@@ -51,11 +51,17 @@ class QuickOrderUseCase extends BaseUseCase {
 
     List<QuickOrderItemEntity> list = quickOrderItemList.map((item) {
       final productEntity = ProductEntityMapper().toEntity(item.product);
-      final unitOfMeasureEntity = ProductUnitOfMeasureEntityMapper.toEntity(
-          item.selectedUnitOfMeasure ?? ProductUnitOfMeasure());
+      final unitOfMeasureEntity = item.selectedUnitOfMeasure != null
+          ? ProductUnitOfMeasureEntityMapper.toEntity(
+              item.selectedUnitOfMeasure!)
+          : null;
+      final vmiBinEntity = item.vmiBinModel != null
+          ? VmiBinModelEntityMapper().toEntity(item.vmiBinModel!)
+          : null;
       final itemEntity = QuickOrderItemEntity(
           productEntity, item.quantityOrdered ?? 1,
           selectedUnitOfMeasure: unitOfMeasureEntity,
+          vmiBinEntity: vmiBinEntity,
           selectedUnitOfMeasureTitle: item.selectedUnitOfMeasureTitle,
           selectedUnitOfMeasureValueText: item.selectedUnitOfMeasureValueText);
       return itemEntity;
@@ -68,13 +74,16 @@ class QuickOrderUseCase extends BaseUseCase {
       {int? index, bool? replace}) async {
     final product = ProductEntityMapper().toModel(item.productEntity);
     final unitOfMeasure = item.selectedUnitOfMeasure != null
-        ? ProductUnitOfMeasureEntityMapper.toModel(
-            item.selectedUnitOfMeasure ?? const ProductUnitOfMeasureEntity())
+        ? ProductUnitOfMeasureEntityMapper.toModel(item.selectedUnitOfMeasure!)
+        : null;
+    final vmiBin = item.vmiBinEntity != null
+        ? VmiBinModelEntityMapper().toModel(item.vmiBinEntity!)
         : null;
 
     final orderItem = QuickOrderItem(
       product,
       selectedUnitOfMeasure: unitOfMeasure,
+      vmiBinModel: vmiBin,
       selectedUnitOfMeasureTitle: item.selectedUnitOfMeasureTitle,
       selectedUnitOfMeasureValueText: item.selectedUnitOfMeasureValueText,
       quantityOrdered: item.quantityOrdered,
@@ -89,12 +98,31 @@ class QuickOrderUseCase extends BaseUseCase {
 
     if (index != null) {
       if (replace == true) {
-        quickOrderItemList[index] == orderItem;
+        quickOrderItemList[index] = orderItem;
       } else {
         quickOrderItemList.insert(index, orderItem);
       }
     } else {
       quickOrderItemList.add(orderItem);
+    }
+
+    await _saveDataAsJson(quickOrderItemList);
+  }
+
+  void updateQuantityOfPersistedData(String? id, int? quantity) async {
+    final quickOrderItemList = await commerceAPIServiceProvider
+        .getCacheService()
+        .loadPersistedData<List<QuickOrderItem>>(_getStorageQueueKey())
+        .catchError((onError) {
+      return Future.value(<QuickOrderItem>[]);
+    });
+
+    for (int i = 0; i < quickOrderItemList.length; i++) {
+      if (quickOrderItemList[i].product.id == id) {
+        quickOrderItemList[i] =
+            quickOrderItemList[i].copyWith(quantityOrdered: quantity);
+        break;
+      }
     }
 
     await _saveDataAsJson(quickOrderItemList);
@@ -132,9 +160,10 @@ class QuickOrderUseCase extends BaseUseCase {
   String _getStorageQueueKey() {
     final clientHost = commerceAPIServiceProvider.getClientService().host ?? '';
     final userName = commerceAPIServiceProvider
-        .getSessionService()
-        .getCachedCurrentSession()
-        ?.userName ?? '';
+            .getSessionService()
+            .getCachedCurrentSession()
+            ?.userName ??
+        '';
     final vmiLocationId =
         coreServiceProvider.getVmiService().currentVmiLocation?.id ?? '';
 

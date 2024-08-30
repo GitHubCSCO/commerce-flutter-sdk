@@ -40,9 +40,12 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         _searchUseCase = searchUseCase,
         _pricingInventoryUseCase = pricingInventoryUseCase,
         super(OrderListInitialState()) {
+    on<OrderListInitialEvent>(_onOrderListInitialEvent);
     on<OrderListLoadEvent>(_onOrderListLoadEvent);
+    on<OrderListReLoadEvent>(_onOrderListReLoadEvent);
     on<OrderListItemAddEvent>(_onOrderLisItemAddEvent);
     on<OrderListItemScanAddEvent>(_onOrderLisScanItemAddEvent);
+    on<OrderListItemQuantityChangeEvent>(_onOrderListItemQuantityChangeEvent);
     on<OrderListItemRemoveEvent>(_onOrderListItemRemoveEvent);
     on<OrderListAddToCartEvent>(_onOrderListAddToCartEvent);
     on<OrderListRemoveEvent>(_onOrderListRemoveEvent);
@@ -50,17 +53,6 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     on<OrderListAddStyleProductEvent>(_onOrderListAddStyleProductEvent);
     on<OrderListAddVmiStyleProductEvent>(_onOrderListAddVmiStyleProductEvent);
     on<OrderListAddVmiBinEvent>(_onOrderListAddVmiBinEvent);
-  }
-
-  void initial() async {
-    instructionsMessage = await _quickOrderUseCase.getSiteMessage(
-        SiteMessageConstants.nameQuickOrderInstructions,
-        SiteMessageConstants.defaultValueQuickOrderInstructions);
-    _createAlternateCart();
-    _quickOrderUseCase.setScanningMode(scanningMode);
-    final list = await _quickOrderUseCase.getPersistedData();
-    quickOrderItemList = list;
-    add(OrderListLoadEvent());
   }
 
   void _createAlternateCart() {
@@ -86,6 +78,19 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     }
   }
 
+  Future<void> _onOrderListInitialEvent(
+      OrderListInitialEvent event, Emitter<OrderListState> emit) async {
+    emit(OrderListLoadingState());
+    instructionsMessage = await _quickOrderUseCase.getSiteMessage(
+        SiteMessageConstants.nameQuickOrderInstructions,
+        SiteMessageConstants.defaultValueQuickOrderInstructions);
+    _createAlternateCart();
+    _quickOrderUseCase.setScanningMode(scanningMode);
+    final list = await _quickOrderUseCase.getPersistedData();
+    quickOrderItemList = list;
+    add(OrderListLoadEvent());
+  }
+
   Future<void> _onOrderListLoadEvent(
       OrderListLoadEvent event, Emitter<OrderListState> emit) async {
     await _getProductSetting();
@@ -95,6 +100,14 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     } else {
       emit(OrderListInitialState());
     }
+  }
+
+  Future<void> _onOrderListReLoadEvent(
+      OrderListReLoadEvent event, Emitter<OrderListState> emit) async {
+    emit(OrderListLoadingState());
+    final list = await _quickOrderUseCase.getPersistedData();
+    quickOrderItemList = list;
+    add(OrderListLoadEvent());
   }
 
   Future<void> _onOrderLisItemAddEvent(
@@ -132,6 +145,13 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
             event.resultText, event.barcodeFormat, emit);
       }
     }
+  }
+
+  void _onOrderListItemQuantityChangeEvent(
+      OrderListItemQuantityChangeEvent event,
+      Emitter<OrderListState> emit) {
+    _quickOrderUseCase.updateQuantityOfPersistedData(
+        event.productId, event.quantityOrdered);
   }
 
   Future<void> _findProductWithRegularSearch(String? searchQuery,
@@ -507,11 +527,14 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
       final cartResult = result.getResultSuccessValue();
       if (cartResult != null) {
         quickOrderItemList.clear();
+        _quickOrderUseCase.clearAllPersistedData();
         emit(OrderListNavigateToVmiCheckoutState(cart: cartResult));
       } else {
         emit(OrderListFailedState());
       }
     } else {
+      quickOrderItemList.clear();
+      _quickOrderUseCase.clearAllPersistedData();
       emit(OrderListNavigateToCartState());
     }
   }

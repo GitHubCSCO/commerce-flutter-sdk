@@ -22,7 +22,7 @@ class VmiBinModelEntityMapper {
             : null,
       );
 
-  VmiBinModel fromEntity(VmiBinModelEntity entity) => VmiBinModel(
+  VmiBinModel toModel(VmiBinModelEntity entity) => VmiBinModel(
         id: entity.id,
         vmiLocationId: entity.vmiLocationId,
         binNumber: entity.binNumber,

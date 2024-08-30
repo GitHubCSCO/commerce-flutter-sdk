@@ -30,6 +30,7 @@ class QuickOrderItemEntity {
     this.productEntity,
     this.quantityOrdered, {
     this.selectedUnitOfMeasure,
+    this.vmiBinEntity,
     this.selectedUnitOfMeasureTitle,
     this.selectedUnitOfMeasureValueText,
   });
@@ -38,6 +39,7 @@ class QuickOrderItemEntity {
     ProductEntity? productEntity,
     int? quantityOrdered,
     ProductUnitOfMeasureEntity? selectedUnitOfMeasure,
+    VmiBinModelEntity? vmiBinEntity,
     String? selectedUnitOfMeasureTitle,
     String? selectedUnitOfMeasureValueText,
   }) {
@@ -46,6 +48,7 @@ class QuickOrderItemEntity {
       quantityOrdered ?? this.quantityOrdered,
       selectedUnitOfMeasure:
           selectedUnitOfMeasure ?? this.selectedUnitOfMeasure,
+      vmiBinEntity: vmiBinEntity ?? this.vmiBinEntity,
       selectedUnitOfMeasureTitle:
           selectedUnitOfMeasureTitle ?? this.selectedUnitOfMeasureTitle,
       selectedUnitOfMeasureValueText:

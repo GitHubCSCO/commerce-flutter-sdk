@@ -61,7 +61,7 @@ class QuickOrderScreen extends StatelessWidget {
             pricingInventoryUseCase: sl(),
             scanningMode: _scanningMode,
           )
-            ..initial();
+            ..add(OrderListInitialEvent());
         },
       ),
       BlocProvider<QuickOrderAutoCompleteBloc>(
@@ -791,7 +791,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
       extra: vmiCheckoutEntity,
     );
 
-    context.read<OrderListBloc>().add(OrderListLoadEvent());
+    context.read<OrderListBloc>().add(OrderListReLoadEvent());
   }
 
   String _getTitle(ScanningMode scanningMode) {
