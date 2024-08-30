@@ -51,6 +51,10 @@ class ProductDetailsUseCase extends BaseUseCase {
       ProductDetailsAddToCartUseCase();
   ProductDetailsUseCase() : super();
 
+  Future<bool> isOnline() async {
+    return commerceAPIServiceProvider.getNetworkService().isOnline();
+  }
+
   Future<bool> hasCheckout() {
     return coreServiceProvider.getAppConfigurationService().hasCheckout();
   }
