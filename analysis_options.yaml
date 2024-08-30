@@ -3,6 +3,7 @@ include: package:flutter_lints/flutter.yaml
 linter:
   rules:
     - camel_case_types
+    - unawaited_futures
     - unnecessary_new
     - package_names
     - unnecessary_parenthesis

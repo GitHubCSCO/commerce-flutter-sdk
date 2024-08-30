@@ -16,8 +16,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class SubCategoryScreen extends BaseStatelessWidget {
-  Category? category;
-  SubCategoryScreen({
+  final Category? category;
+  const SubCategoryScreen({
     super.key,
     this.category,
   });
@@ -28,8 +28,7 @@ class SubCategoryScreen extends BaseStatelessWidget {
       create: (context) =>
           sl<CategoryBloc>()..add(CategoryLoadEvent(category: category)),
       child: SubCategoryPage(
-        categoryTitle: category?.shortDescription,
-        categoryPath: category?.path,
+        category: category,
       ),
     );
   }
@@ -49,10 +48,12 @@ class SubCategoryScreen extends BaseStatelessWidget {
 }
 
 class SubCategoryPage extends StatefulWidget {
-  late final String? categoryTitle;
-  late final String? categoryPath;
+  final Category? category;
 
-  SubCategoryPage({super.key, this.categoryTitle, this.categoryPath});
+  const SubCategoryPage({
+    super.key,
+    this.category,
+  });
 
   @override
   State<SubCategoryPage> createState() => _SubCategoryPageState();
@@ -65,34 +66,45 @@ class _SubCategoryPageState extends State<SubCategoryPage>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            widget.categoryTitle ??
+            widget.category?.shortDescription ??
                 LocalizationConstants.categories.localized(),
             style: OptiTextStyles.titleLarge),
         actions: [
           BottomMenuWidget(
-              websitePath: widget.categoryPath,
+              websitePath: widget.category?.path,
               toolMenuList: getToolMenu(context)),
         ],
       ),
-      body: BlocBuilder<CategoryBloc, CategoryState>(
-        builder: (context, state) {
-          switch (state) {
-            case CategoryInitial():
-            case CategoryLoading():
-              return const Center(child: CircularProgressIndicator());
-            case CategoryLoaded():
-              return Container(
-                child: isGridView
-                    ? CategoryGridWidget(
-                        list: state.list, callback: _handleCategoryClick)
-                    : CategoryListWidget(
-                        list: state.list, callback: _handleCategoryClick),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          context.read<CategoryBloc>().add(
+                CategoryLoadEvent(category: widget.category),
               );
-            case CategoryFailed():
-            default:
-              return const Center();
-          }
         },
+        child: BlocBuilder<CategoryBloc, CategoryState>(
+          builder: (context, state) {
+            switch (state) {
+              case CategoryInitial():
+              case CategoryLoading():
+                return const Center(child: CircularProgressIndicator());
+              case CategoryLoaded():
+                return Container(
+                  child: isGridView
+                      ? CategoryGridWidget(
+                          list: state.list, callback: _handleCategoryClick)
+                      : CategoryListWidget(
+                          list: state.list, callback: _handleCategoryClick),
+                );
+              case CategoryFailed():
+              default:
+                return const CustomScrollView(
+                  slivers: <Widget>[
+                    SliverFillRemaining(child: Center()),
+                  ],
+                );
+            }
+          },
+        ),
       ),
     );
   }
