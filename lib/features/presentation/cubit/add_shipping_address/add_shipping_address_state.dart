@@ -14,3 +14,5 @@ class AddShippingAddtessLoadedState extends AddShippingAddressState {
     required this.states,
   });
 }
+
+class AddShippingAddressUpdateToggleState extends AddShippingAddressState {}

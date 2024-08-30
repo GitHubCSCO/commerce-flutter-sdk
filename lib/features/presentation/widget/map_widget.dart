@@ -70,7 +70,7 @@ class _MapWidgetState extends State<MapWidget> {
             target: firstMarker.position,
             zoom: 6,
           );
-          Future.microtask(() async {
+          await Future.microtask(() async {
             await controller
                 .animateCamera(CameraUpdate.newCameraPosition(newPosition));
           });

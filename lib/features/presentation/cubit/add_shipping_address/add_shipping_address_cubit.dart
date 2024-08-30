@@ -7,13 +7,13 @@ class AddShippingAddressCubit extends Cubit<AddShippingAddressState> {
   final AddShippingAddressUsecase _addShippingAddressUsecase;
   Country? selectedCountry;
   StateModel? selectedState;
+  bool isSavedAddress = false;
   AddShippingAddressCubit(
       {required AddShippingAddressUsecase addShippingAddressUsecase})
       : _addShippingAddressUsecase = addShippingAddressUsecase,
         super(AddShippingAddtessInitialState());
 
   Future<void> setUpDataShippingAddress() async {
-    emit(AddShippingAddtessLoadingState());
     var countryListResponse = await _addShippingAddressUsecase.getCountries();
 
     List<Country> countries = (countryListResponse is Success)
@@ -28,11 +28,16 @@ class AddShippingAddressCubit extends Cubit<AddShippingAddressState> {
   Future<void> onSelectCountry(Country? counrty) async {
     selectedCountry = counrty;
 
-    setUpDataShippingAddress();
+    await setUpDataShippingAddress();
   }
 
   Future<void> onSelectState(StateModel? state) async {
     selectedState = state;
-    setUpDataShippingAddress();
+    await setUpDataShippingAddress();
+  }
+
+  Future<void> onUpdateSaveAddressToggle(bool value) async {
+    isSavedAddress = value;
+    emit(AddShippingAddressUpdateToggleState());
   }
 }
