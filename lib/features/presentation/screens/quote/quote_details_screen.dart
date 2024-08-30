@@ -93,7 +93,7 @@ class QuoteDetailsPage extends StatelessWidget {
         } else if (state is QuoteDeletionSuccessState) {
           CustomSnackBar.showSuccesss(context);
           context.read<RootBloc>().add(RootCartUpdateEvent());
-          Navigator.of(context).pop();
+          AppRoute.myQuote.navigate(context);
         } else if (state is QuoteDeletionFailedState) {
           CustomSnackBar.showFailure(context);
         } else if (state is QuoteDeclineSuccessState) {

@@ -52,66 +52,78 @@ class SavedOrderPage extends StatelessWidget {
             context.read<SavedOrderHandlerCubit>().resetState();
           }
         },
-        child: BlocBuilder<SavedOrderCubit, SavedOrderState>(
-          builder: (context, state) {
-            switch (state.status) {
-              case OrderStatus.loading || OrderStatus.initial:
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-
-              case OrderStatus.failure:
-                return Center(
-                  child: Text(
-                    state.errorMessage ?? '',
-                  ),
-                );
-
-              default:
-                return Column(
-                  children: [
-                    Container(
-                      height: 50,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            ((state.cartCollectionModel.pagination
-                                            ?.totalItemCount ??
-                                        0) !=
-                                    0)
-                                ? '${state.cartCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.orders.localized()}'
-                                : '',
-                            style: OptiTextStyles.header3,
-                          ),
-                          SortToolMenu(
-                            availableSortOrders: CartSortOrder.values,
-                            onSortOrderChanged: (selectedSortOrder) async {
-                              context.read<SavedOrderCubit>().changeSortOrder(
-                                    selectedSortOrder as CartSortOrder,
-                                  );
-                            },
-                            selectedSortOrder: state.sortOrder,
-                          )
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: (state.cartCollectionModel.carts ?? []).isNotEmpty
-                          ? _SavedOrderListWidget(
-                              savedOrders:
-                                  state.cartCollectionModel.carts ?? [],
-                            )
-                          : Center(
-                              child: Text(LocalizationConstants.noSavedOrders
-                                  .localized()),
-                            ),
-                    ),
-                  ],
-                );
-            }
+        child: RefreshIndicator(
+          onRefresh: () async {
+            context.read<SavedOrderCubit>().initialize();
           },
+          child: BlocBuilder<SavedOrderCubit, SavedOrderState>(
+            builder: (context, state) {
+              switch (state.status) {
+                case OrderStatus.loading || OrderStatus.initial:
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+
+                case OrderStatus.failure:
+                  return CustomScrollView(
+                    slivers: <Widget>[
+                      SliverFillRemaining(
+                        child: Center(
+                          child: Text(
+                            state.errorMessage ?? '',
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+
+                default:
+                  return Column(
+                    children: [
+                      Container(
+                        height: 50,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              ((state.cartCollectionModel.pagination
+                                              ?.totalItemCount ??
+                                          0) !=
+                                      0)
+                                  ? '${state.cartCollectionModel.pagination?.totalItemCount} ${LocalizationConstants.orders.localized()}'
+                                  : '',
+                              style: OptiTextStyles.header3,
+                            ),
+                            SortToolMenu(
+                              availableSortOrders: CartSortOrder.values,
+                              onSortOrderChanged: (selectedSortOrder) async {
+                                context.read<SavedOrderCubit>().changeSortOrder(
+                                      selectedSortOrder as CartSortOrder,
+                                    );
+                              },
+                              selectedSortOrder: state.sortOrder,
+                            )
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: (state.cartCollectionModel.carts ?? [])
+                                .isNotEmpty
+                            ? _SavedOrderListWidget(
+                                savedOrders:
+                                    state.cartCollectionModel.carts ?? [],
+                              )
+                            : Center(
+                                child: Text(LocalizationConstants.noSavedOrders
+                                    .localized()),
+                              ),
+                      ),
+                    ],
+                  );
+              }
+            },
+          ),
         ),
       ),
     );
@@ -167,6 +179,7 @@ class _SavedOrderListWidgetState extends State<_SavedOrderListWidget> {
     return BlocBuilder<SavedOrderCubit, SavedOrderState>(
       builder: (context, state) {
         return ListView.separated(
+          physics: const AlwaysScrollableScrollPhysics(),
           controller: _scrollController,
           itemBuilder: (context, index) {
             if (index >= (state.cartCollectionModel.carts?.length ?? 0) &&

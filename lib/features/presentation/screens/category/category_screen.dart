@@ -53,25 +53,34 @@ class _CategoryPageState extends State<CategoryPage>
               isViewOnWebsiteEnable: false, toolMenuList: getToolMenu(context)),
         ],
       ),
-      body: BlocBuilder<CategoryBloc, CategoryState>(
-        builder: (context, state) {
-          switch (state) {
-            case CategoryInitial():
-            case CategoryLoading():
-              return const Center(child: CircularProgressIndicator());
-            case CategoryLoaded():
-              return Container(
-                child: isGridView
-                    ? CategoryGridWidget(
-                        list: state.list, callback: _handleCategoryClick)
-                    : CategoryListWidget(
-                        list: state.list, callback: _handleCategoryClick),
-              );
-            case CategoryFailed():
-            default:
-              return const Center();
-          }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          context.read<CategoryBloc>().add(TopCategoryLoadEvent());
         },
+        child: BlocBuilder<CategoryBloc, CategoryState>(
+          builder: (context, state) {
+            switch (state) {
+              case CategoryInitial():
+              case CategoryLoading():
+                return const Center(child: CircularProgressIndicator());
+              case CategoryLoaded():
+                return Container(
+                  child: isGridView
+                      ? CategoryGridWidget(
+                          list: state.list, callback: _handleCategoryClick)
+                      : CategoryListWidget(
+                          list: state.list, callback: _handleCategoryClick),
+                );
+              case CategoryFailed():
+              default:
+                return const CustomScrollView(
+                  slivers: <Widget>[
+                    SliverFillRemaining(child: Center()),
+                  ],
+                );
+            }
+          },
+        ),
       ),
     );
   }

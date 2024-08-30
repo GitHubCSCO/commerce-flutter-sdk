@@ -94,59 +94,92 @@ class QuotePageState extends State<QuotePage> {
               tabTitle0: LocalizationConstants.pending.localized(),
               tabTitle1: LocalizationConstants.activeJobs.localized(),
               tabWidget0: Expanded(
-                child: BlocBuilder<QuoteBloc, QuoteState>(builder: (_, state) {
-                  if (state is QuoteFailed) {
-                    return const Center(
-                      child: Text("No data found"),
-                    );
-                  } else if (state is QuoteLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (state is QuoteLoaded) {
-                    if (state.quotes == null || state.quotes!.isEmpty) {
-                      return Center(
-                        child: Text(
-                          state.notFoundInfoText ?? "",
-                          style: OptiTextStyles.subtitle,
-                        ),
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<QuoteBloc>().add(
+                          QuoteLoadEvent(
+                            quotePageType: QuotePageType.pending,
+                            quoteParameters: null,
+                          ),
+                        );
+                  },
+                  child:
+                      BlocBuilder<QuoteBloc, QuoteState>(builder: (_, state) {
+                    if (state is QuoteFailed) {
+                      return const Center(
+                        child: Text("No data found"),
                       );
+                    } else if (state is QuoteLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state is QuoteLoaded) {
+                      if (state.quotes == null || state.quotes!.isEmpty) {
+                        return CustomScrollView(
+                          slivers: <Widget>[
+                            SliverFillRemaining(
+                              child: Center(
+                                child: Text(
+                                  state.notFoundInfoText ?? "",
+                                  style: OptiTextStyles.subtitle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return _PendingQuotesWidget(
+                          goToQuoteDetails: goToQuoteDetails,
+                        );
+                      }
                     } else {
-                      return _PendingQuotesWidget(
-                        goToQuoteDetails: goToQuoteDetails,
-                      );
+                      return Container();
                     }
-                  } else {
-                    return Container();
-                  }
-                }),
+                  }),
+                ),
               ),
               tabWidget1: Expanded(
-                child: BlocBuilder<QuoteBloc, QuoteState>(
-                    builder: (context, state) {
-                  if (state is QuoteFailed) {
-                    return const Center(
-                      child: Text("No data found"),
-                    );
-                  } else if (state is QuoteLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (state is JobQuoteLoaded) {
-                    if (state.jobQuotes == null || state.jobQuotes!.isEmpty) {
-                      return Center(
-                        child: Text(
-                          state.notFoundInfoText ?? "",
-                          style: OptiTextStyles.subtitle,
-                        ),
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<QuoteBloc>().add(
+                          QuoteLoadEvent(
+                            quotePageType: QuotePageType.activejobs,
+                            quoteParameters: null,
+                          ),
+                        );
+                  },
+                  child: BlocBuilder<QuoteBloc, QuoteState>(
+                      builder: (context, state) {
+                    if (state is QuoteFailed) {
+                      return const Center(
+                        child: Text("No data found"),
                       );
+                    } else if (state is QuoteLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state is JobQuoteLoaded) {
+                      if (state.jobQuotes == null || state.jobQuotes!.isEmpty) {
+                        return CustomScrollView(
+                          slivers: <Widget>[
+                            SliverFillRemaining(
+                              child: Center(
+                                child: Text(
+                                  state.notFoundInfoText ?? "",
+                                  style: OptiTextStyles.subtitle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return _buildActiveJobsWidget(state.jobQuotes, context);
+                      }
                     } else {
-                      return _buildActiveJobsWidget(state.jobQuotes, context);
+                      return Container();
                     }
-                  } else {
-                    return Container();
-                  }
-                }),
+                  }),
+                ),
               ),
               selectedIndex: selectedIndex,
               onTabSelectionChange: (index) {
@@ -184,43 +217,40 @@ class QuotePageState extends State<QuotePage> {
 
   Widget _buildActiveJobsWidget(
       List<JobQuoteDto>? jobQuotes, BuildContext context) {
-    return Expanded(
-      child: ListView.separated(
-        separatorBuilder: (context, index) => const Divider(
-          color: Colors.grey,
-        ),
-        shrinkWrap: true,
-        // physics: const NeverScrollableScrollPhysics(),
-        scrollDirection: Axis.vertical,
-        itemCount: jobQuotes?.length ?? 0,
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              AppRoute.jobQuoteDetails.navigateBackStack(
-                context,
-                pathParameters: {
-                  'jobQuoteId': jobQuotes?[index].id ?? '',
-                },
-              );
-            },
-            child: QuoteItemWidget(
-              typeDisplay: '',
-              quoteNumber: jobQuotes?[index].jobName ?? '',
-              companyName: jobQuotes?[index].customerName ?? '',
-              address: jobQuotes?[index].shipToFullAddress ?? '',
-              status: jobQuotes?[index].status ?? '',
-              requestDate: jobQuotes?[index].orderDate != null
-                  ? jobQuotes![index].orderDate.formatDate(format: 'MM/dd/yyyy')
-                  : '',
-              expiryDate: jobQuotes?[index].expirationDate != null
-                  ? jobQuotes![index]
-                      .expirationDate!
-                      .formatDate(format: 'MM/dd/yyyy')
-                  : '',
-            ),
-          );
-        },
+    return ListView.separated(
+      separatorBuilder: (context, index) => const Divider(
+        color: Colors.grey,
       ),
+      physics: const AlwaysScrollableScrollPhysics(),
+      scrollDirection: Axis.vertical,
+      itemCount: jobQuotes?.length ?? 0,
+      itemBuilder: (context, index) {
+        return InkWell(
+          onTap: () {
+            AppRoute.jobQuoteDetails.navigateBackStack(
+              context,
+              pathParameters: {
+                'jobQuoteId': jobQuotes?[index].id ?? '',
+              },
+            );
+          },
+          child: QuoteItemWidget(
+            typeDisplay: '',
+            quoteNumber: jobQuotes?[index].jobName ?? '',
+            companyName: jobQuotes?[index].customerName ?? '',
+            address: jobQuotes?[index].shipToFullAddress ?? '',
+            status: jobQuotes?[index].status ?? '',
+            requestDate: jobQuotes?[index].orderDate != null
+                ? jobQuotes![index].orderDate.formatDate(format: 'MM/dd/yyyy')
+                : '',
+            expiryDate: jobQuotes?[index].expirationDate != null
+                ? jobQuotes![index]
+                    .expirationDate!
+                    .formatDate(format: 'MM/dd/yyyy')
+                : '',
+          ),
+        );
+      },
     );
   }
 }
@@ -285,48 +315,46 @@ class __PendingQuotesWidgetState extends State<_PendingQuotesWidget> {
           return const Placeholder();
         }
 
-        return Expanded(
-          child: ListView.separated(
-            separatorBuilder: (context, index) => const Divider(
-              color: Colors.grey,
-            ),
-            shrinkWrap: true,
-            controller: _scrollController,
-            scrollDirection: Axis.vertical,
-            itemCount: (state.moreLoading == true)
-                ? (state.quotes ?? []).length + 1
-                : (state.quotes ?? []).length,
-            itemBuilder: (_, index) {
-              if (state.moreLoading == true &&
-                  index >= (state.quotes ?? []).length) {
-                return const Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              }
-
-              return InkWell(
-                onTap: () {
-                  widget.goToQuoteDetails(context, (state.quotes ?? [])[index]);
-                  // AppRoute.quoteDetails
-                  //     .navigateBackStack(context, extra: quotes[index]);
-                },
-                child: QuoteItemWidget(
-                  typeDisplay: (state.quotes ?? [])[index].typeDisplay ?? '',
-                  quoteNumber: (state.quotes ?? [])[index].quoteNumber ?? '',
-                  companyName: (state.quotes ?? [])[index].customerName ?? '',
-                  address: (state.quotes ?? [])[index].shipToFullAddress ?? '',
-                  status: (state.quotes ?? [])[index].status ?? '',
-                  requestDate: (state.quotes ?? [])[index]
-                      .orderDate
-                      .formatDate(format: 'MM/dd/yyyy'),
-                  expiryDate: (state.quotes ?? [])[index]
-                      .expirationDate
-                      .formatDate(format: 'MM/dd/yyyy'),
-                ),
-              );
-            },
+        return ListView.separated(
+          separatorBuilder: (context, index) => const Divider(
+            color: Colors.grey,
           ),
+          physics: const AlwaysScrollableScrollPhysics(),
+          controller: _scrollController,
+          scrollDirection: Axis.vertical,
+          itemCount: (state.moreLoading == true)
+              ? (state.quotes ?? []).length + 1
+              : (state.quotes ?? []).length,
+          itemBuilder: (_, index) {
+            if (state.moreLoading == true &&
+                index >= (state.quotes ?? []).length) {
+              return const Padding(
+                padding: EdgeInsets.all(10),
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+
+            return InkWell(
+              onTap: () {
+                widget.goToQuoteDetails(context, (state.quotes ?? [])[index]);
+                // AppRoute.quoteDetails
+                //     .navigateBackStack(context, extra: quotes[index]);
+              },
+              child: QuoteItemWidget(
+                typeDisplay: (state.quotes ?? [])[index].typeDisplay ?? '',
+                quoteNumber: (state.quotes ?? [])[index].quoteNumber ?? '',
+                companyName: (state.quotes ?? [])[index].customerName ?? '',
+                address: (state.quotes ?? [])[index].shipToFullAddress ?? '',
+                status: (state.quotes ?? [])[index].status ?? '',
+                requestDate: (state.quotes ?? [])[index]
+                    .orderDate
+                    .formatDate(format: 'MM/dd/yyyy'),
+                expiryDate: (state.quotes ?? [])[index]
+                    .expirationDate
+                    .formatDate(format: 'MM/dd/yyyy'),
+              ),
+            );
+          },
         );
       },
     );
