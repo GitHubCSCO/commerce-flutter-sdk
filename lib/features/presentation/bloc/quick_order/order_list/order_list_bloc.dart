@@ -55,10 +55,10 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     on<OrderListAddVmiBinEvent>(_onOrderListAddVmiBinEvent);
   }
 
-  void _createAlternateCart() {
+  Future<void> _createAlternateCart() async {
     if (scanningMode == ScanningMode.count ||
         scanningMode == ScanningMode.create) {
-      _quickOrderUseCase.createAlternateCart();
+      await _quickOrderUseCase.createAlternateCart();
     }
   }
 
@@ -66,7 +66,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   Future<void> close() async {
     if (scanningMode == ScanningMode.count ||
         scanningMode == ScanningMode.create) {
-      _quickOrderUseCase.removeAlternateCart();
+      await _quickOrderUseCase.removeAlternateCart();
     }
     await super.close();
   }
@@ -84,7 +84,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     instructionsMessage = await _quickOrderUseCase.getSiteMessage(
         SiteMessageConstants.nameQuickOrderInstructions,
         SiteMessageConstants.defaultValueQuickOrderInstructions);
-    _createAlternateCart();
+    await _createAlternateCart();
     _quickOrderUseCase.setScanningMode(scanningMode);
     final list = await _quickOrderUseCase.getPersistedData();
     quickOrderItemList = list;

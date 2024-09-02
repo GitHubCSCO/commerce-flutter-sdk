@@ -35,7 +35,7 @@ class QuickOrderUseCase extends BaseUseCase {
         .createAlternateCart(addCartModel);
   }
 
-  void removeAlternateCart() async {
+  Future<void> removeAlternateCart() async {
     await commerceAPIServiceProvider
         .getClientService()
         .removeAlternateCartCookie();

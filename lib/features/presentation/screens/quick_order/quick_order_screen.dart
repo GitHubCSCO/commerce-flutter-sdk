@@ -561,7 +561,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
       return;
     }
 
-    context.read<OrderListBloc>().deleteExistingCartLine(currentCartProducts);
+    await context
+        .read<OrderListBloc>()
+        .deleteExistingCartLine(currentCartProducts);
 
     var addToCartCartLineList =
         await context.read<OrderListBloc>().addCartLineCollection(addCartLines);

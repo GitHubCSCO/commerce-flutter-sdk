@@ -12,7 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 void showStyleTraitFilter(
   ProductEntity product,
   BuildContext context, {
-  required void Function(StyledProductEntity? styledProductEntity) ongetProduct,
+  required void Function(StyledProductEntity? styledProductEntity) onGetProduct,
 }) {
   final isApplyEnabledNotifier = ValueNotifier(false);
 
@@ -23,7 +23,7 @@ void showStyleTraitFilter(
     onApply: () {
       var styledProduct = context.read<StyleTraitCubit>().styledProductEntity;
       if (styledProduct != null) {
-        ongetProduct(styledProduct);
+        onGetProduct(styledProduct);
       }
     },
     onReset: null,
