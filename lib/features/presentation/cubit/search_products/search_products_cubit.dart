@@ -3,7 +3,7 @@ import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/core/mixins/realtime_pricing_inventory_update_mixin.dart';
 import 'package:commerce_flutter_app/features/domain/entity/pagination_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/search_product_status.dart';
+import 'package:commerce_flutter_app/features/domain/enums/state_status.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/pagination_entity_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
@@ -34,7 +34,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
             originalQuery: '',
             productEntities: null,
             paginationEntity: null,
-            searchProductStatus: SearchProductStatus.initial,
+            searchProductStatus: StateStatus.initial,
             availableSortOrders: const [],
             selectedSortOrder: SortOrderAttribute(
               groupTitle: '',
@@ -86,7 +86,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
 
   void loadInitialSearchProducts(
       GetProductCollectionResult? productCollectionResult) async {
-    emit(state.copyWith(searchProductStatus: SearchProductStatus.loading));
+    emit(state.copyWith(searchProductStatus: StateStatus.loading));
 
     query = productCollectionResult?.originalQuery;
 
@@ -124,7 +124,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
         productEntities: productEntities,
         paginationEntity: PaginationEntityMapper.toEntity(
             productCollectionResult?.pagination ?? Pagination()),
-        searchProductStatus: SearchProductStatus.success,
+        searchProductStatus: StateStatus.success,
         availableSortOrders: availableSortOrders,
         selectedSortOrder: selectedSortOrder,
         productSettings: productSettings,
@@ -141,11 +141,11 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
     if (state.paginationEntity?.page == null ||
         (state.paginationEntity?.page ?? 0) + 1 >
             (state.paginationEntity?.numberOfPages ?? 0) ||
-        state.searchProductStatus == SearchProductStatus.moreLoading) {
+        state.searchProductStatus == StateStatus.moreLoading) {
       return;
     }
 
-    emit(state.copyWith(searchProductStatus: SearchProductStatus.moreLoading));
+    emit(state.copyWith(searchProductStatus: StateStatus.moreLoading));
     final result = await _searchUseCase.loadSearchProductsResults(
       state.originalQuery ?? '',
       (state.paginationEntity?.page ?? 0) + 1,
@@ -160,7 +160,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
 
     if (result == null) {
       emit(state.copyWith(
-          searchProductStatus: SearchProductStatus.moreLoadingFailure));
+          searchProductStatus: StateStatus.moreLoadingFailure));
       return;
     }
 
@@ -177,18 +177,18 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
             productEntities: state.productEntities,
             paginationEntity: PaginationEntityMapper.toEntity(
                 data?.pagination ?? Pagination()),
-            searchProductStatus: SearchProductStatus.success,
+            searchProductStatus: StateStatus.success,
           ),
         );
       case Failure():
         emit(state.copyWith(
-            searchProductStatus: SearchProductStatus.moreLoadingFailure));
+            searchProductStatus: StateStatus.moreLoadingFailure));
     }
   }
 
   Future<void> sortOrderChanged(SortOrderAttribute sortOrder) async {
     emit(state.copyWith(
-      searchProductStatus: SearchProductStatus.loading,
+      searchProductStatus: StateStatus.loading,
       selectedSortOrder: sortOrder,
     ));
 
@@ -212,7 +212,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
       case Success(value: final data):
         if (data == null) {
           emit(
-              state.copyWith(searchProductStatus: SearchProductStatus.failure));
+              state.copyWith(searchProductStatus: StateStatus.failure));
           return;
         }
 
@@ -237,13 +237,13 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
             productEntities: productEntities,
             paginationEntity: PaginationEntityMapper.toEntity(
                 data.pagination ?? Pagination()),
-            searchProductStatus: SearchProductStatus.success,
+            searchProductStatus: StateStatus.success,
             availableSortOrders: availableSortOrders,
             selectedSortOrder: selectedSortOrder,
           ),
         );
       default:
-        emit(state.copyWith(searchProductStatus: SearchProductStatus.failure));
+        emit(state.copyWith(searchProductStatus: StateStatus.failure));
     }
   }
 
@@ -270,7 +270,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
           selectedCategoryId: selectedCategoryId,
           previouslyPurchased: previouslyPurchased,
           selectedStockedItems: selectedStockedItems,
-          searchProductStatus: SearchProductStatus.loading,
+          searchProductStatus: StateStatus.loading,
         ),
       );
 

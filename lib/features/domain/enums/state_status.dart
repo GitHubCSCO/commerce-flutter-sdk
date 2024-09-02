@@ -1,4 +1,4 @@
-enum SearchProductStatus {
+enum StateStatus {
   initial,
   loading,
   moreLoading,
