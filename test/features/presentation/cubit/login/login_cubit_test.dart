@@ -35,7 +35,7 @@ void main() async {
         return sut;
       },
       act: (cubit) async {
-        cubit.onLoginSubmit('validUsername', 'validPassword');
+        await cubit.onLoginSubmit('validUsername', 'validPassword');
       },
       expect: () => [
         LoginLoadingState(),
@@ -51,7 +51,7 @@ void main() async {
         return sut;
       },
       act: (cubit) async {
-        cubit.onLoginSubmit('invalidUsername', 'invalidPassword');
+        await cubit.onLoginSubmit('invalidUsername', 'invalidPassword');
       },
       expect: () => [
         LoginLoadingState(),

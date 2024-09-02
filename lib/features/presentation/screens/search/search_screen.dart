@@ -24,6 +24,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/base_screen.d
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/error_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_product/search_products_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
@@ -261,12 +262,14 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                                 return CustomScrollView(
                                   slivers: <Widget>[
                                     SliverFillRemaining(
-                                      child: Center(
-                                        child: Text(LocalizationConstants
-                                            .errorLoadingSearchLanding
-                                            .localized()),
-                                      ),
-                                    ),
+                                        child: OptiErrorWidget(
+                                      onRetry: () {
+                                        _reloadSearchPage(context);
+                                      },
+                                      errorText: LocalizationConstants
+                                          .errorLoadingSearchLanding
+                                          .localized(),
+                                    )),
                                   ],
                                 );
                             }
@@ -356,10 +359,14 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                       }
                     default:
                       {
-                        return Center(
-                            child: Text(LocalizationConstants
-                                .errorLoadingSearchLanding
-                                .localized()));
+                        return OptiErrorWidget(
+                          onRetry: () {
+                            _reloadSearchPage(context);
+                          },
+                          errorText: LocalizationConstants
+                              .errorLoadingSearchLanding
+                              .localized(),
+                        );
                       }
                   }
                 }),

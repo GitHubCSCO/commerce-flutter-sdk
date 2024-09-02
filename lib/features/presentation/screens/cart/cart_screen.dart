@@ -31,6 +31,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_lin
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_payment_summary_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/error_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -257,11 +258,13 @@ class CartPage extends StatelessWidget {
                   return CustomScrollView(
                     slivers: <Widget>[
                       SliverFillRemaining(
-                        child: Center(
-                          child: Text(LocalizationConstants.errorLoadingCart
-                              .localized()),
-                        ),
-                      ),
+                          child: OptiErrorWidget(
+                        onRetry: () {
+                          _reloadCartPage(context);
+                        },
+                        errorText:
+                            LocalizationConstants.errorLoadingCart.localized(),
+                      )),
                     ],
                   );
               }
