@@ -10,7 +10,7 @@ import '../../injector_mock.dart';
 void main() async {
   late DomainUsecase sut;
   setUp(() async {
-    initInjectionContainerMock();
+    await initInjectionContainerMock();
     await GetIt.I.allReady();
     sut = DomainUsecase();
   });
