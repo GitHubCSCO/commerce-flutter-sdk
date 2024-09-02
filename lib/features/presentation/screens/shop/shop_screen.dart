@@ -15,6 +15,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_c
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/error_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -124,10 +125,12 @@ class ShopPage extends StatelessWidget with BaseDynamicContentScreen {
                   return CustomScrollView(
                     slivers: <Widget>[
                       SliverFillRemaining(
-                        child: Center(
-                          child: Text(LocalizationConstants.errorLoadingShop
-                              .localized()),
-                        ),
+                        child: OptiErrorWidget(
+                            onRetry: () {
+                              _reloadShopPage(context);
+                            },
+                            errorText: LocalizationConstants.errorLoadingShop
+                                .localized()),
                       ),
                     ],
                   );

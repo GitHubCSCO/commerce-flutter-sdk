@@ -41,6 +41,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/product_detai
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_standart_configuration_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_style_traits_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/error_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/product_carousel_section_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -141,14 +142,27 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
                           state.productDetailsEntities, context),
                     ),
                   );
-                case ProductDetailsErrorState():
-                  return const Center(child: Text("failure"));
+                case ProductDetailsErrorState(errorMessage: final errorMessage):
+                  return OptiErrorWidget(
+                    errorText: errorMessage,
+                    onRetry: () {
+                      _reloadProductDetails(context);
+                    },
+                  );
                 default:
-                  return const Center(child: Text("failure"));
+                  return OptiErrorWidget(onRetry: () {
+                    _reloadProductDetails(context);
+                  });
               }
             },
           ),
         ));
+  }
+
+  void _reloadProductDetails(BuildContext context) {
+    context
+        .read<ProductDetailsBloc>()
+        .add(FetchProductDetailsEvent(productId, product));
   }
 
   void handleAuthStatusInProductDetails(BuildContext context, AuthStatus status,
