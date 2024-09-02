@@ -232,9 +232,9 @@ enum LocalizationConstants {
   signInBeforeSaveOrder(
       keyword: "Please sign in before proceeding to save order."),
   quickOrderContents(keyword: "Quick Order Contents"),
-  notFoundForSearch(keyword: "Not found for {0}"),
+  notFoundForSearch(keyword: "Not found for %s"),
   tooManyResultsForSearch(
-      keyword: "There is more than one product that matches {0}"),
+      keyword: "There is more than one product that matches %s"),
   addToCartAndCheckout(keyword: "Add to Cart & Checkout"),
   quickOrder(keyword: "Quick Order"),
   addToQuickOrder(keyword: "Add to Quick Order"),

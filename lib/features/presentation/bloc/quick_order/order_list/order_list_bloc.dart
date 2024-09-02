@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
@@ -10,6 +12,7 @@ import 'package:commerce_flutter_app/features/domain/entity/styled_product_entit
 import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/vmi_bin_model_entity_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/quick_order_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
@@ -119,7 +122,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
       final result = await _quickOrderUseCase
           .getVmiBin(event.autocompleteProduct.binNumber);
 
-      await _addVmiOrderItem(result, emit);
+      await _addVmiOrderItem(result, emit, event.autocompleteProduct.binNumber);
     } else {
       final result = await _quickOrderUseCase.getProduct(
           event.autocompleteProduct.id!, event.autocompleteProduct);
@@ -134,7 +137,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     if (scanningMode == ScanningMode.count ||
         scanningMode == ScanningMode.create) {
       final result = await _quickOrderUseCase.getVmiBin(event.resultText);
-      await _addVmiOrderItem(result, emit);
+      await _addVmiOrderItem(result, emit, event.resultText);
     } else {
       final result = await _quickOrderUseCase.getScanProduct(
           event.resultText, event.barcodeFormat);
@@ -383,56 +386,71 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     }
   }
 
-  Future<void> _addVmiOrderItem(Result<VmiBinModelEntity, ErrorResponse> result,
-      Emitter<OrderListState> emit) async {
+  Future<void> _addVmiOrderItem(Result<GetVmiBinResult, ErrorResponse> result,
+      Emitter<OrderListState> emit, String? searchValue) async {
     await _getProductSetting();
 
     switch (result) {
-      case Success(value: final vmiBin):
-        if (vmiBin == null || vmiBin.productEntity == null) {
-          final message = await _quickOrderUseCase.getSiteMessage(
-              SiteMessageConstants.nameQuickOrderCannotOrderUnavailable,
-              SiteMessageConstants
-                  .defaultValueQuickOrderCannotOrderUnavailable);
-          emit(OrderListAddFailedState(message));
+      case Success(value: final data):
+        if ((data?.vmiBins ?? []).isEmpty) {
+          emit(OrderListAddFailedState(LocalizationConstants.notFoundForSearch
+              .localized()
+              .format([searchValue])));
           emit(OrderListLoadedState(quickOrderItemList, productSettings));
-          return;
-        }
+        } else if ((data?.vmiBins ?? []).length == 1) {
+          final vmiBin = VmiBinModelEntityMapper.toEntity(data!.vmiBins.first);
 
-        if (scanningMode == ScanningMode.count) {
-          final result = await _quickOrderUseCase.getPreviousOrder(vmiBin.id);
-          final previousOrder =
-              (result is Success) ? (result as Success).value : null;
-
-          emit(OrderListVmiProductAddState(vmiBin, previousOrder));
-          return;
-        } else {
-          var quantity = (vmiBin.productEntity!.minimumOrderQty! > 0)
-              ? vmiBin.productEntity!.minimumOrderQty
-              : 1;
-
-          if (vmiBin.productEntity!.isStyleProductParent!) {
-            emit(OrderListVmiStyleProductAddState(vmiBin));
-          } else if (vmiBin.productEntity!.isConfigured! ||
-              (vmiBin.productEntity!.isConfigured! &&
-                  !vmiBin.productEntity!.isFixedConfiguration!)) {
-            final message = await _quickOrderUseCase.getSiteMessage(
-                SiteMessageConstants.nameQuickOrderCannotOrderConfigurable,
-                SiteMessageConstants
-                    .defaultValueQuickOrderCannotOrderConfigurable);
-            emit(OrderListAddFailedState(message));
-          } else if (!vmiBin.productEntity!.canAddToCart!) {
+          if (vmiBin.productEntity == null) {
             final message = await _quickOrderUseCase.getSiteMessage(
                 SiteMessageConstants.nameQuickOrderCannotOrderUnavailable,
                 SiteMessageConstants
                     .defaultValueQuickOrderCannotOrderUnavailable);
             emit(OrderListAddFailedState(message));
-          } else {
-            var newItem =
-                _convertVmiBinProductToQuickOrderItemEntity(vmiBin, quantity!);
-            _insertItemIntoQuickOrderList(newItem);
+            emit(OrderListLoadedState(quickOrderItemList, productSettings));
+            return;
           }
 
+          if (scanningMode == ScanningMode.count) {
+            final result = await _quickOrderUseCase.getPreviousOrder(vmiBin.id);
+            final previousOrder =
+                (result is Success) ? (result as Success).value : null;
+
+            emit(OrderListVmiProductAddState(vmiBin, previousOrder));
+            return;
+          } else {
+            var quantity = (vmiBin.productEntity!.minimumOrderQty! > 0)
+                ? vmiBin.productEntity!.minimumOrderQty
+                : 1;
+
+            if (vmiBin.productEntity!.isStyleProductParent!) {
+              emit(OrderListVmiStyleProductAddState(vmiBin));
+            } else if (vmiBin.productEntity!.isConfigured! ||
+                (vmiBin.productEntity!.isConfigured! &&
+                    !vmiBin.productEntity!.isFixedConfiguration!)) {
+              final message = await _quickOrderUseCase.getSiteMessage(
+                  SiteMessageConstants.nameQuickOrderCannotOrderConfigurable,
+                  SiteMessageConstants
+                      .defaultValueQuickOrderCannotOrderConfigurable);
+              emit(OrderListAddFailedState(message));
+            } else if (!vmiBin.productEntity!.canAddToCart!) {
+              final message = await _quickOrderUseCase.getSiteMessage(
+                  SiteMessageConstants.nameQuickOrderCannotOrderUnavailable,
+                  SiteMessageConstants
+                      .defaultValueQuickOrderCannotOrderUnavailable);
+              emit(OrderListAddFailedState(message));
+            } else {
+              var newItem = _convertVmiBinProductToQuickOrderItemEntity(
+                  vmiBin, quantity!);
+              _insertItemIntoQuickOrderList(newItem);
+            }
+
+            emit(OrderListLoadedState(quickOrderItemList, productSettings));
+          }
+        } else {
+          emit(OrderListAddFailedState(LocalizationConstants
+              .tooManyResultsForSearch
+              .localized()
+              .format([searchValue])));
           emit(OrderListLoadedState(quickOrderItemList, productSettings));
         }
       case Failure():
