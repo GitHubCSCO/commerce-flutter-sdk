@@ -169,10 +169,9 @@ class _BillToShipToAddressSelectionPageState
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: ListView.separated(
                         controller: _scrollController,
-                        itemCount:
-                            state.status == StateStatus.moreLoading
-                                ? (state.list?.length ?? 0) + 1
-                                : state.list?.length ?? 0,
+                        itemCount: state.status == StateStatus.moreLoading
+                            ? (state.list?.length ?? 0) + 1
+                            : state.list?.length ?? 0,
                         itemBuilder: (context, index) {
                           if (index >= (state.list?.length ?? 0) &&
                               state.status == StateStatus.moreLoading) {

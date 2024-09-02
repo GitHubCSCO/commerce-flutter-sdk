@@ -159,8 +159,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
     );
 
     if (result == null) {
-      emit(state.copyWith(
-          searchProductStatus: StateStatus.moreLoadingFailure));
+      emit(state.copyWith(searchProductStatus: StateStatus.moreLoadingFailure));
       return;
     }
 
@@ -211,8 +210,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
     switch (result) {
       case Success(value: final data):
         if (data == null) {
-          emit(
-              state.copyWith(searchProductStatus: StateStatus.failure));
+          emit(state.copyWith(searchProductStatus: StateStatus.failure));
           return;
         }
 

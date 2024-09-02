@@ -21,9 +21,7 @@ class BilltoShiptoAddressSelectionBloc extends Bloc<
       : _billToShipToAddressSelectionUseCase =
             billToShipToAddressSelectionUseCase,
         super(BilltoShiptoAddressSelectionState(
-            list: null,
-            pagination: null,
-          status: StateStatus.initial)) {
+            list: null, pagination: null, status: StateStatus.initial)) {
     on<BilltoShiptoAddressLoadEvent>(
         (event, emit) => _onBilltoShiptoAddressLoadEvent(event, emit));
     on<BilltoShiptoAddressLoadMoreEvent>(
@@ -49,8 +47,10 @@ class BilltoShiptoAddressSelectionBloc extends Bloc<
     if (event.selectionEntity.addressType == AddressType.billTo) {
       await _loadMoreBillToAddress(event.searchQuery, emit);
     } else {
-      await _loadMoreShipToAddress(event.selectionEntity.selectedBillTo?.id ?? '',
-          event.searchQuery, emit);
+      await _loadMoreShipToAddress(
+          event.selectionEntity.selectedBillTo?.id ?? '',
+          event.searchQuery,
+          emit);
     }
   }
 
@@ -61,14 +61,17 @@ class BilltoShiptoAddressSelectionBloc extends Bloc<
 
     switch (result) {
       case Success(value: final data):
-        emit(state.copyWith(list: data?.billTos, pagination: data?.pagination, status: StateStatus.success));
+        emit(state.copyWith(
+            list: data?.billTos,
+            pagination: data?.pagination,
+            status: StateStatus.success));
       case Failure(errorResponse: final error):
         emit(state.copyWith(status: StateStatus.failure));
     }
   }
 
-  Future<void> _loadMoreBillToAddress(String query,
-      Emitter<BilltoShiptoAddressSelectionState> emit) async {
+  Future<void> _loadMoreBillToAddress(
+      String query, Emitter<BilltoShiptoAddressSelectionState> emit) async {
     if (state.pagination?.page == null ||
         (state.pagination?.page ?? 0) + 1 >
             (state.pagination?.numberOfPages ?? 0) ||
@@ -83,7 +86,10 @@ class BilltoShiptoAddressSelectionBloc extends Bloc<
     switch (result) {
       case Success(value: final data):
         state.list?.addAll(data?.billTos ?? []);
-        emit(state.copyWith(list: data?.billTos, pagination: data?.pagination, status: StateStatus.success));
+        emit(state.copyWith(
+            list: data?.billTos,
+            pagination: data?.pagination,
+            status: StateStatus.success));
       case Failure(errorResponse: final error):
         emit(state.copyWith(status: StateStatus.failure));
     }
@@ -96,13 +102,17 @@ class BilltoShiptoAddressSelectionBloc extends Bloc<
 
     switch (result) {
       case Success(value: final data):
-        emit(state.copyWith(list: data?.shipTos, pagination: data?.pagination, status: StateStatus.success));
+        emit(state.copyWith(
+            list: data?.shipTos,
+            pagination: data?.pagination,
+            status: StateStatus.success));
       case Failure(errorResponse: final error):
         emit(state.copyWith(status: StateStatus.failure));
     }
   }
 
-  Future<void> _loadMoreShipToAddress(String billToId, String query, Emitter<BilltoShiptoAddressSelectionState> emit) async {
+  Future<void> _loadMoreShipToAddress(String billToId, String query,
+      Emitter<BilltoShiptoAddressSelectionState> emit) async {
     if (state.pagination?.page == null ||
         (state.pagination?.page ?? 0) + 1 >
             (state.pagination?.numberOfPages ?? 0) ||
@@ -116,10 +126,12 @@ class BilltoShiptoAddressSelectionBloc extends Bloc<
     switch (result) {
       case Success(value: final data):
         state.list?.addAll(data?.shipTos ?? []);
-        emit(state.copyWith(list: state.list, pagination: data?.pagination, status: StateStatus.success));
-      case Failure(errorResponse: final error):
         emit(state.copyWith(
-            status: StateStatus.moreLoadingFailure));
+            list: state.list,
+            pagination: data?.pagination,
+            status: StateStatus.success));
+      case Failure(errorResponse: final error):
+        emit(state.copyWith(status: StateStatus.moreLoadingFailure));
     }
   }
 }
