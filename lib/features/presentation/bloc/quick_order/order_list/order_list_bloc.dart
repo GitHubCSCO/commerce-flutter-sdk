@@ -418,8 +418,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
           if (scanningMode == ScanningMode.count) {
             final result = await _quickOrderUseCase.getPreviousOrder(vmiBin.id);
-            final previousOrder =
-                result.getResultSuccessValue();
+            final previousOrder = result.getResultSuccessValue();
 
             emit(OrderListVmiProductAddState(vmiBin, previousOrder));
             return;
