@@ -66,6 +66,7 @@ class BilltoShiptoAddressSelectionBloc extends Bloc<
             pagination: data?.pagination,
             status: StateStatus.success));
       case Failure(errorResponse: final error):
+        _billToShipToAddressSelectionUseCase.trackError(error);
         emit(state.copyWith(status: StateStatus.failure));
     }
   }
@@ -91,6 +92,7 @@ class BilltoShiptoAddressSelectionBloc extends Bloc<
             pagination: data?.pagination,
             status: StateStatus.success));
       case Failure(errorResponse: final error):
+        _billToShipToAddressSelectionUseCase.trackError(error);
         emit(state.copyWith(status: StateStatus.failure));
     }
   }
@@ -107,6 +109,7 @@ class BilltoShiptoAddressSelectionBloc extends Bloc<
             pagination: data?.pagination,
             status: StateStatus.success));
       case Failure(errorResponse: final error):
+        _billToShipToAddressSelectionUseCase.trackError(error);
         emit(state.copyWith(status: StateStatus.failure));
     }
   }
@@ -131,6 +134,7 @@ class BilltoShiptoAddressSelectionBloc extends Bloc<
             pagination: data?.pagination,
             status: StateStatus.success));
       case Failure(errorResponse: final error):
+        _billToShipToAddressSelectionUseCase.trackError(error);
         emit(state.copyWith(status: StateStatus.moreLoadingFailure));
     }
   }
