@@ -210,7 +210,11 @@ class _LoginPageState extends State<LoginPage> {
                         context.read<LoginCubit>().showSpinner = false;
                         context.pop();
                       }
-                      context.read<AuthCubit>().loadAuthenticationState();
+
+                      context
+                          .read<AuthCubit>()
+                          .loadAuthenticationState()
+                          .ignore();
 
                       if (state.loginStatus ==
                           LoginStatus.loginSuccessBiometric) {
@@ -233,7 +237,10 @@ class _LoginPageState extends State<LoginPage> {
                           if (context.mounted) {
                             context.read<LoginCubit>().showSpinner = true;
                             showPleaseWait(context);
-                            context.read<LoginCubit>().handleBillToShipTo();
+                            context
+                                .read<LoginCubit>()
+                                .handleBillToShipTo()
+                                .ignore();
                           }
 
                           return;
@@ -256,7 +263,12 @@ class _LoginPageState extends State<LoginPage> {
 
                         if (isCancel == null || isCancel) {
                           await context.read<LoginCubit>().onCancelLogin();
-                          context.read<AuthCubit>().loadAuthenticationState();
+                          if (context.mounted) {
+                            context
+                                .read<AuthCubit>()
+                                .loadAuthenticationState()
+                                .ignore();
+                          }
                         }
                       }
                       if (context.mounted) {
