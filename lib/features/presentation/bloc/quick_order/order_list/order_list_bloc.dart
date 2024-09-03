@@ -363,7 +363,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
         if (product.isStyleProductParent == true) {
           emit(OrderListStyleProductAddState(product));
-        } else if (product.isConfigured == true ||
+        } else if (product.canConfigure == true ||
             (product.isConfigured == true &&
                 product.isFixedConfiguration == false)) {
           final message = await _quickOrderUseCase.getSiteMessage(
@@ -427,17 +427,17 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
                 ? vmiBin.productEntity!.minimumOrderQty
                 : 1;
 
-            if (vmiBin.productEntity!.isStyleProductParent!) {
+            if (vmiBin.productEntity?.isStyleProductParent == true) {
               emit(OrderListVmiStyleProductAddState(vmiBin));
-            } else if (vmiBin.productEntity!.isConfigured! ||
-                (vmiBin.productEntity!.isConfigured! &&
-                    !vmiBin.productEntity!.isFixedConfiguration!)) {
+            } else if (vmiBin.productEntity?.canConfigure == true ||
+                (vmiBin.productEntity?.isConfigured == true &&
+                    vmiBin.productEntity?.isFixedConfiguration == false)) {
               final message = await _quickOrderUseCase.getSiteMessage(
                   SiteMessageConstants.nameQuickOrderCannotOrderConfigurable,
                   SiteMessageConstants
                       .defaultValueQuickOrderCannotOrderConfigurable);
               emit(OrderListAddFailedState(message));
-            } else if (!vmiBin.productEntity!.canAddToCart!) {
+            } else if (vmiBin.productEntity?.canAddToCart == false) {
               final message = await _quickOrderUseCase.getSiteMessage(
                   SiteMessageConstants.nameQuickOrderCannotOrderUnavailable,
                   SiteMessageConstants
