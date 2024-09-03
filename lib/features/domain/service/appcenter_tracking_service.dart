@@ -21,14 +21,14 @@ class AppCenterTrackingService implements ITrackingService {
   @override
   Future<void> forceCrash() async {
     if (isEnabled) {
-      AppCenterCrashes.generateTestCrash();
+      AppCenterCrashes.generateTestCrash().ignore();
     }
   }
 
   @override
   Future<void> setUserID(String userId) async {
     if (isEnabled) {
-      AppCenter.setUserId(userId: userId);
+      AppCenter.setUserId(userId: userId).ignore();
     }
   }
 
@@ -60,8 +60,9 @@ class AppCenterTrackingService implements ITrackingService {
         }
       }
       AppCenterAnalytics.trackEvent(
-          name: analyticsEvent.eventName,
-          properties: analyticsEvent.properties);
+              name: analyticsEvent.eventName,
+              properties: analyticsEvent.properties)
+          .ignore();
     }
   }
 
@@ -71,12 +72,14 @@ class AppCenterTrackingService implements ITrackingService {
     if (isEnabled) {
       if (e is ErrorResponse) {
         AppCenterCrashes.trackException(
-            message: e.extractErrorMessage() ?? e.exception.toString(),
-            stackTrace: trace,
-            properties: reason);
+                message: e.extractErrorMessage() ?? e.exception.toString(),
+                stackTrace: trace,
+                properties: reason)
+            .ignore();
       } else {
         AppCenterCrashes.trackException(
-            message: e.toString(), stackTrace: trace, properties: reason);
+                message: e.toString(), stackTrace: trace, properties: reason)
+            .ignore();
       }
     }
   }

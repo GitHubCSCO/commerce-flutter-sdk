@@ -50,19 +50,23 @@ class QuickOrderAutoCompleteBloc
       final result = await loadAutoCompleteProducts();
       switch (result) {
         case Success(value: final data):
-          if ((data?.products ?? []).isNotEmpty) {
-            emit(QuickOrderAutoCompleteLoadedState(result: data));
-          } else {
-            final message = await _searchUseCase.getSiteMessage(
-                SiteMessageConstants.nameQuickOrderCannotOrderUnavailable,
-                SiteMessageConstants
-                    .defaultValueQuickOrderCannotOrderUnavailable);
-            emit(QuickOrderAutoCompleteFailureState(message));
+          {
+            if ((data?.products ?? []).isNotEmpty) {
+              emit(QuickOrderAutoCompleteLoadedState(result: data));
+            } else {
+              final message = await _searchUseCase.getSiteMessage(
+                  SiteMessageConstants.nameQuickOrderCannotOrderUnavailable,
+                  SiteMessageConstants
+                      .defaultValueQuickOrderCannotOrderUnavailable);
+              emit(QuickOrderAutoCompleteFailureState(message));
+            }
           }
         case Failure(errorResponse: final errorResponse):
-          emit(QuickOrderAutoCompleteFailureState(
-              errorResponse.errorDescription ?? ''));
-        default:
+          {
+            _searchUseCase.trackError(errorResponse);
+            emit(QuickOrderAutoCompleteFailureState(
+                errorResponse.errorDescription ?? ''));
+          }
       }
     }
   }
@@ -87,9 +91,11 @@ class QuickOrderAutoCompleteBloc
             emit(QuickOrderAutoCompleteFailureState(message));
           }
         case Failure(errorResponse: final errorResponse):
-          emit(QuickOrderAutoCompleteFailureState(
-              errorResponse.errorDescription ?? ''));
-        default:
+          {
+            _searchUseCase.trackError(errorResponse);
+            emit(QuickOrderAutoCompleteFailureState(
+                errorResponse.errorDescription ?? ''));
+          }
       }
     }
   }
@@ -101,7 +107,7 @@ class QuickOrderAutoCompleteBloc
     }
   }
 
-  Future<Result<AutocompleteResult, ErrorResponse>?>
+  Future<Result<AutocompleteResult, ErrorResponse>>
       loadAutoCompleteProducts() async {
     if (_scanningMode == ScanningMode.count ||
         _scanningMode == ScanningMode.create) {

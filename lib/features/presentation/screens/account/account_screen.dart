@@ -18,6 +18,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.d
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/error_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -202,10 +203,12 @@ class AccountPage extends StatelessWidget with BaseDynamicContentScreen {
                 return CustomScrollView(
                   slivers: <Widget>[
                     SliverFillRemaining(
-                      child: Center(
-                        child: Text(LocalizationConstants.errorLoadingAccount
-                            .localized()),
-                      ),
+                      child: OptiErrorWidget(
+                          onRetry: () {
+                            _reloadAccountPage(context);
+                          },
+                          errorText: LocalizationConstants.errorLoadingAccount
+                              .localized()),
                     ),
                   ],
                 );
