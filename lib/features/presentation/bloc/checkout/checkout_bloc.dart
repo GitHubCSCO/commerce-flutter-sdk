@@ -24,6 +24,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
   Session? session;
   bool hasCheckout = true;
   ProductSettings? productSettings;
+  String? promoItemMessage;
 
   CheckoutBloc({required CheckoutUsecase checkoutUsecase})
       : _checkoutUseCase = checkoutUsecase,
@@ -61,6 +62,9 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
       LoadCheckoutEvent event, Emitter<CheckoutState> emit) async {
     emit(CheckoutLoading());
 
+    promoItemMessage = await _checkoutUseCase.getSiteMessage(
+        SiteMessageConstants.nameCartProductPromotionItem,
+        SiteMessageConstants.defaultValueCartPromotionItem);
     hasCheckout = await _checkoutUseCase.hasCheckout();
 
     var data = await _checkoutUseCase.getCart(event.cart.id!);
@@ -198,7 +202,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
                   productSettings) &&
               cartLine.availability.messageType != 0;
       cartLineEntity = cartLineEntity.copyWith(
-          showInventoryAvailability: shouldShowWarehouseInventoryButton);
+          showInventoryAvailability: shouldShowWarehouseInventoryButton,
+          promoItemMessage: promoItemMessage);
       cartlines.add(cartLineEntity);
     }
     return cartlines;
