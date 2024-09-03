@@ -64,7 +64,10 @@ class VMIService extends ServiceBase implements IVmiService {
             .persistData<VmiLocationModel>(key, closestVmiLocation!);
         break;
       case Failure(errorResponse: final errorResponse):
-        _coreServiceProvider.getTrackingService().trackError(errorResponse);
+        _coreServiceProvider
+            .getTrackingService()
+            .trackError(errorResponse)
+            .ignore();
         break;
     }
 

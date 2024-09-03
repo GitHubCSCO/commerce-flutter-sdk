@@ -51,6 +51,10 @@ class ProductDetailsUseCase extends BaseUseCase {
       ProductDetailsAddToCartUseCase();
   ProductDetailsUseCase() : super();
 
+  Future<bool> isOnline() async {
+    return commerceAPIServiceProvider.getNetworkService().isOnline();
+  }
+
   Future<bool> hasCheckout() {
     return coreServiceProvider.getAppConfigurationService().hasCheckout();
   }
@@ -132,7 +136,7 @@ class ProductDetailsUseCase extends BaseUseCase {
     switch (resultResponse) {
       case Success(value: final data):
         final productEntity =
-            ProductEntityMapper().toEntity(data?.product ?? Product());
+            ProductEntityMapper.toEntity(data?.product ?? Product());
 
         return Success(productEntity);
       case Failure(errorResponse: final errorResponse):

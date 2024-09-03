@@ -394,6 +394,7 @@ enum LocalizationConstants {
   useDifferentBillingAddress(keyword: "Use Different Billing Address"),
   useBillingAddress(keyword: "Use billing address"),
   errorLoadingPage(keyword: "Error Loading Page"),
+  errorLoadingProductDetails(keyword: "Error Loading Page"),
   creditCard(keyword: "Credit Card"),
   oneTimeAddress(keyword: "One-Time Address"),
   country(keyword: "Country"),
@@ -676,6 +677,7 @@ enum LocalizationConstants {
   viewMore(keyword: "View More"),
   tryAgain(keyword: "Try Again"),
   errorLoading(keyword: "Error Loading"),
+  noInternet(keyword: "No Internet"),
   ;
 
   const LocalizationConstants({

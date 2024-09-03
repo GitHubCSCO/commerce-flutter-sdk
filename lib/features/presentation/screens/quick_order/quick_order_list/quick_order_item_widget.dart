@@ -6,6 +6,7 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
@@ -394,7 +395,7 @@ class _OrderProductQuantityGroupWidgetState
   void _showInputDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext mContext) {
         return AlertDialog(
           title: Text(
             LocalizationConstants.updateQuantity.localized(),
@@ -423,12 +424,12 @@ class _OrderProductQuantityGroupWidgetState
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => Navigator.of(mContext).pop(),
               child: Text(LocalizationConstants.cancel.localized()),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(mContext).pop();
                 int? quantity = int.tryParse(_textController.text);
                 if ((quantity ?? 0) == 0) {
                   _textController.text = '0';
@@ -440,6 +441,10 @@ class _OrderProductQuantityGroupWidgetState
                     .read<OrderItemPricingInventoryCubit>()
                     .getPricingAndInventory(
                         widget.quickOrderItemEntity, widget.setting);
+                context.read<OrderListBloc>().add(
+                    OrderListItemQuantityChangeEvent(
+                        widget.quickOrderItemEntity.productEntity.id,
+                        widget.quickOrderItemEntity.quantityOrdered));
               },
               child: Text(LocalizationConstants.save.localized()),
             )

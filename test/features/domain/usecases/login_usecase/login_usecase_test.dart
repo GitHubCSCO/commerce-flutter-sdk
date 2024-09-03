@@ -10,7 +10,7 @@ void main() async {
   late LoginUsecase sut;
 
   setUp(() async {
-    initInjectionContainerMock();
+    await initInjectionContainerMock();
     await GetIt.I.allReady();
 
     sut = LoginUsecase();
