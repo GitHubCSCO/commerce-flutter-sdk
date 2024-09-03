@@ -12,3 +12,12 @@ class BilltoShiptoAddressLoadEvent extends BilltoShiptoAddressSelectionEvent {
       required this.currentPage,
       required this.selectionEntity});
 }
+
+class BilltoShiptoAddressLoadMoreEvent
+    extends BilltoShiptoAddressSelectionEvent {
+  final String searchQuery;
+  final BillToShipToAddressSelectionEntity selectionEntity;
+
+  BilltoShiptoAddressLoadMoreEvent(
+      {required this.searchQuery, required this.selectionEntity});
+}

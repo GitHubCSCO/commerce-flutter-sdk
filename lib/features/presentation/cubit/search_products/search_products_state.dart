@@ -4,7 +4,7 @@ class SearchProductsState extends Equatable {
   final String? originalQuery;
   final List<ProductEntity>? productEntities;
   final PaginationEntity? paginationEntity;
-  final SearchProductStatus searchProductStatus;
+  final StateStatus searchProductStatus;
   final List<SortOrderAttribute> availableSortOrders;
   final SortOrderAttribute selectedSortOrder;
   final List<String> selectedAttributeValueIds;
@@ -69,7 +69,7 @@ class SearchProductsState extends Equatable {
     String? originalQuery,
     List<ProductEntity>? productEntities,
     PaginationEntity? paginationEntity,
-    SearchProductStatus? searchProductStatus,
+    StateStatus? searchProductStatus,
     List<SortOrderAttribute>? availableSortOrders,
     SortOrderAttribute? selectedSortOrder,
     List<String>? selectedAttributeValueIds,

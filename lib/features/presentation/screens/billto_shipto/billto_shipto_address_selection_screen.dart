@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/address_type.dart';
+import 'package:commerce_flutter_app/features/domain/enums/state_status.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/billto_shipto/address_selection/billto_shipto_address_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
@@ -57,6 +58,40 @@ class BillToShipToAddressSelectionPage extends StatefulWidget {
 class _BillToShipToAddressSelectionPageState
     extends State<BillToShipToAddressSelectionPage> {
   final textEditingController = TextEditingController();
+  final _scrollController = ScrollController();
+
+  void _onScroll() {
+    if (_isBottom) {
+      context.read<BilltoShiptoAddressSelectionBloc>().add(
+          BilltoShiptoAddressLoadMoreEvent(
+              searchQuery: '', selectionEntity: widget.selectionEntity));
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) {
+      return false;
+    }
+
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= (maxScroll * 0.9);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    textEditingController.dispose();
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,11 +143,22 @@ class _BillToShipToAddressSelectionPageState
             child: BlocBuilder<BilltoShiptoAddressSelectionBloc,
                 BilltoShiptoAddressSelectionState>(
               builder: (context, state) {
-                switch (state) {
-                  case BilltoShiptoAddressSelectionInitial():
-                  case BilltoShiptoAddressSelectionLoading():
+                switch (state.status) {
+                  case StateStatus.initial:
+                  case StateStatus.loading:
                     return const Center(child: CircularProgressIndicator());
-                  case BilltoShiptoAddressSelectionLoaded():
+                  case StateStatus.failure:
+                    return CustomScrollView(
+                      slivers: <Widget>[
+                        SliverFillRemaining(
+                          child: Center(
+                            child:
+                                Text(LocalizationConstants.error.localized()),
+                          ),
+                        ),
+                      ],
+                    );
+                  default:
                     final list = state.list ?? [];
                     final selectedAddressId =
                         widget.selectionEntity.addressType == AddressType.billTo
@@ -122,8 +168,19 @@ class _BillToShipToAddressSelectionPageState
                       color: OptiAppColors.backgroundWhite,
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: ListView.separated(
-                        itemCount: list.length,
+                        controller: _scrollController,
+                        itemCount: state.status == StateStatus.moreLoading
+                            ? (state.list?.length ?? 0) + 1
+                            : state.list?.length ?? 0,
                         itemBuilder: (context, index) {
+                          if (index >= (state.list?.length ?? 0) &&
+                              state.status == StateStatus.moreLoading) {
+                            return const Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Center(child: CircularProgressIndicator()),
+                            );
+                          }
+
                           final address = list[index];
                           final isSelected =
                               address.id == selectedAddressId ? true : false;
@@ -137,18 +194,6 @@ class _BillToShipToAddressSelectionPageState
                           thickness: 0.3,
                         ),
                       ),
-                    );
-                  case BilltoShiptoAddressSelectionFailed():
-                  default:
-                    return CustomScrollView(
-                      slivers: <Widget>[
-                        SliverFillRemaining(
-                          child: Center(
-                            child:
-                                Text(LocalizationConstants.error.localized()),
-                          ),
-                        ),
-                      ],
                     );
                 }
               },
