@@ -2,9 +2,7 @@ import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/core/models/quick_order_item.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/order_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
@@ -197,7 +195,7 @@ class QuickOrderUseCase extends BaseUseCase {
     }
   }
 
-  Future<Result<VmiBinModelEntity, ErrorResponse>> getVmiBin(
+  Future<Result<GetVmiBinResult, ErrorResponse>> getVmiBin(
       String? binNumber) async {
     var parameters = VmiBinQueryParameters(
       vmiLocationId:
@@ -210,18 +208,7 @@ class QuickOrderUseCase extends BaseUseCase {
         .getVmiLocationsService()
         .getVmiBins(parameters: parameters);
 
-    switch (resultResponse) {
-      case Success(value: final data):
-        if ((data?.vmiBins ?? []).isNotEmpty &&
-            (data?.vmiBins ?? []).length == 1) {
-          final vmiBin = VmiBinModelEntityMapper.toEntity(data!.vmiBins[0]);
-          return Success(vmiBin);
-        } else {
-          return const Success(null);
-        }
-      case Failure(errorResponse: final errorResponse):
-        return Failure(errorResponse);
-    }
+    return resultResponse;
   }
 
   Future<Result<ProductEntity, ErrorResponse>> getScanProduct(
