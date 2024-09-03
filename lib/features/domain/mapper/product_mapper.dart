@@ -29,7 +29,7 @@ import 'package:commerce_flutter_app/features/domain/mapper/styled_prodct_mapper
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductEntityMapper {
-  ProductEntity toEntity(Product model) => ProductEntity(
+  static ProductEntity toEntity(Product model) => ProductEntity(
         id: model.id,
         orderLineId: model.orderLineId,
         name: model.name,
@@ -136,10 +136,10 @@ class ProductEntityMapper {
             ?.map((e) => SpecificationEntityMapper().toEntity(e))
             .toList(),
         crossSells: model.crossSells
-            ?.map((e) => ProductEntityMapper().toEntity(e))
+            ?.map((e) => ProductEntityMapper.toEntity(e))
             .toList(),
         accessories: model.accessories
-            ?.map((e) => ProductEntityMapper().toEntity(e))
+            ?.map((e) => ProductEntityMapper.toEntity(e))
             .toList(),
         productUnitOfMeasures: model.productUnitOfMeasures
             ?.map((e) => ProductUnitOfMeasureEntityMapper.toEntity(e))
@@ -199,7 +199,7 @@ class ProductEntityMapper {
             .toList(),
       );
 
-  Product toModel(ProductEntity entity) => Product(
+  static Product toModel(ProductEntity entity) => Product(
         id: entity.id,
         orderLineId: entity.orderLineId,
         name: entity.name,
@@ -308,10 +308,10 @@ class ProductEntityMapper {
             ?.map((e) => SpecificationEntityMapper().toModel(e))
             .toList(),
         crossSells: entity.crossSells
-            ?.map((e) => ProductEntityMapper().toModel(e))
+            ?.map((e) => ProductEntityMapper.toModel(e))
             .toList(),
         accessories: entity.accessories
-            ?.map((e) => ProductEntityMapper().toModel(e))
+            ?.map((e) => ProductEntityMapper.toModel(e))
             .toList(),
         productUnitOfMeasures: entity.productUnitOfMeasures
             ?.map((e) => ProductUnitOfMeasureEntityMapper.toModel(e))

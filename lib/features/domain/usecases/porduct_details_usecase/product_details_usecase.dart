@@ -136,7 +136,7 @@ class ProductDetailsUseCase extends BaseUseCase {
     switch (resultResponse) {
       case Success(value: final data):
         final productEntity =
-            ProductEntityMapper().toEntity(data?.product ?? Product());
+            ProductEntityMapper.toEntity(data?.product ?? Product());
 
         return Success(productEntity);
       case Failure(errorResponse: final errorResponse):

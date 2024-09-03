@@ -38,7 +38,7 @@ class FirebaseTrackingService implements ITrackingService {
   @override
   Future<void> setUserID(String userId) async {
     if (isEnabled) {
-      analytics.setUserId(id: userId);
+      analytics.setUserId(id: userId).ignore();
     }
   }
 
@@ -70,9 +70,11 @@ class FirebaseTrackingService implements ITrackingService {
         }
       }
 
-      analytics.logEvent(
-          name: analyticsEvent.eventName,
-          parameters: analyticsEvent.properties);
+      analytics
+          .logEvent(
+              name: analyticsEvent.eventName,
+              parameters: analyticsEvent.properties)
+          .ignore();
     }
   }
 

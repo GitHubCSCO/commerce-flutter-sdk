@@ -20,7 +20,7 @@ mixin RealtimePricingInventoryUpdateMixin {
         await pricingInventoryUseCase.getProductInventoryAvailable();
 
     final productList = products
-            ?.map((product) => ProductEntityMapper().toEntity(product))
+            ?.map((product) => ProductEntityMapper.toEntity(product))
             .toList() ??
         [];
 
