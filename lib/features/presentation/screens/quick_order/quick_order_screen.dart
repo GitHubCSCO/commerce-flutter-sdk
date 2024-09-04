@@ -150,7 +150,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
             }
           },
           builder: (context, state) {
-            switch (state.runtimeType) {
+            switch (state) {
               case QuickOrderInitialState():
                 return Stack(
                   fit: StackFit.expand,
