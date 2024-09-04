@@ -21,6 +21,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -64,6 +65,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  var _showPassword = false;
   var tapCount = 0;
 
   @override
@@ -181,9 +183,23 @@ class _LoginPageState extends State<LoginPage> {
                 Input(
                   label: LocalizationConstants.password.localized(),
                   hintText: LocalizationConstants.enterPassword.localized(),
-                  obscureText: true,
+                  obscureText: !_showPassword,
                   controller: _passwordController,
                   onTapOutside: (p0) => context.closeKeyboard(),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _showPassword = !_showPassword;
+                      });
+                    },
+                    icon: _showPassword
+                        ? const SvgAssetImage(
+                            assetName: AssetConstants.iconEyeOff,
+                          )
+                        : const SvgAssetImage(
+                            assetName: AssetConstants.iconEye,
+                          ),
+                  ),
                 ),
                 const SizedBox(height: 16.0),
                 BlocConsumer<LoginCubit, LoginState>(
@@ -194,7 +210,11 @@ class _LoginPageState extends State<LoginPage> {
                         context.read<LoginCubit>().showSpinner = false;
                         context.pop();
                       }
-                      context.read<AuthCubit>().loadAuthenticationState();
+
+                      context
+                          .read<AuthCubit>()
+                          .loadAuthenticationState()
+                          .ignore();
 
                       if (state.loginStatus ==
                           LoginStatus.loginSuccessBiometric) {
@@ -217,7 +237,10 @@ class _LoginPageState extends State<LoginPage> {
                           if (context.mounted) {
                             context.read<LoginCubit>().showSpinner = true;
                             showPleaseWait(context);
-                            context.read<LoginCubit>().handleBillToShipTo();
+                            context
+                                .read<LoginCubit>()
+                                .handleBillToShipTo()
+                                .ignore();
                           }
 
                           return;
@@ -240,7 +263,12 @@ class _LoginPageState extends State<LoginPage> {
 
                         if (isCancel == null || isCancel) {
                           await context.read<LoginCubit>().onCancelLogin();
-                          context.read<AuthCubit>().loadAuthenticationState();
+                          if (context.mounted) {
+                            context
+                                .read<AuthCubit>()
+                                .loadAuthenticationState()
+                                .ignore();
+                          }
                         }
                       }
                       if (context.mounted) {
