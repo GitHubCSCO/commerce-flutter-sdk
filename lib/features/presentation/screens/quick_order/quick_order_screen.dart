@@ -88,6 +88,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   late void Function(bool) callBack;
   FocusNode? autoFocusNode;
 
+  bool isSearching = false;
   bool cameraFlash = false;
   bool canProcess = false;
   String subTotal = '';
@@ -117,27 +118,40 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
         appBar: AppBar(
           title: Text(_getTitle(widget.scanningMode)),
           actions: <Widget>[
-            IconButton(
-                onPressed: () {
-                  setState(() {
-                    cameraFlash = !cameraFlash;
-                  });
-                  context
-                      .read<BarcodeScanBloc>()
-                      .add(ScannerFlashOnOffEvent(cameraFlash));
-                },
-                icon: Icon(
-                  cameraFlash ? Icons.flash_on : Icons.flash_off,
-                )),
+            Visibility(
+              visible: !isSearching,
+              child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      cameraFlash = !cameraFlash;
+                    });
+                    context
+                        .read<BarcodeScanBloc>()
+                        .add(ScannerFlashOnOffEvent(cameraFlash));
+                  },
+                  icon: Icon(
+                    cameraFlash ? Icons.flash_on : Icons.flash_off,
+                  )),
+            ),
             _buildAppBarMenu(),
           ],
         ),
         body: BlocConsumer<QuickOrderAutoCompleteBloc,
             QuickOrderAutoCompleteState>(
-          listener: (context, state) {},
+          listener: (context, state) {
+            if (state is QuickOrderInitialState) {
+              setState(() {
+                isSearching = false;
+              });
+            } else {
+              setState(() {
+                isSearching = true;
+              });
+            }
+          },
           builder: (context, state) {
-            switch (state.runtimeType) {
-              case QuickOrderInitialState:
+            switch (state) {
+              case QuickOrderInitialState():
                 return Stack(
                   fit: StackFit.expand,
                   children: [
@@ -479,9 +493,6 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                               .read<QuickOrderAutoCompleteBloc>()
                               .add(QuickOrderTypingEvent(searchQuery));
                         },
-                        // onSubmitted: (String query) {
-                        //   context.read<QuickOrderAutoCompleteBloc>().add(SearchSearchEvent());
-                        // },
                         controller: textEditingController,
                         autoFocusNode: autoFocusNode,
                       ),
