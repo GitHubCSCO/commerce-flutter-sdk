@@ -4,7 +4,8 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class CartUseCase extends BaseUseCase {
   Future<Result<Cart, ErrorResponse>> loadCurrentCart() async {
     var cartParameters = CartQueryParameters(
-        expand: ["cartlines", "costcodes", "shipping", "tax"]);
+        expand: ["cartlines", "costcodes", "shipping", "tax"],
+        allowInvalidAddress: true);
     return await commerceAPIServiceProvider
         .getCartService()
         .getCurrentCart(cartParameters);

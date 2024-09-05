@@ -7,14 +7,17 @@ class CheckoutUsecase extends BaseUseCase {
 
   Future<Result<Cart, ErrorResponse>> getCart(String? cartId) async {
     // cart get for IsAcceptQuote is different,, need to implement it later
-    var cartParameters = CartQueryParameters(cartId: cartId, expand: [
-      'cartlines',
-      'costcodes',
-      'shipping',
-      'tax',
-      'carriers',
-      'paymentoptions'
-    ]);
+    var cartParameters = CartQueryParameters(
+        cartId: cartId,
+        expand: [
+          'cartlines',
+          'costcodes',
+          'shipping',
+          'tax',
+          'carriers',
+          'paymentoptions'
+        ],
+        allowInvalidAddress: true);
     return await commerceAPIServiceProvider
         .getCartService()
         .getCart(cartId!, cartParameters);
