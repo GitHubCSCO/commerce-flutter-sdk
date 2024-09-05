@@ -1,5 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/mixins/payment_summary_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/warehouse_extension.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
@@ -9,10 +11,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class ReviewOrderWidget extends StatelessWidget {
+class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
   final ReviewOrderEntity reviewOrderEntity;
+  final PaymentSummaryEntity? paymentSummaryEntity;
 
-  const ReviewOrderWidget({super.key, required this.reviewOrderEntity});
+  const ReviewOrderWidget({super.key, required this.reviewOrderEntity, this.paymentSummaryEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +38,9 @@ class ReviewOrderWidget extends StatelessWidget {
   List<Widget> _buildItems(BuildContext context) {
     List<Widget> list = [];
 
+    if (paymentSummaryEntity != null) {
+      list.add(_buildPaymentSummary());
+    }
     list.add(_buildBillingAddress());
 
     if (reviewOrderEntity.shippingMethod == ShippingOption.ship) {
@@ -57,6 +63,12 @@ class ReviewOrderWidget extends StatelessWidget {
     return const Divider(
       thickness: 1,
       color: Colors.grey,
+    );
+  }
+
+  Widget _buildPaymentSummary() {
+    return Column(
+      children: buildSummaryItems(paymentSummaryEntity!),
     );
   }
 
@@ -88,17 +100,22 @@ class ReviewOrderWidget extends StatelessWidget {
           textAlign: TextAlign.start,
           style: OptiTextStyles.body,
         ),
-        const SizedBox(height: 16),
-        Text(
-          reviewOrderEntity.billTo?.email ?? '',
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
-        ),
-        Text(
-          reviewOrderEntity.billTo?.phone ?? '',
-          textAlign: TextAlign.start,
-          style: OptiTextStyles.body,
-        ),
+        if ((reviewOrderEntity.billTo?.email ?? '').isNotEmpty ||
+            (reviewOrderEntity.billTo?.phone ?? '').isNotEmpty) ...[
+          const SizedBox(height: 16),
+          if ((reviewOrderEntity.billTo?.email ?? '').isNotEmpty)
+            Text(
+              reviewOrderEntity.billTo?.email ?? '',
+              textAlign: TextAlign.start,
+              style: OptiTextStyles.body,
+            ),
+          if ((reviewOrderEntity.billTo?.phone ?? '').isNotEmpty)
+            Text(
+              reviewOrderEntity.billTo?.phone ?? '',
+              textAlign: TextAlign.start,
+              style: OptiTextStyles.body,
+            ),
+        ],
         const SizedBox(height: 12),
         _buildSeparator()
       ],
