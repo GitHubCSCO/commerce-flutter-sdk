@@ -6,8 +6,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/add_promotion_
 import 'package:flutter/material.dart';
 
 class CartPaymentSummaryWidget extends StatelessWidget
-   with PaymentSummaryMixin  {
-
+    with PaymentSummaryMixin {
   final PaymentSummaryEntity paymentSummaryEntity;
 
   CartPaymentSummaryWidget({super.key, required this.paymentSummaryEntity});

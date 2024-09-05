@@ -15,7 +15,8 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
   final ReviewOrderEntity reviewOrderEntity;
   final PaymentSummaryEntity? paymentSummaryEntity;
 
-  const ReviewOrderWidget({super.key, required this.reviewOrderEntity, this.paymentSummaryEntity});
+  const ReviewOrderWidget(
+      {super.key, required this.reviewOrderEntity, this.paymentSummaryEntity});
 
   @override
   Widget build(BuildContext context) {
