@@ -63,8 +63,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
     _controller = widget.controller ?? TextEditingController();
     _focusNode = widget.focusNode ?? FocusNode();
     _controller.text = widget.initialText ?? "1";
-    _shouldShowIncrementDecrementIcon =
-        widget.shouldShowIncrementDecrementIcon;
+    _shouldShowIncrementDecrementIcon = widget.shouldShowIncrementDecrementIcon;
     _updateArrows(int.tryParse(_controller.text));
     _focusNode.addListener(_onFocusChange);
     if (widget.focusListener != null) {
