@@ -416,9 +416,9 @@ class _OrderProductQuantityGroupWidgetState
               const SizedBox(height: 12.0),
               NumberTextField(
                 controller: _textController,
-                initialtText:
+                initialText:
                     widget.quickOrderItemEntity.quantityOrdered.toString(),
-                shouldShowIncrementDecermentIcon: false,
+                shouldShowIncrementDecrementIcon: false,
               ),
             ],
           ),
