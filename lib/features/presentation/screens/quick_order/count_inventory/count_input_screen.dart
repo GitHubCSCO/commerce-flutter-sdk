@@ -168,8 +168,8 @@ class _CountInputPageState extends State<CountInputPage> {
           Text(LocalizationConstants.qTY.localized(),
               style: OptiTextStyles.body),
           NumberTextField(
-            initialtText: qty.toString(),
-            shouldShowIncrementDecermentIcon: false,
+            initialText: qty.toString(),
+            shouldShowIncrementDecrementIcon: false,
             controller: _qtyController,
             onChanged: (value) {
               qty = value;

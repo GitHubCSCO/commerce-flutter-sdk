@@ -229,8 +229,8 @@ class PriceBreakwidget extends StatelessWidget {
               flex: 1,
               child: NumberTextField(
                 max: CoreConstants.maximumOrderQuantity,
-                initialtText: startQtyDisplay,
-                shouldShowIncrementDecermentIcon: false,
+                initialText: startQtyDisplay,
+                shouldShowIncrementDecrementIcon: false,
                 onSubmitted: (p0) {
                   if (p0 != null) {
                     context.read<QuotePricingBloc>().add(
@@ -252,8 +252,8 @@ class PriceBreakwidget extends StatelessWidget {
               child: NumberTextField(
                 isEnabled: endQtyEnabled,
                 max: CoreConstants.maximumOrderQuantity,
-                initialtText: endQtyDisplay,
-                shouldShowIncrementDecermentIcon: false,
+                initialText: endQtyDisplay,
+                shouldShowIncrementDecrementIcon: false,
                 onSubmitted: (p0) {
                   if (p0 != null) {
                     context.read<QuotePricingBloc>().add(
@@ -268,8 +268,8 @@ class PriceBreakwidget extends StatelessWidget {
               flex: 1,
               child: NumberTextField(
                 max: CoreConstants.maximumOrderQuantity,
-                initialtText: priceDisplay,
-                shouldShowIncrementDecermentIcon: false,
+                initialText: priceDisplay,
+                shouldShowIncrementDecrementIcon: false,
                 onSubmitted: (p0) {
                   if (p0 != null) {
                     context.read<QuotePricingBloc>().add(
