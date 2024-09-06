@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/models/expansion_panel_item.dart';
+import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shipping_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
@@ -191,6 +192,13 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                         state.requestDateWarningMessage,
                                   );
 
+                                  final paymentSummaryEntity =
+                                      PaymentSummaryEntity(
+                                          cart: state.cart,
+                                          cartSettings: state.cartSettings,
+                                          promotions: state.promotions,
+                                          isCustomerOrderApproval: false);
+
                                   final reviewOrderEntity =
                                       prepareReviewOrderEntiity(state, context);
 
@@ -263,7 +271,9 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                           },
                                           body: ReviewOrderWidget(
                                               reviewOrderEntity:
-                                                  reviewOrderEntity),
+                                                  reviewOrderEntity,
+                                              paymentSummaryEntity:
+                                                  paymentSummaryEntity),
                                           isExpanded:
                                               list?.last.isExpanded ?? false,
                                           canTapOnHeader: true),
