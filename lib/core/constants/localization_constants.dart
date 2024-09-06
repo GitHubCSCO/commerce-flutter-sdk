@@ -347,6 +347,7 @@ enum LocalizationConstants {
   allBrandProductLines(keyword: "All Brand Product Lines"),
   billingShipping(keyword: "Billing & Shipping"),
   paymentDetails(keyword: "Payment Details"),
+  paymentSummary(keyword: "Payment Summary"),
   reviewOrder(keyword: "Review Order"),
   cancelCheckout(keyword: "Cancel Checkout?"),
   orderConfirmation(keyword: "Order Confirmation"),
