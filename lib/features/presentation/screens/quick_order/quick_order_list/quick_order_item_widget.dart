@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/components/style.dart
 import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/order_widgets/order_product_image_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -243,45 +245,54 @@ class OrderProductPricingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 12, 0, 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          if (!(orderItemEntity.hidePricingEnable ?? false)) ...{
-            Visibility(
-              //add showhide pricing logic
-              visible: orderItemEntity.discountValueText?.isNotEmpty ?? false,
-              child: Text(
-                orderItemEntity.discountValueText ?? '',
-                style: OptiTextStyles.bodySmall,
-                textAlign: TextAlign.left,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+          Flexible(
+            flex: 3,
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  orderItemEntity.priceValueText ?? '',
-                  style: OptiTextStyles.bodySmallHighlight,
-                  textAlign: TextAlign.left,
-                ),
-                Text(
-                  orderItemEntity.selectedUnitOfMeasureTitle != null
-                      ? (' / ${orderItemEntity.selectedUnitOfMeasureTitle}')
-                      : '',
-                  style: OptiTextStyles.bodySmall,
-                  textAlign: TextAlign.left,
-                ),
+                if (!(orderItemEntity.hidePricingEnable ?? false)) ...{
+                  Visibility(
+                    //add showhide pricing logic
+                    visible:
+                        orderItemEntity.discountValueText?.isNotEmpty ?? false,
+                    child: Text(
+                      orderItemEntity.discountValueText ?? '',
+                      style: OptiTextStyles.bodySmall,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        orderItemEntity.priceValueText ?? '',
+                        style: OptiTextStyles.bodySmallHighlight,
+                        textAlign: TextAlign.left,
+                      ),
+                      Text(
+                        orderItemEntity.selectedUnitOfMeasureTitle != null
+                            ? (' / ${orderItemEntity.selectedUnitOfMeasureTitle}')
+                            : '',
+                        style: OptiTextStyles.bodySmall,
+                        textAlign: TextAlign.left,
+                      ),
+                    ],
+                  ),
+                },
+                if (!(orderItemEntity.hideInventoryEnable ?? false) ||
+                    orderItemEntity.showInventoryAvailability == null)
+                  Text(
+                    orderItemEntity.availability?.message ?? '',
+                    style: OptiTextStyles.bodySmall,
+                    textAlign: TextAlign.left,
+                  ),
               ],
             ),
-          },
-          if (!(orderItemEntity.hideInventoryEnable ?? false) ||
-              orderItemEntity.showInventoryAvailability == null)
-            Text(
-              orderItemEntity.availability?.message ?? '',
-              style: OptiTextStyles.bodySmall,
-              textAlign: TextAlign.left,
-            ),
+          ),
+          const SizedBox(width: 8),
         ],
       ),
     );
@@ -327,11 +338,13 @@ class _OrderProductQuantityGroupWidgetState
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, bottom: 20.0),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Container(
+      child: LayoutBuilder(builder: (context, constraints) {
+        return Wrap(
+          spacing: 10.0,
+          runSpacing: 10.0,
+          children: [
+            Container(
+                width: (constraints.maxWidth / 2) - 15,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(AppStyle.borderRadius),
@@ -346,49 +359,95 @@ class _OrderProductQuantityGroupWidgetState
                     style: OptiTextStyles.body,
                   ),
                 )),
-          ),
-          if (!(widget.quickOrderItemEntity.hidePricingEnable ?? false)) ...{
-            BlocBuilder<OrderItemPricingInventoryCubit,
-                OrderItemPricingInventoryState>(
-              buildWhen: (previous, current) =>
-                  current is OrderItemPricingInventoryInitial ||
-                  current is OrderItemPricingInventoryLoading ||
-                  current is OrderItemPricingInventoryLoaded ||
-                  current is OrderItemPricingInventoryFailed,
-              builder: (context, state) {
-                switch (state.runtimeType) {
-                  case OrderItemPricingInventoryInitial:
-                  case OrderItemPricingInventoryLoading:
-                    return Expanded(
-                      flex: 2,
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 20, top: 12),
-                        alignment: Alignment.center,
-                        child: LoadingAnimationWidget.prograssiveDots(
-                          color: OptiAppColors.iconPrimary,
-                          size: 30,
-                        ),
-                      ),
-                    );
-                  case OrderItemPricingInventoryLoaded:
-                    return OrderProductSubTitleColumn(
-                        LocalizationConstants.subtotal.localized(),
-                        widget.quickOrderItemEntity.extendedPriceValueText ??
-                            '');
-                  case OrderItemPricingInventoryFailed:
-                  default:
-                    return Container();
-                }
-              },
-            ),
-          } else ...{
-            const Expanded(
-              flex: 2,
-              child: Center(),
-            ),
-          }
-        ],
+            if (widget.quickOrderItemEntity.productEntity
+                        .productUnitOfMeasures !=
+                    null &&
+                widget.quickOrderItemEntity.productEntity.productUnitOfMeasures!
+                        .length >
+                    1) ...{
+              SizedBox(
+                  width: (constraints.maxWidth / 2) - 15,
+                  child: _buildUnitOFMeasureChangeWidget(context)),
+            },
+            if (!(widget.quickOrderItemEntity.hidePricingEnable ?? false)) ...{
+              SizedBox(
+                width: (constraints.maxWidth / 2) - 15,
+                child: BlocBuilder<OrderItemPricingInventoryCubit,
+                    OrderItemPricingInventoryState>(
+                  buildWhen: (previous, current) =>
+                      current is OrderItemPricingInventoryInitial ||
+                      current is OrderItemPricingInventoryLoading ||
+                      current is OrderItemPricingInventoryLoaded ||
+                      current is OrderItemPricingInventoryFailed,
+                  builder: (context, state) {
+                    switch (state.runtimeType) {
+                      case OrderItemPricingInventoryInitial:
+                      case OrderItemPricingInventoryLoading:
+                        return Container(
+                          padding: const EdgeInsets.only(left: 20, top: 12),
+                          alignment: Alignment.center,
+                          child: LoadingAnimationWidget.prograssiveDots(
+                            color: OptiAppColors.iconPrimary,
+                            size: 30,
+                          ),
+                        );
+                      case OrderItemPricingInventoryLoaded:
+                        return OrderProductSubTitleColumn(
+                            LocalizationConstants.subtotal.localized(),
+                            widget.quickOrderItemEntity
+                                    .extendedPriceValueText ??
+                                '');
+                      case OrderItemPricingInventoryFailed:
+                      default:
+                        return Container();
+                    }
+                  },
+                ),
+              ),
+            }
+          ],
+        );
+      }),
+    );
+  }
+
+  Widget _buildUnitOFMeasureChangeWidget(BuildContext context) {
+    void onUnitOfMeasureSelect(BuildContext context, Object item) {
+      widget.quickOrderItemEntity
+          .updateSelectedUnitOfMeasure(item as ProductUnitOfMeasureEntity);
+      context
+          .read<OrderItemPricingInventoryCubit>()
+          .getPricingAndInventory(widget.quickOrderItemEntity, widget.setting);
+    }
+
+    int getIndexOfUOM(List<ProductUnitOfMeasureEntity>? productUnitOfMeasures,
+        ProductUnitOfMeasureEntity? chosenUnitOfMeasure) {
+      if (productUnitOfMeasures == null || chosenUnitOfMeasure == null) {
+        return 0;
+      }
+
+      for (int i = 0; i < productUnitOfMeasures.length; i++) {
+        if (productUnitOfMeasures[i].productUnitOfMeasureId ==
+            chosenUnitOfMeasure.productUnitOfMeasureId) {
+          return i;
+        }
+      }
+      return 0;
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: OptiAppColors.backgroundInput,
+        borderRadius: BorderRadius.circular(10),
       ),
+      child: ListPickerWidget(
+          items:
+              widget.quickOrderItemEntity.productEntity.productUnitOfMeasures ??
+                  [],
+          selectedIndex: getIndexOfUOM(
+              widget.quickOrderItemEntity.productEntity.productUnitOfMeasures,
+              widget.quickOrderItemEntity.selectedUnitOfMeasure),
+          callback: onUnitOfMeasureSelect),
     );
   }
 
@@ -463,23 +522,17 @@ class OrderProductSubTitleColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: 2,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-        child: Column(
-          children: [
-            Text(
-              title,
-              style: OptiTextStyles.bodySmall,
-            ),
-            Text(
-              value,
-              style: OptiTextStyles.titleSmall,
-            )
-          ],
+    return Column(
+      children: [
+        Text(
+          title,
+          style: OptiTextStyles.bodySmall,
         ),
-      ),
+        Text(
+          value,
+          style: OptiTextStyles.titleSmall,
+        )
+      ],
     );
   }
 }

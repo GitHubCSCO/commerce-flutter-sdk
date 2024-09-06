@@ -200,7 +200,9 @@ class _ListPickerState extends State<ListPicker> {
     } else if (item is CalculationMethod) {
       return item.displayName ?? item.name ?? item.value ?? "";
     } else if (item is ProductUnitOfMeasureEntity) {
-      return item.unitOfMeasureTextDisplayWithQuantity ?? "";
+      return item.unitOfMeasureTextDisplayWithQuantity ??
+          item.unitOfMeasureDisplay ??
+          '';
     } else {
       return '';
     }
