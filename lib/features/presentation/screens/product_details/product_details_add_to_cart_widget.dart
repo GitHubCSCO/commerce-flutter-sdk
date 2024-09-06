@@ -195,8 +195,8 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                   flex: 2,
                   child: NumberTextField(
                       max: CoreConstants.maximumOrderQuantity,
-                      initialtText: detailsAddToCartEntity.quantityText,
-                      shouldShowIncrementDecermentIcon: true,
+                      initialText: detailsAddToCartEntity.quantityText,
+                      shouldShowIncrementDecrementIcon: true,
                       onSubmitted: (int? quantity) {
                         if (quantity == null) {
                           return;
