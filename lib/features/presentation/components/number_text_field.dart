@@ -285,7 +285,6 @@ class _NumberTextFieldState extends State<NumberTextField> {
     _controller.text = intValue.toString();
     widget.onChanged?.call(intValue); // Fire onChanged event
     _updateArrows(intValue);
-    _focusNode.requestFocus();
   }
 
   void _updateArrows(int? value) {
