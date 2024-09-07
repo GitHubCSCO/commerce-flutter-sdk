@@ -1,8 +1,7 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/features/domain/enums/product_list_type.dart';
-import 'package:commerce_flutter_app/features/domain/enums/search_product_status.dart';
+import 'package:commerce_flutter_app/features/domain/enums/state_status.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
@@ -81,7 +80,7 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                 break;
             }
           },
-          child: state.searchProductStatus == SearchProductStatus.loading
+          child: state.searchProductStatus == StateStatus.loading
               ? const Center(child: CircularProgressIndicator())
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,7 +172,7 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                                   child: AlignedGridView.count(
                                     controller: _scrollController,
                                     itemCount: state.searchProductStatus ==
-                                            SearchProductStatus.moreLoading
+                                            StateStatus.moreLoading
                                         ? (state.productEntities?.length ?? 0) +
                                             1
                                         : state.productEntities?.length ?? 0,
@@ -182,7 +181,7 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                                               (state.productEntities?.length ??
                                                   0) &&
                                           state.searchProductStatus ==
-                                              SearchProductStatus.moreLoading) {
+                                              StateStatus.moreLoading) {
                                         return const Padding(
                                           padding: EdgeInsets.all(10),
                                           child: Center(
@@ -222,7 +221,7 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                                     color: Color(0xFFF5F5F5),
                                   ),
                                   itemCount: state.searchProductStatus ==
-                                          SearchProductStatus.moreLoading
+                                          StateStatus.moreLoading
                                       ? (state.productEntities?.length ?? 0) + 1
                                       : state.productEntities?.length ?? 0,
                                   shrinkWrap: true,
@@ -231,7 +230,7 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                                             (state.productEntities?.length ??
                                                 0) &&
                                         state.searchProductStatus ==
-                                            SearchProductStatus.moreLoading) {
+                                            StateStatus.moreLoading) {
                                       return const Padding(
                                         padding: EdgeInsets.all(10),
                                         child: Center(

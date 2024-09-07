@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_data_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
@@ -97,6 +98,14 @@ class ProductDetailsBloc
       FetchProductDetailsEvent event, Emitter<ProductDetailsState> emit) async {
     emit(ProductDetailsLoading());
 
+    var isOnline = await _productDetailsUseCase.isOnline();
+
+    if (!isOnline) {
+      emit(ProductDetailsErrorState(
+          LocalizationConstants.noInternet.localized()));
+      return;
+    }
+
     await _loadSettings();
 
     final result = await _productDetailsUseCase.getProductDetails(
@@ -107,7 +116,8 @@ class ProductDetailsBloc
         _extractValuesFromData(data!);
         await _makeAllDetailsItems(data, emit);
       case Failure(errorResponse: final errorResponse):
-        emit(ProductDetailsErrorState(errorResponse.errorDescription ?? ''));
+        emit(ProductDetailsErrorState(
+            LocalizationConstants.errorLoadingProductDetails.localized()));
     }
   }
 

@@ -10,7 +10,6 @@ import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart'
 import 'package:commerce_flutter_app/features/domain/enums/product_list_type.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/refresh/pull_to_refresh_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/cms/search_page_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/search/search/search_bloc.dart';
@@ -25,6 +24,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/base_screen.d
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/error_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_product/search_products_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
@@ -39,8 +39,6 @@ class SearchScreen extends BaseStatelessWidget {
   @override
   Widget buildContent(BuildContext context) {
     return MultiBlocProvider(providers: [
-      BlocProvider<PullToRefreshBloc>(
-          create: (context) => sl<PullToRefreshBloc>()),
       BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
       BlocProvider<SearchPageCmsBloc>(
         create: (context) =>
@@ -102,13 +100,6 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
               context
                   .read<SearchBloc>()
                   .add(SearchFieldPopulateEvent(state.query));
-            }
-          },
-        ),
-        BlocListener<PullToRefreshBloc, PullToRefreshState>(
-          listener: (context, state) {
-            if (state is PullToRefreshLoadState) {
-              _reloadSearchPage(context);
             }
           },
         ),
@@ -247,8 +238,7 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                     case SearchCmsInitialState:
                       return RefreshIndicator(
                         onRefresh: () async {
-                          BlocProvider.of<PullToRefreshBloc>(context)
-                              .add(PullToRefreshInitialEvent());
+                          _reloadSearchPage(context);
                         },
                         child: BlocBuilder<CmsCubit, CmsState>(
                           builder: (context, state) {
@@ -272,12 +262,14 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                                 return CustomScrollView(
                                   slivers: <Widget>[
                                     SliverFillRemaining(
-                                      child: Center(
-                                        child: Text(LocalizationConstants
-                                            .errorLoadingSearchLanding
-                                            .localized()),
-                                      ),
-                                    ),
+                                        child: OptiErrorWidget(
+                                      onRetry: () {
+                                        _reloadSearchPage(context);
+                                      },
+                                      errorText: LocalizationConstants
+                                          .errorLoadingSearchLanding
+                                          .localized(),
+                                    )),
                                   ],
                                 );
                             }
@@ -367,10 +359,14 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                       }
                     default:
                       {
-                        return Center(
-                            child: Text(LocalizationConstants
-                                .errorLoadingSearchLanding
-                                .localized()));
+                        return OptiErrorWidget(
+                          onRetry: () {
+                            _reloadSearchPage(context);
+                          },
+                          errorText: LocalizationConstants
+                              .errorLoadingSearchLanding
+                              .localized(),
+                        );
                       }
                   }
                 }),

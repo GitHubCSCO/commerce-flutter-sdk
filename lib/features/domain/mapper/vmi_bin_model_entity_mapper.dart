@@ -3,7 +3,7 @@ import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart'
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class VmiBinModelEntityMapper {
-  VmiBinModelEntity toEntity(VmiBinModel model) => VmiBinModelEntity(
+  static VmiBinModelEntity toEntity(VmiBinModel model) => VmiBinModelEntity(
         id: model.id,
         vmiLocationId: model.vmiLocationId,
         binNumber: model.binNumber,
@@ -18,11 +18,11 @@ class VmiBinModelEntityMapper {
         previousCountUserName: model.previousCountUserName,
         lastOrderDate: model.lastOrderDate,
         productEntity: model.product != null
-            ? ProductEntityMapper().toEntity(model.product!)
+            ? ProductEntityMapper.toEntity(model.product!)
             : null,
       );
 
-  VmiBinModel fromEntity(VmiBinModelEntity entity) => VmiBinModel(
+  static VmiBinModel toModel(VmiBinModelEntity entity) => VmiBinModel(
         id: entity.id,
         vmiLocationId: entity.vmiLocationId,
         binNumber: entity.binNumber,
@@ -37,7 +37,7 @@ class VmiBinModelEntityMapper {
         previousCountUserName: entity.previousCountUserName,
         lastOrderDate: entity.lastOrderDate,
         product: entity.productEntity != null
-            ? ProductEntityMapper().toModel(entity.productEntity!)
+            ? ProductEntityMapper.toModel(entity.productEntity!)
             : null,
       );
 }

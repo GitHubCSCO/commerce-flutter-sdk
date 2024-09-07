@@ -2,7 +2,11 @@ part of 'order_list_bloc.dart';
 
 abstract class OrderListEvent {}
 
+class OrderListInitialEvent extends OrderListEvent {}
+
 class OrderListLoadEvent extends OrderListEvent {}
+
+class OrderListReLoadEvent extends OrderListEvent {}
 
 class OrderListItemAddEvent extends OrderListEvent {
   final AutocompleteProduct autocompleteProduct;
@@ -15,6 +19,13 @@ class OrderListItemScanAddEvent extends OrderListEvent {
   final BarcodeFormat? barcodeFormat;
 
   OrderListItemScanAddEvent({this.resultText, this.barcodeFormat});
+}
+
+class OrderListItemQuantityChangeEvent extends OrderListEvent {
+  final String? productId;
+  final int? quantityOrdered;
+
+  OrderListItemQuantityChangeEvent(this.productId, this.quantityOrdered);
 }
 
 class OrderListItemRemoveEvent extends OrderListEvent {

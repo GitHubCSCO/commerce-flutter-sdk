@@ -80,7 +80,7 @@ Future<void> initAnalyticsTracker() async {
       options: sl<AnalyticsConfig>().firebaseOptions,
     );
 
-    FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
+    await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
 
     // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
     PlatformDispatcher.instance.onError = (error, stack) {
@@ -98,7 +98,8 @@ Future<void> initAnalyticsTracker() async {
       FlutterError.presentError(errorDetails);
     } else {
       if (sl<AnalyticsConfig>().firebaseOptions?.isValid() == true) {
-        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+        await FirebaseCrashlytics.instance
+            .recordFlutterFatalError(errorDetails);
       }
       if (sl<AnalyticsConfig>().appCenterSecret?.isNullOrEmpty == false) {
         await AppCenterCrashes.trackException(

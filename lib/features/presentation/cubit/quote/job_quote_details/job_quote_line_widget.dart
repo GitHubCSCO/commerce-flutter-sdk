@@ -133,8 +133,8 @@ class _JobQuoteLineQuantityGroupWidget extends StatelessWidget {
                 NumberTextField(
                   max: jobQty - purchasedQty,
                   min: 0,
-                  initialtText: qtyOrdered,
-                  shouldShowIncrementDecermentIcon: false,
+                  initialText: qtyOrdered,
+                  shouldShowIncrementDecrementIcon: false,
                   onSubmitted: onQtyChanged,
                 ),
               ],

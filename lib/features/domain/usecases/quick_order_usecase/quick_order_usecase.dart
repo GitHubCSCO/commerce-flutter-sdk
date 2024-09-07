@@ -1,16 +1,25 @@
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_app/core/models/quick_order_item.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
+import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/order_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/product_unit_of_measure_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/vmi_bin_model_entity_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuickOrderUseCase extends BaseUseCase {
+  ScanningMode scanningMode = ScanningMode.quick;
+
   QuickOrderUseCase() : super();
+
+  void setScanningMode(ScanningMode scanningMode) {
+    this.scanningMode = scanningMode;
+  }
 
   Future<void> createAlternateCart() async {
     final vmiLocationId =
@@ -30,6 +39,134 @@ class QuickOrderUseCase extends BaseUseCase {
         .removeAlternateCartCookie();
   }
 
+  Future<List<QuickOrderItem>> _getQuickOrderPersistedList() async {
+    final quickOrderItemList = await commerceAPIServiceProvider
+        .getCacheService()
+        .loadPersistedData<List<QuickOrderItem>>(_getStorageQueueKey())
+        .catchError((onError) {
+      return Future.value(<QuickOrderItem>[]);
+    });
+
+    return quickOrderItemList;
+  }
+
+  Future<List<QuickOrderItemEntity>> getPersistedData() async {
+    final quickOrderItemList = await _getQuickOrderPersistedList();
+
+    List<QuickOrderItemEntity> list = quickOrderItemList.map((item) {
+      final productEntity = ProductEntityMapper.toEntity(item.product);
+      final unitOfMeasureEntity = item.selectedUnitOfMeasure != null
+          ? ProductUnitOfMeasureEntityMapper.toEntity(
+              item.selectedUnitOfMeasure!)
+          : null;
+      final vmiBinEntity = item.vmiBinModel != null
+          ? VmiBinModelEntityMapper.toEntity(item.vmiBinModel!)
+          : null;
+
+      final itemEntity = QuickOrderItemEntity(
+          productEntity, item.quantityOrdered ?? 1,
+          selectedUnitOfMeasure: unitOfMeasureEntity,
+          vmiBinEntity: vmiBinEntity,
+          selectedUnitOfMeasureTitle: item.selectedUnitOfMeasureTitle,
+          selectedUnitOfMeasureValueText: item.selectedUnitOfMeasureValueText);
+      return itemEntity;
+    }).toList();
+
+    return list;
+  }
+
+  void persistedData(QuickOrderItemEntity item,
+      {int? index, bool? replace}) async {
+    final product = ProductEntityMapper.toModel(item.productEntity);
+    final unitOfMeasure = item.selectedUnitOfMeasure != null
+        ? ProductUnitOfMeasureEntityMapper.toModel(item.selectedUnitOfMeasure!)
+        : null;
+    final vmiBin = item.vmiBinEntity != null
+        ? VmiBinModelEntityMapper.toModel(item.vmiBinEntity!)
+        : null;
+
+    final orderItem = QuickOrderItem(
+      product,
+      selectedUnitOfMeasure: unitOfMeasure,
+      vmiBinModel: vmiBin,
+      selectedUnitOfMeasureTitle: item.selectedUnitOfMeasureTitle,
+      selectedUnitOfMeasureValueText: item.selectedUnitOfMeasureValueText,
+      quantityOrdered: item.quantityOrdered,
+    );
+
+    final quickOrderItemList = await _getQuickOrderPersistedList();
+
+    if (index != null) {
+      if (replace == true) {
+        quickOrderItemList[index] = orderItem;
+      } else {
+        quickOrderItemList.insert(index, orderItem);
+      }
+    } else {
+      quickOrderItemList.add(orderItem);
+    }
+
+    await _saveDataAsJson(quickOrderItemList);
+  }
+
+  void updateQuantityOfPersistedData(String? id, int? quantity) async {
+    final quickOrderItemList = await _getQuickOrderPersistedList();
+
+    for (int i = 0; i < quickOrderItemList.length; i++) {
+      if (quickOrderItemList[i].product.id == id) {
+        quickOrderItemList[i] =
+            quickOrderItemList[i].copyWith(quantityOrdered: quantity);
+        break;
+      }
+    }
+
+    await _saveDataAsJson(quickOrderItemList);
+  }
+
+  Future<void> removePersistedData(ProductEntity entity) async {
+    final quickOrderItemList = await _getQuickOrderPersistedList();
+
+    quickOrderItemList.removeWhere((item) => item.product.id == entity.id);
+
+    await _saveDataAsJson(quickOrderItemList);
+  }
+
+  void clearAllPersistedData() async {
+    await commerceAPIServiceProvider
+        .getCacheService()
+        .removePersistedData(_getStorageQueueKey());
+  }
+
+  Future<void> _saveDataAsJson(List<QuickOrderItem> quickOrderItemList) async {
+    List<Map<String, dynamic>> jsonList =
+        quickOrderItemList.map((item) => item.toJson()).toList();
+
+    await commerceAPIServiceProvider
+        .getCacheService()
+        .persistData<List<Map<String, dynamic>>>(
+            _getStorageQueueKey(), jsonList);
+  }
+
+  String _getStorageQueueKey() {
+    final clientHost = commerceAPIServiceProvider.getClientService().host ?? '';
+    final userName = commerceAPIServiceProvider
+            .getSessionService()
+            .getCachedCurrentSession()
+            ?.userName ??
+        '';
+    final vmiLocationId =
+        coreServiceProvider.getVmiService().currentVmiLocation?.id ?? '';
+
+    switch (scanningMode) {
+      case ScanningMode.quick:
+        return 'quick_order-$clientHost:$userName';
+      case ScanningMode.count:
+        return 'vmi_quick_count-$vmiLocationId:$clientHost:$userName';
+      case ScanningMode.create:
+        return 'vmi_quick_create-$vmiLocationId:$clientHost:$userName';
+    }
+  }
+
   Future<Result<ProductEntity, ErrorResponse>> getProduct(
       String productId, AutocompleteProduct product) async {
     var parameters = ProductQueryParameters(
@@ -45,7 +182,7 @@ class QuickOrderUseCase extends BaseUseCase {
     switch (resultResponse) {
       case Success(value: final data):
         final productEntity =
-            ProductEntityMapper().toEntity(data?.product ?? Product());
+            ProductEntityMapper.toEntity(data?.product ?? Product());
         // if (productEntity.styledProducts != null) {
         //   if (productEntity.styleParentId != null) {
         //     styledProduct = productEntity.styledProducts
@@ -58,7 +195,7 @@ class QuickOrderUseCase extends BaseUseCase {
     }
   }
 
-  Future<Result<VmiBinModelEntity, ErrorResponse>> getVmiBin(
+  Future<Result<GetVmiBinResult, ErrorResponse>> getVmiBin(
       String? binNumber) async {
     var parameters = VmiBinQueryParameters(
       vmiLocationId:
@@ -71,18 +208,7 @@ class QuickOrderUseCase extends BaseUseCase {
         .getVmiLocationsService()
         .getVmiBins(parameters: parameters);
 
-    switch (resultResponse) {
-      case Success(value: final data):
-        if ((data?.vmiBins ?? []).isNotEmpty &&
-            (data?.vmiBins ?? []).length == 1) {
-          final vmiBin = VmiBinModelEntityMapper().toEntity(data!.vmiBins[0]);
-          return Success(vmiBin);
-        } else {
-          return const Success(null);
-        }
-      case Failure(errorResponse: final errorResponse):
-        return Failure(errorResponse);
-    }
+    return resultResponse;
   }
 
   Future<Result<ProductEntity, ErrorResponse>> getScanProduct(
@@ -137,11 +263,11 @@ class QuickOrderUseCase extends BaseUseCase {
 
             if (result?.product != null) {
               final productEntity =
-                  ProductEntityMapper().toEntity(result!.product!);
+                  ProductEntityMapper.toEntity(result!.product!);
               return Success(productEntity);
             }
           } else {
-            final productEntity = ProductEntityMapper().toEntity(product);
+            final productEntity = ProductEntityMapper.toEntity(product);
             return Success(productEntity);
           }
         }
@@ -161,7 +287,7 @@ class QuickOrderUseCase extends BaseUseCase {
     switch (result) {
       case Success(value: final data):
         final productEntity =
-            ProductEntityMapper().toEntity(data?.product ?? Product());
+            ProductEntityMapper.toEntity(data?.product ?? Product());
         return Success(productEntity);
       case Failure(errorResponse: final errorResponse):
         return Failure(errorResponse);

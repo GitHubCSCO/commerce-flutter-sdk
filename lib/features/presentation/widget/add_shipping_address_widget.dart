@@ -64,59 +64,46 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       color: Colors.white,
-      child: MultiBlocListener(
-          listeners: [
-            BlocListener<AddShippingAddressCubit, AddShippingAddressState>(
-                listener: (_, state) {}),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: _buildItems(context),
+                ),
+              ),
+            ),
+            _buildContinueButtonWidget(context)
           ],
-          child: BlocBuilder<AddShippingAddressCubit, AddShippingAddressState>(
-            builder: (_, state) {
-              if (state is AddShippingAddtessLoadingState) {
-                return Center(child: CircularProgressIndicator());
-              } else if (state is AddShippingAddtessLoadedState) {
-                return Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: _buildItems(state, context),
-                          ),
-                        ),
-                      ),
-                      _buildContinueButtonWidget(context)
-                    ],
-                  ),
-                );
-              } else {
-                return Container();
-              }
-            },
-          )),
+        ),
+      ),
     );
   }
 
   Widget _createInputField(
       String label, String hintText, TextEditingController controller,
       {FormFieldValidator<String>? validator}) {
-    return Input(
-      label: label,
-      hintText: hintText,
-      controller: controller,
-      onTapOutside: (_) {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      onEditingComplete: () {
-        FocusManager.instance.primaryFocus?.nextFocus();
-      },
-      validator: validator,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 7),
+      child: Input(
+        label: label,
+        hintText: hintText,
+        controller: controller,
+        onTapOutside: (_) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        onEditingComplete: () {
+          FocusManager.instance.primaryFocus?.nextFocus();
+        },
+        validator: validator,
+      ),
     );
   }
 
-  List<Widget> _buildItems(
-      AddShippingAddtessLoadedState state, BuildContext context) {
+  List<Widget> _buildItems(BuildContext context) {
     List<Widget> list = [];
     list.add(_createInputField(
         LocalizationConstants.firstName.localized(),
@@ -139,7 +126,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
     list.add(_createInputField(LocalizationConstants.companyName.localized(),
         LocalizationConstants.companyName.localized(), companyNameController));
 
-    list.add(_addCountryWidget(context, state));
+    list.add(_addCountryWidget(context));
 
     list.add(_createInputField(
         LocalizationConstants.addressOne.localized(),
@@ -177,7 +164,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
       return null;
     }));
 
-    list.add(_addStateWidget(context, state));
+    list.add(_addStateWidget(context));
 
     list.add(_createInputField(LocalizationConstants.email.localized(),
         LocalizationConstants.email.localized(), emailController,
@@ -185,7 +172,34 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
     list.add(_createInputField(LocalizationConstants.phoneNumber.localized(),
         LocalizationConstants.phoneNumber.localized(), phonenumberController,
         validator: validatePhoneNumber));
+    list.add(_buildSavedAddressWiget(context));
     return list;
+  }
+
+  Widget _buildSavedAddressWiget(BuildContext context) {
+    return BlocBuilder<AddShippingAddressCubit, AddShippingAddressState>(
+        builder: (_, state) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              LocalizationConstants.saveThisAddress.localized(),
+              style: OptiTextStyles.body,
+            ),
+            Switch(
+              value: context.watch<AddShippingAddressCubit>().isSavedAddress,
+              onChanged: (value) {
+                context
+                    .read<AddShippingAddressCubit>()
+                    .onUpdateSaveAddressToggle(value);
+              },
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildContinueButtonWidget(BuildContext context) {
@@ -225,6 +239,48 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
             shipto.country =
                 context.read<AddShippingAddressCubit>().selectedCountry;
 
+            shipto.isNew = true;
+            shipto.oneTimeAddress =
+                !context.read<AddShippingAddressCubit>().isSavedAddress;
+            shipto.isVmiLocation = false;
+            shipto.isDefault = false;
+
+            var customerValidation = CustomerValidationDto();
+
+            var validationCountry = FieldValidationDto(
+              isDisabled: false,
+              isRequired: true,
+            );
+            customerValidation.country = validationCountry;
+
+            var validationState = FieldValidationDto(
+              isDisabled: false,
+              isRequired: false,
+            );
+            customerValidation.state = validationState;
+
+            var validation = FieldValidationDto(
+              isDisabled: false,
+              isRequired: false,
+              maxLength: 40,
+            );
+
+            customerValidation.firstName = validation;
+            customerValidation.lastName = validation;
+            customerValidation.companyName = validation;
+            customerValidation.attention = validation;
+            customerValidation.address2 = validation;
+            customerValidation.address3 = validation;
+            customerValidation.address4 = validation;
+
+            customerValidation.postalCode = validation;
+            customerValidation.email = validation;
+            customerValidation.phone = validation;
+            customerValidation.address1 = validation;
+            customerValidation.city = validation;
+
+            shipto.validation = customerValidation;
+
             onShippingAddressAdded(shipto);
             Navigator.pop(context);
 
@@ -261,72 +317,98 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
     return -1;
   }
 
-  Widget _addCountryWidget(
-      BuildContext context, AddShippingAddtessLoadedState state) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Expanded(
-          flex: 1,
-          child: Text(
-            LocalizationConstants.selectCountry.localized(),
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: Row(
-            children: [
-              Expanded(
-                  child: ListPickerWidget(
-                      items: state.countries,
-                      selectedIndex: _getIndexOfCountry(
-                          state.countries,
-                          context
-                              .read<AddShippingAddressCubit>()
-                              .selectedCountry),
-                      descriptionText:
-                          LocalizationConstants.country.localized(),
-                      callback: _onCountrySelect)),
-            ],
-          ),
-        ),
-      ],
-    );
+  Widget _addCountryWidget(BuildContext context) {
+    return BlocBuilder<AddShippingAddressCubit, AddShippingAddressState>(
+        buildWhen: (previous, current) {
+      if (current is AddShippingAddtessLoadedState ||
+          current is AddShippingAddtessInitialState) {
+        return true;
+      }
+
+      return false;
+    }, builder: (_, state) {
+      if (state is AddShippingAddtessLoadedState) {
+        return Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              flex: 1,
+              child: Text(
+                LocalizationConstants.selectCountry.localized(),
+                textAlign: TextAlign.start,
+                style: OptiTextStyles.body,
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Row(
+                children: [
+                  Expanded(
+                      child: ListPickerWidget(
+                          items: state.countries,
+                          selectedIndex: _getIndexOfCountry(
+                              state.countries,
+                              context
+                                  .read<AddShippingAddressCubit>()
+                                  .selectedCountry),
+                          descriptionText:
+                              LocalizationConstants.country.localized(),
+                          callback: _onCountrySelect)),
+                ],
+              ),
+            ),
+          ],
+        );
+      } else
+        return Container();
+    });
   }
 
-  Widget _addStateWidget(
-      BuildContext context, AddShippingAddtessLoadedState state) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Expanded(
-          flex: 1,
-          child: Text(
-            LocalizationConstants.selectState.localized(),
-            textAlign: TextAlign.start,
-            style: OptiTextStyles.body,
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: Row(
-            children: [
-              Expanded(
-                  child: ListPickerWidget(
-                      items: state.states ?? [],
-                      selectedIndex: _getIndexOfState(
-                          state.states,
-                          context
-                              .read<AddShippingAddressCubit>()
-                              .selectedState),
-                      descriptionText: LocalizationConstants.state.localized(),
-                      callback: _onStateSelect)),
-            ],
-          ),
-        ),
-      ],
-    );
+  Widget _addStateWidget(BuildContext context) {
+    return BlocBuilder<AddShippingAddressCubit, AddShippingAddressState>(
+        buildWhen: (previous, current) {
+      if (current is AddShippingAddtessLoadedState ||
+          current is AddShippingAddtessInitialState) {
+        return true;
+      }
+
+      return false;
+    }, builder: (_, state) {
+      if (state is AddShippingAddtessLoadedState) {
+        return Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              flex: 1,
+              child: Text(
+                LocalizationConstants.selectState.localized(),
+                textAlign: TextAlign.start,
+                style: OptiTextStyles.body,
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Row(
+                children: [
+                  Expanded(
+                      child: ListPickerWidget(
+                          items: state.states ?? [],
+                          selectedIndex: _getIndexOfState(
+                              state.states,
+                              context
+                                  .read<AddShippingAddressCubit>()
+                                  .selectedState),
+                          descriptionText:
+                              LocalizationConstants.state.localized(),
+                          callback: _onStateSelect)),
+                ],
+              ),
+            ),
+          ],
+        );
+      } else {
+        return Container();
+      }
+    });
   }
 }

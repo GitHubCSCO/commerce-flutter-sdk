@@ -17,7 +17,7 @@ class BrandEntityMapper {
         featuredImageAltText: model?.featuredImageAltText,
         htmlContent: model?.htmlContent,
         topSellerProducts: model?.topSellerProducts
-            ?.map((e) => ProductEntityMapper().toEntity(e))
+            ?.map((e) => ProductEntityMapper.toEntity(e))
             .toList(),
       );
 
@@ -35,7 +35,7 @@ class BrandEntityMapper {
         featuredImageAltText: entity.featuredImageAltText,
         htmlContent: entity.htmlContent,
         topSellerProducts: entity.topSellerProducts
-            ?.map((e) => ProductEntityMapper().toModel(e))
+            ?.map((e) => ProductEntityMapper.toModel(e))
             .toList(),
       );
 }

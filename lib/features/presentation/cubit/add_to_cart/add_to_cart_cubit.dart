@@ -33,7 +33,7 @@ class AddToCartCubit extends Cubit<AddToCartState> {
   Future<void> updateAddToCartButton(ProductEntity product) async {
     emit(AddToCartButtonLoading());
     var realTimeInventory = await _addToCartUsecase
-        .loadRealTimeInventory(ProductEntityMapper().toModel(product));
+        .loadRealTimeInventory(ProductEntityMapper.toModel(product));
 
     num qtyOnHand;
 

@@ -232,9 +232,9 @@ enum LocalizationConstants {
   signInBeforeSaveOrder(
       keyword: "Please sign in before proceeding to save order."),
   quickOrderContents(keyword: "Quick Order Contents"),
-  notFoundForSearch(keyword: "Not found for {0}"),
+  notFoundForSearch(keyword: "Not found for %s"),
   tooManyResultsForSearch(
-      keyword: "There is more than one product that matches {0}"),
+      keyword: "There is more than one product that matches %s"),
   addToCartAndCheckout(keyword: "Add to Cart & Checkout"),
   quickOrder(keyword: "Quick Order"),
   addToQuickOrder(keyword: "Add to Quick Order"),
@@ -347,6 +347,7 @@ enum LocalizationConstants {
   allBrandProductLines(keyword: "All Brand Product Lines"),
   billingShipping(keyword: "Billing & Shipping"),
   paymentDetails(keyword: "Payment Details"),
+  paymentSummary(keyword: "Payment Summary"),
   reviewOrder(keyword: "Review Order"),
   cancelCheckout(keyword: "Cancel Checkout?"),
   orderConfirmation(keyword: "Order Confirmation"),
@@ -394,6 +395,7 @@ enum LocalizationConstants {
   useDifferentBillingAddress(keyword: "Use Different Billing Address"),
   useBillingAddress(keyword: "Use billing address"),
   errorLoadingPage(keyword: "Error Loading Page"),
+  errorLoadingProductDetails(keyword: "Error Loading Page"),
   creditCard(keyword: "Credit Card"),
   oneTimeAddress(keyword: "One-Time Address"),
   country(keyword: "Country"),
@@ -676,6 +678,7 @@ enum LocalizationConstants {
   viewMore(keyword: "View More"),
   tryAgain(keyword: "Try Again"),
   errorLoading(keyword: "Error Loading"),
+  noInternet(keyword: "No Internet"),
   ;
 
   const LocalizationConstants({

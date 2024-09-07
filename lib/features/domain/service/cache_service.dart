@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:commerce_flutter_app/core/models/quick_order_item.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -100,6 +101,12 @@ class CacheService implements ICacheService {
             jsonDecode(sharedPreferences.getString(key)!);
         List<String> stringList =
             dynamicList.map((item) => item as String).toList();
+        return stringList as T;
+      } else if (T == List<QuickOrderItem>) {
+        List<dynamic> dynamicList =
+            jsonDecode(sharedPreferences.getString(key)!);
+        List<QuickOrderItem> stringList =
+            dynamicList.map((item) => QuickOrderItem.fromJson(item)).toList();
         return stringList as T;
       } else {
         String rawValue = sharedPreferences.getString(key)!;

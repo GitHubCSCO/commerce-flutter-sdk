@@ -3,7 +3,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class SearchUseCase extends BaseUseCase {
-  Future<Result<AutocompleteResult, ErrorResponse>?> loadAutocompleteResults(
+  Future<Result<AutocompleteResult, ErrorResponse>> loadAutocompleteResults(
       String searchQuery) async {
     var parameters = AutocompleteQueryParameters(
       query: searchQuery,
@@ -22,7 +22,7 @@ class SearchUseCase extends BaseUseCase {
     }
   }
 
-  Future<Result<AutocompleteResult, ErrorResponse>?> loadVmiAutocompleteResults(
+  Future<Result<AutocompleteResult, ErrorResponse>> loadVmiAutocompleteResults(
       String searchQuery) async {
     var parameters = VmiBinQueryParameters(
       vmiLocationId:

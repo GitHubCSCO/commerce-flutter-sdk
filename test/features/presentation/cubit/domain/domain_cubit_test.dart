@@ -77,7 +77,7 @@ void main() async {
         return sut;
       },
       act: (cubit) async {
-        cubit.selectDomain('validDomain');
+        await cubit.selectDomain('validDomain');
       },
       expect: () => [
         DomainOperationInProgress(),
@@ -93,7 +93,7 @@ void main() async {
         return sut;
       },
       act: (cubit) async {
-        cubit.selectDomain('invalidDomain');
+        await cubit.selectDomain('invalidDomain');
       },
       expect: () => [
         DomainOperationInProgress(),
@@ -112,7 +112,7 @@ void main() async {
         return sut;
       },
       act: (cubit) async {
-        cubit.selectDomain('invalidDomain');
+        await cubit.selectDomain('invalidDomain');
       },
       expect: () => [
         DomainOperationInProgress(),
@@ -131,7 +131,7 @@ void main() async {
         return sut;
       },
       act: (cubit) async {
-        cubit.selectDomain('invalidDomain');
+        await cubit.selectDomain('invalidDomain');
       },
       expect: () => [
         DomainOperationInProgress(),
