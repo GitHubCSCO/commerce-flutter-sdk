@@ -93,8 +93,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
         updateCheckoutData(cartData);
         cartData = removeQuoteRequiredProductsIfNeeded(cartData);
 
-        final billToAddress = session?.billTo;
-        final shipToAddress = session?.shipTo;
+        final billToAddress = cartData.billTo;
+        final shipToAddress = cartData.shipTo;
         final wareHouse = session?.pickUpWarehouse;
         var shippingMethod = session?.fulfillmentMethod;
         PromotionCollectionModel? promotionCollection =
