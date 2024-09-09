@@ -437,8 +437,8 @@ class _OrderProductQuantityGroupWidgetState
 
     return Container(
       decoration: BoxDecoration(
-        color: OptiAppColors.backgroundInput,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppStyle.borderRadius),
+        color: AppStyle.neutral100,
       ),
       child: ListPickerWidget(
           items:
@@ -447,7 +447,7 @@ class _OrderProductQuantityGroupWidgetState
           selectedIndex: getIndexOfUOM(
               widget.quickOrderItemEntity.productEntity.productUnitOfMeasures,
               widget.quickOrderItemEntity.selectedUnitOfMeasure),
-          callback: onUnitOfMeasureSelect),
+          callback: onUnitOfMeasureSelect, showDropDown: true),
     );
   }
 

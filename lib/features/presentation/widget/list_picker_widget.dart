@@ -12,6 +12,7 @@ class ListPickerWidget extends StatelessWidget {
   final List<Object> items;
   final int? selectedIndex;
   final String? descriptionText;
+  final bool? showDropDown;
 
   const ListPickerWidget({
     super.key,
@@ -19,6 +20,7 @@ class ListPickerWidget extends StatelessWidget {
     this.selectedIndex,
     required this.callback,
     this.descriptionText,
+    this.showDropDown,
   });
 
   @override
@@ -28,6 +30,7 @@ class ListPickerWidget extends StatelessWidget {
       selectedIndex: selectedIndex,
       callback: callback,
       descriptionText: descriptionText,
+      showDropDown: showDropDown,
     );
   }
 }
@@ -37,6 +40,7 @@ class ListPicker extends StatefulWidget {
   final List<Object> items;
   final int? selectedIndex;
   final String? descriptionText;
+  final bool? showDropDown;
 
   const ListPicker({
     super.key,
@@ -44,6 +48,7 @@ class ListPicker extends StatefulWidget {
     this.selectedIndex,
     required this.callback,
     this.descriptionText,
+    this.showDropDown,
   });
 
   @override
@@ -86,8 +91,8 @@ class _ListPickerState extends State<ListPicker> {
                     .body, // Assuming you have OptiTextStyles defined
               ),
             ),
-            const Icon(
-              Icons.arrow_forward_ios,
+            Icon(
+              (widget.showDropDown == true) ? Icons.keyboard_arrow_down : Icons.arrow_forward_ios,
               color: Colors.grey,
               size: 16,
             ),
