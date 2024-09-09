@@ -136,14 +136,16 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
             ),
           );
         } else {
+          var failedReason =
+              'BillTo: $billToAddress, ShipTo: $shipToAddress, WareHouse: ${wareHouse?.toJson()}, ShippingMethod: $shippingMethod';
+          _checkoutUseCase.trackError(ErrorResponse(message: failedReason));
           emit(
-            CheckoutDataFetchFailed(
-                error:
-                    'BillTo: $billToAddress, ShipTo: $shipToAddress, WareHouse: ${wareHouse?.toJson()}, ShippingMethod: $shippingMethod'),
+            CheckoutDataFetchFailed(error: failedReason),
           );
         }
         break;
       case Failure(errorResponse: final errorResponse):
+        _checkoutUseCase.trackError(errorResponse);
         emit(CheckoutDataFetchFailed(
             error: errorResponse.errorDescription ?? ''));
         break;
@@ -187,6 +189,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
 
         break;
       case Failure(errorResponse: final errorResponse):
+        _checkoutUseCase.trackError(errorResponse);
         emit(CheckoutPlaceOrderFailed(
             error: errorResponse.errorDescription ?? ''));
         break;
