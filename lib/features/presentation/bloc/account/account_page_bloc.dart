@@ -20,16 +20,12 @@ class AccountPageBloc extends Bloc<AccountPageEvent, AccountPageState> {
       AccountPageLoadEvent event, Emitter<AccountPageState> emit) async {
     emit(AccountPageLoadingState());
 
-    var futureResult = await Future.wait([
-      _accountUseCase.loadData(),
-      _accountUseCase.getSiteMessage(
-        SiteMessageConstants.nameMobileAppAccountUnauthenticatedDescription,
-        SiteMessageConstants.defalutMobileAppAccountUnauthenticatedDescription,
-      ),
-    ]);
+    loggedOutBannerSiteMessage = await _accountUseCase.getSiteMessage(
+      SiteMessageConstants.nameMobileAppAccountUnauthenticatedDescription,
+      SiteMessageConstants.defalutMobileAppAccountUnauthenticatedDescription,
+    );
 
-    var result = futureResult[0] as Result<List<WidgetEntity>, ErrorResponse>;
-    loggedOutBannerSiteMessage = futureResult[1] as String;
+    final result = await _accountUseCase.loadData();
 
     switch (result) {
       case Success(value: final data):
