@@ -96,7 +96,7 @@ class AddToCartSignInWidget extends StatelessWidget {
             return AddToCartSuccessWidget(state.productDetailsAddToCartEntity);
           }
           if (state is ProductDetailsAddtoCartError) {
-            return Center(child: Text(state.errorMessage));
+            return Center(child: Text(state.errorMessage ?? ""));
           } else {
             return const Center(child: Text("failure"));
           }

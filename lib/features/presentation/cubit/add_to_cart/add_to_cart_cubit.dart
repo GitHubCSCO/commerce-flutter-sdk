@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/add_to_cart_usecase.dart';
@@ -18,10 +19,13 @@ class AddToCartCubit extends Cubit<AddToCartState> {
     );
 
     final response = await _addToCartUsecase.addToCart(addCartLine);
+    final productAddCartSiteMsg = await _addToCartUsecase.getSiteMessage(
+        SiteMessageConstants.nameAddToCartSuccess,
+        SiteMessageConstants.defaultValueAddToCartSuccess);
 
     switch (response) {
       case Success(value: final data):
-        emit(AddToCartSuccess());
+        emit(AddToCartSuccess(addToCartMsg: productAddCartSiteMsg));
         break;
       case Failure(errorResponse: final errorResponse):
         emit(AddToCartFailure(
