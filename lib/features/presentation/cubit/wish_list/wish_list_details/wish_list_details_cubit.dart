@@ -40,8 +40,38 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       (state.wishListLines.pagination?.totalItemCount ?? 0) == 0 &&
       state.searchQuery.isNullOrEmpty == false;
 
+  String siteMessageMobileAppAlertCommunicationError =
+      SiteMessageConstants.defaultMobileAppAlertCommunicationError;
+  String siteMessageWishListNoProducts =
+      SiteMessageConstants.defaultValueWishListNoProducts;
+  String siteMessageDealerLocatorNoResults =
+      SiteMessageConstants.defaultDealerLocatorNoResultsMessage;
+
   List<WishListLineSortOrder> get availableSortOrders =>
       _wishListDetailsUsecase.listLineAvailableSortOrders;
+
+  Future<void> _loadSiteMessages() async {
+    final futureResult = await Future.wait([
+      _wishListDetailsUsecase.getSiteMessage(
+        SiteMessageConstants.nameMobileAppAlertCommunicationError,
+        SiteMessageConstants.defaultMobileAppAlertCommunicationError,
+      ),
+      _wishListDetailsUsecase.getSiteMessage(
+        SiteMessageConstants.nameWishListNoProducts,
+        SiteMessageConstants.defaultValueWishListNoProducts,
+      ),
+      _wishListDetailsUsecase.getSiteMessage(
+        SiteMessageConstants.nameDealerLocatorNoResultsMessage,
+        SiteMessageConstants.defaultDealerLocatorNoResultsMessage,
+      ),
+    ]);
+
+    siteMessageMobileAppAlertCommunicationError = futureResult[0];
+    siteMessageWishListNoProducts = futureResult[1];
+    siteMessageDealerLocatorNoResults = futureResult[2];
+
+    return;
+  }
 
   Future<void> changeSortOrder(WishListLineSortOrder sortOrder) async {
     emit(
@@ -64,10 +94,11 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     final wishListRelatedData = await Future.wait([
       _wishListDetailsUsecase.loadWishList(id),
       _wishListDetailsUsecase.loadWishListSettings(),
+      _loadSiteMessages(),
     ]);
 
-    final wishList = wishListRelatedData.first as WishListEntity?;
-    final settings = wishListRelatedData.last as WishListSettingsEntity?;
+    final wishList = wishListRelatedData[0] as WishListEntity?;
+    final settings = wishListRelatedData[1] as WishListSettingsEntity?;
 
     if (wishList == null || settings == null) {
       emit(state.copyWith(status: WishListStatus.failure));
@@ -189,9 +220,7 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     emit(state.copyWith(status: WishListStatus.realTimeAttributesLoading));
 
     if (modificationResult == null) {
-      final message = await _wishListDetailsUsecase.getSiteMessage(
-          SiteMessageConstants.nameMobileAppAlertCommunicationError,
-          SiteMessageConstants.defaultMobileAppAlertCommunicationError);
+      final message = siteMessageMobileAppAlertCommunicationError;
       emit(state.copyWith(
           status: WishListStatus.errorModification, message: message));
       return;

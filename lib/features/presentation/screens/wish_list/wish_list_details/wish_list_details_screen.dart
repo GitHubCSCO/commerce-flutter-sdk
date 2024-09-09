@@ -2,7 +2,6 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
@@ -143,7 +142,8 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
               onRefresh: () async {
                 context
                     .read<WishListDetailsCubit>()
-                    .loadWishListDetails(widget.wishListId);
+                    .loadWishListDetails(widget.wishListId)
+                    .ignore();
               },
               child: BlocConsumer<WishListDetailsCubit, WishListDetailsState>(
                 listener: (context, state) {
@@ -311,8 +311,9 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                     displayDialogWidget(
                       context: context,
                       title: LocalizationConstants.error.localized(),
-                      message: SiteMessageConstants
-                          .defaultMobileAppAlertCommunicationError,
+                      message: context
+                          .watch<WishListDetailsCubit>()
+                          .siteMessageMobileAppAlertCommunicationError,
                       actions: [
                         TextButton(
                           onPressed: () {
@@ -338,8 +339,11 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                       slivers: <Widget>[
                         SliverFillRemaining(
                           child: Center(
-                            child: Text(SiteMessageConstants
-                                .defaultValueWishListNoProducts),
+                            child: Text(
+                              context
+                                  .watch<WishListDetailsCubit>()
+                                  .siteMessageWishListNoProducts,
+                            ),
                           ),
                         ),
                       ],
@@ -349,8 +353,9 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                       .noSearchResult) {
                     return Center(
                       child: Text(
-                        SiteMessageConstants
-                            .defaultDealerLocatorNoResultsMessage,
+                        context
+                            .watch<WishListDetailsCubit>()
+                            .siteMessageDealerLocatorNoResults,
                       ),
                     );
                   }
@@ -382,7 +387,8 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                                           .read<WishListDetailsCubit>()
                                           .changeSortOrder(
                                             sortOrder as WishListLineSortOrder,
-                                          );
+                                          )
+                                          .ignore();
                                     },
                                     selectedSortOrder: state.sortOrder,
                                   )
