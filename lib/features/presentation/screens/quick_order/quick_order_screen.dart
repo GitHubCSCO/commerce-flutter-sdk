@@ -464,7 +464,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                             fit: BoxFit.fitWidth,
                           ),
                           onPressed: () {
-                            _popSearchBar();
+                            textEditingController.clear();
+                            context
+                                .read<QuickOrderAutoCompleteBloc>()
+                                .add(QuickOrderTypingEvent(''));
                           },
                         ),
                         textInputAction: TextInputAction.search,
