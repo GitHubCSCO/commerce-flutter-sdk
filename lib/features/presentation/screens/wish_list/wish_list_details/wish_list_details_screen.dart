@@ -147,6 +147,9 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
               },
               child: BlocConsumer<WishListDetailsCubit, WishListDetailsState>(
                 listener: (context, state) {
+                  var addToCardFailedMsg = context
+                      .read<WishListDetailsCubit>()
+                      .siteMessageAddToCarFailed;
                   if (state.status == WishListStatus.listAddToCartSuccess) {
                     context.read<CartCountCubit>().onCartItemChange();
                     CustomSnackBar.showWishListAddToCart(context);
@@ -206,12 +209,14 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                   }
 
                   if (state.status == WishListStatus.listLineAddToCartSuccess) {
-                    CustomSnackBar.showProductAddedToCart(context);
+                    CustomSnackBar.showProductAddedToCart(
+                        context, addToCardFailedMsg);
                     context.read<CartCountCubit>().onCartItemChange();
                   }
 
                   if (state.status == WishListStatus.listLineAddToCartFailure) {
-                    CustomSnackBar.showAddToCartFailed(context);
+                    CustomSnackBar.showAddToCartFailed(
+                        context, addToCardFailedMsg);
                   }
 
                   if (state.status == WishListStatus.listLineDeleteSuccess) {
@@ -222,7 +227,8 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                   }
 
                   if (state.status == WishListStatus.listLineDeleteFailure) {
-                    CustomSnackBar.showAddToCartFailed(context);
+                    CustomSnackBar.showAddToCartFailed(
+                        context, addToCardFailedMsg);
                   }
 
                   if (state.status == WishListStatus.listUpdateSuccess) {

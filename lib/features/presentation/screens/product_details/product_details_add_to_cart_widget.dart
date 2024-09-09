@@ -71,7 +71,14 @@ class AddToCartSignInWidget extends StatelessWidget {
       listener: (bloccontext, state) {
         if (state is ProductDetailsProdctAddedToCartSuccess) {
           context.read<CartCountCubit>().onCartItemChange();
-          CustomSnackBar.showProductAddedToCart(context);
+          CustomSnackBar.showProductAddedToCart(
+              context,
+              context
+                  .read<ProductDetailsAddToCartBloc>()
+                  .messageAddToCartSuccess);
+        } else if (state is ProductDetailsAddtoCartError) {
+          CustomSnackBar.showAddToCartFailed(context,
+              context.read<ProductDetailsAddToCartBloc>().messageAddtoCartFail);
         }
       },
       child: BlocBuilder<ProductDetailsAddToCartBloc,
