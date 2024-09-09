@@ -102,15 +102,14 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
         if (didPop) {
           return;
         }
-        var quickOrderAutoCompleteStatte = context
+        var quickOrderAutoCompleteState = context
             .read<QuickOrderAutoCompleteBloc>()
             .state is QuickOrderInitialState;
         final NavigatorState navigator = Navigator.of(context);
-        //! TODO
-        //! Search back button should not go back if autocomplete was shown while back was pressed
-        final bool? shouldPop = true;
-        if (shouldPop ?? false) {
+        if (quickOrderAutoCompleteState) {
           navigator.pop();
+        } else {
+          _popSearchBar();
         }
       },
       child: Scaffold(
@@ -465,17 +464,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                             fit: BoxFit.fitWidth,
                           ),
                           onPressed: () {
-                            context
-                                .read<QuickOrderAutoCompleteBloc>()
-                                .add(QuickOrderEndSearchEvent());
-                            textEditingController.clear();
-                            context
-                                .read<QuickOrderAutoCompleteBloc>()
-                                .add(QuickOrderTypingEvent(''));
-                            context.closeKeyboard();
+                            _popSearchBar();
                           },
                         ),
-                        onTapOutside: (p0) => context.closeKeyboard(),
                         textInputAction: TextInputAction.search,
                         focusListener: (bool hasFocus) {
                           if (hasFocus) {
@@ -505,6 +496,17 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
         ),
       ),
     );
+  }
+
+  void _popSearchBar() {
+    textEditingController.clear();
+    context.closeKeyboard();
+    context
+        .read<QuickOrderAutoCompleteBloc>()
+        .add(QuickOrderEndSearchEvent());
+    context
+        .read<QuickOrderAutoCompleteBloc>()
+        .add(QuickOrderTypingEvent(''));
   }
 
   Widget _buildAutoCompleteContainer(QuickOrderAutoCompleteState state) {
