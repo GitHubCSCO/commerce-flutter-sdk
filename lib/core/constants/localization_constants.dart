@@ -586,6 +586,7 @@ enum LocalizationConstants {
   jobExpiration(keyword: "Job Expiration"),
   declineSalesQuote(keyword: "Decline Sales Quote"),
   viewQuotedPricing(keyword: "View Quoted Pricing"),
+  viewQuantityPricing(keyword: "View Quantity Pricing"),
   acceptQuoteMessage(
       keyword:
           "Items in your cart will not be added to your quote order. You will be able to continue shopping and purchase these items after accepting your quote."),
