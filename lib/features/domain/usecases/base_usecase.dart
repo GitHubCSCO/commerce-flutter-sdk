@@ -55,4 +55,10 @@ class BaseUseCase {
             StorefrontAccessConstants.signInRequiredToBrowse;
     }
   }
+
+  String? get privacyPolicyUrl =>
+      coreServiceProvider.getAppConfigurationService().privacyPolicyUrl;
+
+  String? get termsOfUseUrl =>
+      coreServiceProvider.getAppConfigurationService().termsOfUseUrl;
 }
