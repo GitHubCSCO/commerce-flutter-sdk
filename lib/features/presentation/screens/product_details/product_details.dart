@@ -28,6 +28,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/style_trait_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
@@ -85,14 +86,25 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthCubit, AuthState>(
-        listener: (context, state) {
-          if (state.status == AuthStatus.authenticated) {
-            context
-                .read<ProductDetailsBloc>()
-                .add(FetchProductDetailsEvent(productId, product));
-          }
-        },
+    return MultiBlocListener(
+        listeners: [
+          BlocListener<AuthCubit, AuthState>(
+            listener: (context, state) {
+              if (state.status == AuthStatus.authenticated) {
+                context
+                    .read<ProductDetailsBloc>()
+                    .add(FetchProductDetailsEvent(productId, product));
+              }
+            },
+          ),
+          BlocListener<ProductDetailsBloc, ProductDetailsState>(
+            listener: (_, state) {
+              if (state is ProductDetailsReloadState) {
+                _reloadProductDetails(context);
+              }
+            },
+          ),
+        ],
         child: Scaffold(
           backgroundColor: OptiAppColors.backgroundGray,
           appBar: AppBar(actions: <Widget>[
@@ -128,18 +140,29 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
             })
           ], backgroundColor: Theme.of(context).colorScheme.surface),
           body: BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
+            buildWhen: (previous, current) {
+              if (current is! ProductDetailsReloadState) {
+                return true;
+              }
+              return false;
+            },
             builder: (_, state) {
               switch (state) {
                 case ProductDetailsInitial():
                 case ProductDetailsLoading():
                   return const Center(child: CircularProgressIndicator());
                 case ProductDetailsLoaded():
-                  return SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _buildProductDetailsWidgets(
-                          state.productDetailsEntities, context),
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      _reloadProductDetails(context);
+                    },
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: _buildProductDetailsWidgets(
+                            state.productDetailsEntities, context),
+                      ),
                     ),
                   );
                 case ProductDetailsErrorState(errorMessage: final errorMessage):
@@ -149,6 +172,7 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
                       _reloadProductDetails(context);
                     },
                   );
+
                 default:
                   return OptiErrorWidget(onRetry: () {
                     _reloadProductDetails(context);
@@ -332,6 +356,8 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
                   productDetailsAddToCartEntity: detailsAddToCartEntity,
                 ),
               );
+        } else if (state is ProductDetailsPricingErrorState) {
+          CustomSnackBar.showFailure(context);
         }
       },
       child: const ProductDetailsAddToCartWidget(),

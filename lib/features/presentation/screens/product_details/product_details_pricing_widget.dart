@@ -67,6 +67,12 @@ class ProductDetailsPricingWidget extends StatelessWidget {
 
   Widget _buildQuantityPricingSection(BuildContext context) {
     return BlocBuilder<ProductDetailsPricingBloc, ProductDetailsPricingState>(
+      buildWhen: (previous, current) {
+        if (current is ProductDetailsPricingLoaded) {
+          return true;
+        }
+        return false;
+      },
       builder: (context, state) {
         if (state is ProductDetailsPricingLoaded &&
             state.productDetailsPriceEntity.viewQuantityPricingButtonShown !=
@@ -81,7 +87,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
                       []);
             },
             child: Text(
-              "View Quantity Pricing",
+              LocalizationConstants.viewQuantityPricing.localized(),
               style: OptiTextStyles.link,
             ),
           );
@@ -154,25 +160,29 @@ class ProductDetailsPricingWidget extends StatelessWidget {
 
   Widget _buildPricingSection(BuildContext context) {
     return BlocBuilder<ProductDetailsPricingBloc, ProductDetailsPricingState>(
+      buildWhen: (previous, current) {
+        if (current is ProductDetailsPricingLoaded) {
+          return true;
+        }
+        return false;
+      },
       builder: (context, state) {
         if (state is ProductDetailsPricingLoaded) {
           var productDetailsPriceEntity = state.productDetailsPriceEntity;
-          return Container(
-            child: Row(
-              children: [
+          return Row(
+            children: [
+              Text(
+                  productDetailsPriceEntity.product.updatePriceValueText(
+                      productDetailsPriceEntity.productPricingEnabled),
+                  style: OptiTextStyles.subtitle),
+              if (productDetailsPriceEntity
+                      .selectedUnitOfMeasureValueText.isNullOrEmpty ==
+                  false)
                 Text(
-                    productDetailsPriceEntity.product.updatePriceValueText(
-                        productDetailsPriceEntity.productPricingEnabled),
-                    style: OptiTextStyles.subtitle),
-                if (productDetailsPriceEntity
-                        .selectedUnitOfMeasureValueText.isNullOrEmpty ==
-                    false)
-                  Text(
-                    " / ${productDetailsPriceEntity.selectedUnitOfMeasureValueText ?? ""}",
-                    style: OptiTextStyles.body,
-                  ),
-              ],
-            ),
+                  " / ${productDetailsPriceEntity.selectedUnitOfMeasureValueText ?? ""}",
+                  style: OptiTextStyles.body,
+                ),
+            ],
           );
         }
         return Container(

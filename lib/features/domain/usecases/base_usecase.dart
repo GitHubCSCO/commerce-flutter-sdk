@@ -56,6 +56,10 @@ class BaseUseCase {
     }
   }
 
+  Future<bool> isOnline() async {
+    return commerceAPIServiceProvider.getNetworkService().isOnline();
+  }
+
   String? get privacyPolicyUrl =>
       coreServiceProvider.getAppConfigurationService().privacyPolicyUrl;
 

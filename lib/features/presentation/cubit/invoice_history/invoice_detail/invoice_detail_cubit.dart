@@ -97,20 +97,27 @@ class InvoiceDetailCubit extends Cubit<InvoiceDetailState> {
   String get subtotalTitle => LocalizationConstants.subtotal.localized();
   String get subtotalValue => state.invoice.productTotalDisplay ?? '';
   String get taxTitle => LocalizationConstants.tax.localized();
-  String get taxValue => (state.invoice.invoiceHistoryTaxes == null ||
+  num get taxSum => (state.invoice.invoiceHistoryTaxes == null ||
           state.invoice.invoiceHistoryTaxes!.isEmpty)
-      ? state.invoice.taxAmountDisplay ?? ''
+      ? state.invoice.taxAmount ?? 0
       : (state.invoice.invoiceHistoryTaxes ?? [])
-          .map((e) => e.taxAmount)
-          .reduce((a, b) => (a ?? 0) + (b ?? 0))
-          .toString();
+              .map((e) => e.taxAmount)
+              .reduce((a, b) => (a ?? 0) + (b ?? 0)) ??
+          0;
+  String get taxValue => taxSum != 0 ? taxSum.toString() : '';
   String get shippingTitle => LocalizationConstants.shipping.localized();
-  String get shippingValue => state.invoice.shippingAndHandlingDisplay ?? '';
+  String get shippingValue => (state.invoice.shippingAndHandling ?? 0) != 0
+      ? (state.invoice.shippingAndHandlingDisplay ?? '')
+      : '';
   String get discountTitle => LocalizationConstants.discounts.localized();
-  String get discountValue => state.invoice.discountAmountDisplay ?? '';
+  String get discountValue => (state.invoice.discountAmount ?? 0) != 0
+      ? (state.invoice.discountAmountDisplay ?? '')
+      : '';
   String get totalTitle => LocalizationConstants.invoiceTotal.localized();
   String get totalValue => state.invoice.invoiceTotalDisplay ?? '';
   String get otherChargesTitle =>
       LocalizationConstants.otherCharges.localized();
-  String get otherChargesValue => state.invoice.otherChargesDisplay ?? '';
+  String get otherChargesValue => (state.invoice.otherCharges ?? 0) != 0
+      ? (state.invoice.otherChargesDisplay ?? '')
+      : '';
 }

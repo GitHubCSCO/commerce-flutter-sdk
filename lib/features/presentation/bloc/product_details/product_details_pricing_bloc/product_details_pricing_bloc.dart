@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
@@ -36,6 +37,14 @@ class ProductDetailsPricingBloc
   Future<void> _fetchProductDetailsPricing(LoadProductDetailsPricing event,
       Emitter<ProductDetailsPricingState> emit) async {
     emit(ProductDetailsPricingLoading());
+
+    var isOnline = await _productDetailsPricingUseCase.isOnline();
+
+    if (!isOnline) {
+      emit(ProductDetailsPricingErrorState(
+          LocalizationConstants.noInternet.localized()));
+      return;
+    }
 
     var productDetailsPricingEntity = event.productDetailsPricingEntity;
     var product = event.productDetailsDataEntity.product!;
@@ -145,8 +154,6 @@ class ProductDetailsPricingBloc
             productDetailsPricingEntity.styledProduct,
             productDetailsPricingEntity,
             chosenUnitOfMeasure);
-
-    // need to implement hide/show inventory and quanty button logix
 
     return productDetailsPricingEntity;
   }
