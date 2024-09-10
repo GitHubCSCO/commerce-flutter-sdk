@@ -20,6 +20,12 @@ class ProductDetailsAddtoCartError extends ProductDetailsAddtoCartState {
   ProductDetailsAddtoCartError({this.errorMessage});
 }
 
+class ProductDetailsAddtoCartWarning extends ProductDetailsAddtoCartState {
+  final String? warningMsg;
+
+  ProductDetailsAddtoCartWarning({this.warningMsg});
+}
+
 // product added to cart
 class ProductDetailsProdctAddedToCartSuccess
     extends ProductDetailsAddtoCartState {}

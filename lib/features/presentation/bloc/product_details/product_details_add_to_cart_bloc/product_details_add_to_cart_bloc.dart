@@ -9,6 +9,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class ProductDetailsAddToCartBloc
     extends Bloc<ProductDetailsAddToCartEvent, ProductDetailsAddtoCartState> {
   final ProductDetailsAddToCartUseCase _productDetailsAddToCartUseCase;
+  String quantityText = '1';
   String messageAddToCartSuccess =
       SiteMessageConstants.defaultValueAddToCartSuccess;
   String messageAddtoCartFail = SiteMessageConstants.defaultValueAddToCartFail;
@@ -24,6 +25,12 @@ class ProductDetailsAddToCartBloc
     on<LoadProductDetailsAddToCartEvent>(
         (event, emit) => _fetchProductDetailsAddToCartData(event, emit));
     on<AddToCartEvent>((event, emit) => _onAddToCartEvent(event, emit));
+    on<AddToCartUpdateQuantityEvent>(
+        (event, emit) => _onAddToCartUpdateQuantity(event.quantityText!));
+  }
+
+  void _onAddToCartUpdateQuantity(String quantityText) {
+    this.quantityText = quantityText;
   }
 
   Future<void> _fetchProductDetailsAddToCartData(
@@ -68,7 +75,9 @@ class ProductDetailsAddToCartBloc
 
     switch (response) {
       case Success(value: final data):
-        if (data != null) {
+        if (data != null && data.isQtyAdjusted == true) {
+          emit(ProductDetailsAddtoCartWarning());
+        } else if (data != null) {
           emit(ProductDetailsProdctAddedToCartSuccess());
         } else {
           emit(ProductDetailsAddtoCartError());

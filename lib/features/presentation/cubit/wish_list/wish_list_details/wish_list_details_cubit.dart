@@ -46,7 +46,9 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       SiteMessageConstants.defaultValueWishListNoProducts;
   String siteMessageDealerLocatorNoResults =
       SiteMessageConstants.defaultDealerLocatorNoResultsMessage;
-  String siteMessageAddToCarFailed =
+  String siteMessageAddToCartFailed =
+      SiteMessageConstants.defaultDealerLocatorNoResultsMessage;
+  String siteMessageAddToCartSuccess =
       SiteMessageConstants.defaultDealerLocatorNoResultsMessage;
 
   List<WishListLineSortOrder> get availableSortOrders =>
@@ -70,12 +72,17 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
         SiteMessageConstants.nameAddToCartFail,
         SiteMessageConstants.defaultValueAddToCartFail,
       ),
+      _wishListDetailsUsecase.getSiteMessage(
+        SiteMessageConstants.nameAddToCartSuccess,
+        SiteMessageConstants.defaultValueAddToCartSuccess,
+      ),
     ]);
 
     siteMessageMobileAppAlertCommunicationError = futureResult[0];
     siteMessageWishListNoProducts = futureResult[1];
     siteMessageDealerLocatorNoResults = futureResult[2];
-    siteMessageAddToCarFailed = futureResult[3];
+    siteMessageAddToCartFailed = futureResult[3];
+    siteMessageAddToCartSuccess = futureResult[4];
 
     return;
   }

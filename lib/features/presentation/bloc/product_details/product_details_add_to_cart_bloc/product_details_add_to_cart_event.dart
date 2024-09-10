@@ -19,3 +19,9 @@ class AddToCartEvent extends ProductDetailsAddToCartEvent {
       {required this.productDetailsDataEntity,
       required this.productDetailsAddToCartEntity});
 }
+
+class AddToCartUpdateQuantityEvent extends ProductDetailsAddToCartEvent {
+  final String? quantityText;
+
+  AddToCartUpdateQuantityEvent({required this.quantityText});
+}
