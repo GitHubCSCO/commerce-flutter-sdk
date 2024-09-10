@@ -145,7 +145,8 @@ class SearchProductListItemWidget extends StatelessWidget
                   listener: (context, state) {
                     if (state is AddToCartSuccess) {
                       context.read<CartCountCubit>().onCartItemChange();
-                      CustomSnackBar.showProductAddedToCart(context);
+                      CustomSnackBar.showProductAddedToCart(
+                          context, state.addToCartMsg);
                     }
                   },
                   child: BlocBuilder<AddToCartCubit, AddToCartState>(

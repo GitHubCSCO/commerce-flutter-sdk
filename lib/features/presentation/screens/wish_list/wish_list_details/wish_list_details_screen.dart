@@ -206,12 +206,20 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                   }
 
                   if (state.status == WishListStatus.listLineAddToCartSuccess) {
-                    CustomSnackBar.showProductAddedToCart(context);
+                    CustomSnackBar.showProductAddedToCart(
+                        context,
+                        context
+                            .read<WishListDetailsCubit>()
+                            .siteMessageAddToCartSuccess);
                     context.read<CartCountCubit>().onCartItemChange();
                   }
 
                   if (state.status == WishListStatus.listLineAddToCartFailure) {
-                    CustomSnackBar.showAddToCartFailed(context);
+                    CustomSnackBar.showAddToCartFailed(
+                        context,
+                        context
+                            .read<WishListDetailsCubit>()
+                            .siteMessageAddToCartFailed);
                   }
 
                   if (state.status == WishListStatus.listLineDeleteSuccess) {
@@ -222,7 +230,11 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                   }
 
                   if (state.status == WishListStatus.listLineDeleteFailure) {
-                    CustomSnackBar.showAddToCartFailed(context);
+                    CustomSnackBar.showAddToCartFailed(
+                        context,
+                        context
+                            .read<WishListDetailsCubit>()
+                            .siteMessageAddToCartFailed);
                   }
 
                   if (state.status == WishListStatus.listUpdateSuccess) {

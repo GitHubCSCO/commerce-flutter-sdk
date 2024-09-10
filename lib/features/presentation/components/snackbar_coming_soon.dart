@@ -12,19 +12,19 @@ class CustomSnackBar {
     );
   }
 
-  static void showProductAddedToCart(BuildContext context) {
+  static void showProductAddedToCart(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Product Added to Cart"),
-        duration: Duration(seconds: 1),
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 1),
       ),
     );
   }
 
-  static void showAddToCartFailed(BuildContext context) {
+  static void showAddToCartFailed(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(SiteMessageConstants.defaultValueAddToCartFail),
+        content: Text(message),
         duration: const Duration(seconds: 1),
       ),
     );
