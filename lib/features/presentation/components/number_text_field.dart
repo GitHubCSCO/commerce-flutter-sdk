@@ -282,7 +282,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
         ? intValue = 1
         : intValue += up ? widget.step : -widget.step;
     _controller.text = intValue.toString();
-    widget.onChanged?.call(intValue); // Fire onChanged event
+    widget.onSubmitted?.call(intValue); // Fire onChanged event
     _updateArrows(intValue);
   }
 

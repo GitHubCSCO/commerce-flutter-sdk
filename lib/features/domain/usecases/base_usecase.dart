@@ -55,4 +55,8 @@ class BaseUseCase {
             StorefrontAccessConstants.signInRequiredToBrowse;
     }
   }
+
+  Future<bool> isOnline() async {
+    return commerceAPIServiceProvider.getNetworkService().isOnline();
+  }
 }
