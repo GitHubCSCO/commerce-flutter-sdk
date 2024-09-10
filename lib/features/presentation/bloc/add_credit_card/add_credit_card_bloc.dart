@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/tokenex_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/token_ex_view_mode.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/add_credit_card_usecase/add_credit_card_usecase.dart';
@@ -12,6 +13,17 @@ class AddCreditCardBloc extends Bloc<AddCreditCardEvent, AddCreditCardState> {
 
   bool useAsDefaultCard = false;
 
+  String messageNameRequired =
+      SiteMessageConstants.defaultValueAddressNameRequired;
+  String messageCountryRequired =
+      SiteMessageConstants.defaultValueAddressCountryRequired;
+  String messageCityRequired =
+      SiteMessageConstants.defaultValueAddressCityRequired;
+  String messageZipRequired =
+      SiteMessageConstants.defaultValueAddressZipRequired;
+  String messageStateRequired =
+      SiteMessageConstants.defaultAllProductCountExceed;
+
   AddCreditCardBloc({required AddCreditCardUsecase addCreditCardUsecase})
       : _addCreditCardUsecase = addCreditCardUsecase,
         super(AddCreditCardInitialState()) {
@@ -24,6 +36,12 @@ class AddCreditCardBloc extends Bloc<AddCreditCardEvent, AddCreditCardState> {
   Future<void> _onSetUpDataSourceEvent(
       SetUpDataSourceEvent event, Emitter<AddCreditCardState> emit) async {
     emit(AddCreditCardLoadingState());
+    await _loadSiteMessages();
+    if (event.addCreditCardEntity?.isAddNewCreditCard == false) {
+      useAsDefaultCard =
+          event.addCreditCardEntity?.accountPaymentProfile?.isDefault ?? false;
+    }
+
     var currentCartResponse = await _addCreditCardUsecase.getCurrentCart();
 
     Cart currentCart = (currentCartResponse is Success)
@@ -97,5 +115,38 @@ class AddCreditCardBloc extends Bloc<AddCreditCardEvent, AddCreditCardState> {
       case Failure():
         emit(CreditCardDeletedFailureState());
     }
+  }
+
+  Future<void> _loadSiteMessages() async {
+    final futureResult = await Future.wait([
+      _addCreditCardUsecase.getSiteMessage(
+          SiteMessageConstants.nameCreditCardInfoCardHolderNameRequired,
+          SiteMessageConstants
+              .defaultValueCreditCardInfoCardHolderNameRequired),
+      _addCreditCardUsecase.getSiteMessage(
+        SiteMessageConstants.nameAddressInfoCountryRequired,
+        SiteMessageConstants.defaultValueAddressCountryRequired,
+      ),
+      _addCreditCardUsecase.getSiteMessage(
+        SiteMessageConstants.nameAddressInfoCityRequired,
+        SiteMessageConstants.defaultValueAddressCityRequired,
+      ),
+      _addCreditCardUsecase.getSiteMessage(
+        SiteMessageConstants.nameAddressInfoZipRequired,
+        SiteMessageConstants.defaultValueAddressZipRequired,
+      ),
+      _addCreditCardUsecase.getSiteMessage(
+        SiteMessageConstants.nameAddressInfoStateRequired,
+        SiteMessageConstants.defaultValueAddressStateRequired,
+      ),
+    ]);
+
+    messageNameRequired = futureResult[0];
+    messageCountryRequired = futureResult[1];
+    messageCityRequired = futureResult[2];
+    messageZipRequired = futureResult[3];
+    messageStateRequired = futureResult[4];
+
+    return;
   }
 }

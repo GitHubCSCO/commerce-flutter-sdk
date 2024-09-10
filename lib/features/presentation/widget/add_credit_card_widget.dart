@@ -140,7 +140,8 @@ class AddCreditCardPage extends StatelessWidget {
           ],
           child: BlocBuilder<AddCreditCardBloc, AddCreditCardState>(
             buildWhen: (previous, current) {
-              if (current is AddCreditCardLoadedState) {
+              if (current is AddCreditCardLoadedState ||
+                  current is AddCreditCardLoadingState) {
                 return true;
               }
               return false;
@@ -181,6 +182,7 @@ class AddCreditCardPage extends StatelessWidget {
                   ),
                 );
               } else
+                // ignore: curly_braces_in_flow_control_structures
                 return Container();
             },
           )),
@@ -190,7 +192,7 @@ class AddCreditCardPage extends StatelessWidget {
   List<Widget> _buildItems(
       AddCreditCardLoadedState state, BuildContext context) {
     List<Widget> list = [];
-    list.add(_buildNameField());
+    list.add(_buildNameField(context));
 
     if (addCreditCardEntity.isAddNewCreditCard) {
       list.add(
@@ -225,7 +227,7 @@ class AddCreditCardPage extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Text(
           addCreditCardEntity.accountPaymentProfile?.maskedCardNumber ?? "",
-          style: TextStyle(
+          style: const TextStyle(
             color: OptiAppColors.textDisabledColor,
             fontSize: 16.0,
           ),
@@ -261,7 +263,7 @@ class AddCreditCardPage extends StatelessWidget {
                       .add(UpdateUseAsDefaultCardEvent());
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               Text(
@@ -271,8 +273,9 @@ class AddCreditCardPage extends StatelessWidget {
             ],
           ),
         );
-      } else
+      } else {
         return Container();
+      }
     });
   }
 
@@ -359,7 +362,7 @@ class AddCreditCardPage extends StatelessWidget {
             cardIdentifier:
                 addCreditCardEntity.accountPaymentProfile?.cardIdentifier,
             cardType: addCreditCardEntity.accountPaymentProfile?.cardType,
-            isDefault: addCreditCardEntity.accountPaymentProfile?.isDefault,
+            isDefault: context.read<AddCreditCardBloc>().useAsDefaultCard,
             id: addCreditCardEntity.accountPaymentProfile?.id);
 
         context.read<AddCreditCardBloc>().add(
@@ -367,6 +370,7 @@ class AddCreditCardPage extends StatelessWidget {
       }
     } else {
       context.read<CardExpirationCubit>().validateExpirationDate();
+      context.read<BillingAddressCubit>().validateBillingAddress();
     }
   }
 
@@ -374,7 +378,7 @@ class AddCreditCardPage extends StatelessWidget {
       TokenExEntity tokenExEntity, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24.0, 0, 24.0, 0),
-      child: Container(
+      child: SizedBox(
         height: 120,
         child: TokenExWebView(
           tokenExEntity: tokenExEntity,
@@ -400,14 +404,14 @@ class AddCreditCardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildNameField() {
+  Widget _buildNameField(BuildContext context) {
     return _createInputField(
         LocalizationConstants.name.localized(),
         LocalizationConstants.name.localized(),
         nameController,
         true, validator: (value) {
       if (nameController.text.isEmpty) {
-        return SiteMessageConstants.defaultValueAddressNameRequired;
+        return context.read<AddCreditCardBloc>().messageNameRequired;
       }
       return null;
     });
@@ -492,11 +496,11 @@ class AddCreditCardPage extends StatelessWidget {
 
   Widget _buildBillingAddressWidget(
       {required int selectedCountryIndex, required int selectedStateIndex}) {
-    void _onCountrySelect(BuildContext context, Object item) {
+    void onCountrySelect(BuildContext context, Object item) {
       context.read<BillingAddressCubit>().onSelectCountry(item as Country);
     }
 
-    void _onStateSelect(BuildContext context, Object item) {
+    void onStateSelect(BuildContext context, Object item) {
       context.read<BillingAddressCubit>().onSelectState(item as StateModel);
     }
 
@@ -519,7 +523,13 @@ class AddCreditCardPage extends StatelessWidget {
     }
 
     return BlocBuilder<BillingAddressCubit, BillingAddressState>(
-        builder: (context, state) {
+        buildWhen: (previous, current) {
+      if (current is BilingAddressLoadedState ||
+          current is BillingAddressLoadingState) {
+        return true;
+      }
+      return false;
+    }, builder: (context, state) {
       if (state is BillingAddressLoadingState) {
         return const CircularProgressIndicator();
       } else if (state is BilingAddressLoadedState) {
@@ -592,19 +602,41 @@ class AddCreditCardPage extends StatelessWidget {
                                         .selectedCountry),
                                 descriptionText:
                                     LocalizationConstants.country.localized(),
-                                callback: _onCountrySelect)),
+                                callback: onCountrySelect)),
                       ],
                     ),
                   ),
                 ],
               ),
+              BlocBuilder<BillingAddressCubit, BillingAddressState>(
+                  builder: (context, state) {
+                return Visibility(
+                  visible: state is BillingAddressValidationState &&
+                      state.isCountryEmpty,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        context
+                            .read<AddCreditCardBloc>()
+                            .messageCountryRequired,
+                        style: const TextStyle(
+                          color: Colors.red, // Change the color if needed
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
               _createInputField(LocalizationConstants.city.localized(),
                   LocalizationConstants.city.localized(), cityController, true,
                   validator: addCreditCardEntity.isAddNewCreditCard
                       ? (value) {
                           if (cityController.text.isEmpty) {
-                            return SiteMessageConstants
-                                .defaultValueAddressCityRequired;
+                            return context
+                                .read<AddCreditCardBloc>()
+                                .messageCityRequired;
                           }
                           return null;
                         }
@@ -634,12 +666,31 @@ class AddCreditCardPage extends StatelessWidget {
                                         .selectedState),
                                 descriptionText:
                                     LocalizationConstants.state.localized(),
-                                callback: _onStateSelect)),
+                                callback: onStateSelect)),
                       ],
                     ),
                   ),
                 ],
               ),
+              BlocBuilder<BillingAddressCubit, BillingAddressState>(
+                  builder: (context, state) {
+                return Visibility(
+                  visible: state is BillingAddressValidationState &&
+                      state.isStateEmpty,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        context.read<AddCreditCardBloc>().messageStateRequired,
+                        style: const TextStyle(
+                          color: Colors.red, // Change the color if needed
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
               _createInputField(
                   LocalizationConstants.postalCode.localized(),
                   LocalizationConstants.postalCode.localized(),
@@ -648,8 +699,9 @@ class AddCreditCardPage extends StatelessWidget {
                   validator: addCreditCardEntity.isAddNewCreditCard
                       ? (value) {
                           if (postalCodeController.text.isEmpty) {
-                            return SiteMessageConstants
-                                .defaultValueAddressZipRequired;
+                            return context
+                                .read<AddCreditCardBloc>()
+                                .messageZipRequired;
                           }
                           return null;
                         }
@@ -669,8 +721,8 @@ class AddCreditCardPage extends StatelessWidget {
     int getIndexForSelectedExpirationMonths(
         List<KeyValuePair<String, int>>? expirationMonths,
         KeyValuePair<String, int>? selectedExpirationMonth) {
-      for (int i = 0; i < expirationMonths!.length; i++) {
-        if (expirationMonths[i].key == selectedExpirationMonth?.key) {
+      for (int i = 0; i < (expirationMonths?.length ?? 0); i++) {
+        if (expirationMonths?[i].key == selectedExpirationMonth?.key) {
           return i;
         }
       }
@@ -680,8 +732,8 @@ class AddCreditCardPage extends StatelessWidget {
     int getIndexForSelectedExpirationYears(
         List<KeyValuePair<int, int>>? expirationYears,
         KeyValuePair<int, int>? selectedExpirationYear) {
-      for (int i = 0; i < expirationYears!.length; i++) {
-        if (expirationYears[i].key == selectedExpirationYear?.key) {
+      for (int i = 0; i < (expirationYears?.length ?? 0); i++) {
+        if (expirationYears?[i].key == selectedExpirationYear?.key) {
           return i;
         }
       }
@@ -749,16 +801,21 @@ class AddCreditCardPage extends StatelessWidget {
                 ),
               ],
             ),
-            Visibility(
-                visible: state is CardExpirationValidationState &&
-                    state.isMonthInvalid,
-                child: Text(
-                  SiteMessageConstants
-                      .defaultValueCreditCardInfoExpirationMonthRequired,
-                  style: const TextStyle(
-                    color: Colors.red, // Change the color if needed
-                  ),
-                )),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Visibility(
+                    visible: state is CardExpirationValidationState &&
+                        state.isMonthInvalid,
+                    child: Text(
+                      SiteMessageConstants
+                          .defaultValueCreditCardInfoExpirationMonthRequired,
+                      style: const TextStyle(
+                        color: Colors.red, // Change the color if needed
+                      ),
+                    )),
+              ],
+            ),
             Row(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -803,16 +860,21 @@ class AddCreditCardPage extends StatelessWidget {
                 ),
               ],
             ),
-            Visibility(
-                visible: state is CardExpirationValidationState &&
-                    state.isYearInvalid,
-                child: Text(
-                  SiteMessageConstants
-                      .defaultValueCreditCardInfoExpirationYearRequired,
-                  style: const TextStyle(
-                    color: Colors.red, // Change the color if needed
-                  ),
-                )),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Visibility(
+                    visible: state is CardExpirationValidationState &&
+                        state.isYearInvalid,
+                    child: Text(
+                      SiteMessageConstants
+                          .defaultValueCreditCardInfoExpirationYearRequired,
+                      style: const TextStyle(
+                        color: Colors.red, // Change the color if needed
+                      ),
+                    )),
+              ],
+            ),
           ],
         );
       } else {
