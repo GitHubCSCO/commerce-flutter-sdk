@@ -22,3 +22,5 @@ class UnitOfMeasuteChangeEvent extends ProductDetailsEvent {
 
   UnitOfMeasuteChangeEvent({required this.productunitOfMeasureEntity});
 }
+
+class ProductDetailsReloadEvent extends ProductDetailsEvent {}

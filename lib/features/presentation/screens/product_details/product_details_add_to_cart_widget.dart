@@ -257,6 +257,10 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                                     productDetailsBloc.productDetailDataEntity,
                                 quantity: quantity,
                               ));
+                        } else {
+                          context
+                              .read<ProductDetailsBloc>()
+                              .add(ProductDetailsReloadEvent());
                         }
                       }),
                 ),
