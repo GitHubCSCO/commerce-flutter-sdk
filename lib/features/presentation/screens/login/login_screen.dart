@@ -22,9 +22,12 @@ import 'package:commerce_flutter_app/features/presentation/cubit/biometric_optio
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -34,7 +37,7 @@ class LoginScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => sl<LoginCubit>(),
+          create: (context) => sl<LoginCubit>()..initialize(),
         ),
         BlocProvider(
           create: (context) => sl<SettingsDomainCubit>()..fetchDomain(),
@@ -114,261 +117,350 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
-      body: Container(
-        height: double.infinity,
-        color: AppStyle.neutral00,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SingleChildScrollView(
+      body: SafeArea(
+        child: Container(
+          color: AppStyle.neutral00,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const SizedBox(height: 50),
-                GestureDetector(
-                  onTap: () async {
-                    tapCount++;
-                    if (tapCount == 10) {
-                      await context.read<RemoteConfigCubit>().fetchDevMode();
-                    }
-                  },
-                  child: Image.asset(
-                    AssetConstants.logo,
-                    width: 100,
-                    height: 100,
-                  ),
-                ),
-                const SizedBox(height: 50),
-                BlocListener<SettingsDomainCubit, SettingsDomainState>(
-                  listener: (context, state) async {
-                    if (state is SettingsDomainLoaded) {
-                      final remoteConfigCubit =
-                          context.read<RemoteConfigCubit>();
-                      await remoteConfigCubit
-                          .fetchDebugCredential(state.domain);
-                    }
-                  },
-                  child: BlocBuilder<RemoteConfigCubit, RemoteConfigState>(
-                    builder: (context, state) {
-                      if (state is RemoteConfigDebugCredentialsLoaded) {
-                        if (state.creds?.isNotEmpty == true) {
-                          return DropdownButton<Map<String, String>>(
-                            hint: const Text('Select an item'),
-                            items: state.creds?.map((item) {
-                              return DropdownMenuItem<Map<String, String>>(
-                                value: item,
-                                child: Text(item['username']!),
-                              );
-                            }).toList(),
-                            onChanged: (newValue) {
-                              setState(() {
-                                _fillCredentials(newValue?['username'],
-                                    newValue?['password']);
-                              });
-                            },
-                          );
-                        }
-                      }
-                      return Container();
-                    },
-                  ),
-                ),
-                Input(
-                  label: LocalizationConstants.username.localized(),
-                  hintText: LocalizationConstants.enterUsername.localized(),
-                  controller: _usernameController,
-                  onTapOutside: (p0) => context.closeKeyboard(),
-                  onEditingComplete: () => context.nextFocus(),
-                ),
-                const SizedBox(height: 16.0),
-                Input(
-                  label: LocalizationConstants.password.localized(),
-                  hintText: LocalizationConstants.enterPassword.localized(),
-                  obscureText: !_showPassword,
-                  controller: _passwordController,
-                  onTapOutside: (p0) => context.closeKeyboard(),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _showPassword = !_showPassword;
-                      });
-                    },
-                    icon: _showPassword
-                        ? const SvgAssetImage(
-                            assetName: AssetConstants.iconEyeOff,
-                          )
-                        : const SvgAssetImage(
-                            assetName: AssetConstants.iconEye,
-                          ),
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                BlocConsumer<LoginCubit, LoginState>(
-                  listener: (context, state) async {
-                    if (state is LoginSuccessState) {
-                      if (context.read<LoginCubit>().showSpinner) {
-                        Navigator.of(context, rootNavigator: true).pop();
-                        context.read<LoginCubit>().showSpinner = false;
-                        context.pop();
-                      }
-
-                      context
-                          .read<AuthCubit>()
-                          .loadAuthenticationState()
-                          .ignore();
-
-                      if (state.loginStatus ==
-                          LoginStatus.loginSuccessBiometric) {
-                        final biometricOptionsState =
-                            context.read<BiometricOptionsCubit>().state;
-                        final options =
-                            biometricOptionsState is BiometricOptionsLoaded
-                                ? biometricOptionsState.option
-                                : DeviceAuthenticationOption.none;
-
-                        if (options != DeviceAuthenticationOption.none) {
-                          final _ = await context.pushNamed(
-                            AppRoute.biometricLogin.name,
-                            extra: BiometricInfoEntity(
-                              biometricOption: options,
-                              password: _passwordController.text,
-                            ),
-                          );
-
-                          if (context.mounted) {
-                            context.read<LoginCubit>().showSpinner = true;
-                            showPleaseWait(context);
-                            context
-                                .read<LoginCubit>()
-                                .handleBillToShipTo()
-                                .ignore();
+                SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 20),
+                      GestureDetector(
+                        onTap: () async {
+                          tapCount++;
+                          if (tapCount == 10) {
+                            await context
+                                .read<RemoteConfigCubit>()
+                                .fetchDevMode();
                           }
+                        },
+                        child: Image.asset(
+                          AssetConstants.logo,
+                          width: 100,
+                          height: 100,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      BlocListener<SettingsDomainCubit, SettingsDomainState>(
+                        listener: (context, state) async {
+                          if (state is SettingsDomainLoaded) {
+                            final remoteConfigCubit =
+                                context.read<RemoteConfigCubit>();
+                            await remoteConfigCubit
+                                .fetchDebugCredential(state.domain);
+                          }
+                        },
+                        child:
+                            BlocBuilder<RemoteConfigCubit, RemoteConfigState>(
+                          builder: (context, state) {
+                            if (state is RemoteConfigDebugCredentialsLoaded) {
+                              if (state.creds?.isNotEmpty == true) {
+                                return DropdownButton<Map<String, String>>(
+                                  hint: const Text('Select an item'),
+                                  items: state.creds?.map((item) {
+                                    return DropdownMenuItem<
+                                        Map<String, String>>(
+                                      value: item,
+                                      child: Text(item['username']!),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      _fillCredentials(newValue?['username'],
+                                          newValue?['password']);
+                                    });
+                                  },
+                                );
+                              }
+                            }
+                            return Container();
+                          },
+                        ),
+                      ),
+                      Input(
+                        label: LocalizationConstants.username.localized(),
+                        hintText:
+                            LocalizationConstants.enterUsername.localized(),
+                        controller: _usernameController,
+                        onTapOutside: (p0) => context.closeKeyboard(),
+                        onEditingComplete: () => context.nextFocus(),
+                      ),
+                      const SizedBox(height: 16.0),
+                      Input(
+                        label: LocalizationConstants.password.localized(),
+                        hintText:
+                            LocalizationConstants.enterPassword.localized(),
+                        obscureText: !_showPassword,
+                        controller: _passwordController,
+                        onTapOutside: (p0) => context.closeKeyboard(),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _showPassword = !_showPassword;
+                            });
+                          },
+                          icon: _showPassword
+                              ? const SvgAssetImage(
+                                  assetName: AssetConstants.iconEyeOff,
+                                )
+                              : const SvgAssetImage(
+                                  assetName: AssetConstants.iconEye,
+                                ),
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      BlocConsumer<LoginCubit, LoginState>(
+                        listener: (context, state) async {
+                          if (state is LoginSuccessState) {
+                            if (context.read<LoginCubit>().showSpinner) {
+                              Navigator.of(context, rootNavigator: true).pop();
+                              context.read<LoginCubit>().showSpinner = false;
+                              context.pop();
+                            }
 
-                          return;
-                        }
-                        return;
-                      } else if (state.loginStatus ==
-                          LoginStatus.loginSuccessBillToShipTo) {
-                        if (context.read<LoginCubit>().showSpinner) {
-                          Navigator.of(context, rootNavigator: true).pop();
-                          context.read<LoginCubit>().showSpinner = false;
-                        }
-
-                        final isCancel = await context.pushNamed<bool>(
-                          AppRoute.billToShipToChange.name,
-                        );
-
-                        if (!context.mounted) {
-                          return;
-                        }
-
-                        if (isCancel == null || isCancel) {
-                          await context.read<LoginCubit>().onCancelLogin();
-                          if (context.mounted) {
                             context
                                 .read<AuthCubit>()
                                 .loadAuthenticationState()
                                 .ignore();
-                          }
-                        }
-                      }
-                      if (context.mounted) {
-                        context.pop(true);
-                      }
-                    } else if (state is LoginFailureState) {
-                      if (context.read<LoginCubit>().showSpinner) {
-                        Navigator.of(context, rootNavigator: true).pop();
-                        context.read<LoginCubit>().showSpinner = false;
-                      }
 
-                      displayDialogWidget(
-                        context: context,
-                        title: state.title,
-                        message: state.message,
-                        actions: [
-                          DialogPlainButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(state.buttonText ?? ''),
-                          ),
-                        ],
-                      );
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state is LoginLoadingState) {
-                      return const CircularProgressIndicator(); // Display a loading indicator
-                    } else {
-                      return PrimaryButton(
-                        onPressed: () {
-                          context.closeKeyboard();
-                          BlocProvider.of<LoginCubit>(context).onLoginSubmit(
-                            _usernameController.text,
-                            _passwordController.text,
-                          );
-                        },
-                        text: LocalizationConstants.signIn.localized(),
-                      );
-                    }
-                  },
-                ),
-                BlocBuilder<LoginCubit, LoginState>(
-                  builder: (context, state) {
-                    return state is LoginLoadingState
-                        ? const SizedBox.shrink()
-                        : const SizedBox(height: 16.0);
-                  },
-                ),
-                BlocBuilder<LoginCubit, LoginState>(
-                  builder: (context, state) {
-                    return state is LoginLoadingState
-                        ? const SizedBox.shrink()
-                        : BlocBuilder<BiometricOptionsCubit,
-                            BiometricOptionsState>(
-                            builder: (context, state) {
-                              if (state is BiometricOptionsLoading ||
-                                  state is BiometricOptionsUnknown ||
-                                  (state is BiometricOptionsLoaded &&
-                                      state.option ==
-                                          DeviceAuthenticationOption.none)) {
-                                return const SizedBox.shrink();
+                            if (state.loginStatus ==
+                                LoginStatus.loginSuccessBiometric) {
+                              final biometricOptionsState =
+                                  context.read<BiometricOptionsCubit>().state;
+                              final options = biometricOptionsState
+                                      is BiometricOptionsLoaded
+                                  ? biometricOptionsState.option
+                                  : DeviceAuthenticationOption.none;
+
+                              if (options != DeviceAuthenticationOption.none) {
+                                final _ = await context.pushNamed(
+                                  AppRoute.biometricLogin.name,
+                                  extra: BiometricInfoEntity(
+                                    biometricOption: options,
+                                    password: _passwordController.text,
+                                  ),
+                                );
+
+                                if (context.mounted) {
+                                  context.read<LoginCubit>().showSpinner = true;
+                                  showPleaseWait(context);
+                                  context
+                                      .read<LoginCubit>()
+                                      .handleBillToShipTo()
+                                      .ignore();
+                                }
+
+                                return;
+                              }
+                              return;
+                            } else if (state.loginStatus ==
+                                LoginStatus.loginSuccessBillToShipTo) {
+                              if (context.read<LoginCubit>().showSpinner) {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
+                                context.read<LoginCubit>().showSpinner = false;
                               }
 
-                              final biometricOption =
-                                  state is BiometricOptionsLoaded
-                                      ? state.option
-                                      : DeviceAuthenticationOption.none;
-
-                              final biometricDisplayOption = Platform.isAndroid
-                                  ? LocalizationConstants.fingerprint
-                                      .localized()
-                                  : biometricOption ==
-                                          DeviceAuthenticationOption.faceID
-                                      ? LocalizationConstants.faceID.localized()
-                                      : LocalizationConstants.touchID
-                                          .localized();
-
-                              return SecondaryButton(
-                                onPressed: () async {
-                                  await context
-                                      .read<LoginCubit>()
-                                      .onBiometricLoginSubmit(biometricOption);
-                                },
-                                text: 'Use $biometricDisplayOption',
+                              final isCancel = await context.pushNamed<bool>(
+                                AppRoute.billToShipToChange.name,
                               );
-                            },
-                          );
-                  },
-                ),
-                const SizedBox(height: 16.0),
-                PlainButton(
-                  onPressed: () => AppRoute.forgotPassword
-                      .navigateBackStack(context, extra: AccountType.standard),
-                  style: OptiTextStyles.subtitle.copyWith(
-                    color: OptiAppColors.primaryColor,
+
+                              if (!context.mounted) {
+                                return;
+                              }
+
+                              if (isCancel == null || isCancel) {
+                                await context
+                                    .read<LoginCubit>()
+                                    .onCancelLogin();
+                                if (context.mounted) {
+                                  context
+                                      .read<AuthCubit>()
+                                      .loadAuthenticationState()
+                                      .ignore();
+                                }
+                              }
+                            }
+                            if (context.mounted) {
+                              context.pop(true);
+                            }
+                          } else if (state is LoginFailureState) {
+                            if (context.read<LoginCubit>().showSpinner) {
+                              Navigator.of(context, rootNavigator: true).pop();
+                              context.read<LoginCubit>().showSpinner = false;
+                            }
+
+                            displayDialogWidget(
+                              context: context,
+                              title: state.title,
+                              message: state.message,
+                              actions: [
+                                DialogPlainButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text(state.buttonText ?? ''),
+                                ),
+                              ],
+                            );
+                          }
+                        },
+                        builder: (context, state) {
+                          if (state is LoginLoadingState) {
+                            return const CircularProgressIndicator(); // Display a loading indicator
+                          } else {
+                            return PrimaryButton(
+                              onPressed: () {
+                                context.closeKeyboard();
+                                BlocProvider.of<LoginCubit>(context)
+                                    .onLoginSubmit(
+                                  _usernameController.text,
+                                  _passwordController.text,
+                                );
+                              },
+                              text: LocalizationConstants.signIn.localized(),
+                            );
+                          }
+                        },
+                      ),
+                      BlocBuilder<LoginCubit, LoginState>(
+                        builder: (context, state) {
+                          return state is LoginLoadingState
+                              ? const SizedBox.shrink()
+                              : const SizedBox(height: 16.0);
+                        },
+                      ),
+                      BlocBuilder<LoginCubit, LoginState>(
+                        builder: (context, state) {
+                          return state is LoginLoadingState
+                              ? const SizedBox.shrink()
+                              : BlocBuilder<BiometricOptionsCubit,
+                                  BiometricOptionsState>(
+                                  builder: (context, state) {
+                                    if (state is BiometricOptionsLoading ||
+                                        state is BiometricOptionsUnknown ||
+                                        (state is BiometricOptionsLoaded &&
+                                            state.option ==
+                                                DeviceAuthenticationOption
+                                                    .none)) {
+                                      return const SizedBox.shrink();
+                                    }
+
+                                    final biometricOption =
+                                        state is BiometricOptionsLoaded
+                                            ? state.option
+                                            : DeviceAuthenticationOption.none;
+
+                                    final biometricDisplayOption =
+                                        Platform.isAndroid
+                                            ? LocalizationConstants.fingerprint
+                                                .localized()
+                                            : biometricOption ==
+                                                    DeviceAuthenticationOption
+                                                        .faceID
+                                                ? LocalizationConstants.faceID
+                                                    .localized()
+                                                : LocalizationConstants.touchID
+                                                    .localized();
+
+                                    return SecondaryButton(
+                                      onPressed: () async {
+                                        await context
+                                            .read<LoginCubit>()
+                                            .onBiometricLoginSubmit(
+                                                biometricOption);
+                                      },
+                                      text: 'Use $biometricDisplayOption',
+                                    );
+                                  },
+                                );
+                        },
+                      ),
+                      const SizedBox(height: 16.0),
+                      PlainButton(
+                        onPressed: () => AppRoute.forgotPassword
+                            .navigateBackStack(context,
+                                extra: AccountType.standard),
+                        style: OptiTextStyles.subtitle.copyWith(
+                          color: OptiAppColors.primaryColor,
+                        ),
+                        text: LocalizationConstants.forgotPassword.localized(),
+                      ),
+                    ],
                   ),
-                  text: LocalizationConstants.forgotPassword.localized(),
                 ),
+                if (context.watch<LoginCubit>().isInfoMessageAvailable)
+                  BlocBuilder<LoginCubit, LoginState>(
+                    builder: (context, state) {
+                      if (state is LoginInfoLoadingState) {
+                        return LoadingAnimationWidget.prograssiveDots(
+                          color: OptiAppColors.iconPrimary,
+                          size: 30,
+                        );
+                      }
+
+                      return RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          children: context
+                              .watch<LoginCubit>()
+                              .informationText
+                              .split(' ')
+                              .map(
+                            (word) {
+                              if (word.contains('{0}')) {
+                                return TextSpan(
+                                  text:
+                                      '${LocalizationConstants.privacyPolicy.localized()} ',
+                                  style: OptiTextStyles.body.copyWith(
+                                    color: OptiAppColors.primaryColor,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      launchUrlString(
+                                        context
+                                                .read<LoginCubit>()
+                                                .privacyPolicyUrl ??
+                                            '',
+                                      );
+                                    },
+                                );
+                              } else if (word.contains('{1}')) {
+                                return TextSpan(
+                                  text:
+                                      '${LocalizationConstants.termsOfUse.localized()} ',
+                                  style: OptiTextStyles.body.copyWith(
+                                    color: OptiAppColors.primaryColor,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      launchUrlString(
+                                        context
+                                                .read<LoginCubit>()
+                                                .termsOfUseUrl ??
+                                            '',
+                                      );
+                                    },
+                                );
+                              } else {
+                                return TextSpan(
+                                  text: '$word ',
+                                  style: OptiTextStyles.body,
+                                );
+                              }
+                            },
+                          ).toList(),
+                        ),
+                      );
+                    },
+                  ),
+                const SizedBox.shrink(),
               ],
             ),
           ),

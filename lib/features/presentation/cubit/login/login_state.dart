@@ -9,6 +9,8 @@ sealed class LoginState extends Equatable {
 
 class LoginInitialState extends LoginState {}
 
+class LoginInfoLoadingState extends LoginState {}
+
 class LoginLoadingState extends LoginState {}
 
 class LoginSuccessState extends LoginState {
