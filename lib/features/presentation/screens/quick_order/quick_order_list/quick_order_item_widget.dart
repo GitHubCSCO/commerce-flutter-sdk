@@ -418,6 +418,9 @@ class _OrderProductQuantityGroupWidgetState
       context
           .read<OrderItemPricingInventoryCubit>()
           .getPricingAndInventory(widget.quickOrderItemEntity, widget.setting);
+      context
+          .read<OrderListBloc>()
+          .add(OrderListItemUomChangeEvent(widget.quickOrderItemEntity));
     }
 
     int getIndexOfUOM(List<ProductUnitOfMeasureEntity>? productUnitOfMeasures,
@@ -447,7 +450,8 @@ class _OrderProductQuantityGroupWidgetState
           selectedIndex: getIndexOfUOM(
               widget.quickOrderItemEntity.productEntity.productUnitOfMeasures,
               widget.quickOrderItemEntity.selectedUnitOfMeasure),
-          callback: onUnitOfMeasureSelect, showDropDown: true),
+          callback: onUnitOfMeasureSelect,
+          showDropDown: true),
     );
   }
 

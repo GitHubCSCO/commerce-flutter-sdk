@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/product_unit_of_measure_extension.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
@@ -205,9 +206,7 @@ class _ListPickerState extends State<ListPicker> {
     } else if (item is CalculationMethod) {
       return item.displayName ?? item.name ?? item.value ?? "";
     } else if (item is ProductUnitOfMeasureEntity) {
-      return item.unitOfMeasureTextDisplayWithQuantity ??
-          item.unitOfMeasureDisplay ??
-          '';
+      return item.getUnitOfMeasureTextDisplayWithQuantity();
     } else {
       return '';
     }

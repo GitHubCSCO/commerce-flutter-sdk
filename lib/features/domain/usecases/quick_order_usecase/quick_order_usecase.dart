@@ -77,22 +77,7 @@ class QuickOrderUseCase extends BaseUseCase {
 
   void persistedData(QuickOrderItemEntity item,
       {int? index, bool? replace}) async {
-    final product = ProductEntityMapper.toModel(item.productEntity);
-    final unitOfMeasure = item.selectedUnitOfMeasure != null
-        ? ProductUnitOfMeasureEntityMapper.toModel(item.selectedUnitOfMeasure!)
-        : null;
-    final vmiBin = item.vmiBinEntity != null
-        ? VmiBinModelEntityMapper.toModel(item.vmiBinEntity!)
-        : null;
-
-    final orderItem = QuickOrderItem(
-      product,
-      selectedUnitOfMeasure: unitOfMeasure,
-      vmiBinModel: vmiBin,
-      selectedUnitOfMeasureTitle: item.selectedUnitOfMeasureTitle,
-      selectedUnitOfMeasureValueText: item.selectedUnitOfMeasureValueText,
-      quantityOrdered: item.quantityOrdered,
-    );
+    final orderItem = convertQuickOrderItem(item);
 
     final quickOrderItemList = await _getQuickOrderPersistedList();
 
@@ -123,6 +108,21 @@ class QuickOrderUseCase extends BaseUseCase {
     await _saveDataAsJson(quickOrderItemList);
   }
 
+  void updateUomOfPersistedData(QuickOrderItemEntity item) async {
+    final orderItem = convertQuickOrderItem(item);
+
+    final quickOrderItemList = await _getQuickOrderPersistedList();
+
+    for (int i = 0; i < quickOrderItemList.length; i++) {
+      if (quickOrderItemList[i].product.id == item.productEntity.id) {
+        quickOrderItemList[i] = orderItem;
+        break;
+      }
+    }
+
+    await _saveDataAsJson(quickOrderItemList);
+  }
+
   Future<void> removePersistedData(ProductEntity entity) async {
     final quickOrderItemList = await _getQuickOrderPersistedList();
 
@@ -135,6 +135,27 @@ class QuickOrderUseCase extends BaseUseCase {
     await commerceAPIServiceProvider
         .getCacheService()
         .removePersistedData(_getStorageQueueKey());
+  }
+
+  QuickOrderItem convertQuickOrderItem(QuickOrderItemEntity item) {
+    final product = ProductEntityMapper.toModel(item.productEntity);
+    final unitOfMeasure = item.selectedUnitOfMeasure != null
+        ? ProductUnitOfMeasureEntityMapper.toModel(item.selectedUnitOfMeasure!)
+        : null;
+    final vmiBin = item.vmiBinEntity != null
+        ? VmiBinModelEntityMapper.toModel(item.vmiBinEntity!)
+        : null;
+
+    final orderItem = QuickOrderItem(
+      product,
+      selectedUnitOfMeasure: unitOfMeasure,
+      vmiBinModel: vmiBin,
+      selectedUnitOfMeasureTitle: item.selectedUnitOfMeasureTitle,
+      selectedUnitOfMeasureValueText: item.selectedUnitOfMeasureValueText,
+      quantityOrdered: item.quantityOrdered,
+    );
+
+    return orderItem;
   }
 
   Future<void> _saveDataAsJson(List<QuickOrderItem> quickOrderItemList) async {
