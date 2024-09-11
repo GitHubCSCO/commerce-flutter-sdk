@@ -13,11 +13,11 @@
         {
             "contentKey": 4111,
             "class": "MobileHeader",
-            "title": "CURRENT LOCATION"
+            "title": "Current Location"
         },
         {
             "contentKey": 4112,
-            "title": "CURRENT LOCATION",
+            "title": "Current Location",
             "class": "MobileCurrentLocation"
         },
         {
@@ -64,12 +64,12 @@
         {
             "contentKey": 4116,
             "class": "MobileHeader",
-            "title": "LOCATION NOTE"
+            "title": "Location Note"
         },
         {
             "contentKey": 4117,
             "class": "MobileLocationNote",
-            "title": "LOCATION NOTE"
+            "title": "Location Note"
         },
         {
             "contentKey": 4110,
@@ -80,11 +80,11 @@
         {
             "contentKey": 4120,
             "class": "MobileHeader",
-            "title": "PREVIOUS ORDERS"
+            "title": "Previous Orders"
         },
         {
             "contentKey": 4121,
-            "title": "PREVIOUS ORDERS",
+            "title": "Previous Orders",
             "class": "MobilePreviousOrders"
         }
     ],

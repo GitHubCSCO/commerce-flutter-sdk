@@ -49,7 +49,7 @@ class VMIPage extends StatelessWidget with BaseDynamicContentScreen {
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         backgroundColor: OptiAppColors.backgroundWhite,
-        title: const Text('VMI'),
+        title: Text(LocalizationConstants.vendorManagedInventory.localized()),
         centerTitle: false,
       ),
       body: MultiBlocListener(
