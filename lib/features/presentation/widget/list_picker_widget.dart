@@ -93,7 +93,9 @@ class _ListPickerState extends State<ListPicker> {
               ),
             ),
             Icon(
-              (widget.showDropDown == true) ? Icons.keyboard_arrow_down : Icons.arrow_forward_ios,
+              (widget.showDropDown == true)
+                  ? Icons.keyboard_arrow_down
+                  : Icons.arrow_forward_ios,
               color: Colors.grey,
               size: 16,
             ),

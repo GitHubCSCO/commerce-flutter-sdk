@@ -1,11 +1,9 @@
 import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
 
 extension ProductUnitOfMeasureExtension on ProductUnitOfMeasureEntity {
-
   String getUnitOfMeasureTextDisplayWithQuantity() {
     String? dataSourceItem;
-    if (description != null &&
-        description!.isNotEmpty) {
+    if (description != null && description!.isNotEmpty) {
       dataSourceItem = qtyPerBaseUnitOfMeasure! > 1
           ? '$description /$qtyPerBaseUnitOfMeasure'
           : description;
@@ -17,5 +15,4 @@ extension ProductUnitOfMeasureExtension on ProductUnitOfMeasureEntity {
     }
     return dataSourceItem ?? '';
   }
-
 }

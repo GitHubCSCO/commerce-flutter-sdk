@@ -295,7 +295,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         var newItem = _convertProductToQuickOrderItemEntity(product, quantity!);
         _insertItemIntoQuickOrderList(newItem);
         emit(OrderListLoadedState(quickOrderItemList, productSettings));
-      case Failure():
+      case Failure(errorResponse: final errorResponse):
+        _quickOrderUseCase.trackError(errorResponse);
         emit(OrderListLoadedState(quickOrderItemList, productSettings));
     }
   }
