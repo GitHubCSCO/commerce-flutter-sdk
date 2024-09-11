@@ -26,6 +26,8 @@ class QuoteDeletionFailedState extends QuoteDetailsState {}
 
 class QuoteDeclineSuccessState extends QuoteDetailsState {}
 
+class QuoteDeleteDeclineLoadingState extends QuoteDetailsState {}
+
 class QuoteDeclineFailedState extends QuoteDetailsState {}
 
 class QuoteSubmissionSuccessState extends QuoteDetailsState {}

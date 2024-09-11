@@ -222,6 +222,7 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
 
   Future<void> _onDeleteSalesQuoteEvent(
       DeleteQuoteEvent event, Emitter<QuoteDetailsState> emit) async {
+    emit(QuoteDeleteDeclineLoadingState());
     var deleteQuoteResponse =
         await _quoteDetailsUsecase.deleteQuote(event.quoteId);
     switch (deleteQuoteResponse) {
@@ -243,7 +244,7 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
       DeclineQuoteEvent event, Emitter<QuoteDetailsState> emit) async {
     quoteDto?.status = "QuoteRejected";
 
-    emit(QuoteDetailsLoadingState());
+    emit(QuoteDeleteDeclineLoadingState());
 
     var submitQuoteResponse = await _quoteDetailsUsecase.submitQuote(quoteDto!);
     switch (submitQuoteResponse) {
@@ -251,10 +252,12 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
         if (data != null) {
           emit(QuoteDeclineSuccessState());
         } else {
+          quoteDto?.status = quoteDto?.statusDisplay;
           emit(QuoteDeclineFailedState());
         }
         break;
       case Failure(errorResponse: final errorResponse):
+        quoteDto?.status = quoteDto?.statusDisplay;
         emit(QuoteDeclineFailedState());
         break;
       default:
