@@ -74,7 +74,8 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
             switch (state) {
               case AddToCartSuccess():
                 context.read<CartCountCubit>().onCartItemChange();
-                CustomSnackBar.showProductAddedToCart(context);
+                CustomSnackBar.showProductAddedToCart(
+                    context, state.addToCartMsg);
                 break;
               case AddToCartFailure():
                 break;

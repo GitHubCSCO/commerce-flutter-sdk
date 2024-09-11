@@ -29,7 +29,14 @@ class ProductDetailsBloc
     on<FetchProductDetailsEvent>(_fetchProductDetails);
     on<StyleTraitSelectedEvent>(_onStyleTraitSelected);
     on<UnitOfMeasuteChangeEvent>(_changeUnitOfMeasureEvent);
+    on<ProductDetailsReloadEvent>(_onProductDetailsReloadEvent);
   }
+
+  void _onProductDetailsReloadEvent(
+      ProductDetailsReloadEvent event, Emitter<ProductDetailsState> emit) {
+    emit(ProductDetailsReloadState());
+  }
+
   List<AddCartLine> getAddCartLineForWistlist() {
     var cartLineOfProduct = AddCartLine(
       productId: productDetailDataEntity.styledProduct?.productId ??

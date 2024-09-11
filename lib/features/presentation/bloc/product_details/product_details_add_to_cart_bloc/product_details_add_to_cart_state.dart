@@ -15,9 +15,15 @@ class ProductDetailsAddtoCartSuccess extends ProductDetailsAddtoCartState {
 }
 
 class ProductDetailsAddtoCartError extends ProductDetailsAddtoCartState {
-  final String errorMessage;
+  final String? errorMessage;
 
-  const ProductDetailsAddtoCartError(this.errorMessage);
+  ProductDetailsAddtoCartError({this.errorMessage});
+}
+
+class ProductDetailsAddtoCartWarning extends ProductDetailsAddtoCartState {
+  final String? warningMsg;
+
+  ProductDetailsAddtoCartWarning({this.warningMsg});
 }
 
 // product added to cart

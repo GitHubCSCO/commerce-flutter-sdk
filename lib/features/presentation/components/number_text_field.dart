@@ -19,16 +19,16 @@ class NumberTextField extends StatefulWidget {
   final double borderWidth;
   final ValueChanged<int?>? onChanged;
   final ValueChanged<int?>? onSubmitted;
-  final String? initialtText;
-  final bool shouldShowIncrementDecermentIcon;
+  final String? initialText;
+  final bool shouldShowIncrementDecrementIcon;
   final void Function(bool hasFocus)? focusListener;
   final bool? isEnabled;
   final bool? showWarningHighlighted;
 
   const NumberTextField({
-    Key? key,
-    this.initialtText,
-    this.shouldShowIncrementDecermentIcon = false,
+    super.key,
+    this.initialText,
+    this.shouldShowIncrementDecrementIcon = false,
     this.controller,
     this.focusNode,
     this.min = 1,
@@ -43,7 +43,7 @@ class NumberTextField extends StatefulWidget {
     this.isEnabled = true,
     this.onSubmitted,
     this.showWarningHighlighted = false,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _NumberTextFieldState();
@@ -54,7 +54,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
   late FocusNode _focusNode;
   bool _canGoUp = false;
   bool _canGoDown = false;
-  bool _shouldShowIncrementDecermentIcon = false;
+  bool _shouldShowIncrementDecrementIcon = false;
   OverlayEntry? _overlayEntry;
 
   @override
@@ -62,9 +62,8 @@ class _NumberTextFieldState extends State<NumberTextField> {
     super.initState();
     _controller = widget.controller ?? TextEditingController();
     _focusNode = widget.focusNode ?? FocusNode();
-    _controller.text = widget.initialtText ?? "1";
-    _shouldShowIncrementDecermentIcon =
-        widget.shouldShowIncrementDecermentIcon!;
+    _controller.text = widget.initialText ?? "1";
+    _shouldShowIncrementDecrementIcon = widget.shouldShowIncrementDecrementIcon;
     _updateArrows(int.tryParse(_controller.text));
     _focusNode.addListener(_onFocusChange);
     if (widget.focusListener != null) {
@@ -109,7 +108,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
           color: Colors.grey[200],
           child: Container(
             height: 40.0,
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -119,7 +118,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
                   },
                   child: Text(
                     LocalizationConstants.done.localized(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.bold,
                     ),
@@ -131,7 +130,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
         ),
       ),
     );
-    overlay?.insert(_overlayEntry!);
+    overlay.insert(_overlayEntry!);
   }
 
   void _removeOverlay() {
@@ -148,8 +147,8 @@ class _NumberTextFieldState extends State<NumberTextField> {
     if (widget.focusNode != oldWidget.focusNode) {
       _focusNode = widget.focusNode ?? _focusNode;
     }
-    _controller.text = widget.initialtText ?? _controller.text;
-    _shouldShowIncrementDecermentIcon = widget.shouldShowIncrementDecermentIcon;
+    _controller.text = widget.initialText ?? _controller.text;
+    _shouldShowIncrementDecrementIcon = widget.shouldShowIncrementDecrementIcon;
     _updateArrows(int.tryParse(_controller.text));
   }
 
@@ -157,7 +156,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
   Widget build(BuildContext context) => Row(
         children: [
           // Minus button
-          if (_shouldShowIncrementDecermentIcon)
+          if (_shouldShowIncrementDecrementIcon)
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: SizedBox(
@@ -172,9 +171,9 @@ class _NumberTextFieldState extends State<NumberTextField> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: OptiAppColors.backgroundGray,
                     padding: EdgeInsets.zero,
-                    shape: CircleBorder(),
+                    shape: const CircleBorder(),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.remove,
                     color: Colors.black,
                     size: 24,
@@ -204,7 +203,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
                     AppStyle.textFieldborderRadius,
                   ),
                   borderSide: widget.showWarningHighlighted!
-                      ? BorderSide(color: Color.fromARGB(255, 244, 0, 0))
+                      ? const BorderSide(color: Color.fromARGB(255, 244, 0, 0))
                       : BorderSide.none,
                 ),
                 disabledBorder: OutlineInputBorder(
@@ -243,7 +242,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
             ),
           ),
           // Plus button
-          if (_shouldShowIncrementDecermentIcon)
+          if (_shouldShowIncrementDecrementIcon)
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: SizedBox(
@@ -258,9 +257,9 @@ class _NumberTextFieldState extends State<NumberTextField> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: OptiAppColors.backgroundGray,
                     padding: EdgeInsets.zero,
-                    shape: CircleBorder(),
+                    shape: const CircleBorder(),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.add,
                     color: Colors.black,
                     size: 24,
@@ -283,19 +282,19 @@ class _NumberTextFieldState extends State<NumberTextField> {
         ? intValue = 1
         : intValue += up ? widget.step : -widget.step;
     _controller.text = intValue.toString();
-    widget.onChanged?.call(intValue); // Fire onChanged event
+    widget.onSubmitted?.call(intValue); // Fire onChanged event
     _updateArrows(intValue);
-    _focusNode.requestFocus();
   }
 
   void _updateArrows(int? value) {
     final canGoUp = value == null || value < widget.max;
     final canGoDown = value == null || value > widget.min;
-    if (_canGoUp != canGoUp || _canGoDown != canGoDown)
+    if (_canGoUp != canGoUp || _canGoDown != canGoDown) {
       setState(() {
         _canGoUp = canGoUp;
         _canGoDown = canGoDown;
       });
+    }
   }
 }
 
@@ -308,11 +307,19 @@ class _NumberTextInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    if (const ['-', ''].contains(newValue.text)) return newValue;
+    if (const ['-', ''].contains(newValue.text)) {
+      return newValue;
+    }
     final intValue = int.tryParse(newValue.text);
-    if (intValue == null) return newValue;
-    if (intValue < min) return newValue.copyWith(text: min.toString());
-    if (intValue > max) return newValue.copyWith(text: max.toString());
+    if (intValue == null) {
+      return newValue;
+    }
+    if (intValue < min) {
+      return newValue.copyWith(text: min.toString());
+    }
+    if (intValue > max) {
+      return newValue.copyWith(text: max.toString());
+    }
     return newValue.copyWith(text: intValue.toString());
   }
 }

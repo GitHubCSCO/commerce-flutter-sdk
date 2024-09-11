@@ -39,8 +39,8 @@ class LineItemQuantityGroupWidget extends StatelessWidget {
             child: canEdit
                 ? NumberTextField(
                     max: CoreConstants.maximumOrderQuantity,
-                    initialtText: qtyOrdered,
-                    shouldShowIncrementDecermentIcon: false,
+                    initialText: qtyOrdered,
+                    shouldShowIncrementDecrementIcon: false,
                     onSubmitted: onQtyChanged,
                     showWarningHighlighted: hasInsufficientInventory ?? false,
                     isEnabled: !isEditFieldDisabled,

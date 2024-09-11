@@ -19,3 +19,9 @@ class BilingAddressLoadedState extends BillingAddressState {
     this.billTo,
   });
 }
+
+class BillingAddressValidationState extends BillingAddressState {
+  final bool isCountryEmpty;
+  final bool isStateEmpty;
+  BillingAddressValidationState(this.isCountryEmpty, this.isStateEmpty);
+}

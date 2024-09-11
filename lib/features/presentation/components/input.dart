@@ -211,15 +211,20 @@ class _InputState extends State<Input> {
               ),
             ),
             if (_errorText != null && _errorText!.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: Text(
-                  _errorText!,
-                  style: const TextStyle(
-                    color: Colors.red,
-                    fontSize: 12,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      _errorText!,
+                      style: const TextStyle(
+                        color: Colors.red,
+                        fontSize: 14,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
           ],
         );

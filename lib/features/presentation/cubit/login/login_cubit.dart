@@ -16,6 +16,28 @@ class LoginCubit extends Cubit<LoginState> {
   final LoginUsecase loginUsecase;
   LoginCubit({required this.loginUsecase}) : super(LoginInitialState());
 
+  String informationText = '';
+
+  String? get privacyPolicyUrl => loginUsecase.privacyPolicyUrl;
+
+  String? get termsOfUseUrl => loginUsecase.termsOfUseUrl;
+
+  bool get isInfoMessageAvailable =>
+      !(privacyPolicyUrl.isNullOrEmpty || !termsOfUseUrl.isNullOrEmpty);
+
+  Future<void> _loadSiteMessages() async {
+    informationText = await loginUsecase.getSiteMessage(
+      SiteMessageConstants.nameMobileAppSignInAgreement,
+      SiteMessageConstants.defaultMobileAppSignInAgreement,
+    );
+  }
+
+  Future<void> initialize() async {
+    emit(LoginInfoLoadingState());
+    await _loadSiteMessages();
+    emit(LoginInitialState());
+  }
+
   Future<void> onLoginSubmit(String username, String password) async {
     emit(LoginLoadingState());
 

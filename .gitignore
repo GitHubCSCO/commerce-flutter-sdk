@@ -133,3 +133,5 @@ mason.yaml
 ios/adhoc.plist
 ios/appstore.plist
 ios/development.plist
+coverage
+node_modules

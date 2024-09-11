@@ -2,7 +2,6 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
@@ -318,8 +317,7 @@ class _AccountLoggedOutHeader extends StatelessWidget {
     return Column(
       children: [
         Text(
-          SiteMessageConstants
-              .defalutMobileAppAccountUnauthenticatedDescription,
+          context.watch<AccountPageBloc>().loggedOutBannerSiteMessage,
           style: OptiTextStyles.body,
         ),
         const SizedBox(height: AppStyle.defaultVerticalPadding),

@@ -2,7 +2,10 @@ abstract class AddToCartState {}
 
 class AddToCartInitial extends AddToCartState {}
 
-class AddToCartSuccess extends AddToCartState {}
+class AddToCartSuccess extends AddToCartState {
+  final String addToCartMsg;
+  AddToCartSuccess({required this.addToCartMsg});
+}
 
 class AddToCartFailure extends AddToCartState {
   final String errorResponse;

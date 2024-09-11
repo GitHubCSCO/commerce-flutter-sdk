@@ -15,6 +15,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
@@ -71,13 +72,31 @@ class AddToCartSignInWidget extends StatelessWidget {
       listener: (bloccontext, state) {
         if (state is ProductDetailsProdctAddedToCartSuccess) {
           context.read<CartCountCubit>().onCartItemChange();
-          CustomSnackBar.showProductAddedToCart(context);
+          CustomSnackBar.showProductAddedToCart(
+              context,
+              context
+                  .read<ProductDetailsAddToCartBloc>()
+                  .messageAddToCartSuccess);
+        } else if (state is ProductDetailsAddtoCartError) {
+          CustomSnackBar.showAddToCartFailed(context,
+              context.read<ProductDetailsAddToCartBloc>().messageAddtoCartFail);
+        } else if (state is ProductDetailsAddtoCartWarning) {
+          _displayQuanityWarningDialog(
+              context,
+              context
+                  .read<ProductDetailsAddToCartBloc>()
+                  .messageAddToCartQuantityAdjusted);
         }
       },
       child: BlocBuilder<ProductDetailsAddToCartBloc,
           ProductDetailsAddtoCartState>(
         buildWhen: (previous, current) {
-          return current is! ProductDetailsProdctAddedToCartSuccess;
+          if (current is ProductDetailsProdctAddedToCartSuccess ||
+              current is ProductDetailsAddtoCartError ||
+              current is ProductDetailsAddtoCartWarning) {
+            return false;
+          }
+          return true;
         },
         builder: (context, state) {
           if (state is ProductDetailsAddtoCartInitial ||
@@ -89,13 +108,30 @@ class AddToCartSignInWidget extends StatelessWidget {
             return AddToCartSuccessWidget(state.productDetailsAddToCartEntity);
           }
           if (state is ProductDetailsAddtoCartError) {
-            return Center(child: Text(state.errorMessage));
+            return Center(child: Text(state.errorMessage ?? ""));
           } else {
             return const Center(child: Text("failure"));
           }
         },
       ),
     );
+  }
+
+  void _displayQuanityWarningDialog(BuildContext context, String msg) {
+    displayDialogWidget(context: context, message: msg, actions: [
+      DialogPlainButton(
+        onPressed: () {
+          context.read<CartCountCubit>().onCartItemChange();
+          CustomSnackBar.showProductAddedToCart(
+              context,
+              context
+                  .read<ProductDetailsAddToCartBloc>()
+                  .messageAddToCartSuccess);
+          Navigator.of(context).pop();
+        },
+        child: Text(LocalizationConstants.oK.localized()),
+      ),
+    ]);
   }
 }
 
@@ -109,14 +145,13 @@ class AddToCartSuccessWidget extends StatefulWidget {
 }
 
 class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
-  int? quantity = 1;
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ProductDetailsAddCartRow(widget.detailsAddToCartEntity, (int? value) {
-          quantity = value;
+          context.read<ProductDetailsAddToCartBloc>().add(
+              AddToCartUpdateQuantityEvent(quantityText: value.toString()));
         }),
         if (widget.detailsAddToCartEntity.isAddToCartAllowed == true)
           PrimaryButton(
@@ -129,19 +164,21 @@ class _AddToCartSuccessWidgetState extends State<AddToCartSuccessWidget> {
                     const ColorFilter.mode(Colors.white, BlendMode.srcIn),
               ),
               text: LocalizationConstants.addToCart.localized(),
-              onPressed:
-                  widget.detailsAddToCartEntity.addToCartButtonEnabled == true
-                      ? () {
-                          context.read<ProductDetailsAddToCartBloc>().add(
-                              AddToCartEvent(
-                                  productDetailsDataEntity: context
-                                      .read<ProductDetailsBloc>()
-                                      .productDetailDataEntity,
-                                  productDetailsAddToCartEntity:
-                                      widget.detailsAddToCartEntity.copyWith(
-                                          quantityText: quantity.toString())));
-                        }
-                      : null)
+              onPressed: widget.detailsAddToCartEntity.addToCartButtonEnabled ==
+                      true
+                  ? () {
+                      context.read<ProductDetailsAddToCartBloc>().add(
+                          AddToCartEvent(
+                              productDetailsDataEntity: context
+                                  .read<ProductDetailsBloc>()
+                                  .productDetailDataEntity,
+                              productDetailsAddToCartEntity:
+                                  widget.detailsAddToCartEntity.copyWith(
+                                      quantityText: context
+                                          .read<ProductDetailsAddToCartBloc>()
+                                          .quantityText)));
+                    }
+                  : null)
       ],
     );
   }
@@ -195,8 +232,8 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                   flex: 2,
                   child: NumberTextField(
                       max: CoreConstants.maximumOrderQuantity,
-                      initialtText: detailsAddToCartEntity.quantityText,
-                      shouldShowIncrementDecermentIcon: true,
+                      initialText: detailsAddToCartEntity.quantityText,
+                      shouldShowIncrementDecrementIcon: true,
                       onSubmitted: (int? quantity) {
                         if (quantity == null) {
                           return;
@@ -220,6 +257,10 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                                     productDetailsBloc.productDetailDataEntity,
                                 quantity: quantity,
                               ));
+                        } else {
+                          context
+                              .read<ProductDetailsBloc>()
+                              .add(ProductDetailsReloadEvent());
                         }
                       }),
                 ),

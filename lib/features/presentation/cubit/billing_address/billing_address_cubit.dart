@@ -85,16 +85,21 @@ class BillingAddressCubit extends Cubit<BillingAddressState> {
 
   Future<void> onSelectCountry(Country? counrty) async {
     selectedCountry = counrty;
-    setUpDataBillingAddress(addCreditCardEntity);
+    await setUpDataBillingAddress(addCreditCardEntity);
   }
 
   Future<void> onSelectState(StateModel? state) async {
     selectedState = state;
-    setUpDataBillingAddress(addCreditCardEntity);
+    await setUpDataBillingAddress(addCreditCardEntity);
   }
 
   Future<void> updateaddNewBillingAddressToggleState() async {
     billingAddressAddNewToggle = !billingAddressAddNewToggle;
-    setUpDataBillingAddress(addCreditCardEntity);
+    await setUpDataBillingAddress(addCreditCardEntity);
+  }
+
+  void validateBillingAddress() {
+    emit(BillingAddressValidationState(
+        selectedCountry == null, selectedState == null));
   }
 }

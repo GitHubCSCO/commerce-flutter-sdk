@@ -55,4 +55,14 @@ class BaseUseCase {
             StorefrontAccessConstants.signInRequiredToBrowse;
     }
   }
+
+  Future<bool> isOnline() async {
+    return commerceAPIServiceProvider.getNetworkService().isOnline();
+  }
+
+  String? get privacyPolicyUrl =>
+      coreServiceProvider.getAppConfigurationService().privacyPolicyUrl;
+
+  String? get termsOfUseUrl =>
+      coreServiceProvider.getAppConfigurationService().termsOfUseUrl;
 }

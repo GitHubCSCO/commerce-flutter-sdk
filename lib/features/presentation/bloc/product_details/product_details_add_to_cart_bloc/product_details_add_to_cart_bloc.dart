@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
@@ -8,6 +9,13 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class ProductDetailsAddToCartBloc
     extends Bloc<ProductDetailsAddToCartEvent, ProductDetailsAddtoCartState> {
   final ProductDetailsAddToCartUseCase _productDetailsAddToCartUseCase;
+  String quantityText = '1';
+  String messageAddToCartSuccess =
+      SiteMessageConstants.defaultValueAddToCartSuccess;
+  String messageAddtoCartFail = SiteMessageConstants.defaultValueAddToCartFail;
+  String messageAddToCartQuantityAdjusted =
+      SiteMessageConstants.defaultValueAddToCartQuantityAdjusted;
+
   ProductDetailsAddToCartBloc(
       {required ProductDetailsAddToCartUseCase productDetailsAddToCartUseCase,
       required ProductDetailsStyleTraitsUseCase
@@ -17,6 +25,12 @@ class ProductDetailsAddToCartBloc
     on<LoadProductDetailsAddToCartEvent>(
         (event, emit) => _fetchProductDetailsAddToCartData(event, emit));
     on<AddToCartEvent>((event, emit) => _onAddToCartEvent(event, emit));
+    on<AddToCartUpdateQuantityEvent>(
+        (event, emit) => _onAddToCartUpdateQuantity(event.quantityText!));
+  }
+
+  void _onAddToCartUpdateQuantity(String quantityText) {
+    this.quantityText = quantityText;
   }
 
   Future<void> _fetchProductDetailsAddToCartData(
@@ -24,6 +38,8 @@ class ProductDetailsAddToCartBloc
       Emitter<ProductDetailsAddtoCartState> emit) async {
     emit(ProductDetailsAddtoCartLoading());
     var productDetailsAddToCartEntity = event.productDetailsAddToCartEntity;
+
+    await _loadSiteMessages();
 
     productDetailsAddToCartEntity = _productDetailsAddToCartUseCase
         .updateAddToCartViewModel(productDetailsAddToCartEntity);
@@ -58,13 +74,43 @@ class ProductDetailsAddToCartBloc
         await _productDetailsAddToCartUseCase.addToCart(addCartLine);
 
     switch (response) {
-      case Success(value: _):
-        emit(ProductDetailsProdctAddedToCartSuccess());
+      case Success(value: final data):
+        if (data != null && data.isQtyAdjusted == true) {
+          emit(ProductDetailsAddtoCartWarning());
+        } else if (data != null) {
+          emit(ProductDetailsProdctAddedToCartSuccess());
+        } else {
+          emit(ProductDetailsAddtoCartError());
+        }
+
         break;
       case Failure(errorResponse: final errorResponse):
-        emit(
-            ProductDetailsAddtoCartError(errorResponse.errorDescription ?? ''));
+        emit(ProductDetailsAddtoCartError(
+            errorMessage: errorResponse.errorDescription));
         break;
     }
+  }
+
+  Future<void> _loadSiteMessages() async {
+    final futureResult = await Future.wait([
+      _productDetailsAddToCartUseCase.getSiteMessage(
+        SiteMessageConstants.nameAddToCartSuccess,
+        SiteMessageConstants.defaultValueAddToCartSuccess,
+      ),
+      _productDetailsAddToCartUseCase.getSiteMessage(
+        SiteMessageConstants.nameAddToCartFail,
+        SiteMessageConstants.defaultValueAddToCartFail,
+      ),
+      _productDetailsAddToCartUseCase.getSiteMessage(
+        SiteMessageConstants.nameAddToCartQuantityAdjusted,
+        SiteMessageConstants.defaultValueAddToCartQuantityAdjusted,
+      ),
+    ]);
+
+    messageAddToCartSuccess = futureResult[0];
+    messageAddtoCartFail = futureResult[1];
+    messageAddToCartQuantityAdjusted = futureResult[2];
+
+    return;
   }
 }
