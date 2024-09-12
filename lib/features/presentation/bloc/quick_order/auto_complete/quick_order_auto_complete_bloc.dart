@@ -1,5 +1,6 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,11 +55,10 @@ class QuickOrderAutoCompleteBloc
             if ((data?.products ?? []).isNotEmpty) {
               emit(QuickOrderAutoCompleteLoadedState(result: data));
             } else {
-              final message = await _searchUseCase.getSiteMessage(
-                  SiteMessageConstants.nameQuickOrderCannotOrderUnavailable,
-                  SiteMessageConstants
-                      .defaultValueQuickOrderCannotOrderUnavailable);
-              emit(QuickOrderAutoCompleteFailureState(message));
+              emit(QuickOrderAutoCompleteFailureState(LocalizationConstants
+                  .notFoundForSearch
+                  .localized()
+                  .format([searchQuery])));
             }
           }
         case Failure(errorResponse: final errorResponse):
@@ -84,11 +84,10 @@ class QuickOrderAutoCompleteBloc
           if ((data?.products ?? []).isNotEmpty) {
             emit(QuickOrderAutoCompleteLoadedState(result: data));
           } else {
-            final message = await _searchUseCase.getSiteMessage(
-                SiteMessageConstants.nameQuickOrderCannotOrderUnavailable,
-                SiteMessageConstants
-                    .defaultValueQuickOrderCannotOrderUnavailable);
-            emit(QuickOrderAutoCompleteFailureState(message));
+            emit(QuickOrderAutoCompleteFailureState(LocalizationConstants
+                .notFoundForSearch
+                .localized()
+                .format([searchQuery])));
           }
         case Failure(errorResponse: final errorResponse):
           {
