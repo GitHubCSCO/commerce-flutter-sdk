@@ -12,6 +12,8 @@ class ProductDetailsLoaded extends ProductDetailsState {
   ProductDetailsLoaded({required this.productDetailsEntities});
 }
 
+class ProductDetailsReloadState extends ProductDetailsState {}
+
 class ProductDetailsErrorState extends ProductDetailsState {
   final String errorMessage;
 

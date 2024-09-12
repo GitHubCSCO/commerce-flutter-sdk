@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/account_usecase/account_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +20,13 @@ class AccountPageBloc extends Bloc<AccountPageEvent, AccountPageState> {
       AccountPageLoadEvent event, Emitter<AccountPageState> emit) async {
     emit(AccountPageLoadingState());
 
-    var result = await _accountUseCase.loadData();
+    loggedOutBannerSiteMessage = await _accountUseCase.getSiteMessage(
+      SiteMessageConstants.nameMobileAppAccountUnauthenticatedDescription,
+      SiteMessageConstants.defalutMobileAppAccountUnauthenticatedDescription,
+    );
+
+    final result = await _accountUseCase.loadData();
+
     switch (result) {
       case Success(value: final data):
         {
@@ -46,4 +53,7 @@ class AccountPageBloc extends Bloc<AccountPageEvent, AccountPageState> {
   String? getTermsOfUseUrl() {
     return _accountUseCase.termsOfUseUrl;
   }
+
+  String loggedOutBannerSiteMessage =
+      SiteMessageConstants.defalutMobileAppAccountUnauthenticatedDescription;
 }

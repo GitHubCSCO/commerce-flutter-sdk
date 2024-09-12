@@ -3,6 +3,7 @@ class CoreConstants {
   static const int cloudflareGatewayTimeoutHTTPStatusCode = 524;
   static const int vmiLocationSearchRadius = 200;
   static const int defaultPageSize = 16;
+  static const double defaultPadding = 16.0;
   static const int maxPageSize = 2147483647;
   static const String wishListsShouldReloadKey = "WishListShouldReloadKey";
   static const String bundleResetStackKey = "ResetStack";

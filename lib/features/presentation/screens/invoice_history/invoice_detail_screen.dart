@@ -210,26 +210,30 @@ class _InvoicePaymentSummarySection extends StatelessWidget {
                 value: cubit.subtotalValue,
                 textStyle: OptiTextStyles.subtitle,
               ),
-              TwoTextsRow(
-                label: cubit.taxTitle,
-                value: cubit.taxValue,
-                textStyle: OptiTextStyles.body,
-              ),
-              TwoTextsRow(
-                label: cubit.shippingTitle,
-                value: cubit.shippingValue,
-                textStyle: OptiTextStyles.body,
-              ),
-              TwoTextsRow(
-                label: cubit.discountTitle,
-                value: cubit.discountValue,
-                textStyle: OptiTextStyles.body,
-              ),
-              TwoTextsRow(
-                label: cubit.otherChargesTitle,
-                value: cubit.otherChargesValue,
-                textStyle: OptiTextStyles.body,
-              ),
+              if (!cubit.taxValue.isNullOrEmpty)
+                TwoTextsRow(
+                  label: cubit.taxTitle,
+                  value: cubit.taxValue,
+                  textStyle: OptiTextStyles.body,
+                ),
+              if (!cubit.shippingValue.isNullOrEmpty)
+                TwoTextsRow(
+                  label: cubit.shippingTitle,
+                  value: cubit.shippingValue,
+                  textStyle: OptiTextStyles.body,
+                ),
+              if (!cubit.discountValue.isNullOrEmpty)
+                TwoTextsRow(
+                  label: cubit.discountTitle,
+                  value: cubit.discountValue,
+                  textStyle: OptiTextStyles.body,
+                ),
+              if (!cubit.otherChargesValue.isNullOrEmpty)
+                TwoTextsRow(
+                  label: cubit.otherChargesTitle,
+                  value: cubit.otherChargesValue,
+                  textStyle: OptiTextStyles.body,
+                ),
               const SizedBox(height: 10),
               TwoTextsRow(
                 label: cubit.totalTitle,

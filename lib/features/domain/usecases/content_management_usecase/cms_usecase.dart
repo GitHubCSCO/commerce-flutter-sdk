@@ -260,10 +260,6 @@ class CmsUseCase extends BaseUseCase {
                 type: WidgetType.mobileCartContents, title: "Cart Contents"));
 
             widgetEntities.add(mobileCartWidget);
-          // case WidgetType.mobileCurrentLocation:
-          //   final currentLocationWidget =
-          //       CurrentLocationWidgetEntity(title: pageWidget.);
-          //   widgetEntities.add(currentLocationWidget);
           case WidgetType.unknown:
           default:
             break;

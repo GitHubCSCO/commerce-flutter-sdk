@@ -107,7 +107,7 @@ class SearchProductGridItemWidget extends StatelessWidget
                                       .read<CartCountCubit>()
                                       .onCartItemChange();
                                   CustomSnackBar.showProductAddedToCart(
-                                      context);
+                                      context, state.addToCartMsg);
                                 }
                               },
                               child:
