@@ -134,7 +134,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.d
 import 'package:commerce_flutter_app/features/presentation/cubit/count_inventory/count_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/date_selection/date_selection_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/deaker_location_finder/dealer_location_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/dealer_location_finder/dealer_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain_redirect/domain_redirect_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/invoice_history/invoice_detail/invoice_detail_cubit.dart';
