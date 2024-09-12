@@ -3,7 +3,7 @@ import 'package:commerce_flutter_app/features/domain/service/interfaces/interfac
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 extension GetResultSuccessValue<S, E> on Result<S, E> {
-  S? getResultSuccessValue({bool trackError = false}) {
+  S? getResultSuccessValue({bool trackError = true}) {
     if (this is Success<S, E>) {
       return (this as Success<S, E>).value;
     }
