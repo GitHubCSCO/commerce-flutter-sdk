@@ -241,8 +241,11 @@ class QuickOrderUseCase extends BaseUseCase {
     var resultResponse = await commerceAPIServiceProvider
         .getProductService()
         .getProducts(parameters);
-    int totalItemCount =
-        resultResponse.getResultSuccessValue()?.pagination?.totalItemCount ?? 0;
+    int totalItemCount = resultResponse
+            .getResultSuccessValue(trackError: false)
+            ?.pagination
+            ?.totalItemCount ??
+        0;
     //This is a workaround for ICM-4422 where leading 0 in EAN-13 code gets dropped by the MLKit
     if (totalItemCount == 0 && barcodeFormat != null) {
       /*
@@ -294,6 +297,7 @@ class QuickOrderUseCase extends BaseUseCase {
         }
         return const Success(null);
       case Failure(errorResponse: final errorResponse):
+        trackError(errorResponse);
         return Failure(errorResponse);
     }
   }
@@ -311,6 +315,7 @@ class QuickOrderUseCase extends BaseUseCase {
             ProductEntityMapper.toEntity(data?.product ?? Product());
         return Success(productEntity);
       case Failure(errorResponse: final errorResponse):
+        trackError(errorResponse);
         return Failure(errorResponse);
     }
   }
@@ -339,6 +344,7 @@ class QuickOrderUseCase extends BaseUseCase {
           return const Success(null);
         }
       case Failure(errorResponse: final errorResponse):
+        trackError(errorResponse);
         return Failure(errorResponse);
     }
   }
