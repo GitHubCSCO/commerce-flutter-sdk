@@ -63,4 +63,4 @@ class SubmitButtonLoadingState extends QuoteDetailsState {}
 
 class QuotelineNoetUpdateSuccessState extends QuoteDetailsState {}
 
-class QuotelineNoetUpdateFailureState extends QuoteDetailsState {}
+class QuotelineNoteUpdateFailureState extends QuoteDetailsState {}

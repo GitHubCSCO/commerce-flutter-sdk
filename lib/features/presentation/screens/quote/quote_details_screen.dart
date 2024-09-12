@@ -105,7 +105,7 @@ class QuoteDetailsPage extends StatelessWidget {
         } else if (state is QuotelineNoetUpdateSuccessState) {
           CustomSnackBar.showSuccesss(context);
           context.read<QuoteDetailsBloc>().add(QuoteDetailsInitEvent());
-        } else if (state is QuotelineNoetUpdateFailureState) {
+        } else if (state is QuotelineNoteUpdateFailureState) {
           CustomSnackBar.showFailure(context);
           context.read<QuoteDetailsBloc>().add(QuoteDetailsInitEvent());
         }
