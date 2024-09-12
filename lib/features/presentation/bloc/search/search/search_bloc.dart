@@ -115,8 +115,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       emit(SearchLoadingState());
       var result =
           await _searchUseCase.loadSearchProductsResults(searchQuery, 1);
-      int totalItemCount =
-          result?.getResultSuccessValue()?.pagination?.totalItemCount ?? 0;
+      int totalItemCount = result
+              ?.getResultSuccessValue(trackError: false)
+              ?.pagination
+              ?.totalItemCount ??
+          0;
       //This is a workaround for ICM-4422 where leading 0 in EAN-13 code gets dropped by the MLKit
       if (totalItemCount == 0 && barcodeFormat != null) {
         /*
