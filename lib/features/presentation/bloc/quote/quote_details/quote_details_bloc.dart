@@ -19,6 +19,8 @@ enum QuoteStatus {
   QuoteCreated
 }
 
+enum QuoteType { Job, Quote }
+
 class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
   final QuoteDetailsUsecase _quoteDetailsUsecase;
   final PricingInventoryUseCase _pricingInventoryUseCase;
@@ -359,8 +361,14 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
   }
 
   String get getSubmitTitle {
-    if (compareStatus(QuoteStatus.QuoteProposed)) {
+    if (compareStatus(QuoteStatus.QuoteProposed) &&
+        quoteDto?.type == QuoteType.Job.name) {
+      return LocalizationConstants.acceptJobQuote.localized();
+    } else if (compareStatus(QuoteStatus.QuoteProposed)) {
       return LocalizationConstants.acceptSalesQuote.localized();
+    } else if ((compareStatus(QuoteStatus.QuoteRequested) || isSalesPerson) &&
+        quoteDto?.type == QuoteType.Job.name) {
+      return LocalizationConstants.submitJobQuote.localized();
     } else if (compareStatus(QuoteStatus.QuoteRequested) || isSalesPerson) {
       return LocalizationConstants.submitSalesQuote.localized();
     }
@@ -368,7 +376,10 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
   }
 
   String get acceptedTitle {
-    if (compareStatus(QuoteStatus.QuoteProposed)) {
+    if (compareStatus(QuoteStatus.QuoteProposed) &&
+        quoteDto?.type == QuoteType.Job.name) {
+      return LocalizationConstants.acceptJobQuote.localized();
+    } else if (compareStatus(QuoteStatus.QuoteProposed)) {
       return LocalizationConstants.acceptSalesQuote.localized();
     } else if (compareStatus(QuoteStatus.QuoteRequested) || isSalesPerson) {
       return LocalizationConstants.quoteAll.localized();
@@ -378,8 +389,14 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
   }
 
   String get declineTile {
-    if (compareStatus(QuoteStatus.QuoteProposed)) {
+    if (compareStatus(QuoteStatus.QuoteProposed) &&
+        quoteDto?.type == QuoteType.Job.name) {
+      return LocalizationConstants.declineJobQuote.localized();
+    } else if (compareStatus(QuoteStatus.QuoteProposed)) {
       return LocalizationConstants.declineSalesQuote.localized();
+    } else if ((compareStatus(QuoteStatus.QuoteRequested) || isSalesPerson) &&
+        quoteDto?.type == "Job") {
+      return LocalizationConstants.deleteJobQuote.localized();
     } else if (compareStatus(QuoteStatus.QuoteRequested) || isSalesPerson) {
       return LocalizationConstants.deleteSalesQuote.localized();
     }
