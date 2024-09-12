@@ -49,6 +49,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     on<OrderListItemAddEvent>(_onOrderLisItemAddEvent);
     on<OrderListItemScanAddEvent>(_onOrderLisScanItemAddEvent);
     on<OrderListItemQuantityChangeEvent>(_onOrderListItemQuantityChangeEvent);
+    on<OrderListItemUomChangeEvent>(_onOrderListItemUomChangeEvent);
     on<OrderListItemRemoveEvent>(_onOrderListItemRemoveEvent);
     on<OrderListAddToCartEvent>(_onOrderListAddToCartEvent);
     on<OrderListRemoveEvent>(_onOrderListRemoveEvent);
@@ -77,7 +78,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   Future<void> _getProductSetting() async {
     if (productSettings == null) {
       var result = await _quickOrderUseCase.getProductSetting();
-      productSettings = result.getResultSuccessValue(trackError: true);
+      productSettings = result.getResultSuccessValue();
     }
   }
 
@@ -141,7 +142,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     } else {
       final result = await _quickOrderUseCase.getScanProduct(
           event.resultText, event.barcodeFormat);
-      if (result.getResultSuccessValue(trackError: true) != null) {
+      if (result.getResultSuccessValue() != null) {
         await _addOrderItem(result, emit);
       } else {
         await _findProductWithRegularSearch(
@@ -156,6 +157,11 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         event.productId, event.quantityOrdered);
   }
 
+  void _onOrderListItemUomChangeEvent(
+      OrderListItemUomChangeEvent event, Emitter<OrderListState> emit) {
+    _quickOrderUseCase.updateUomOfPersistedData(event.item);
+  }
+
   Future<void> _findProductWithRegularSearch(String? searchQuery,
       BarcodeFormat? barcodeFormat, Emitter<OrderListState> emit) async {
     if (searchQuery == null) {
@@ -163,8 +169,11 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     } else {
       var result =
           await _searchUseCase.loadSearchProductsResults(searchQuery, 1);
-      int totalItemCount =
-          result?.getResultSuccessValue()?.pagination?.totalItemCount ?? 0;
+      int totalItemCount = result
+              ?.getResultSuccessValue(trackError: false)
+              ?.pagination
+              ?.totalItemCount ??
+          0;
       //This is a workaround for ICM-4422 where leading 0 in EAN-13 code gets dropped by the MLKit
       if (totalItemCount == 0 && barcodeFormat != null) {
         /*
@@ -197,7 +206,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
           var result = (await _searchUseCase.commerceAPIServiceProvider
                   .getProductService()
                   .getProduct(product.id ?? '', parameters: parameters))
-              .getResultSuccessValue(trackError: true);
+              .getResultSuccessValue();
 
           if (result?.product != null) {
             final productEntity =
@@ -289,7 +298,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         var newItem = _convertProductToQuickOrderItemEntity(product, quantity!);
         _insertItemIntoQuickOrderList(newItem);
         emit(OrderListLoadedState(quickOrderItemList, productSettings));
-      case Failure():
+      case Failure(errorResponse: final errorResponse):
+        _quickOrderUseCase.trackError(errorResponse);
         emit(OrderListLoadedState(quickOrderItemList, productSettings));
     }
   }
@@ -540,7 +550,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   Future<List<CartLine>?> addCartLineCollection(
       List<AddCartLine> addCartLines) async {
     var result = await _quickOrderUseCase.addCartLineCollection(addCartLines);
-    return result.getResultSuccessValue(trackError: true);
+    return result.getResultSuccessValue();
   }
 
   Future<void> _onOrderListAddToCartEvent(
@@ -549,7 +559,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     if (scanningMode == ScanningMode.count ||
         scanningMode == ScanningMode.create) {
       final result = await _quickOrderUseCase.getCart();
-      final cartResult = result.getResultSuccessValue(trackError: true);
+      final cartResult = result.getResultSuccessValue();
       if (cartResult != null) {
         quickOrderItemList.clear();
         _quickOrderUseCase.clearAllPersistedData();

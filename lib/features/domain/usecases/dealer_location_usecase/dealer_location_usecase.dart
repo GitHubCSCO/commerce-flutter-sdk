@@ -6,7 +6,7 @@ class DealerLocationUsecase extends BaseUseCase {
 
   Future<Result<GetDealerCollectionResult, ErrorResponse>> getDealersLocation(
       {required DealerLocationFinderQueryParameters parameters}) async {
-    return await commerceAPIServiceProvider
+    return commerceAPIServiceProvider
         .getDealerService()
         .getDealers(parameters: parameters);
   }

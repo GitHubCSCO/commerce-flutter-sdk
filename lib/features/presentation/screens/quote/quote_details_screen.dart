@@ -105,7 +105,7 @@ class QuoteDetailsPage extends StatelessWidget {
         } else if (state is QuotelineNoetUpdateSuccessState) {
           CustomSnackBar.showSuccesss(context);
           context.read<QuoteDetailsBloc>().add(QuoteDetailsInitEvent());
-        } else if (state is QuotelineNoetUpdateFailureState) {
+        } else if (state is QuotelineNoteUpdateFailureState) {
           CustomSnackBar.showFailure(context);
           context.read<QuoteDetailsBloc>().add(QuoteDetailsInitEvent());
         }
@@ -117,7 +117,7 @@ class QuoteDetailsPage extends StatelessWidget {
             },
           );
         } else if (state is QuoteDetailsLoadingState) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         } else if (state is QuoteDetailsLoadedState) {
@@ -145,8 +145,8 @@ class QuoteDetailsPage extends StatelessWidget {
               BlocBuilder<QuoteDetailsBloc, QuoteDetailsState>(
                   builder: (_, state) {
                 if (state is SubmitButtonLoadingState) {
-                  return Padding(
-                    padding: const EdgeInsets.all(30.0),
+                  return const Padding(
+                    padding: EdgeInsets.all(30.0),
                     child: Center(
                       child: CircularProgressIndicator(),
                     ),
@@ -362,19 +362,30 @@ class QuoteDetailsPage extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 16),
-          Visibility(
-            visible: context.read<QuoteDetailsBloc>().canBeDeclined,
-            child: TertiaryBlackButton(
-              text: declineTitle,
-              onPressed: () {
-                if (context.read<QuoteDetailsBloc>().isQuoteProposed) {
-                  context.read<QuoteDetailsBloc>().add(DeclineQuoteEvent());
-                } else {
-                  displayDialogForDeleteQuote(context);
-                }
-              },
-            ),
-          ),
+          BlocBuilder<QuoteDetailsBloc, QuoteDetailsState>(builder: (_, state) {
+            if (state is QuoteDeleteDeclineLoadingState) {
+              return const Padding(
+                padding: EdgeInsets.all(30.0),
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            } else {
+              return Visibility(
+                visible: context.read<QuoteDetailsBloc>().canBeDeclined,
+                child: TertiaryBlackButton(
+                  text: declineTitle,
+                  onPressed: () {
+                    if (context.read<QuoteDetailsBloc>().isQuoteProposed) {
+                      context.read<QuoteDetailsBloc>().add(DeclineQuoteEvent());
+                    } else {
+                      displayDialogForDeleteQuote(context);
+                    }
+                  },
+                ),
+              );
+            }
+          }),
         ],
       ),
     );

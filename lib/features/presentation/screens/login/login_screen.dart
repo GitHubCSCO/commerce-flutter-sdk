@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
@@ -37,17 +38,28 @@ class LoginScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => sl<LoginCubit>()..initialize(),
+          create: (context) {
+            final cubit = sl<LoginCubit>();
+            unawaited(cubit.initialize());
+            return cubit;
+          },
         ),
         BlocProvider(
-          create: (context) => sl<SettingsDomainCubit>()..fetchDomain(),
+          create: (context) {
+            final cubit = sl<SettingsDomainCubit>();
+            unawaited(cubit.fetchDomain());
+            return cubit;
+          },
         ),
         BlocProvider(
           create: (context) => sl<RemoteConfigCubit>(),
         ),
         BlocProvider(
-          create: (context) =>
-              sl<BiometricOptionsCubit>()..loadBiometricOptions(),
+          create: (context) {
+            final cubit = sl<BiometricOptionsCubit>();
+            unawaited(cubit.loadBiometricOptions());
+            return cubit;
+          },
         ),
         BlocProvider(
           create: (context) => sl<BiometricAuthCubit>(),
@@ -70,9 +82,19 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
   var _showPassword = false;
   var tapCount = 0;
+  var _isSignInEnabled = false;
+
+  void _updateSignInButtonOnTextChange() {
+    setState(() {
+      _isSignInEnabled = _usernameController.text.trim().isNotEmpty &&
+          _passwordController.text.trim().isNotEmpty;
+    });
+  }
 
   @override
   void dispose() {
+    _usernameController.removeListener(_updateSignInButtonOnTextChange);
+    _passwordController.removeListener(_updateSignInButtonOnTextChange);
     _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -81,6 +103,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    _usernameController.addListener(_updateSignInButtonOnTextChange);
+    _passwordController.addListener(_updateSignInButtonOnTextChange);
   }
 
   void _fillCredentials(String? username, String? password) {
@@ -93,6 +117,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         title: Text(
@@ -110,10 +135,10 @@ class _LoginPageState extends State<LoginPage> {
         ],
         automaticallyImplyLeading: false,
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(20),
+          preferredSize: const Size.fromHeight(5),
           child: Container(
             color: AppStyle.neutral75,
-            height: 20,
+            height: 5,
           ),
         ),
       ),
@@ -130,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       GestureDetector(
                         onTap: () async {
                           tapCount++;
@@ -146,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
                           height: 100,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       BlocListener<SettingsDomainCubit, SettingsDomainState>(
                         listener: (context, state) async {
                           if (state is SettingsDomainLoaded) {
@@ -316,13 +341,15 @@ class _LoginPageState extends State<LoginPage> {
                             return const CircularProgressIndicator(); // Display a loading indicator
                           } else {
                             return PrimaryButton(
-                              onPressed: () {
+                              isEnabled: _isSignInEnabled,
+                              onPressed: () async {
                                 context.closeKeyboard();
                                 BlocProvider.of<LoginCubit>(context)
                                     .onLoginSubmit(
-                                  _usernameController.text,
-                                  _passwordController.text,
-                                );
+                                      _usernameController.text,
+                                      _passwordController.text,
+                                    )
+                                    .ignore();
                               },
                               text: LocalizationConstants.signIn.localized(),
                             );
@@ -369,20 +396,25 @@ class _LoginPageState extends State<LoginPage> {
                                                 : LocalizationConstants.touchID
                                                     .localized();
 
-                                    return SecondaryButton(
-                                      onPressed: () async {
-                                        await context
-                                            .read<LoginCubit>()
-                                            .onBiometricLoginSubmit(
-                                                biometricOption);
-                                      },
-                                      text: 'Use $biometricDisplayOption',
+                                    return Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        SecondaryButton(
+                                          onPressed: () async {
+                                            await context
+                                                .read<LoginCubit>()
+                                                .onBiometricLoginSubmit(
+                                                    biometricOption);
+                                          },
+                                          text: 'Use $biometricDisplayOption',
+                                        ),
+                                        const SizedBox(height: 16.0),
+                                      ],
                                     );
                                   },
                                 );
                         },
                       ),
-                      const SizedBox(height: 16.0),
                       PlainButton(
                         onPressed: () => AppRoute.forgotPassword
                             .navigateBackStack(context,
@@ -396,71 +428,73 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 if (context.watch<LoginCubit>().isInfoMessageAvailable)
-                  BlocBuilder<LoginCubit, LoginState>(
-                    builder: (context, state) {
-                      if (state is LoginInfoLoadingState) {
-                        return LoadingAnimationWidget.prograssiveDots(
-                          color: OptiAppColors.iconPrimary,
-                          size: 30,
-                        );
-                      }
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: BlocBuilder<LoginCubit, LoginState>(
+                      builder: (context, state) {
+                        if (state is LoginInfoLoadingState) {
+                          return LoadingAnimationWidget.prograssiveDots(
+                            color: OptiAppColors.iconPrimary,
+                            size: 30,
+                          );
+                        }
 
-                      return RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          children: context
-                              .watch<LoginCubit>()
-                              .informationText
-                              .split(' ')
-                              .map(
-                            (word) {
-                              if (word.contains('{0}')) {
-                                return TextSpan(
-                                  text:
-                                      '${LocalizationConstants.privacyPolicy.localized()} ',
-                                  style: OptiTextStyles.body.copyWith(
-                                    color: OptiAppColors.primaryColor,
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      launchUrlString(
-                                        context
-                                                .read<LoginCubit>()
-                                                .privacyPolicyUrl ??
-                                            '',
-                                      );
-                                    },
-                                );
-                              } else if (word.contains('{1}')) {
-                                return TextSpan(
-                                  text:
-                                      '${LocalizationConstants.termsOfUse.localized()} ',
-                                  style: OptiTextStyles.body.copyWith(
-                                    color: OptiAppColors.primaryColor,
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      launchUrlString(
-                                        context
-                                                .read<LoginCubit>()
-                                                .termsOfUseUrl ??
-                                            '',
-                                      );
-                                    },
-                                );
-                              } else {
-                                return TextSpan(
-                                  text: '$word ',
-                                  style: OptiTextStyles.body,
-                                );
-                              }
-                            },
-                          ).toList(),
-                        ),
-                      );
-                    },
+                        return RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            children: context
+                                .watch<LoginCubit>()
+                                .informationText
+                                .split(' ')
+                                .map(
+                              (word) {
+                                if (word.contains('{0}')) {
+                                  return TextSpan(
+                                    text:
+                                        '${LocalizationConstants.privacyPolicy.localized()} ',
+                                    style: OptiTextStyles.body.copyWith(
+                                      color: OptiAppColors.primaryColor,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () async {
+                                        launchUrlString(
+                                          context
+                                                  .read<LoginCubit>()
+                                                  .privacyPolicyUrl ??
+                                              '',
+                                        ).ignore();
+                                      },
+                                  );
+                                } else if (word.contains('{1}')) {
+                                  return TextSpan(
+                                    text:
+                                        '${LocalizationConstants.termsOfUse.localized()} ',
+                                    style: OptiTextStyles.body.copyWith(
+                                      color: OptiAppColors.primaryColor,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () async {
+                                        launchUrlString(
+                                          context
+                                                  .read<LoginCubit>()
+                                                  .termsOfUseUrl ??
+                                              '',
+                                        ).ignore();
+                                      },
+                                  );
+                                } else {
+                                  return TextSpan(
+                                    text: '$word ',
+                                    style: OptiTextStyles.body,
+                                  );
+                                }
+                              },
+                            ).toList(),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                const SizedBox.shrink(),
               ],
             ),
           ),

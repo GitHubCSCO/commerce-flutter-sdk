@@ -23,7 +23,7 @@ class LoginCubit extends Cubit<LoginState> {
   String? get termsOfUseUrl => loginUsecase.termsOfUseUrl;
 
   bool get isInfoMessageAvailable =>
-      !(privacyPolicyUrl.isNullOrEmpty || !termsOfUseUrl.isNullOrEmpty);
+      !(privacyPolicyUrl.isNullOrEmpty || termsOfUseUrl.isNullOrEmpty);
 
   Future<void> _loadSiteMessages() async {
     informationText = await loginUsecase.getSiteMessage(
@@ -156,9 +156,7 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginInitialState());
 
     final fullSession =
-        (await loginUsecase.getCurrentSession()).getResultSuccessValue(
-      trackError: true,
-    );
+        (await loginUsecase.getCurrentSession()).getResultSuccessValue();
     if (fullSession == null) {
       emit(
         LoginFailureState(
@@ -188,9 +186,7 @@ class LoginCubit extends Cubit<LoginState> {
     );
 
     final billToResultResponse =
-        (await loginUsecase.getBillTo(parameters)).getResultSuccessValue(
-      trackError: true,
-    );
+        (await loginUsecase.getBillTo(parameters)).getResultSuccessValue();
     if (billToResultResponse == null) {
       emit(
         LoginFailureState(
@@ -212,9 +208,7 @@ class LoginCubit extends Cubit<LoginState> {
       );
       final shipToResultResponse = (await loginUsecase.getShipTo(
               currentBillTo?.id ?? '', shipToParameters))
-          .getResultSuccessValue(
-        trackError: true,
-      );
+          .getResultSuccessValue();
       var hasOneShipTo = shipToResultResponse?.shipTos?.length == 1 &&
           shipToResultResponse?.shipTos?[0].id != null;
       var isShipToTheSameAsCurrent = hasOneShipTo &&
