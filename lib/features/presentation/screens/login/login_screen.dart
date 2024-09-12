@@ -82,17 +82,29 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
   var _showPassword = false;
   var tapCount = 0;
+  var _isSignInEnabled = false;
+
+  void _updateSignInButtonOnTextChange() {
+    setState(() {
+      _isSignInEnabled = _usernameController.text.trim().isNotEmpty &&
+          _passwordController.text.trim().isNotEmpty;
+    });
+  }
 
   @override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
+    _usernameController.removeListener(_updateSignInButtonOnTextChange);
+    _passwordController.removeListener(_updateSignInButtonOnTextChange);
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+    _usernameController.addListener(_updateSignInButtonOnTextChange);
+    _passwordController.addListener(_updateSignInButtonOnTextChange);
   }
 
   void _fillCredentials(String? username, String? password) {
@@ -329,6 +341,7 @@ class _LoginPageState extends State<LoginPage> {
                             return const CircularProgressIndicator(); // Display a loading indicator
                           } else {
                             return PrimaryButton(
+                              isEnabled: _isSignInEnabled,
                               onPressed: () async {
                                 context.closeKeyboard();
                                 BlocProvider.of<LoginCubit>(context)
