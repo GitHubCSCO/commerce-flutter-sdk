@@ -12,6 +12,10 @@ class DealerLocationLoadedState extends DealerLocationState {
   DealerLocationLoadedState({required this.dealers});
 }
 
+class DealerLocationLoadingMoreState extends DealerLocationLoadedState {
+  DealerLocationLoadingMoreState({required super.dealers});
+}
+
 class DealerLocationFailureState extends DealerLocationState {
   final String message;
 

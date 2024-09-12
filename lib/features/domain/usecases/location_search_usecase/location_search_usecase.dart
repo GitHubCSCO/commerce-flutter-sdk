@@ -5,7 +5,7 @@ class LocationSearchUseCase extends BaseUseCase {
   LocationSearchUseCase() : super();
 
   Future<GooglePlace?> getSearchedLocation(String query) async {
-    return await coreServiceProvider.getVmiService().getPlace(query);
+    return coreServiceProvider.getVmiService().getPlace(query);
   }
 
   Future<void> persistSearchQuery(String searchQuery) async {
@@ -15,7 +15,7 @@ class LocationSearchUseCase extends BaseUseCase {
   }
 
   Future<List<String>> loadSearchQueryHistory() async {
-    return await coreServiceProvider
+    return coreServiceProvider
         .getLocationSearchHistoryService()
         .loadSearchQueryHistory();
   }
