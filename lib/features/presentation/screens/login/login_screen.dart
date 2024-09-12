@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
@@ -37,17 +38,28 @@ class LoginScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => sl<LoginCubit>()..initialize(),
+          create: (context) {
+            final cubit = sl<LoginCubit>();
+            unawaited(cubit.initialize());
+            return cubit;
+          },
         ),
         BlocProvider(
-          create: (context) => sl<SettingsDomainCubit>()..fetchDomain(),
+          create: (context) {
+            final cubit = sl<SettingsDomainCubit>();
+            unawaited(cubit.fetchDomain());
+            return cubit;
+          },
         ),
         BlocProvider(
           create: (context) => sl<RemoteConfigCubit>(),
         ),
         BlocProvider(
-          create: (context) =>
-              sl<BiometricOptionsCubit>()..loadBiometricOptions(),
+          create: (context) {
+            final cubit = sl<BiometricOptionsCubit>();
+            unawaited(cubit.loadBiometricOptions());
+            return cubit;
+          },
         ),
         BlocProvider(
           create: (context) => sl<BiometricAuthCubit>(),
@@ -317,13 +329,14 @@ class _LoginPageState extends State<LoginPage> {
                             return const CircularProgressIndicator(); // Display a loading indicator
                           } else {
                             return PrimaryButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 context.closeKeyboard();
                                 BlocProvider.of<LoginCubit>(context)
                                     .onLoginSubmit(
-                                  _usernameController.text,
-                                  _passwordController.text,
-                                );
+                                      _usernameController.text,
+                                      _passwordController.text,
+                                    )
+                                    .ignore();
                               },
                               text: LocalizationConstants.signIn.localized(),
                             );
@@ -430,13 +443,13 @@ class _LoginPageState extends State<LoginPage> {
                                       color: OptiAppColors.primaryColor,
                                     ),
                                     recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
+                                      ..onTap = () async {
                                         launchUrlString(
                                           context
                                                   .read<LoginCubit>()
                                                   .privacyPolicyUrl ??
                                               '',
-                                        );
+                                        ).ignore();
                                       },
                                   );
                                 } else if (word.contains('{1}')) {
@@ -447,13 +460,13 @@ class _LoginPageState extends State<LoginPage> {
                                       color: OptiAppColors.primaryColor,
                                     ),
                                     recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
+                                      ..onTap = () async {
                                         launchUrlString(
                                           context
                                                   .read<LoginCubit>()
                                                   .termsOfUseUrl ??
                                               '',
-                                        );
+                                        ).ignore();
                                       },
                                   );
                                 } else {
