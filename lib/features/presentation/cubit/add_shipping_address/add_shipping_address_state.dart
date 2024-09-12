@@ -2,16 +2,18 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 abstract class AddShippingAddressState {}
 
-class AddShippingAddtessInitialState extends AddShippingAddressState {}
+class AddShippingAddressInitialState extends AddShippingAddressState {}
 
-class AddShippingAddtessLoadingState extends AddShippingAddressState {}
+class AddShippingAddressLoadingState extends AddShippingAddressState {}
 
-class AddShippingAddtessLoadedState extends AddShippingAddressState {
+class AddShippingAddressLoadedState extends AddShippingAddressState {
   final List<Country> countries;
   final List<StateModel>? states;
-  AddShippingAddtessLoadedState({
+  final Map<String, String> siteMessages;
+  AddShippingAddressLoadedState({
     required this.countries,
     required this.states,
+    required this.siteMessages,
   });
 }
 
