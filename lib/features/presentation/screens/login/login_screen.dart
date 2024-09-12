@@ -93,10 +93,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
     _usernameController.removeListener(_updateSignInButtonOnTextChange);
     _passwordController.removeListener(_updateSignInButtonOnTextChange);
+    _usernameController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
