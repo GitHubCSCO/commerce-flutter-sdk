@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
@@ -20,8 +22,12 @@ class SavedOrderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<SavedOrderCubit>()..initialize(),
+    return BlocProvider<SavedOrderCubit>(
+      create: (context) {
+        final cubit = sl<SavedOrderCubit>();
+        unawaited(cubit.initialize());
+        return cubit;
+      },
       child: const SavedOrderPage(),
     );
   }
@@ -45,16 +51,16 @@ class SavedOrderPage extends StatelessWidget {
         ],
       ),
       body: BlocListener<SavedOrderHandlerCubit, SavedOrderHandlerState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state.status == SavedOrderHandlerStatus.shouldRefreshSavedOrder ||
               state.status == SavedOrderHandlerStatus.failure) {
-            context.read<SavedOrderCubit>().initialize();
+            context.read<SavedOrderCubit>().initialize().ignore();
             context.read<SavedOrderHandlerCubit>().resetState();
           }
         },
         child: RefreshIndicator(
           onRefresh: () async {
-            context.read<SavedOrderCubit>().initialize();
+            context.read<SavedOrderCubit>().initialize().ignore();
           },
           child: BlocBuilder<SavedOrderCubit, SavedOrderState>(
             builder: (context, state) {
@@ -95,15 +101,20 @@ class SavedOrderPage extends StatelessWidget {
                                   : '',
                               style: OptiTextStyles.header3,
                             ),
-                            SortToolMenu(
-                              availableSortOrders: CartSortOrder.values,
-                              onSortOrderChanged: (selectedSortOrder) async {
-                                context.read<SavedOrderCubit>().changeSortOrder(
-                                      selectedSortOrder as CartSortOrder,
-                                    );
-                              },
-                              selectedSortOrder: state.sortOrder,
-                            )
+                            if ((state.cartCollectionModel.carts ?? [])
+                                .isNotEmpty)
+                              SortToolMenu(
+                                availableSortOrders: CartSortOrder.values,
+                                onSortOrderChanged: (selectedSortOrder) async {
+                                  context
+                                      .read<SavedOrderCubit>()
+                                      .changeSortOrder(
+                                        selectedSortOrder as CartSortOrder,
+                                      )
+                                      .ignore();
+                                },
+                                selectedSortOrder: state.sortOrder,
+                              )
                           ],
                         ),
                       ),
@@ -144,9 +155,9 @@ class _SavedOrderListWidget extends StatefulWidget {
 class _SavedOrderListWidgetState extends State<_SavedOrderListWidget> {
   final _scrollController = ScrollController();
 
-  void _onScroll() {
+  Future<void> _onScroll() async {
     if (_isBottom) {
-      context.read<SavedOrderCubit>().loadMoreSavedOrders();
+      context.read<SavedOrderCubit>().loadMoreSavedOrders().ignore();
     }
   }
 

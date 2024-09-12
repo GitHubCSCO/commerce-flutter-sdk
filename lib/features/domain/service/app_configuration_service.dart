@@ -86,7 +86,9 @@ class AppConfigurationService extends ServiceBase
     var mobileSettingsResponse = await _commerceAPIServiceProvider
         .getSettingsService()
         .getMobileAppSettingAsync();
-    return mobileSettingsResponse.getResultSuccessValue()?.checkoutUrl ??
+    return mobileSettingsResponse
+            .getResultSuccessValue(trackError: false)
+            ?.checkoutUrl ??
         baseConfig?.checkoutUrl;
   }
 
@@ -248,7 +250,7 @@ class AppConfigurationService extends ServiceBase
         .getSettingsService()
         .getMobileAppSettingAsync();
     return mobileSettingsResponse
-            .getResultSuccessValue()
+            .getResultSuccessValue(trackError: false)
             ?.startingCategoryForBrowsing ??
         baseConfig?.startingCategoryForBrowsing;
   }
