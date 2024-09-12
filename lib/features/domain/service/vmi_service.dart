@@ -62,13 +62,11 @@ class VMIService extends ServiceBase implements IVmiService {
         await _commerceAPIServiceProvider
             .getCacheService()
             .persistData<VmiLocationModel>(key, closestVmiLocation!);
-        break;
       case Failure(errorResponse: final errorResponse):
         _coreServiceProvider
             .getTrackingService()
             .trackError(errorResponse)
             .ignore();
-        break;
     }
 
     return closestVmiLocation;
