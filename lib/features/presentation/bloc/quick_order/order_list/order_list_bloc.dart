@@ -49,6 +49,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     on<OrderListItemAddEvent>(_onOrderLisItemAddEvent);
     on<OrderListItemScanAddEvent>(_onOrderLisScanItemAddEvent);
     on<OrderListItemQuantityChangeEvent>(_onOrderListItemQuantityChangeEvent);
+    on<OrderListItemUomChangeEvent>(_onOrderListItemUomChangeEvent);
     on<OrderListItemRemoveEvent>(_onOrderListItemRemoveEvent);
     on<OrderListAddToCartEvent>(_onOrderListAddToCartEvent);
     on<OrderListRemoveEvent>(_onOrderListRemoveEvent);
@@ -154,6 +155,11 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
       OrderListItemQuantityChangeEvent event, Emitter<OrderListState> emit) {
     _quickOrderUseCase.updateQuantityOfPersistedData(
         event.productId, event.quantityOrdered);
+  }
+
+  void _onOrderListItemUomChangeEvent(
+      OrderListItemUomChangeEvent event, Emitter<OrderListState> emit) {
+    _quickOrderUseCase.updateUomOfPersistedData(event.item);
   }
 
   Future<void> _findProductWithRegularSearch(String? searchQuery,
@@ -292,7 +298,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         var newItem = _convertProductToQuickOrderItemEntity(product, quantity!);
         _insertItemIntoQuickOrderList(newItem);
         emit(OrderListLoadedState(quickOrderItemList, productSettings));
-      case Failure():
+      case Failure(errorResponse: final errorResponse):
+        _quickOrderUseCase.trackError(errorResponse);
         emit(OrderListLoadedState(quickOrderItemList, productSettings));
     }
   }
