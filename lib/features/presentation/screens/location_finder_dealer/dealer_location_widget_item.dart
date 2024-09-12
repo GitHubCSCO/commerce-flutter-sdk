@@ -93,8 +93,8 @@ class _DealerLocationWidgetItemState extends State<DealerLocationWidgetItem>
                 widget.dealerData.htmlContent ?? "",
                 textStyle: OptiTextStyles.body,
               ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Divider(),
             )
           ],

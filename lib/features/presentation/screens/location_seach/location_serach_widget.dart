@@ -14,7 +14,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/pickup_location/
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/deaker_location_finder/dealer_location_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/dealer_location_finder/dealer_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/pick_up_location_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/location_finder_dealer/dealer_location_widget.dart';
@@ -124,17 +124,19 @@ class LocationSearchPage extends StatelessWidget {
                         context
                             .read<LocationSearchBloc>()
                             .add(LocationSeachHistoryLoadEvent());
-                      } else {
-                        context.read<LocationSearchBloc>().add(
-                            LocationSearchLoadEvent(
-                                searchQuery: "", pageType: ""));
                       }
                     },
                     onChanged: (String searchQuery) {},
                     onSubmitted: (String query) {
-                      context.read<LocationSearchBloc>().add(
-                          LocationSearchLoadEvent(
-                              searchQuery: query, pageType: ""));
+                      if (query.isNotEmpty) {
+                        context.read<LocationSearchBloc>().add(
+                            LocationSearchLoadEvent(
+                                searchQuery: query, pageType: ""));
+                      } else {
+                        context
+                            .read<LocationSearchBloc>()
+                            .add(LocationSearchInitialEvent());
+                      }
                     },
                     controller: textEditingController,
                   ),
@@ -198,7 +200,7 @@ class LocationSearchPage extends StatelessWidget {
                       }
                     case LocationSearchType.locationFinder:
                       {
-                        return DealerLocationWidget();
+                        return const DealerLocationWidget();
                       }
                     case LocationSearchType.pickUpLocation:
                       return PickUpLocationScreen(
@@ -219,7 +221,7 @@ class LocationSearchPage extends StatelessWidget {
                       }
                     case LocationSearchType.locationFinder:
                       {
-                        return DealerLocationWidget();
+                        return const DealerLocationWidget();
                       }
                     case LocationSearchType.pickUpLocation:
                       return PickUpLocationScreen(
@@ -228,7 +230,7 @@ class LocationSearchPage extends StatelessWidget {
                       });
                   }
                 } else if (state is LocationSearchFocusState) {
-                  return const Text('LocationSearchFocusState');
+                  return Container();
                 } else if (state is LocationSearchFailureState) {
                   if (locationSearchType == LocationSearchType.vmi) {
                     return VMILocationScreen(
@@ -238,11 +240,12 @@ class LocationSearchPage extends StatelessWidget {
                       },
                     );
                   } else {
-                    return Center(child: const Text('No results found'));
+                    return const Center(child: Text('No results found'));
                   }
                 } else if (state is LocationSearchHistoryLoadedState) {
-                  return (state.searchHistory.length == 0)
-                      ? const Text("No History Found")
+                  return (state.searchHistory.isEmpty)
+                      ? Text(LocalizationConstants.searchNoHistoryAvailable
+                          .localized())
                       : buildSearchHistoryList(state);
                 } else {
                   return Container();
