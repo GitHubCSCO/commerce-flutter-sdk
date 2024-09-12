@@ -28,6 +28,12 @@ class OrderListItemQuantityChangeEvent extends OrderListEvent {
   OrderListItemQuantityChangeEvent(this.productId, this.quantityOrdered);
 }
 
+class OrderListItemUomChangeEvent extends OrderListEvent {
+  final QuickOrderItemEntity item;
+
+  OrderListItemUomChangeEvent(this.item);
+}
+
 class OrderListItemRemoveEvent extends OrderListEvent {
   final ProductEntity productEntity;
 
