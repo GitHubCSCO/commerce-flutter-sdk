@@ -60,7 +60,7 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
           case Success(value: final data):
             emit(QuotelineNoetUpdateSuccessState());
           case Failure():
-            emit(QuotelineNoetUpdateFailureState());
+            emit(QuotelineNoteUpdateFailureState());
         }
       } else {
         var quotelineUpdateResponse = await _quoteDetailsUsecase.patchQuoteLine(
@@ -69,11 +69,12 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
           case Success(value: final data):
             emit(QuotelineNoetUpdateSuccessState());
           case Failure():
-            emit(QuotelineNoetUpdateFailureState());
+            emit(QuotelineNoteUpdateFailureState());
         }
       }
     } else {
-      emit(QuotelineNoetUpdateFailureState());
+      _quoteDetailsUsecase.trackError('quoteLine is null');
+      emit(QuotelineNoteUpdateFailureState());
     }
   }
 
@@ -114,14 +115,14 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
           emit(QuoteDetailsLoadedState(
               quoteDto: data, quoteLines: getQuoteLineEntities(data)));
         } else {
+          _quoteDetailsUsecase.trackError('Data not found');
           emit(QuoteDetailsFailedState(error: 'Data not found'));
         }
 
-        break;
       case Failure(errorResponse: final errorResponse):
+        _quoteDetailsUsecase.trackError(errorResponse);
         emit(QuoteDetailsFailedState(
             error: errorResponse.errorDescription ?? ''));
-        break;
       default:
     }
   }
@@ -214,16 +215,16 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
         } else {
           emit(QuoteSubmissionFailedState());
         }
-        break;
       case Failure(errorResponse: final errorResponse):
+        _quoteDetailsUsecase.trackError(errorResponse);
         emit(QuoteSubmissionFailedState());
-        break;
       default:
     }
   }
 
   Future<void> _onDeleteSalesQuoteEvent(
       DeleteQuoteEvent event, Emitter<QuoteDetailsState> emit) async {
+    emit(QuoteDeleteDeclineLoadingState());
     var deleteQuoteResponse =
         await _quoteDetailsUsecase.deleteQuote(event.quoteId);
     switch (deleteQuoteResponse) {
@@ -233,10 +234,10 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
         } else {
           emit(QuoteDeletionFailedState());
         }
-        break;
+
       case Failure(errorResponse: final errorResponse):
+        _quoteDetailsUsecase.trackError(errorResponse);
         emit(QuoteDeletionFailedState());
-        break;
       default:
     }
   }
@@ -245,7 +246,7 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
       DeclineQuoteEvent event, Emitter<QuoteDetailsState> emit) async {
     quoteDto?.status = "QuoteRejected";
 
-    emit(QuoteDetailsLoadingState());
+    emit(QuoteDeleteDeclineLoadingState());
 
     var submitQuoteResponse = await _quoteDetailsUsecase.submitQuote(quoteDto!);
     switch (submitQuoteResponse) {
@@ -253,12 +254,13 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
         if (data != null) {
           emit(QuoteDeclineSuccessState());
         } else {
+          quoteDto?.status = quoteDto?.statusDisplay;
           emit(QuoteDeclineFailedState());
         }
-        break;
       case Failure(errorResponse: final errorResponse):
+        _quoteDetailsUsecase.trackError(errorResponse);
+        quoteDto?.status = quoteDto?.statusDisplay;
         emit(QuoteDeclineFailedState());
-        break;
       default:
     }
   }

@@ -89,7 +89,13 @@ class QuickOrderItemEntity {
 
   void updateSelectedUnitOfMeasure(
       ProductUnitOfMeasureEntity? selectedUnitOfMeasure) {
+    productEntity = productEntity.copyWith(
+        selectedUnitOfMeasure: selectedUnitOfMeasure?.unitOfMeasure,
+        selectedUnitOfMeasureDisplay:
+            selectedUnitOfMeasure?.unitOfMeasureDisplay,
+        unitOfMeasureDescription: selectedUnitOfMeasure?.description);
     this.selectedUnitOfMeasure = selectedUnitOfMeasure;
+
     if (selectedUnitOfMeasure == null) {
       selectedUnitOfMeasureTitle = '';
       selectedUnitOfMeasureValueText = '';
