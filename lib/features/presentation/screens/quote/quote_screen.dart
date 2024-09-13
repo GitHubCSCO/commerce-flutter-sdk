@@ -201,10 +201,10 @@ class QuotePageState extends State<QuotePage> {
   }
 
   void goToQuoteDetails(BuildContext context, QuoteDto quoteDto) async {
-    final result = await context.pushNamed<Bool>(
+    final result = await context.pushNamed(
       AppRoute.quoteDetails.name,
       extra: quoteDto,
-    );
+    ) as bool?;
     if (!context.mounted) {
       return;
     }
