@@ -63,7 +63,6 @@ class _ListPickerState extends State<ListPicker> {
   void initState() {
     super.initState();
     selectedIndex = widget.selectedIndex ?? 0;
-
     isButtonEnabled = (selectedIndex != -1 && widget.items.isNotEmpty)
         ? _isOptionAvailable(widget.items[selectedIndex])
         : true;
@@ -71,6 +70,7 @@ class _ListPickerState extends State<ListPicker> {
 
   @override
   Widget build(BuildContext context) {
+    selectedIndex = widget.selectedIndex ?? 0;
     return GestureDetector(
       onTap: () {
         _selectItem(context);

@@ -331,8 +331,11 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
   }
 
   int _getIndexOfState(List<StateModel>? states, StateModel? state) {
+    if (state == null) {
+      return -1;
+    }
     for (int i = 0; i < (states?.length ?? 0); i++) {
-      if (states?[i].name == state?.name) {
+      if (states?[i].name == state.name) {
         return i;
       }
     }

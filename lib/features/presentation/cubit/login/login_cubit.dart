@@ -41,18 +41,16 @@ class LoginCubit extends Cubit<LoginState> {
   Future<void> onLoginSubmit(String username, String password) async {
     emit(LoginLoadingState());
 
-    final loginStatus = await loginUsecase.attemptSignIn(username, password);
+    final loginResponse = await loginUsecase.attemptSignIn(username, password);
+    final loginStatus = loginResponse.loginStatus;
     switch (loginStatus) {
       case LoginStatus.loginSuccess:
         emit(const LoginSuccessState(loginStatus: LoginStatus.loginSuccess));
-        break;
       case LoginStatus.loginSuccessBiometric:
         emit(const LoginSuccessState(
             loginStatus: LoginStatus.loginSuccessBiometric));
-        break;
       case LoginStatus.loginSuccessBillToShipTo:
         await handleBillToShipTo();
-        break;
       case LoginStatus.loginErrorOffline:
         final title = await loginUsecase.getSiteMessage(
             SiteMessageConstants.nameMobileAppAlertNoInternet,
@@ -67,15 +65,14 @@ class LoginCubit extends Cubit<LoginState> {
             buttonText: LocalizationConstants.dismiss.localized(),
           ),
         );
-        break;
       case LoginStatus.loginErrorUnsuccessful:
         emit(
           LoginFailureState(
-            title: LocalizationConstants.incorrectLoginOrPassword.localized(),
+            title: loginResponse.message ??
+                LocalizationConstants.incorrectLoginOrPassword.localized(),
             buttonText: LocalizationConstants.dismiss.localized(),
           ),
         );
-        break;
       case LoginStatus.loginErrorUnknown:
         emit(
           LoginFailureState(
@@ -83,7 +80,6 @@ class LoginCubit extends Cubit<LoginState> {
             buttonText: LocalizationConstants.dismiss.localized(),
           ),
         );
-        break;
       case LoginStatus.loginFailed:
         emit(
           LoginFailureState(
@@ -91,7 +87,6 @@ class LoginCubit extends Cubit<LoginState> {
             buttonText: LocalizationConstants.oK.localized(),
           ),
         );
-        break;
     }
   }
 
