@@ -257,10 +257,10 @@ packages:
     dependency: transitive
     description:
       name: chewie
-      sha256: "8210c6e8702ddae9b3337aad0d539a9ff128cc4a5baaadc0174edbd0f99b0125"
+      sha256: "335df378c025588aef400c704bd71f0daea479d4cd57c471c88c056c1144e7cd"
       url: "https://pub.dev"
     source: hosted
-    version: "1.8.4"
+    version: "1.8.5"
   clock:
     dependency: transitive
     description:
@@ -361,10 +361,10 @@ packages:
     dependency: transitive
     description:
       name: dart_style
-      sha256: "99e066ce75c89d6b29903d788a7bb9369cf754f7b24bf70bf4b6d6d6b26853b9"
+      sha256: "7856d364b589d1f08986e140938578ed36ed948581fbc3bc9aef1805039ac5ab"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.6"
+    version: "2.3.7"
   dbus:
     dependency: transitive
     description:
@@ -784,10 +784,10 @@ packages:
     dependency: transitive
     description:
       name: google_maps_flutter_android
-      sha256: "60a005bf1ba8d178144e442f6e2d734b0ffc2cc800a05415388472f934ad6d6a"
+      sha256: "36e75af1d0bd4c7391eacdaedf9ca7632c5b9709c5ec618b04489b79ea2b3f82"
       url: "https://pub.dev"
     source: hosted
-    version: "2.14.4"
+    version: "2.14.6"
   google_maps_flutter_ios:
     dependency: transitive
     description:
@@ -800,10 +800,10 @@ packages:
     dependency: transitive
     description:
       name: google_maps_flutter_platform_interface
-      sha256: "4f6930fd668bf5d40feb2695d5695dbc0c35e5542b557a34ad35be491686d2ba"
+      sha256: "099874463dc4c9bff04fe4b2b8cf7284d2455c2deead8f9a59a87e1b9f028c69"
       url: "https://pub.dev"
     source: hosted
-    version: "2.9.0"
+    version: "2.9.2"
   google_maps_flutter_web:
     dependency: transitive
     description:
@@ -1177,7 +1177,7 @@ packages:
     description:
       path: "."
       ref: develop
-      resolved-ref: c6d26508ac189ce64806f9cd37c56254ea8325da
+      resolved-ref: "9d5e096724d5843287de783fe4f74c49c2dec3cc"
       url: "git@github.com:InsiteSoftware/commerce-dart-sdk.git"
     source: git
     version: "0.1.1"
@@ -1417,10 +1417,10 @@ packages:
     dependency: transitive
     description:
       name: shelf_static
-      sha256: a41d3f53c4adf0f57480578c1d61d90342cd617de7fc8077b1304643c2d85c1e
+      sha256: c87c3875f91262785dade62d135760c2c69cb217ac759485334c5857ad89f6e3
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.2"
+    version: "1.1.3"
   shelf_web_socket:
     dependency: transitive
     description:
@@ -1742,10 +1742,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: "5c5f338a667b4c644744b661f309fb8080bb94b18a7e91ef1dbd343bed00ed6d"
+      sha256: f652077d0bdf60abe4c1f6377448e8655008eef28f128bc023f7b5e8dfeb48fc
       url: "https://pub.dev"
     source: hosted
-    version: "14.2.5"
+    version: "14.2.4"
   wakelock_plus:
     dependency: transitive
     description:
