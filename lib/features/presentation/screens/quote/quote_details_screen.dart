@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
@@ -85,11 +87,11 @@ class QuoteDetailsPage extends StatelessWidget {
         } else if (state is QuoteSubmissionSuccessState) {
           CustomSnackBar.showSuccesss(context);
           context.read<RootBloc>().add(RootCartUpdateEvent());
-          Navigator.of(context).pop();
+          context.pop(true);
         } else if (state is QuoteSubmissionFailedState) {
           CustomSnackBar.showFailure(context);
           context.read<RootBloc>().add(RootCartUpdateEvent());
-          Navigator.of(context).pop();
+          context.pop(true);
         } else if (state is QuoteDeletionSuccessState) {
           CustomSnackBar.showSuccesss(context);
           context.read<RootBloc>().add(RootCartUpdateEvent());
@@ -99,7 +101,7 @@ class QuoteDetailsPage extends StatelessWidget {
         } else if (state is QuoteDeclineSuccessState) {
           CustomSnackBar.showSuccesss(context);
           context.read<RootBloc>().add(RootCartUpdateEvent());
-          Navigator.of(context).pop();
+          context.pop(true);
         } else if (state is QuoteDeclineFailedState) {
           CustomSnackBar.showFailure(context);
         } else if (state is QuotelineNoetUpdateSuccessState) {
@@ -162,6 +164,16 @@ class QuoteDetailsPage extends StatelessWidget {
                         onPressed: () {
                           if (context
                               .read<QuoteDetailsBloc>()
+                              .isJobQuoteProposed) {
+                            var quoteDto =
+                                context.read<QuoteDetailsBloc>().quoteDto;
+                            if (quoteDto != null) {
+                              context
+                                  .read<QuoteDetailsBloc>()
+                                  .add(SubmitQuoteEvent(quoteDto: quoteDto));
+                            }
+                          } else if (context
+                              .read<QuoteDetailsBloc>()
                               .isQuoteProposed) {
                             context
                                 .read<QuoteDetailsBloc>()
@@ -169,7 +181,7 @@ class QuoteDetailsPage extends StatelessWidget {
                           } else if (context
                               .read<QuoteDetailsBloc>()
                               .isSalesPerson) {
-                            QuoteDto? quoteDto =
+                            var quoteDto =
                                 context.read<QuoteDetailsBloc>().quoteDto;
                             if (quoteDto != null) {
                               context

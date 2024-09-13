@@ -205,6 +205,10 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
       quoteDto.status = "QuoteProposed";
     }
 
+    if (isJobQuoteProposed && !isSalesPerson) {
+      quoteDto.status = "JobAccepted";
+    }
+
     emit(QuoteDetailsLoadingState());
 
     var submitQuoteResponse = await _quoteDetailsUsecase.submitQuote(quoteDto);
@@ -462,6 +466,11 @@ class QuoteDetailsBloc extends Bloc<QuoteDetailsEvent, QuoteDetailsState> {
 
   bool get isQuoteRejected {
     return compareStatus(QuoteStatus.QuoteRejected);
+  }
+
+  bool get isJobQuoteProposed {
+    return compareStatus(QuoteStatus.QuoteProposed) &&
+        quoteDto?.type == QuoteType.Job.name;
   }
 
   String viewQuotedPricingTitle(QuoteLineEntity? quoteLine) {

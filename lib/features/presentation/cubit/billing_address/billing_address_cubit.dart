@@ -83,8 +83,11 @@ class BillingAddressCubit extends Cubit<BillingAddressState> {
     }
   }
 
-  Future<void> onSelectCountry(Country? counrty) async {
-    selectedCountry = counrty;
+  Future<void> onSelectCountry(Country? country) async {
+    if (selectedCountry != null && selectedCountry?.id != country?.id) {
+      selectedState = null;
+    }
+    selectedCountry = country;
     await setUpDataBillingAddress(addCreditCardEntity);
   }
 

@@ -10,7 +10,7 @@ class RemoteConfigUsecase extends BaseUseCase {
   RemoteConfigUsecase() : super();
 
   Future<void> _syncRemoteConfig() async {
-    final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
+    final remoteConfig = FirebaseRemoteConfig.instance;
     // Using zero duration to force fetching from remote server.
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
       fetchTimeout: const Duration(seconds: 10),
@@ -22,8 +22,8 @@ class RemoteConfigUsecase extends BaseUseCase {
   Future<List<Map<String, String>>> fetchDebugCredential(String domain) async {
     if (sl<AnalyticsConfig>().firebaseOptions?.isValid() == true) {
       await _syncRemoteConfig();
-      final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
-      final String jsonString = remoteConfig.getString('debug_credentials');
+      final remoteConfig = FirebaseRemoteConfig.instance;
+      final jsonString = remoteConfig.getString('debug_credentials');
 
       if (jsonString.isEmpty) {
         return List.empty();
@@ -35,7 +35,7 @@ class RemoteConfigUsecase extends BaseUseCase {
         return MapEntry(key, Map<String, String>.from(value));
       });
 
-      List<Map<String, String>> result = [];
+      var result = <Map<String, String>>[];
 
       decodeMap.forEach((key, value) {
         if (value['url'] == domain) {
@@ -52,8 +52,8 @@ class RemoteConfigUsecase extends BaseUseCase {
   Future<bool> fetchDevMode() async {
     if (sl<AnalyticsConfig>().firebaseOptions?.isValid() == true) {
       await _syncRemoteConfig();
-      final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
-      final bool devMode = remoteConfig.getBool('dev_mode');
+      final remoteConfig = FirebaseRemoteConfig.instance;
+      final devMode = remoteConfig.getBool('dev_mode');
       return devMode;
     } else {
       return false;
@@ -63,15 +63,15 @@ class RemoteConfigUsecase extends BaseUseCase {
   Future<Map<String, String>> fetchDebugDomains() async {
     if (sl<AnalyticsConfig>().firebaseOptions?.isValid() == true) {
       await _syncRemoteConfig();
-      final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
-      final String jsonString = remoteConfig.getString('debug_credentials');
+      final remoteConfig = FirebaseRemoteConfig.instance;
+      final jsonString = remoteConfig.getString('debug_credentials');
       if (jsonString.isEmpty) {
         return {};
       }
 
       final Map<String, dynamic> decodedJson = jsonDecode(jsonString);
 
-      Map<String, String> resultMap = {};
+      var resultMap = <String, String>{};
 
       decodedJson.forEach((key, value) {
         if (value is Map<String, dynamic> && value.containsKey('url')) {

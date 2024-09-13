@@ -60,7 +60,8 @@ class _BrandProductLinesPageState extends State<BrandProductLinesPage>
             style: OptiTextStyles.titleLarge),
         actions: [
           BottomMenuWidget(
-              isViewOnWebsiteEnable: false, toolMenuList: getToolMenu(context)),
+              websitePath: widget.brand.detailPagePath,
+              toolMenuList: getToolMenu(context)),
         ],
       ),
       body: BlocBuilder<BrandProductLinesCubit, BrandProductLinesState>(
