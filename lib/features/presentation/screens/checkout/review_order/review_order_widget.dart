@@ -14,9 +14,14 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
   final ReviewOrderEntity reviewOrderEntity;
   final PaymentSummaryEntity? paymentSummaryEntity;
+  final bool isOrderApproval;
 
-  const ReviewOrderWidget(
-      {super.key, required this.reviewOrderEntity, this.paymentSummaryEntity});
+  const ReviewOrderWidget({
+    super.key,
+    required this.reviewOrderEntity,
+    this.paymentSummaryEntity,
+    this.isOrderApproval = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +60,9 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
       list.add(_buildRequestDeliveryDate(context));
     }
 
-    list.add(_buildPaymentMethod());
+    if (!isOrderApproval) {
+      list.add(_buildPaymentMethod());
+    }
 
     return list;
   }
@@ -273,6 +280,7 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
             style: OptiTextStyles.bodySmall,
           ),
         ),
+        if (isOrderApproval) const SizedBox(height: 12),
       ],
     );
   }
