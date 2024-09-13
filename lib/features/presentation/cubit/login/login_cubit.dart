@@ -23,7 +23,7 @@ class LoginCubit extends Cubit<LoginState> {
   String? get termsOfUseUrl => loginUsecase.termsOfUseUrl;
 
   bool get isInfoMessageAvailable =>
-      !(privacyPolicyUrl.isNullOrEmpty || !termsOfUseUrl.isNullOrEmpty);
+      !(privacyPolicyUrl.isNullOrEmpty || termsOfUseUrl.isNullOrEmpty);
 
   Future<void> _loadSiteMessages() async {
     informationText = await loginUsecase.getSiteMessage(

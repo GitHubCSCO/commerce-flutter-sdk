@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/mixins/validator_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
@@ -61,25 +62,40 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      color: Colors.white,
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
+    return BlocBuilder<AddShippingAddressCubit, AddShippingAddressState>(
+      buildWhen: (previous, current) {
+        return current is AddShippingAddressInitialState ||
+            current is AddShippingAddressLoadedState;
+      },
+      builder: (context, state) {
+        switch (state) {
+          case AddShippingAddressInitialState():
+            return const Center(child: CircularProgressIndicator());
+          case AddShippingAddressLoadedState():
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              color: Colors.white,
+              child: Form(
+                key: _formKey,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: _buildItems(context),
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: _buildItems(context, state.siteMessages),
+                        ),
+                      ),
+                    ),
+                    _buildContinueButtonWidget(context)
+                  ],
                 ),
               ),
-            ),
-            _buildContinueButtonWidget(context)
-          ],
-        ),
-      ),
+            );
+          default:
+            return const Center();
+        }
+      },
     );
   }
 
@@ -103,14 +119,15 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
     );
   }
 
-  List<Widget> _buildItems(BuildContext context) {
-    List<Widget> list = [];
+  List<Widget> _buildItems(
+      BuildContext context, Map<String, String> siteMessages) {
+    var list = <Widget>[];
     list.add(_createInputField(
         LocalizationConstants.firstName.localized(),
         LocalizationConstants.firstName.localized(),
         firstNameController, validator: (value) {
       if (value == null || value.isEmpty) {
-        return 'First Name cannot be empty';
+        return siteMessages[SiteMessageConstants.nameAddressInfoNameRequired];
       }
       return null;
     }));
@@ -119,7 +136,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
         LocalizationConstants.lastName.localized(),
         lastNameController, validator: (value) {
       if (value == null || value.isEmpty) {
-        return 'Last Name cannot be empty';
+        return siteMessages[SiteMessageConstants.nameAddressInfoNameRequired];
       }
       return null;
     }));
@@ -133,7 +150,8 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
         LocalizationConstants.addressOne.localized(),
         addressOneController, validator: (value) {
       if (value == null || value.isEmpty) {
-        return 'Address Line 1 cannot be empty';
+        return siteMessages[
+            SiteMessageConstants.nameAddressInfoAddressOneRequired];
       }
       return null;
     }));
@@ -150,7 +168,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
         LocalizationConstants.postalCode.localized(),
         postalCodeController, validator: (value) {
       if (value == null || value.isEmpty) {
-        return 'Postal Code cannot be empty';
+        return siteMessages[SiteMessageConstants.nameAddressInfoZipRequired];
       }
       return null;
     }));
@@ -159,7 +177,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
         LocalizationConstants.city.localized(),
         cityController, validator: (value) {
       if (value == null || value.isEmpty) {
-        return 'City cannot be empty';
+        return siteMessages[SiteMessageConstants.nameAddressInfoCityRequired];
       }
       return null;
     }));
@@ -168,7 +186,11 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
 
     list.add(_createInputField(LocalizationConstants.email.localized(),
         LocalizationConstants.email.localized(), emailController,
-        validator: validateEmail));
+        validator: (value) => validateEmail(emailController.text.trim(),
+            emptyWarning: siteMessages[
+                SiteMessageConstants.nameAddressInfoEmailAddressRequired],
+            invalidWarning:
+                siteMessages[SiteMessageConstants.nameAddressEmailInvalid])));
     list.add(_createInputField(LocalizationConstants.phoneNumber.localized(),
         LocalizationConstants.phoneNumber.localized(), phonenumberController,
         validator: validatePhoneNumber));
@@ -309,8 +331,11 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
   }
 
   int _getIndexOfState(List<StateModel>? states, StateModel? state) {
+    if (state == null) {
+      return -1;
+    }
     for (int i = 0; i < (states?.length ?? 0); i++) {
-      if (states?[i].name == state?.name) {
+      if (states?[i].name == state.name) {
         return i;
       }
     }
@@ -320,14 +345,14 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
   Widget _addCountryWidget(BuildContext context) {
     return BlocBuilder<AddShippingAddressCubit, AddShippingAddressState>(
         buildWhen: (previous, current) {
-      if (current is AddShippingAddtessLoadedState ||
-          current is AddShippingAddtessInitialState) {
+      if (current is AddShippingAddressLoadedState ||
+          current is AddShippingAddressInitialState) {
         return true;
       }
 
       return false;
     }, builder: (_, state) {
-      if (state is AddShippingAddtessLoadedState) {
+      if (state is AddShippingAddressLoadedState) {
         return Row(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -367,14 +392,14 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
   Widget _addStateWidget(BuildContext context) {
     return BlocBuilder<AddShippingAddressCubit, AddShippingAddressState>(
         buildWhen: (previous, current) {
-      if (current is AddShippingAddtessLoadedState ||
-          current is AddShippingAddtessInitialState) {
+      if (current is AddShippingAddressLoadedState ||
+          current is AddShippingAddressInitialState) {
         return true;
       }
 
       return false;
     }, builder: (_, state) {
-      if (state is AddShippingAddtessLoadedState) {
+      if (state is AddShippingAddressLoadedState) {
         return Row(
           mainAxisSize: MainAxisSize.max,
           children: [

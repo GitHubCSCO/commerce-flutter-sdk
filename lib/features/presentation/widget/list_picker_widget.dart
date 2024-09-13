@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/product_unit_of_measure_extension.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
@@ -12,6 +13,7 @@ class ListPickerWidget extends StatelessWidget {
   final List<Object> items;
   final int? selectedIndex;
   final String? descriptionText;
+  final bool? showDropDown;
 
   const ListPickerWidget({
     super.key,
@@ -19,6 +21,7 @@ class ListPickerWidget extends StatelessWidget {
     this.selectedIndex,
     required this.callback,
     this.descriptionText,
+    this.showDropDown,
   });
 
   @override
@@ -28,6 +31,7 @@ class ListPickerWidget extends StatelessWidget {
       selectedIndex: selectedIndex,
       callback: callback,
       descriptionText: descriptionText,
+      showDropDown: showDropDown,
     );
   }
 }
@@ -37,6 +41,7 @@ class ListPicker extends StatefulWidget {
   final List<Object> items;
   final int? selectedIndex;
   final String? descriptionText;
+  final bool? showDropDown;
 
   const ListPicker({
     super.key,
@@ -44,6 +49,7 @@ class ListPicker extends StatefulWidget {
     this.selectedIndex,
     required this.callback,
     this.descriptionText,
+    this.showDropDown,
   });
 
   @override
@@ -57,7 +63,6 @@ class _ListPickerState extends State<ListPicker> {
   void initState() {
     super.initState();
     selectedIndex = widget.selectedIndex ?? 0;
-
     isButtonEnabled = (selectedIndex != -1 && widget.items.isNotEmpty)
         ? _isOptionAvailable(widget.items[selectedIndex])
         : true;
@@ -65,6 +70,7 @@ class _ListPickerState extends State<ListPicker> {
 
   @override
   Widget build(BuildContext context) {
+    selectedIndex = widget.selectedIndex ?? 0;
     return GestureDetector(
       onTap: () {
         _selectItem(context);
@@ -86,8 +92,10 @@ class _ListPickerState extends State<ListPicker> {
                     .body, // Assuming you have OptiTextStyles defined
               ),
             ),
-            const Icon(
-              Icons.arrow_forward_ios,
+            Icon(
+              (widget.showDropDown == true)
+                  ? Icons.keyboard_arrow_down
+                  : Icons.arrow_forward_ios,
               color: Colors.grey,
               size: 16,
             ),
@@ -200,7 +208,7 @@ class _ListPickerState extends State<ListPicker> {
     } else if (item is CalculationMethod) {
       return item.displayName ?? item.name ?? item.value ?? "";
     } else if (item is ProductUnitOfMeasureEntity) {
-      return item.unitOfMeasureTextDisplayWithQuantity ?? "";
+      return item.getUnitOfMeasureTextDisplayWithQuantity();
     } else {
       return '';
     }

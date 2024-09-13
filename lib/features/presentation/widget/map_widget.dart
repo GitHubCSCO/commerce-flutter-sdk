@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:commerce_flutter_app/features/presentation/cubit/deaker_location_finder/dealer_location_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/dealer_location_finder/dealer_location_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_state.dart';
 import 'package:flutter/material.dart';
@@ -86,7 +86,7 @@ class _MapWidgetState extends State<MapWidget> {
               onCameraIdle: () => _updateVisibleRegion((double radius) {
                 context
                     .read<DealerLocationCubit>()
-                    .updateVisibleMapRdius(radius);
+                    .updateVisibleMapRadius(radius);
               }),
               initialCameraPosition: _kGooglePlex,
               onMapCreated: (GoogleMapController controller) async {
