@@ -82,8 +82,10 @@ class CheckoutSuccessPage extends StatelessWidget {
                   _buildOrderItemSummaryWidget(),
                   if (checkoutSuccessEntity.reviewOrderEntity != null)
                     ReviewOrderWidget(
-                        reviewOrderEntity:
-                            checkoutSuccessEntity.reviewOrderEntity!),
+                      reviewOrderEntity:
+                          checkoutSuccessEntity.reviewOrderEntity!,
+                      isOrderApproval: checkoutSuccessEntity.isOrderApproval,
+                    ),
                   const SizedBox(height: 24),
                 ],
               ),
@@ -185,7 +187,7 @@ class CheckoutSuccessPage extends StatelessWidget {
             const SizedBox(height: 8.0),
             if (checkoutSuccessEntity.cart.orderDate != null)
               Text(
-                "Order Placed: ${DateFormat(CoreConstants.dateFormatString).format(checkoutSuccessEntity.cart.orderDate!)}",
+                "${isOrderApproval ? '${LocalizationConstants.orderDate.localized()}:' : 'Order Placed:'} ${DateFormat(CoreConstants.dateFormatString).format(checkoutSuccessEntity.cart.orderDate!)}",
                 style: OptiTextStyles.body,
               ),
             if (checkoutSuccessEntity.cart.orderDate != null)
@@ -196,6 +198,13 @@ class CheckoutSuccessPage extends StatelessWidget {
                 "Delivery Method: ${checkoutSuccessEntity.cart.carrier?.description}   ${checkoutSuccessEntity.cart.shipVia?.description}",
                 style: OptiTextStyles.body,
               ),
+            if (isOrderApproval &&
+                !checkoutSuccessEntity.cart.status.isNullOrEmpty) ...[
+              const SizedBox(height: 8.0),
+              Text(
+                "${LocalizationConstants.status.localized()}: ${checkoutSuccessEntity.cart.status ?? ''}",
+              ),
+            ],
             const SizedBox(height: 8.0),
           ],
         ),
