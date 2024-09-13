@@ -81,8 +81,10 @@ class AddShippingAddressCubit extends Cubit<AddShippingAddressState> {
   }
 
   Future<void> onSelectCountry(Country? country) async {
+    if (selectedCountry != null && selectedCountry?.id != country?.id) {
+      selectedState = null;
+    }
     selectedCountry = country;
-
     await setUpDataShippingAddress();
   }
 
