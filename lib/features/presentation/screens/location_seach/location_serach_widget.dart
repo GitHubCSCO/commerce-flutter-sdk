@@ -40,7 +40,8 @@ class LocationSearchScreen extends StatelessWidget {
     return MultiBlocProvider(
         providers: [
           BlocProvider<LocationSearchBloc>(
-              create: (context) => sl<LocationSearchBloc>()),
+              create: (context) =>
+                  sl<LocationSearchBloc>()..add(LocationSearchInitialEvent())),
           BlocProvider<VMILocationBloc>(
               create: (context) =>
                   sl<VMILocationBloc>()..add(LoadVMILocationsEvent())),
@@ -98,51 +99,62 @@ class LocationSearchPage extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Input(
-                    hintText: LocalizationConstants.search.localized(),
-                    suffixIcon: IconButton(
-                      icon: const SvgAssetImage(
-                        assetName: AssetConstants.iconClear,
-                        semanticsLabel: 'search query clear icon',
-                        fit: BoxFit.fitWidth,
+            child: BlocBuilder<LocationSearchBloc, LoactionSearchState>(
+                buildWhen: (previous, current) =>
+                    current is LocationSearchInitialState,
+                builder: (_, state) {
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: Input(
+                          hintText: context
+                              .read<LocationSearchBloc>()
+                              .searchBarPlaceholder,
+                          suffixIcon: IconButton(
+                            icon: const SvgAssetImage(
+                              assetName: AssetConstants.iconClear,
+                              semanticsLabel: 'search query clear icon',
+                              fit: BoxFit.fitWidth,
+                            ),
+                            onPressed: () {
+                              textEditingController.clear();
+                              context.closeKeyboard();
+                              context
+                                  .read<LocationSearchBloc>()
+                                  .add(LocationSearchInitialEvent());
+                            },
+                          ),
+                          onTapOutside: (p0) => context.closeKeyboard(),
+                          textInputAction: TextInputAction.search,
+                          focusListener: (bool hasFocus) {
+                            if (hasFocus) {
+                              context
+                                  .read<LocationSearchBloc>()
+                                  .add(LocationSeachHistoryLoadEvent());
+                            } else {
+                              context
+                                  .read<LocationSearchBloc>()
+                                  .add(LocationSearchInitialEvent());
+                            }
+                          },
+                          onChanged: (String searchQuery) {},
+                          onSubmitted: (String query) {
+                            if (query.isNotEmpty) {
+                              context.read<LocationSearchBloc>().add(
+                                  LocationSearchLoadEvent(
+                                      searchQuery: query, pageType: ""));
+                            } else {
+                              context
+                                  .read<LocationSearchBloc>()
+                                  .add(LocationSearchInitialEvent());
+                            }
+                          },
+                          controller: textEditingController,
+                        ),
                       ),
-                      onPressed: () {
-                        textEditingController.clear();
-                        context.closeKeyboard();
-                        context
-                            .read<LocationSearchBloc>()
-                            .add(LocationSearchInitialEvent());
-                      },
-                    ),
-                    onTapOutside: (p0) => context.closeKeyboard(),
-                    textInputAction: TextInputAction.search,
-                    focusListener: (bool hasFocus) {
-                      if (hasFocus) {
-                        context
-                            .read<LocationSearchBloc>()
-                            .add(LocationSeachHistoryLoadEvent());
-                      }
-                    },
-                    onChanged: (String searchQuery) {},
-                    onSubmitted: (String query) {
-                      if (query.isNotEmpty) {
-                        context.read<LocationSearchBloc>().add(
-                            LocationSearchLoadEvent(
-                                searchQuery: query, pageType: ""));
-                      } else {
-                        context
-                            .read<LocationSearchBloc>()
-                            .add(LocationSearchInitialEvent());
-                      }
-                    },
-                    controller: textEditingController,
-                  ),
-                ),
-              ],
-            ),
+                    ],
+                  );
+                }),
           ),
           Expanded(
               child: MultiBlocListener(
@@ -240,7 +252,10 @@ class LocationSearchPage extends StatelessWidget {
                       },
                     );
                   } else {
-                    return const Center(child: Text('No results found'));
+                    return Center(
+                        child: Text(context
+                            .read<LocationSearchBloc>()
+                            .noSearchResultsFoundText));
                   }
                 } else if (state is LocationSearchHistoryLoadedState) {
                   return (state.searchHistory.isEmpty)

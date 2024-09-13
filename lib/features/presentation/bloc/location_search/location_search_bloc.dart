@@ -1,9 +1,8 @@
-import 'package:commerce_flutter_app/core/models/lat_long.dart';
+import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/location_search_usecase/location_search_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class LocationSearchBloc
     extends Bloc<LocationSearchEvent, LoactionSearchState> {
@@ -11,6 +10,11 @@ class LocationSearchBloc
 
   String searchQuery = "";
   bool isSearchProductActive = false;
+
+  String noSearchResultsFoundText =
+      SiteMessageConstants.defaultDealerLocatorNoResultsMessage;
+  String searchBarPlaceholder =
+      SiteMessageConstants.defaultDealerLocatorLocationSearchLabel;
 
   LocationSearchBloc({required LocationSearchUseCase locationSearchUseCase})
       : _locationSearchUseCase = locationSearchUseCase,
@@ -45,6 +49,7 @@ class LocationSearchBloc
 
   Future<void> _onLocationSearchInitialEvent(LocationSearchInitialEvent event,
       Emitter<LoactionSearchState> emit) async {
+    await _loadSiteMessages();
     emit(LocationSearchInitialState());
   }
 
@@ -53,5 +58,21 @@ class LocationSearchBloc
     var response = await _locationSearchUseCase.loadSearchQueryHistory();
 
     emit(LocationSearchHistoryLoadedState(searchHistory: response));
+  }
+
+  Future<void> _loadSiteMessages() async {
+    final futureResult = await Future.wait([
+      _locationSearchUseCase.getSiteMessage(
+          SiteMessageConstants.nameDealerLocatorNoResultsMessage,
+          SiteMessageConstants.defaultDealerLocatorNoResultsMessage),
+      _locationSearchUseCase.getSiteMessage(
+          SiteMessageConstants.nameDealerLocatorLocationSearchLabel,
+          SiteMessageConstants.defaultDealerLocatorLocationSearchLabel),
+    ]);
+
+    noSearchResultsFoundText = futureResult[0];
+    searchBarPlaceholder = futureResult[1];
+
+    return;
   }
 }
