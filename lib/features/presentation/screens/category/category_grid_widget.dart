@@ -102,7 +102,7 @@ class CategoryGridItemWidget<T extends BaseModel> extends StatelessWidget {
             ),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
               alignment: Alignment.center,
               child: Text(
                 description,
