@@ -30,43 +30,41 @@ class SearchHistoryService implements ISearchHistoryService {
     try {
       var historyList = await _commerceAPIServiceProvider
           .getCacheService()
-          .loadPersistedData(_searchQueryHistoryCacheKey);
+          .loadPersistedData<List<String>>(_searchQueryHistoryCacheKey);
 
-      historyList ??= [];
-      int listLength = historyList.length;
+      var listLength = historyList.length;
       historyList =
           historyList.sublist(0, min(listLength, _searchQueryHistoryCount));
       return historyList;
     } catch (e) {
-      print('Failed to load search query history: $e');
+      // print('Failed to load search query history: $e');
       return [];
     }
   }
 
   @override
-  Future<void> persistSearchQuery(String searchQuery) async {
-    List<String> historyList = [];
+  Future<void> persistSearchQuery(String? searchQuery) async {
+    var historyList = <String>[];
     try {
       searchQuery = searchQuery?.trim() ?? '';
       historyList = await _commerceAPIServiceProvider
           .getCacheService()
-          .loadPersistedData(_searchQueryHistoryCacheKey);
-      historyList ??= [];
+          .loadPersistedData<List<String>>(_searchQueryHistoryCacheKey);
       historyList.removeWhere(
-          (query) => query.toLowerCase() == searchQuery.toLowerCase());
+          (query) => query.toLowerCase() == searchQuery?.toLowerCase());
       historyList.insert(0, searchQuery);
-      int listLength = historyList.length;
+      var listLength = historyList.length;
       historyList =
           historyList.sublist(0, min(listLength, _searchQueryHistoryCount));
     } catch (e) {
-      print('Failed to load search query history: $e');
+      // print('Failed to load search query history: $e');
       // If there's an exception, we initialize historyList with the new search query
-      historyList = [searchQuery];
+      historyList = [searchQuery ?? ''];
     } finally {
       // Persist data in the finally block, so it's always executed
       await _commerceAPIServiceProvider
           .getCacheService()
-          .persistData(_searchQueryHistoryCacheKey, historyList);
+          .persistData<List<String>>(_searchQueryHistoryCacheKey, historyList);
     }
   }
 }
