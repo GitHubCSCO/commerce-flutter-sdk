@@ -105,7 +105,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
         var quickOrderAutoCompleteState = context
             .read<QuickOrderAutoCompleteBloc>()
             .state is QuickOrderInitialState;
-        final NavigatorState navigator = Navigator.of(context);
+        final navigator = Navigator.of(context);
         if (quickOrderAutoCompleteState) {
           navigator.pop();
         } else {

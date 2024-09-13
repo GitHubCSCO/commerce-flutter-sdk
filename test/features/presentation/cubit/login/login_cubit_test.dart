@@ -31,7 +31,7 @@ void main() async {
       'emits [LoginLoadingState, LoginSuccessState] when onLoginSubmit is called successfully with biometric option',
       build: () {
         when(() => mockLoginUsecase.attemptSignIn(any(), any()))
-            .thenAnswer((_) async => LoginStatus.loginSuccessBiometric);
+            .thenAnswer((_) async => LoginResponse(LoginStatus.loginSuccessBiometric));
         return sut;
       },
       act: (cubit) async {
@@ -47,7 +47,7 @@ void main() async {
       'emits [LoginLoadingState, LoginFailureState] when onLoginSubmit encounters an error',
       build: () {
         when(() => mockLoginUsecase.attemptSignIn(any(), any()))
-            .thenAnswer((_) async => LoginStatus.loginErrorUnsuccessful);
+            .thenAnswer((_) async => LoginResponse(LoginStatus.loginErrorUnsuccessful));
         return sut;
       },
       act: (cubit) async {
