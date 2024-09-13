@@ -24,21 +24,21 @@ void main() async {
   test('attemptSignIn should return loginErrorOffline when offline', () async {
     const userName = 'testUser';
     const passWord = 'testPassword';
-    const expectedResult = LoginStatus.loginErrorOffline;
+    var expectedResult = LoginResponse(LoginStatus.loginErrorOffline);
 
     when(() => sut.commerceAPIServiceProvider.getNetworkService().isOnline())
         .thenAnswer((_) async => false);
 
     final result = await sut.attemptSignIn(userName, passWord);
 
-    expect(result, expectedResult);
+    expect(result.loginStatus, expectedResult.loginStatus);
   });
 
   test('attemptSignIn should return loginErrorUnsuccessful when login fails',
       () async {
     const userName = 'testUser';
     const passWord = 'testPassword';
-    const expectedResult = LoginStatus.loginErrorUnsuccessful;
+    var expectedResult = LoginResponse(LoginStatus.loginErrorUnsuccessful);
 
     when(() => sut.commerceAPIServiceProvider.getNetworkService().isOnline())
         .thenAnswer((_) async => true);
@@ -55,7 +55,7 @@ void main() async {
 
     final result = await sut.attemptSignIn(userName, passWord);
 
-    expect(result, expectedResult);
+    expect(result.loginStatus, expectedResult.loginStatus);
   });
 
   test(
@@ -63,7 +63,7 @@ void main() async {
       () async {
     const userName = 'testUser';
     const passWord = 'testPassword';
-    const expectedResult = LoginStatus.loginErrorUnknown;
+    var expectedResult = LoginResponse(LoginStatus.loginErrorUnknown);
 
     when(() => sut.commerceAPIServiceProvider.getNetworkService().isOnline())
         .thenAnswer((_) async => true);
@@ -80,6 +80,6 @@ void main() async {
 
     final result = await sut.attemptSignIn(userName, passWord);
 
-    expect(result, expectedResult);
+    expect(result.loginStatus, expectedResult.loginStatus);
   });
 }

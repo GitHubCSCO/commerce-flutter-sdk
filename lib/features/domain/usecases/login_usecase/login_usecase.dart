@@ -4,17 +4,24 @@ import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/biometric_usecase/biometric_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
+class LoginResponse {
+  final LoginStatus loginStatus;
+  final String? message;
+
+  LoginResponse(this.loginStatus, {this.message});
+}
+
 class LoginUsecase extends BiometricUsecase {
   LoginUsecase() : super();
 
-  Future<LoginStatus> attemptSignIn(
+  Future<LoginResponse> attemptSignIn(
     String username,
     String password,
   ) async {
     bool isOnline =
         await commerceAPIServiceProvider.getNetworkService().isOnline();
     if (!isOnline) {
-      return LoginStatus.loginErrorOffline;
+      return LoginResponse(LoginStatus.loginErrorOffline);
     }
 
     final result = await commerceAPIServiceProvider
@@ -30,7 +37,7 @@ class LoginUsecase extends BiometricUsecase {
             case Success(value: final fullSession):
               {
                 if (fullSession == null) {
-                  return LoginStatus.loginErrorUnknown;
+                  return LoginResponse(LoginStatus.loginErrorUnknown);
                 }
 
                 await commerceAPIServiceProvider
@@ -41,17 +48,18 @@ class LoginUsecase extends BiometricUsecase {
                   await coreServiceProvider
                       .getBiometricAuthenticationService()
                       .markCurrentUserAsSeenEnableBiometricOptionView();
-                  return LoginStatus.loginSuccessBiometric;
+                  return LoginResponse(LoginStatus.loginSuccessBiometric);
                 } else {
-                  return LoginStatus.loginSuccessBillToShipTo;
+                  return LoginResponse(LoginStatus.loginSuccessBillToShipTo);
                 }
               }
             case Failure():
-              return LoginStatus.loginErrorUnknown;
+              return LoginResponse(LoginStatus.loginErrorUnknown);
           }
         }
-      case Failure():
-        return LoginStatus.loginErrorUnsuccessful;
+      case Failure(errorResponse: final errorResponse):
+        return LoginResponse(LoginStatus.loginErrorUnsuccessful,
+            message: errorResponse.extractErrorMessage());
     }
   }
 
