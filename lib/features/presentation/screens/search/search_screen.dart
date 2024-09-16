@@ -382,52 +382,40 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
     final autoCompleteProductList = result?.products;
     return ListView(
       children: [
-        Visibility(
-          visible: autoCompleteCategoryList?.isNotEmpty ?? false,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
-                child: Text(
-                  LocalizationConstants.categories.localized(),
-                  style: OptiTextStyles.titleSmall,
-                ),
-              ),
-              CategoryAutoCompleteWidget(
-                  autocompleteCategories: autoCompleteCategoryList,
-                  callback: handleAutoCompleteCategoryCallback),
-              const SizedBox(height: 12),
-            ],
+        if (autoCompleteCategoryList?.isNotEmpty ?? false) ...[
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+            child: Text(
+              LocalizationConstants.categories.localized(),
+              style: OptiTextStyles.titleSmall,
+            ),
           ),
-        ),
-        Visibility(
-          visible: autoCompleteBrandList?.isNotEmpty ?? false,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
-                child: Text(
-                  LocalizationConstants.brands.localized(),
-                  style: OptiTextStyles.titleSmall,
-                ),
-              ),
-              BrandAutoCompleteWidget(
-                  autocompleteBrands: autoCompleteBrandList,
-                  callback: handleAutoCompleteBrandCallback),
-              const SizedBox(height: 12),
-            ],
+          CategoryAutoCompleteWidget(
+            autocompleteCategories: autoCompleteCategoryList,
+            callback: handleAutoCompleteCategoryCallback,
           ),
-        ),
-        Visibility(
-          visible: autoCompleteProductList?.isNotEmpty ?? false,
-          child: AutoCompleteWidget(
-              callback: handleAutoCompleteCallback,
-              autoCompleteProductList: autoCompleteProductList),
-        )
+          const SizedBox(height: 12),
+        ],
+        if (autoCompleteBrandList?.isNotEmpty ?? false) ...[
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+            child: Text(
+              LocalizationConstants.brands.localized(),
+              style: OptiTextStyles.titleSmall,
+            ),
+          ),
+          BrandAutoCompleteWidget(
+            autocompleteBrands: autoCompleteBrandList,
+            callback: handleAutoCompleteBrandCallback,
+          ),
+          const SizedBox(height: 12),
+        ],
+        if (autoCompleteProductList?.isNotEmpty ?? false)
+          AutoCompleteWidget(
+            callback: handleAutoCompleteCallback,
+            autoCompleteProductList: autoCompleteProductList,
+            isScrollableChild: false,
+          ),
       ],
     );
   }

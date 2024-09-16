@@ -99,59 +99,73 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
                 return Container(
                   color: OptiAppColors.backgroundWhite,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildBillToWidget(state.billToAddress),
-                      const SizedBox(height: 20.0),
-                      TabSwitchWidget(
-                        tabTitle0: LocalizationConstants.ship.localized(),
-                        tabTitle1: LocalizationConstants.pickUp.localized(),
-                        tabWidget0: _buildShipToWidget(
-                            state.billToAddress, state.shipToAddress),
-                        tabWidget1: _buildPickUpWidget(state.billToAddress,
-                            state.pickUpWarehouse, state.recipientAddress),
-                        selectedIndex: (state.hasWillCall &&
-                                    state.selectedShippingMethod ==
-                                        FulfillmentMethodType.PickUp) ==
-                                true
-                            ? 1
-                            : 0,
-                        onTabSelectionChange: (index) {
-                          final type = index == 1
-                              ? FulfillmentMethodType.PickUp
-                              : FulfillmentMethodType.Ship;
-                          context
-                              .read<BillToShipToBloc>()
-                              .add(FulfillmentMethodUpdateEvent(type));
-                          bool isEnable = context
-                              .read<BillToShipToBloc>()
-                              .saveButtonEnable(fulfillmentMethodType: type);
-                          setState(() {
-                            _isSwitched = false;
-                            _isSaveEnable = isEnable;
-                          });
-                        },
-                        showDefaultOnly: state.hasWillCall ? false : true,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 20.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                  LocalizationConstants.setAsDefault
-                                      .localized(),
-                                  style: OptiTextStyles.body),
-                            ),
-                            Switch(
-                                value: _isSwitched,
-                                onChanged: (value) {
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildBillToWidget(state.billToAddress),
+                              const SizedBox(height: 20.0),
+                              TabSwitchWidget(
+                                tabTitle0:
+                                    LocalizationConstants.ship.localized(),
+                                tabTitle1:
+                                    LocalizationConstants.pickUp.localized(),
+                                tabWidget0: _buildShipToWidget(
+                                    state.billToAddress, state.shipToAddress),
+                                tabWidget1: _buildPickUpWidget(
+                                    state.billToAddress,
+                                    state.pickUpWarehouse,
+                                    state.recipientAddress),
+                                selectedIndex: (state.hasWillCall &&
+                                            state.selectedShippingMethod ==
+                                                FulfillmentMethodType.PickUp) ==
+                                        true
+                                    ? 1
+                                    : 0,
+                                onTabSelectionChange: (index) {
+                                  final type = index == 1
+                                      ? FulfillmentMethodType.PickUp
+                                      : FulfillmentMethodType.Ship;
+                                  context
+                                      .read<BillToShipToBloc>()
+                                      .add(FulfillmentMethodUpdateEvent(type));
+                                  bool isEnable = context
+                                      .read<BillToShipToBloc>()
+                                      .saveButtonEnable(
+                                          fulfillmentMethodType: type);
                                   setState(() {
-                                    _isSwitched = value;
+                                    _isSwitched = false;
+                                    _isSaveEnable = isEnable;
                                   });
-                                }),
-                          ],
+                                },
+                                showDefaultOnly:
+                                    state.hasWillCall ? false : true,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 20.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                          LocalizationConstants.setAsDefault
+                                              .localized(),
+                                          style: OptiTextStyles.body),
+                                    ),
+                                    Switch(
+                                        value: _isSwitched,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _isSwitched = value;
+                                          });
+                                        }),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       ListInformationBottomSubmitWidget(actions: [
