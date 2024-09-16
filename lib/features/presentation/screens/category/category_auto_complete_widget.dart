@@ -25,6 +25,7 @@ class CategoryAutoCompleteWidget extends StatelessWidget {
       ),
       itemCount: autocompleteCategories?.length ?? 0,
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         final autoCompleteCategory = autocompleteCategories![index];
         return InkWell(
