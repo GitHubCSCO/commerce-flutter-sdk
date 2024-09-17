@@ -382,11 +382,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
                   .defaultValueQuickOrderCannotOrderConfigurable);
           emit(OrderListAddFailedState(message));
         } else if (product.canAddToCart == false) {
-          final message = await _quickOrderUseCase.getSiteMessage(
-              SiteMessageConstants.nameQuickOrderCannotOrderUnavailable,
-              SiteMessageConstants
-                  .defaultValueQuickOrderCannotOrderUnavailable);
-          emit(OrderListAddFailedState(message));
+          emit(OrderListAddFailedState(
+              LocalizationConstants.canNotAddToCart.localized()));
         } else {
           var newItem =
               _convertProductToQuickOrderItemEntity(product, quantity);

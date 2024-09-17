@@ -13,16 +13,10 @@ class SearchHistoryUseCase extends BaseUseCase {
       final List<String>? list = await commerceAPIServiceProvider
           .getCacheService()
           .loadPersistedData<List<String>>(CacheServiceConstants.searchHistory);
-      if (list != null) {
-        list.isEmpty
-            ? list
-                .add(LocalizationConstants.searchNoHistoryAvailable.localized())
-            : null;
-      }
 
       return list ?? [];
     } catch (e) {
-      return [LocalizationConstants.searchNoHistoryAvailable.localized()];
+      return [];
     }
   }
 

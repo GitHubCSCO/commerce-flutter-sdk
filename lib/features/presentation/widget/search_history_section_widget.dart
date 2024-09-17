@@ -41,26 +41,32 @@ class SearchHistorySectionWidget extends StatelessWidget {
                   return Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     decoration: const BoxDecoration(color: Colors.white),
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(0.0),
-                      itemCount: _historyListCount(
-                          searchHistoryWidgetEntity.itemsCount,
-                          state.historyList.length),
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (context, index) {
-                        final history = state.historyList[index];
-                        return InkWell(
-                          onTap: () {
-                            context
-                                .read<RootBloc>()
-                                .add(RootInitiateSearchEvent(history));
-                          },
-                          child: SearchHistoryItemWidget(history: history),
-                        );
-                      },
-                    ),
+                    child: (state.historyList.isNotEmpty)
+                        ? ListView.builder(
+                            padding: const EdgeInsets.all(0.0),
+                            itemCount: _historyListCount(
+                                searchHistoryWidgetEntity.itemsCount,
+                                state.historyList.length),
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            itemBuilder: (context, index) {
+                              final history = state.historyList[index];
+                              return InkWell(
+                                onTap: () {
+                                  context
+                                      .read<RootBloc>()
+                                      .add(RootInitiateSearchEvent(history));
+                                },
+                                child:
+                                    SearchHistoryItemWidget(history: history),
+                              );
+                            },
+                          )
+                        : SearchHistoryItemWidget(
+                            history: LocalizationConstants
+                                .searchNoHistoryAvailable
+                                .localized()),
                   );
                 default:
                   return const Center();

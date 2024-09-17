@@ -215,7 +215,7 @@ class ProductDetailsUseCase extends BaseUseCase {
     genralInfoEntity = genralInfoEntity.copyWith(
         myPartNumberTitle: LocalizationConstants.myPartNumberSign.localized());
     genralInfoEntity = genralInfoEntity.copyWith(
-        mFGNumberTitle: LocalizationConstants.myPartNumberSign.localized());
+        mFGNumberTitle: LocalizationConstants.mFGNumberSign.localized());
     genralInfoEntity = genralInfoEntity.copyWith(
         packDescriptionTitle:
             LocalizationConstants.packDescription.localized());

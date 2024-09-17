@@ -23,6 +23,7 @@ class BrandAutoCompleteWidget extends StatelessWidget {
       ),
       itemCount: autocompleteBrands?.length ?? 0,
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         final autoCompleteBrand = autocompleteBrands![index];
         return InkWell(

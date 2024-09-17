@@ -9,9 +9,14 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class AutoCompleteWidget extends StatelessWidget {
   final Function(BuildContext, AutocompleteProduct) callback;
   final List<AutocompleteProduct>? autoCompleteProductList;
+  final bool? isScrollableChild;
 
-  const AutoCompleteWidget(
-      {super.key, required this.callback, this.autoCompleteProductList});
+  const AutoCompleteWidget({
+    super.key,
+    required this.callback,
+    this.autoCompleteProductList,
+    this.isScrollableChild,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +30,9 @@ class AutoCompleteWidget extends StatelessWidget {
       ),
       itemCount: autoCompleteProductList?.length ?? 0,
       shrinkWrap: true,
+      physics: (isScrollableChild == false)
+          ? const NeverScrollableScrollPhysics()
+          : null,
       itemBuilder: (context, index) {
         final autoCompleteProduct = autoCompleteProductList![index];
         return InkWell(
