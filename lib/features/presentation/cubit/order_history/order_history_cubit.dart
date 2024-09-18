@@ -1,3 +1,5 @@
+import 'package:commerce_flutter_app/core/constants/website_paths.dart';
+import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/get_order_collection_result_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/filter_status.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
@@ -217,4 +219,8 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       _orderUsecase.availableSortOrders;
 
   String? get vmiLocationId => _orderUsecase.getCurrentLocation()?.id;
+
+  String get websitePath => state.isFromVMI == true
+        ? WebsitePaths.vmiOrdersPath.format([vmiLocationId ?? ''])
+        : WebsitePaths.ordersPath;
 }
