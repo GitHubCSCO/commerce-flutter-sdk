@@ -1,10 +1,10 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
-import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
@@ -43,19 +43,14 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
 
   final _textEditingController = TextEditingController();
 
-  late final String websitePath;
-
   @override
   Widget build(BuildContext context) {
-    var vmlLocationId = context.read<OrderHistoryCubit>().vmiLocationId;
-    websitePath = isFromVMI == true
-        ? WebsitePaths.vmiOrdersPath.format([vmlLocationId ?? ''])
-        : WebsitePaths.ordersPath;
     return Scaffold(
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         actions: <Widget>[
-          BottomMenuWidget(websitePath: websitePath),
+          BottomMenuWidget(
+              websitePath: context.watch<OrderHistoryCubit>().websitePath),
         ],
         backgroundColor: OptiAppColors.backgroundWhite,
         title: const Text('My Orders'),
@@ -77,9 +72,9 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
                 onPressed: () {
                   _textEditingController.clear();
 
-                  context
+                  unawaited(context
                       .read<OrderHistoryCubit>()
-                      .searchQueryChanged(_textEditingController.text);
+                      .searchQueryChanged(_textEditingController.text));
                   context.closeKeyboard();
                 },
               ),
@@ -87,10 +82,14 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
               textInputAction: TextInputAction.search,
               controller: _textEditingController,
               onChanged: (value) {
-                context.read<OrderHistoryCubit>().searchQueryChanged(value);
+                unawaited(context
+                    .read<OrderHistoryCubit>()
+                    .searchQueryChanged(value));
               },
               onSubmitted: (value) {
-                context.read<OrderHistoryCubit>().searchQueryChanged(value);
+                unawaited(context
+                    .read<OrderHistoryCubit>()
+                    .searchQueryChanged(value));
               },
             ),
           ),
@@ -192,7 +191,7 @@ class __OrderHistoryListWidgetState extends State<_OrderHistoryListWidget> {
 
   void _onScroll() {
     if (_isBottom) {
-      context.read<OrderHistoryCubit>().loadMoreOrderHistory();
+      unawaited(context.read<OrderHistoryCubit>().loadMoreOrderHistory());
     }
   }
 
@@ -324,7 +323,7 @@ void _showOrderHistoryFilter(
   required void Function(String value) onStatusValueRemoved,
   required void Function() onShowMyOrdersToggled,
 }) {
-  context.read<OrderHistoryCubit>().loadFilterValues();
+  unawaited(context.read<OrderHistoryCubit>().loadFilterValues());
   showFilterModalSheet(
     context,
     onApply: onApply,
