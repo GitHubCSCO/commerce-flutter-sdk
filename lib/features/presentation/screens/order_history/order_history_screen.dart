@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
@@ -70,9 +72,9 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
                 onPressed: () {
                   _textEditingController.clear();
 
-                  context
+                  unawaited(context
                       .read<OrderHistoryCubit>()
-                      .searchQueryChanged(_textEditingController.text);
+                      .searchQueryChanged(_textEditingController.text));
                   context.closeKeyboard();
                 },
               ),
@@ -80,10 +82,14 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
               textInputAction: TextInputAction.search,
               controller: _textEditingController,
               onChanged: (value) {
-                context.read<OrderHistoryCubit>().searchQueryChanged(value);
+                unawaited(context
+                    .read<OrderHistoryCubit>()
+                    .searchQueryChanged(value));
               },
               onSubmitted: (value) {
-                context.read<OrderHistoryCubit>().searchQueryChanged(value);
+                unawaited(context
+                    .read<OrderHistoryCubit>()
+                    .searchQueryChanged(value));
               },
             ),
           ),
@@ -185,7 +191,7 @@ class __OrderHistoryListWidgetState extends State<_OrderHistoryListWidget> {
 
   void _onScroll() {
     if (_isBottom) {
-      context.read<OrderHistoryCubit>().loadMoreOrderHistory();
+      unawaited(context.read<OrderHistoryCubit>().loadMoreOrderHistory());
     }
   }
 
@@ -317,7 +323,7 @@ void _showOrderHistoryFilter(
   required void Function(String value) onStatusValueRemoved,
   required void Function() onShowMyOrdersToggled,
 }) {
-  context.read<OrderHistoryCubit>().loadFilterValues();
+  unawaited(context.read<OrderHistoryCubit>().loadFilterValues());
   showFilterModalSheet(
     context,
     onApply: onApply,

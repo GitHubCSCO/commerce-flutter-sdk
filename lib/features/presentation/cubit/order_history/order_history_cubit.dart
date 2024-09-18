@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/get_order_collection_result_entity.dart';
@@ -47,7 +49,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
         isFromVMI: isFromVMI,
       ),
     );
-    loadOrderHistory();
+    unawaited(loadOrderHistory());
   }
 
   Future<void> loadFilterValues() async {
@@ -221,6 +223,6 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
   String? get vmiLocationId => _orderUsecase.getCurrentLocation()?.id;
 
   String get websitePath => state.isFromVMI == true
-        ? WebsitePaths.vmiOrdersPath.format([vmiLocationId ?? ''])
-        : WebsitePaths.ordersPath;
+      ? WebsitePaths.vmiOrdersPath.format([vmiLocationId ?? ''])
+      : WebsitePaths.ordersPath;
 }
