@@ -32,7 +32,7 @@ class PricingInventoryUseCase extends BaseUseCase {
     var productPricingEnabledResult = await coreServiceProvider
         .getAppConfigurationService()
         .productPricingEnabled();
-    bool productPricingPresentationEnabled =
+    var productPricingPresentationEnabled =
         productPricingEnabledResult ?? false;
     return productPricingPresentationEnabled;
   }
