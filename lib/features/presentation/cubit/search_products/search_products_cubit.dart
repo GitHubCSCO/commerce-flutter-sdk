@@ -113,10 +113,9 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
         SiteMessageConstants.nameMobileAppSearchNoResults,
         SiteMessageConstants.defaultMobileAppSearchNoResults);
 
-    List<ProductEntity> productEntities =
-        await updateProductPricingAndInventoryAvailability(
-            _pricingInventoryUseCase, productCollectionResult?.products,
-            hidePricing: hidePricingEnable, hideInventory: hideInventoryEnable);
+    var productEntities = await updateProductPricingAndInventoryAvailability(
+        _pricingInventoryUseCase, productCollectionResult?.products,
+        hidePricing: hidePricingEnable, hideInventory: hideInventoryEnable);
 
     emit(
       state.copyWith(

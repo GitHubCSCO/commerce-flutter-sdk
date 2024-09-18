@@ -107,19 +107,26 @@ Widget _buildPricingSection(
   String? priceValueText,
   String? unitOfMeasureValueText,
 }) {
-  return Row(
-    children: [
-      Text(priceValueText ?? '', style: OptiTextStyles.bodySmallHighlight),
-      Text(unitOfMeasureValueText ?? '', style: OptiTextStyles.bodySmall),
-    ],
-  );
+  if ((priceValueText != null && priceValueText.isNotEmpty) ||
+      (unitOfMeasureValueText != null && unitOfMeasureValueText.isNotEmpty)) {
+    return Row(
+      children: [
+        Text(priceValueText ?? '', style: OptiTextStyles.bodySmallHighlight),
+        Text(unitOfMeasureValueText ?? '', style: OptiTextStyles.bodySmall),
+      ],
+    );
+  }
+  return const SizedBox.shrink();
 }
 
 Widget _buildInventorySection(BuildContext context,
     {String? availabilityText, int? availabilityMessageType}) {
-  return Text(
-    availabilityText ?? '',
-    style: OptiTextStyles.body.copyWith(
-        color: AvailabilityColorConverter.convert(availabilityMessageType)),
-  );
+  if (availabilityText != null && availabilityText.isNotEmpty) {
+    return Text(
+      availabilityText ?? '',
+      style: OptiTextStyles.body.copyWith(
+          color: AvailabilityColorConverter.convert(availabilityMessageType)),
+    );
+  }
+  return const SizedBox.shrink();
 }
