@@ -228,7 +228,7 @@ class OptiTextStyles {
 
   static TextStyle get header3 => _getInterFontStyle(
         const TextStyle(
-          fontSize: 18,
+          fontSize: 16,
           color: headlineColor,
           fontWeight: headlineWeight,
         ),
