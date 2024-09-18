@@ -34,41 +34,43 @@ class ProductDetailsCarouselWidget extends StatelessWidget {
                 BlocProvider.of<CarouselIndicatorCubit>(context)
                     .carouselPageChange(index);
               })),
-      Positioned(
-        left: 0,
-        right: 0,
-        bottom: 8,
-        child: BlocBuilder<CarouselIndicatorCubit, CarouselIndicatorState>(
-          builder: (context, state) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: generalInfoEntity.thumbnails
-                      ?.asMap()
-                      .entries
-                      .map((entry) {
-                    return GestureDetector(
-                      onTap: () => _controller.animateToPage(entry.key),
-                      child: Container(
-                        width: 8.0,
-                        height: 8.0,
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 4.0),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: (Theme.of(context).brightness ==
-                                        Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black)
-                                .withOpacity(
-                                    state.current == entry.key ? 0.9 : 0.4)),
-                      ),
-                    );
-                  }).toList() ??
-                  [],
-            );
-          },
+      if ((generalInfoEntity.thumbnails?.length ?? 0) > 1) ...[
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 8,
+          child: BlocBuilder<CarouselIndicatorCubit, CarouselIndicatorState>(
+            builder: (context, state) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: generalInfoEntity.thumbnails
+                        ?.asMap()
+                        .entries
+                        .map((entry) {
+                      return GestureDetector(
+                        onTap: () => _controller.animateToPage(entry.key),
+                        child: Container(
+                          width: 8.0,
+                          height: 8.0,
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 4.0),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: (Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black)
+                                  .withOpacity(
+                                      state.current == entry.key ? 0.9 : 0.4)),
+                        ),
+                      );
+                    }).toList() ??
+                    [],
+              );
+            },
+          ),
         ),
-      ),
+      ],
     ]);
   }
 }
