@@ -16,24 +16,26 @@ class ProductDetailsCarouselWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: [
       CarouselSlider.builder(
-          itemCount: generalInfoEntity.thumbnails?.length ?? 0,
-          itemBuilder: (context, index, viewIndex) {
-            ProductImageEntity productImageEntity =
-                generalInfoEntity.thumbnails![index];
-            return ProductDetailsCarouselItemWidget(
-                productImageEntity: productImageEntity);
+        itemCount: generalInfoEntity.thumbnails?.length ?? 0,
+        itemBuilder: (context, index, viewIndex) {
+          ProductImageEntity productImageEntity =
+              generalInfoEntity.thumbnails![index];
+          return ProductDetailsCarouselItemWidget(
+              productImageEntity: productImageEntity);
+        },
+        options: CarouselOptions(
+          enlargeCenterPage: true,
+          autoPlay: false,
+          aspectRatio: 16 / 9,
+          autoPlayCurve: Curves.fastOutSlowIn,
+          enableInfiniteScroll: false,
+          viewportFraction: 1.0,
+          onPageChanged: (index, reason) {
+            BlocProvider.of<CarouselIndicatorCubit>(context)
+                .carouselPageChange(index);
           },
-          options: CarouselOptions(
-              enlargeCenterPage: true,
-              autoPlay: false,
-              aspectRatio: 16 / 9,
-              autoPlayCurve: Curves.fastOutSlowIn,
-              enableInfiniteScroll: false,
-              viewportFraction: 1.0,
-              onPageChanged: (index, reason) {
-                BlocProvider.of<CarouselIndicatorCubit>(context)
-                    .carouselPageChange(index);
-              })),
+        ),
+      ),
       if ((generalInfoEntity.thumbnails?.length ?? 0) > 1) ...[
         Positioned(
           left: 0,
