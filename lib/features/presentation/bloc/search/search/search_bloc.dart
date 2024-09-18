@@ -57,7 +57,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         final result =
             await _searchUseCase.loadAutocompleteResults(searchQuery);
 
-        if (state is SearchCmsInitialState) {
+        if (state is SearchCmsInitialState ||
+            state is SearchProductsLoadedState) {
           return;
         }
         switch (result) {
@@ -87,7 +88,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       emit(SearchLoadingState());
       final result = await _searchUseCase.loadAutocompleteResults(searchQuery);
 
-      if (state is SearchCmsInitialState) {
+      if (state is SearchCmsInitialState ||
+          state is SearchProductsLoadedState) {
         return;
       }
 

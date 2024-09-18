@@ -94,34 +94,38 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                           Visibility(
                             visible: state.originalQuery != null &&
                                 state.originalQuery!.isNotEmpty,
-                            child: Text(
-                              state.originalQuery == null
-                                  ? LocalizationConstants.results
-                                      .localized()
-                                      .format(
-                                      [
-                                        (state.paginationEntity?.totalItemCount ==
-                                                0)
-                                            ? LocalizationConstants.no
-                                                .localized()
-                                            : state.paginationEntity
-                                                ?.totalItemCount
-                                      ],
-                                    )
-                                  : LocalizationConstants.resultsFor
-                                      .localized()
-                                      .format(
-                                      [
-                                        (state.paginationEntity?.totalItemCount ==
-                                                0)
-                                            ? LocalizationConstants.no
-                                                .localized()
-                                            : state.paginationEntity
-                                                ?.totalItemCount,
-                                        state.originalQuery
-                                      ],
-                                    ),
-                              style: OptiTextStyles.header3,
+                            child: Expanded(
+                              child: Text(
+                                state.originalQuery == null
+                                    ? LocalizationConstants.results
+                                        .localized()
+                                        .format(
+                                        [
+                                          (state.paginationEntity?.totalItemCount ==
+                                                  0)
+                                              ? LocalizationConstants.no
+                                                  .localized()
+                                              : state.paginationEntity
+                                                  ?.totalItemCount
+                                        ],
+                                      )
+                                    : LocalizationConstants.resultsFor
+                                        .localized()
+                                        .format(
+                                        [
+                                          (state.paginationEntity?.totalItemCount ==
+                                                  0)
+                                              ? LocalizationConstants.no
+                                                  .localized()
+                                              : state.paginationEntity
+                                                  ?.totalItemCount,
+                                          state.originalQuery
+                                        ],
+                                      ),
+                                style: OptiTextStyles.header3,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
                           Row(
