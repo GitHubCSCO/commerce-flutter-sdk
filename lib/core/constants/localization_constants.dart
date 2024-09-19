@@ -685,6 +685,9 @@ enum LocalizationConstants {
   errorLoading(keyword: "Error Loading"),
   noInternet(keyword: "No Internet"),
   canNotAddToCart(keyword: "This product cannot be added to the cart."),
+  featuredCategory(keyword: "Featured Category"),
+  recentlyViewed(keyword: "Recently Viewed"),
+  webCrossSells(keyword: "Cross Sells"),
   ;
 
   const LocalizationConstants({
