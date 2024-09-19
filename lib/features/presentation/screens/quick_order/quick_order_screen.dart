@@ -233,9 +233,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                       context, state.message ?? '');
                                 } else if (state
                                     is OrderListAddToListFailedState) {
-                                  _showAlert(context,
+                                  showSignInDialog(context,
                                       message: LocalizationConstants
-                                          .pleaseSignInBeforeAddingToList
+                                          .signInBeforeCheckout
                                           .localized());
                                 } else if (state is OrderListAddFailedState) {
                                   _showAlert(context, message: state.message);
@@ -656,6 +656,29 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
             child: Text(LocalizationConstants.oK.localized()),
           ),
         ]);
+  }
+
+  void showSignInDialog(BuildContext context, {String? message}) {
+    displayDialogWidget(
+      context: context,
+      title: LocalizationConstants.notSignedIn.localized(),
+      message: message,
+      actions: [
+        DialogPlainButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text(LocalizationConstants.cancel.localized()),
+        ),
+        DialogPlainButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            AppRoute.login.navigateBackStack(context);
+          },
+          child: Text(LocalizationConstants.signIn.localized()),
+        ),
+      ],
+    );
   }
 
   void _clearAllCart(BuildContext context) {
