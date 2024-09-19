@@ -246,7 +246,6 @@ class _LoginPageState extends State<LoginPage> {
                             if (context.read<LoginCubit>().showSpinner) {
                               Navigator.of(context, rootNavigator: true).pop();
                               context.read<LoginCubit>().showSpinner = false;
-                              context.pop();
                             }
 
                             context
