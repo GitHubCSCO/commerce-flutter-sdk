@@ -13,8 +13,8 @@ class RemoteConfigUsecase extends BaseUseCase {
     final remoteConfig = FirebaseRemoteConfig.instance;
     // Using zero duration to force fetching from remote server.
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
-      fetchTimeout: const Duration(seconds: 10),
-      minimumFetchInterval: Duration.zero,
+      fetchTimeout: const Duration(minutes: 1),
+      minimumFetchInterval: const Duration(hours: 1),
     ));
     await remoteConfig.fetchAndActivate();
   }
