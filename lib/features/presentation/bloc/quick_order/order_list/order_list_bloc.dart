@@ -247,10 +247,10 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
   Future<void> _onOrderListAddToListEvent(
       OrderListAddToListEvent event, Emitter<OrderListState> emit) async {
-    emit(OrderListLoadingState());
     bool isUserAuthenticated = await _quickOrderUseCase.isAuthenticated();
     if (!isUserAuthenticated) {
       emit(OrderListAddToListFailedState());
+      emit(OrderListLoadedState(quickOrderItemList, productSettings));
     } else {
       List<AddCartLine> products = [];
 

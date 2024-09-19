@@ -381,6 +381,7 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
     final autoCompleteBrandList = result?.brands;
     final autoCompleteProductList = result?.products;
     return ListView(
+      padding: const EdgeInsets.only(top: 8),
       children: [
         if (autoCompleteCategoryList?.isNotEmpty ?? false) ...[
           Padding(

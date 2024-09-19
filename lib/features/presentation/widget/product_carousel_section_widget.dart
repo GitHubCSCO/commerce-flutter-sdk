@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
@@ -34,10 +35,7 @@ class ProductCarouselSectionWidget extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(16),
                     child: Text(
-                      productCarouselWidgetEntity.title ??
-                          productCarouselWidgetEntity.carouselType?.name
-                              .toUpperCase() ??
-                          '',
+                      _getCarouselTitle(),
                       style: OptiTextStyles.titleLarge,
                     ),
                   ),
@@ -84,5 +82,23 @@ class ProductCarouselSectionWidget extends StatelessWidget {
         }
       },
     );
+  }
+
+  String _getCarouselTitle() {
+    if (productCarouselWidgetEntity.title?.isNotEmpty == true) {
+      return productCarouselWidgetEntity.title!;
+    }
+    switch (productCarouselWidgetEntity.carouselType) {
+      case ProductCarouselType.featuredCategory:
+        return LocalizationConstants.featuredCategory.localized();
+      case ProductCarouselType.topSellers:
+        return LocalizationConstants.topSellers.localized();
+      case ProductCarouselType.recentlyViewed:
+        return LocalizationConstants.recentlyViewed.localized();
+      case ProductCarouselType.webCrossSells:
+        return LocalizationConstants.webCrossSells.localized();
+      default:
+        return '';
+    }
   }
 }
