@@ -235,7 +235,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                     is OrderListAddToListFailedState) {
                                   showSignInDialog(context,
                                       message: LocalizationConstants
-                                          .signInBeforeCheckout
+                                          .pleaseSignInBeforeAddingToList
                                           .localized());
                                 } else if (state is OrderListAddFailedState) {
                                   _showAlert(context, message: state.message);
