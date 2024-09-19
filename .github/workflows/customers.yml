@@ -3,17 +3,17 @@ on:
   workflow_dispatch:
     inputs:
       release_env:
-        description: 'Environment'
+        description: "Environment"
         required: true
-        default: 'qa'
+        default: "qa"
         type: choice
         options:
           - qa
           - beta
       test_group:
-        description: 'Tester group'
+        description: "Tester group"
         required: false
-        default: 'none'
+        default: "none"
         type: choice
         options:
           - all
@@ -22,13 +22,13 @@ on:
           - customers
           - dummy
       custom_test_group:
-        description: 'Custom Test Group (optional)'
+        description: "Custom Test Group (optional)"
         required: false
 
 jobs:
   ios:
     runs-on: macos-latest
-    steps: 
+    steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: List
@@ -39,7 +39,7 @@ jobs:
         id: flutter-action
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
           cache: true
 
       - run: flutter --version
@@ -55,7 +55,7 @@ jobs:
       - name: Fastlane
         run: |
           RELEASE_ENV='${{ github.event.inputs.release_env }}'
-          
+
           if [ -n "${{ github.event.inputs.custom_test_group }}" ]; then
               TEST_GROUP="${{ github.event.inputs.custom_test_group }}"
           else
@@ -64,7 +64,7 @@ jobs:
 
           echo "Using RELEASE_ENV: $RELEASE_ENV"
           echo "Using TEST_GROUP: $TEST_GROUP"
-          
+
           if [ -z "$TEST_GROUP" ] || [ "$TEST_GROUP" == "none" ]; then
               fastlane ios "$RELEASE_ENV"
           else
@@ -77,7 +77,7 @@ jobs:
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
-  android:    
+  android:
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -88,17 +88,16 @@ jobs:
 
       - name: Set up Java
         uses: actions/setup-java@v4
-        with: 
-          distribution: 'zulu'
-          java-version: '17'
-          cache: 'gradle'
-
+        with:
+          distribution: "zulu"
+          java-version: "17"
+          cache: "gradle"
 
       - name: Install Flutter
         id: flutter-action
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
           cache: true
 
       - run: flutter --version
@@ -114,7 +113,7 @@ jobs:
       - name: Fastlane
         run: |
           RELEASE_ENV='${{ github.event.inputs.release_env }}'
-          
+
           if [ -n "${{ github.event.inputs.custom_test_group }}" ]; then
               TEST_GROUP="${{ github.event.inputs.custom_test_group }}"
           else
@@ -123,7 +122,7 @@ jobs:
 
           echo "Using RELEASE_ENV: $RELEASE_ENV"
           echo "Using TEST_GROUP: $TEST_GROUP"
-          
+
           if [ -z "$TEST_GROUP" ] || [ "$TEST_GROUP" == "none" ]; then
               fastlane android "$RELEASE_ENV"
           else
@@ -141,3 +140,11 @@ jobs:
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+      - name: Upload APK/AAB as artifact
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts
+          path: |
+            build/app/outputs/bundle/release/app-release.aab
+            build/app/outputs/flutter-apk/app-release.apk
