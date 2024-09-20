@@ -215,7 +215,7 @@ class _ProductPageState extends State<ProductPage> with ListGridViewMenuMixIn {
                         ),
                         BlocProvider(
                           create: (context) => sl<SearchProductsCubit>()
-                            ..setProductFilter(widget.pageEntity)
+                            ..initialSetup(widget.pageEntity)
                             ..loadInitialSearchProducts(
                                 productCollectionResult),
                         ),
