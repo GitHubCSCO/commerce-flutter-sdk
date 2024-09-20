@@ -106,11 +106,23 @@ class ProductScreen extends BaseStatelessWidget {
             pageEntity.category?.shortDescription ?? '';
         eventPropertyReferenceType = AnalyticsConstants.screenNameCategory;
       case ProductParentType.brand:
-      // TODO: Handle this case.
+        screenName = AnalyticsConstants.screenNameBrandProductList;
+        eventPropertyReferenceId = pageEntity.brandEntity?.id ?? '';
+        eventPropertyReferenceName = pageEntity.brandEntity?.name ?? '';
+        eventPropertyReferenceType =
+            AnalyticsConstants.screenNameBrandProductList;
       case ProductParentType.brandProductLine:
-      // TODO: Handle this case.
+        screenName = AnalyticsConstants.screenNameBrandProductLineProductList;
+        eventPropertyReferenceId = pageEntity.brandProductLine?.id ?? '';
+        eventPropertyReferenceName = pageEntity.brandProductLine?.name ?? '';
+        eventPropertyReferenceType =
+            AnalyticsConstants.screenNameBrandProductLine;
       case ProductParentType.brandCategory:
-      // TODO: Handle this case.
+        screenName = AnalyticsConstants.screenNameBrandCategoryProductList;
+        eventPropertyReferenceId = pageEntity.categoryId ?? '';
+        eventPropertyReferenceName = pageEntity.brandEntityTitle ?? '';
+        eventPropertyReferenceType =
+            AnalyticsConstants.screenNameBrandCategory;
     }
 
     var viewScreenEvent =
