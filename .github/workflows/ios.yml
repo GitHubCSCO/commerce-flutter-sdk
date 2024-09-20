@@ -24,7 +24,7 @@ on:
       upload_build:
         description: "Upload build"
         required: false
-        default: "none"
+        default: "store"
         type: choice
         options:
           - none
