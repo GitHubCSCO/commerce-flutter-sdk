@@ -21,6 +21,9 @@ on:
           - qa
           - customers
           - dummy
+      version_code:
+        description: "Version Code (optional)"
+        required: false
       custom_test_group:
         description: "Custom Test Group (optional)"
         required: false
@@ -69,14 +72,24 @@ jobs:
               TEST_GROUP="${{ github.event.inputs.test_group }}"
           fi
 
+          VERSION_CODE="${{ github.event.inputs.version_code }}"
+
           echo "Using RELEASE_ENV: $RELEASE_ENV"
           echo "Using TEST_GROUP: $TEST_GROUP"
+          echo "Using VERSION_CODE: $VERSION_CODE"
 
-          if [ -z "$TEST_GROUP" ] || [ "$TEST_GROUP" == "none" ]; then
-              fastlane android "$RELEASE_ENV"
-          else
-              fastlane android "$RELEASE_ENV" release:"$TEST_GROUP"
+          # Build the fastlane command
+          FASTLANE_CMD="fastlane android $RELEASE_ENV"
+
+          if [ -n "$TEST_GROUP" ] && [ "$TEST_GROUP" != "none" ]; then
+              FASTLANE_CMD="$FASTLANE_CMD release:$TEST_GROUP"
           fi
+
+          if [ -n "$VERSION_CODE" ]; then
+              FASTLANE_CMD="$FASTLANE_CMD version_code:$VERSION_CODE"
+          fi
+          echo "Executing: $FASTLANE_CMD"
+          # $FASTLANE_CMD
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
