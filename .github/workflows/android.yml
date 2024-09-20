@@ -86,10 +86,10 @@ jobs:
           fi
 
           if [ -n "$VERSION_CODE" ]; then
-              FASTLANE_CMD="$FASTLANE_CMD version_code:$VERSION_CODE"
+              FASTLANE_CMD="$FASTLANE_CMD versionCode:$VERSION_CODE"
           fi
           echo "Executing: $FASTLANE_CMD"
-          # $FASTLANE_CMD
+          $FASTLANE_CMD
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
