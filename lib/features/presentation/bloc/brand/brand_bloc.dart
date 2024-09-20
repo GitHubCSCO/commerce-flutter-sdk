@@ -66,14 +66,14 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
           AnalyticsConstants.screenNameBrands,
         )
             .withProperty(
-            name: AnalyticsConstants.eventPropertySearchTerm,
-            strValue: event.query)
+                name: AnalyticsConstants.eventPropertySearchTerm,
+                strValue: event.query)
             .withProperty(
-            name: AnalyticsConstants.eventPropertyResultsCount,
-            strValue: resultsCount.toString())
+                name: AnalyticsConstants.eventPropertyResultsCount,
+                strValue: resultsCount.toString())
             .withProperty(
-            name: AnalyticsConstants.eventPropertySuccessful,
-            strValue: apiCallIsSuccessful.toString());
+                name: AnalyticsConstants.eventPropertySuccessful,
+                strValue: apiCallIsSuccessful.toString());
 
         _brandUseCase.trackEvent(viewScreenEvent);
       }

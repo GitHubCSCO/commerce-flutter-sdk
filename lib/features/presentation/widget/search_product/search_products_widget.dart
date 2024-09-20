@@ -164,6 +164,9 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                                 onApply: context
                                     .read<SearchProductsCubit>()
                                     .applyFilter,
+                                onReset: context
+                                    .read<SearchProductsCubit>()
+                                    .resetFilter,
                               ),
                             ],
                           ),

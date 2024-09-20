@@ -73,7 +73,8 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
 
     switch (entity.parentType) {
       case ProductParentType.search:
-      // TODO: Handle this case.
+        screenName = AnalyticsConstants.screenNameSearch;
+        eventPropertyReferenceType = AnalyticsConstants.screenNameSearch;
       case ProductParentType.category:
         screenName = AnalyticsConstants.screenNameProductList;
         eventPropertyReferenceId = entity.category?.id ?? '';
@@ -349,7 +350,38 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
       );
 
       await _loadSearchProducts();
+
+      var analyticsEvent =
+          AnalyticsEvent(AnalyticsConstants.eventFilter, screenName)
+              .withProperty(
+                  name: AnalyticsConstants.eventPropertyReferenceId,
+                  strValue: eventPropertyReferenceId)
+              .withProperty(
+                  name: AnalyticsConstants.eventPropertyReferenceName,
+                  strValue: eventPropertyReferenceName)
+              .withProperty(
+                  name: AnalyticsConstants.eventPropertyReferenceType,
+                  strValue: eventPropertyReferenceType)
+              .withProperty(
+                  name: AnalyticsConstants.eventPropertyFilterCount,
+                  strValue: selectedFiltersCount.toString());
+      _searchUseCase.trackEvent(analyticsEvent);
     }
+  }
+
+  void resetFilter() {
+    var analyticsEvent =
+        AnalyticsEvent(AnalyticsConstants.eventResetFilter, screenName)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyReferenceId,
+                strValue: eventPropertyReferenceId)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyReferenceName,
+                strValue: eventPropertyReferenceName)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyReferenceType,
+                strValue: eventPropertyReferenceType);
+    _searchUseCase.trackEvent(analyticsEvent);
   }
 
   int get selectedFiltersCount {

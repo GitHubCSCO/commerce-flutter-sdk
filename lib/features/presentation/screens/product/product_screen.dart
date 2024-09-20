@@ -98,7 +98,8 @@ class ProductScreen extends BaseStatelessWidget {
         eventPropertyReferenceType;
     switch (pageEntity.parentType) {
       case ProductParentType.search:
-      // TODO: Handle this case.
+        screenName = AnalyticsConstants.screenNameSearch;
+        eventPropertyReferenceType = AnalyticsConstants.screenNameSearch;
       case ProductParentType.category:
         screenName = AnalyticsConstants.screenNameProductList;
         eventPropertyReferenceId = pageEntity.category?.id ?? '';
@@ -121,8 +122,7 @@ class ProductScreen extends BaseStatelessWidget {
         screenName = AnalyticsConstants.screenNameBrandCategoryProductList;
         eventPropertyReferenceId = pageEntity.categoryId ?? '';
         eventPropertyReferenceName = pageEntity.brandEntityTitle ?? '';
-        eventPropertyReferenceType =
-            AnalyticsConstants.screenNameBrandCategory;
+        eventPropertyReferenceType = AnalyticsConstants.screenNameBrandCategory;
     }
 
     var viewScreenEvent =
