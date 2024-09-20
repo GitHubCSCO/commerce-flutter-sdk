@@ -21,6 +21,15 @@ on:
           - qa
           - customers
           - dummy
+      upload_build:
+        description: "Upload build"
+        required: false
+        default: "none"
+        type: choice
+        options:
+          - none
+          - firebase
+          - store
       version_code:
         description: "Version Code (optional)"
         required: false
@@ -74,9 +83,12 @@ jobs:
 
           VERSION_CODE="${{ github.event.inputs.version_code }}"
 
+          UPLOAD_BUILD="${{ github.event.inputs.upload_build }}"
+
           echo "Using RELEASE_ENV: $RELEASE_ENV"
           echo "Using TEST_GROUP: $TEST_GROUP"
           echo "Using VERSION_CODE: $VERSION_CODE"
+          echo "Using UPLOAD_BUILD: $UPLOAD_BUILD"
 
           # Build the fastlane command
           FASTLANE_CMD="fastlane android $RELEASE_ENV"
@@ -88,6 +100,11 @@ jobs:
           if [ -n "$VERSION_CODE" ]; then
               FASTLANE_CMD="$FASTLANE_CMD versionCode:$VERSION_CODE"
           fi
+
+          if [ -n "$UPLOAD_BUILD" ]; then
+              FASTLANE_CMD="$FASTLANE_CMD uploadBuild:$UPLOAD_BUILD"
+          fi
+
           echo "Executing: $FASTLANE_CMD"
           $FASTLANE_CMD
         env:
