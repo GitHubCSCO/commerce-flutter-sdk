@@ -10,6 +10,15 @@ on:
         options:
           - qa
           - beta
+      upload_build:
+        description: "Upload build"
+        required: false
+        default: "none"
+        type: choice
+        options:
+          - none
+          - firebase
+          - store
       test_group:
         description: "Tester group"
         required: false
@@ -62,14 +71,25 @@ jobs:
               TEST_GROUP="${{ github.event.inputs.test_group }}"
           fi
 
+          UPLOAD_BUILD="${{ github.event.inputs.upload_build }}"
+
           echo "Using RELEASE_ENV: $RELEASE_ENV"
           echo "Using TEST_GROUP: $TEST_GROUP"
+          echo "Using UPLOAD_BUILD: $UPLOAD_BUILD"
 
-          if [ -z "$TEST_GROUP" ] || [ "$TEST_GROUP" == "none" ]; then
-              fastlane ios "$RELEASE_ENV"
-          else
-              fastlane ios "$RELEASE_ENV" release:"$TEST_GROUP"
+          # Build the fastlane command
+          FASTLANE_CMD="fastlane ios $RELEASE_ENV"
+
+          if [ -n "$TEST_GROUP" ] && [ "$TEST_GROUP" != "none" ]; then
+              FASTLANE_CMD="$FASTLANE_CMD release:$TEST_GROUP"
           fi
+
+          if [ -n "$UPLOAD_BUILD" ]; then
+              FASTLANE_CMD="$FASTLANE_CMD uploadBuild:$UPLOAD_BUILD"
+          fi
+
+          echo "Executing: $FASTLANE_CMD"
+          $FASTLANE_CMD
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
@@ -77,6 +97,13 @@ jobs:
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+      - name: Upload IPA as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts
+          path: |
+            build/ios/iphoneos/release/commerce_flutter_app.ipa
   android:
     runs-on: macos-latest
     steps:
@@ -120,14 +147,25 @@ jobs:
               TEST_GROUP="${{ github.event.inputs.test_group }}"
           fi
 
+          UPLOAD_BUILD="${{ github.event.inputs.upload_build }}"
+
           echo "Using RELEASE_ENV: $RELEASE_ENV"
           echo "Using TEST_GROUP: $TEST_GROUP"
+          echo "Using UPLOAD_BUILD: $UPLOAD_BUILD"
 
-          if [ -z "$TEST_GROUP" ] || [ "$TEST_GROUP" == "none" ]; then
-              fastlane android "$RELEASE_ENV"
-          else
-              fastlane android "$RELEASE_ENV" release:"$TEST_GROUP"
+          # Build the fastlane command
+          FASTLANE_CMD="fastlane android $RELEASE_ENV"
+
+          if [ -n "$TEST_GROUP" ] && [ "$TEST_GROUP" != "none" ]; then
+              FASTLANE_CMD="$FASTLANE_CMD release:$TEST_GROUP"
           fi
+
+          if [ -n "$UPLOAD_BUILD" ]; then
+              FASTLANE_CMD="$FASTLANE_CMD uploadBuild:$UPLOAD_BUILD"
+          fi
+
+          echo "Executing: $FASTLANE_CMD"
+          $FASTLANE_CMD
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
