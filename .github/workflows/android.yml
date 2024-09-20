@@ -1,4 +1,4 @@
-name: Customer Build
+name: Customer Android Build
 on:
   workflow_dispatch:
     inputs:
@@ -26,57 +26,6 @@ on:
         required: false
 
 jobs:
-  ios:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: List
-        run: |
-          ls -l
-
-      - name: Install Flutter
-        id: flutter-action
-        uses: subosito/flutter-action@v2
-        with:
-          channel: "stable"
-          cache: true
-
-      - run: flutter --version
-
-      - run: flutter doctor -v
-
-      - uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          name: id_rsa
-          known_hosts: ${{ secrets.KNOWN_HOSTS }}
-
-      - name: Fastlane
-        run: |
-          RELEASE_ENV='${{ github.event.inputs.release_env }}'
-
-          if [ -n "${{ github.event.inputs.custom_test_group }}" ]; then
-              TEST_GROUP="${{ github.event.inputs.custom_test_group }}"
-          else
-              TEST_GROUP="${{ github.event.inputs.test_group }}"
-          fi
-
-          echo "Using RELEASE_ENV: $RELEASE_ENV"
-          echo "Using TEST_GROUP: $TEST_GROUP"
-
-          if [ -z "$TEST_GROUP" ] || [ "$TEST_GROUP" == "none" ]; then
-              fastlane ios "$RELEASE_ENV"
-          else
-              fastlane ios "$RELEASE_ENV" release:"$TEST_GROUP"
-          fi
-        env:
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
-          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
-          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
   android:
     runs-on: macos-latest
     steps:
