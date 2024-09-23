@@ -1,13 +1,20 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_app/core/mixins/product_list_item_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_attributes_entity.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductDetailsAttributesWidget extends StatefulWidget {
   final ProductDetailsAttributesEntity productDetailsAttributesEntity;
+  final String productNumber;
 
   const ProductDetailsAttributesWidget(
-      {Key? key, required this.productDetailsAttributesEntity})
-      : super(key: key);
+      {super.key,
+      required this.productDetailsAttributesEntity,
+      required this.productNumber});
 
   @override
   _ProductDetailsAttributesWidgetState createState() =>
@@ -18,9 +25,18 @@ class _ProductDetailsAttributesWidgetState
     extends State<ProductDetailsAttributesWidget> {
   bool _showAll = false;
 
+  void trackAttributesEvent() {
+    context.read<RootBloc>().add(RootAnalyticsEvent(AnalyticsEvent(
+            AnalyticsConstants.eventViewAttributes,
+            AnalyticsConstants.screenNameProductDetail)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyProductNumber,
+            strValue: widget.productNumber)));
+  }
+
   @override
   Widget build(BuildContext context) {
-    int itemCount = _showAll
+    var itemCount = _showAll
         ? widget.productDetailsAttributesEntity.productAttributes.length
         : (widget.productDetailsAttributesEntity.productAttributes.length > 3
             ? 3
@@ -50,7 +66,7 @@ class _ProductDetailsAttributesWidgetState
                     style: OptiTextStyles.subtitle,
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Expanded(
                   flex: 1,
                   child: Text(
@@ -68,6 +84,9 @@ class _ProductDetailsAttributesWidgetState
               onPressed: () {
                 setState(() {
                   _showAll = !_showAll;
+                  if (_showAll) {
+                    trackAttributesEvent();
+                  }
                 });
               },
               child: Text(_showAll ? 'Show less' : 'Show more'),

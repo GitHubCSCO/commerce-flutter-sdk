@@ -312,7 +312,8 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
           final productDetailsAttributesEntity =
               item as ProductDetailsAttributesEntity;
           widgets.add(buildProductDetailsAttributesWidget(
-              productDetailsAttributesEntity: productDetailsAttributesEntity));
+              productDetailsAttributesEntity: productDetailsAttributesEntity,
+              productNumber: product.getProductNumber()));
         default:
           break;
       }
@@ -418,9 +419,10 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
   }
 
   Widget buildProductDetailsAttributesWidget(
-      {required ProductDetailsAttributesEntity
-          productDetailsAttributesEntity}) {
+      {required ProductDetailsAttributesEntity productDetailsAttributesEntity,
+      required String productNumber}) {
     return ProductDetailsAttributesWidget(
-        productDetailsAttributesEntity: productDetailsAttributesEntity);
+        productDetailsAttributesEntity: productDetailsAttributesEntity,
+        productNumber: productNumber);
   }
 }
