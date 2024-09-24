@@ -104,7 +104,7 @@ class ProductCollectionBloc extends Bloc<ProductEvent, ProductState> {
                   strValue: resultsCount.toString())
               .withProperty(
                   name: AnalyticsConstants.eventPropertySuccessful,
-                  strValue: apiCallIsSuccessful.toString());
+                  boolValue: apiCallIsSuccessful);
       _searchUseCase.trackEvent(viewScreenEvent);
     }
   }

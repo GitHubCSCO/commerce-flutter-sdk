@@ -73,7 +73,7 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
                 strValue: resultsCount.toString())
             .withProperty(
                 name: AnalyticsConstants.eventPropertySuccessful,
-                strValue: apiCallIsSuccessful.toString());
+                boolValue: apiCallIsSuccessful);
 
         _brandUseCase.trackEvent(viewScreenEvent);
       }
