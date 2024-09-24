@@ -209,10 +209,8 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                   ),
                   onPressed: () async {
                     final result = (await GoRouter.of(context)
-                        .pushNamed(AppRoute.barcodeSearch.name) ?? '') as (
-                      String,
-                      BarcodeFormat
-                    );
+                            .pushNamed(AppRoute.barcodeSearch.name) ??
+                        '') as (String, BarcodeFormat);
                     if (!result.$1.isNullOrEmpty && context.mounted) {
                       await context
                           .read<SearchHistoryCubit>()
