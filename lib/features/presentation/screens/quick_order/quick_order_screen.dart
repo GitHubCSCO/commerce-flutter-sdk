@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
@@ -8,6 +9,7 @@ import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
@@ -27,6 +29,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/sty
 import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/barcode_scanner_view.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/vmi_checkout/vmi_checkout_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_input_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_list/quick_order_list_widget.dart';
@@ -40,14 +43,14 @@ import 'package:go_router/go_router.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class QuickOrderScreen extends StatelessWidget {
+class QuickOrderScreen extends BaseStatelessWidget {
   final ScanningMode _scanningMode;
 
   const QuickOrderScreen({super.key, required ScanningMode scanningMode})
       : _scanningMode = scanningMode;
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return MultiBlocProvider(providers: [
       BlocProvider<BarcodeScanBloc>(create: (context) => sl<BarcodeScanBloc>()),
       BlocProvider<StyleTraitCubit>(
@@ -72,6 +75,23 @@ class QuickOrderScreen extends StatelessWidget {
         },
       )
     ], child: QuickOrderPage(scanningMode: _scanningMode));
+  }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() {
+    String screenName;
+    switch (_scanningMode) {
+      case ScanningMode.quick:
+        screenName = AnalyticsConstants.screenNameQuickOrder;
+      case ScanningMode.create:
+        screenName = AnalyticsConstants.screenNameVmiCreateOrder;
+      case ScanningMode.count:
+        screenName = AnalyticsConstants.screenNameCountInventory;
+    }
+    return AnalyticsEvent(
+      AnalyticsConstants.eventViewScreen,
+      screenName,
+    );
   }
 }
 

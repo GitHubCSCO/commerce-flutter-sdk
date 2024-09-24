@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
@@ -122,8 +124,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         scanningMode == ScanningMode.create) {
       final result = await _quickOrderUseCase
           .getVmiBin(event.autocompleteProduct.binNumber);
-
-      await _addVmiOrderItem(result, emit, event.autocompleteProduct.binNumber);
+      await _addVmiOrderItem(result, emit, event.autocompleteProduct.binNumber,
+          AnalyticsConstants.eventSearchProduct);
     } else {
       final result = await _quickOrderUseCase.getProduct(
           event.autocompleteProduct.id!, event.autocompleteProduct);
@@ -138,7 +140,29 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     if (scanningMode == ScanningMode.count ||
         scanningMode == ScanningMode.create) {
       final result = await _quickOrderUseCase.getVmiBin(event.resultText);
-      await _addVmiOrderItem(result, emit, event.resultText);
+      await _addVmiOrderItem(
+          result, emit, event.resultText, AnalyticsConstants.eventScanBarcode);
+
+      String screenName;
+      switch (scanningMode) {
+        case ScanningMode.quick:
+          screenName = AnalyticsConstants.screenNameQuickOrder;
+        case ScanningMode.create:
+          screenName = AnalyticsConstants.screenNameVmiCreateOrder;
+        case ScanningMode.count:
+          screenName = AnalyticsConstants.screenNameCountInventory;
+      }
+      var trackEvent =
+          AnalyticsEvent(AnalyticsConstants.eventScanBarcode, screenName)
+              .withProperty(
+                  name: AnalyticsConstants.eventPropertyBarcode,
+                  strValue: event.resultText)
+              .withProperty(
+                  name: AnalyticsConstants.eventPropertySuccessful,
+                  strValue: (result.getResultSuccessValue() != null)
+                      ? 'success'
+                      : 'fail');
+      _quickOrderUseCase.trackEvent(trackEvent);
     } else {
       final result = await _quickOrderUseCase.getScanProduct(
           event.resultText, event.barcodeFormat);
@@ -399,8 +423,11 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     }
   }
 
-  Future<void> _addVmiOrderItem(Result<GetVmiBinResult, ErrorResponse> result,
-      Emitter<OrderListState> emit, String? searchValue) async {
+  Future<void> _addVmiOrderItem(
+      Result<GetVmiBinResult, ErrorResponse> result,
+      Emitter<OrderListState> emit,
+      String? searchValue,
+      String? eventName) async {
     await _getProductSetting();
 
     switch (result) {
