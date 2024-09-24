@@ -6,11 +6,10 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 part 'product_event.dart';
 part 'product_state.dart';
 
-//TODO confusing name: ProductCollectionBloc or ListProductBloc would've made sense
-class ProductBloc extends Bloc<ProductEvent, ProductState> {
+class ProductCollectionBloc extends Bloc<ProductEvent, ProductState> {
   final SearchUseCase _searchUseCase;
 
-  ProductBloc({required SearchUseCase searchUseCase})
+  ProductCollectionBloc({required SearchUseCase searchUseCase})
       : _searchUseCase = searchUseCase,
         super(ProductInitial()) {
     on<ProductLoadEvent>((event, emit) => _onProductLoadEvent(event, emit));

@@ -11,15 +11,18 @@ import 'package:url_launcher/url_launcher_string.dart';
 class BottomMenuWidget extends StatelessWidget {
   final List<ToolMenu> toolMenuList;
   final String websitePath;
+  final String? screenName;
   final bool isViewOnWebsiteEnable;
 
   BottomMenuWidget({
     super.key,
     List<ToolMenu>? toolMenuList,
     String? websitePath,
+    String? screenName,
     bool? isViewOnWebsiteEnable,
   })  : toolMenuList = toolMenuList ?? [],
         websitePath = websitePath ?? '',
+        screenName = screenName ?? '',
         isViewOnWebsiteEnable = isViewOnWebsiteEnable ?? true;
 
   @override
@@ -38,15 +41,18 @@ class BottomMenuWidget extends StatelessWidget {
 class BottomMenu extends StatelessWidget {
   final List<ToolMenu> toolMenuList;
   final String websitePath;
+  final String screenName;
   final bool isViewOnWebsiteEnable;
 
   BottomMenu({
     super.key,
     List<ToolMenu>? toolMenuList,
     String? websitePath,
+    String? screenName,
     bool? isViewOnWebsiteEnable,
   })  : toolMenuList = toolMenuList ?? [],
         websitePath = websitePath ?? '',
+        screenName = screenName ?? '',
         isViewOnWebsiteEnable = isViewOnWebsiteEnable ?? true;
 
   @override
@@ -107,7 +113,9 @@ class BottomMenu extends StatelessWidget {
         onPressed: () {
           Navigator.pop(mContext);
           if (websitePath.isNotEmpty) {
-            context.read<BottomMenuCubit>().loadWebsiteUrl(websitePath);
+            context
+                .read<BottomMenuCubit>()
+                .loadWebsiteUrl(websitePath, screenName: screenName);
           }
         },
         child: Text(

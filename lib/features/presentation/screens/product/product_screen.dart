@@ -1,15 +1,18 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/mixins/list_grid_view_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
 import 'package:commerce_flutter_app/features/domain/enums/product_list_type.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/product/product_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product/product_collection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_product/search_products_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
@@ -73,18 +76,55 @@ class ProductPageEntity {
   }
 }
 
-class ProductScreen extends StatelessWidget {
+class ProductScreen extends BaseStatelessWidget {
   final ProductPageEntity pageEntity;
 
   const ProductScreen({super.key, required this.pageEntity});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider<ProductBloc>(
-      create: (context) =>
-          sl<ProductBloc>()..add(ProductLoadEvent(entity: pageEntity)),
+  Widget buildContent(BuildContext context) {
+    return BlocProvider<ProductCollectionBloc>(
+      create: (context) => sl<ProductCollectionBloc>()
+        ..add(ProductLoadEvent(entity: pageEntity)),
       child: ProductPage(pageEntity: pageEntity),
     );
+  }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() {
+    late String screenName,
+        eventPropertyReferenceId,
+        eventPropertyReferenceName,
+        eventPropertyReferenceType;
+    switch (pageEntity.parentType) {
+      case ProductParentType.search:
+      // TODO: Handle this case.
+      case ProductParentType.category:
+        screenName = AnalyticsConstants.screenNameProductList;
+        eventPropertyReferenceId = pageEntity.category?.id ?? '';
+        eventPropertyReferenceName =
+            pageEntity.category?.shortDescription ?? '';
+        eventPropertyReferenceType = AnalyticsConstants.screenNameCategory;
+      case ProductParentType.brand:
+      // TODO: Handle this case.
+      case ProductParentType.brandProductLine:
+      // TODO: Handle this case.
+      case ProductParentType.brandCategory:
+      // TODO: Handle this case.
+    }
+
+    var viewScreenEvent =
+        AnalyticsEvent(AnalyticsConstants.eventViewScreen, screenName)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyReferenceId,
+                strValue: eventPropertyReferenceId)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyReferenceName,
+                strValue: eventPropertyReferenceName)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyReferenceType,
+                strValue: eventPropertyReferenceType);
+    return viewScreenEvent;
   }
 }
 
@@ -132,7 +172,7 @@ class _ProductPageState extends State<ProductPage> with ListGridViewMenuMixIn {
                 ),
                 onPressed: () {
                   textEditingController.clear();
-                  context.read<ProductBloc>().add(ProductLoadEvent(
+                  context.read<ProductCollectionBloc>().add(ProductLoadEvent(
                       entity: widget.pageEntity.copyWith(query: '')));
                   context.closeKeyboard();
                 },
@@ -140,7 +180,7 @@ class _ProductPageState extends State<ProductPage> with ListGridViewMenuMixIn {
               onTapOutside: (p0) => context.closeKeyboard(),
               textInputAction: TextInputAction.search,
               onSubmitted: (String query) {
-                context.read<ProductBloc>().add(ProductLoadEvent(
+                context.read<ProductCollectionBloc>().add(ProductLoadEvent(
                     entity: widget.pageEntity
                         .copyWith(query: textEditingController.text)));
               },
@@ -148,7 +188,7 @@ class _ProductPageState extends State<ProductPage> with ListGridViewMenuMixIn {
             ),
           ),
           Expanded(
-            child: BlocBuilder<ProductBloc, ProductState>(
+            child: BlocBuilder<ProductCollectionBloc, ProductState>(
               builder: (context, state) {
                 switch (state) {
                   case ProductInitial():
