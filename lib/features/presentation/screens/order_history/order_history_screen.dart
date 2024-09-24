@@ -94,11 +94,6 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
               onTapOutside: (p0) => context.closeKeyboard(),
               textInputAction: TextInputAction.search,
               controller: _textEditingController,
-              onChanged: (value) {
-                unawaited(context
-                    .read<OrderHistoryCubit>()
-                    .searchQueryChanged(value));
-              },
               onSubmitted: (value) {
                 unawaited(context
                     .read<OrderHistoryCubit>()
