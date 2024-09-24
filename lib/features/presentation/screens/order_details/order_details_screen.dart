@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
@@ -32,8 +34,13 @@ class OrderDetailsScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => sl<OrderDetailsCubit>()
-            ..loadOrderDetails(orderNumber, isFromVMI: isFromVMI),
+          create: (context) {
+            final cubit = sl<OrderDetailsCubit>();
+            unawaited(
+              cubit.loadOrderDetails(orderNumber, isFromVMI: isFromVMI),
+            );
+            return cubit;
+          },
         ),
         BlocProvider(
           create: (context) => sl<BottomMenuCubit>(), // for print path
@@ -45,8 +52,7 @@ class OrderDetailsScreen extends StatelessWidget {
           listener: (context, state) {
             switch (state) {
               case BottomMenuWebsiteUrlLoaded():
-                launchUrlString(state.url);
-                break;
+                unawaited(launchUrlString(state.url));
               case BottomMenuWebsiteUrlFailed():
                 displayDialogWidget(
                   context: context,
@@ -59,7 +65,6 @@ class OrderDetailsScreen extends StatelessWidget {
                     ),
                   ],
                 );
-                break;
             }
           },
           child: const OrderDetailsPage(),
@@ -95,7 +100,7 @@ class OrderDetailsPage extends StatelessWidget {
 
           if (state.orderStatus == OrderStatus.reorderSuccess) {
             Navigator.of(context, rootNavigator: true).pop();
-            context.read<CartCountCubit>().onCartItemChange();
+            unawaited(context.read<CartCountCubit>().onCartItemChange());
             CustomSnackBar.showSnackBarMessage(
               context,
               state.errorMessage ?? '',
@@ -216,9 +221,11 @@ class OrderDetailsPage extends StatelessWidget {
                           confirmDialog(
                             context: context,
                             onConfirm: () {
-                              context
-                                  .read<OrderDetailsCubit>()
-                                  .reorderAllProducts();
+                              unawaited(
+                                context
+                                    .read<OrderDetailsCubit>()
+                                    .reorderAllProducts(),
+                              );
                             },
                             message: LocalizationConstants.addOrderContentToCart
                                 .localized(),
@@ -245,14 +252,13 @@ class _OptionsMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<OrderDetailsCubit, OrderDetailsState>(
       builder: (context, state) {
-        String? websitePathOrderNumber =
-            state.order.webOrderNumber.isNullOrEmpty
-                ? state.order.erpOrderNumber
-                : state.order.webOrderNumber;
+        var websitePathOrderNumber = state.order.webOrderNumber.isNullOrEmpty
+            ? state.order.erpOrderNumber
+            : state.order.webOrderNumber;
         String? websitePath = websitePathOrderNumber.isNullOrEmpty
             ? ''
             : 'redirectto/OrderDetailPage?ordernumber=${websitePathOrderNumber ?? ''}';
-        String printPath = PrintPaths.orderDetailPrintPath.format(
+        var printPath = PrintPaths.orderDetailPrintPath.format(
           [
             websitePathOrderNumber ?? '',
             state.order.shipToPostalCode ?? '',
@@ -265,9 +271,11 @@ class _OptionsMenu extends StatelessWidget {
             ToolMenu(
               title: LocalizationConstants.print.localized(),
               action: () {
-                context.read<BottomMenuCubit>().loadWebsiteUrl(
-                      printPath,
-                    );
+                unawaited(
+                  context.read<BottomMenuCubit>().loadWebsiteUrl(
+                        printPath,
+                      ),
+                );
               },
             ),
           ],
