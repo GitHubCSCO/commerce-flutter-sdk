@@ -1,0 +1,106 @@
+name: Customer iOS Build
+on:
+  workflow_dispatch:
+    inputs:
+      release_env:
+        description: "Environment"
+        required: true
+        default: "qa"
+        type: choice
+        options:
+          - qa
+          - beta
+      test_group:
+        description: "Tester group"
+        required: false
+        default: "none"
+        type: choice
+        options:
+          - all
+          - none
+          - qa
+          - customers
+          - dummy
+      upload_build:
+        description: "Upload build"
+        required: false
+        default: "store"
+        type: choice
+        options:
+          - none
+          - firebase
+          - store
+      custom_test_group:
+        description: "Custom Test Group (optional)"
+        required: false
+
+jobs:
+  ios:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: List
+        run: |
+          ls -l
+
+      - name: Install Flutter
+        id: flutter-action
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - run: flutter --version
+
+      - run: flutter doctor -v
+
+      - uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          name: id_rsa
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - name: Fastlane
+        run: |
+          RELEASE_ENV='${{ github.event.inputs.release_env }}'
+
+          if [ -n "${{ github.event.inputs.custom_test_group }}" ]; then
+              TEST_GROUP="${{ github.event.inputs.custom_test_group }}"
+          else
+              TEST_GROUP="${{ github.event.inputs.test_group }}"
+          fi
+
+          UPLOAD_BUILD="${{ github.event.inputs.upload_build }}"
+
+          echo "Using RELEASE_ENV: $RELEASE_ENV"
+          echo "Using TEST_GROUP: $TEST_GROUP"
+          echo "Using UPLOAD_BUILD: $UPLOAD_BUILD"
+
+          # Build the fastlane command
+          FASTLANE_CMD="fastlane ios $RELEASE_ENV"
+
+          if [ -n "$TEST_GROUP" ] && [ "$TEST_GROUP" != "none" ]; then
+              FASTLANE_CMD="$FASTLANE_CMD release:$TEST_GROUP"
+          fi
+
+          if [ -n "$UPLOAD_BUILD" ]; then
+              FASTLANE_CMD="$FASTLANE_CMD uploadBuild:$UPLOAD_BUILD"
+          fi
+
+          echo "Executing: $FASTLANE_CMD"
+          $FASTLANE_CMD
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+      - name: Upload IPA as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts
+          path: |
+            build/ios/iphoneos/release/commerce_flutter_app.ipa
