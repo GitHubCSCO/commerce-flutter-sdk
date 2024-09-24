@@ -138,6 +138,11 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                                       .read<SearchProductsCubit>()
                                       .sortOrderChanged(sortOrder);
                                 },
+                                onSortOrderCancel: () {
+                                  context
+                                      .read<SearchProductsCubit>()
+                                      .sortOrderCancel();
+                                },
                                 selectedSortOrder: state.selectedSortOrder,
                               ),
                               SearchProductFilterWidget(
@@ -159,6 +164,9 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                                 onApply: context
                                     .read<SearchProductsCubit>()
                                     .applyFilter,
+                                onReset: context
+                                    .read<SearchProductsCubit>()
+                                    .resetFilter,
                               ),
                             ],
                           ),

@@ -1,5 +1,7 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/brand_usecase/brand_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -9,6 +11,7 @@ part 'brand_event.dart';
 
 class BrandBloc extends Bloc<BrandEvent, BrandState> {
   final BrandUseCase _brandUseCase;
+  final minimumNumberCharactersSearchLog = 3;
 
   BrandBloc({required BrandUseCase brandUseCase})
       : _brandUseCase = brandUseCase,
@@ -36,10 +39,16 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
       BrandAutoCompleteLoadEvent event, Emitter<BrandState> emit) async {
     if (event.query.isNotEmpty) {
       emit(BrandLoading());
+
+      var apiCallIsSuccessful = false;
+      var resultsCount = 0;
+
       final result = await _brandUseCase.getAutoCompleteBrands(event.query);
       switch (result) {
         case Success(value: final data):
           if (data != null && data.isNotEmpty) {
+            apiCallIsSuccessful = true;
+            resultsCount = data.length;
             emit(BrandAutoCompleteLoaded(data));
           } else {
             emit(BrandAutoCompleteFailed(
@@ -49,6 +58,24 @@ class BrandBloc extends Bloc<BrandEvent, BrandState> {
           emit(BrandAutoCompleteFailed(
               error: errorResponse.errorDescription ?? ''));
         default:
+      }
+
+      if (event.query.length >= minimumNumberCharactersSearchLog) {
+        var viewScreenEvent = AnalyticsEvent(
+          AnalyticsConstants.eventViewSearchResults,
+          AnalyticsConstants.screenNameBrands,
+        )
+            .withProperty(
+                name: AnalyticsConstants.eventPropertySearchTerm,
+                strValue: event.query)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyResultsCount,
+                strValue: resultsCount.toString())
+            .withProperty(
+                name: AnalyticsConstants.eventPropertySuccessful,
+                strValue: apiCallIsSuccessful.toString());
+
+        _brandUseCase.trackEvent(viewScreenEvent);
       }
     }
   }
