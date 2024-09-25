@@ -1,10 +1,13 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shipping_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/address_type.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/warehouse_extension.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/shipping_address_add_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
@@ -120,9 +123,16 @@ class BillingShippingWidget extends StatelessWidget {
     return list;
   }
 
+  void trackNewAddressCheckoutEvent(BuildContext context) {
+    context.read<RootBloc>().add(RootAnalyticsEvent(AnalyticsEvent(
+        AnalyticsConstants.eventNewAddressCheckout,
+        AnalyticsConstants.screenNameCheckout)));
+  }
+
   Widget _buildAddShippingAddressButton(BuildContext context) {
     return TextButton(
       onPressed: () {
+        trackNewAddressCheckoutEvent(context);
         AppRoute.addShippingAddress.navigateBackStack(context, extra:
             ShippingAddressAddCallbackHelper(onShippingAddressAdded: (shiptTo) {
           context.read<CheckoutBloc>().add(AddShiptoAddressEvent(shiptTo));

@@ -1,12 +1,15 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/credit_card_add_callback_helper.dart';
@@ -229,9 +232,16 @@ class CheckoutPaymentDetails extends StatelessWidget {
         );
   }
 
+  void trackNewPaymentCheckoutEvent(BuildContext context) {
+    context.read<RootBloc>().add(RootAnalyticsEvent(AnalyticsEvent(
+        AnalyticsConstants.eventNewPaymentCheckout,
+        AnalyticsConstants.screenNameCheckout)));
+  }
+
   Widget _buildAddPaymentMethodButton(BuildContext context) {
     return TextButton(
       onPressed: () {
+        trackNewPaymentCheckoutEvent(context);
         AppRoute.addCreditCard.navigateBackStack(context,
             extra: CreditCardAddCallbackHelper(
                 addCreditCardEntity:

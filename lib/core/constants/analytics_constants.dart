@@ -128,6 +128,11 @@ class AnalyticsConstants {
   static const String eventQuickOrderAddToList = "add_to_list";
   static const String eventQuickOrderClear = "clear_quick_order";
   static const String eventQuickOrderAddToCart = "add_to_cart";
+  static const String eventApplyPromoCart = "apply_promo_cart";
+  static const String eventAddDiscountCheckout = "add_discount_checkout";
+  static const String eventNewPaymentCheckout = "new_payment_checkout";
+  static const String eventNewAddressCheckout = "new_address_checkout";
+  static const String eventPromoCode = "promo_code";
   static const String eventQuickOrderAddProduct = "add_product_quick_order";
   static const String eventQuickOrderRemoveProduct =
       "remove_product_quick_order";
@@ -177,6 +182,7 @@ class AnalyticsConstants {
   static const String eventPropertyListId = "list_id";
   static const String eventPropertyOrderId = "order_id";
   static const String eventPropertyErpOrderNumber = "erp_order_number";
+  static const String eventPropertyErpNumber = "erp_number";
   static const String eventPropertyWebOrderNumber = "web_order_number";
   static const String eventPropertyQty = "qty";
   static const String eventPropertyViewProductGallery = "view_product_gallery";
