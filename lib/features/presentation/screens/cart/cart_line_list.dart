@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CartLineWidgetList extends StatelessWidget {
+  final String? oderNumber;
   final bool? showClearCart;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
@@ -17,6 +18,7 @@ class CartLineWidgetList extends StatelessWidget {
   final void Function(BuildContext) onCartChangeCallBack;
 
   CartLineWidgetList({
+    required this.oderNumber,
     required this.cartLineEntities,
     required this.onCartChangeCallBack,
     this.showClearCart,
@@ -49,6 +51,7 @@ class CartLineWidgetList extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CartContentHeaderWidget(
+                orderNumber: oderNumber,
                 showClearCart: showClearCart,
                 cartCount: cartLineEntities.length,
               ),
@@ -62,6 +65,7 @@ class CartLineWidgetList extends StatelessWidget {
                           onCartQuantityChangedCallback: (quantity) {
                             context.read<CartContentBloc>().add(
                                   CartContentQuantityChangedEvent(
+                                    orderNumber: oderNumber,
                                     cartLineEntity: cartLineEntity.copyWith(
                                         qtyOrdered: quantity),
                                   ),
@@ -70,6 +74,7 @@ class CartLineWidgetList extends StatelessWidget {
                           onCartLineRemovedCallback: (cartLineEntity) {
                             context.read<CartContentBloc>().add(
                                 CartContentRemoveEvent(
+                                    orderNumber: oderNumber,
                                     cartLine: CartLineEntityMapper.toModel(
                                         cartLineEntity)));
                           },

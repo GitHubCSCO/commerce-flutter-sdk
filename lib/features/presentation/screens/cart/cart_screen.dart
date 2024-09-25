@@ -27,6 +27,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubi
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_header_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line_list.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_payment_summary_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
@@ -244,6 +245,13 @@ class CartPage extends StatelessWidget {
                             padding: const EdgeInsets.all(24),
                             child: TertiaryButton(
                               onPressed: () {
+                                trackContinueShoppingEvent(
+                                    context,
+                                    context
+                                            .read<CartPageBloc>()
+                                            .cart
+                                            ?.orderNumber ??
+                                        '');
                                 AppRoute.shop.navigate(context);
                               },
                               text: LocalizationConstants.continueShopping
@@ -273,6 +281,44 @@ class CartPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void trackContinueShoppingEvent(BuildContext context, String orderNumber) {
+    context.read<RootBloc>().add(RootAnalyticsEvent(AnalyticsEvent(
+            AnalyticsConstants.eventContinueShopping,
+            AnalyticsConstants.screenNameCart)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyOrderNumber,
+            strValue: orderNumber)));
+  }
+
+  void trackAddToListEvent(BuildContext context, String orderNumber) {
+    context.read<RootBloc>().add(RootAnalyticsEvent(AnalyticsEvent(
+                AnalyticsConstants.eventCartToListSelected,
+                AnalyticsConstants.screenNameCart)
+            .withProperty(
+          name: AnalyticsConstants.eventPropertyOrderNumber,
+          strValue: orderNumber,
+        )));
+  }
+
+  void trackAddToListSuccessfulEvent(
+      BuildContext context, String orderGrandTotal) {
+    context.read<RootBloc>().add(RootAnalyticsEvent(AnalyticsEvent(
+            AnalyticsConstants.eventBeginCheckout,
+            AnalyticsConstants.screenNameCheckout)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyValue,
+            strValue: orderGrandTotal)));
+  }
+
+  void trackBeginCheckoutEvent(BuildContext context, String orderNumber) {
+    context.read<RootBloc>().add(RootAnalyticsEvent(AnalyticsEvent(
+            AnalyticsConstants.eventCartToListSuccessful,
+            AnalyticsConstants.screenNameCart)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyOrderNumber,
+            strValue: orderNumber)));
   }
 
   Widget _buildCheckoutButton(BuildContext context) {
@@ -323,13 +369,18 @@ class CartPage extends StatelessWidget {
   void handleAuthStatusForAddToWishList(
       BuildContext context, AuthStatus status) {
     if (status == AuthStatus.authenticated) {
+      trackClearCartSelectedEvent(
+          context, context.read<CartPageBloc>().cart?.orderNumber ?? '');
       final addCartLines = context.read<CartPageBloc>().getAddCartLines();
       WishListCallbackHelper.addItemsToWishList(
         context,
         addToCartCollection: WishListAddToCartCollection(
           wishListLines: addCartLines,
         ),
-        onAddedToCart: null,
+        onAddedToCart: () {
+          trackClearCartSuccessfulEvent(
+              context, context.read<CartPageBloc>().cart?.orderNumber ?? '');
+        },
       );
     } else {
       showSignInDialog(context,
@@ -350,6 +401,8 @@ class CartPage extends StatelessWidget {
   }
 
   void navigateToCheckout(BuildContext context, CartPageBloc cartPageBloc) {
+    trackBeginCheckoutEvent(context,
+        context.read<CartPageBloc>().cart?.orderGrandTotalDisplay ?? '');
     AppRoute.checkout.navigateBackStack(context, extra: cartPageBloc.cart);
   }
 
@@ -461,6 +514,7 @@ class CartPage extends StatelessWidget {
               }
             },
             child: CartLineWidgetList(
+              oderNumber: context.read<CartPageBloc>().cart?.orderNumber ?? '',
               cartLineEntities: context.read<CartPageBloc>().getCartLines(),
               onCartChangeCallBack: (context) {
                 context.read<CartCountCubit>().loadCurrentCartCount();
