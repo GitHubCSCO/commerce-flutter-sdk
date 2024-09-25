@@ -124,8 +124,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         scanningMode == ScanningMode.create) {
       final result = await _quickOrderUseCase
           .getVmiBin(event.autocompleteProduct.binNumber);
-      await _addVmiOrderItem(result, emit, event.autocompleteProduct.binNumber,
-          AnalyticsConstants.eventSearchProduct);
+      await _addVmiOrderItem(result, emit, event.autocompleteProduct.binNumber);
     } else {
       final result = await _quickOrderUseCase.getProduct(
           event.autocompleteProduct.id!, event.autocompleteProduct);
@@ -140,12 +139,12 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     if (scanningMode == ScanningMode.count ||
         scanningMode == ScanningMode.create) {
       final result = await _quickOrderUseCase.getVmiBin(event.resultText);
-      await _addVmiOrderItem(
-          result, emit, event.resultText, AnalyticsConstants.eventScanBarcode);
+      await _addVmiOrderItem(result, emit, event.resultText);
       _trackBarcodeScan(result, event.resultText);
     } else {
       final result = await _quickOrderUseCase.getScanProduct(
           event.resultText, event.barcodeFormat);
+      _trackBarcodeScan(result, event.resultText);
       if (result.getResultSuccessValue() != null) {
         await _addOrderItem(result, emit);
       } else {
@@ -156,11 +155,18 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   }
 
   void _trackBarcodeScan(
-      Result<GetVmiBinResult, ErrorResponse> result, String? barcode) {
+      Result<dynamic, ErrorResponse> result, String? barcode) {
     String screenName;
-    var scanState = (result.getResultSuccessValue() != null)
-        ? ScanState.success
-        : ScanState.fail;
+    var scanState = ScanState.fail;
+
+    final data = result.getResultSuccessValue();
+    if (data != null) {
+      if (data is GetVmiBinResult && data.vmiBins.length == 1) {
+        scanState = ScanState.success;
+      } else if (data is ProductEntity) {
+        scanState = ScanState.success;
+      }
+    }
 
     switch (scanningMode) {
       case ScanningMode.quick:
@@ -429,11 +435,8 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     }
   }
 
-  Future<void> _addVmiOrderItem(
-      Result<GetVmiBinResult, ErrorResponse> result,
-      Emitter<OrderListState> emit,
-      String? searchValue,
-      String? eventName) async {
+  Future<void> _addVmiOrderItem(Result<GetVmiBinResult, ErrorResponse> result,
+      Emitter<OrderListState> emit, String? searchValue) async {
     await _getProductSetting();
 
     switch (result) {
