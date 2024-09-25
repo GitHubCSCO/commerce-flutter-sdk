@@ -18,7 +18,7 @@ class BottomMenuCubit extends Cubit<BottomMenuState> {
     if (url != null) {
       if (screenName != null && screenName.isNotEmpty) {
         final viewOnWebsiteEvent =
-            AnalyticsEvent(AnalyticsConstants.eventViewScreen, screenName)
+            AnalyticsEvent(AnalyticsConstants.eventViewOnWebsite, screenName)
                 .withProperty(
                     name: AnalyticsConstants.eventPropertyUrl, strValue: url);
         _platformUseCase.trackEvent(viewOnWebsiteEvent);
