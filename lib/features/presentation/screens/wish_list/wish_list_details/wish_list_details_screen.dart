@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
@@ -9,6 +10,7 @@ import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
@@ -21,6 +23,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_delete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_details/wish_list_line/wish_list_line_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
@@ -31,7 +34,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 final GlobalKey _wishListDetailsPageScaffoldKey = GlobalKey();
 
-class WishListDetailsScreen extends StatelessWidget {
+class WishListDetailsScreen extends BaseStatelessWidget {
   final String wishListId;
   final void Function()? onWishListUpdated;
   final void Function()? onWishListDeleted;
@@ -44,7 +47,7 @@ class WishListDetailsScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return BlocProvider(
       create: (context) {
         final cubit = sl<WishListDetailsCubit>();
@@ -70,6 +73,17 @@ class WishListDetailsScreen extends StatelessWidget {
           ),
         );
       }),
+    );
+  }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() {
+    return AnalyticsEvent(
+      AnalyticsConstants.eventViewScreen,
+      AnalyticsConstants.screenNameListDetail,
+    ).withProperty(
+      name: AnalyticsConstants.eventPropertyListId,
+      strValue: wishListId,
     );
   }
 }
@@ -420,6 +434,9 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                                           )
                                           .ignore();
                                     },
+                                    onSortOrderCancel: context
+                                        .read<WishListDetailsCubit>()
+                                        .cancelSort,
                                     selectedSortOrder: state.sortOrder,
                                   )
                                 ],
@@ -560,6 +577,7 @@ class _OptionsMenu extends StatelessWidget {
     return BlocBuilder<WishListDetailsCubit, WishListDetailsState>(
       builder: (context, state) {
         return BottomMenuWidget(
+          screenName: AnalyticsConstants.screenNameListDetail,
           websitePath: WebsitePaths.listDetailsWebsitePath.format(
             [
               state.wishList.id ?? '',

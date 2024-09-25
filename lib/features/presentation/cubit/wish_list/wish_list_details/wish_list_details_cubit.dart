@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/settings/wish_list_settings_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_collection_entity.dart';
@@ -94,7 +96,51 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       ),
     );
 
+    final analyticsEvent = AnalyticsEvent(
+      AnalyticsConstants.eventSort,
+      AnalyticsConstants.screenNameSortSelection,
+    )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceId,
+          strValue: state.wishList.id,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceName,
+          strValue: state.wishList.name,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceType,
+          strValue: AnalyticsConstants.screenNameListDetail,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertySortOption,
+          strValue: sortOrder.value,
+        );
+
+    _wishListDetailsUsecase.trackEvent(analyticsEvent);
+
     await loadWishListLines(state.wishList);
+  }
+
+  void cancelSort() {
+    final analyticsEvent = AnalyticsEvent(
+      AnalyticsConstants.eventCancelSort,
+      AnalyticsConstants.screenNameSortSelection,
+    )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceId,
+          strValue: state.wishList.id,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceName,
+          strValue: state.wishList.name,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceType,
+          strValue: AnalyticsConstants.screenNameListDetail,
+        );
+
+    _wishListDetailsUsecase.trackEvent(analyticsEvent);
   }
 
   Future<void> searchQueryChanged(String query) async {
@@ -162,6 +208,36 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       );
     } else {
       emit(state.copyWith(status: WishListStatus.failure));
+    }
+
+    if (state.searchQuery.isNotEmpty) {
+      final analyticsEvent = AnalyticsEvent(
+        AnalyticsConstants.eventViewSearchResults,
+        AnalyticsConstants.screenNameListDetail,
+      )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertySearchTerm,
+            strValue: state.searchQuery,
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceId,
+            strValue: wishList.id ?? '',
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceName,
+            strValue: wishList.name ?? '',
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyResultsCount,
+            strValue:
+                wishListLines?.pagination?.totalItemCount?.toString() ?? '0',
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertySuccessful,
+            boolValue: wishListLines != null,
+          );
+
+      _wishListDetailsUsecase.trackEvent(analyticsEvent);
     }
   }
 
@@ -300,6 +376,18 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     final result = await _wishListDetailsUsecase.deleteWishList(
       wishListId: state.wishList.id,
     );
+
+    if (result == WishListStatus.listDeleteSuccess) {
+      final analyticsEvent = AnalyticsEvent(
+        AnalyticsConstants.eventDeleteList,
+        AnalyticsConstants.screenNameLists,
+      ).withProperty(
+        name: AnalyticsConstants.eventPropertyListId,
+        strValue: state.wishList.id,
+      );
+
+      _wishListDetailsUsecase.trackEvent(analyticsEvent);
+    }
 
     emit(state.copyWith(status: result));
   }
