@@ -54,7 +54,9 @@ class ShopPage extends StatelessWidget with BaseDynamicContentScreen {
     return Scaffold(
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(actions: <Widget>[
-        BottomMenuWidget(websitePath: websitePath),
+        BottomMenuWidget(
+            screenName: AnalyticsConstants.screenNameShop,
+            websitePath: websitePath),
       ], backgroundColor: Theme.of(context).colorScheme.surface),
       body: MultiBlocListener(
         listeners: [
