@@ -5,14 +5,12 @@ import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/mixins/list_grid_view_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
 import 'package:commerce_flutter_app/features/domain/enums/product_list_type.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product/product_collection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_product/search_products_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
@@ -76,67 +74,18 @@ class ProductPageEntity {
   }
 }
 
-class ProductScreen extends BaseStatelessWidget {
+class ProductScreen extends StatelessWidget {
   final ProductPageEntity pageEntity;
 
   const ProductScreen({super.key, required this.pageEntity});
 
   @override
-  Widget buildContent(BuildContext context) {
+  Widget build(BuildContext context) {
     return BlocProvider<ProductCollectionBloc>(
       create: (context) => sl<ProductCollectionBloc>()
         ..add(ProductLoadEvent(entity: pageEntity)),
       child: ProductPage(pageEntity: pageEntity),
     );
-  }
-
-  @override
-  AnalyticsEvent getAnalyticsEvent() {
-    late String screenName,
-        eventPropertyReferenceId,
-        eventPropertyReferenceName,
-        eventPropertyReferenceType;
-    switch (pageEntity.parentType) {
-      case ProductParentType.search:
-        screenName = AnalyticsConstants.screenNameSearch;
-        eventPropertyReferenceType = AnalyticsConstants.screenNameSearch;
-      case ProductParentType.category:
-        screenName = AnalyticsConstants.screenNameProductList;
-        eventPropertyReferenceId = pageEntity.category?.id ?? '';
-        eventPropertyReferenceName =
-            pageEntity.category?.shortDescription ?? '';
-        eventPropertyReferenceType = AnalyticsConstants.screenNameCategory;
-      case ProductParentType.brand:
-        screenName = AnalyticsConstants.screenNameBrandProductList;
-        eventPropertyReferenceId = pageEntity.brandEntity?.id ?? '';
-        eventPropertyReferenceName = pageEntity.brandEntity?.name ?? '';
-        eventPropertyReferenceType =
-            AnalyticsConstants.screenNameBrandProductList;
-      case ProductParentType.brandProductLine:
-        screenName = AnalyticsConstants.screenNameBrandProductLineProductList;
-        eventPropertyReferenceId = pageEntity.brandProductLine?.id ?? '';
-        eventPropertyReferenceName = pageEntity.brandProductLine?.name ?? '';
-        eventPropertyReferenceType =
-            AnalyticsConstants.screenNameBrandProductLine;
-      case ProductParentType.brandCategory:
-        screenName = AnalyticsConstants.screenNameBrandCategoryProductList;
-        eventPropertyReferenceId = pageEntity.categoryId ?? '';
-        eventPropertyReferenceName = pageEntity.brandEntityTitle ?? '';
-        eventPropertyReferenceType = AnalyticsConstants.screenNameBrandCategory;
-    }
-
-    var viewScreenEvent =
-        AnalyticsEvent(AnalyticsConstants.eventViewScreen, screenName)
-            .withProperty(
-                name: AnalyticsConstants.eventPropertyReferenceId,
-                strValue: eventPropertyReferenceId)
-            .withProperty(
-                name: AnalyticsConstants.eventPropertyReferenceName,
-                strValue: eventPropertyReferenceName)
-            .withProperty(
-                name: AnalyticsConstants.eventPropertyReferenceType,
-                strValue: eventPropertyReferenceType);
-    return viewScreenEvent;
   }
 }
 
@@ -166,6 +115,7 @@ class _ProductPageState extends State<ProductPage> with ListGridViewMenuMixIn {
             style: OptiTextStyles.titleLarge),
         actions: [
           BottomMenuWidget(
+              screenName: _getScreenName(widget.pageEntity),
               websitePath: _getWebsitePath(widget.pageEntity),
               toolMenuList: getToolMenu(context)),
         ],
@@ -278,5 +228,20 @@ class _ProductPageState extends State<ProductPage> with ListGridViewMenuMixIn {
       return entity.brandProductLine?.productListPagePath;
     }
     return null;
+  }
+
+  String? _getScreenName(ProductPageEntity entity) {
+    switch (entity.parentType) {
+      case ProductParentType.search:
+        return AnalyticsConstants.screenNameSearch;
+      case ProductParentType.category:
+        return AnalyticsConstants.screenNameProductList;
+      case ProductParentType.brand:
+        return AnalyticsConstants.screenNameBrandProductList;
+      case ProductParentType.brandProductLine:
+        return AnalyticsConstants.screenNameBrandProductLineProductList;
+      case ProductParentType.brandCategory:
+        return AnalyticsConstants.screenNameBrandCategoryProductList;
+    }
   }
 }
