@@ -1,5 +1,7 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
 import 'package:flutter/material.dart';
@@ -124,6 +126,15 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
           0;
       //This is a workaround for ICM-4422 where leading 0 in EAN-13 code gets dropped by the MLKit
       if (totalItemCount == 0 && barcodeFormat != null) {
+        _searchUseCase.trackEvent(AnalyticsEvent(
+                AnalyticsConstants.eventScanBarcode,
+                AnalyticsConstants.screenNameSearch)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyBarcode,
+                strValue: searchQuery)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyBarcodeFormat,
+                strValue: barcodeFormat?.name));
         /*
         For example we have a product: 012546011099
         It's UPC-A will be: 0-12546-01109-9

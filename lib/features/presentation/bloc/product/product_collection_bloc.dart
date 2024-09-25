@@ -69,7 +69,7 @@ class ProductCollectionBloc extends Bloc<ProductEvent, ProductState> {
           eventPropertyReferenceName;
       switch (entity.parentType) {
         case ProductParentType.search:
-        // TODO: Handle this case.
+          screenName = AnalyticsConstants.screenNameSearch;
         case ProductParentType.category:
           screenName = AnalyticsConstants.screenNameProductList;
           eventPropertyReferenceId = entity.category?.id ?? '';
@@ -104,7 +104,7 @@ class ProductCollectionBloc extends Bloc<ProductEvent, ProductState> {
                   strValue: resultsCount.toString())
               .withProperty(
                   name: AnalyticsConstants.eventPropertySuccessful,
-                  strValue: apiCallIsSuccessful.toString());
+                  boolValue: apiCallIsSuccessful);
       _searchUseCase.trackEvent(viewScreenEvent);
     }
   }
