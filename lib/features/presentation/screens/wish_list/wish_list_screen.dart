@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
@@ -35,12 +37,16 @@ class WishListsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<WishListCubit>()..loadWishLists(),
+      create: (context) {
+        final cubit = sl<WishListCubit>();
+        unawaited(cubit.loadWishLists());
+        return cubit;
+      },
       child: Builder(builder: (context) {
         return BlocListener<WishListHandlerCubit, WishListHandlerState>(
           listener: (context, state) {
             if (state.status == WishListHandlerStatus.shouldRefreshWishList) {
-              context.read<WishListCubit>().loadWishLists();
+              unawaited(context.read<WishListCubit>().loadWishLists());
               context.read<WishListHandlerCubit>().resetState();
             }
           },
@@ -81,9 +87,11 @@ class _WishListsPageState extends State<WishListsPage> {
         actions: [
           _OptionsMenu(
             onWishListCreated: () {
-              _wishListPageScaffoldKey.currentContext
-                  ?.read<WishListCubit>()
-                  .loadWishLists();
+              unawaited(
+                _wishListPageScaffoldKey.currentContext
+                    ?.read<WishListCubit>()
+                    .loadWishLists(),
+              );
             },
           ),
         ],
@@ -104,9 +112,11 @@ class _WishListsPageState extends State<WishListsPage> {
                 onPressed: () {
                   _textEditingController.clear();
 
-                  context
-                      .read<WishListCubit>()
-                      .searchQueryChanged(_textEditingController.text);
+                  unawaited(
+                    context
+                        .read<WishListCubit>()
+                        .searchQueryChanged(_textEditingController.text),
+                  );
                   context.closeKeyboard();
                 },
               ),
@@ -114,17 +124,23 @@ class _WishListsPageState extends State<WishListsPage> {
               textInputAction: TextInputAction.search,
               controller: _textEditingController,
               onChanged: (value) {
-                context.read<WishListCubit>().searchQueryChanged(value);
+                unawaited(
+                  context.read<WishListCubit>().searchQueryChanged(value),
+                );
               },
               onSubmitted: (value) {
-                context.read<WishListCubit>().searchQueryChanged(value);
+                unawaited(
+                  context.read<WishListCubit>().searchQueryChanged(value),
+                );
               },
             ),
           ),
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
-                context.read<WishListCubit>().loadWishLists();
+                unawaited(
+                  context.read<WishListCubit>().loadWishLists(),
+                );
               },
               child: BlocConsumer<WishListCubit, WishListState>(
                 listener: (context, state) {
@@ -138,7 +154,9 @@ class _WishListsPageState extends State<WishListsPage> {
                       context,
                       LocalizationConstants.listDeleted.localized(),
                     );
-                    context.read<WishListCubit>().loadWishLists();
+                    unawaited(
+                      context.read<WishListCubit>().loadWishLists(),
+                    );
                   }
 
                   if (state.status == WishListStatus.listDeleteFailure) {
@@ -239,7 +257,9 @@ class _WishListsSectionState extends State<_WishListsSection> {
 
   void _onScroll() {
     if (_isBottom) {
-      context.read<WishListCubit>().loadMoreWishlists();
+      unawaited(
+        context.read<WishListCubit>().loadMoreWishlists(),
+      );
     }
   }
 
@@ -347,14 +367,18 @@ class _WishListItem extends StatelessWidget {
           },
           extra: WishListScreenCallbackHelper(
             onWishListUpdated: () {
-              _wishListPageScaffoldKey.currentContext
-                  ?.read<WishListCubit>()
-                  .loadWishLists();
+              unawaited(
+                _wishListPageScaffoldKey.currentContext
+                    ?.read<WishListCubit>()
+                    .loadWishLists(),
+              );
             },
             onWishListDeleted: () {
-              _wishListPageScaffoldKey.currentContext
-                  ?.read<WishListCubit>()
-                  .loadWishLists();
+              unawaited(
+                _wishListPageScaffoldKey.currentContext
+                    ?.read<WishListCubit>()
+                    .loadWishLists(),
+              );
             },
           ),
         ),
