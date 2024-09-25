@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
@@ -44,15 +46,20 @@ class WishListDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          sl<WishListDetailsCubit>()..loadWishListDetails(wishListId),
+      create: (context) {
+        final cubit = sl<WishListDetailsCubit>();
+        unawaited(cubit.loadWishListDetails(wishListId));
+        return cubit;
+      },
       child: Builder(builder: (context) {
         return BlocListener<WishListHandlerCubit, WishListHandlerState>(
           listener: (context, state) {
             if (state.status == WishListHandlerStatus.shouldRefreshWishList) {
-              context
-                  .read<WishListDetailsCubit>()
-                  .loadWishListDetails(wishListId);
+              unawaited(
+                context
+                    .read<WishListDetailsCubit>()
+                    .loadWishListDetails(wishListId),
+              );
               context.read<WishListHandlerCubit>().resetState();
             }
           },
@@ -120,20 +127,23 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                 ),
                 onPressed: () {
                   _textEditingController.clear();
-                  context
-                      .read<WishListDetailsCubit>()
-                      .searchQueryChanged(_textEditingController.text);
+                  unawaited(
+                    context
+                        .read<WishListDetailsCubit>()
+                        .searchQueryChanged(_textEditingController.text),
+                  );
                   context.closeKeyboard();
                 },
               ),
               onTapOutside: (p0) => context.closeKeyboard(),
               textInputAction: TextInputAction.search,
               controller: _textEditingController,
-              onChanged: (value) {
-                context.read<WishListDetailsCubit>().searchQueryChanged(value);
-              },
               onSubmitted: (value) {
-                context.read<WishListDetailsCubit>().searchQueryChanged(value);
+                unawaited(
+                  context
+                      .read<WishListDetailsCubit>()
+                      .searchQueryChanged(value),
+                );
               },
             ),
           ),
@@ -148,7 +158,9 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
               child: BlocConsumer<WishListDetailsCubit, WishListDetailsState>(
                 listener: (context, state) {
                   if (state.status == WishListStatus.listAddToCartSuccess) {
-                    context.read<CartCountCubit>().onCartItemChange();
+                    unawaited(
+                      context.read<CartCountCubit>().onCartItemChange(),
+                    );
                     CustomSnackBar.showWishListAddToCart(context);
                   }
 
@@ -178,9 +190,11 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                       actions: [
                         TextButton(
                           onPressed: () {
-                            context
-                                .read<WishListDetailsCubit>()
-                                .addWishListToCart(ignoreOutOfStock: true);
+                            unawaited(
+                              context
+                                  .read<WishListDetailsCubit>()
+                                  .addWishListToCart(ignoreOutOfStock: true),
+                            );
                             Navigator.of(context).pop();
                           },
                           child: Text(LocalizationConstants.oK.localized()),
@@ -211,7 +225,9 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                         context
                             .read<WishListDetailsCubit>()
                             .siteMessageAddToCartSuccess);
-                    context.read<CartCountCubit>().onCartItemChange();
+                    unawaited(
+                      context.read<CartCountCubit>().onCartItemChange(),
+                    );
                   }
 
                   if (state.status == WishListStatus.listLineAddToCartFailure) {
@@ -224,9 +240,11 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
 
                   if (state.status == WishListStatus.listLineDeleteSuccess) {
                     CustomSnackBar.showProductDeleted(context);
-                    context
-                        .read<WishListDetailsCubit>()
-                        .loadWishListLines(state.wishList);
+                    unawaited(
+                      context
+                          .read<WishListDetailsCubit>()
+                          .loadWishListLines(state.wishList),
+                    );
                   }
 
                   if (state.status == WishListStatus.listLineDeleteFailure) {
@@ -421,9 +439,11 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                         child: PrimaryButton(
                           isEnabled: state.wishList.canAddAllToCart == true,
                           onPressed: () {
-                            context
-                                .read<WishListDetailsCubit>()
-                                .addWishListToCart();
+                            unawaited(
+                              context
+                                  .read<WishListDetailsCubit>()
+                                  .addWishListToCart(),
+                            );
                           },
                           text: LocalizationConstants.addListToCart.localized(),
                         ),
@@ -454,7 +474,9 @@ class _WishListLinesSectionState extends State<_WishListLinesSection> {
 
   void _onScroll() {
     if (_isBottom) {
-      context.read<WishListDetailsCubit>().loadMoreWishListLines();
+      unawaited(
+        context.read<WishListDetailsCubit>().loadMoreWishListLines(),
+      );
     }
   }
 
@@ -552,11 +574,13 @@ class _OptionsMenu extends StatelessWidget {
                   extra: WishListInfoScreenCallbackHelper(
                     wishList: state.wishList,
                     onWishListUpdated: () {
-                      _wishListDetailsPageScaffoldKey.currentContext
-                          ?.read<WishListDetailsCubit>()
-                          .loadWishListDetails(
-                            state.wishList.id ?? '',
-                          );
+                      unawaited(
+                        _wishListDetailsPageScaffoldKey.currentContext
+                            ?.read<WishListDetailsCubit>()
+                            .loadWishListDetails(
+                              state.wishList.id ?? '',
+                            ),
+                      );
                       if (onWishListUpdated != null) {
                         onWishListUpdated!();
                       }
@@ -577,7 +601,11 @@ class _OptionsMenu extends StatelessWidget {
                     confirmText: LocalizationConstants.save.localized(),
                     existingValue: state.wishList.name ?? '',
                     onSubmit: (text) {
-                      context.read<WishListDetailsCubit>().renameWishList(text);
+                      unawaited(
+                        context
+                            .read<WishListDetailsCubit>()
+                            .renameWishList(text),
+                      );
                     },
                   );
                 },
@@ -605,7 +633,11 @@ class _OptionsMenu extends StatelessWidget {
                       ),
                       TextButton(
                         onPressed: () {
-                          context.read<WishListDetailsCubit>().leaveWishList();
+                          unawaited(
+                            context
+                                .read<WishListDetailsCubit>()
+                                .leaveWishList(),
+                          );
                           Navigator.of(context).pop();
                         },
                         child: Text(LocalizationConstants.leave.localized()),
@@ -624,7 +656,9 @@ class _OptionsMenu extends StatelessWidget {
                     wishList: state.wishList,
                     context: context,
                     onDelete: () {
-                      context.read<WishListDetailsCubit>().deleteWishList();
+                      unawaited(
+                        context.read<WishListDetailsCubit>().deleteWishList(),
+                      );
                     },
                   );
                 },
