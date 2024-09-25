@@ -1,3 +1,5 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/biometric_usecase/biometric_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -33,6 +35,16 @@ class BiometricControllerCubit extends Cubit<BiometricControllerState> {
     emit(BiometricControllerLoading());
     final enabled =
         await _biometricUsecase.isBiometricAuthenticationEnableForCurrentUser();
+
+    if (enabled) {
+      _biometricUsecase.trackEvent(AnalyticsEvent(
+          AnalyticsConstants.eventEnableBiometric,
+          AnalyticsConstants.screenNameSettings));
+    } else {
+      _biometricUsecase.trackEvent(AnalyticsEvent(
+          AnalyticsConstants.eventDisableBiometric,
+          AnalyticsConstants.screenNameSettings));
+    }
 
     enabled
         ? emit(BiometricControllerEnabled())

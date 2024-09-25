@@ -395,6 +395,18 @@ class _LoginPageState extends State<LoginPage> {
                                                 : LocalizationConstants.touchID
                                                     .localized();
 
+                                    var biometricDisplayOptionForEvent =
+                                        Platform.isAndroid
+                                            ? LocalizationConstants
+                                                .fingerprint.keyword
+                                            : biometricOption ==
+                                                    DeviceAuthenticationOption
+                                                        .faceID
+                                                ? LocalizationConstants
+                                                    .faceID.keyword
+                                                : LocalizationConstants
+                                                    .touchID.keyword;
+
                                     return Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
@@ -403,7 +415,8 @@ class _LoginPageState extends State<LoginPage> {
                                             await context
                                                 .read<LoginCubit>()
                                                 .onBiometricLoginSubmit(
-                                                    biometricOption);
+                                                    biometricOption,
+                                                    biometricDisplayOptionForEvent);
                                           },
                                           text: 'Use $biometricDisplayOption',
                                         ),

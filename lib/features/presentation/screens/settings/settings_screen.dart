@@ -1,29 +1,33 @@
 import 'dart:io';
 
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_controller/biometric_controller_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends BaseStatelessWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -40,6 +44,12 @@ class SettingsScreen extends StatelessWidget {
       ],
       child: const SettingsPage(),
     );
+  }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() {
+    return AnalyticsEvent(AnalyticsConstants.eventViewScreen,
+        AnalyticsConstants.screenNameSettings);
   }
 }
 
@@ -145,15 +155,25 @@ class _SettingsListWidget extends StatelessWidget {
   }
 }
 
+void trackClearCacheEvent(BuildContext context) {
+  context.read<RootBloc>().add(RootAnalyticsEvent(AnalyticsEvent(
+      AnalyticsConstants.eventClearCache,
+      AnalyticsConstants.screenNameSettings)));
+}
+
 final settingsItems = [
   const _BiometricListTile(),
   _SettingsListItemWidget(
-    onTap: (BuildContext context) => showClearCacheDialog(context),
+    onTap: (BuildContext context) {
+      showClearCacheDialog(context);
+    },
     title: LocalizationConstants.clearCache.localized(),
   ),
   _SettingsListItemWidget(
     title: LocalizationConstants.languages.localized(),
-    onTap: (BuildContext context) => AppRoute.language.navigate(context),
+    onTap: (BuildContext context) {
+      AppRoute.language.navigate(context);
+    },
     showTrailing: true,
   ),
   // TODO - Enable this later when we implement admin login
@@ -175,6 +195,7 @@ void showClearCacheDialog(BuildContext context) {
       ),
       DialogPlainButton(
         onPressed: () async {
+          trackClearCacheEvent(context);
           await context.read<SettingsDomainCubit>().clearCache();
           Navigator.of(context).pop();
         },
