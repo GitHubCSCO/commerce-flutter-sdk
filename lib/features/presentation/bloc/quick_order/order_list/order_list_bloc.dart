@@ -142,27 +142,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
       final result = await _quickOrderUseCase.getVmiBin(event.resultText);
       await _addVmiOrderItem(
           result, emit, event.resultText, AnalyticsConstants.eventScanBarcode);
-
-      String screenName;
-      switch (scanningMode) {
-        case ScanningMode.quick:
-          screenName = AnalyticsConstants.screenNameQuickOrder;
-        case ScanningMode.create:
-          screenName = AnalyticsConstants.screenNameVmiCreateOrder;
-        case ScanningMode.count:
-          screenName = AnalyticsConstants.screenNameCountInventory;
-      }
-      var trackEvent =
-          AnalyticsEvent(AnalyticsConstants.eventScanBarcode, screenName)
-              .withProperty(
-                  name: AnalyticsConstants.eventPropertyBarcode,
-                  strValue: event.resultText)
-              .withProperty(
-                  name: AnalyticsConstants.eventPropertySuccessful,
-                  strValue: (result.getResultSuccessValue() != null)
-                      ? 'success'
-                      : 'fail');
-      _quickOrderUseCase.trackEvent(trackEvent);
+      _trackBarcodeScan(result, event.resultText);
     } else {
       final result = await _quickOrderUseCase.getScanProduct(
           event.resultText, event.barcodeFormat);
@@ -173,6 +153,32 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
             event.resultText, event.barcodeFormat, emit);
       }
     }
+  }
+
+  void _trackBarcodeScan(
+      Result<GetVmiBinResult, ErrorResponse> result, String? barcode) {
+    String screenName;
+    var scanState = (result.getResultSuccessValue() != null)
+        ? ScanState.success
+        : ScanState.fail;
+
+    switch (scanningMode) {
+      case ScanningMode.quick:
+        screenName = AnalyticsConstants.screenNameQuickOrder;
+      case ScanningMode.create:
+        screenName = AnalyticsConstants.screenNameVmiCreateOrder;
+      case ScanningMode.count:
+        screenName = AnalyticsConstants.screenNameCountInventory;
+    }
+    var trackEvent =
+        AnalyticsEvent(AnalyticsConstants.eventScanBarcode, screenName)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyBarcode,
+                strValue: barcode)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertySuccessful,
+                strValue: scanState.name);
+    _quickOrderUseCase.trackEvent(trackEvent);
   }
 
   void _onOrderListItemQuantityChangeEvent(
