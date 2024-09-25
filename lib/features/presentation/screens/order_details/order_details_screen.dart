@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
@@ -218,6 +221,19 @@ class OrderDetailsPage extends StatelessWidget {
                       PrimaryButton(
                         text: LocalizationConstants.reorder.localized(),
                         onPressed: () {
+                          context.read<RootBloc>().add(
+                                RootAnalyticsEvent(
+                                  context
+                                      .read<OrderDetailsCubit>()
+                                      .currentOrderAnalyticEvent(
+                                        AnalyticsEvent(
+                                          AnalyticsConstants.eventSelectReorder,
+                                          AnalyticsConstants
+                                              .screenNameOrderDetail,
+                                        ),
+                                      ),
+                                ),
+                              );
                           confirmDialog(
                             context: context,
                             onConfirm: () {
@@ -226,6 +242,22 @@ class OrderDetailsPage extends StatelessWidget {
                                     .read<OrderDetailsCubit>()
                                     .reorderAllProducts(),
                               );
+                            },
+                            onCancel: () {
+                              context.read<RootBloc>().add(
+                                    RootAnalyticsEvent(
+                                      context
+                                          .read<OrderDetailsCubit>()
+                                          .currentOrderAnalyticEvent(
+                                            AnalyticsEvent(
+                                              AnalyticsConstants
+                                                  .eventCancelReorder,
+                                              AnalyticsConstants
+                                                  .screenNameOrderDetail,
+                                            ),
+                                          ),
+                                    ),
+                                  );
                             },
                             message: LocalizationConstants.addOrderContentToCart
                                 .localized(),
@@ -267,6 +299,7 @@ class _OptionsMenu extends StatelessWidget {
 
         return BottomMenuWidget(
           websitePath: websitePath,
+          screenName: AnalyticsConstants.screenNameOrderDetail,
           toolMenuList: [
             ToolMenu(
               title: LocalizationConstants.print.localized(),
@@ -276,6 +309,17 @@ class _OptionsMenu extends StatelessWidget {
                         printPath,
                       ),
                 );
+                context.read<RootBloc>().add(
+                      RootAnalyticsEvent(
+                        AnalyticsEvent(
+                          AnalyticsConstants.eventPrintPdf,
+                          AnalyticsConstants.screenNameOrderDetail,
+                        ).withProperty(
+                          name: AnalyticsConstants.eventPropertyUrl,
+                          strValue: printPath,
+                        ),
+                      ),
+                    );
               },
             ),
           ],
