@@ -33,6 +33,7 @@ class BottomMenuWidget extends StatelessWidget {
         toolMenuList: toolMenuList,
         websitePath: websitePath,
         isViewOnWebsiteEnable: isViewOnWebsiteEnable,
+        screenName: screenName,
       ),
     );
   }

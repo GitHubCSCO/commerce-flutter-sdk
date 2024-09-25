@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
@@ -32,8 +37,13 @@ class OrderDetailsScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => sl<OrderDetailsCubit>()
-            ..loadOrderDetails(orderNumber, isFromVMI: isFromVMI),
+          create: (context) {
+            final cubit = sl<OrderDetailsCubit>();
+            unawaited(
+              cubit.loadOrderDetails(orderNumber, isFromVMI: isFromVMI),
+            );
+            return cubit;
+          },
         ),
         BlocProvider(
           create: (context) => sl<BottomMenuCubit>(), // for print path
@@ -45,8 +55,7 @@ class OrderDetailsScreen extends StatelessWidget {
           listener: (context, state) {
             switch (state) {
               case BottomMenuWebsiteUrlLoaded():
-                launchUrlString(state.url);
-                break;
+                unawaited(launchUrlString(state.url));
               case BottomMenuWebsiteUrlFailed():
                 displayDialogWidget(
                   context: context,
@@ -59,7 +68,6 @@ class OrderDetailsScreen extends StatelessWidget {
                     ),
                   ],
                 );
-                break;
             }
           },
           child: const OrderDetailsPage(),
@@ -95,7 +103,7 @@ class OrderDetailsPage extends StatelessWidget {
 
           if (state.orderStatus == OrderStatus.reorderSuccess) {
             Navigator.of(context, rootNavigator: true).pop();
-            context.read<CartCountCubit>().onCartItemChange();
+            unawaited(context.read<CartCountCubit>().onCartItemChange());
             CustomSnackBar.showSnackBarMessage(
               context,
               state.errorMessage ?? '',
@@ -213,12 +221,43 @@ class OrderDetailsPage extends StatelessWidget {
                       PrimaryButton(
                         text: LocalizationConstants.reorder.localized(),
                         onPressed: () {
+                          context.read<RootBloc>().add(
+                                RootAnalyticsEvent(
+                                  context
+                                      .read<OrderDetailsCubit>()
+                                      .currentOrderAnalyticEvent(
+                                        AnalyticsEvent(
+                                          AnalyticsConstants.eventSelectReorder,
+                                          AnalyticsConstants
+                                              .screenNameOrderDetail,
+                                        ),
+                                      ),
+                                ),
+                              );
                           confirmDialog(
                             context: context,
                             onConfirm: () {
-                              context
-                                  .read<OrderDetailsCubit>()
-                                  .reorderAllProducts();
+                              unawaited(
+                                context
+                                    .read<OrderDetailsCubit>()
+                                    .reorderAllProducts(),
+                              );
+                            },
+                            onCancel: () {
+                              context.read<RootBloc>().add(
+                                    RootAnalyticsEvent(
+                                      context
+                                          .read<OrderDetailsCubit>()
+                                          .currentOrderAnalyticEvent(
+                                            AnalyticsEvent(
+                                              AnalyticsConstants
+                                                  .eventCancelReorder,
+                                              AnalyticsConstants
+                                                  .screenNameOrderDetail,
+                                            ),
+                                          ),
+                                    ),
+                                  );
                             },
                             message: LocalizationConstants.addOrderContentToCart
                                 .localized(),
@@ -245,14 +284,13 @@ class _OptionsMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<OrderDetailsCubit, OrderDetailsState>(
       builder: (context, state) {
-        String? websitePathOrderNumber =
-            state.order.webOrderNumber.isNullOrEmpty
-                ? state.order.erpOrderNumber
-                : state.order.webOrderNumber;
+        var websitePathOrderNumber = state.order.webOrderNumber.isNullOrEmpty
+            ? state.order.erpOrderNumber
+            : state.order.webOrderNumber;
         String? websitePath = websitePathOrderNumber.isNullOrEmpty
             ? ''
             : 'redirectto/OrderDetailPage?ordernumber=${websitePathOrderNumber ?? ''}';
-        String printPath = PrintPaths.orderDetailPrintPath.format(
+        var printPath = PrintPaths.orderDetailPrintPath.format(
           [
             websitePathOrderNumber ?? '',
             state.order.shipToPostalCode ?? '',
@@ -261,12 +299,26 @@ class _OptionsMenu extends StatelessWidget {
 
         return BottomMenuWidget(
           websitePath: websitePath,
+          screenName: AnalyticsConstants.screenNameOrderDetail,
           toolMenuList: [
             ToolMenu(
               title: LocalizationConstants.print.localized(),
               action: () {
-                context.read<BottomMenuCubit>().loadWebsiteUrl(
-                      printPath,
+                unawaited(
+                  context.read<BottomMenuCubit>().loadWebsiteUrl(
+                        printPath,
+                      ),
+                );
+                context.read<RootBloc>().add(
+                      RootAnalyticsEvent(
+                        AnalyticsEvent(
+                          AnalyticsConstants.eventPrintPdf,
+                          AnalyticsConstants.screenNameOrderDetail,
+                        ).withProperty(
+                          name: AnalyticsConstants.eventPropertyUrl,
+                          strValue: printPath,
+                        ),
+                      ),
                     );
               },
             ),
