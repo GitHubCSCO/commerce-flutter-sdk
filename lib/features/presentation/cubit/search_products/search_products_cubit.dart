@@ -29,7 +29,8 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
   late String screenName,
       eventPropertyReferenceId,
       eventPropertyReferenceName,
-      eventPropertyReferenceType;
+      eventPropertyReferenceType,
+      eventPropertyDomain;
 
   SearchProductsCubit(
       {required SearchUseCase searchUseCase,
@@ -70,6 +71,7 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
     eventPropertyReferenceId = '';
     eventPropertyReferenceName = '';
     eventPropertyReferenceType = '';
+    eventPropertyDomain = '';
 
     switch (entity.parentType) {
       case ProductParentType.search:
@@ -98,6 +100,23 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
         eventPropertyReferenceName = entity.brandEntityTitle ?? '';
         eventPropertyReferenceType = AnalyticsConstants.screenNameBrandCategory;
     }
+    eventPropertyDomain = ClientConfig.hostUrl ?? '';
+
+    var viewScreenEvent =
+        AnalyticsEvent(AnalyticsConstants.eventViewScreen, screenName)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyReferenceId,
+                strValue: eventPropertyReferenceId)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyReferenceName,
+                strValue: eventPropertyReferenceName)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyReferenceType,
+                strValue: eventPropertyReferenceType)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyDomain,
+                strValue: eventPropertyDomain);
+    _searchUseCase.trackEvent(viewScreenEvent);
   }
 
   void _setProductFilter(ProductPageEntity entity) {

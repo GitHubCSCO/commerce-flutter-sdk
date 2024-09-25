@@ -1,4 +1,6 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/add_to_cart_usecase.dart';
@@ -13,7 +15,9 @@ class AddToCartCubit extends Cubit<AddToCartState> {
       : _addToCartUsecase = addToCartUsecase,
         super(AddToCartInitial());
 
-  Future<void> searchPorductAddToCard(String productId) async {
+  Future<void> searchProductAddToCard(ProductEntity product) async {
+    var productId = product.styleParentId ?? product.id;
+
     var addCartLine = AddCartLine(
       productId: productId,
     );
@@ -25,6 +29,13 @@ class AddToCartCubit extends Cubit<AddToCartState> {
 
     switch (response) {
       case Success(value: final data):
+        var analyticsEvent = AnalyticsEvent(
+          AnalyticsConstants.eventAddToCart,
+          AnalyticsConstants.screenNameProductList,
+        ).withProperty(
+            name: AnalyticsConstants.eventPropertyProductNumber,
+            strValue: product.erpNumber);
+        _addToCartUsecase.trackEvent(analyticsEvent);
         emit(AddToCartSuccess(addToCartMsg: productAddCartSiteMsg));
         break;
       case Failure(errorResponse: final errorResponse):
