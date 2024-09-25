@@ -3,33 +3,33 @@ on:
   workflow_dispatch:
     inputs:
       match_purpose:
-        description: 'Sync or Nuke'
+        description: "Sync or Nuke"
         required: true
-        default: 'sync'
+        default: "sync"
         type: choice
         options:
           - sync
           - nuke
       read_only:
-        description: 'Read only'
+        description: "Read only"
         required: true
-        default: 'true'
+        default: "true"
         type: choice
         options:
           - true
           - false
       release_env:
-        description: 'Environment'
+        description: "Environment"
         required: true
-        default: 'qa'
+        default: "qa"
         type: choice
         options:
           - qa
           - beta
       match_type:
-        description: 'Match type'
+        description: "Match type"
         required: true
-        default: 'all'
+        default: "all"
         type: choice
         options:
           - all
@@ -40,13 +40,13 @@ on:
 jobs:
   ios:
     runs-on: macos-latest
-    steps: 
+    steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: List
         run: |
           ls -l
-      
+
       - name: Extract branch name
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: extract_branch
