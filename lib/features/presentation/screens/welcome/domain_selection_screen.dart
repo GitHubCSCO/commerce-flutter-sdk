@@ -34,9 +34,9 @@ class DomainScreen extends BaseStatelessWidget {
 
   @override
   AnalyticsEvent getAnalyticsEvent() => AnalyticsEvent(
-    AnalyticsConstants.eventViewScreen,
-    AnalyticsConstants.screenNameDomainSelection,
-  );
+        AnalyticsConstants.eventViewScreen,
+        AnalyticsConstants.screenNameDomainSelection,
+      );
 }
 
 class DomainWelcomeScreen extends StatelessWidget {
