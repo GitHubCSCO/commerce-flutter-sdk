@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
@@ -122,7 +124,6 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         scanningMode == ScanningMode.create) {
       final result = await _quickOrderUseCase
           .getVmiBin(event.autocompleteProduct.binNumber);
-
       await _addVmiOrderItem(result, emit, event.autocompleteProduct.binNumber);
     } else {
       final result = await _quickOrderUseCase.getProduct(
@@ -139,9 +140,11 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
         scanningMode == ScanningMode.create) {
       final result = await _quickOrderUseCase.getVmiBin(event.resultText);
       await _addVmiOrderItem(result, emit, event.resultText);
+      _trackBarcodeScan(result, event.resultText);
     } else {
       final result = await _quickOrderUseCase.getScanProduct(
           event.resultText, event.barcodeFormat);
+      _trackBarcodeScan(result, event.resultText);
       if (result.getResultSuccessValue() != null) {
         await _addOrderItem(result, emit);
       } else {
@@ -149,6 +152,39 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
             event.resultText, event.barcodeFormat, emit);
       }
     }
+  }
+
+  void _trackBarcodeScan(
+      Result<dynamic, ErrorResponse> result, String? barcode) {
+    String screenName;
+    var scanState = ScanState.fail;
+
+    final data = result.getResultSuccessValue();
+    if (data != null) {
+      if (data is GetVmiBinResult && data.vmiBins.length == 1) {
+        scanState = ScanState.success;
+      } else if (data is ProductEntity) {
+        scanState = ScanState.success;
+      }
+    }
+
+    switch (scanningMode) {
+      case ScanningMode.quick:
+        screenName = AnalyticsConstants.screenNameQuickOrder;
+      case ScanningMode.create:
+        screenName = AnalyticsConstants.screenNameVmiCreateOrder;
+      case ScanningMode.count:
+        screenName = AnalyticsConstants.screenNameCountInventory;
+    }
+    var trackEvent =
+        AnalyticsEvent(AnalyticsConstants.eventScanBarcode, screenName)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyBarcode,
+                strValue: barcode)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertySuccessful,
+                strValue: scanState.name);
+    _quickOrderUseCase.trackEvent(trackEvent);
   }
 
   void _onOrderListItemQuantityChangeEvent(
