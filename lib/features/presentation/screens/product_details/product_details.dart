@@ -355,7 +355,6 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
   }
 
   // details add to cart widget
-
   Widget buildAddToCartWidget(
       ProductDetailsAddtoCartEntity detailsAddToCartEntity,
       BuildContext buildContext) {

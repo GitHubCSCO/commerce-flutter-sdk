@@ -29,10 +29,6 @@ class DomainCubit extends Cubit<DomainState> {
   Future<void> selectDomain(String domain) async {
     emit(DomainOperationInProgress());
 
-    _domainUsecase.trackEvent(AnalyticsEvent(
-        AnalyticsConstants.eventDomainSelection,
-        AnalyticsConstants.screenNameSettings));
-
     final result = await _domainUsecase.domainSelectHandler(domain);
 
     switch (result) {
