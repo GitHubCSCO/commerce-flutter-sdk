@@ -1,4 +1,6 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/enums/domain_change_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
 import 'package:equatable/equatable.dart';
@@ -30,6 +32,12 @@ class DomainCubit extends Cubit<DomainState> {
 
     switch (result) {
       case DomainChangeStatus.success:
+        var analyticsEvent = AnalyticsEvent(
+          AnalyticsConstants.eventDomainSelection,
+          AnalyticsConstants.screenNameDomainSelection,
+        ).withProperty(
+            name: AnalyticsConstants.eventPropertyDomain, strValue: domain);
+        _domainUsecase.trackEvent(analyticsEvent);
         emit(DomainLoaded(domain));
         break;
       case DomainChangeStatus.failedOffline:
