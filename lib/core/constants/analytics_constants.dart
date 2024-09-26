@@ -81,6 +81,7 @@ class AnalyticsConstants {
   static const String eventDeleteList = "delete_list";
   static const String eventCopyList = "copy_list";
   static const String eventAddListToCart = "add_list_to_cart";
+  static const String eventQtyIncDec = "qty_inc_dec";
   static const String eventLeaveList = "leave_list";
   static const String eventDeleteProduct = "delete_product";
   static const String eventAddProductToCart = "add_product_to_cart";
