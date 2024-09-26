@@ -1,18 +1,23 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_information/wish_list_information_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class WishListInformationScreen extends StatelessWidget {
+class WishListInformationScreen extends BaseStatelessWidget {
   const WishListInformationScreen({
     super.key,
     required this.wishList,
@@ -23,14 +28,28 @@ class WishListInformationScreen extends StatelessWidget {
   final void Function()? onWishListUpdated;
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          sl<WishListInformationCubit>()..initialize(wishList: wishList),
+      create: (context) {
+        final cubit = sl<WishListInformationCubit>();
+        unawaited(cubit.initialize(wishList: wishList));
+        return cubit;
+      },
       child: WishListInformationPage(
         wishList: wishList,
         onWishListUpdated: onWishListUpdated,
       ),
+    );
+  }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() {
+    return AnalyticsEvent(
+      AnalyticsConstants.eventViewListInformation,
+      AnalyticsConstants.screenNameListDetail,
+    ).withProperty(
+      name: AnalyticsConstants.eventPropertyListId,
+      strValue: wishList.id,
     );
   }
 }
@@ -156,10 +175,12 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                     return;
                   }
 
-                  context.read<WishListInformationCubit>().updateWishList(
-                        name: _listNameEditingController.text,
-                        description: _listDescriptionEditingController.text,
-                      );
+                  unawaited(
+                    context.read<WishListInformationCubit>().updateWishList(
+                          name: _listNameEditingController.text,
+                          description: _listDescriptionEditingController.text,
+                        ),
+                  );
                 },
               ),
             ]),
