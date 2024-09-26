@@ -295,6 +295,18 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     );
 
     emit(state.copyWith(status: result));
+
+    if (result == WishListStatus.listAddToCartSuccess) {
+      final analyticsEvent = AnalyticsEvent(
+        AnalyticsConstants.eventAddListToCart,
+        AnalyticsConstants.screenNameListDetail,
+      ).withProperty(
+        name: AnalyticsConstants.eventPropertyListId,
+        strValue: state.wishList.id,
+      );
+
+      _wishListDetailsUsecase.trackEvent(analyticsEvent);
+    }
   }
 
   Future<void> updateWishListLineQuantity(
@@ -343,6 +355,23 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     );
 
     emit(state.copyWith(status: result));
+
+    if (result == WishListStatus.listLineAddToCartSuccess) {
+      final analyticsEvent = AnalyticsEvent(
+        AnalyticsConstants.eventAddToCart,
+        AnalyticsConstants.screenNameListDetail,
+      )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyListId,
+            strValue: state.wishList.id,
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyProductNumber,
+            strValue: wishListLine.erpNumber,
+          );
+
+      _wishListDetailsUsecase.trackEvent(analyticsEvent);
+    }
   }
 
   Future<void> deleteWishListLine(WishListLineEntity wishListLine) async {
@@ -352,6 +381,18 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     );
 
     emit(state.copyWith(status: result));
+
+    if (result == WishListStatus.listLineDeleteSuccess) {
+      final analyticsEvent = AnalyticsEvent(
+        AnalyticsConstants.eventDeleteProduct,
+        AnalyticsConstants.screenNameListDetail,
+      ).withProperty(
+        name: AnalyticsConstants.eventPropertyListId,
+        strValue: state.wishList.id,
+      );
+
+      _wishListDetailsUsecase.trackEvent(analyticsEvent);
+    }
   }
 
   Future<void> renameWishList(String newName) async {
@@ -366,6 +407,16 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
         wishList: state.wishList.copyWith(name: newName),
         status: result,
       ));
+
+      final analyticsEvent = AnalyticsEvent(
+        AnalyticsConstants.eventRenameList,
+        AnalyticsConstants.screenNameListDetail,
+      ).withProperty(
+        name: AnalyticsConstants.eventPropertyListId,
+        strValue: state.wishList.id,
+      );
+
+      _wishListDetailsUsecase.trackEvent(analyticsEvent);
     } else {
       emit(state.copyWith(status: result));
     }
@@ -380,7 +431,7 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     if (result == WishListStatus.listDeleteSuccess) {
       final analyticsEvent = AnalyticsEvent(
         AnalyticsConstants.eventDeleteList,
-        AnalyticsConstants.screenNameLists,
+        AnalyticsConstants.screenNameListDetail,
       ).withProperty(
         name: AnalyticsConstants.eventPropertyListId,
         strValue: state.wishList.id,
@@ -400,6 +451,18 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     );
 
     emit(state.copyWith(status: result));
+
+    if (result == WishListStatus.listCopySuccess) {
+      final analyticsEvent = AnalyticsEvent(
+        AnalyticsConstants.eventCopyList,
+        AnalyticsConstants.screenNameListDetail,
+      ).withProperty(
+        name: AnalyticsConstants.eventPropertyListId,
+        strValue: state.wishList.id,
+      );
+
+      _wishListDetailsUsecase.trackEvent(analyticsEvent);
+    }
   }
 
   Future<void> leaveWishList() async {
@@ -409,6 +472,18 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     );
 
     emit(state.copyWith(status: result));
+
+    if (result == WishListStatus.listLeaveSuccess) {
+      final analyticsEvent = AnalyticsEvent(
+        AnalyticsConstants.eventLeaveList,
+        AnalyticsConstants.screenNameListDetail,
+      ).withProperty(
+        name: AnalyticsConstants.eventPropertyListId,
+        strValue: state.wishList.id,
+      );
+
+      _wishListDetailsUsecase.trackEvent(analyticsEvent);
+    }
   }
 
   bool canDeleteWishList({required WishListEntity wishList}) {
@@ -420,7 +495,6 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
 
   Future<String> getSiteMessage(
       String messageName, String defaultMessage) async {
-    return await _wishListDetailsUsecase.getSiteMessage(
-        messageName, defaultMessage);
+    return _wishListDetailsUsecase.getSiteMessage(messageName, defaultMessage);
   }
 }
