@@ -1,3 +1,5 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/biometric_usecase/biometric_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -10,6 +12,12 @@ class BiometricControllerCubit extends Cubit<BiometricControllerState> {
   BiometricControllerCubit({required BiometricUsecase biometricUsecase})
       : _biometricUsecase = biometricUsecase,
         super(BiometricControllerInitial());
+
+  String biometricTypeName = '';
+
+  void initialize({required String biometricTypeName}) {
+    this.biometricTypeName = biometricTypeName;
+  }
 
   Future<void> enableBiometric(String password) async {
     emit(BiometricControllerChangeLoading());
@@ -34,6 +42,16 @@ class BiometricControllerCubit extends Cubit<BiometricControllerState> {
     final enabled =
         await _biometricUsecase.isBiometricAuthenticationEnableForCurrentUser();
 
+    if (enabled) {
+      _biometricUsecase.trackEvent(AnalyticsEvent(
+          AnalyticsConstants.eventEnableBiometric,
+          AnalyticsConstants.screenNameSettings));
+    } else {
+      _biometricUsecase.trackEvent(AnalyticsEvent(
+          AnalyticsConstants.eventDisableBiometric,
+          AnalyticsConstants.screenNameSettings));
+    }
+
     enabled
         ? emit(BiometricControllerEnabled())
         : emit(BiometricControllerDisabled());
@@ -45,5 +63,21 @@ class BiometricControllerCubit extends Cubit<BiometricControllerState> {
     result
         ? emit(BiometricControllerChangeSuccessDisabled())
         : emit(BiometricControllerChangeFailure());
+  }
+
+  void trackBiometricSetupEvent(String result) {
+    final biometricSetupEvent = AnalyticsEvent(
+      AnalyticsConstants.eventBiometricSetup,
+      AnalyticsConstants.screenNameSignIn,
+    )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyResult,
+          strValue: result,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyLoginType,
+          strValue: biometricTypeName,
+        );
+    _biometricUsecase.trackEvent(biometricSetupEvent);
   }
 }

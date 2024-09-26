@@ -266,7 +266,8 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
       switch (item.detailsSectionType) {
         case ProdcutDeatilsPageWidgets.productDetailsSpecification:
           final specificationEntity = item as ProductDetailItemEntity;
-          widgets.add(buildExpandableDescriptionWidget(specificationEntity));
+          widgets.add(buildExpandableDescriptionWidget(
+              specificationEntity, product.getProductNumber()));
           break;
         case ProdcutDeatilsPageWidgets.productDetailsDescription:
           final detailsEntity = item as ProductDetailsDescriptionEntity;
@@ -342,8 +343,9 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
 
   // details expandable widgets
   Widget buildExpandableDescriptionWidget(
-      ProductDetailItemEntity specification) {
-    return ProductDetailsExpansionItemWidget(specification: specification);
+      ProductDetailItemEntity specification, String productNumber) {
+    return ProductDetailsExpansionItemWidget(
+        specification: specification, productNumber: productNumber);
   }
 
   // details general info widget

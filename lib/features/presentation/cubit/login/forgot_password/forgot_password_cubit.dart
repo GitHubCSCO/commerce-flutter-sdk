@@ -1,3 +1,5 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/settings/account_settings_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/forgot_password_usecase.dart';
@@ -18,6 +20,11 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
         );
 
   Future<void> resetPassword(String userName, AccountType accountType) async {
+    _forgotPasswordUseCase.trackEvent(AnalyticsEvent(
+      AnalyticsConstants.eventForgotPassword,
+      AnalyticsConstants.screenNameSignIn,
+    ));
+
     emit(state.copyWith(status: ForgotPasswordStatus.loading));
     final status = await _forgotPasswordUseCase.forgotPassword(
       userName: userName,

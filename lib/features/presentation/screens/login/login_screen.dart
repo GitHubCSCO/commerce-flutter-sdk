@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
@@ -22,6 +24,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/biometric_auth/
 import 'package:commerce_flutter_app/features/presentation/cubit/biometric_options/biometric_options_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/settings_domain/settings_domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -30,11 +33,11 @@ import 'package:go_router/go_router.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends BaseStatelessWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -68,6 +71,12 @@ class LoginScreen extends StatelessWidget {
       child: const LoginPage(),
     );
   }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() => AnalyticsEvent(
+        AnalyticsConstants.eventViewScreen,
+        AnalyticsConstants.screenNameSignIn,
+      );
 }
 
 class LoginPage extends StatefulWidget {
@@ -395,6 +404,18 @@ class _LoginPageState extends State<LoginPage> {
                                                 : LocalizationConstants.touchID
                                                     .localized();
 
+                                    var biometricDisplayOptionForEvent =
+                                        Platform.isAndroid
+                                            ? LocalizationConstants
+                                                .fingerprint.keyword
+                                            : biometricOption ==
+                                                    DeviceAuthenticationOption
+                                                        .faceID
+                                                ? LocalizationConstants
+                                                    .faceID.keyword
+                                                : LocalizationConstants
+                                                    .touchID.keyword;
+
                                     return Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
@@ -403,7 +424,8 @@ class _LoginPageState extends State<LoginPage> {
                                             await context
                                                 .read<LoginCubit>()
                                                 .onBiometricLoginSubmit(
-                                                    biometricOption);
+                                                    biometricOption,
+                                                    biometricDisplayOptionForEvent);
                                           },
                                           text: 'Use $biometricDisplayOption',
                                         ),
