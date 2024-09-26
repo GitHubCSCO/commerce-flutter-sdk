@@ -1,9 +1,11 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/forgot_password_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
@@ -11,11 +13,12 @@ import 'package:commerce_flutter_app/features/presentation/components/dialog.dar
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/login/forgot_password/forgot_password_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class ForgotPasswordScreen extends StatelessWidget {
+class ForgotPasswordScreen extends BaseStatelessWidget {
   final AccountType accountType;
 
   const ForgotPasswordScreen({
@@ -24,12 +27,18 @@ class ForgotPasswordScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<ForgotPasswordCubit>()..loadAccountSettings(),
       child: ForgotPasswordPage(accountType: accountType),
     );
   }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() => AnalyticsEvent(
+        AnalyticsConstants.eventViewForgotPassword,
+        AnalyticsConstants.screenNameSignIn,
+      );
 }
 
 class ForgotPasswordPage extends StatefulWidget {

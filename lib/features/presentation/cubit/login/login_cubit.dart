@@ -1,6 +1,8 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
@@ -32,6 +34,16 @@ class LoginCubit extends Cubit<LoginState> {
     );
   }
 
+  void trackSignInEvent(String loginType) {
+    loginUsecase.trackEvent(AnalyticsEvent(
+            AnalyticsConstants.eventSignIn, AnalyticsConstants.screenNameSignIn)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertySuccessful, boolValue: true)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyLoginType,
+            strValue: loginType));
+  }
+
   Future<void> initialize() async {
     emit(LoginInfoLoadingState());
     await _loadSiteMessages();
@@ -45,6 +57,7 @@ class LoginCubit extends Cubit<LoginState> {
     final loginStatus = loginResponse.loginStatus;
     switch (loginStatus) {
       case LoginStatus.loginSuccess:
+        trackSignInEvent('password');
         emit(const LoginSuccessState(loginStatus: LoginStatus.loginSuccess));
       case LoginStatus.loginSuccessBiometric:
         emit(const LoginSuccessState(
@@ -90,12 +103,14 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  Future<void> onBiometricLoginSubmit(DeviceAuthenticationOption option) async {
+  Future<void> onBiometricLoginSubmit(
+      DeviceAuthenticationOption option, String biometricDisplayOption) async {
     emit(LoginLoadingState());
 
     final loginStatus = await loginUsecase.authenticateBiometrically(option);
     switch (loginStatus) {
       case LoginStatus.loginSuccessBillToShipTo:
+        trackSignInEvent(biometricDisplayOption);
         await handleBillToShipTo();
         break;
       case LoginStatus.loginErrorOffline:
