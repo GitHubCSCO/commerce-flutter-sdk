@@ -13,6 +13,12 @@ class BiometricControllerCubit extends Cubit<BiometricControllerState> {
       : _biometricUsecase = biometricUsecase,
         super(BiometricControllerInitial());
 
+  String biometricTypeName = '';
+
+  void initialize({required String biometricTypeName}) {
+    this.biometricTypeName = biometricTypeName;
+  }
+
   Future<void> enableBiometric(String password) async {
     emit(BiometricControllerChangeLoading());
     final enabled =
@@ -57,5 +63,21 @@ class BiometricControllerCubit extends Cubit<BiometricControllerState> {
     result
         ? emit(BiometricControllerChangeSuccessDisabled())
         : emit(BiometricControllerChangeFailure());
+  }
+
+  void trackBiometricSetupEvent(String result) {
+    final biometricSetupEvent = AnalyticsEvent(
+      AnalyticsConstants.eventBiometricSetup,
+      AnalyticsConstants.screenNameSignIn,
+    )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyResult,
+          strValue: result,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyLoginType,
+          strValue: biometricTypeName,
+        );
+    _biometricUsecase.trackEvent(biometricSetupEvent);
   }
 }
