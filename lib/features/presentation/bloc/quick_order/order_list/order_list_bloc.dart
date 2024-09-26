@@ -692,7 +692,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   bool hidePricingEnable() => _pricingInventoryUseCase.getHidePricingEnable();
 
   String calculateSubtotal() {
-    if (productSettings == null) {
+    if (productSettings == null || quickOrderItemList.isEmpty) {
       return '';
     }
     var canSeeAllPrices = productSettings!.canSeePrices;

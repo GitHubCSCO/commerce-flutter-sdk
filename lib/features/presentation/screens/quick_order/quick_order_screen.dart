@@ -379,6 +379,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                         .spaceBetween,
                                                 children: [
                                                   Expanded(
+                                                    flex: 1,
                                                     child: Container(
                                                       padding:
                                                           const EdgeInsets.only(
@@ -407,12 +408,15 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                     ),
                                                   ),
                                                   if (!hidePricingEnable)
-                                                    Text(
-                                                      subTotal,
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                      style: OptiTextStyles
-                                                          .subtitle,
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Text(
+                                                        subTotal,
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                        style: OptiTextStyles
+                                                            .subtitle,
+                                                      ),
                                                     )
                                                 ],
                                               ),
