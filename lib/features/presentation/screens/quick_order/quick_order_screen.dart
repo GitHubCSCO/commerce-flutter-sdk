@@ -116,7 +116,6 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
