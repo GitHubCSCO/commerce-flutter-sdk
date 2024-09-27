@@ -116,6 +116,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
@@ -363,7 +364,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                       ),
                                       Container(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 32, vertical: 16),
+                                            horizontal: 32, vertical: 8),
                                         clipBehavior: Clip.antiAlias,
                                         decoration: const BoxDecoration(
                                             color: Colors.white),
@@ -379,7 +380,6 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                         .spaceBetween,
                                                 children: [
                                                   Expanded(
-                                                    flex: 1,
                                                     child: Container(
                                                       padding:
                                                           const EdgeInsets.only(
@@ -401,7 +401,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                                 .listTotal
                                                                 .localized(),
                                                         textAlign:
-                                                            TextAlign.start,
+                                                            TextAlign.left,
                                                         style: OptiTextStyles
                                                             .subtitle,
                                                       ),
@@ -409,11 +409,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                   ),
                                                   if (!hidePricingEnable)
                                                     Expanded(
-                                                      flex: 2,
                                                       child: Text(
                                                         subTotal,
                                                         textAlign:
-                                                            TextAlign.start,
+                                                            TextAlign.right,
                                                         style: OptiTextStyles
                                                             .subtitle,
                                                       ),
@@ -421,7 +420,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                 ],
                                               ),
                                             ),
-                                            const SizedBox(height: 20),
+                                            const SizedBox(height: 8),
                                             TertiaryButton(
                                               isEnabled:
                                                   (state is OrderListLoadedState &&
