@@ -201,7 +201,7 @@ class _LoginPageState extends State<LoginPage> {
                                     return DropdownMenuItem<
                                         Map<String, String>>(
                                       value: item,
-                                      child: Text(item['username']!),
+                                      child: Text(item['username'] ?? ''),
                                     );
                                   }).toList(),
                                   onChanged: (newValue) {
