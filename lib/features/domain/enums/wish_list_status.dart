@@ -34,6 +34,7 @@ enum WishListStatus {
   listDeleteLoading,
 
   listAddToCartSuccess,
+  listAddToCartPartialSuccess,
   listAddToCartFailure,
   listAddToCartFailureTimeOut,
   listAddToCartFailureOutOfStock,

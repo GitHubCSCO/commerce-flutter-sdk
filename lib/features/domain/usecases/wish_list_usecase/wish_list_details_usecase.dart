@@ -201,9 +201,16 @@ class WishListDetailsUsecase extends WishListUsecase {
 
     switch (result) {
       case Success(value: final value):
-        return value != null
-            ? WishListStatus.listAddToCartSuccess
-            : WishListStatus.listAddToCartFailure;
+        if (value == null) {
+          return WishListStatus.listAddToCartFailure;
+        }
+
+        if (value.notAllAddedToCart == true) {
+          return WishListStatus.listAddToCartPartialSuccess;
+        }
+
+        return WishListStatus.listAddToCartSuccess;
+
       case Failure(errorResponse: final errorResponse):
         final exception = errorResponse.exception;
         if (exception == null) {
