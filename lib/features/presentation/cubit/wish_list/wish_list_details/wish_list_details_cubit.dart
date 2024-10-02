@@ -52,6 +52,8 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       SiteMessageConstants.defaultDealerLocatorNoResultsMessage;
   String siteMessageAddToCartSuccess =
       SiteMessageConstants.defaultDealerLocatorNoResultsMessage;
+  String siteMessageNotAllAddedToCart =
+      SiteMessageConstants.defaultValueWishListNotAllAddedToCart;
 
   List<WishListLineSortOrder> get availableSortOrders =>
       _wishListDetailsUsecase.listLineAvailableSortOrders;
@@ -78,6 +80,10 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
         SiteMessageConstants.nameAddToCartSuccess,
         SiteMessageConstants.defaultValueAddToCartSuccess,
       ),
+      _wishListDetailsUsecase.getSiteMessage(
+        SiteMessageConstants.nameWishListNotAllAddedToCart,
+        SiteMessageConstants.defaultValueWishListNotAllAddedToCart,
+      ),
     ]);
 
     siteMessageMobileAppAlertCommunicationError = futureResult[0];
@@ -85,6 +91,7 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     siteMessageDealerLocatorNoResults = futureResult[2];
     siteMessageAddToCartFailed = futureResult[3];
     siteMessageAddToCartSuccess = futureResult[4];
+    siteMessageNotAllAddedToCart = futureResult[5];
 
     return;
   }
@@ -296,7 +303,8 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
 
     emit(state.copyWith(status: result));
 
-    if (result == WishListStatus.listAddToCartSuccess) {
+    if (result == WishListStatus.listAddToCartSuccess ||
+        result == WishListStatus.listAddToCartPartialSuccess) {
       final analyticsEvent = AnalyticsEvent(
         AnalyticsConstants.eventAddListToCart,
         AnalyticsConstants.screenNameListDetail,

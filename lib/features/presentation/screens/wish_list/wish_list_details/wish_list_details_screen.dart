@@ -194,6 +194,17 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                   }
 
                   if (state.status ==
+                      WishListStatus.listAddToCartPartialSuccess) {
+                    CustomSnackBar.showSnackBarMessage(
+                      context,
+                      context
+                          .read<WishListDetailsCubit>()
+                          .siteMessageNotAllAddedToCart,
+                      seconds: 3,
+                    );
+                  }
+
+                  if (state.status ==
                       WishListStatus.listAddToCartFailureOutOfStock) {
                     displayDialogWidget(
                       context: context,
