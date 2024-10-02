@@ -35,6 +35,12 @@ class BiometricControllerCubit extends Cubit<BiometricControllerState> {
     enabled
         ? emit(BiometricControllerChangeSuccessEnabled())
         : emit(BiometricControllerChangeFailure());
+
+    if (enabled) {
+      _biometricUsecase.trackEvent(AnalyticsEvent(
+          AnalyticsConstants.eventEnableBiometric,
+          AnalyticsConstants.screenNameSettings));
+    }
   }
 
   Future<void> checkBiometricEnabledForCurrentUser() async {
@@ -42,22 +48,16 @@ class BiometricControllerCubit extends Cubit<BiometricControllerState> {
     final enabled =
         await _biometricUsecase.isBiometricAuthenticationEnableForCurrentUser();
 
-    if (enabled) {
-      _biometricUsecase.trackEvent(AnalyticsEvent(
-          AnalyticsConstants.eventEnableBiometric,
-          AnalyticsConstants.screenNameSettings));
-    } else {
-      _biometricUsecase.trackEvent(AnalyticsEvent(
-          AnalyticsConstants.eventDisableBiometric,
-          AnalyticsConstants.screenNameSettings));
-    }
-
     enabled
         ? emit(BiometricControllerEnabled())
         : emit(BiometricControllerDisabled());
   }
 
   Future<void> disableBiometricAuthentication() async {
+    _biometricUsecase.trackEvent(AnalyticsEvent(
+        AnalyticsConstants.eventDisableBiometric,
+        AnalyticsConstants.screenNameSettings));
+
     emit(BiometricControllerChangeLoading());
     final result = await _biometricUsecase.disableBiometricAuthentication();
     result
