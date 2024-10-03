@@ -50,7 +50,7 @@ class ProductCollectionBloc extends Bloc<ProductEvent, ProductState> {
     switch (result) {
       case Success(value: final data):
         apiCallIsSuccessful = true;
-        resultsCount = data?.products?.length ?? 0;
+        resultsCount = data?.pagination?.totalItemCount ?? 0;
         emit(ProductLoaded(result: data));
       case Failure(errorResponse: final errorResponse):
         emit(ProductFailed(errorResponse.errorDescription ?? ''));
@@ -89,7 +89,7 @@ class ProductCollectionBloc extends Bloc<ProductEvent, ProductState> {
       }
 
       var viewScreenEvent =
-          AnalyticsEvent(AnalyticsConstants.eventViewScreen, screenName)
+          AnalyticsEvent(AnalyticsConstants.eventViewSearchResults, screenName)
               .withProperty(
                   name: AnalyticsConstants.eventPropertySearchTerm,
                   strValue: entity.query)
