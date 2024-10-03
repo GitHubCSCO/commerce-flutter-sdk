@@ -118,15 +118,18 @@ class _SettingsDomainSelectorWidget extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           PrimaryButton(
-            leadingIcon: SvgPicture.asset(
-              AssetConstants.iconChangeDomain,
-              semanticsLabel: 'Change domain icon',
-              fit: BoxFit.fitWidth,
-            ),
-            text: LocalizationConstants.changeDomain.localized(),
-            onPressed: () =>
-                AppRoute.domainSelection.navigateBackStack(context),
-          )
+              leadingIcon: SvgPicture.asset(
+                AssetConstants.iconChangeDomain,
+                semanticsLabel: 'Change domain icon',
+                fit: BoxFit.fitWidth,
+              ),
+              text: LocalizationConstants.changeDomain.localized(),
+              onPressed: () {
+                context.read<RootBloc>().add(RootAnalyticsEvent(AnalyticsEvent(
+                    AnalyticsConstants.eventChangeDomain,
+                    AnalyticsConstants.screenNameSettings)));
+                AppRoute.domainSelection.navigateBackStack(context);
+              })
         ],
       ),
     );
