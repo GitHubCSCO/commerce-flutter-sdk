@@ -16,6 +16,7 @@ import 'package:commerce_flutter_app/features/domain/enums/device_authentication
 import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/remote_config/remote_config_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
@@ -478,6 +479,17 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {
+                                        context.read<RootBloc>().add(
+                                              RootAnalyticsEvent(
+                                                AnalyticsEvent(
+                                                  AnalyticsConstants
+                                                      .eventViewPrivacyPolicy,
+                                                  AnalyticsConstants
+                                                      .screenNameSignIn,
+                                                ),
+                                              ),
+                                            );
+
                                         launchUrlString(
                                           context
                                                   .read<LoginCubit>()
@@ -495,6 +507,17 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {
+                                        context.read<RootBloc>().add(
+                                              RootAnalyticsEvent(
+                                                AnalyticsEvent(
+                                                  AnalyticsConstants
+                                                      .eventViewTermsOfUse,
+                                                  AnalyticsConstants
+                                                      .screenNameSignIn,
+                                                ),
+                                              ),
+                                            );
+
                                         launchUrlString(
                                           context
                                                   .read<LoginCubit>()
