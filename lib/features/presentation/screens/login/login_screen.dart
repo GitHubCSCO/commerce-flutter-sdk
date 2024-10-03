@@ -2,18 +2,21 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
 import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/remote_config/remote_config_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
@@ -456,6 +459,17 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {
+                                        context.read<RootBloc>().add(
+                                              RootAnalyticsEvent(
+                                                AnalyticsEvent(
+                                                  AnalyticsConstants
+                                                      .eventViewPrivacyPolicy,
+                                                  AnalyticsConstants
+                                                      .screenNameSignIn,
+                                                ),
+                                              ),
+                                            );
+
                                         launchUrlString(
                                           context
                                                   .read<LoginCubit>()
@@ -473,6 +487,17 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {
+                                        context.read<RootBloc>().add(
+                                              RootAnalyticsEvent(
+                                                AnalyticsEvent(
+                                                  AnalyticsConstants
+                                                      .eventViewTermsOfUse,
+                                                  AnalyticsConstants
+                                                      .screenNameSignIn,
+                                                ),
+                                              ),
+                                            );
+
                                         launchUrlString(
                                           context
                                                   .read<LoginCubit>()
