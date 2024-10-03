@@ -11,6 +11,14 @@ on:
           - qa
           - customers
           - test
+      analytics_config:
+        description: "Config to use"
+        required: true
+        default: "flutter"
+        type: choice
+        options:
+          - flutter
+          - qa_analytics
       release_tag1:
         description: "Tag1: add all tickets from Tag1-Tag2 or Tag1-Head with release notes (optional)"
         required: false
@@ -50,7 +58,7 @@ jobs:
         uses: actions/checkout@master
         with:
           repository: InsiteSoftware/commerce-mobile-build-scripts
-          ref: refs/heads/flutter
+          ref: refs/heads/${{ github.event.inputs.analytics_config }}
           token: ${{ secrets.my_pat }}
           path: build-scripts
       - name: List out everything
@@ -124,7 +132,7 @@ jobs:
         uses: actions/checkout@master
         with:
           repository: InsiteSoftware/commerce-mobile-build-scripts
-          ref: refs/heads/flutter
+          ref: refs/heads/${{ github.event.inputs.analytics_config }}
           token: ${{ secrets.my_pat }}
           path: build-scripts
       - name: List out everything
