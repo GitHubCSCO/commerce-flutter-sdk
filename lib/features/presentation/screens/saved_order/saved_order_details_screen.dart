@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/core/extensions/string_format_extension.dar
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
@@ -171,9 +172,10 @@ class OrderDetailsPage extends StatelessWidget {
                                 unitOfMeasure: cartLineEntity.unitOfMeasure,
                               );
 
-                              context
-                                  .read<SavedOrderDetailsCubit>()
-                                  .addToCart(addCartLine: addCartLine);
+                              context.read<SavedOrderDetailsCubit>().addToCart(
+                                  addCartLine: addCartLine,
+                                  productNumber:
+                                      cartLineEntity.getProductNumber());
                             }
 
                             if (cartLineEntity.canAddToCart != true) {
