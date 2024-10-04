@@ -1,10 +1,8 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_detail_item_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
@@ -36,7 +34,6 @@ import 'package:commerce_flutter_app/features/presentation/cubit/product_carouse
 import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/style_trait_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_add_to_cart_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_attributes_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_documents_widget.dart';
@@ -54,19 +51,20 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:commerce_flutter_app/core/extensions/html_string_extension.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class ProductDetailsScreen extends BaseStatelessWidget {
+class ProductDetailsScreen extends StatelessWidget {
   final String productId;
   final ProductEntity? product;
   const ProductDetailsScreen(
       {super.key, required this.productId, this.product});
 
   @override
-  Widget buildContent(BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ProductDetailsBloc>(
           create: (context) => sl<ProductDetailsBloc>()
-            ..add(FetchProductDetailsEvent(productId, product)),
+            ..add(FetchProductDetailsEvent(productId, product,
+                trackScreen: true)),
         ),
         BlocProvider<ProductDetailsPricingBloc>(
           create: (context) => sl<ProductDetailsPricingBloc>(),
@@ -80,17 +78,6 @@ class ProductDetailsScreen extends BaseStatelessWidget {
       ],
       child: ProductDetailsPage(productId, product),
     );
-  }
-
-  @override
-  AnalyticsEvent getAnalyticsEvent() {
-    var viewScreenEvent = AnalyticsEvent(AnalyticsConstants.eventViewScreen,
-            AnalyticsConstants.screenNameProductDetail)
-        .withProperty(
-            name: AnalyticsConstants.eventPropertyProductNumber,
-            strValue: product.getProductNumber().toString());
-
-    return viewScreenEvent;
   }
 }
 
