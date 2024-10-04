@@ -146,10 +146,10 @@ class ProductDetailsBloc
 
   void _trackViewScreen(ProductEntity? product) {
     var viewScreenEvent = AnalyticsEvent(AnalyticsConstants.eventViewScreen,
-        AnalyticsConstants.screenNameProductDetail)
+            AnalyticsConstants.screenNameProductDetail)
         .withProperty(
-        name: AnalyticsConstants.eventPropertyProductNumber,
-        strValue: product?.getProductNumber());
+            name: AnalyticsConstants.eventPropertyProductNumber,
+            strValue: product?.getProductNumber());
     _productDetailsUseCase.trackEvent(viewScreenEvent);
   }
 
