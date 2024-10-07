@@ -388,6 +388,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
           var newItem =
               _convertProductToQuickOrderItemEntity(product, quantity);
           _insertItemIntoQuickOrderList(newItem);
+          emit(OrderListQuickOrderProductAddState());
         }
 
         emit(OrderListLoadedState(quickOrderItemList, productSettings));
@@ -454,6 +455,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
               var newItem = _convertVmiBinProductToQuickOrderItemEntity(
                   vmiBin, quantity!);
               _insertItemIntoQuickOrderList(newItem);
+              emit(OrderListVmiQuickOrderProductAddState());
             }
 
             emit(OrderListLoadedState(quickOrderItemList, productSettings));
