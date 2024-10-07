@@ -25,7 +25,7 @@ abstract class IDeviceService {
 
   String get currentVersion;
 
-  String get applicationName;
+  String? get applicationName;
 
   Future<DeviceAuthenticationOption> authenticationOption();
 
