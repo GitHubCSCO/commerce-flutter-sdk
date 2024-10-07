@@ -1,24 +1,16 @@
-import 'dart:io';
 import 'dart:ui';
 import 'dart:ui' as ui;
 
-import 'package:camera/camera.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/painters/coordinates_translator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 
 class BarcodeDetectorPainter extends CustomPainter {
-  BarcodeDetectorPainter(
-    this.barcodes,
-    this.imageSize,
-    this.rotation,
-    this.cameraLensDirection,
-  );
+  BarcodeDetectorPainter(this.barcodes, this.imageSize, this.rotation);
 
   final List<Barcode> barcodes;
   final Size imageSize;
   final InputImageRotation rotation;
-  final CameraLensDirection cameraLensDirection;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -42,43 +34,18 @@ class BarcodeDetectorPainter extends CustomPainter {
       builder.pop();
 
       final left = translateX(
-        barcode.boundingBox.left,
-        size,
-        imageSize,
-        rotation,
-        cameraLensDirection,
-      );
+          barcode.boundingBox.left, size, imageSize, rotation.rawValue);
       final top = translateY(
-        barcode.boundingBox.top,
-        size,
-        imageSize,
-        rotation,
-        cameraLensDirection,
-      );
+          barcode.boundingBox.top, size, imageSize, rotation.rawValue);
       final right = translateX(
-        barcode.boundingBox.right,
-        size,
-        imageSize,
-        rotation,
-        cameraLensDirection,
-      );
+          barcode.boundingBox.right, size, imageSize, rotation.rawValue);
 
       final List<Offset> cornerPoints = <Offset>[];
       for (final point in barcode.cornerPoints) {
-        final double x = translateX(
-          point.x.toDouble(),
-          size,
-          imageSize,
-          rotation,
-          cameraLensDirection,
-        );
-        final double y = translateY(
-          point.y.toDouble(),
-          size,
-          imageSize,
-          rotation,
-          cameraLensDirection,
-        );
+        final double x =
+            translateX(point.x.toDouble(), size, imageSize, rotation.rawValue);
+        final double y =
+            translateY(point.y.toDouble(), size, imageSize, rotation.rawValue);
 
         cornerPoints.add(Offset(x, y));
       }
@@ -92,12 +59,7 @@ class BarcodeDetectorPainter extends CustomPainter {
           ..layout(ParagraphConstraints(
             width: (right - left).abs(),
           )),
-        Offset(
-            Platform.isAndroid &&
-                    cameraLensDirection == CameraLensDirection.front
-                ? right
-                : left,
-            top),
+        Offset(left, top),
       );
     }
   }

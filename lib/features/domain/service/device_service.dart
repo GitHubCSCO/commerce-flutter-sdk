@@ -16,8 +16,7 @@ class DeviceService implements IDeviceService {
   }
 
   @override
-  // TODO: implement applicationName
-  String get applicationName => throw UnimplementedError();
+  String? get applicationName => packageInfo?.appName;
 
   @override
   Future<DeviceAuthenticationOption> authenticationOption() async {
