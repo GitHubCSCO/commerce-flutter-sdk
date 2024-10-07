@@ -20,7 +20,11 @@ class DetectorView extends StatefulWidget {
   final CustomPaint? customPaint;
   final String? text;
   final bool barcodeFullView;
-  final Function(InputImage inputImage) onImage;
+  final Function({
+    required InputImage inputImage,
+    required Size canvasSize,
+    required double aspectRatio,
+  }) onImage;
   final Function()? onCameraFeedReady;
   final Function(CameraLensDirection direction)? onCameraLensDirectionChanged;
   final CameraLensDirection initialCameraLensDirection;
@@ -39,7 +43,7 @@ class _DetectorViewState extends State<DetectorView> {
       onCameraFeedReady: widget.onCameraFeedReady,
       initialCameraLensDirection: widget.initialCameraLensDirection,
       onCameraLensDirectionChanged: widget.onCameraLensDirectionChanged,
-      resolutionPreset: ResolutionPreset.medium,
+      resolutionPreset: ResolutionPreset.high,
     );
   }
 }

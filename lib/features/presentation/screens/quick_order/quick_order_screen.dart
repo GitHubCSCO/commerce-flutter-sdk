@@ -238,15 +238,39 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                           .pleaseSignInBeforeAddingToList
                                           .localized());
                                 } else if (state is OrderListAddFailedState) {
-                                  _showAlert(context, message: state.message);
+                                  context
+                                      .read<BarcodeScanBloc>()
+                                      .add(ScannerProductNotFoundEvent());
+                                  _showAlert(context, message: state.message,
+                                      onDismissAlert: () {
+                                    context
+                                        .read<BarcodeScanBloc>()
+                                        .add(ScannerResetEvent());
+                                  });
+                                } else if (state
+                                        is OrderListQuickOrderProductAddState ||
+                                    state
+                                        is OrderListVmiQuickOrderProductAddState) {
+                                  context
+                                      .read<BarcodeScanBloc>()
+                                      .add(ScannerProductFoundEvent());
                                 } else if (state
                                     is OrderListStyleProductAddState) {
+                                  context
+                                      .read<BarcodeScanBloc>()
+                                      .add(ScannerProductFoundEvent());
                                   handleStyleProductAdd(state.productEntity);
                                 } else if (state
                                     is OrderListVmiStyleProductAddState) {
+                                  context
+                                      .read<BarcodeScanBloc>()
+                                      .add(ScannerProductFoundEvent());
                                   handleVmiStyleProductAdd(state.vmiBinEntity);
                                 } else if (state
                                     is OrderListVmiProductAddState) {
+                                  context
+                                      .read<BarcodeScanBloc>()
+                                      .add(ScannerProductFoundEvent());
                                   handleVmiBinAdd(state.vmiBinEntity,
                                       state.previousOrderEntity);
                                 }
@@ -343,7 +367,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                       ),
                                       Container(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 32, vertical: 16),
+                                            horizontal: 32, vertical: 8),
                                         clipBehavior: Clip.antiAlias,
                                         decoration: const BoxDecoration(
                                             color: Colors.white),
@@ -359,7 +383,6 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                         .spaceBetween,
                                                 children: [
                                                   Expanded(
-                                                    flex: 1,
                                                     child: Container(
                                                       padding:
                                                           const EdgeInsets.only(
@@ -381,7 +404,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                                 .listTotal
                                                                 .localized(),
                                                         textAlign:
-                                                            TextAlign.start,
+                                                            TextAlign.left,
                                                         style: OptiTextStyles
                                                             .subtitle,
                                                       ),
@@ -389,11 +412,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                   ),
                                                   if (!hidePricingEnable)
                                                     Expanded(
-                                                      flex: 2,
                                                       child: Text(
                                                         subTotal,
                                                         textAlign:
-                                                            TextAlign.start,
+                                                            TextAlign.right,
                                                         style: OptiTextStyles
                                                             .subtitle,
                                                       ),
@@ -401,7 +423,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                                 ],
                                               ),
                                             ),
-                                            const SizedBox(height: 20),
+                                            const SizedBox(height: 8),
                                             TertiaryButton(
                                               isEnabled:
                                                   (state is OrderListLoadedState &&
@@ -420,6 +442,9 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                             const SizedBox(height: 4),
                                             PrimaryButton(
                                               onPressed: () {
+                                                context
+                                                    .read<BarcodeScanBloc>()
+                                                    .add(ScannerResetEvent());
                                                 setState(() {
                                                   canProcess = !canProcess;
                                                 });
@@ -646,7 +671,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   }
 
   void _showAlert(BuildContext context,
-      {Widget? icon, String? title, String? message}) {
+      {Widget? icon,
+      String? title,
+      String? message,
+      void Function()? onDismissAlert}) {
     displayDialogWidget(
         context: context,
         icon: icon,
@@ -656,6 +684,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
           DialogPlainButton(
             onPressed: () {
               Navigator.of(context).pop();
+              onDismissAlert?.call();
             },
             child: Text(LocalizationConstants.oK.localized()),
           ),
