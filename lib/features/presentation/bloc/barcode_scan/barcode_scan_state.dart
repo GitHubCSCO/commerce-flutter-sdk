@@ -6,12 +6,16 @@ class BarcodeScanInitialState extends BarcodeScanState {}
 
 class ScannerFlashOnOffState extends BarcodeScanState {
   final bool cameraFlash;
-
   ScannerFlashOnOffState(this.cameraFlash);
 }
 
 class ScannerScanState extends BarcodeScanState {
   final bool canProcess;
-
   ScannerScanState(this.canProcess);
 }
+
+class ScannerResetState extends BarcodeScanState {}
+
+class ScannerProductFoundState extends BarcodeScanState {}
+
+class ScannerProductNotFoundState extends BarcodeScanState {}
