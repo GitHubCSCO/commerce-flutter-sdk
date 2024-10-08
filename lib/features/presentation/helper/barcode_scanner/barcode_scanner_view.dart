@@ -34,12 +34,12 @@ class BarcodeScannerView extends StatefulWidget {
 class _BarcodeScannerViewState extends State<BarcodeScannerView>
     with TickerProviderStateMixin {
   final BarcodeScanner _barcodeScanner = BarcodeScanner();
-  bool _isBusy = false;
-  bool isDialogShowing = false;
+  bool _canProcessFrame = false;
+  bool _isDialogShowing = false;
+  bool _canScan = false;
   CustomPaint? _customPaint;
   RectanglePainter? rectanglePainter;
-  String? _text;
-  bool canProcess = false;
+
   var _cameraLensDirection = CameraLensDirection.back;
 
   double bottomViewHeight = 80.0;
@@ -53,7 +53,7 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView>
 
   @override
   void dispose() {
-    canProcess = false;
+    _canScan = false;
     rectanglePainter?.dispose();
     _barcodeScanner.close();
     super.dispose();
@@ -65,10 +65,10 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView>
       listener: (context, state) {
         if (state is ScannerScanState) {
           setState(() {
-            canProcess = state.canProcess;
-          });
-        } else if (state is ScannerResetState) {
-          setState(() {
+            _canScan = state.canProcess;
+            if (_canScan) {
+              _canProcessFrame = true;
+            }
             rectanglePainter?.reset();
           });
         } else if (state is ScannerProductFoundState) {
@@ -86,11 +86,11 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView>
         children: [
           Expanded(
             child: DetectorView(
-              title: 'Barcode Scanner',
               customPaint: _customPaint,
-              text: _text,
               barcodeFullView: widget.barcodeFullView,
-              onImage: _processImage,
+              onImage: _canScan && _canProcessFrame && !_isDialogShowing
+                  ? _processImage
+                  : null,
               initialCameraLensDirection: _cameraLensDirection,
               onCameraLensDirectionChanged: (value) =>
                   _cameraLensDirection = value,
@@ -106,16 +106,17 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView>
               child: PrimaryButton(
                 onPressed: () {
                   setState(() {
-                    if (canProcess) {
-                      rectanglePainter?.reset();
+                    _canScan = !_canScan;
+                    if (_canScan) {
+                      _canProcessFrame = true;
                     }
-                    canProcess = !canProcess;
+                    rectanglePainter?.reset();
                   });
                 },
-                backgroundColor: canProcess
+                backgroundColor: _canScan
                     ? OptiAppColors.buttonDarkRedBackgroudColor
                     : OptiAppColors.primaryColor,
-                text: canProcess
+                text: _canScan
                     ? LocalizationConstants.cancel.localized()
                     : LocalizationConstants.tapToScan.localized(),
               ),
@@ -126,86 +127,94 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView>
     );
   }
 
-  Future<void> _processImage({
+  void _processImage({
     required InputImage inputImage,
     required Size canvasSize,
     required double aspectRatio,
-  }) async {
-    if (!canProcess) return;
-    if (_isBusy) return;
-    _isBusy = true;
-    setState(() {
-      _text = '';
-    });
+  }) {
+    if (!_isDialogShowing) {
+      _barcodeScanner.processImage(inputImage).then((barcodes) {
+        if (barcodes.isNotEmpty && _canProcessFrame) {
+          setState(() {
+            //Found barcode, we should pause scanning until we see whether they are inside the rect or not
+            _canProcessFrame = false;
+          });
+          final size = rotateSize(inputImage.metadata!.size,
+              inputImage.metadata?.rotation.rawValue ?? 0);
 
-    final barcodes = await _barcodeScanner.processImage(inputImage);
-    final size = rotateSize(
-        inputImage.metadata!.size, inputImage.metadata?.rotation.rawValue ?? 0);
+          final updatedCanvasSize =
+              Size(canvasSize.width, canvasSize.width / aspectRatio);
 
-    final updatedCanvasSize =
-        Size(canvasSize.width, canvasSize.width / aspectRatio);
+          var barCodesWithIn = <Barcode>[];
+          for (var barcode in barcodes) {
+            final left = translateX(
+                barcode.boundingBox.left, updatedCanvasSize, size, 0);
+            final top =
+                translateY(barcode.boundingBox.top, updatedCanvasSize, size, 0);
+            final right = translateX(
+                barcode.boundingBox.right, updatedCanvasSize, size, 0);
+            final bottom = translateY(
+                barcode.boundingBox.bottom, updatedCanvasSize, size, 0);
+            var transformedBoundingBox =
+                Rect.fromLTRB(left, top, right, bottom);
 
-    var barCodesWithIn = <Barcode>[];
-    for (var barcode in barcodes) {
-      final left =
-          translateX(barcode.boundingBox.left, updatedCanvasSize, size, 0);
-      final top =
-          translateY(barcode.boundingBox.top, updatedCanvasSize, size, 0);
-      final right =
-          translateX(barcode.boundingBox.right, updatedCanvasSize, size, 0);
-      final bottom =
-          translateY(barcode.boundingBox.bottom, updatedCanvasSize, size, 0);
-      var transformedBoundingBox = Rect.fromLTRB(left, top, right, bottom);
+            if (isRectInside(rectanglePainter?.rect, transformedBoundingBox)) {
+              barCodesWithIn.add(barcode);
+            } else {
+              rectanglePainter?.reset();
+            }
+          }
 
-      if (isRectInside(rectanglePainter?.rect, transformedBoundingBox)) {
-        barCodesWithIn.add(barcode);
-      } else {
-        rectanglePainter?.reset();
-      }
-    }
+          if (barCodesWithIn.isNotEmpty && mounted) {
+            if (barCodesWithIn.length == 1) {
+              widget.callback(
+                context,
+                resultText: barCodesWithIn[0].rawValue!,
+                format: barCodesWithIn[0].format,
+              );
+            } else {
+              setState(() {
+                _isDialogShowing = true;
+              });
+              displayDialogWidget(
+                  context: context,
+                  title: LocalizationConstants.multipleBarcodeWarningTitle
+                      .localized(),
+                  message: LocalizationConstants.multipleBarcodeWarningMessage
+                      .localized(),
+                  actions: [
+                    DialogPlainButton(
+                      onPressed: () {
+                        if (widget.barcodeFullView) {
+                          setState(() {
+                            _canScan = false;
+                            _canProcessFrame = true;
+                            _isDialogShowing = false;
+                          });
+                        } else {
+                          //This callback is to reset canProcess in quick order
+                          widget.callback(
+                            context,
+                          );
+                          setState(() {
+                            _isDialogShowing = false;
+                          });
+                        }
 
-    await Future.delayed(const Duration(milliseconds: 100));
-
-    if (barCodesWithIn.isNotEmpty) {
-      if (barCodesWithIn.length == 1) {
-        if (mounted) {
-          await widget.callback(
-            context,
-            resultText: barCodesWithIn[0].rawValue!,
-            format: barCodesWithIn[0].format,
-          );
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(LocalizationConstants.oK.localized()),
+                    ),
+                  ]);
+            }
+          } else {
+            setState(() {
+              //Could not find any barcode, we should keep scanning
+              _canProcessFrame = true;
+            });
+          }
         }
-        _busyUpdate();
-      } else if (!isDialogShowing) {
-        isDialogShowing = true;
-        if (mounted) {
-          displayDialogWidget(
-              context: context,
-              title:
-                  LocalizationConstants.multipleBarcodeWarningTitle.localized(),
-              message: LocalizationConstants.multipleBarcodeWarningMessage
-                  .localized(),
-              actions: [
-                DialogPlainButton(
-                  onPressed: () {
-                    _busyUpdate();
-                    isDialogShowing = false;
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(LocalizationConstants.oK.localized()),
-                ),
-              ]);
-        }
-      }
-    } else {
-      _busyUpdate();
-    }
-  }
-
-  void _busyUpdate() {
-    _isBusy = false;
-    if (mounted) {
-      setState(() {});
+      });
     }
   }
 
@@ -235,7 +244,7 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView>
 class RectanglePainter extends CustomPainter {
   Rect? rect;
   Color _rectColor = Colors.white;
-  late AnimationController _controller;
+  AnimationController? _controller;
   late Animation<Color?> _colorAnimation;
   TickerProvider vsync;
 
@@ -248,22 +257,22 @@ class RectanglePainter extends CustomPainter {
     Color endColor = Colors.white,
   }) {
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 200),
       vsync: vsync,
     );
 
     _colorAnimation = ColorTween(
       begin: startColor,
       end: endColor,
-    ).animate(_controller);
+    ).animate(_controller!);
 
     // Start the animation after a delay
-    Future.delayed(const Duration(microseconds: 1000), () {
-      _controller.forward();
+    Future.delayed(const Duration(milliseconds: 5), () {
+      _controller?.forward();
     });
 
     // Add listener to rebuild on each frame
-    _controller.addListener(() {
+    _controller?.addListener(() {
       _rectColor = _colorAnimation.value ?? Colors.white;
     });
   }
@@ -304,7 +313,7 @@ class RectanglePainter extends CustomPainter {
   }
 
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
   }
 
   @override
