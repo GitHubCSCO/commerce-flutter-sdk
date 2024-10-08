@@ -14,8 +14,6 @@ class ScannerScanState extends BarcodeScanState {
   ScannerScanState(this.canProcess);
 }
 
-class ScannerResetState extends BarcodeScanState {}
-
 class ScannerProductFoundState extends BarcodeScanState {}
 
 class ScannerProductNotFoundState extends BarcodeScanState {}
