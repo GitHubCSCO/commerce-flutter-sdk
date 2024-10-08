@@ -29,7 +29,7 @@ class CameraView extends StatefulWidget {
     required InputImage inputImage,
     required Size canvasSize,
     required double aspectRatio,
-  }) onImage;
+  })? onImage;
   final bool barcodeFullView;
   final VoidCallback? onCameraFeedReady;
   final VoidCallback? onDetectorViewModeChanged;
@@ -317,6 +317,7 @@ class _CameraViewState extends State<CameraView> {
           ? ImageFormatGroup.nv21
           : ImageFormatGroup.bgra8888,
     );
+    await _controller?.setFocusMode(FocusMode.auto);
     await _controller?.initialize().then((_) {
       if (!mounted) {
         return;
@@ -342,13 +343,17 @@ class _CameraViewState extends State<CameraView> {
   }
 
   void _processCameraImage(CameraImage image) {
-    final inputImage = _inputImageFromCameraImage(image);
-    if (inputImage == null) return;
-    widget.onImage(
-      inputImage: inputImage,
-      canvasSize: canvasSize ?? const Size(0, 0),
-      aspectRatio: aspectRatio ?? 1,
-    );
+    if (widget.onImage != null) {
+      final inputImage = _inputImageFromCameraImage(image);
+      if (inputImage == null) {
+        return;
+      }
+      widget.onImage!(
+        inputImage: inputImage,
+        canvasSize: canvasSize ?? const Size(0, 0),
+        aspectRatio: aspectRatio ?? 1,
+      );
+    }
   }
 
   final _orientations = {
