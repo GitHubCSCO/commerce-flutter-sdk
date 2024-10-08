@@ -12,8 +12,6 @@ class ScannerScanEvent extends BarcodeScanEvent {
   ScannerScanEvent(this.canProcess);
 }
 
-class ScannerResetEvent extends BarcodeScanEvent {}
-
 class ScannerProductFoundEvent extends BarcodeScanEvent {}
 
 class ScannerProductNotFoundEvent extends BarcodeScanEvent {}
