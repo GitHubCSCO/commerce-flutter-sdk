@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/extensions/product_detail_documents_name_value_converter.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_documents_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
@@ -53,9 +54,9 @@ class ProductDetailsDocumentsWidget extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(
                                 20.0, 10.0, 0.0, 10.0),
                             child: Text(
-                              productdetailsdocumentsEntity
-                                      .documents![index].name ??
-                                  "",
+                              productdetailsdocumentsEntity.documents?[index]
+                                      .getDocumentDisplayName() ??
+                                  '$index',
                               style: OptiTextStyles.body,
                             ),
                           ));
