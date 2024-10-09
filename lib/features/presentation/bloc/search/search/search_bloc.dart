@@ -119,7 +119,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       emit(SearchLoadingState());
       var result =
           await _searchUseCase.loadSearchProductsResults(searchQuery, 1);
-      int totalItemCount = result
+
+      var apiCallIsSuccessful = false;
+      var totalItemCount = result
               ?.getResultSuccessValue(trackError: false)
               ?.pagination
               ?.totalItemCount ??
@@ -163,12 +165,16 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
       switch (result) {
         case Success(value: final data):
+          apiCallIsSuccessful = true;
           emit(SearchProductsLoadedState(result: data));
         case Failure(errorResponse: final errorResponse):
           emit(
               SearchProductsFailureState(errorResponse.errorDescription ?? ''));
         default:
       }
+
+      _trackViewSearchResultsEvent(
+          searchQuery, apiCallIsSuccessful, totalItemCount);
     }
   }
 
@@ -252,5 +258,21 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     }
 
     add(SearchAutoCompleteLoadEvent(searchQuery));
+  }
+
+  void _trackViewSearchResultsEvent(
+      String query, bool apiCallIsSuccessful, int resultsCount) {
+    var viewScreenEvent = AnalyticsEvent(
+            AnalyticsConstants.eventViewSearchResults,
+            AnalyticsConstants.screenNameSearch)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertySearchTerm, strValue: query)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyResultsCount,
+            strValue: resultsCount.toString())
+        .withProperty(
+            name: AnalyticsConstants.eventPropertySuccessful,
+            boolValue: apiCallIsSuccessful);
+    _searchUseCase.trackEvent(viewScreenEvent);
   }
 }
