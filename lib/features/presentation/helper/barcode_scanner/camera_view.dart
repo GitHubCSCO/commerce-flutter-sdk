@@ -317,7 +317,6 @@ class _CameraViewState extends State<CameraView> {
           ? ImageFormatGroup.nv21
           : ImageFormatGroup.bgra8888,
     );
-    await _controller?.setFocusMode(FocusMode.auto);
     await _controller?.initialize().then((_) {
       if (!mounted) {
         return;
@@ -332,6 +331,9 @@ class _CameraViewState extends State<CameraView> {
       });
       setState(() {});
     });
+    if (_controller?.value.isInitialized == true) {
+      await _controller?.setFocusMode(FocusMode.auto);
+    }
     _minZoom = await _controller?.getMinZoomLevel() ?? 1.0;
     _maxZoom = await _controller?.getMaxZoomLevel() ?? 1.0;
   }
