@@ -27,6 +27,16 @@ class WarehouseInventoryCubit extends Cubit<WareHouseInventoryState> {
       warehouses = await _getProductInventory(id, unitOfMeasure);
     }
 
+    warehouses.sort((a, b) {
+      String getSortingValue(InventoryWarehouse item) {
+        return (item.description == null || item.description!.isEmpty)
+            ? item.name ?? ''
+            : item.description!;
+      }
+
+      return getSortingValue(a).compareTo(getSortingValue(b));
+    });
+
     emit(WareHouseInventoryLoadedState(warehouses: warehouses));
 
     // need to implement empty warehouse logic
