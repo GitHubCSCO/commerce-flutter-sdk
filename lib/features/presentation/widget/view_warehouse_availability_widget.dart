@@ -87,9 +87,13 @@ void viewWarehouseWidget(BuildContext context, String? id, String productNumber,
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Expanded(
-                                                  child: Text(
-                                                      warehouse.description ??
-                                                          '')),
+                                                  child: Text((warehouse
+                                                              .description
+                                                              ?.isEmpty ??
+                                                          true)
+                                                      ? (warehouse.name ?? '')
+                                                      : warehouse
+                                                          .description!)),
                                               Text((warehouse.qty ?? 0)
                                                   .toInt()
                                                   .toString()),
