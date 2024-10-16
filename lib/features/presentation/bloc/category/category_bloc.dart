@@ -1,4 +1,3 @@
-import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/category_usecase/category_useacase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
