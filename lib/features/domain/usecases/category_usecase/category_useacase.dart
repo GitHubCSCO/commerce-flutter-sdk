@@ -11,7 +11,11 @@ class CategoryUseCase extends BaseUseCase {
         startingCategoryId == CoreConstants.emptyGuidString) {
       return getCategories();
     } else {
-      return getCategories(categoryId: startingCategoryId);
+      var result = await getCategories(categoryId: startingCategoryId);
+      if (result is Failure) {
+        return getCategories();
+      }
+      return result;
     }
   }
 
