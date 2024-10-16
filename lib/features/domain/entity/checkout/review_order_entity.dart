@@ -13,44 +13,45 @@ class ReviewOrderEntity {
   final ShipViaDto? selectedService;
   final DateTime? requestDeliveryDate;
   final bool? allowCreateNewShipToAddress;
+  final String? orderNotes;
 
-  ReviewOrderEntity({
-    this.billTo,
-    this.shipTo,
-    this.warehouse,
-    this.shippingMethod,
-    this.carriers,
-    this.cartSettings,
-    this.paymentMethod,
-    this.selectedCarrier,
-    this.selectedService,
-    this.requestDeliveryDate,
-    this.allowCreateNewShipToAddress,
-  });
+  ReviewOrderEntity(
+      {this.billTo,
+      this.shipTo,
+      this.warehouse,
+      this.shippingMethod,
+      this.carriers,
+      this.cartSettings,
+      this.paymentMethod,
+      this.selectedCarrier,
+      this.selectedService,
+      this.requestDeliveryDate,
+      this.allowCreateNewShipToAddress,
+      this.orderNotes});
 
-  ReviewOrderEntity copyWith({
-    BillTo? billTo,
-    ShipTo? shipTo,
-    Warehouse? warehouse,
-    ShippingOption? shippingMethod,
-    List<CarrierDto>? carriers,
-    CartSettings? cartSettings,
-    PaymentMethodDto? paymentMethod,
-    bool? allowCreateNewShipToAddress,
-  }) {
+  ReviewOrderEntity copyWith(
+      {BillTo? billTo,
+      ShipTo? shipTo,
+      Warehouse? warehouse,
+      ShippingOption? shippingMethod,
+      List<CarrierDto>? carriers,
+      CartSettings? cartSettings,
+      PaymentMethodDto? paymentMethod,
+      bool? allowCreateNewShipToAddress,
+      String? orderNotes}) {
     return ReviewOrderEntity(
-      selectedCarrier: selectedCarrier,
-      selectedService: selectedService,
-      requestDeliveryDate: requestDeliveryDate,
-      billTo: billTo ?? this.billTo,
-      shipTo: shipTo ?? this.shipTo,
-      warehouse: warehouse ?? this.warehouse,
-      shippingMethod: shippingMethod ?? this.shippingMethod,
-      carriers: carriers ?? this.carriers,
-      cartSettings: cartSettings ?? this.cartSettings,
-      paymentMethod: paymentMethod ?? this.paymentMethod,
-      allowCreateNewShipToAddress:
-          allowCreateNewShipToAddress ?? this.allowCreateNewShipToAddress,
-    );
+        selectedCarrier: selectedCarrier,
+        selectedService: selectedService,
+        requestDeliveryDate: requestDeliveryDate,
+        billTo: billTo ?? this.billTo,
+        shipTo: shipTo ?? this.shipTo,
+        warehouse: warehouse ?? this.warehouse,
+        shippingMethod: shippingMethod ?? this.shippingMethod,
+        carriers: carriers ?? this.carriers,
+        cartSettings: cartSettings ?? this.cartSettings,
+        paymentMethod: paymentMethod ?? this.paymentMethod,
+        allowCreateNewShipToAddress:
+            allowCreateNewShipToAddress ?? this.allowCreateNewShipToAddress,
+        orderNotes: orderNotes ?? this.orderNotes);
   }
 }
