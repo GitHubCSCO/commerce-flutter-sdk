@@ -38,3 +38,8 @@ class QuoteLineNoteUpdateEvent extends QuoteDetailsEvent {
   final QuoteLineEntity quoteLineEntity;
   QuoteLineNoteUpdateEvent({required this.note, required this.quoteLineEntity});
 }
+
+class QuoteLineQuantityUpdateEvent extends QuoteDetailsEvent {
+  final QuoteLineEntity quoteLineEntity;
+  QuoteLineQuantityUpdateEvent({required this.quoteLineEntity});
+}
