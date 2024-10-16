@@ -33,21 +33,21 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 ReviewOrderEntity prepareReviewOrderEntiity(
     CheckoutDataLoaded state, BuildContext context) {
   return ReviewOrderEntity(
-    billTo: state.billToAddress,
-    shipTo: state.shipToAddress,
-    warehouse: state.wareHouse,
-    shippingMethod:
-        (state.shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)
-            ? ShippingOption.pickUp
-            : ShippingOption.ship),
-    carriers: state.cart.carriers,
-    cartSettings: state.cartSettings,
-    paymentMethod: context.read<CheckoutBloc>().cart!.paymentMethod,
-    selectedCarrier: state.selectedCarrier,
-    selectedService: state.selectedService,
-    requestDeliveryDate: state.requestDeliveryDate,
-    allowCreateNewShipToAddress: state.allowCreateNewShipToAddress,
-  );
+      billTo: state.billToAddress,
+      shipTo: state.shipToAddress,
+      warehouse: state.wareHouse,
+      shippingMethod:
+          (state.shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)
+              ? ShippingOption.pickUp
+              : ShippingOption.ship),
+      carriers: state.cart.carriers,
+      cartSettings: state.cartSettings,
+      paymentMethod: context.read<CheckoutBloc>().cart!.paymentMethod,
+      selectedCarrier: state.selectedCarrier,
+      selectedService: state.selectedService,
+      requestDeliveryDate: state.requestDeliveryDate,
+      allowCreateNewShipToAddress: state.allowCreateNewShipToAddress,
+      orderNotes: context.read<CheckoutBloc>().getOrderNote());
 }
 
 class CheckoutScreen extends StatelessWidget {
@@ -363,6 +363,19 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                               ?.paymentMethod
                                               ?.isCreditCard ==
                                           true;
+
+                                  var isOrderNotesShowed = context
+                                      .read<PaymentDetailsBloc>()
+                                      .shouldShowOrderNotes;
+                                  var orderNotes = context
+                                      .read<PaymentDetailsBloc>()
+                                      .getOrderNotes();
+
+                                  if (isOrderNotesShowed) {
+                                    context
+                                        .read<CheckoutBloc>()
+                                        .add(UpdateOrderNotesEvent(orderNotes));
+                                  }
 
                                   if (!isPaymentMethodSelectedInCard ||
                                       isPaymentMethodSelectedasCreditCard) {

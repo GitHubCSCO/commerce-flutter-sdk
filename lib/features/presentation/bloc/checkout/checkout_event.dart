@@ -49,6 +49,12 @@ class UpdatePONumberEvent extends CheckoutEvent {
   UpdatePONumberEvent(this.poNumber);
 }
 
+class UpdateOrderNotesEvent extends CheckoutEvent {
+  final String orderNotes;
+
+  UpdateOrderNotesEvent(this.orderNotes);
+}
+
 class AddShiptoAddressEvent extends CheckoutEvent {
   final ShipTo shipTo;
 
