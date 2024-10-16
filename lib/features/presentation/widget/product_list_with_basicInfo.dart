@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/cart_line_extentions.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:flutter/material.dart';
 
@@ -53,11 +54,11 @@ class ProductListWithBasicInfo extends StatelessWidget {
             if (item is ProductEntity) {
               imageUrl = item.smallImagePath;
               title = item.shortDescription;
-              productNumber = item.erpNumber;
+              productNumber = item.getProductNumber();
             } else if (item is CartLineEntity) {
               imageUrl = item.smallImagePath;
               title = item.shortDescription;
-              productNumber = item.erpNumber;
+              productNumber = item.getProductNumber();
               price = item.updatePriceValueText();
             }
 

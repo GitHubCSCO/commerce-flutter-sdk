@@ -102,6 +102,7 @@ class CartLineEntity extends AddCartLineEntity {
   final BrandEntity? brand;
   final bool? showInventoryAvailability;
   final String? promoItemMessage;
+  final Properties? properties;
 
   bool get hasLinenotes => !notes!.isNullorWhitespace;
 
@@ -152,7 +153,8 @@ class CartLineEntity extends AddCartLineEntity {
       this.unitOfMeasureDescription,
       this.unitOfMeasureDisplay,
       this.showInventoryAvailability,
-      this.promoItemMessage})
+      this.promoItemMessage,
+      this.properties})
       : super(
             notes: notes,
             productId: productId,
@@ -207,7 +209,8 @@ class CartLineEntity extends AddCartLineEntity {
       BrandEntity? brand,
       String? status,
       bool? showInventoryAvailability,
-      String? promoItemMessage}) {
+      String? promoItemMessage,
+      Properties? properties}) {
     return CartLineEntity(
       showInventoryAvailability:
           showInventoryAvailability ?? this.showInventoryAvailability,
@@ -259,6 +262,7 @@ class CartLineEntity extends AddCartLineEntity {
       brand: brand ?? this.brand,
       status: status ?? this.status,
       promoItemMessage: promoItemMessage ?? this.promoItemMessage,
+      properties: properties ?? this.properties,
     );
   }
 }

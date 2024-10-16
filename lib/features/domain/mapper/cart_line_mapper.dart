@@ -78,6 +78,7 @@ class CartLineEntityMapper {
         sectionOptions: model.sectionOptions
             ?.map((e) => SectionOptionEntityMapper.toEntity(e))
             .toList(),
+        properties: model.properties,
       );
 
   static CartLine toModel(CartLineEntity entity) => CartLine(
@@ -101,7 +102,7 @@ class CartLineEntityMapper {
         costCode: entity.costCode,
         qtyLeft: entity.qtyLeft,
         pricing: ProductPriceEntityMapper.toModel(
-            entity.pricing ?? ProductPriceEntity()),
+            entity.pricing ?? const ProductPriceEntity()),
         isPromotionItem: entity.isPromotionItem,
         isDiscounted: entity.isDiscounted,
         isFixedConfiguration: entity.isFixedConfiguration,
@@ -110,7 +111,7 @@ class CartLineEntityMapper {
             ?.map((e) => BreakPriceDtoEntityMapper.toModel(e))
             .toList(),
         availability: AvailabilityEntityMapper.toModel(
-            entity.availability ?? AvailabilityEntity()),
+            entity.availability ?? const AvailabilityEntity()),
         qtyOnHand: entity.qtyOnHand,
         canAddToCart: entity.canAddToCart,
         isQtyAdjusted: entity.isQtyAdjusted,
@@ -122,9 +123,16 @@ class CartLineEntityMapper {
             entity.productSubscription ?? ProductSubscriptionEntity()),
         isRestricted: entity.isRestricted,
         isActive: entity.isActive,
-        brand: BrandEntityMapper.toModel(entity.brand ?? BrandEntity()),
+        brand: BrandEntityMapper.toModel(entity.brand ?? const BrandEntity()),
         status: entity.status,
-      );
+        notes: entity.notes,
+        vmiBinId: entity.vmiBinId,
+        sectionOptions: entity.sectionOptions
+            ?.map((e) => SectionOptionEntityMapper.toModel(e))
+            .toList(),
+        productId: entity.productId,
+        unitOfMeasure: entity.unitOfMeasure,
+      )..properties = entity.properties;
 }
 
 class SectionOptionEntityMapper {

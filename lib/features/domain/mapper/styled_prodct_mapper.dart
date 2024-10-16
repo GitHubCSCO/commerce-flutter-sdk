@@ -40,6 +40,7 @@ class StyledProductEntityMapper {
             ?.map((warehouse) => WarehouseEntityMapper.toEntity(warehouse))
             .toList(),
         trackInventory: model.trackInventory,
+        properties: model.properties,
       );
   StyledProduct toModel(StyledProductEntity entity) => StyledProduct(
         productId: entity.productId,
@@ -52,13 +53,13 @@ class StyledProductEntityMapper {
         qtyOnHand: entity.qtyOnHand,
         numberInCart: entity.numberInCart,
         pricing: ProductPriceEntityMapper.toModel(
-            entity.pricing ?? ProductPriceEntity()),
+            entity.pricing ?? const ProductPriceEntity()),
         quoteRequired: entity.quoteRequired,
         styleValues: entity.styleValues
             ?.map((styleValue) => StyleValueEntityMapper.toModel(styleValue))
             .toList(),
         availability: AvailabilityEntityMapper.toModel(
-            entity.availability ?? AvailabilityEntity()),
+            entity.availability ?? const AvailabilityEntity()),
         productUnitOfMeasures: entity.productUnitOfMeasures
             ?.map((productUnitOfMeasure) =>
                 ProductUnitOfMeasureEntityMapper.toModel(productUnitOfMeasure))
@@ -71,5 +72,5 @@ class StyledProductEntityMapper {
             ?.map((warehouse) => WarehouseEntityMapper.toModel(warehouse))
             .toList(),
         trackInventory: entity.trackInventory,
-      );
+      )..properties = entity.properties;
 }

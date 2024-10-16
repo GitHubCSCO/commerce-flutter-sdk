@@ -18,6 +18,7 @@ import 'package:commerce_flutter_app/features/domain/entity/specification_entity
 import 'package:commerce_flutter_app/features/domain/entity/style_trait_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:equatable/equatable.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductEntity extends Equatable {
   final String? id;
@@ -142,6 +143,9 @@ class ProductEntity extends Equatable {
   final List<StyleTraitEntity>? variantTraits;
   final List<ChildTraitValueEntity>? childTraitValues;
 
+  // Customization - Add properties from BaseModel
+  final Properties? properties;
+
   ProductEntity({
     this.id,
     this.orderLineId,
@@ -263,6 +267,7 @@ class ProductEntity extends Equatable {
     this.images,
     this.variantTraits,
     this.childTraitValues,
+    this.properties,
   });
 
   ProductEntity copyWith({
@@ -386,6 +391,7 @@ class ProductEntity extends Equatable {
     List<ProductImageEntity>? images,
     List<StyleTraitEntity>? variantTraits,
     List<ChildTraitValueEntity>? childTraitValues,
+    Properties? properties,
   }) {
     return ProductEntity(
       id: id ?? this.id,
@@ -520,6 +526,7 @@ class ProductEntity extends Equatable {
       images: images ?? this.images,
       variantTraits: variantTraits ?? this.variantTraits,
       childTraitValues: childTraitValues ?? this.childTraitValues,
+      properties: properties ?? this.properties,
     );
   }
 

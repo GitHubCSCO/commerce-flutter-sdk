@@ -110,6 +110,7 @@ class WishListLineEntityMapper {
         brand: BrandEntityMapper.toEntity(wishListLine.brand),
         isQtyAdjusted: wishListLine.isQtyAdjusted,
         allowZeroPricing: wishListLine.allowZeroPricing,
+        properties: wishListLine.properties,
       );
 
   static WishListLine toModel(WishListLineEntity wishListLineEntity) =>
@@ -166,7 +167,7 @@ class WishListLineEntityMapper {
         isDiscontinued: wishListLineEntity.isDiscontinued,
         sortOrder: wishListLineEntity.sortOrder,
         isQtyAdjusted: wishListLineEntity.isQtyAdjusted,
-      );
+      )..properties = wishListLineEntity.properties;
 }
 
 class WishListLineCollectionEntityMapper {

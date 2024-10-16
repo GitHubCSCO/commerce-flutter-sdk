@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/features/domain/entity/break_price_entity.d
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/pricing_rfq_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuoteLinePricingEntity {
   final String? qty;
@@ -78,7 +79,8 @@ class QuoteLineEntity extends CartLineEntity {
       this.hideInventoryEnable,
       this.hidePricingEnable,
       this.quoteLinePricingBreakList,
-      super.promoItemMessage})
+      super.promoItemMessage,
+      super.properties})
       : super();
   @override
   List<Object?> get props => [pricingRfq, maxQty];
@@ -137,7 +139,8 @@ class QuoteLineEntity extends CartLineEntity {
       List<QuoteLinePricingEntity>? quoteLinePricingBreakList,
       bool? hidePricingEnable,
       bool? hideInventoryEnable,
-      String? promoItemMessage}) {
+      String? promoItemMessage,
+      Properties? properties}) {
     return QuoteLineEntity(
         quoteLinePricingBreakList:
             quoteLinePricingBreakList ?? this.quoteLinePricingBreakList,
@@ -197,6 +200,7 @@ class QuoteLineEntity extends CartLineEntity {
         vmiBinId: vmiBinId ?? this.vmiBinId,
         hidePricingEnable: hidePricingEnable ?? this.hidePricingEnable,
         hideInventoryEnable: hideInventoryEnable ?? this.hideInventoryEnable,
-        promoItemMessage: promoItemMessage ?? this.promoItemMessage);
+        promoItemMessage: promoItemMessage ?? this.promoItemMessage,
+        properties: properties ?? this.properties);
   }
 }
