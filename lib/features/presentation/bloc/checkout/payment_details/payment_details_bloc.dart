@@ -18,6 +18,7 @@ class PaymentDetailsBloc
   AccountPaymentProfile? accountPaymentProfile;
   TokenExDto? tokenExConfiguration;
   final _poNumberController = TextEditingController();
+  final _orderNotesController = TextEditingController();
   bool isSelectedNewAddedCard = false;
   bool isCreditCardSectionCompleted = false;
   bool isCVVFieldOpened = false;
@@ -59,6 +60,8 @@ class PaymentDetailsBloc
         isNewCreditCard: false,
         showPOField: showPOField,
         poTextEditingController: _poNumberController,
+        orderNotesTextEditingController: _orderNotesController,
+        shouldShowOrderNotes: shouldShowOrderNotes,
         cart: cart));
   }
 
@@ -91,8 +94,10 @@ class PaymentDetailsBloc
           tokenExEntity: null,
           showPOField: false,
           poTextEditingController: _poNumberController,
+          orderNotesTextEditingController: _orderNotesController,
           isNewCreditCard: true,
           cardDetails: _getCardDetails(accountPaymentProfile!),
+          shouldShowOrderNotes: shouldShowOrderNotes,
           cart: cart));
       return;
     }
@@ -158,6 +163,8 @@ class PaymentDetailsBloc
                       cardDetails: cardDetails,
                       showPOField: showPOField,
                       poTextEditingController: _poNumberController,
+                      orderNotesTextEditingController: _orderNotesController,
+                      shouldShowOrderNotes: shouldShowOrderNotes,
                       cart: cart));
                   return;
               }
@@ -185,6 +192,8 @@ class PaymentDetailsBloc
                 cardDetails: cardDetails,
                 showPOField: showPOField,
                 poTextEditingController: _poNumberController,
+                orderNotesTextEditingController: _orderNotesController,
+                shouldShowOrderNotes: shouldShowOrderNotes,
                 cart: cart));
           }
         case Failure(errorResponse: final errorResponse):
@@ -196,6 +205,8 @@ class PaymentDetailsBloc
           tokenExEntity: null,
           showPOField: showPOField,
           poTextEditingController: _poNumberController,
+          orderNotesTextEditingController: _orderNotesController,
+          shouldShowOrderNotes: shouldShowOrderNotes,
           cart: cart));
     }
   }
@@ -237,10 +248,15 @@ class PaymentDetailsBloc
   void updateCart(Emitter<PaymentDetailsState> emit) {
     cart?.paymentMethod = selectedPaymentMethod;
     cart?.poNumber = _poNumberController.text;
+    cart?.notes = _orderNotesController.text;
   }
 
   String getPONumber() {
     return _poNumberController.text;
+  }
+
+  String getOrderNotes() {
+    return _orderNotesController.text;
   }
 
   List<PaymentMethodDto>? getPaymentMethods(Cart? cart) {
@@ -257,5 +273,9 @@ class PaymentDetailsBloc
     }
 
     return paymentMethods;
+  }
+
+  bool get shouldShowOrderNotes {
+    return _paymentDetailsUseCase.shouldShowOrderNotes;
   }
 }

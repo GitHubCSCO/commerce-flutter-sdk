@@ -323,13 +323,6 @@ class _OrderProductQuantityGroupWidgetState
   void initState() {
     super.initState();
 
-    // Listen to changes in the TextEditingController
-    _textController.addListener(() {
-      setState(() {
-        _displayOrderedCount = _textController.text;
-      });
-    });
-
     _displayOrderedCount =
         widget.quickOrderItemEntity.quantityOrdered.toString();
   }
@@ -456,9 +449,15 @@ class _OrderProductQuantityGroupWidgetState
   }
 
   void _showInputDialog(BuildContext context) {
+    var focusNode = FocusNode();
+
     showDialog(
       context: context,
       builder: (BuildContext mContext) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          focusNode.requestFocus();
+        });
+
         return AlertDialog(
           title: Text(
             LocalizationConstants.updateQuantity.localized(),
@@ -482,6 +481,7 @@ class _OrderProductQuantityGroupWidgetState
                 initialText:
                     widget.quickOrderItemEntity.quantityOrdered.toString(),
                 shouldShowIncrementDecrementIcon: false,
+                focusNode: focusNode,
               ),
             ],
           ),
@@ -493,7 +493,7 @@ class _OrderProductQuantityGroupWidgetState
             TextButton(
               onPressed: () {
                 Navigator.of(mContext).pop();
-                int? quantity = int.tryParse(_textController.text);
+                var quantity = int.tryParse(_textController.text);
                 if ((quantity ?? 0) == 0) {
                   _textController.text = '0';
                   widget.quickOrderItemEntity.previousQty =
@@ -508,6 +508,10 @@ class _OrderProductQuantityGroupWidgetState
                     OrderListItemQuantityChangeEvent(
                         widget.quickOrderItemEntity.productEntity.id,
                         widget.quickOrderItemEntity.quantityOrdered));
+                setState(() {
+                  _displayOrderedCount =
+                      widget.quickOrderItemEntity.quantityOrdered.toString();
+                });
               },
               child: Text(LocalizationConstants.save.localized()),
             )

@@ -7,6 +7,7 @@ import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -39,6 +40,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
         (event, emit) => _onPaymentMethodSelect(event, emit));
     on<SelectPaymentEvent>((event, emit) => _onPaymentSelect(event, emit));
     on<UpdatePONumberEvent>((event, emit) => _onUpdatePONumber(event, emit));
+    on<UpdateOrderNotesEvent>(
+        (event, emit) => _onUpdateOrderNotes(event, emit));
     on<AddShiptoAddressEvent>((event, emit) => _onAddShipTo(event, emit));
     on<UpdateShiptoAddressEvent>((event, emit) => _onUpdateShipto(event, emit));
   }
@@ -120,20 +123,20 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
             shippingMethod != null) {
           emit(
             CheckoutDataLoaded(
-              cart: cartData,
-              billToAddress: billToAddress,
-              shipToAddress: shipToAddress,
-              wareHouse: wareHouse,
-              promotions: promotionCollection,
-              shippingMethod: shippingMethod,
-              cartSettings: cartSettings,
-              selectedCarrier: selectedCarrier,
-              selectedService: selectedService,
-              requestDeliveryDate: requestDeliveryDate,
-              allowCreateNewShipToAddress: allowCreateNewShipToAddress,
-              requestDateWarningMessage: message,
-              cartWarningMsg: cartWarningMsg,
-            ),
+                cart: cartData,
+                billToAddress: billToAddress,
+                shipToAddress: shipToAddress,
+                wareHouse: wareHouse,
+                promotions: promotionCollection,
+                shippingMethod: shippingMethod,
+                cartSettings: cartSettings,
+                selectedCarrier: selectedCarrier,
+                selectedService: selectedService,
+                requestDeliveryDate: requestDeliveryDate,
+                allowCreateNewShipToAddress: allowCreateNewShipToAddress,
+                requestDateWarningMessage: message,
+                cartWarningMsg: cartWarningMsg,
+                orderNotes: cart?.notes),
           );
         } else {
           var failedReason =
@@ -261,6 +264,15 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
   void _onUpdatePONumber(
       UpdatePONumberEvent event, Emitter<CheckoutState> emit) {
     cart?.poNumber = event.poNumber;
+  }
+
+  void _onUpdateOrderNotes(
+      UpdateOrderNotesEvent event, Emitter<CheckoutState> emit) {
+    cart?.notes = event.orderNotes;
+  }
+
+  String? getOrderNote() {
+    return cart?.notes;
   }
 
   Future<void> _onAddShipTo(

@@ -14,25 +14,26 @@ class ListPickerWidget extends StatelessWidget {
   final int? selectedIndex;
   final String? descriptionText;
   final bool? showDropDown;
+  final bool? isActionEnabled;
 
-  const ListPickerWidget({
-    super.key,
-    required this.items,
-    this.selectedIndex,
-    required this.callback,
-    this.descriptionText,
-    this.showDropDown,
-  });
+  const ListPickerWidget(
+      {super.key,
+      required this.items,
+      this.selectedIndex,
+      required this.callback,
+      this.descriptionText,
+      this.showDropDown,
+      this.isActionEnabled = true});
 
   @override
   Widget build(BuildContext context) {
     return ListPicker(
-      items: items,
-      selectedIndex: selectedIndex,
-      callback: callback,
-      descriptionText: descriptionText,
-      showDropDown: showDropDown,
-    );
+        items: items,
+        selectedIndex: selectedIndex,
+        callback: callback,
+        descriptionText: descriptionText,
+        showDropDown: showDropDown,
+        isActionEnabled: isActionEnabled);
   }
 }
 
@@ -42,15 +43,15 @@ class ListPicker extends StatefulWidget {
   final int? selectedIndex;
   final String? descriptionText;
   final bool? showDropDown;
-
-  const ListPicker({
-    super.key,
-    required this.items,
-    this.selectedIndex,
-    required this.callback,
-    this.descriptionText,
-    this.showDropDown,
-  });
+  final bool? isActionEnabled;
+  const ListPicker(
+      {super.key,
+      required this.items,
+      this.selectedIndex,
+      required this.callback,
+      this.descriptionText,
+      this.showDropDown,
+      this.isActionEnabled});
 
   @override
   _ListPickerState createState() => _ListPickerState();
@@ -72,9 +73,11 @@ class _ListPickerState extends State<ListPicker> {
   Widget build(BuildContext context) {
     selectedIndex = widget.selectedIndex ?? 0;
     return GestureDetector(
-      onTap: () {
-        _selectItem(context);
-      },
+      onTap: widget.isActionEnabled!
+          ? () {
+              _selectItem(context);
+            }
+          : null,
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Row(
@@ -106,6 +109,10 @@ class _ListPickerState extends State<ListPicker> {
   }
 
   void _selectItem(BuildContext context) {
+    if (!widget.isActionEnabled!) {
+      return;
+    }
+
     FixedExtentScrollController scrollController =
         FixedExtentScrollController(initialItem: selectedIndex);
 
