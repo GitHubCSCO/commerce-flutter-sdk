@@ -21,6 +21,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/checkout/expans
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_handler/order_approval_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/base_checkout.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
@@ -52,13 +53,13 @@ ReviewOrderEntity prepareReviewOrderEntiity(
   );
 }
 
-class CheckoutScreen extends StatelessWidget {
+class CheckoutScreen extends BaseStatelessWidget {
   final Cart cart;
 
   const CheckoutScreen({super.key, required this.cart});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ExpansionPanelCubit>(
@@ -80,6 +81,12 @@ class CheckoutScreen extends StatelessWidget {
       child: CheckoutPage(cart: cart),
     );
   }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() => AnalyticsEvent(
+        AnalyticsConstants.eventViewScreen,
+        AnalyticsConstants.screenNameCheckout,
+      );
 }
 
 class CheckoutPage extends StatelessWidget with BaseCheckout {
