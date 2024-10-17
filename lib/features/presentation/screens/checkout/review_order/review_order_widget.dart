@@ -64,6 +64,10 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
       list.add(_buildPaymentMethod());
     }
 
+    if (!reviewOrderEntity.orderNotes.isNullOrEmpty) {
+      list.add(_buildOrderNotes());
+    }
+
     return list;
   }
 
@@ -327,6 +331,30 @@ class ReviewOrderWidget extends StatelessWidget with PaymentSummaryMixin {
         const SizedBox(height: 8),
         Text(
           _paymentDescription(reviewOrderEntity.paymentMethod),
+          textAlign: TextAlign.center,
+          style: OptiTextStyles.body,
+        ),
+        const SizedBox(height: 12),
+        _buildSeparator()
+      ],
+    );
+  }
+
+  Widget _buildOrderNotes() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 12),
+        Text(
+          LocalizationConstants.orderNotes.localized(),
+          textAlign: TextAlign.center,
+          style: OptiTextStyles.subtitle,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          reviewOrderEntity.orderNotes ?? "",
           textAlign: TextAlign.center,
           style: OptiTextStyles.body,
         ),

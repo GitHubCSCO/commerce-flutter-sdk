@@ -20,22 +20,23 @@ class CheckoutDataLoaded extends CheckoutState {
   final bool? allowCreateNewShipToAddress;
   final String? requestDateWarningMessage;
   final String cartWarningMsg;
+  final String? orderNotes;
 
-  CheckoutDataLoaded({
-    required this.cart,
-    required this.billToAddress,
-    required this.shipToAddress,
-    required this.wareHouse,
-    required this.promotions,
-    required this.shippingMethod,
-    required this.cartSettings,
-    required this.selectedCarrier,
-    required this.selectedService,
-    required this.requestDeliveryDate,
-    required this.allowCreateNewShipToAddress,
-    required this.requestDateWarningMessage,
-    required this.cartWarningMsg,
-  });
+  CheckoutDataLoaded(
+      {required this.cart,
+      required this.billToAddress,
+      required this.shipToAddress,
+      required this.wareHouse,
+      required this.promotions,
+      required this.shippingMethod,
+      required this.cartSettings,
+      required this.selectedCarrier,
+      required this.selectedService,
+      required this.requestDeliveryDate,
+      required this.allowCreateNewShipToAddress,
+      required this.requestDateWarningMessage,
+      required this.cartWarningMsg,
+      required this.orderNotes});
 }
 
 class CheckoutNoDataState extends CheckoutState {

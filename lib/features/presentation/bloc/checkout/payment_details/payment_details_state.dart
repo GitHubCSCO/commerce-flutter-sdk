@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:commerce_flutter_app/features/domain/entity/checkout/tokenex_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -15,8 +13,10 @@ class PaymentDetailsLoaded extends PaymentDetailsState {
   final String? cardDetails;
   final bool? showPOField;
   final TextEditingController? poTextEditingController;
+  final TextEditingController? orderNotesTextEditingController;
   final Cart? cart;
   final bool isNewCreditCard;
+  final bool? shouldShowOrderNotes;
 
   PaymentDetailsLoaded(
       {this.tokenExEntity,
@@ -24,7 +24,9 @@ class PaymentDetailsLoaded extends PaymentDetailsState {
       this.cart,
       this.cardDetails,
       this.showPOField,
-      this.poTextEditingController});
+      this.poTextEditingController,
+      this.orderNotesTextEditingController,
+      this.shouldShowOrderNotes});
 }
 
 class PaymentDetailsCompletedState extends PaymentDetailsState {}
