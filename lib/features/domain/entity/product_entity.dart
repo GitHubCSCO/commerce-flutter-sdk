@@ -143,7 +143,6 @@ class ProductEntity extends Equatable {
   final List<StyleTraitEntity>? variantTraits;
   final List<ChildTraitValueEntity>? childTraitValues;
 
-  // Customization - Add properties from BaseModel
   final Properties? properties;
 
   ProductEntity({
