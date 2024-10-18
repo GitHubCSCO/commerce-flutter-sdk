@@ -304,4 +304,8 @@ class WishListDetailsUsecase extends WishListUsecase {
 
   List<WishListLineSortOrder> get listLineAvailableSortOrders =>
       WishListLineSortOrder.values;
+
+  Future<bool> hasCheckout() async {
+    return await coreServiceProvider.getAppConfigurationService().hasCheckout();
+  }
 }
