@@ -7,6 +7,7 @@ class WishListDetailsState extends Equatable {
   final WishListLineSortOrder sortOrder;
   final String searchQuery;
   final WishListSettingsEntity settings;
+  final bool? canAddWishListToCart;
   final String? message;
 
   const WishListDetailsState(
@@ -16,6 +17,7 @@ class WishListDetailsState extends Equatable {
       required this.sortOrder,
       required this.searchQuery,
       required this.settings,
+      this.canAddWishListToCart,
       this.message});
 
   @override
@@ -25,6 +27,7 @@ class WishListDetailsState extends Equatable {
         status,
         sortOrder,
         searchQuery,
+        canAddWishListToCart ?? false,
         settings,
         message ?? ''
       ];
@@ -35,6 +38,7 @@ class WishListDetailsState extends Equatable {
       WishListStatus? status,
       WishListLineSortOrder? sortOrder,
       String? searchQuery,
+      bool? canAddWishListToCart,
       WishListSettingsEntity? settings,
       String? message}) {
     return WishListDetailsState(
@@ -43,6 +47,7 @@ class WishListDetailsState extends Equatable {
       status: status ?? this.status,
       sortOrder: sortOrder ?? this.sortOrder,
       searchQuery: searchQuery ?? this.searchQuery,
+      canAddWishListToCart: canAddWishListToCart ?? this.canAddWishListToCart,
       settings: settings ?? this.settings,
       message: message ?? this.message,
     );
