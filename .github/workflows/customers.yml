@@ -97,13 +97,6 @@ jobs:
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
-      - name: Upload IPA as artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: artifacts
-          path: |
-            build/ios/iphoneos/release/commerce_flutter_app.ipa
   android:
     runs-on: macos-latest
     steps:
