@@ -87,7 +87,7 @@ class _WishListCreatePageState extends State<WishListCreatePage> {
                   RootAnalyticsEvent(
                     AnalyticsEvent(
                       AnalyticsConstants.eventCreateList,
-                      AnalyticsConstants.screenNameListDetail,
+                      AnalyticsConstants.screenNameLists,
                     ),
                   ),
                 );
