@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/enums/invoice_status.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/two_texts_row.dart';
@@ -295,7 +296,7 @@ class _InvoiceProductsSectionWidget extends StatelessWidget {
               imagePath: invoiceLine.mediumImagePath,
               shortDescription:
                   invoiceLine.shortDescription ?? invoiceLine.description,
-              productNumber: invoiceLine.productErpNumber,
+              productNumber: invoiceLine.getProductNumber(),
               manufacturerItem: !invoiceLine.manufacturerItem.isNullOrEmpty
                   ? LocalizationConstants.mFGNumberSign.localized() +
                       (invoiceLine.manufacturerItem ?? '')

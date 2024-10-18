@@ -262,6 +262,7 @@ class OrderLineEntityMapper {
         unitPriceWithVatDisplay: orderLine.unitPriceWithVatDisplay,
         vmiBinNumber: orderLine.vmiBinNumber,
         warehouse: orderLine.warehouse,
+        properties: orderLine.properties,
       );
 
   static OrderLine toModel(OrderLineEntity entity) => OrderLine(
@@ -346,7 +347,7 @@ class OrderLineEntityMapper {
         unitPriceWithVatDisplay: entity.unitPriceWithVatDisplay,
         vmiBinNumber: entity.vmiBinNumber,
         warehouse: entity.warehouse,
-      );
+      )..properties = entity.properties;
 }
 
 class OrderPromotionEntityMapper {

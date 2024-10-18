@@ -1,9 +1,9 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/wish_list_line_extensions.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/view_warehouse_availability_widget.dart';
 
 import 'package:flutter/material.dart';
@@ -53,7 +53,7 @@ class WishListContentPricingWidget extends StatelessWidget {
                     viewWarehouseWidget(
                         context,
                         wishListLineEntity.productId,
-                        wishListLineEntity.erpNumber ?? "",
+                        wishListLineEntity.getProductNumber(),
                         wishListLineEntity.unitOfMeasure ?? "");
                   },
                   child: Text(

@@ -1,8 +1,11 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/order/order_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -78,32 +81,32 @@ extension CartLineExtensions on CartLineEntity {
   }
 }
 
-// extension OrderLineExtensions on OrderLine {
-//   String getProductNumber() {
-//     return productErpNumber ?? '';
-//   }
-// }
+extension OrderLineExtensions on OrderLineEntity? {
+  String getProductNumber() {
+    return this?.productErpNumber ?? '';
+  }
+}
 
-// extension WishListLineExtensions on WishListLine {
-//   String getProductNumber() {
-//     return erpNumber ?? '';
-//   }
-// }
+extension WishListLineExtensions on WishListLineEntity? {
+  String getProductNumber() {
+    return this?.erpNumber ?? '';
+  }
+}
 
-// extension InvoiceLineExtensions on InvoiceLine {
-//   String getProductNumber() {
-//     return productErpNumber ?? '';
-//   }
-// }
+extension InvoiceLineExtensions on InvoiceLine? {
+  String getProductNumber() {
+    return this?.productErpNumber ?? '';
+  }
+}
 
-// extension AutocompleteProductExtensions on AutocompleteProduct {
-//   String getProductNumber() {
-//     return erpNumber ?? '';
-//   }
-// }
+extension AutocompleteProductExtensions on AutocompleteProduct? {
+  String getProductNumber() {
+    return this?.erpNumber ?? '';
+  }
+}
 
-// extension QuoteLineExtensions on QuoteLine {
-//   String getProductNumber() {
-//     return erpNumber ?? '';
-//   }
-// }
+extension QuoteLineExtensions on QuoteLineEntity? {
+  String getProductNumber() {
+    return this?.erpNumber ?? '';
+  }
+}

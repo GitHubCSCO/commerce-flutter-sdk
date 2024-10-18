@@ -40,17 +40,19 @@ class SearchUseCase extends BaseUseCase {
         if (data?.vmiBins != null) {
           for (var item in data!.vmiBins) {
             if (item.product != null) {
-              result.add(AutocompleteProduct(
-                id: item.product?.id,
-                title: item.product?.shortDescription,
-                subtitle: item.product?.pageTitle,
-                image: item.product?.mediumImagePath,
-                name: item.product?.name,
-                erpNumber: item.product?.erpNumber,
-                brandName: item.product?.brand?.name,
-                brandDetailPagePath: item.product?.brand?.logoSmallImagePath,
-                binNumber: item.binNumber,
-              ));
+              result.add(
+                AutocompleteProduct(
+                  id: item.product?.id,
+                  title: item.product?.shortDescription,
+                  subtitle: item.product?.pageTitle,
+                  image: item.product?.mediumImagePath,
+                  name: item.product?.name,
+                  erpNumber: item.product?.erpNumber,
+                  brandName: item.product?.brand?.name,
+                  brandDetailPagePath: item.product?.brand?.logoSmallImagePath,
+                  binNumber: item.binNumber,
+                )..properties = item.product?.properties,
+              );
             }
           }
         }

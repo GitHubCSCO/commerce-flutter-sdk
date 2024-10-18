@@ -6,6 +6,7 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
+import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
@@ -103,8 +104,9 @@ class _CountInputPageState extends State<CountInputPage> {
                             .productEntity?.smallImagePath,
                         title: widget.countInventoryEntity.vmiBinEntity
                             .productEntity?.shortDescription,
-                        productNumber: widget.countInventoryEntity.vmiBinEntity
-                            .productEntity?.erpNumber,
+                        productNumber: widget
+                            .countInventoryEntity.vmiBinEntity.productEntity
+                            ?.getProductNumber(),
                       ),
                       const SizedBox(height: 20.0),
                       TabSwitchWidget(
