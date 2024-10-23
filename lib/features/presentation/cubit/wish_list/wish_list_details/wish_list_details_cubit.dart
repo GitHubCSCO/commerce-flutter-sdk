@@ -452,6 +452,16 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
   }
 
   Future<void> copyWishList({required String name}) async {
+    final analyticsEvent = AnalyticsEvent(
+      AnalyticsConstants.eventCopyList,
+      AnalyticsConstants.screenNameListDetail,
+    ).withProperty(
+      name: AnalyticsConstants.eventPropertyListId,
+      strValue: state.wishList.id,
+    );
+
+    _wishListDetailsUsecase.trackEvent(analyticsEvent);
+
     emit(state.copyWith(status: WishListStatus.listCopyLoading));
     final result = await _wishListDetailsUsecase.copyWishList(
       copyFromWishList: state.wishList,
@@ -459,18 +469,6 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
     );
 
     emit(state.copyWith(status: result));
-
-    if (result == WishListStatus.listCopySuccess) {
-      final analyticsEvent = AnalyticsEvent(
-        AnalyticsConstants.eventCopyList,
-        AnalyticsConstants.screenNameListDetail,
-      ).withProperty(
-        name: AnalyticsConstants.eventPropertyListId,
-        strValue: state.wishList.id,
-      );
-
-      _wishListDetailsUsecase.trackEvent(analyticsEvent);
-    }
   }
 
   Future<void> leaveWishList() async {
