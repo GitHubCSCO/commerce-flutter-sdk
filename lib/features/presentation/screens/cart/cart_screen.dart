@@ -67,7 +67,11 @@ class CartPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(LocalizationConstants.cart.localized()),
         backgroundColor: Colors.white,
-        actions: [BottomMenuWidget(websitePath: websitePath)],
+        actions: [
+          BottomMenuWidget(
+              websitePath: websitePath,
+              screenName: AnalyticsConstants.screenNameCart)
+        ],
       ),
       body: MultiBlocListener(
         listeners: [
