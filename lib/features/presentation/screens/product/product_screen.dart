@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
@@ -6,7 +7,7 @@ import 'package:commerce_flutter_app/core/mixins/list_grid_view_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
 import 'package:commerce_flutter_app/features/domain/enums/product_list_type.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/product/product_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product/product_collection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/add_to_cart/add_to_cart_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/search_products/search_products_cubit.dart';
@@ -80,9 +81,9 @@ class ProductScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ProductBloc>(
-      create: (context) =>
-          sl<ProductBloc>()..add(ProductLoadEvent(entity: pageEntity)),
+    return BlocProvider<ProductCollectionBloc>(
+      create: (context) => sl<ProductCollectionBloc>()
+        ..add(ProductLoadEvent(entity: pageEntity)),
       child: ProductPage(pageEntity: pageEntity),
     );
   }
@@ -114,6 +115,7 @@ class _ProductPageState extends State<ProductPage> with ListGridViewMenuMixIn {
             style: OptiTextStyles.titleLarge),
         actions: [
           BottomMenuWidget(
+              screenName: _getScreenName(widget.pageEntity),
               websitePath: _getWebsitePath(widget.pageEntity),
               toolMenuList: getToolMenu(context)),
         ],
@@ -132,7 +134,7 @@ class _ProductPageState extends State<ProductPage> with ListGridViewMenuMixIn {
                 ),
                 onPressed: () {
                   textEditingController.clear();
-                  context.read<ProductBloc>().add(ProductLoadEvent(
+                  context.read<ProductCollectionBloc>().add(ProductLoadEvent(
                       entity: widget.pageEntity.copyWith(query: '')));
                   context.closeKeyboard();
                 },
@@ -140,7 +142,7 @@ class _ProductPageState extends State<ProductPage> with ListGridViewMenuMixIn {
               onTapOutside: (p0) => context.closeKeyboard(),
               textInputAction: TextInputAction.search,
               onSubmitted: (String query) {
-                context.read<ProductBloc>().add(ProductLoadEvent(
+                context.read<ProductCollectionBloc>().add(ProductLoadEvent(
                     entity: widget.pageEntity
                         .copyWith(query: textEditingController.text)));
               },
@@ -148,7 +150,7 @@ class _ProductPageState extends State<ProductPage> with ListGridViewMenuMixIn {
             ),
           ),
           Expanded(
-            child: BlocBuilder<ProductBloc, ProductState>(
+            child: BlocBuilder<ProductCollectionBloc, ProductState>(
               builder: (context, state) {
                 switch (state) {
                   case ProductInitial():
@@ -163,7 +165,7 @@ class _ProductPageState extends State<ProductPage> with ListGridViewMenuMixIn {
                         ),
                         BlocProvider(
                           create: (context) => sl<SearchProductsCubit>()
-                            ..setProductFilter(widget.pageEntity)
+                            ..initialSetup(widget.pageEntity)
                             ..loadInitialSearchProducts(
                                 productCollectionResult),
                         ),
@@ -226,5 +228,20 @@ class _ProductPageState extends State<ProductPage> with ListGridViewMenuMixIn {
       return entity.brandProductLine?.productListPagePath;
     }
     return null;
+  }
+
+  String? _getScreenName(ProductPageEntity entity) {
+    switch (entity.parentType) {
+      case ProductParentType.search:
+        return AnalyticsConstants.screenNameSearch;
+      case ProductParentType.category:
+        return AnalyticsConstants.screenNameProductList;
+      case ProductParentType.brand:
+        return AnalyticsConstants.screenNameBrandProductList;
+      case ProductParentType.brandProductLine:
+        return AnalyticsConstants.screenNameBrandProductLineProductList;
+      case ProductParentType.brandCategory:
+        return AnalyticsConstants.screenNameBrandCategoryProductList;
+    }
   }
 }

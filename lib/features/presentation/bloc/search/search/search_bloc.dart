@@ -1,5 +1,7 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
 import 'package:flutter/material.dart';
@@ -117,13 +119,25 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       emit(SearchLoadingState());
       var result =
           await _searchUseCase.loadSearchProductsResults(searchQuery, 1);
-      int totalItemCount = result
+
+      var apiCallIsSuccessful = false;
+      var totalItemCount = result
               ?.getResultSuccessValue(trackError: false)
               ?.pagination
               ?.totalItemCount ??
           0;
+
       //This is a workaround for ICM-4422 where leading 0 in EAN-13 code gets dropped by the MLKit
       if (totalItemCount == 0 && barcodeFormat != null) {
+        _searchUseCase.trackEvent(AnalyticsEvent(
+                AnalyticsConstants.eventScanBarcode,
+                AnalyticsConstants.screenNameSearch)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyBarcode,
+                strValue: searchQuery)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyBarcodeFormat,
+                strValue: barcodeFormat?.name));
         /*
         For example we have a product: 012546011099
         It's UPC-A will be: 0-12546-01109-9
@@ -141,6 +155,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
             var modifiedSearchQuery = "0$searchQuery";
             result = await _searchUseCase.loadSearchProductsResults(
                 modifiedSearchQuery, 1);
+            totalItemCount = result
+                    ?.getResultSuccessValue(trackError: false)
+                    ?.pagination
+                    ?.totalItemCount ??
+                0;
             searchQuery = modifiedSearchQuery;
           }
         }
@@ -152,12 +171,16 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
       switch (result) {
         case Success(value: final data):
+          apiCallIsSuccessful = true;
           emit(SearchProductsLoadedState(result: data));
         case Failure(errorResponse: final errorResponse):
           emit(
               SearchProductsFailureState(errorResponse.errorDescription ?? ''));
         default:
       }
+
+      _trackViewSearchResultsEvent(
+          searchQuery, apiCallIsSuccessful, totalItemCount);
     }
   }
 
@@ -241,5 +264,21 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     }
 
     add(SearchAutoCompleteLoadEvent(searchQuery));
+  }
+
+  void _trackViewSearchResultsEvent(
+      String query, bool apiCallIsSuccessful, int resultsCount) {
+    var viewScreenEvent = AnalyticsEvent(
+            AnalyticsConstants.eventViewSearchResults,
+            AnalyticsConstants.screenNameSearch)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertySearchTerm, strValue: query)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyResultsCount,
+            strValue: resultsCount.toString())
+        .withProperty(
+            name: AnalyticsConstants.eventPropertySuccessful,
+            boolValue: apiCallIsSuccessful);
+    _searchUseCase.trackEvent(viewScreenEvent);
   }
 }

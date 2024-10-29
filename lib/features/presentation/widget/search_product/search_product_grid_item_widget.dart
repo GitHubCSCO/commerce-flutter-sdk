@@ -131,13 +131,9 @@ class SearchProductGridItemWidget extends StatelessWidget
                                     if (state.canAddToCart) {
                                       return IconButton(
                                         onPressed: () {
-                                          var productId =
-                                              product.styleParentId ??
-                                                  product.id;
                                           context
                                               .read<AddToCartCubit>()
-                                              .searchPorductAddToCard(
-                                                  productId!);
+                                              .searchProductAddToCard(product);
                                         },
                                         icon: Container(
                                           width: 40,

@@ -110,6 +110,12 @@ class QuoteDetailsPage extends StatelessWidget {
         } else if (state is QuotelineNoteUpdateFailureState) {
           CustomSnackBar.showFailure(context);
           context.read<QuoteDetailsBloc>().add(QuoteDetailsInitEvent());
+        } else if (state is QuotelineQuantityUpdatedState) {
+          context
+              .read<QuoteDetailsBloc>()
+              .add(LoadQuoteDetailsDataEvent(quoteId: quoteDto?.id ?? ""));
+        } else if (state is QuotelineQuantityUpdatedFailureState) {
+          CustomSnackBar.showFailure(context);
         }
       }, builder: (_, state) {
         if (state is QuoteDetailsFailedState) {
@@ -436,7 +442,13 @@ class QuoteDetailsPage extends StatelessWidget {
                   moreButtonWidget:
                       _buildMenuButtonForQuoteLine(context, quoteLineEntity),
                   onCartLineRemovedCallback: (cartLineEntity) {},
-                  onCartQuantityChangedCallback: (quantity) {}))
+                  onCartQuantityChangedCallback: (quantity) {
+                    quoteLineEntity =
+                        quoteLineEntity.copyWith(qtyOrdered: quantity);
+                    context.read<QuoteDetailsBloc>().add(
+                        QuoteLineQuantityUpdateEvent(
+                            quoteLineEntity: quoteLineEntity));
+                  }))
               .toList(),
         ),
       ],

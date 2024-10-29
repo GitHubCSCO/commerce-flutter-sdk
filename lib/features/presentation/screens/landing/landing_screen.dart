@@ -33,9 +33,8 @@ class LandingScreen extends StatelessWidget {
               PrimaryButton(
                 text: LocalizationConstants.signIn.localized(),
                 onPressed: () async {
-                  final goToShop =
-                      await context.pushNamed(AppRoute.login.name) as bool;
-                  if (goToShop && context.mounted) {
+                  var goToShop = await context.pushNamed(AppRoute.login.name);
+                  if (goToShop == true && context.mounted) {
                     AppRoute.shop.navigate(context);
                   }
                 },

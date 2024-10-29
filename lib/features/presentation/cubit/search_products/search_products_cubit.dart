@@ -1,6 +1,8 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/core/mixins/realtime_pricing_inventory_update_mixin.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/pagination_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/state_status.dart';
@@ -23,6 +25,12 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
   bool? hidePricingEnable;
   bool? hideInventoryEnable;
   bool? canAddToCartInProductList;
+
+  late String screenName,
+      eventPropertyReferenceId,
+      eventPropertyReferenceName,
+      eventPropertyReferenceType,
+      eventPropertyDomain;
 
   SearchProductsCubit(
       {required SearchUseCase searchUseCase,
@@ -53,7 +61,65 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
           ),
         );
 
-  void setProductFilter(ProductPageEntity entity) {
+  void initialSetup(ProductPageEntity entity) {
+    _setUpTrackEvent(entity);
+    _setProductFilter(entity);
+  }
+
+  void _setUpTrackEvent(ProductPageEntity entity) {
+    screenName = '';
+    eventPropertyReferenceId = '';
+    eventPropertyReferenceName = '';
+    eventPropertyReferenceType = '';
+    eventPropertyDomain = '';
+
+    switch (entity.parentType) {
+      case ProductParentType.search:
+        screenName = AnalyticsConstants.screenNameSearch;
+        eventPropertyReferenceType = AnalyticsConstants.screenNameSearch;
+      case ProductParentType.category:
+        screenName = AnalyticsConstants.screenNameProductList;
+        eventPropertyReferenceId = entity.category?.id ?? '';
+        eventPropertyReferenceName = entity.category?.shortDescription ?? '';
+        eventPropertyReferenceType = AnalyticsConstants.screenNameCategory;
+      case ProductParentType.brand:
+        screenName = AnalyticsConstants.screenNameBrandProductList;
+        eventPropertyReferenceId = entity.brandEntity?.id ?? '';
+        eventPropertyReferenceName = entity.brandEntity?.name ?? '';
+        eventPropertyReferenceType =
+            AnalyticsConstants.screenNameBrandProductList;
+      case ProductParentType.brandProductLine:
+        screenName = AnalyticsConstants.screenNameBrandProductLineProductList;
+        eventPropertyReferenceId = entity.brandProductLine?.id ?? '';
+        eventPropertyReferenceName = entity.brandProductLine?.name ?? '';
+        eventPropertyReferenceType =
+            AnalyticsConstants.screenNameBrandProductLine;
+      case ProductParentType.brandCategory:
+        screenName = AnalyticsConstants.screenNameBrandCategoryProductList;
+        eventPropertyReferenceId = entity.categoryId ?? '';
+        eventPropertyReferenceName = entity.brandEntityTitle ?? '';
+        eventPropertyReferenceType = AnalyticsConstants.screenNameBrandCategory;
+    }
+    eventPropertyDomain = ClientConfig.hostUrl ?? '';
+
+    var viewScreenEvent =
+        AnalyticsEvent(AnalyticsConstants.eventViewScreen, screenName)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyReferenceId,
+                strValue: eventPropertyReferenceId)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyReferenceName,
+                strValue: eventPropertyReferenceName)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyReferenceType,
+                strValue: eventPropertyReferenceType)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyDomain,
+                strValue: eventPropertyDomain);
+    _searchUseCase.trackEvent(viewScreenEvent);
+  }
+
+  void _setProductFilter(ProductPageEntity entity) {
     switch (entity.parentType) {
       case ProductParentType.category:
         emit(state.copyWith(
@@ -191,6 +257,37 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
     ));
 
     await _loadSearchProducts();
+
+    var analyticsEvent = AnalyticsEvent(AnalyticsConstants.eventSort,
+            AnalyticsConstants.screenNameSortSelection)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceId,
+            strValue: eventPropertyReferenceId)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceName,
+            strValue: eventPropertyReferenceName)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceType,
+            strValue: eventPropertyReferenceType)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertySortOption,
+            strValue: sortOrder.title);
+    _searchUseCase.trackEvent(analyticsEvent);
+  }
+
+  void sortOrderCancel() {
+    var analyticsEvent = AnalyticsEvent(AnalyticsConstants.eventCancelSort,
+            AnalyticsConstants.screenNameSortSelection)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceId,
+            strValue: eventPropertyReferenceId)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceName,
+            strValue: eventPropertyReferenceName)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceType,
+            strValue: eventPropertyReferenceType);
+    _searchUseCase.trackEvent(analyticsEvent);
   }
 
   Future<void> _loadSearchProducts() async {
@@ -272,7 +369,38 @@ class SearchProductsCubit extends Cubit<SearchProductsState>
       );
 
       await _loadSearchProducts();
+
+      var analyticsEvent = AnalyticsEvent(AnalyticsConstants.eventFilter,
+              AnalyticsConstants.screenNameFilterSelection)
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyReferenceId,
+              strValue: eventPropertyReferenceId)
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyReferenceName,
+              strValue: eventPropertyReferenceName)
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyReferenceType,
+              strValue: eventPropertyReferenceType)
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyFilterCount,
+              strValue: selectedFiltersCount.toString());
+      _searchUseCase.trackEvent(analyticsEvent);
     }
+  }
+
+  void resetFilter() {
+    var analyticsEvent = AnalyticsEvent(AnalyticsConstants.eventResetFilter,
+            AnalyticsConstants.screenNameFilterSelection)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceId,
+            strValue: eventPropertyReferenceId)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceName,
+            strValue: eventPropertyReferenceName)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceType,
+            strValue: eventPropertyReferenceType);
+    _searchUseCase.trackEvent(analyticsEvent);
   }
 
   int get selectedFiltersCount {

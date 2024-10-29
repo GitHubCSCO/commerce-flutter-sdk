@@ -151,6 +151,10 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                 BlocProvider<CartContentBloc>(
                                   create: (context) => sl<CartContentBloc>(),
                                   child: CartLineWidgetList(
+                                    oderNumber: context
+                                        .read<CheckoutBloc>()
+                                        .cart
+                                        ?.orderNumber,
                                     showClearCart: false,
                                     cartLineEntities: context
                                         .read<CheckoutBloc>()

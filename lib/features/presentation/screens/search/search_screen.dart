@@ -23,6 +23,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/extra/delayer.
 import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/category/category_auto_complete_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/auto_complete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/error_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/search_product/search_products_widget.dart';
@@ -206,13 +207,11 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                     fit: BoxFit.fitWidth,
                   ),
                   onPressed: () async {
-                    final result = await GoRouter.of(context)
-                        .pushNamed(AppRoute.barcodeSearch.name) as (
-                      String,
-                      BarcodeFormat
-                    );
+                    final result = (await GoRouter.of(context)
+                            .pushNamed(AppRoute.barcodeSearch.name) ??
+                        '') as (String, BarcodeFormat);
                     if (!result.$1.isNullOrEmpty && context.mounted) {
-                      context
+                      await context
                           .read<SearchHistoryCubit>()
                           .addSearchHistory(result.$1);
                       context.read<SearchBloc>().searchQuery = result.$1;
@@ -338,6 +337,8 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
                             ),
                             BlocProvider(
                               create: (context) => sl<SearchProductsCubit>()
+                                ..initialSetup(ProductPageEntity(
+                                    '', ProductParentType.search))
                                 ..loadInitialSearchProducts(
                                     productCollectionResult),
                             ),

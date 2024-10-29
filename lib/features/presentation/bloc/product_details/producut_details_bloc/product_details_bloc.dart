@@ -1,9 +1,12 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_data_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/produc_details_state.dart';
@@ -120,6 +123,9 @@ class ProductDetailsBloc
 
     switch (result) {
       case Success(value: final data):
+        if (event.trackScreen == true) {
+          _trackViewScreen(data);
+        }
         _extractValuesFromData(data!);
         await _makeAllDetailsItems(data, emit);
       case Failure(errorResponse: final errorResponse):
@@ -136,6 +142,15 @@ class ProductDetailsBloc
     );
 
     await _makeAllDetailsItems(productDetailDataEntity.product!, emit);
+  }
+
+  void _trackViewScreen(ProductEntity? product) {
+    var viewScreenEvent = AnalyticsEvent(AnalyticsConstants.eventViewScreen,
+            AnalyticsConstants.screenNameProductDetail)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyProductNumber,
+            strValue: product?.getProductNumber());
+    _productDetailsUseCase.trackEvent(viewScreenEvent);
   }
 
   void _extractValuesFromData(ProductEntity productEntity) {

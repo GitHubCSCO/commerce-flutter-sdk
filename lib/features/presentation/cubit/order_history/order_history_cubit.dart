@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/get_order_collection_result_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/filter_status.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
@@ -61,6 +63,16 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       ),
     );
 
+    final analyticEvent = AnalyticsEvent(
+      AnalyticsConstants.eventViewScreen,
+      AnalyticsConstants.screenNameFilterSelection,
+    ).withProperty(
+      name: AnalyticsConstants.eventPropertyReferenceType,
+      strValue: AnalyticsConstants.screenNameOrders,
+    );
+
+    _orderUsecase.trackEvent(analyticEvent);
+
     final result = await _orderUsecase.getFilterValues();
 
     result != null
@@ -112,6 +124,16 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
         temporaryShowMyOrdersValue: false,
       ),
     );
+
+    final analyticsEvent = AnalyticsEvent(
+      AnalyticsConstants.eventResetFilter,
+      AnalyticsConstants.screenNameFilterSelection,
+    ).withProperty(
+      name: AnalyticsConstants.eventPropertyReferenceType,
+      strValue: AnalyticsConstants.screenNameOrders,
+    );
+
+    _orderUsecase.trackEvent(analyticsEvent);
   }
 
   Future<void> changeSortOrder(OrderSortOrder orderSortOrder) async {
@@ -121,7 +143,34 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       ),
     );
 
+    final analyticsEvent = AnalyticsEvent(
+      AnalyticsConstants.eventSort,
+      AnalyticsConstants.screenNameSortSelection,
+    )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceType,
+          strValue: AnalyticsConstants.screenNameOrders,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertySortOption,
+          strValue: orderSortOrder.value,
+        );
+
+    _orderUsecase.trackEvent(analyticsEvent);
+
     await loadOrderHistory();
+  }
+
+  void cancelSort() {
+    final analyticsEvent = AnalyticsEvent(
+      AnalyticsConstants.eventCancelSort,
+      AnalyticsConstants.screenNameSortSelection,
+    ).withProperty(
+      name: AnalyticsConstants.eventPropertyReferenceType,
+      strValue: AnalyticsConstants.screenNameOrders,
+    );
+
+    _orderUsecase.trackEvent(analyticsEvent);
   }
 
   Future<void> applyFilter() async {
@@ -132,11 +181,36 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
       ),
     );
 
+    final analyticsEvent = AnalyticsEvent(
+      AnalyticsConstants.eventFilter,
+      AnalyticsConstants.screenNameFilterSelection,
+    )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyFilterCount,
+          strValue: state.numberOfFilters.toString(),
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyReferenceType,
+          strValue: AnalyticsConstants.screenNameOrders,
+        );
+
+    _orderUsecase.trackEvent(analyticsEvent);
+
     await loadOrderHistory();
   }
 
   Future<void> searchQueryChanged(String query) async {
     emit(state.copyWith(searchQuery: query));
+
+    final analyticsEvent = AnalyticsEvent(
+      AnalyticsConstants.eventSearchOrders,
+      AnalyticsConstants.screenNameOrders,
+    ).withProperty(
+      name: AnalyticsConstants.eventPropertySearchTerm,
+      strValue: query,
+    );
+
+    _orderUsecase.trackEvent(analyticsEvent);
 
     await loadOrderHistory();
   }
@@ -179,6 +253,27 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
               orderStatus: OrderStatus.failure,
             ),
           );
+
+    if (state.searchQuery.isNotEmpty) {
+      final analyticsEvent = AnalyticsEvent(
+        AnalyticsConstants.eventViewSearchResults,
+        AnalyticsConstants.screenNameOrders,
+      )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertySearchTerm,
+            strValue: state.searchQuery,
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyResultsCount,
+            strValue: result?.pagination?.totalItemCount.toString() ?? '0',
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertySuccessful,
+            strValue: result != null ? 'true' : 'false',
+          );
+
+      _orderUsecase.trackEvent(analyticsEvent);
+    }
   }
 
   Future<void> loadMoreOrderHistory() async {

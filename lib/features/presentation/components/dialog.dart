@@ -246,6 +246,7 @@ void confirmDialog({
   String? title,
   String? message,
   required void Function() onConfirm,
+  void Function()? onCancel,
   String? confirmText,
   String? cancelText,
   bool highlightConfirm = false,
@@ -256,7 +257,12 @@ void confirmDialog({
     message: message,
     actions: [
       DialogPlainButton(
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: () {
+          if (onCancel != null) {
+            onCancel();
+          }
+          Navigator.of(context).pop();
+        },
         child: Text(cancelText ?? LocalizationConstants.cancel.localized()),
       ),
       highlightConfirm

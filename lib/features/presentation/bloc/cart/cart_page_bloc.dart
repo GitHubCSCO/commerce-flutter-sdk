@@ -1,8 +1,10 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/core/mixins/cart_checkout_helper_mixin.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_usecase.dart';
@@ -33,6 +35,15 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
     on<CartPageCheckoutEvent>(_onCartCheckoutSubmitEvent);
   }
 
+  void _trackViewCartScreen() {
+    var viewScreenEvent = AnalyticsEvent(AnalyticsConstants.eventViewScreen,
+            AnalyticsConstants.screenNameCart)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyOrderNumber,
+            strValue: cart?.orderNumber ?? '');
+    _cartUseCase.trackEvent(viewScreenEvent);
+  }
+
   Future<void> _onCurrentCartLoadEvent(
       CartPageLoadEvent event, Emitter<CartPageState> emit) async {
     emit(CartPageLoadingState());
@@ -55,6 +66,9 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
       switch (result) {
         case Success(value: final data):
           cart = data;
+          if (event.trackScreen) {
+            _trackViewCartScreen();
+          }
           if (cart?.cartLines == null || cart!.cartLines!.isEmpty) {
             final message = await _cartUseCase.getSiteMessage(
                 SiteMessageConstants.nameNoOrderLines,

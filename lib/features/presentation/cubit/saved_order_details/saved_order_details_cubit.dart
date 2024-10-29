@@ -1,6 +1,8 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
@@ -115,7 +117,9 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
     return cartlines;
   }
 
-  Future<void> addToCart({required AddCartLine addCartLine}) async {
+  Future<void> addToCart(
+      {required AddCartLine addCartLine, required String productNumber}) async {
+    savedOrdertrackAddToCartEvent(productNumber, "1");
     emit(
       state.copyWith(
         status: OrderStatus.lineItemAddToCartLoading,
@@ -155,6 +159,17 @@ class SavedOrderDetailsCubit extends Cubit<SavedOrderDetailsState> {
         ),
       );
     }
+  }
+
+  void savedOrdertrackAddToCartEvent(String productNumber, String qty) {
+    var analyticsEvent = AnalyticsEvent(AnalyticsConstants.eventAddToCart,
+            AnalyticsConstants.screenNameSavedOrdersDetail)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyProductNumber,
+            strValue: productNumber)
+        .withProperty(name: AnalyticsConstants.eventPropertyQty, strValue: qty);
+
+    _savedOrderUsecase.trackEvent(analyticsEvent);
   }
 
   String addCartLineToCartMessageName = '';

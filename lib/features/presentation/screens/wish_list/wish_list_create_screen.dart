@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
@@ -77,6 +82,16 @@ class _WishListCreatePageState extends State<WishListCreatePage> {
               context,
               LocalizationConstants.listCreated.localized(),
             );
+
+            context.read<RootBloc>().add(
+                  RootAnalyticsEvent(
+                    AnalyticsEvent(
+                      AnalyticsConstants.eventCreateList,
+                      AnalyticsConstants.screenNameLists,
+                    ),
+                  ),
+                );
+
             if (widget.onWishListCreated != null) {
               widget.onWishListCreated!();
             }
@@ -148,11 +163,13 @@ class _WishListCreatePageState extends State<WishListCreatePage> {
                 PrimaryButton(
                   text: LocalizationConstants.create.localized(),
                   onPressed: () {
-                    context.read<WishListCreateCubit>().createWishList(
-                          name: _listNameEditingController.text,
-                          description: _listDescriptionEditingController.text,
-                          addToCartCollection: widget.addToCartCollection,
-                        );
+                    unawaited(
+                        context.read<WishListCreateCubit>().createWishList(
+                              name: _listNameEditingController.text,
+                              description:
+                                  _listDescriptionEditingController.text,
+                              addToCartCollection: widget.addToCartCollection,
+                            ));
                   },
                 ),
               ],

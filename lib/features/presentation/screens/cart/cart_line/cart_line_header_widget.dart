@@ -1,14 +1,44 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void _onClickClearAllCart(BuildContext context) {
+void trackClearCartSelectedEvent(BuildContext context, String orderNumber) {
+  context.read<RootBloc>().add(RootAnalyticsEvent(AnalyticsEvent(
+          AnalyticsConstants.eventClearCartSelected,
+          AnalyticsConstants.screenNameCart)
+      .withProperty(
+          name: AnalyticsConstants.eventPropertyOrderNumber,
+          strValue: orderNumber)));
+}
+
+void trackClearCartCancelledEvent(BuildContext context, String orderNumber) {
+  context.read<RootBloc>().add(RootAnalyticsEvent(AnalyticsEvent(
+          AnalyticsConstants.eventClearCartCancelled,
+          AnalyticsConstants.screenNameCart)
+      .withProperty(
+          name: AnalyticsConstants.eventPropertyOrderNumber,
+          strValue: orderNumber)));
+}
+
+void trackClearCartSuccessfulEvent(BuildContext context, String orderNumber) {
+  context.read<RootBloc>().add(RootAnalyticsEvent(AnalyticsEvent(
+          AnalyticsConstants.eventClearCartSuccessful,
+          AnalyticsConstants.screenNameCart)
+      .withProperty(
+          name: AnalyticsConstants.eventPropertyOrderNumber,
+          strValue: orderNumber)));
+}
+
+void _onClickClearAllCart(BuildContext context, String orderNumber) {
   displayDialogWidget(
       context: context,
       title: "",
@@ -16,6 +46,7 @@ void _onClickClearAllCart(BuildContext context) {
       actions: [
         DialogPlainButton(
           onPressed: () {
+            trackClearCartSuccessfulEvent(context, orderNumber);
             context.read<CartContentBloc>().add(CartContentClearAllEvent());
             Navigator.of(context).pop();
           },
@@ -23,6 +54,7 @@ void _onClickClearAllCart(BuildContext context) {
         ),
         DialogPlainButton(
           onPressed: () {
+            trackClearCartCancelledEvent(context, orderNumber);
             Navigator.of(context).pop();
           },
           child: Text(LocalizationConstants.cancel.localized()),
@@ -33,9 +65,11 @@ void _onClickClearAllCart(BuildContext context) {
 class CartContentHeaderWidget extends StatelessWidget {
   final bool? showClearCart;
   final int cartCount;
+  final String? orderNumber;
   const CartContentHeaderWidget({
     super.key,
     required this.cartCount,
+    required this.orderNumber,
     this.showClearCart,
   });
 
@@ -69,7 +103,8 @@ class CartContentHeaderWidget extends StatelessWidget {
             visible: showClearCart ?? true,
             child: InkWell(
               onTap: () {
-                _onClickClearAllCart(context);
+                trackClearCartSelectedEvent(context, orderNumber ?? "");
+                _onClickClearAllCart(context, orderNumber ?? "");
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,

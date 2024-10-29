@@ -90,9 +90,8 @@ class AddPromotionWidget extends StatelessWidget {
                             backgroundColor: OptiAppColors.grayBackgroundColor,
                             text: LocalizationConstants.apply.localized(),
                             onPressed: () {
-                              context
-                                  .read<PromoCodeCubit>()
-                                  .applyPromoCode(promoCodeController.text);
+                              context.read<PromoCodeCubit>().applyPromoCode(
+                                  promoCodeController.text, fromCartPage);
                             }),
                       ],
                     ),

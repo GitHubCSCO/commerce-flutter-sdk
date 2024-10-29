@@ -107,4 +107,11 @@ class QuoteDetailsUsecase extends BaseUseCase {
         .getWebsiteService()
         .getAuthorizedURL(path);
   }
+
+  Future<Result<QuoteLine, ErrorResponse>> updateQuoteLine(
+      String quoteId, QuoteLine quoteLine) {
+    return commerceAPIServiceProvider
+        .getQuoteService()
+        .updateQuoteLine(quoteId, quoteLine);
+  }
 }
