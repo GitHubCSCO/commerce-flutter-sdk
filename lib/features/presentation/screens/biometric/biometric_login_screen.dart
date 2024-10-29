@@ -159,54 +159,65 @@ class BiometricLoginPage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  const SizedBox(height: 60),
-                  _BiometricIcon(
-                      iconPath: iconPath ?? '',
-                      enabled: state is BiometricControllerChangeSuccessEnabled
-                          ? true
-                          : false),
-                  const SizedBox(height: 30),
-                  Text(
-                    title ?? '',
-                    style: OptiTextStyles.header3,
-                    textAlign: TextAlign.center,
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 60),
+                      _BiometricIcon(
+                          iconPath: iconPath ?? '',
+                          enabled:
+                              state is BiometricControllerChangeSuccessEnabled
+                                  ? true
+                                  : false),
+                      const SizedBox(height: 30),
+                      Text(
+                        title ?? '',
+                        style: OptiTextStyles.header3,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 30),
+                      Text(
+                        subtitle,
+                        style: OptiTextStyles.body,
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 30),
-                  Text(
-                    subtitle,
-                    style: OptiTextStyles.body,
-                    textAlign: TextAlign.center,
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      state is BiometricControllerChangeSuccessEnabled
+                          ? PrimaryButton(
+                              text: LocalizationConstants.continueText
+                                  .localized(),
+                              onPressed: () async {
+                                context.pop();
+                              },
+                            )
+                          : PrimaryButton(
+                              text: enableButtonTitle,
+                              onPressed: () async {
+                                await context
+                                    .read<BiometricControllerCubit>()
+                                    .enableBiometric(password);
+                              },
+                            ),
+                      const SizedBox(height: 5),
+                      state is BiometricControllerChangeSuccessEnabled
+                          ? const SizedBox.shrink()
+                          : PlainButton(
+                              text: 'No Thanks',
+                              onPressed: () {
+                                context
+                                    .read<BiometricControllerCubit>()
+                                    .trackBiometricSetupEvent('canceled');
+                                context.pop();
+                              },
+                            ),
+                    ],
                   ),
-                  const SizedBox(height: 200),
-                  state is BiometricControllerChangeSuccessEnabled
-                      ? PrimaryButton(
-                          text: LocalizationConstants.continueText.localized(),
-                          onPressed: () async {
-                            context.pop();
-                          },
-                        )
-                      : PrimaryButton(
-                          text: enableButtonTitle,
-                          onPressed: () async {
-                            await context
-                                .read<BiometricControllerCubit>()
-                                .enableBiometric(password);
-                          },
-                        ),
-                  const SizedBox(height: 5),
-                  state is BiometricControllerChangeSuccessEnabled
-                      ? const SizedBox.shrink()
-                      : PlainButton(
-                          text: 'No Thanks',
-                          onPressed: () {
-                            context
-                                .read<BiometricControllerCubit>()
-                                .trackBiometricSetupEvent('canceled');
-                            context.pop();
-                          },
-                        ),
                 ],
               ),
             ),
