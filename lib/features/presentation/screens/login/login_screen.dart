@@ -410,17 +410,17 @@ class _LoginPageState extends State<LoginPage> {
                                               : LocalizationConstants.touchID
                                                   .localized();
 
-                                    var biometricDisplayOptionForEvent =
-                                        Platform.isAndroid
-                                            ? LocalizationConstants
-                                                .fingerprint.keyword
-                                            : biometricOption ==
-                                                    DeviceAuthenticationOption
-                                                        .faceID
-                                                ? LocalizationConstants
-                                                    .faceID.keyword
-                                                : LocalizationConstants
-                                                    .touchID.keyword;
+                                      var biometricDisplayOptionForEvent =
+                                          Platform.isAndroid
+                                              ? LocalizationConstants
+                                                  .fingerprint.keyword
+                                              : biometricOption ==
+                                                      DeviceAuthenticationOption
+                                                          .faceID
+                                                  ? LocalizationConstants
+                                                      .faceID.keyword
+                                                  : LocalizationConstants
+                                                      .touchID.keyword;
 
                                       return Column(
                                         mainAxisSize: MainAxisSize.min,
@@ -431,7 +431,7 @@ class _LoginPageState extends State<LoginPage> {
                                                   .read<LoginCubit>()
                                                   .onBiometricLoginSubmit(
                                                       biometricOption,
-                                                    biometricDisplayOptionForEvent);
+                                                      biometricDisplayOptionForEvent);
                                             },
                                             text: 'Use $biometricDisplayOption',
                                           ),
@@ -490,16 +490,15 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async {
-                                        context.read<RootBloc>().add(
-                                              RootAnalyticsEvent(
-                                                AnalyticsEvent(
-                                                  AnalyticsConstants
-                                                      .eventViewPrivacyPolicy,
-                                                  AnalyticsConstants
-                                                      .screenNameSignIn,
-                                                ),
-                                              ),
-                                            );
+                                  context.read<RootBloc>().add(
+                                        RootAnalyticsEvent(
+                                          AnalyticsEvent(
+                                            AnalyticsConstants
+                                                .eventViewPrivacyPolicy,
+                                            AnalyticsConstants.screenNameSignIn,
+                                          ),
+                                        ),
+                                      );
 
                                   launchUrlString(
                                     context
@@ -518,16 +517,15 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async {
-                                        context.read<RootBloc>().add(
-                                              RootAnalyticsEvent(
-                                                AnalyticsEvent(
-                                                  AnalyticsConstants
-                                                      .eventViewTermsOfUse,
-                                                  AnalyticsConstants
-                                                      .screenNameSignIn,
-                                                ),
-                                              ),
-                                            );
+                                  context.read<RootBloc>().add(
+                                        RootAnalyticsEvent(
+                                          AnalyticsEvent(
+                                            AnalyticsConstants
+                                                .eventViewTermsOfUse,
+                                            AnalyticsConstants.screenNameSignIn,
+                                          ),
+                                        ),
+                                      );
 
                                   launchUrlString(
                                     context.read<LoginCubit>().termsOfUseUrl ??
