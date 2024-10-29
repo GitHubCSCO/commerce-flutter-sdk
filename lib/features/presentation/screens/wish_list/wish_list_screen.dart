@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
@@ -8,8 +11,10 @@ import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
@@ -18,6 +23,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_delete_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
@@ -29,24 +35,36 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 final GlobalKey _wishListPageScaffoldKey = GlobalKey();
 
-class WishListsScreen extends StatelessWidget {
+class WishListsScreen extends BaseStatelessWidget {
   const WishListsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<WishListCubit>()..loadWishLists(),
+      create: (context) {
+        final cubit = sl<WishListCubit>();
+        unawaited(cubit.loadWishLists());
+        return cubit;
+      },
       child: Builder(builder: (context) {
         return BlocListener<WishListHandlerCubit, WishListHandlerState>(
           listener: (context, state) {
             if (state.status == WishListHandlerStatus.shouldRefreshWishList) {
-              context.read<WishListCubit>().loadWishLists();
+              unawaited(context.read<WishListCubit>().loadWishLists());
               context.read<WishListHandlerCubit>().resetState();
             }
           },
           child: const WishListsPage(),
         );
       }),
+    );
+  }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() {
+    return AnalyticsEvent(
+      AnalyticsConstants.eventViewScreen,
+      AnalyticsConstants.screenNameLists,
     );
   }
 }
@@ -81,9 +99,11 @@ class _WishListsPageState extends State<WishListsPage> {
         actions: [
           _OptionsMenu(
             onWishListCreated: () {
-              _wishListPageScaffoldKey.currentContext
-                  ?.read<WishListCubit>()
-                  .loadWishLists();
+              unawaited(
+                _wishListPageScaffoldKey.currentContext
+                    ?.read<WishListCubit>()
+                    .loadWishLists(),
+              );
             },
           ),
         ],
@@ -104,27 +124,30 @@ class _WishListsPageState extends State<WishListsPage> {
                 onPressed: () {
                   _textEditingController.clear();
 
-                  context
-                      .read<WishListCubit>()
-                      .searchQueryChanged(_textEditingController.text);
+                  unawaited(
+                    context
+                        .read<WishListCubit>()
+                        .searchQueryChanged(_textEditingController.text),
+                  );
                   context.closeKeyboard();
                 },
               ),
               onTapOutside: (p0) => context.closeKeyboard(),
               textInputAction: TextInputAction.search,
               controller: _textEditingController,
-              onChanged: (value) {
-                context.read<WishListCubit>().searchQueryChanged(value);
-              },
               onSubmitted: (value) {
-                context.read<WishListCubit>().searchQueryChanged(value);
+                unawaited(
+                  context.read<WishListCubit>().searchQueryChanged(value),
+                );
               },
             ),
           ),
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
-                context.read<WishListCubit>().loadWishLists();
+                unawaited(
+                  context.read<WishListCubit>().loadWishLists(),
+                );
               },
               child: BlocConsumer<WishListCubit, WishListState>(
                 listener: (context, state) {
@@ -138,7 +161,9 @@ class _WishListsPageState extends State<WishListsPage> {
                       context,
                       LocalizationConstants.listDeleted.localized(),
                     );
-                    context.read<WishListCubit>().loadWishLists();
+                    unawaited(
+                      context.read<WishListCubit>().loadWishLists(),
+                    );
                   }
 
                   if (state.status == WishListStatus.listDeleteFailure) {
@@ -202,6 +227,9 @@ class _WishListsPageState extends State<WishListsPage> {
                                             sortOrder as WishListSortOrder,
                                           );
                                     },
+                                    onSortOrderCancel: context
+                                        .read<WishListCubit>()
+                                        .cancelSort,
                                     selectedSortOrder: state.sortOrder,
                                   ),
                                 ],
@@ -239,7 +267,9 @@ class _WishListsSectionState extends State<_WishListsSection> {
 
   void _onScroll() {
     if (_isBottom) {
-      context.read<WishListCubit>().loadMoreWishlists();
+      unawaited(
+        context.read<WishListCubit>().loadMoreWishlists(),
+      );
     }
   }
 
@@ -347,14 +377,18 @@ class _WishListItem extends StatelessWidget {
           },
           extra: WishListScreenCallbackHelper(
             onWishListUpdated: () {
-              _wishListPageScaffoldKey.currentContext
-                  ?.read<WishListCubit>()
-                  .loadWishLists();
+              unawaited(
+                _wishListPageScaffoldKey.currentContext
+                    ?.read<WishListCubit>()
+                    .loadWishLists(),
+              );
             },
             onWishListDeleted: () {
-              _wishListPageScaffoldKey.currentContext
-                  ?.read<WishListCubit>()
-                  .loadWishLists();
+              unawaited(
+                _wishListPageScaffoldKey.currentContext
+                    ?.read<WishListCubit>()
+                    .loadWishLists(),
+              );
             },
           ),
         ),
@@ -447,6 +481,7 @@ class _OptionsMenu extends StatelessWidget {
       builder: (context, state) {
         return BottomMenuWidget(
           websitePath: WebsitePaths.listsWebsitePath,
+          screenName: AnalyticsConstants.screenNameLists,
           toolMenuList: [
             if (state.settings.allowMultipleWishLists == true ||
                 (state.settings.allowMultipleWishLists == false &&
@@ -454,6 +489,14 @@ class _OptionsMenu extends StatelessWidget {
               ToolMenu(
                 title: LocalizationConstants.createNewList.localized(),
                 action: () {
+                  context.read<RootBloc>().add(
+                        RootAnalyticsEvent(
+                          AnalyticsEvent(
+                            AnalyticsConstants.eventViewCreateList,
+                            AnalyticsConstants.screenNameLists,
+                          ),
+                        ),
+                      );
                   AppRoute.wishListCreate.navigateBackStack(
                     context,
                     extra: WishListCreateScreenCallbackHelper(

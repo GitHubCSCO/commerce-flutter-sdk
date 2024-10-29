@@ -3,3 +3,8 @@ enum ScanningMode {
   count,
   create,
 }
+
+enum ScanState {
+  success,
+  fail,
+}

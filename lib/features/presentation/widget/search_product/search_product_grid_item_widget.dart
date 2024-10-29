@@ -131,13 +131,9 @@ class SearchProductGridItemWidget extends StatelessWidget
                                     if (state.canAddToCart) {
                                       return IconButton(
                                         onPressed: () {
-                                          var productId =
-                                              product.styleParentId ??
-                                                  product.id;
                                           context
                                               .read<AddToCartCubit>()
-                                              .searchPorductAddToCard(
-                                                  productId!);
+                                              .searchProductAddToCard(product);
                                         },
                                         icon: Container(
                                           width: 40,
@@ -188,7 +184,7 @@ class SearchProductGridItemWidget extends StatelessWidget
                       Text(
                         LocalizationConstants.itemNumber
                             .localized()
-                            .format([product.erpNumber ?? '']),
+                            .format([product.getProductNumber()]),
                         style: OptiTextStyles.bodySmall.copyWith(
                           color: OptiAppColors.textDisabledColor,
                         ),
@@ -205,7 +201,7 @@ class SearchProductGridItemWidget extends StatelessWidget
                         availabilityMessageType:
                             product.availability?.messageType,
                         productId: product.id,
-                        erpNumber: product.erpNumber,
+                        erpNumber: product.getProductNumber(),
                         unitOfMeasure: product.unitOfMeasure,
                         showViewAvailabilityByWarehouse:
                             showWarehouseInventory(product, productSettings),

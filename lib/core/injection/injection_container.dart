@@ -90,7 +90,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/show_hide/pricin
 import 'package:commerce_flutter_app/features/presentation/bloc/load_website_url/load_website_url_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/pickup_location/pickup_location_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/product/product_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/product/product_collection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_pricing_bloc/product_details_pricing_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
@@ -331,7 +331,7 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => PricingInventoryUseCase())
 
     //product
-    ..registerFactory(() => ProductBloc(searchUseCase: sl()))
+    ..registerFactory(() => ProductCollectionBloc(searchUseCase: sl()))
 
     //account
     ..registerFactory(() => AccountPageBloc(accountUseCase: sl()))

@@ -1,6 +1,8 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/settings/order_settings_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
@@ -41,6 +43,34 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
 
     final order = futureResults[0] as OrderEntity?;
     final orderSettings = futureResults[1] as OrderSettingsEntity?;
+
+    if (order != null) {
+      final analyticEvent = AnalyticsEvent(
+        AnalyticsConstants.eventViewScreen,
+        AnalyticsConstants.screenNameOrderDetail,
+      )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyOrderId,
+            strValue: order.id ?? '',
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyErpOrderNumber,
+            strValue: order.erpOrderNumber ?? '',
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyWebOrderNumber,
+            strValue: order.webOrderNumber ?? '',
+          );
+
+      _orderUsecase.trackEvent(analyticEvent);
+    } else {
+      final analyticEvent = AnalyticsEvent(
+        AnalyticsConstants.eventViewScreen,
+        AnalyticsConstants.screenNameOrderDetail,
+      );
+
+      _orderUsecase.trackEvent(analyticEvent);
+    }
 
     if (order == null || orderSettings == null) {
       emit(state.copyWith(orderStatus: OrderStatus.failure));
@@ -102,6 +132,13 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     );
 
     if (result == OrderStatus.success) {
+      final analyticsEvent = AnalyticsEvent(
+        AnalyticsConstants.eventReorder,
+        AnalyticsConstants.screenNameOrderDetail,
+      );
+
+      _orderUsecase.trackEvent(currentOrderAnalyticEvent(analyticsEvent));
+
       final message = await _orderUsecase.getSiteMessage(
           SiteMessageConstants.nameAddToCartSuccess,
           SiteMessageConstants.defaultValueAddToCartSuccess);
@@ -250,4 +287,20 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
   String? get totalTitle => LocalizationConstants.total.localized();
 
   String? get totalValue => state.order.orderGrandTotalDisplay;
+
+  AnalyticsEvent currentOrderAnalyticEvent(AnalyticsEvent analyticsEvent) {
+    return analyticsEvent
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyOrderId,
+          strValue: state.order.id ?? '',
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyErpOrderNumber,
+          strValue: state.order.erpOrderNumber ?? '',
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyWebOrderNumber,
+          strValue: state.order.webOrderNumber ?? '',
+        );
+  }
 }

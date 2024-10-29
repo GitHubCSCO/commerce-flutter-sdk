@@ -9,7 +9,6 @@ import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_image_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_quantity_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_title_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/view_quote_line_break_price_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -83,7 +82,8 @@ class QuoteLineWidget extends StatelessWidget {
           QuoteLineItemTitleWidget(
             shortDescription: quoteLineEntity.shortDescription,
             manufacturerItem: quoteLineEntity.manufacturerItem,
-            productNumber: quoteLineEntity.getProductNumber(),
+            productNumber:
+                QuoteLineExtensions(quoteLineEntity).getProductNumber(),
             myPartNumberValueLabel: quoteLineEntity.customerName,
             quantityValueLabel: quoteLineEntity.qtyOrdered?.toInt().toString(),
           ),
@@ -100,7 +100,8 @@ class QuoteLineWidget extends StatelessWidget {
                     quoteLineEntity.updateUnitOfMeasureValueText(),
                 availabilityText: quoteLineEntity.availability?.message,
                 productId: quoteLineEntity.productId,
-                erpNumber: quoteLineEntity.erpNumber,
+                erpNumber:
+                    QuoteLineExtensions(quoteLineEntity).getProductNumber(),
                 unitOfMeasure: quoteLineEntity.baseUnitOfMeasure,
                 showViewAvailabilityByWarehouse: false,
               ),
@@ -240,7 +241,7 @@ class QuoteLineItemTitleWidget extends StatelessWidget {
                         LocalizationConstants.qTY.localized(),
                         style: OptiTextStyles.subtitle.copyWith(fontSize: 12),
                       ),
-                      SizedBox(width: 5),
+                      const SizedBox(width: 5),
                       Text(
                         quantityValueLabel ?? '',
                         style: OptiTextStyles.bodySmall,

@@ -1,7 +1,9 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/models/expansion_panel_item.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shipping_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/review_order_entity.dart';
@@ -19,6 +21,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/checkout/expans
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_handler/order_approval_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/base_checkout.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
@@ -50,13 +53,13 @@ ReviewOrderEntity prepareReviewOrderEntiity(
       orderNotes: context.read<CheckoutBloc>().getOrderNote());
 }
 
-class CheckoutScreen extends StatelessWidget {
+class CheckoutScreen extends BaseStatelessWidget {
   final Cart cart;
 
   const CheckoutScreen({super.key, required this.cart});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ExpansionPanelCubit>(
@@ -78,6 +81,12 @@ class CheckoutScreen extends StatelessWidget {
       child: CheckoutPage(cart: cart),
     );
   }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() => AnalyticsEvent(
+        AnalyticsConstants.eventViewScreen,
+        AnalyticsConstants.screenNameCheckout,
+      );
 }
 
 class CheckoutPage extends StatelessWidget with BaseCheckout {
@@ -107,6 +116,31 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
 
   bool get isCheckoutButtonEnabled {
     return !isCartCheckoutDisabled || !hasOnlyQuoteRequiredProducts;
+  }
+
+  void trackEcommercePurchaseEvent(
+      BuildContext context,
+      String value,
+      String currency,
+      String shipping,
+      String tax,
+      String transcationId,
+      String promoCode) {
+    context.read<RootBloc>().add(RootAnalyticsEvent(AnalyticsEvent(
+            AnalyticsConstants.eventEcommercePurchase,
+            AnalyticsConstants.screenNameCheckout)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyCurrency, strValue: currency)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyShipping, strValue: shipping)
+        .withProperty(name: AnalyticsConstants.eventPropertyTax, strValue: tax)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyTransactionId,
+            strValue: transcationId)
+        .withProperty(
+            name: AnalyticsConstants.eventPromoCode, strValue: promoCode)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyValue, strValue: value)));
   }
 
   @override
@@ -422,6 +456,18 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                 void handleReviewOrder() {
                                   final reviewOrderEntity =
                                       prepareReviewOrderEntiity(state, context);
+
+                                  trackEcommercePurchaseEvent(
+                                      context,
+                                      state.cart.orderGrandTotal?.toString() ??
+                                          '0',
+                                      state.cart.currencySymbol ?? '',
+                                      state.cart.shippingAndHandling
+                                              ?.toString() ??
+                                          '0',
+                                      state.cart.totalTax?.toString() ?? '0',
+                                      state.cart.orderNumber ?? '',
+                                      state.cart.promotionCode ?? '');
 
                                   context.read<CheckoutBloc>().add(
                                       PlaceOrderEvent(

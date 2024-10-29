@@ -1,9 +1,12 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_content_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_state.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -22,6 +25,18 @@ class CartContentBloc extends Bloc<CartContentEvent, CartContentState> {
       CartContentQuantityChangedEvent event,
       Emitter<CartContentState> emit) async {
     var cartLineEntity = event.cartLineEntity;
+
+    _contentUseCase.trackEvent(AnalyticsEvent(
+            AnalyticsConstants.eventUpdateCartLine,
+            AnalyticsConstants.screenNameCart)
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyErpNumber,
+          strValue: cartLineEntity.erpNumber,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyOrderNumber,
+          strValue: event.orderNumber,
+        ));
 
     final result = await _contentUseCase
         .updateCartLine(CartLineEntityMapper.toModel(cartLineEntity));
@@ -45,6 +60,18 @@ class CartContentBloc extends Bloc<CartContentEvent, CartContentState> {
 
   Future<void> _onCartContentRemove(
       CartContentRemoveEvent event, Emitter<CartContentState> emit) async {
+    _contentUseCase.trackEvent(AnalyticsEvent(
+            AnalyticsConstants.eventRemoveCartLine,
+            AnalyticsConstants.screenNameCart)
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyErpNumber,
+          strValue: event.cartLine.erpNumber,
+        )
+        .withProperty(
+          name: AnalyticsConstants.eventPropertyOrderNumber,
+          strValue: event.orderNumber,
+        ));
+
     final result = await _contentUseCase.deleteCartLine(event.cartLine);
     switch (result) {
       case Success(value: final data):

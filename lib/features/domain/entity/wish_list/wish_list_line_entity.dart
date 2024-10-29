@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
 import 'package:commerce_flutter_app/features/domain/entity/break_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WishListLineEntity extends Equatable {
   final String? id;
@@ -49,6 +50,7 @@ class WishListLineEntity extends Equatable {
   final BrandEntity? brand;
   final bool? isQtyAdjusted;
   final bool? allowZeroPricing;
+  final Properties? properties;
 
   const WishListLineEntity({
     this.id,
@@ -93,6 +95,7 @@ class WishListLineEntity extends Equatable {
     this.brand,
     this.isQtyAdjusted,
     this.allowZeroPricing,
+    this.properties,
   });
 
   @override
@@ -139,6 +142,7 @@ class WishListLineEntity extends Equatable {
         brand,
         isQtyAdjusted,
         allowZeroPricing,
+        properties,
       ];
 
   WishListLineEntity copyWith({
@@ -184,6 +188,7 @@ class WishListLineEntity extends Equatable {
     BrandEntity? brand,
     bool? isQtyAdjusted,
     bool? allowZeroPricing,
+    Properties? properties,
   }) {
     return WishListLineEntity(
       id: id ?? this.id,
@@ -233,6 +238,7 @@ class WishListLineEntity extends Equatable {
       brand: brand ?? this.brand,
       isQtyAdjusted: isQtyAdjusted ?? this.isQtyAdjusted,
       allowZeroPricing: allowZeroPricing ?? this.allowZeroPricing,
+      properties: properties ?? this.properties,
     );
   }
 }

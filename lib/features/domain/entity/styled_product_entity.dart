@@ -6,6 +6,7 @@ import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_meas
 import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
 import 'package:equatable/equatable.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class StyledProductEntity extends Equatable {
   final String? productId;
@@ -26,6 +27,7 @@ class StyledProductEntity extends Equatable {
   final List<ProductImageEntity>? productImages;
   final List<WarehouseEntity>? warehouses;
   final bool? trackInventory;
+  final Properties? properties;
 
   const StyledProductEntity({
     this.availability,
@@ -45,6 +47,7 @@ class StyledProductEntity extends Equatable {
     this.styleValues,
     this.trackInventory,
     this.warehouses,
+    this.properties,
   });
 
   @override
@@ -66,6 +69,7 @@ class StyledProductEntity extends Equatable {
         productImages,
         warehouses,
         trackInventory,
+        properties,
       ];
 
   StyledProductEntity copyWith({
@@ -86,6 +90,7 @@ class StyledProductEntity extends Equatable {
     List<ProductImageEntity>? productImages,
     List<WarehouseEntity>? warehouses,
     bool? trackInventory,
+    Properties? properties,
   }) {
     return StyledProductEntity(
       productId: productId ?? this.productId,
@@ -106,6 +111,7 @@ class StyledProductEntity extends Equatable {
       productImages: productImages ?? this.productImages,
       warehouses: warehouses ?? this.warehouses,
       trackInventory: trackInventory ?? this.trackInventory,
+      properties: properties ?? this.properties,
     );
   }
 }

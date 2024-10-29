@@ -17,6 +17,7 @@ import 'package:commerce_flutter_app/features/domain/entity/product_details/prod
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
@@ -62,7 +63,8 @@ class ProductDetailsScreen extends StatelessWidget {
       providers: [
         BlocProvider<ProductDetailsBloc>(
           create: (context) => sl<ProductDetailsBloc>()
-            ..add(FetchProductDetailsEvent(productId, product)),
+            ..add(FetchProductDetailsEvent(productId, product,
+                trackScreen: true)),
         ),
         BlocProvider<ProductDetailsPricingBloc>(
           create: (context) => sl<ProductDetailsPricingBloc>(),
@@ -251,7 +253,8 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
       switch (item.detailsSectionType) {
         case ProdcutDeatilsPageWidgets.productDetailsSpecification:
           final specificationEntity = item as ProductDetailItemEntity;
-          widgets.add(buildExpandableDescriptionWidget(specificationEntity));
+          widgets.add(buildExpandableDescriptionWidget(
+              specificationEntity, product.getProductNumber()));
           break;
         case ProdcutDeatilsPageWidgets.productDetailsDescription:
           final detailsEntity = item as ProductDetailsDescriptionEntity;
@@ -297,7 +300,8 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
           final productDetailsAttributesEntity =
               item as ProductDetailsAttributesEntity;
           widgets.add(buildProductDetailsAttributesWidget(
-              productDetailsAttributesEntity: productDetailsAttributesEntity));
+              productDetailsAttributesEntity: productDetailsAttributesEntity,
+              productNumber: product.getProductNumber()));
         default:
           break;
       }
@@ -326,8 +330,9 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
 
   // details expandable widgets
   Widget buildExpandableDescriptionWidget(
-      ProductDetailItemEntity specification) {
-    return ProductDetailsExpansionItemWidget(specification: specification);
+      ProductDetailItemEntity specification, String productNumber) {
+    return ProductDetailsExpansionItemWidget(
+        specification: specification, productNumber: productNumber);
   }
 
   // details general info widget
@@ -337,7 +342,6 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
   }
 
   // details add to cart widget
-
   Widget buildAddToCartWidget(
       ProductDetailsAddtoCartEntity detailsAddToCartEntity,
       BuildContext buildContext) {
@@ -403,9 +407,10 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
   }
 
   Widget buildProductDetailsAttributesWidget(
-      {required ProductDetailsAttributesEntity
-          productDetailsAttributesEntity}) {
+      {required ProductDetailsAttributesEntity productDetailsAttributesEntity,
+      required String productNumber}) {
     return ProductDetailsAttributesWidget(
-        productDetailsAttributesEntity: productDetailsAttributesEntity);
+        productDetailsAttributesEntity: productDetailsAttributesEntity,
+        productNumber: productNumber);
   }
 }

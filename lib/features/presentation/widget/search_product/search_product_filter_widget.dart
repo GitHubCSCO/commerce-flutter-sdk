@@ -31,6 +31,7 @@ class SearchProductFilterWidget extends StatelessWidget {
     required bool previouslyPurchased,
     required bool selectedStockedItems,
   }) onApply;
+  final void Function()? onReset;
 
   const SearchProductFilterWidget(
     BuildContext context, {
@@ -45,6 +46,7 @@ class SearchProductFilterWidget extends StatelessWidget {
     this.selectedStockedItems,
     this.searchText,
     required this.onApply,
+    this.onReset,
   });
 
   @override
@@ -111,6 +113,7 @@ class SearchProductFilterWidget extends StatelessWidget {
                             _getProductsQueryParameters(productListType),
                         productListType: productListType,
                       );
+                  onReset?.call();
                 },
                 onFilterSelected: (v) {
                   context.read<ProductListFilterCubit>().selectFilter(

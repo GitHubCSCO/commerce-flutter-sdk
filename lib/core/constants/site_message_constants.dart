@@ -23,6 +23,8 @@ class SiteMessageConstants {
   static String get nameWishListNoListsFound => "Lists_NoListsFound";
   static String get nameWishListNameRequired => "Lists_List_Name_Required";
   static String get nameWishListProductAdded => "Lists_ProductAdded";
+  static String get nameWishListNotAllAddedToCart =>
+      "Lists_Items_Not_All_Added_To_Cart";
   static String get nameRealTimePricingLoadFail =>
       "RealTimePricing_PriceLoadFailed";
   static String get nameRealTimeInventoryLoadFail =>
@@ -181,6 +183,8 @@ class SiteMessageConstants {
   static String get defaultValueWishListNameRequired => "List Name is required";
   static String get defaultValueWishListProductAdded =>
       "Product successfully added to your list.";
+  static String get defaultValueWishListNotAllAddedToCart =>
+      "Not all items were added to the cart due to product restrictions or discontinued products. Please review your cart before placing your order.";
   static String get defaultValueRealTimePricingLoadFail =>
       "Price Not Available";
   static String get defaultValueRealTimeInventoryLoadFail =>

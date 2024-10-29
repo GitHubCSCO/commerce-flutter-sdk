@@ -7,8 +7,9 @@ abstract class ProductDetailsEvent {}
 class FetchProductDetailsEvent extends ProductDetailsEvent {
   final String productId;
   final ProductEntity? product;
+  final bool? trackScreen;
 
-  FetchProductDetailsEvent(this.productId, this.product);
+  FetchProductDetailsEvent(this.productId, this.product, {this.trackScreen});
 }
 
 class StyleTraitSelectedEvent extends ProductDetailsEvent {

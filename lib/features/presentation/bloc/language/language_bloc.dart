@@ -1,3 +1,5 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/language_usecase/language_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -62,6 +64,17 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
   Future<void> _onLanguageChangeEvent(
       LanguageChangeEvent event, Emitter<LanguageState> emit) async {
     emit(LanguageLoading());
+
+    _languageUsecase.trackEvent(AnalyticsEvent(
+            AnalyticsConstants.eventChangeLanguage,
+            AnalyticsConstants.screenNameSettings)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyLanguageId,
+            strValue: event.language.id)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyLanguageCode,
+            strValue: event.language.languageCode));
+
     var result = await _languageUsecase.changeLanguage(event.language);
     switch (result) {
       case Success(value: final data):

@@ -1,10 +1,14 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/display_option.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 List<DisplayOption> _getDisplayOptions(
@@ -55,11 +59,14 @@ class SortToolMenu extends StatelessWidget {
   final List<DisplayOption> displayOptions;
   final SortOrderAttribute selectedSortOrder;
   final Future<void> Function(SortOrderAttribute) onSortOrderChanged;
+  final void Function()? onSortOrderCancel;
+  final isMenuCloseManually = true;
 
   SortToolMenu({
     super.key,
     required List<SortOrderAttribute> availableSortOrders,
     required this.onSortOrderChanged,
+    this.onSortOrderCancel,
     required this.selectedSortOrder,
   }) : displayOptions = _getDisplayOptions(
           availableSortOrders,
@@ -90,9 +97,17 @@ class SortToolMenu extends StatelessWidget {
     }
   }
 
-  void _showBottomMenu(
-      BuildContext context, List<DisplayOption> displayOptionsList) {
-    showCupertinoModalPopup(
+  Future<void> _showBottomMenu(
+      BuildContext context, List<DisplayOption> displayOptionsList) async {
+    context.read<RootBloc>().add(
+          RootAnalyticsEvent(
+            AnalyticsEvent(
+              AnalyticsConstants.eventViewScreen,
+              AnalyticsConstants.screenNameSortSelection,
+            ),
+          ),
+        );
+    final result = await showCupertinoModalPopup(
       context: context,
       builder: (context) {
         return CupertinoActionSheet(
@@ -104,11 +119,16 @@ class SortToolMenu extends StatelessWidget {
               LocalizationConstants.cancel.localized(),
               style: TextStyle(color: Colors.blue),
             ),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(context, isMenuCloseManually),
           ),
         );
       },
     );
+
+    //Check whether user close menu manually
+    if (result == null || result == true) {
+      onSortOrderCancel?.call();
+    }
   }
 
   List<Widget> _getToolMenuWidgets(
@@ -121,7 +141,7 @@ class SortToolMenu extends StatelessWidget {
       return CupertinoActionSheetAction(
         onPressed: () async {
           if (context.mounted) {
-            Navigator.pop(context);
+            Navigator.pop(context, !isMenuCloseManually);
           }
           await value.action();
         },
@@ -147,7 +167,7 @@ class SortToolMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       padding: const EdgeInsets.all(10),
-      onPressed: () => _showBottomMenu(context, displayOptions),
+      onPressed: () async => _showBottomMenu(context, displayOptions),
       icon: const SvgAssetImage(
         height: 20,
         width: 20,

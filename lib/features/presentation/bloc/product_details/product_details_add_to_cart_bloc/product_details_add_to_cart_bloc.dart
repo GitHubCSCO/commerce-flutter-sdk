@@ -1,4 +1,7 @@
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
@@ -37,6 +40,7 @@ class ProductDetailsAddToCartBloc
       LoadProductDetailsAddToCartEvent event,
       Emitter<ProductDetailsAddtoCartState> emit) async {
     emit(ProductDetailsAddtoCartLoading());
+
     var productDetailsAddToCartEntity = event.productDetailsAddToCartEntity;
 
     await _loadSiteMessages();
@@ -49,6 +53,11 @@ class ProductDetailsAddToCartBloc
 
   Future<void> _onAddToCartEvent(
       AddToCartEvent event, Emitter<ProductDetailsAddtoCartState> emit) async {
+    trackAddToCardEvent(
+        event.productDetailsAddToCartEntity.productDetailsPriceEntity?.product
+                ?.getProductNumber() ??
+            "",
+        event.productDetailsAddToCartEntity.quantityText!);
     var product =
         event.productDetailsAddToCartEntity.productDetailsPriceEntity?.product;
     var styledProduct = event
@@ -112,5 +121,16 @@ class ProductDetailsAddToCartBloc
     messageAddToCartQuantityAdjusted = futureResult[2];
 
     return;
+  }
+
+  void trackAddToCardEvent(String productNumber, String qty) {
+    var analyticsEvent = AnalyticsEvent(AnalyticsConstants.eventAddToCart,
+            AnalyticsConstants.screenNameProductDetail)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyProductNumber,
+            strValue: productNumber)
+        .withProperty(name: AnalyticsConstants.eventPropertyQty, strValue: qty);
+
+    _productDetailsAddToCartUseCase.trackEvent(analyticsEvent);
   }
 }

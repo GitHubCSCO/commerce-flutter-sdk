@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/context.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/filter_status.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
@@ -15,6 +17,7 @@ import 'package:commerce_flutter_app/features/presentation/components/filter.dar
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_history/order_history_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/order_history_list_item_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
@@ -23,16 +26,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:badges/badges.dart' as badges;
 
-class OrderHistoryScreen extends StatelessWidget {
+class OrderHistoryScreen extends BaseStatelessWidget {
   final bool? isFromVMI;
   const OrderHistoryScreen({super.key, this.isFromVMI});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return BlocProvider(
       create: (context) =>
           sl<OrderHistoryCubit>()..initialize(isFromVMI: isFromVMI ?? false),
       child: OrderHistoryPage(isFromVMI),
+    );
+  }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() {
+    return AnalyticsEvent(
+      AnalyticsConstants.eventViewScreen,
+      AnalyticsConstants.screenNameOrders,
     );
   }
 }
@@ -50,7 +61,9 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
       appBar: AppBar(
         actions: <Widget>[
           BottomMenuWidget(
-              websitePath: context.watch<OrderHistoryCubit>().websitePath),
+            websitePath: context.watch<OrderHistoryCubit>().websitePath,
+            screenName: AnalyticsConstants.screenNameOrders,
+          ),
         ],
         backgroundColor: OptiAppColors.backgroundWhite,
         title: const Text('My Orders'),
@@ -81,11 +94,6 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
               onTapOutside: (p0) => context.closeKeyboard(),
               textInputAction: TextInputAction.search,
               controller: _textEditingController,
-              onChanged: (value) {
-                unawaited(context
-                    .read<OrderHistoryCubit>()
-                    .searchQueryChanged(value));
-              },
               onSubmitted: (value) {
                 unawaited(context
                     .read<OrderHistoryCubit>()
@@ -149,6 +157,9 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
                                               sortOrder as OrderSortOrder,
                                             );
                                       },
+                                      onSortOrderCancel: context
+                                          .read<OrderHistoryCubit>()
+                                          .cancelSort,
                                     ),
                                     const SizedBox(width: 10),
                                     const _OrderHistoryFilter(),
