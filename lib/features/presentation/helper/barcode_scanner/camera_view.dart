@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
+import 'package:commerce_flutter_app/core/utils/camera_utils.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/scanner_camera_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,7 +25,11 @@ class CameraView extends StatefulWidget {
       : super(key: key);
 
   final CustomPaint? customPaint;
-  final Function(InputImage inputImage) onImage;
+  final Function({
+    required InputImage inputImage,
+    required Size canvasSize,
+    required double aspectRatio,
+  })? onImage;
   final bool barcodeFullView;
   final VoidCallback? onCameraFeedReady;
   final VoidCallback? onDetectorViewModeChanged;
@@ -39,6 +46,15 @@ class _CameraViewState extends State<CameraView> {
   CameraController? _controller;
   int _cameraIndex = -1;
   bool cameraFlash = false;
+  Size? canvasSize;
+  double? aspectRatio;
+  double _currentZoomLevel = 1.0;
+  double _minZoom = 1.0;
+  double _maxZoom = 1.0;
+  double _baseZoomLevel = 1.0;
+  bool showFocusCircle = false;
+  double x = 0;
+  double y = 0;
 
   @override
   void initState() {
@@ -90,19 +106,98 @@ class _CameraViewState extends State<CameraView> {
     if (_controller?.value.isInitialized == false) return Container();
     return ColoredBox(
       color: Colors.black,
-      child: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          CameraPreview(
-            _controller!,
-            child: widget.customPaint,
-          ),
-          _rectangleScanArea(),
-          _switchFlashToggle(),
-          _backButton(),
-        ],
-      ),
+      child: LayoutBuilder(builder: (context, constraints) {
+        canvasSize = Size(constraints.maxWidth, constraints.maxHeight);
+        aspectRatio = isLandscape(_controller!)
+            ? _controller!.value.aspectRatio
+            : (1 / _controller!.value.aspectRatio);
+        var scaledPreviewHeight = canvasSize!.width / aspectRatio!;
+        const rectHeight = CoreConstants.barcodeRectangleSize *
+            CoreConstants.drawRectHeightFactor;
+        //TODO
+        //Or is it better?
+        //var rectHeight = (widget.customPaint?.foregroundPainter as RectanglePainter).rect?.height ?? 1;
+        var quickOrderScanTopOffset = -((scaledPreviewHeight / 2) -
+            rectHeight * CoreConstants.topOffsetFactor);
+        double searchScanTopOffset = 0;
+        if (scaledPreviewHeight > canvasSize!.height) {
+          searchScanTopOffset =
+              -((scaledPreviewHeight - canvasSize!.height) / 2);
+        }
+        return Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Positioned(
+              top: widget.barcodeFullView
+                  ? searchScanTopOffset
+                  : quickOrderScanTopOffset,
+              left: 0, // Optional: Align to the left
+              right: 0, // Optional: Align to the right to center horizontally
+              child: GestureDetector(
+                onDoubleTap: _handleDoubleTap,
+                onScaleStart: _handleScaleStart,
+                onScaleUpdate: _handleScaleUpdate,
+                onTapUp: (details) async {
+                  _onTap(details);
+                },
+                child: Stack(
+                  children: [
+                    ScannerCameraPreview(
+                      _controller!,
+                      child: widget.customPaint,
+                    ),
+                    if (showFocusCircle)
+                      Positioned(
+                          top: y - 20,
+                          left: x - 20,
+                          child: Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    color: Colors.white, width: 1.5)),
+                          ))
+                  ],
+                ),
+              ),
+            ),
+            _switchFlashToggle(),
+            _backButton(),
+          ],
+        );
+      }),
     );
+  }
+
+  FutureOr<void> _onTap(TapUpDetails details) async {
+    if (_controller?.value.isInitialized == true) {
+      showFocusCircle = true;
+      x = details.localPosition.dx;
+      y = details.localPosition.dy;
+
+      double fullWidth = MediaQuery.of(context).size.width;
+      double cameraHeight = fullWidth * _controller!.value.aspectRatio;
+
+      double xp = x / fullWidth;
+      double yp = y / cameraHeight;
+
+      Offset point = Offset(xp, yp);
+
+      // Manually focus
+      await _controller?.setFocusPoint(point);
+
+      // Manually set light exposure
+      // _controller?.setExposurePoint(point);
+
+      setState(() {
+        Future.delayed(const Duration(milliseconds: 1000)).whenComplete(() {
+          setState(() {
+            showFocusCircle = false;
+          });
+        });
+      });
+    }
   }
 
   Widget _backButton() => Visibility(
@@ -153,8 +248,8 @@ class _CameraViewState extends State<CameraView> {
               InkWell(
                 onTap: () {
                   setState(() => cameraFlash = !cameraFlash);
-                  _controller?.setFlashMode(
-                      cameraFlash ? FlashMode.torch : FlashMode.off);
+                  unawaited(_controller?.setFlashMode(
+                      cameraFlash ? FlashMode.torch : FlashMode.off));
                 },
                 borderRadius: BorderRadius.circular(32),
                 child: Container(
@@ -171,8 +266,8 @@ class _CameraViewState extends State<CameraView> {
                   shape: const CircleBorder(),
                   onPressed: () {
                     setState(() => cameraFlash = !cameraFlash);
-                    _controller?.setFlashMode(
-                        cameraFlash ? FlashMode.torch : FlashMode.off);
+                    unawaited(_controller?.setFlashMode(
+                        cameraFlash ? FlashMode.torch : FlashMode.off));
                   },
                   backgroundColor: Colors.grey.shade100,
                   child: Icon(
@@ -187,23 +282,28 @@ class _CameraViewState extends State<CameraView> {
         ),
       );
 
-  Widget _rectangleScanArea() {
-    double rectangleHeight = CoreConstants.barcodeRectangleSize;
-    Size screenSize = MediaQuery.of(context).size;
+  FutureOr<void> _handleDoubleTap() async {
+    setState(() {
+      if (_currentZoomLevel < _maxZoom) {
+        _currentZoomLevel = (_currentZoomLevel + 1.0).clamp(_minZoom, _maxZoom);
+      } else {
+        _currentZoomLevel = _minZoom; // Reset zoom
+      }
+      _controller?.setZoomLevel(_currentZoomLevel);
+    });
+  }
 
-    final topMargin = (screenSize.height - 180 - 80) / 2;
+  FutureOr<void> _handleScaleUpdate(ScaleUpdateDetails details) async {
+    setState(() {
+      // Adjust the current zoom level based on pinch scale
+      _currentZoomLevel =
+          (_baseZoomLevel * details.scale).clamp(_minZoom, _maxZoom);
+      _controller?.setZoomLevel(_currentZoomLevel);
+    });
+  }
 
-    return Positioned(
-      top: widget.barcodeFullView ? topMargin : 0,
-      left: 0,
-      right: 0,
-      child: SizedBox(
-        height: rectangleHeight,
-        child: CustomPaint(
-          painter: RectanglePainter(),
-        ),
-      ),
-    );
+  void _handleScaleStart(ScaleStartDetails details) {
+    _baseZoomLevel = _currentZoomLevel;
   }
 
   Future _startLiveFeed() async {
@@ -217,7 +317,7 @@ class _CameraViewState extends State<CameraView> {
           ? ImageFormatGroup.nv21
           : ImageFormatGroup.bgra8888,
     );
-    _controller?.initialize().then((_) {
+    await _controller?.initialize().then((_) {
       if (!mounted) {
         return;
       }
@@ -231,6 +331,11 @@ class _CameraViewState extends State<CameraView> {
       });
       setState(() {});
     });
+    if (_controller?.value.isInitialized == true) {
+      await _controller?.setFocusMode(FocusMode.auto);
+    }
+    _minZoom = await _controller?.getMinZoomLevel() ?? 1.0;
+    _maxZoom = await _controller?.getMaxZoomLevel() ?? 1.0;
   }
 
   Future _stopLiveFeed() async {
@@ -240,9 +345,17 @@ class _CameraViewState extends State<CameraView> {
   }
 
   void _processCameraImage(CameraImage image) {
-    final inputImage = _inputImageFromCameraImage(image);
-    if (inputImage == null) return;
-    widget.onImage(inputImage);
+    if (widget.onImage != null) {
+      final inputImage = _inputImageFromCameraImage(image);
+      if (inputImage == null) {
+        return;
+      }
+      widget.onImage!(
+        inputImage: inputImage,
+        canvasSize: canvasSize ?? const Size(0, 0),
+        aspectRatio: aspectRatio ?? 1,
+      );
+    }
   }
 
   final _orientations = {
@@ -290,12 +403,14 @@ class _CameraViewState extends State<CameraView> {
     // only supported formats:
     // * nv21 for Android
     // * bgra8888 for iOS
+    // if (format == null) return null;
     if (format == null ||
         (Platform.isAndroid && format != InputImageFormat.nv21) ||
         (Platform.isIOS && format != InputImageFormat.bgra8888)) return null;
 
     // since format is constraint to nv21 or bgra8888, both only have one plane
     if (image.planes.length != 1) return null;
+    // if (image.planes.isEmpty) return null;
     final plane = image.planes.first;
 
     // compose InputImage using bytes
@@ -308,36 +423,5 @@ class _CameraViewState extends State<CameraView> {
         bytesPerRow: plane.bytesPerRow, // used only in iOS
       ),
     );
-  }
-}
-
-class RectanglePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()
-      ..color = Colors.white
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 4.0;
-
-    // final rect = Rect.fromLTWH(
-    //   size.width *
-    //       0.10, // Adjust these values as needed to position the rectangle
-    //   size.height * 0.4,
-    //   size.width * 0.80,
-    //   size.height * 0.20,
-    // );
-    final rect = Rect.fromLTWH(
-      size.width * 0.10,
-      size.height * 0.15,
-      size.width * 0.80,
-      size.height * 0.70,
-    );
-
-    canvas.drawRect(rect, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
   }
 }

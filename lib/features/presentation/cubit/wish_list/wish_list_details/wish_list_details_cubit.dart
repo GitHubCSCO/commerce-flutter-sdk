@@ -189,6 +189,11 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       searchText: state.searchQuery,
     );
 
+    final hasCheckout = await _wishListDetailsUsecase.hasCheckout();
+
+    final canAddWishListToCart =
+        hasCheckout && (wishList.canAddAllToCart ?? false);
+
     if (wishListLines != null) {
       emit(
         WishListDetailsState(
@@ -198,6 +203,7 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
           wishListLines: wishListLines,
           status: WishListStatus.realTimeAttributesLoading,
           settings: state.settings,
+          canAddWishListToCart: canAddWishListToCart,
         ),
       );
 

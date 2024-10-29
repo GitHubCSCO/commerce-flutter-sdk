@@ -85,7 +85,6 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
 
   @override
   void dispose() {
-    autoFocusNode.dispose();
     super.dispose();
   }
 

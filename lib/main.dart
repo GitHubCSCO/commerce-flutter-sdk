@@ -146,7 +146,7 @@ class MyApp extends StatelessWidget {
         builder: (context, state) {
           final lightTheme = getTheme();
           return MaterialApp.router(
-            title: 'Commerce Mobile',
+            title: sl<IDeviceService>().applicationName ?? 'Commerce Mobile',
             routerConfig: sl<GoRouter>(),
             theme: lightTheme,
           );

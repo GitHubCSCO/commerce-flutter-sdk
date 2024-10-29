@@ -4,12 +4,14 @@ abstract class BarcodeScanEvent {}
 
 class ScannerFlashOnOffEvent extends BarcodeScanEvent {
   final bool cameraFlash;
-
   ScannerFlashOnOffEvent(this.cameraFlash);
 }
 
 class ScannerScanEvent extends BarcodeScanEvent {
   final bool canProcess;
-
   ScannerScanEvent(this.canProcess);
 }
+
+class ScannerProductFoundEvent extends BarcodeScanEvent {}
+
+class ScannerProductNotFoundEvent extends BarcodeScanEvent {}

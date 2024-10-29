@@ -50,7 +50,7 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
           ),
         ];
 
-        RealTimePricingParameters parameter = RealTimePricingParameters(
+        var parameter = RealTimePricingParameters(
           productPriceParameters: priceProducts,
         );
         var getProductRealTimePricesResponse = await commerceAPIServiceProvider
@@ -60,9 +60,10 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
         switch (getProductRealTimePricesResponse) {
           case Success(value: final data):
             var realTimePrices = data;
-            productPricing = ProductPriceEntityMapper.toEntity(realTimePrices
-                ?.realTimePricingResults!
-                .firstWhere((o) => o.productId == productId));
+            var productPricingList = realTimePrices?.realTimePricingResults
+                ?.where((o) => o.productId == productId);
+            productPricing = ProductPriceEntityMapper.toEntity(
+                productPricingList?.firstOrNull);
             return Success(productPricing);
           case Failure(errorResponse: final errorResponse):
             return Failure(ErrorResponse(
@@ -131,8 +132,9 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
       ProductUnitOfMeasureEntity? chosenUnitOfMeasure) {
     var productId =
         styledProduct != null ? styledProduct.productId : productEntity.id;
-    var inventory = getRealTimeInventoryResult?.realTimeInventoryResults
-        ?.firstWhere((o) => o.productId == productId);
+    var inventoryList = getRealTimeInventoryResult?.realTimeInventoryResults
+        ?.where((o) => o.productId == productId);
+    var inventory = inventoryList?.firstOrNull;
 
     if (inventory != null) {
       Availability? newInventoryAvailability;
@@ -168,8 +170,10 @@ class ProductDetailsPricingUseCase extends BaseUseCase {
           ? styledProduct.productUnitOfMeasures
           : productEntity.productUnitOfMeasures;
       for (var p in productUnitOfMeasures!) {
-        var unitOfMeasureAvailability = inventory.inventoryAvailabilityDtos
-            ?.firstWhere((o) => o.unitOfMeasure == p.unitOfMeasure);
+        var unitOfMeasureAvailabilityList = inventory.inventoryAvailabilityDtos
+            ?.where((o) => o.unitOfMeasure == p.unitOfMeasure);
+        var unitOfMeasureAvailability =
+            unitOfMeasureAvailabilityList?.firstOrNull;
         if (unitOfMeasureAvailability != null) {
           p = p.copyWith(
               availability: AvailabilityEntityMapper.toEntity(

@@ -69,7 +69,9 @@ class CartOrderProductsSectionWidget extends StatelessWidget {
               showViewAvailabilityByWarehouse:
                   cartLineEntity.showInventoryAvailability ?? false,
               showViewQuantityPricing: false,
-              unitOfMeasure: cartLineEntity.baseUnitOfMeasure,
+              unitOfMeasure: cartLineEntity.pricing?.getUnitOfMeasure(
+                cartLineEntity.baseUnitOfMeasure ?? '',
+              ),
               hidePricingEnable: hidePricingEnable,
               hideInventoryEnable: hideInventoryEnable,
               canAddToCart: onAddToCart != null,

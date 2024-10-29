@@ -258,15 +258,39 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                           .pleaseSignInBeforeAddingToList
                                           .localized());
                                 } else if (state is OrderListAddFailedState) {
-                                  _showAlert(context, message: state.message);
+                                  context
+                                      .read<BarcodeScanBloc>()
+                                      .add(ScannerProductNotFoundEvent());
+                                  _showAlert(context, message: state.message,
+                                      onDismissAlert: () {
+                                    context
+                                        .read<BarcodeScanBloc>()
+                                        .add(ScannerScanEvent(canProcess));
+                                  });
+                                } else if (state
+                                        is OrderListQuickOrderProductAddState ||
+                                    state
+                                        is OrderListVmiQuickOrderProductAddState) {
+                                  context
+                                      .read<BarcodeScanBloc>()
+                                      .add(ScannerProductFoundEvent());
                                 } else if (state
                                     is OrderListStyleProductAddState) {
+                                  context
+                                      .read<BarcodeScanBloc>()
+                                      .add(ScannerProductFoundEvent());
                                   handleStyleProductAdd(state.productEntity);
                                 } else if (state
                                     is OrderListVmiStyleProductAddState) {
+                                  context
+                                      .read<BarcodeScanBloc>()
+                                      .add(ScannerProductFoundEvent());
                                   handleVmiStyleProductAdd(state.vmiBinEntity);
                                 } else if (state
                                     is OrderListVmiProductAddState) {
+                                  context
+                                      .read<BarcodeScanBloc>()
+                                      .add(ScannerProductFoundEvent());
                                   handleVmiBinAdd(state.vmiBinEntity,
                                       state.previousOrderEntity);
                                 }
@@ -664,7 +688,10 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   }
 
   void _showAlert(BuildContext context,
-      {Widget? icon, String? title, String? message}) {
+      {Widget? icon,
+      String? title,
+      String? message,
+      void Function()? onDismissAlert}) {
     displayDialogWidget(
         context: context,
         icon: icon,
@@ -674,6 +701,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
           DialogPlainButton(
             onPressed: () {
               Navigator.of(context).pop();
+              onDismissAlert?.call();
             },
             child: Text(LocalizationConstants.oK.localized()),
           ),
@@ -818,14 +846,18 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
 
   _handleBarcodeValue(BuildContext context,
       {String? resultText, BarcodeFormat? format}) {
-    cameraFlash = false;
-    canProcess = false;
+    setState(() {
+      cameraFlash = false;
+      canProcess = false;
+    });
     context.read<BarcodeScanBloc>().add(ScannerFlashOnOffEvent(cameraFlash));
     context.read<BarcodeScanBloc>().add(ScannerScanEvent(canProcess));
-    context.read<OrderListBloc>().add(OrderListItemScanAddEvent(
-          resultText: resultText,
-          barcodeFormat: format,
-        ));
+    if (resultText != null) {
+      context.read<OrderListBloc>().add(OrderListItemScanAddEvent(
+            resultText: resultText,
+            barcodeFormat: format,
+          ));
+    }
   }
 
   void handleStyleProductAdd(ProductEntity productEntity) {

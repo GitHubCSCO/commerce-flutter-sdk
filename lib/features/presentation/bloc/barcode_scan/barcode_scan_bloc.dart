@@ -7,6 +7,8 @@ class BarcodeScanBloc extends Bloc<BarcodeScanEvent, BarcodeScanState> {
   BarcodeScanBloc() : super(BarcodeScanInitialState()) {
     on<ScannerFlashOnOffEvent>(_onScannerFlashOnOffEvent);
     on<ScannerScanEvent>(_onScannerScanEvent);
+    on<ScannerProductFoundEvent>(_onScannerProductFoundEvent);
+    on<ScannerProductNotFoundEvent>(_onScannerProductNotFoundEvent);
   }
 
   Future<void> _onScannerFlashOnOffEvent(
@@ -17,5 +19,15 @@ class BarcodeScanBloc extends Bloc<BarcodeScanEvent, BarcodeScanState> {
   Future<void> _onScannerScanEvent(
       ScannerScanEvent event, Emitter<BarcodeScanState> emit) async {
     emit(ScannerScanState(event.canProcess));
+  }
+
+  Future<void> _onScannerProductFoundEvent(
+      ScannerProductFoundEvent event, Emitter<BarcodeScanState> emit) async {
+    emit(ScannerProductFoundState());
+  }
+
+  Future<void> _onScannerProductNotFoundEvent(
+      ScannerProductNotFoundEvent event, Emitter<BarcodeScanState> emit) async {
+    emit(ScannerProductNotFoundState());
   }
 }

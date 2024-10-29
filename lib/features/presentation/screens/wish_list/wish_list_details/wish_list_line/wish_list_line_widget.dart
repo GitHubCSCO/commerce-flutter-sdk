@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/wish_list_line_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_details/wish_list_details_cubit.dart';
@@ -135,7 +136,7 @@ class WishListLineWidget extends StatelessWidget {
           LineItemTitleWidget(
             shortDescription: wishListLineEntity.shortDescription,
             manufacturerItem: wishListLineEntity.manufacturerItem,
-            productNumber: wishListLineEntity.erpNumber,
+            productNumber: wishListLineEntity.getProductNumber(),
           ),
           WishListContentPricingWidget(
             wishListLineEntity: wishListLineEntity,

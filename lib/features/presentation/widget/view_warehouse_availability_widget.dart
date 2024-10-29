@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/converter/avalability_color_converter.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/warehouse_inventory/warehouse_inventory_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/warehouse_inventory/warehouse_inventory_state.dart';
@@ -86,8 +87,24 @@ void viewWarehouseWidget(BuildContext context, String? id, String productNumber,
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(warehouse.name!),
-                                              Text(warehouse.qty.toString()),
+                                              Expanded(
+                                                  child: Text((warehouse
+                                                              .description
+                                                              ?.isEmpty ??
+                                                          true)
+                                                      ? (warehouse.name ?? '')
+                                                      : warehouse
+                                                          .description!)),
+                                              Text(
+                                                (warehouse.qty ?? 0)
+                                                    .toInt()
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    color:
+                                                        AvailabilityColorConverter
+                                                            .convert(warehouse
+                                                                .messageType)),
+                                              ),
                                             ],
                                           ),
                                         ),

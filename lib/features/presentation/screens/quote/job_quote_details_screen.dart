@@ -5,7 +5,9 @@ import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/enums/job_quote_details_status.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
@@ -304,12 +306,13 @@ class _ProductSection extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             final jobQuoteLine = jobQuoteLines[index];
+            final cartLineEntity = CartLineEntityMapper.toEntity(jobQuoteLine);
             return JobQuoteLineWidget(
               imagePath: jobQuoteLine.smallImagePath,
               jobQty: (jobQuoteLine.qtyOrdered ?? 0).toInt(),
               purchasedQty: (jobQuoteLine.qtySold ?? 0).toInt(),
               shortDescription: jobQuoteLine.shortDescription,
-              productNumber: jobQuoteLine.erpNumber,
+              productNumber: cartLineEntity.getProductNumber(),
               manufacturerItem: !jobQuoteLine.manufacturerItem.isNullOrEmpty
                   ? LocalizationConstants.mFGNumberSign.localized() +
                       (jobQuoteLine.manufacturerItem ?? '')
@@ -319,10 +322,11 @@ class _ProductSection extends StatelessWidget {
                   : ProductPriceEntityMapper.toEntity(
                           jobQuoteLine.pricing ?? ProductPrice())
                       .getPriceValue(),
-              unitOfMeasureValueText:
-                  !jobQuoteLine.unitOfMeasureDescription.isNullOrEmpty
-                      ? ' / ${jobQuoteLine.unitOfMeasureDescription!}'
-                      : jobQuoteLine.unitOfMeasureDisplay,
+              unitOfMeasureValueText: cartLineEntity.pricing?.getUnitOfMeasure(
+                !jobQuoteLine.unitOfMeasureDescription.isNullOrEmpty
+                    ? ' / ${jobQuoteLine.unitOfMeasureDescription!}'
+                    : jobQuoteLine.unitOfMeasureDisplay ?? '',
+              ),
               qtyOrdered: jobOrderQty[index].toString(),
               unitOfMeasure: jobQuoteLine.unitOfMeasure,
               onQtyChanged: (int? qty) {

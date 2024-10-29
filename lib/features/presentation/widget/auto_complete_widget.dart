@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -108,7 +109,7 @@ class AutoCompleteProductWidget extends StatelessWidget {
                 Text(
                   LocalizationConstants.itemNumber
                       .localized()
-                      .format([autocompleteProduct.erpNumber ?? '']),
+                      .format([autocompleteProduct.getProductNumber()]),
                   style: OptiTextStyles.bodySmall.copyWith(
                     color: OptiAppColors.textDisabledColor,
                   ),

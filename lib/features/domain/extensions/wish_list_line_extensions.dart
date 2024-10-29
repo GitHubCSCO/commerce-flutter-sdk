@@ -1,7 +1,6 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 extension WishListLineExtensions on WishListLineEntity? {
   String get updatePriceValueText {
@@ -45,16 +44,12 @@ extension WishListLineExtensions on WishListLineEntity? {
       return "";
     }
     var uomText = "";
-    if (this!.pricing != null && this!.pricing!.isOnSale!) {
-      if (!this!.unitOfMeasureDescription.isNullorWhitespace) {
-        uomText = this!.unitOfMeasureDescription ?? "";
-      } else {
-        uomText = this!.unitOfMeasureDisplay ?? "";
-      }
+    if (this!.pricing != null && this!.pricing!.isOnSale == true) {
+      uomText = this!.unitOfMeasure ?? "";
     } else {
-      uomText = this!.pricing.getUnitOfMeasure(uomText) ?? "";
+      uomText = this!.pricing.getUnitOfMeasure(this!.unitOfMeasure ?? "") ?? "";
     }
 
-    return uomText;
+    return uomText.isEmpty ? '' : ' / $uomText';
   }
 }

@@ -184,7 +184,7 @@ class SearchProductGridItemWidget extends StatelessWidget
                       Text(
                         LocalizationConstants.itemNumber
                             .localized()
-                            .format([product.erpNumber ?? '']),
+                            .format([product.getProductNumber()]),
                         style: OptiTextStyles.bodySmall.copyWith(
                           color: OptiAppColors.textDisabledColor,
                         ),
@@ -201,7 +201,7 @@ class SearchProductGridItemWidget extends StatelessWidget
                         availabilityMessageType:
                             product.availability?.messageType,
                         productId: product.id,
-                        erpNumber: product.erpNumber,
+                        erpNumber: product.getProductNumber(),
                         unitOfMeasure: product.unitOfMeasure,
                         showViewAvailabilityByWarehouse:
                             showWarehouseInventory(product, productSettings),

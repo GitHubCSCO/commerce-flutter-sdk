@@ -197,6 +197,7 @@ class ProductEntityMapper {
         childTraitValues: model.childTraitValues
             ?.map((e) => ChildTraitValueEntityMapper.toEntity(e))
             .toList(),
+        properties: model.properties,
       );
 
   static Product toModel(ProductEntity entity) => Product(
@@ -374,5 +375,5 @@ class ProductEntityMapper {
         childTraitValues: entity.childTraitValues
             ?.map((e) => ChildTraitValueEntityMapper.toModel(e))
             .toList(),
-      );
+      )..properties = entity.properties;
 }

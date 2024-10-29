@@ -1,52 +1,34 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:camera/camera.dart';
-import 'package:google_mlkit_commons/google_mlkit_commons.dart';
-
-double translateX(
-  double x,
-  Size canvasSize,
-  Size imageSize,
-  InputImageRotation rotation,
-  CameraLensDirection cameraLensDirection,
-) {
+double translateX(double x, Size canvasSize, Size imageSize, int rotation) {
   switch (rotation) {
-    case InputImageRotation.rotation90deg:
+    case 90:
       return x *
           canvasSize.width /
           (Platform.isIOS ? imageSize.width : imageSize.height);
-    case InputImageRotation.rotation270deg:
+    case 270:
       return canvasSize.width -
           x *
               canvasSize.width /
               (Platform.isIOS ? imageSize.width : imageSize.height);
-    case InputImageRotation.rotation0deg:
-    case InputImageRotation.rotation180deg:
-      switch (cameraLensDirection) {
-        case CameraLensDirection.back:
-          return x * canvasSize.width / imageSize.width;
-        default:
-          return canvasSize.width - x * canvasSize.width / imageSize.width;
-      }
+    case 0:
+    case 180:
+      return x * canvasSize.width / imageSize.width;
   }
+  return x;
 }
 
-double translateY(
-  double y,
-  Size canvasSize,
-  Size imageSize,
-  InputImageRotation rotation,
-  CameraLensDirection cameraLensDirection,
-) {
+double translateY(double y, Size canvasSize, Size imageSize, int rotation) {
   switch (rotation) {
-    case InputImageRotation.rotation90deg:
-    case InputImageRotation.rotation270deg:
+    case 90:
+    case 270:
       return y *
           canvasSize.height /
           (Platform.isIOS ? imageSize.height : imageSize.width);
-    case InputImageRotation.rotation0deg:
-    case InputImageRotation.rotation180deg:
+    case 0:
+    case 180:
       return y * canvasSize.height / imageSize.height;
   }
+  return y;
 }

@@ -6,7 +6,6 @@ import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 class DetectorView extends StatefulWidget {
   DetectorView({
     Key? key,
-    required this.title,
     required this.onImage,
     this.customPaint,
     this.text,
@@ -16,11 +15,14 @@ class DetectorView extends StatefulWidget {
     this.onCameraLensDirectionChanged,
   }) : super(key: key);
 
-  final String title;
   final CustomPaint? customPaint;
   final String? text;
   final bool barcodeFullView;
-  final Function(InputImage inputImage) onImage;
+  final Function({
+    required InputImage inputImage,
+    required Size canvasSize,
+    required double aspectRatio,
+  })? onImage;
   final Function()? onCameraFeedReady;
   final Function(CameraLensDirection direction)? onCameraLensDirectionChanged;
   final CameraLensDirection initialCameraLensDirection;
@@ -39,7 +41,7 @@ class _DetectorViewState extends State<DetectorView> {
       onCameraFeedReady: widget.onCameraFeedReady,
       initialCameraLensDirection: widget.initialCameraLensDirection,
       onCameraLensDirectionChanged: widget.onCameraLensDirectionChanged,
-      resolutionPreset: ResolutionPreset.medium,
+      resolutionPreset: ResolutionPreset.high,
     );
   }
 }

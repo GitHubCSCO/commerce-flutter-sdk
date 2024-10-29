@@ -123,12 +123,16 @@ class BrandPage extends StatelessWidget {
                                             (item.letter ?? '').toUpperCase()),
                                       );
                                     },
-                                    body: BlocProvider<BrandListCubit>(
-                                      create: (context) => sl<BrandListCubit>()
-                                        ..getBrands(item.letter ?? ''),
-                                      child: BrandListWidget(
-                                          name: item.letter ?? ''),
-                                    ),
+                                    body: (state.currentPanelIndex == index)
+                                        ? BlocProvider<BrandListCubit>(
+                                            create: (context) =>
+                                                sl<BrandListCubit>()
+                                                  ..getBrands(
+                                                      item.letter ?? ''),
+                                            child: BrandListWidget(
+                                                name: item.letter ?? ''),
+                                          )
+                                        : const Center(),
                                     isExpanded:
                                         state.currentPanelIndex == index,
                                     canTapOnHeader: true,
@@ -180,9 +184,12 @@ class BrandListWidget extends StatelessWidget {
       switch (state) {
         case BrandListInitial():
         case BrandListLoading():
-          return const Center(child: CircularProgressIndicator());
+          return const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Center(child: CircularProgressIndicator()),
+          );
         case BrandListLoaded():
-          final List<Brand> brandList = state.brandsResult?.brands ?? [];
+          final brandList = state.brandsResult?.brands ?? [];
 
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),

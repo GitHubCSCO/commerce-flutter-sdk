@@ -76,6 +76,11 @@ class OrderListStyleProductAddState extends OrderListState {
   List<Object?> get props => [];
 }
 
+class OrderListQuickOrderProductAddState extends OrderListState {
+  @override
+  List<Object?> get props => [];
+}
+
 class OrderListVmiStyleProductAddState extends OrderListState {
   final VmiBinModelEntity vmiBinEntity;
 
@@ -91,6 +96,11 @@ class OrderListVmiProductAddState extends OrderListState {
 
   OrderListVmiProductAddState(this.vmiBinEntity, this.previousOrderEntity);
 
+  @override
+  List<Object?> get props => [];
+}
+
+class OrderListVmiQuickOrderProductAddState extends OrderListState {
   @override
   List<Object?> get props => [];
 }

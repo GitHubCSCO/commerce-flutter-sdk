@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/extensions/string_format_extension.dar
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_line_entity.dart';
+import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/components/two_texts_row.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_widget.dart';
@@ -354,7 +355,7 @@ class OrderProductsSectionWidget extends StatelessWidget {
               imagePath: orderLine.mediumImagePath,
               shortDescription: orderLine.shortDescription,
               manufacturerItem: orderLine.manufacturerItem,
-              productNumber: orderLine.productErpNumber,
+              productNumber: orderLine.getProductNumber(),
               discountMessage: (orderLine.unitNetPrice == 0)
                   ? ''
                   : (DiscountValueConverter().convert(orderLine) ?? '')

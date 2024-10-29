@@ -465,7 +465,7 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                         clipBehavior: Clip.antiAlias,
                         decoration: const BoxDecoration(color: Colors.white),
                         child: PrimaryButton(
-                          isEnabled: state.wishList.canAddAllToCart == true,
+                          isEnabled: state.canAddWishListToCart == true,
                           onPressed: () {
                             unawaited(
                               context
