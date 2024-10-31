@@ -109,7 +109,8 @@ class BottomMenu extends StatelessWidget {
       List<ToolMenu> toolMenuList) {
     List<Widget> widgets = [];
 
-    if (isViewOnWebsiteEnable) {
+    if (isViewOnWebsiteEnable &&
+        context.read<BottomMenuCubit>().isViewOnWebsiteEnabled()) {
       widgets.add(CupertinoActionSheetAction(
         onPressed: () {
           Navigator.pop(mContext);
