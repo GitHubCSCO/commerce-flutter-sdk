@@ -12,4 +12,12 @@ class PlatformUseCase extends BaseUseCase {
         .getWebsiteService()
         .getAuthorizedURL(path);
   }
+
+  bool isViewOnWebsiteEnabled() {
+    return coreServiceProvider
+            .getAppConfigurationService()
+            .baseConfig
+            ?.viewOnWebsiteEnabled ??
+        true;
+  }
 }
