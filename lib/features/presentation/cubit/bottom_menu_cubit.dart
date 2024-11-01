@@ -20,7 +20,7 @@ class BottomMenuCubit extends Cubit<BottomMenuState> {
         final viewOnWebsiteEvent =
             AnalyticsEvent(AnalyticsConstants.eventViewOnWebsite, screenName)
                 .withProperty(
-                    name: AnalyticsConstants.eventPropertyUrl, strValue: path);
+                    name: AnalyticsConstants.eventPropertyUrl, strValue: url);
         _platformUseCase.trackEvent(viewOnWebsiteEvent);
       }
       emit(BottomMenuWebsiteUrlLoaded(url));
@@ -30,5 +30,9 @@ class BottomMenuCubit extends Cubit<BottomMenuState> {
           SiteMessageConstants.defaultMobileAppAlertCommunicationError);
       emit(BottomMenuWebsiteUrlFailed(message));
     }
+  }
+
+  bool isViewOnWebsiteEnabled() {
+    return _platformUseCase.isViewOnWebsiteEnabled();
   }
 }
