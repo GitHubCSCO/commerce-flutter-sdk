@@ -159,9 +159,10 @@ class _CountInputPageState extends State<CountInputPage> {
   }
 
   Widget _getQtyInputWidget() {
-    int? qty =
-        widget.countInventoryEntity.vmiBinEntity.lastCountQty?.toInt() ?? 0;
-    int previousQty = qty;
+    int? qty = int.tryParse(_qtyController.text) ??
+        widget.countInventoryEntity.vmiBinEntity.lastCountQty?.toInt() ??
+        0;
+    var previousQty = qty;
     return Container(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -171,6 +172,7 @@ class _CountInputPageState extends State<CountInputPage> {
               style: OptiTextStyles.body),
           NumberTextField(
             initialText: qty.toString(),
+            min: 0,
             shouldShowIncrementDecrementIcon: false,
             controller: _qtyController,
             onChanged: (value) {
