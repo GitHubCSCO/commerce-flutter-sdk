@@ -195,7 +195,8 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => RootUsecase())
 
     //auth
-    ..registerFactory(() => AuthCubit(authUsecase: sl()))
+    ..registerFactory(
+        () => AuthCubit(authUsecase: sl(), authStreamService: sl()))
     ..registerFactory(() => AuthUsecase())
 
     //language
@@ -628,10 +629,10 @@ Future<void> initInjectionContainer() async {
     ..registerLazySingleton<ILocationSearchHistoryService>(
         () => LocationSearchHistoryService(commerceAPIServiceProvider: sl()))
     ..registerLazySingleton<IClientService>(() => ClientService(
-          localStorageService: sl(),
-          secureStorageService: sl(),
-          loggerService: sl(),
-        ))
+        localStorageService: sl(),
+        secureStorageService: sl(),
+        loggerService: sl(),
+        authStreamService: sl()))
     ..registerSingletonAsync<ICacheService>(() async {
       var pref = await SharedPreferences.getInstance();
       return CacheService(
@@ -658,10 +659,10 @@ Future<void> initInjectionContainer() async {
           networkService: sl(),
         ))
     ..registerLazySingleton<IAdminClientService>(() => AdminClientService(
-          localStorageService: sl(),
-          secureStorageService: sl(),
-          loggerService: sl(),
-        ))
+        localStorageService: sl(),
+        secureStorageService: sl(),
+        loggerService: sl(),
+        authStreamService: sl()))
     ..registerLazySingleton<IAccountService>(() => AccountService(
           clientService: sl(),
           cacheService: sl(),
@@ -764,7 +765,8 @@ Future<void> initInjectionContainer() async {
           clientService: sl(),
           cacheService: sl(),
           networkService: sl(),
-        ));
+        ))
+    ..registerLazySingleton<IAuthStreamService>(() => AuthStreamService());
 
   await sl.allReady();
 }

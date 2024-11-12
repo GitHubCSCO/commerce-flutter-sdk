@@ -22,8 +22,8 @@ class ProductDetailsBloc
       ProductDetailsStyleTraitsUseCase();
   ProductUnitOfMeasureEntity? chosenUnitOfMeasure;
   ProductDetailsDataEntity productDetailDataEntity = ProductDetailsDataEntity();
-  late Session session;
-  late AccountSettings accountSettings;
+  late Session? session;
+  late AccountSettings? accountSettings;
   int quantity = 1;
 
   ProductDetailsBloc({required ProductDetailsUseCase productDetailsUseCase})
@@ -90,11 +90,11 @@ class ProductDetailsBloc
         realtimeSupport == RealTimeSupport.RealTimePricingAndInventory ||
         realtimeSupport == RealTimeSupport.RealTimePricingWithInventoryIncluded;
 
-    this.accountSettings = accountSettings!;
-    this.session = session!;
+    this.accountSettings = accountSettings;
+    this.session = session;
     productDetailDataEntity = productDetailDataEntity.copyWith(
         session: session,
-        productSettings: productSettings!,
+        productSettings: productSettings,
         accountSettings: accountSettings,
         addToCartEnabled: addToCartEnabled,
         productPricingEnabled: productPricingEnabled,

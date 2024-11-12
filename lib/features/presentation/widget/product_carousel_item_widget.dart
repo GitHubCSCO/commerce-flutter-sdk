@@ -75,7 +75,7 @@ class ProductCarouselItemWidget extends StatelessWidget {
               ),
               child: Container(
                 alignment: Alignment.bottomLeft,
-                child: LoadingAnimationWidget.prograssiveDots(
+                child: LoadingAnimationWidget.progressiveDots(
                   color: OptiAppColors.iconPrimary,
                   size: 30,
                 ),

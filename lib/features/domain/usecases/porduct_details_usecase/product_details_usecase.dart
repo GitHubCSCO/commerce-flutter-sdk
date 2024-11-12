@@ -91,8 +91,8 @@ class ProductDetailsUseCase extends BaseUseCase {
   Future<Result<ProductEntity, ErrorResponse>> getProductDetails(
       String productId,
       ProductEntity? product,
-      AccountSettings accountSettings,
-      Session session) async {
+      AccountSettings? accountSettings,
+      Session? session) async {
     if (productId.isNullOrEmpty) {
       var urlSegment = product?.urlSegment ?? '';
       var response = await commerceAPIServiceProvider
@@ -112,8 +112,8 @@ class ProductDetailsUseCase extends BaseUseCase {
     }
 
     var includeAlternateInventory =
-        accountSettings.enableWarehousePickup == false ||
-            session.fulfillmentMethod != FulfillmentMethodType.PickUp.name;
+        accountSettings?.enableWarehousePickup == false ||
+            session?.fulfillmentMethod != FulfillmentMethodType.PickUp.name;
 
     var parameters = ProductQueryParameters(
       addToRecentlyViewed: true,

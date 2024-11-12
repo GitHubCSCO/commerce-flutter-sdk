@@ -26,7 +26,7 @@ dependencies:
   hive_flutter: ^1.1.0
   html: ^0.15.4
   flutter_widget_from_html: ^0.14.11
-  loading_animation_widget:
+  loading_animation_widget: ^1.3.0
   device_info_plus: ^9.1.2
   local_auth: ^2.2.0
   webview_flutter: ^4.7.0
@@ -61,6 +61,10 @@ dev_dependencies:
   mocktail: ^1.0.2
   bloc_test: ^9.1.5
   json_serializable: ^6.8.0
+
+dependency_overrides:
+  optimizely_commerce_api:
+    path: ./commerce-dart-sdk
 
 flutter:
   uses-material-design: true
