@@ -1,5 +1,6 @@
 import 'package:appcenter_analytics/appcenter_analytics.dart';
 import 'package:commerce_flutter_app/core/config/analytics_config.dart';
+import 'package:commerce_flutter_app/core/config/prod_config_constants.dart';
 import 'package:commerce_flutter_app/core/config/test_config_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/firebase_options_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
@@ -119,8 +120,8 @@ void initialHiveDatabase() async {
 
 void initCommerceSDK() {
   ClientConfig.hostUrl = null;
-  ClientConfig.clientId = TestConfigConstants.clientId;
-  ClientConfig.clientSecret = TestConfigConstants.clientSecret;
+  ClientConfig.clientId = ProdConfigConstants.clientId;
+  ClientConfig.clientSecret = ProdConfigConstants.clientSecret;
 }
 
 class MyApp extends StatelessWidget {
