@@ -6,20 +6,20 @@ class CartUseCase extends BaseUseCase {
     var cartParameters = CartQueryParameters(
         expand: ["cartlines", "costcodes", "shipping", "tax"],
         allowInvalidAddress: true);
-    return  commerceAPIServiceProvider
+    return commerceAPIServiceProvider
         .getCartService()
         .getCurrentCart(cartParameters);
   }
 
   Future<Result<CartSettings, ErrorResponse>> loadCartSetting() async {
-    return  commerceAPIServiceProvider
+    return commerceAPIServiceProvider
         .getSettingsService()
         .getCartSettingAsync();
   }
 
   Future<Result<PromotionCollectionModel, ErrorResponse>>
       loadCartPromotions() async {
-    return  commerceAPIServiceProvider
+    return commerceAPIServiceProvider
         .getCartService()
         .getCurrentCartPromotions();
   }
@@ -31,34 +31,32 @@ class CartUseCase extends BaseUseCase {
         .getCachedCurrentSession();
     newSession?.pickUpWarehouse = warehouse;
 
-    return  commerceAPIServiceProvider
+    return commerceAPIServiceProvider
         .getSessionService()
         .patchSession(newSession!);
   }
 
   Future<bool> isCustomerOrderApproval() async {
-    return  commerceAPIServiceProvider
+    return commerceAPIServiceProvider
         .getClientService()
         .isCustomerOrderApproval();
   }
 
   Future<Result<ProductSettings, ErrorResponse>> loadProductSettings() async {
-    return  commerceAPIServiceProvider
+    return commerceAPIServiceProvider
         .getSettingsService()
         .getProductSettingsAsync();
   }
 
   Future<bool> hasCheckout() async {
-    return  coreServiceProvider.getAppConfigurationService().hasCheckout();
+    return coreServiceProvider.getAppConfigurationService().hasCheckout();
   }
 
   Future<Result<Session, ErrorResponse>> getCurrentSession() async {
-    return  commerceAPIServiceProvider
-        .getSessionService()
-        .getCurrentSession();
+    return commerceAPIServiceProvider.getSessionService().getCurrentSession();
   }
 
   Future<bool> hasWillCall() async {
-    return  coreServiceProvider.getAppConfigurationService().hasWillCall();
+    return coreServiceProvider.getAppConfigurationService().hasWillCall();
   }
 }
