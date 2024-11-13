@@ -25,7 +25,7 @@ class AuthCubit extends Cubit<AuthState> {
         authenticated();
       } else if (status == AuthSDKStatus.loggedOut) {
         unauthenticated();
-        // autoLogout();
+        autoLogout();
       }
     });
   }

@@ -17,7 +17,7 @@ dependencies:
   optimizely_commerce_api:
     git:
       url: git@github.com:InsiteSoftware/commerce-dart-sdk.git
-      ref: develop
+      ref: story/ICM-4936-dart
   shared_preferences: ^2.2.0
   get_it: ^7.6.4
   flutter_bloc: ^8.1.3
@@ -61,10 +61,6 @@ dev_dependencies:
   mocktail: ^1.0.2
   bloc_test: ^9.1.5
   json_serializable: ^6.8.0
-
-dependency_overrides:
-  optimizely_commerce_api:
-    path: ./commerce-dart-sdk
 
 flutter:
   uses-material-design: true

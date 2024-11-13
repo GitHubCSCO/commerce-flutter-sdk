@@ -131,7 +131,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocListener(
         listeners: [
           BlocListener<LoadWebsiteUrlBloc, LoadWebsiteUrlState>(
-            listener: (context, state) {
+            listener: (_, state) {
               switch (state) {
                 case LoadWebsiteUrlLoadedState():
                   launchUrlString(state.authorizedURL);
@@ -146,12 +146,9 @@ class MyApp extends StatelessWidget {
             },
           ),
           BlocListener<AuthCubit, AuthState>(
-            listener: (context, state) async {
+            listener: (_, state) async {
               if (state.status == AuthStatus.unauthenticated) {
                 await sl<CartCountCubit>().onCartItemChange();
-              }
-               if (state.status == AuthStatus.autoLogout) {
-                print("autoLogout");
               }
             },
           )
