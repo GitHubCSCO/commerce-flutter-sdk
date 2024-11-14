@@ -31,4 +31,8 @@ class BottomMenuCubit extends Cubit<BottomMenuState> {
       emit(BottomMenuWebsiteUrlFailed(message));
     }
   }
+
+  bool isViewOnWebsiteEnabled() {
+    return _platformUseCase.isViewOnWebsiteEnabled();
+  }
 }

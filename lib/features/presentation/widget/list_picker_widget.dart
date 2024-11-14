@@ -73,7 +73,7 @@ class _ListPickerState extends State<ListPicker> {
   Widget build(BuildContext context) {
     selectedIndex = widget.selectedIndex ?? 0;
     return GestureDetector(
-      onTap: widget.isActionEnabled!
+      onTap: (widget.isActionEnabled ?? false)
           ? () {
               _selectItem(context);
             }
