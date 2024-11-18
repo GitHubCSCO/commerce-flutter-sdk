@@ -629,7 +629,7 @@ enum LocalizationConstants {
   priceInvalid(keyword: "Price is not valid"),
   noMessageItem(keyword: "There are no message item."),
   removeItemFromTheList(keyword: "Remove item from the list?"),
-  quantityIsRequired(keyword: "Quantity is required or greater than 0."),
+  quantityIsRequired(keyword: "Quantity is required, 0 or more."),
   notification(keyword: "Notification"),
   vendorManagedInventory(keyword: "Vendor Managed Inventory"),
   location(keyword: "Location"),

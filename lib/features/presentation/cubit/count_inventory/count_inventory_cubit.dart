@@ -15,9 +15,9 @@ class CountInventoryCubit extends Cubit<CountInventoryState> {
 
   Future<void> updateInventoryQuantity(
       VmiBinModelEntity vmiBinEntity, String qtyStr) async {
-    int qty = convertStringToInt(qtyStr);
+    var qty = convertStringToInt(qtyStr);
 
-    if (qty <= 0) {
+    if (qty < 0) {
       emit(CountInventoryAlert(
           LocalizationConstants.quantityIsRequired.localized()));
     } else {
