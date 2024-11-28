@@ -107,8 +107,8 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.landing.name,
     path: AppRoute.landing.suffix,
     builder: (context, state) {
-      final domainChangePossible = state.extra as bool;
-      return LandingScreen(domainChangePossible: domainChangePossible);
+      final domainChangePossible = state.extra as bool?;
+      return LandingScreen(domainChangePossible: domainChangePossible == true);
     },
     parent: null,
   );
@@ -502,7 +502,7 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.vmiOrderDetails.suffix,
     builder: (context, state) {
       final orderNumber = state.pathParameters['orderNumber'] ?? '';
-      final isFromVMI = state.extra as bool;
+      final isFromVMI = state.extra as bool?;
       return OrderDetailsScreen(orderNumber: orderNumber, isFromVMI: isFromVMI);
     },
     parent: vmi,
