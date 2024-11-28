@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
@@ -84,6 +86,7 @@ final GlobalKey<NavigatorState> _rootNavigator = GlobalKey(debugLabel: 'root');
 
 GoRouter getRouter({required OptiLoggerService loggerService}) {
   return GoRouter(
+    extraCodec: const RoutingCodec(),
     navigatorKey: _rootNavigator,
     initialLocation: AppRoute.root.fullPath,
     debugLogDiagnostics: loggerService.isDebugLogEnabled,
@@ -257,7 +260,7 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.productDetails.suffix,
     builder: (context, state) => ProductDetailsScreen(
         productId: state.pathParameters['productId'] ?? '',
-        product: state.extra as ProductEntity),
+        product: state.extra as ProductEntity?),
     parent: shop,
   );
 
@@ -487,7 +490,7 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.orderDetails.suffix,
     builder: (context, state) {
       final orderNumber = state.pathParameters['orderNumber'] ?? '';
-      final isFromVMI = state.extra as bool;
+      final isFromVMI = state.extra as bool?;
       return OrderDetailsScreen(orderNumber: orderNumber, isFromVMI: isFromVMI);
     },
     parent: orderHistory,
@@ -819,4 +822,41 @@ List<NavigationNode> _getNavigationRoot() {
     salesRepSelection,
     quoteLineNotes,
   ];
+}
+
+class RoutingCodec extends Codec<Object?, Object?> {
+  const RoutingCodec();
+
+  @override
+  Converter<Object?, Object?> get decoder => const _RoutingDecoder();
+
+  @override
+  Converter<Object?, Object?> get encoder => const _RoutingEncoder();
+}
+
+class _RoutingDecoder extends Converter<Object?, Object?> {
+  const _RoutingDecoder();
+
+  @override
+  Object? convert(Object? input) {
+    if (input == null) {
+      return null;
+    }
+
+    final inputAsList = input as List<Object?>;
+    return inputAsList[1];
+  }
+}
+
+class _RoutingEncoder extends Converter<Object?, Object?> {
+  const _RoutingEncoder();
+
+  @override
+  Object? convert(Object? input) {
+    if (input == null) {
+      return null;
+    }
+
+    return [input.runtimeType.toString(), input];
+  }
 }
