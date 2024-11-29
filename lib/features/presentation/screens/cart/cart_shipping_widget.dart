@@ -12,7 +12,20 @@ import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_l
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-enum ShippingOption { ship, pickUp }
+enum ShippingOption {
+  ship,
+  pickUp,
+  ;
+
+  factory ShippingOption.fromJson(Map<String, dynamic> json) =>
+      ShippingOption.values.firstWhere(
+        (e) => e.toString().split('.').last == json['shippingOption'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        'shippingOption': toString().split('.').last,
+      };
+}
 
 class CartShippingWidget extends StatelessWidget with MapDirection {
   final ShippingEntity shippingEntity;
