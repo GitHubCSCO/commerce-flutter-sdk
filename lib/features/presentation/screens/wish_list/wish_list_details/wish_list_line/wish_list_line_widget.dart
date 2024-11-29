@@ -100,7 +100,9 @@ class WishListLineWidget extends StatelessWidget {
             ),
             _buildRemoveAndAddToCartButton(
               context,
-              canAddToCart: wishListLineEntity.canAddToCart == true,
+              canAddToCart: wishListLineEntity.canAddToCart == true &&
+                  wishListLineEntity.isDiscontinued != true &&
+                  wishListLineEntity.isActive == true,
               isDeleteButtonVisible: isDeleteButtonVisible,
               wishListLineEntity: wishListLineEntity,
             ),
