@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/features/domain/entity/break_price_entity.d
 import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/pricing_rfq_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/quote_line_mapper.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuoteLinePricingEntity {
@@ -203,4 +204,10 @@ class QuoteLineEntity extends CartLineEntity {
         promoItemMessage: promoItemMessage ?? this.promoItemMessage,
         properties: properties ?? this.properties);
   }
+
+  factory QuoteLineEntity.fromJson(Map<String, dynamic> json) =>
+      QuoteLineEntityMapper.toEntity(QuoteLine.fromJson(json));
+
+  Map<String, dynamic> toJson() =>
+      QuoteLineEntityMapper.toModel(this)!.toJson();
 }
