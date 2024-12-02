@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/mixins/list_grid_view_mixin.dart';
+import 'package:commerce_flutter_app/core/models/screen_parameters.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/brand_mapper.dart';
@@ -146,8 +147,14 @@ class _BrandCategoryPageState extends State<BrandCategoryPage>
         .read<BrandCategoryBloc>()
         .onSelectBrandCategory(brandCategory);
     if (result?.subCategories?.isNotEmpty == true) {
-      AppRoute.brandCategory
-          .navigateBackStack(context, extra: (brand, brandCategory, null));
+      AppRoute.brandCategory.navigateBackStack(
+        context,
+        extra: BrandCategoryScreenParameters(
+          brand: brand,
+          brandCategory: brandCategory,
+          brandSubCategoriesResult: null,
+        ),
+      );
     } else {
       final brandEntity = BrandEntityMapper.toEntity(brand);
       final productPageEntity = ProductPageEntity(
