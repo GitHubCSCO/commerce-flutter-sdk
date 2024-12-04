@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/core/models/screen_parameters.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
@@ -269,7 +270,7 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.topLevelProductDetails.fullPath,
     builder: (context, state) => ProductDetailsScreen(
         productId: state.pathParameters['productId'] ?? '',
-        product: state.extra as ProductEntity),
+        product: state.extra as ProductEntity?),
     parent: null,
   );
 
@@ -571,15 +572,11 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.brandCategory.name,
     path: AppRoute.brandCategory.suffix,
     builder: (context, state) {
-      //! TODO caution
-      //! TODO we are passing multiple objects through extra using record
-      //! TODO either we need to organize this record in a better way or use any other data structure
-      final brandCategory =
-          state.extra as (Brand, BrandCategory?, GetBrandSubCategoriesResult?);
+      final brandCategory = state.extra as BrandCategoryScreenParameters;
       return BrandCategoryScreen(
-          brand: brandCategory.$1,
-          brandCategory: brandCategory.$2,
-          brandSubCategories: brandCategory.$3);
+          brand: brandCategory.brand,
+          brandCategory: brandCategory.brandCategory,
+          brandSubCategories: brandCategory.brandSubCategoriesResult);
     },
     parent: shopBrandDetails,
   );
