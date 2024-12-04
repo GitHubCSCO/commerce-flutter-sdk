@@ -20,7 +20,6 @@ import 'package:commerce_flutter_app/features/presentation/components/snackbar_c
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_details/wish_list_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
@@ -30,6 +29,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_wi
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 final GlobalKey _wishListDetailsPageScaffoldKey = GlobalKey();
@@ -597,25 +597,26 @@ class _OptionsMenu extends StatelessWidget {
           toolMenuList: [
             ToolMenu(
               title: LocalizationConstants.listInformation.localized(),
-              action: () {
-                AppRoute.wishListInfo.navigateBackStack(
-                  context,
-                  extra: WishListInfoScreenCallbackHelper(
-                    wishList: state.wishList,
-                    onWishListUpdated: () {
-                      unawaited(
-                        _wishListDetailsPageScaffoldKey.currentContext
-                            ?.read<WishListDetailsCubit>()
-                            .loadWishListDetails(
-                              state.wishList.id ?? '',
-                            ),
-                      );
-                      if (onWishListUpdated != null) {
-                        onWishListUpdated!();
-                      }
-                    },
-                  ),
+              action: () async {
+                final result = await context.pushNamed(
+                  AppRoute.wishListInfo.name,
+                  extra: state.wishList,
                 );
+
+                if (!context.mounted) {
+                  return;
+                }
+
+                if (result == true) {
+                  unawaited(
+                    context
+                        .read<WishListDetailsCubit>()
+                        .loadWishListDetails(state.wishList.id ?? ''),
+                  );
+                  if (onWishListUpdated != null) {
+                    onWishListUpdated!();
+                  }
+                }
               },
             ),
             if (state.wishList.isSharedList != true &&

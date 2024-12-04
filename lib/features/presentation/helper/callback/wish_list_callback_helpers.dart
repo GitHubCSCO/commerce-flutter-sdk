@@ -1,5 +1,4 @@
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
-import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,16 +20,6 @@ class WishListAddToListCallbackHelper {
 
   const WishListAddToListCallbackHelper({
     required this.addToCartCollection,
-    this.onWishListUpdated,
-  });
-}
-
-class WishListInfoScreenCallbackHelper {
-  final WishListEntity wishList;
-  final void Function()? onWishListUpdated;
-
-  const WishListInfoScreenCallbackHelper({
-    required this.wishList,
     this.onWishListUpdated,
   });
 }

@@ -6,6 +6,7 @@ import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entit
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
@@ -434,14 +435,10 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.wishListInfo.name,
     path: AppRoute.wishListInfo.suffix,
     builder: (context, state) {
-      final callbackHelper = state.extra as WishListInfoScreenCallbackHelper;
-
-      final wishList = callbackHelper.wishList;
-      final onWishListUpdated = callbackHelper.onWishListUpdated;
+      final wishList = state.extra as WishListEntity?;
 
       return WishListInformationScreen(
-        wishList: wishList,
-        onWishListUpdated: onWishListUpdated,
+        wishList: wishList!,
       );
     },
     parent: null,
