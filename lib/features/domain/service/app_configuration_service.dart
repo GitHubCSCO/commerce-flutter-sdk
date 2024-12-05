@@ -6,6 +6,7 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/config/base_configuration.dart';
 import 'package:commerce_flutter_app/core/config/custom_configuration.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/core/extensions/url_string_extension.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
@@ -217,6 +218,10 @@ class AppConfigurationService extends ServiceBase
           ? OptiAppColors.colorFromHexString(
               websiteSettings.mobilePrimaryColor!)
           : OptiAppColors.defaultPrimaryColor;
+      await _commerceAPIServiceProvider.getLocalStorageService().save(
+          CoreConstants.primaryColorCachingKey,
+          OptiAppColors.primaryColor.value
+              .toRadixString(16)); // Convert to hex string
       privacyPolicyUrl = websiteSettings.mobilePrivacyPolicyUrl?.makeValidUrl();
       termsOfUseUrl = websiteSettings.mobileTermsOfUseUrl?.makeValidUrl();
     }
