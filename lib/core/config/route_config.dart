@@ -420,12 +420,9 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.wishlistsDetails.suffix,
     builder: (context, state) {
       final wishListId = state.pathParameters['id'] ?? '';
-      final callbackHelper = state.extra as WishListScreenCallbackHelper;
 
       return WishListDetailsScreen(
         wishListId: wishListId,
-        onWishListUpdated: callbackHelper.onWishListUpdated,
-        onWishListDeleted: callbackHelper.onWishListDeleted,
       );
     },
     parent: wishlists,

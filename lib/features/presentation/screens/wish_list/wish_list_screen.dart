@@ -375,22 +375,6 @@ class _WishListItem extends StatelessWidget {
           pathParameters: {
             'id': wishList.id ?? '',
           },
-          extra: WishListScreenCallbackHelper(
-            onWishListUpdated: () {
-              unawaited(
-                _wishListPageScaffoldKey.currentContext
-                    ?.read<WishListCubit>()
-                    .loadWishLists(),
-              );
-            },
-            onWishListDeleted: () {
-              unawaited(
-                _wishListPageScaffoldKey.currentContext
-                    ?.read<WishListCubit>()
-                    .loadWishLists(),
-              );
-            },
-          ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
