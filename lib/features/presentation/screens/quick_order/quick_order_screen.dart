@@ -111,6 +111,7 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   bool isSearching = false;
   bool cameraFlash = false;
   bool canProcess = false;
+  bool isProcessingOrder = false;
   String subTotal = '';
   final textEditingController = TextEditingController();
 
@@ -308,184 +309,212 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
                                     .read<OrderListBloc>()
                                     .hidePricingEnable();
                                 return Expanded(
-                                  child: Column(
-                                    children: [
-                                      Expanded(
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Expanded(
-                                                    child: Container(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              right: 8),
-                                                      child: Text(
-                                                        _getContentTitle(widget
-                                                            .scanningMode),
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                        style: OptiTextStyles
-                                                            .titleSmall,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Visibility(
-                                                    visible: state
-                                                            is OrderListLoadedState &&
-                                                        state.quickOrderItemList
-                                                            .isNotEmpty,
-                                                    child: TextButton(
-                                                      onPressed: () {
-                                                        _clearAllCart(context);
-                                                      },
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          const Icon(
-                                                            Icons
-                                                                .delete_outline,
-                                                            color: Colors.grey,
-                                                          ),
-                                                          const SizedBox(
-                                                              width: 8),
-                                                          Text(
-                                                            LocalizationConstants
-                                                                .clear
-                                                                .localized(),
-                                                            style:
-                                                                OptiTextStyles
-                                                                    .bodyFade,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                              Expanded(
-                                                child: QuickOrderListWidget(
-                                                    scanningMode:
-                                                        widget.scanningMode,
-                                                    callback:
-                                                        _handleQuickOrderListCallback),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 32, vertical: 8),
-                                        clipBehavior: Clip.antiAlias,
-                                        decoration: const BoxDecoration(
-                                            color: Colors.white),
-                                        child: Column(
+                                  child: isProcessingOrder
+                                      ? const Center(
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      : Column(
                                           children: [
-                                            Visibility(
-                                              visible: widget.scanningMode !=
-                                                  ScanningMode.count,
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Expanded(
-                                                    child: Container(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              right: 8),
-                                                      child: Text(
-                                                        (state is OrderListLoadedState &&
-                                                                state
-                                                                    .quickOrderItemList
-                                                                    .isNotEmpty)
-                                                            ? LocalizationConstants
-                                                                .listTotalProducts
-                                                                .localized()
-                                                                .format([
-                                                                state
-                                                                    .quickOrderItemList
-                                                                    .length
-                                                              ])
-                                                            : LocalizationConstants
-                                                                .listTotal
-                                                                .localized(),
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: OptiTextStyles
-                                                            .subtitle,
-                                                      ),
+                                            Expanded(
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 16),
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Expanded(
+                                                          child: Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    right: 8),
+                                                            child: Text(
+                                                              _getContentTitle(
+                                                                  widget
+                                                                      .scanningMode),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .start,
+                                                              style:
+                                                                  OptiTextStyles
+                                                                      .titleSmall,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Visibility(
+                                                          visible: state
+                                                                  is OrderListLoadedState &&
+                                                              state
+                                                                  .quickOrderItemList
+                                                                  .isNotEmpty,
+                                                          child: TextButton(
+                                                            onPressed: () {
+                                                              _clearAllCart(
+                                                                  context);
+                                                            },
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              children: [
+                                                                const Icon(
+                                                                  Icons
+                                                                      .delete_outline,
+                                                                  color: Colors
+                                                                      .grey,
+                                                                ),
+                                                                const SizedBox(
+                                                                    width: 8),
+                                                                Text(
+                                                                  LocalizationConstants
+                                                                      .clear
+                                                                      .localized(),
+                                                                  style: OptiTextStyles
+                                                                      .bodyFade,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
                                                     ),
-                                                  ),
-                                                  if (!hidePricingEnable)
                                                     Expanded(
-                                                      child: Text(
-                                                        subTotal,
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                        style: OptiTextStyles
-                                                            .subtitle,
-                                                      ),
-                                                    )
-                                                ],
+                                                      child: QuickOrderListWidget(
+                                                          scanningMode: widget
+                                                              .scanningMode,
+                                                          callback:
+                                                              _handleQuickOrderListCallback),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                            const SizedBox(height: 8),
-                                            TertiaryButton(
-                                              isEnabled:
-                                                  (state is OrderListLoadedState &&
-                                                          state
-                                                              .quickOrderItemList
-                                                              .isNotEmpty)
-                                                      ? true
-                                                      : false,
-                                              onPressed: () {
-                                                _addToCart(context,
-                                                    widget.scanningMode);
-                                              },
-                                              text: _getCheckoutButtonTitle(
-                                                  widget.scanningMode),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            PrimaryButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  canProcess = !canProcess;
-                                                });
-                                                context
-                                                    .read<BarcodeScanBloc>()
-                                                    .add(ScannerScanEvent(
-                                                        canProcess));
-                                              },
-                                              backgroundColor: canProcess
-                                                  ? OptiAppColors
-                                                      .buttonDarkRedBackgroudColor
-                                                  : OptiAppColors.primaryColor,
-                                              text: canProcess
-                                                  ? LocalizationConstants.cancel
-                                                      .localized()
-                                                  : LocalizationConstants
-                                                      .tapToScan
-                                                      .localized(),
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 32,
+                                                      vertical: 8),
+                                              clipBehavior: Clip.antiAlias,
+                                              decoration: const BoxDecoration(
+                                                  color: Colors.white),
+                                              child: Column(
+                                                children: [
+                                                  Visibility(
+                                                    visible:
+                                                        widget.scanningMode !=
+                                                            ScanningMode.count,
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Expanded(
+                                                          child: Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    right: 8),
+                                                            child: Text(
+                                                              (state is OrderListLoadedState &&
+                                                                      state
+                                                                          .quickOrderItemList
+                                                                          .isNotEmpty)
+                                                                  ? LocalizationConstants
+                                                                      .listTotalProducts
+                                                                      .localized()
+                                                                      .format([
+                                                                      state
+                                                                          .quickOrderItemList
+                                                                          .length
+                                                                    ])
+                                                                  : LocalizationConstants
+                                                                      .listTotal
+                                                                      .localized(),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style:
+                                                                  OptiTextStyles
+                                                                      .subtitle,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        if (!hidePricingEnable)
+                                                          Expanded(
+                                                            child: Text(
+                                                              subTotal,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .right,
+                                                              style:
+                                                                  OptiTextStyles
+                                                                      .subtitle,
+                                                            ),
+                                                          )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 8),
+                                                  TertiaryButton(
+                                                    isEnabled: (state
+                                                                is OrderListLoadedState &&
+                                                            state
+                                                                .quickOrderItemList
+                                                                .isNotEmpty)
+                                                        ? true
+                                                        : false,
+                                                    onPressed: () {
+                                                      _addToCart(context,
+                                                          widget.scanningMode);
+                                                    },
+                                                    text:
+                                                        _getCheckoutButtonTitle(
+                                                            widget
+                                                                .scanningMode),
+                                                  ),
+                                                  const SizedBox(height: 4),
+                                                  PrimaryButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        canProcess =
+                                                            !canProcess;
+                                                      });
+                                                      context
+                                                          .read<
+                                                              BarcodeScanBloc>()
+                                                          .add(ScannerScanEvent(
+                                                              canProcess));
+                                                    },
+                                                    backgroundColor: canProcess
+                                                        ? OptiAppColors
+                                                            .buttonDarkRedBackgroudColor
+                                                        : OptiAppColors
+                                                            .primaryColor,
+                                                    text: canProcess
+                                                        ? LocalizationConstants
+                                                            .cancel
+                                                            .localized()
+                                                        : LocalizationConstants
+                                                            .tapToScan
+                                                            .localized(),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
                                 );
                               },
                             ),
@@ -589,20 +618,21 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
 
   Future<void> _addToCart(
       BuildContext context, ScanningMode scanningMode) async {
+    _processingOrder(true);
+
     var reversedQuickOrderProductsList =
         context.read<OrderListBloc>().getReversedQuickOrderItemEntityList();
-    Set<String> currentCartProducts = <String>{};
-    Set<String> allCountCartProducts = <String>{};
+    var currentCartProducts = <String>{};
+    var allCountCartProducts = <String>{};
 
-    List<AddCartLine> addCartLines = context
-        .read<OrderListBloc>()
-        .getAddCartLines(
-            scanningMode: scanningMode,
-            reversedQuickOrderProductsList: reversedQuickOrderProductsList,
-            allCountCartProducts: allCountCartProducts,
-            currentCartProducts: currentCartProducts);
+    var addCartLines = context.read<OrderListBloc>().getAddCartLines(
+        scanningMode: scanningMode,
+        reversedQuickOrderProductsList: reversedQuickOrderProductsList,
+        allCountCartProducts: allCountCartProducts,
+        currentCartProducts: currentCartProducts);
 
     if (addCartLines.any((x) => x.qtyOrdered == null || x.qtyOrdered == 0)) {
+      _processingOrder(false);
       displayDialogWidget(
           context: context,
           title: LocalizationConstants.removeItem.localized(),
@@ -633,9 +663,11 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
               child: Text(LocalizationConstants.cancel.localized()),
             ),
           ]);
+      return;
     }
 
     if (allCountCartProducts.isNotEmpty && currentCartProducts.isEmpty) {
+      _processingOrder(false);
       final icon = _buildWarningIcon();
       _showAlert(context,
           icon: icon,
@@ -685,6 +717,13 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
           SiteMessageConstants.defaultValueAddToCartFail);
       CustomSnackBar.showSnackBarMessage(context, message);
     }
+    _processingOrder(false);
+  }
+
+  void _processingOrder(bool isEnabled) {
+    setState(() {
+      isProcessingOrder = isEnabled;
+    });
   }
 
   void _showAlert(BuildContext context,
@@ -799,8 +838,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   }
 
   List<ToolMenu> _buildToolMenu(BuildContext context) {
-    bool isOrderListEmpty = context.watch<OrderListBloc>().isOrderListEmpty();
-    List<ToolMenu> list = [];
+    var isOrderListEmpty = context.watch<OrderListBloc>().isOrderListEmpty();
+    var list = <ToolMenu>[];
     if (widget.scanningMode == ScanningMode.count &&
         isOrderListEmpty == false) {
       list.add(ToolMenu(
