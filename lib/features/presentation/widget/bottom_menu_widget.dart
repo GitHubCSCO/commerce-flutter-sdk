@@ -1,11 +1,14 @@
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/utils/platform_utils.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/bottom_menu_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class BottomMenuWidget extends StatelessWidget {
@@ -59,10 +62,36 @@ class BottomMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<BottomMenuCubit, BottomMenuState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         switch (state) {
           case BottomMenuWebsiteUrlLoaded():
-            launchUrlString(state.url);
+            final isWebViewEnabled =
+                await PlatformUtils.isSystemWebViewEnabled(state.url);
+            if (isWebViewEnabled) {
+              await context.pushNamed(
+                AppRoute.inAppBrowser.name,
+                extra: state.url,
+              );
+            } else {
+              // Show prompt to the user
+              displayDialogWidget(
+                context: context,
+                title: LocalizationConstants.externalBrowserOpenWarningTitle
+                    .localized(),
+                message: LocalizationConstants.externalBrowserOpenWarningMsg
+                    .localized(),
+                actions: [
+                  DialogPlainButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      launchUrlString(state.url);
+                    },
+                    child: Text(LocalizationConstants.oK.localized()),
+                  ),
+                ],
+              );
+            }
+
             break;
           case BottomMenuWebsiteUrlFailed():
             displayDialogWidget(

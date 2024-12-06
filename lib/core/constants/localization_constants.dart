@@ -688,6 +688,10 @@ enum LocalizationConstants {
   featuredCategory(keyword: "Featured Category"),
   recentlyViewed(keyword: "Recently Viewed"),
   webCrossSells(keyword: "Cross Sells"),
+  externalBrowserOpenWarningTitle(keyword: "System WebView disabled"),
+  externalBrowserOpenWarningMsg(
+      keyword:
+          "System WebView is disabled. We are opening the link in an external browser. Please note, you will not be logged in."),
   ;
 
   const LocalizationConstants({
