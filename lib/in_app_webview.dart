@@ -75,7 +75,6 @@ class _InAppBrowserState extends State<InAppBrowser> {
                 })();
                 """,
               );
-           
             } else {
               print("No token available to inject.");
             }
