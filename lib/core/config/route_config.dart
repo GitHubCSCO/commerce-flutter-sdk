@@ -461,7 +461,6 @@ List<NavigationNode> _getNavigationRoot() {
       final callbackHelper = state.extra as WishListAddToListCallbackHelper;
 
       return AddToWishListScreen(
-        onWishListUpdated: callbackHelper.onWishListUpdated,
         addToCartCollection: callbackHelper.addToCartCollection,
       );
     },
