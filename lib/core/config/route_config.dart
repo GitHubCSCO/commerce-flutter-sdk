@@ -720,9 +720,7 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.orderApprovalDetails.suffix,
     builder: (context, state) {
       final cartId = state.pathParameters['cartId'] ?? '';
-      final refreshOrderApprovals = state.extra as void Function();
-      return OrderApprovalDetailsScreen(
-          cartId: cartId, refreshOrderApprovals: refreshOrderApprovals);
+      return OrderApprovalDetailsScreen(cartId: cartId);
     },
     parent: orderApproval,
   );
