@@ -5,13 +5,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WishListCreateScreenCallbackHelper {
-  final void Function()? onWishListCreated;
   final WishListAddToCartCollection? addToCartCollection;
 
   WishListCreateScreenCallbackHelper({
-    this.onWishListCreated,
     this.addToCartCollection,
   });
+
+  factory WishListCreateScreenCallbackHelper.fromJson(Map<String, dynamic> json) {
+    return WishListCreateScreenCallbackHelper(
+      addToCartCollection: json['addToCartCollection'] != null
+          ? WishListAddToCartCollection.fromJson(json['addToCartCollection'])
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    if (addToCartCollection != null) {
+      data['addToCartCollection'] = addToCartCollection!.toJson();
+    }
+    return data;
+  }
 }
 
 class WishListAddToListCallbackHelper {

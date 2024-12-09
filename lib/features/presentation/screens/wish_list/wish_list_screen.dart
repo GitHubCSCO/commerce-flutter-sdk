@@ -30,10 +30,9 @@ import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widg
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
-
-final GlobalKey _wishListPageScaffoldKey = GlobalKey();
 
 class WishListsScreen extends BaseStatelessWidget {
   const WishListsScreen({super.key});
@@ -90,7 +89,6 @@ class _WishListsPageState extends State<WishListsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _wishListPageScaffoldKey,
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         backgroundColor: OptiAppColors.backgroundWhite,
@@ -99,11 +97,7 @@ class _WishListsPageState extends State<WishListsPage> {
         actions: [
           _OptionsMenu(
             onWishListCreated: () {
-              unawaited(
-                _wishListPageScaffoldKey.currentContext
-                    ?.read<WishListCubit>()
-                    .loadWishLists(),
-              );
+              context.read<WishListHandlerCubit>().shouldRefreshWishList();
             },
           ),
         ],
@@ -472,7 +466,7 @@ class _OptionsMenu extends StatelessWidget {
                     (state.wishLists.pagination?.totalItemCount ?? 0) == 0))
               ToolMenu(
                 title: LocalizationConstants.createNewList.localized(),
-                action: () {
+                action: () async {
                   context.read<RootBloc>().add(
                         RootAnalyticsEvent(
                           AnalyticsEvent(
@@ -481,12 +475,14 @@ class _OptionsMenu extends StatelessWidget {
                           ),
                         ),
                       );
-                  AppRoute.wishListCreate.navigateBackStack(
-                    context,
-                    extra: WishListCreateScreenCallbackHelper(
-                      onWishListCreated: onWishListCreated,
-                    ),
+                  final result = await context.pushNamed(
+                    AppRoute.wishListCreate.name,
+                    extra: WishListCreateScreenCallbackHelper(),
                   );
+
+                  if (result == true && onWishListCreated != null) {
+                    onWishListCreated!();
+                  }
                 },
               )
           ],

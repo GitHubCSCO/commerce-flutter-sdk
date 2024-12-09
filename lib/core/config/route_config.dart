@@ -448,7 +448,6 @@ List<NavigationNode> _getNavigationRoot() {
       final callbackHelper = state.extra as WishListCreateScreenCallbackHelper;
 
       return WishListCreateScreen(
-        onWishListCreated: callbackHelper.onWishListCreated,
         addToCartCollection: callbackHelper.addToCartCollection,
       );
     },

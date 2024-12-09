@@ -300,19 +300,23 @@ class _AddToWishListPageState extends State<AddToWishListPage> {
             actions: [
               PrimaryButton(
                 text: LocalizationConstants.createNewList.localized(),
-                onPressed: () {
-                  AppRoute.wishListCreate.navigateBackStack(
-                    context,
+                onPressed: () async {
+                  final result = await context.pushNamed(
+                    AppRoute.wishListCreate.name,
                     extra: WishListCreateScreenCallbackHelper(
-                      onWishListCreated: () {
-                        if (widget.onWishListUpdated != null) {
-                          widget.onWishListUpdated!();
-                        }
-                        context.pop();
-                      },
                       addToCartCollection: widget.addToCartCollection,
                     ),
                   );
+
+                  if (result == true) {
+                    if (widget.onWishListUpdated != null) {
+                      widget.onWishListUpdated!();
+                    }
+
+                    if (context.mounted) {
+                      context.pop();
+                    }
+                  }
                 },
               ),
             ],
