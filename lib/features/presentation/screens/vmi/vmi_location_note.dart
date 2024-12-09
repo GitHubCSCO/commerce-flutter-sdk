@@ -10,28 +10,23 @@ import 'package:commerce_flutter_app/features/presentation/components/snackbar_c
 import 'package:commerce_flutter_app/features/presentation/cubit/vmi_location_note/vmi_location_note_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/vmi_location_note/vmi_location_note_state.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_widget.dart';
+import 'package:go_router/go_router.dart';
 
 class VmiLocationNoteScreen extends StatelessWidget {
-  final void Function() onVMILocationNoteUpdated;
   const VmiLocationNoteScreen({
     super.key,
-    required this.onVMILocationNoteUpdated,
   });
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (context) => sl<VMILocationNoteCubit>(),
-        child: VmiLocationNotePage(
-          onVMILocationNoteUpdated: onVMILocationNoteUpdated,
-        ));
+        child: VmiLocationNotePage());
   }
 }
 
 class VmiLocationNotePage extends StatelessWidget {
-  final void Function() onVMILocationNoteUpdated;
   VmiLocationNotePage({
     super.key,
-    required this.onVMILocationNoteUpdated,
   });
   final TextEditingController noteDescriptionController =
       TextEditingController();
@@ -45,8 +40,7 @@ class VmiLocationNotePage extends StatelessWidget {
           listener: (context, state) {
             if (state is VmiLocationNoteSavedSuccessState) {
               CustomSnackBar.showVMILocationNoteSaved(context);
-              onVMILocationNoteUpdated();
-              Navigator.pop(context);
+              context.pop(true);
             }
             if (state is VmiLocationNoteSavedFailureState) {
               CustomSnackBar.showVMILocationNoteNotSaved(context);
