@@ -122,7 +122,7 @@ class SearchProductGridItemWidget extends StatelessWidget
                                     return Container(
                                       alignment: Alignment.bottomLeft,
                                       child: LoadingAnimationWidget
-                                          .prograssiveDots(
+                                          .progressiveDots(
                                         color: OptiAppColors.iconPrimary,
                                         size: 30,
                                       ),

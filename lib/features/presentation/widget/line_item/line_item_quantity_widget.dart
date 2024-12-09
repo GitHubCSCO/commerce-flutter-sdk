@@ -103,7 +103,7 @@ class LineItemSubtotalColumnWidget extends StatelessWidget {
           realTimeLoading
               ? Container(
                   alignment: Alignment.center,
-                  child: LoadingAnimationWidget.prograssiveDots(
+                  child: LoadingAnimationWidget.progressiveDots(
                     color: OptiAppColors.iconPrimary,
                     size: 30,
                   ),

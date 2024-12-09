@@ -159,7 +159,7 @@ class SearchProductListItemWidget extends StatelessWidget
                       } else if (state is AddToCartButtonLoading) {
                         return Container(
                           alignment: Alignment.bottomLeft,
-                          child: LoadingAnimationWidget.prograssiveDots(
+                          child: LoadingAnimationWidget.progressiveDots(
                             color: OptiAppColors.iconPrimary,
                             size: 30,
                           ),

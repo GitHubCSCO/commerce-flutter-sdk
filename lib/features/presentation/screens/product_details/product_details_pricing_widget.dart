@@ -187,7 +187,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
         }
         return Container(
           alignment: Alignment.bottomLeft,
-          child: LoadingAnimationWidget.prograssiveDots(
+          child: LoadingAnimationWidget.progressiveDots(
             color: OptiAppColors.iconPrimary,
             size: 30,
           ),
@@ -212,7 +212,7 @@ class ProductDetailsPricingWidget extends StatelessWidget {
         } else if (state is ProductDetailsPricingLoading) {
           return Container(
             alignment: Alignment.bottomLeft,
-            child: LoadingAnimationWidget.prograssiveDots(
+            child: LoadingAnimationWidget.progressiveDots(
               color: OptiAppColors.iconPrimary,
               size: 30,
             ),
