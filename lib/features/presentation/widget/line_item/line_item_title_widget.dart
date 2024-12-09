@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -45,6 +46,11 @@ class LineItemTitleWidget extends StatelessWidget {
                 if (!manufacturerItem.isNullOrEmpty)
                   Row(
                     children: [
+                      Text(
+                        '${LocalizationConstants.mFGNumberSign.localized()} ',
+                        style: OptiTextStyles.subtitle.copyWith(fontSize: 12),
+                        textAlign: TextAlign.left,
+                      ),
                       Text(
                         manufacturerItem ?? '',
                         style: OptiTextStyles.bodySmall,

@@ -1,6 +1,8 @@
 import 'package:appcenter_analytics/appcenter_analytics.dart';
+import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/config/analytics_config.dart';
 import 'package:commerce_flutter_app/core/config/prod_config_constants.dart';
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/config/test_config_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/firebase_options_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
@@ -36,6 +38,7 @@ Future<void> main() async {
   initialHiveDatabase();
   initCommerceSDK();
   await initInjectionContainer();
+  await initAppEssentials();
 
   //If error log is not enabled we should not do anything when an error is presented
   //By default if isErrorLogEnabled is true: FlutterError.presentError = FlutterError.dumpErrorToConsole
@@ -48,7 +51,6 @@ Future<void> main() async {
   }
 
   await initAnalyticsTracker();
-
   runApp(
     MultiBlocProvider(
       providers: [
@@ -122,6 +124,15 @@ void initCommerceSDK() {
   ClientConfig.hostUrl = null;
   ClientConfig.clientId = ProdConfigConstants.clientId;
   ClientConfig.clientSecret = ProdConfigConstants.clientSecret;
+}
+
+Future<void> initAppEssentials() async {
+  var colorString = await sl<ILocalStorageService>()
+      .load(CoreConstants.primaryColorCachingKey);
+  if (colorString != null) {
+    // Convert back to Color
+    OptiAppColors.primaryColor = Color(int.parse(colorString, radix: 16));
+  }
 }
 
 class MyApp extends StatelessWidget {
