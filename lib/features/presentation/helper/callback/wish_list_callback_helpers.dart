@@ -11,7 +11,8 @@ class WishListCreateScreenCallbackHelper {
     this.addToCartCollection,
   });
 
-  factory WishListCreateScreenCallbackHelper.fromJson(Map<String, dynamic> json) {
+  factory WishListCreateScreenCallbackHelper.fromJson(
+      Map<String, dynamic> json) {
     return WishListCreateScreenCallbackHelper(
       addToCartCollection: json['addToCartCollection'] != null
           ? WishListAddToCartCollection.fromJson(json['addToCartCollection'])
@@ -35,16 +36,6 @@ class WishListAddToListCallbackHelper {
   const WishListAddToListCallbackHelper({
     required this.addToCartCollection,
     this.onWishListUpdated,
-  });
-}
-
-class WishListScreenCallbackHelper {
-  final void Function()? onWishListUpdated;
-  final void Function()? onWishListDeleted;
-
-  const WishListScreenCallbackHelper({
-    this.onWishListUpdated,
-    this.onWishListDeleted,
   });
 }
 
