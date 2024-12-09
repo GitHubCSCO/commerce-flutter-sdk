@@ -150,13 +150,13 @@ class _WishListsPageState extends State<WishListsPage> {
                   }
 
                   if (state.status == WishListStatus.listDeleteSuccess) {
+                    context
+                        .read<WishListHandlerCubit>()
+                        .shouldRefreshWishList();
                     Navigator.of(context, rootNavigator: true).pop();
                     CustomSnackBar.showSnackBarMessage(
                       context,
                       LocalizationConstants.listDeleted.localized(),
-                    );
-                    unawaited(
-                      context.read<WishListCubit>().loadWishLists(),
                     );
                   }
 
