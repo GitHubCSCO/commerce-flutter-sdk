@@ -11,7 +11,6 @@ import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/credit_card_add_callback_helper.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/callback/shipping_address_add_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
@@ -223,12 +222,7 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.addShippingAddress.name,
     path: AppRoute.addShippingAddress.suffix,
     builder: (context, state) {
-      final callbackHelper = state.extra as ShippingAddressAddCallbackHelper;
-
-      final onShippingAddressAdded = callbackHelper.onShippingAddressAdded;
-
-      return AddShippingAddressScreen(
-          onShippingAddressAdded: onShippingAddressAdded);
+      return const AddShippingAddressScreen();
     },
     parent: null,
   );
