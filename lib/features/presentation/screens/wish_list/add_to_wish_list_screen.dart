@@ -61,13 +61,16 @@ class AddToWishListScreen extends StatelessWidget {
               if (state.status == WishListStatus.allowMultipleListsFailure) {
                 return AddToSingleWishListPage(
                   addToCartCollection: addToCartCollection,
-                  onWishListUpdated: context.read<WishListHandlerCubit>().shouldRefreshWishList,
+                  onWishListUpdated: context
+                      .read<WishListHandlerCubit>()
+                      .shouldRefreshWishList,
                 );
               }
 
               return AddToWishListPage(
                 addToCartCollection: addToCartCollection,
-                onWishListUpdated: context.read<WishListHandlerCubit>().shouldRefreshWishList,
+                onWishListUpdated:
+                    context.read<WishListHandlerCubit>().shouldRefreshWishList,
               );
             },
           );
