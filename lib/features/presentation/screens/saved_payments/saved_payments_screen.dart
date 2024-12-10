@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
@@ -7,11 +9,11 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_payments/saved_payments_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_payments/saved_payments_state.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/callback/credit_card_add_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/add_credit_card_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class SavedPaymentsScreen extends StatelessWidget {
   const SavedPaymentsScreen({super.key});
@@ -69,16 +71,25 @@ class SavedPaymentPage extends StatelessWidget {
               color: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               child: PrimaryButton(
-                onPressed: () {
-                  AppRoute.addCreditCard.navigateBackStack(context,
-                      extra: CreditCardAddCallbackHelper(
-                          addCreditCardEntity:
-                              AddCreditCardEntity(isAddNewCreditCard: true),
-                          onAddedCeditCard: (paymentProfile) {
-                            context
-                                .read<SavedPaymentsCubit>()
-                                .loadSavedPayments();
-                          }));
+                onPressed: () async {
+                  final result = await context.pushNamed(
+                    AppRoute.addCreditCard.name,
+                    extra: AddCreditCardEntity(isAddNewCreditCard: true),
+                  ) as AddCreditCardScreenResponse?;
+
+                  if (result == null) {
+                    return;
+                  }
+
+                  if (result.isAddNewCreditCard == true) {
+                    final paymentProfile = result.accountPaymentProfile;
+                    if (paymentProfile == null || !context.mounted) {
+                      return;
+                    }
+
+                    unawaited(
+                        context.read<SavedPaymentsCubit>().loadSavedPayments());
+                  }
                 },
                 text: LocalizationConstants.addCreditCard.localized(),
               ),
@@ -97,19 +108,39 @@ class SavedPaymentPage extends StatelessWidget {
       return Column(
         children: [
           InkWell(
-            onTap: () {
-              AppRoute.addCreditCard.navigateBackStack(context,
-                  extra: CreditCardAddCallbackHelper(
-                      onDeletedCreditCard: () {
-                        context.read<SavedPaymentsCubit>().loadSavedPayments();
-                      },
-                      addCreditCardEntity: AddCreditCardEntity(
-                          isAddNewCreditCard: false,
-                          accountPaymentProfile:
-                              state.accountPaymentProfiles?[index]),
-                      onAddedCeditCard: (paymentProfile) {
-                        context.read<SavedPaymentsCubit>().loadSavedPayments();
-                      }));
+            onTap: () async {
+              final result = await context.pushNamed(
+                AppRoute.addCreditCard.name,
+                extra: AddCreditCardEntity(
+                  isAddNewCreditCard: false,
+                  accountPaymentProfile: state.accountPaymentProfiles?[index],
+                ),
+              ) as AddCreditCardScreenResponse?;
+
+              if (result == null) {
+                return;
+              }
+
+              if (result.isAddNewCreditCard == true) {
+                final paymentProfile = result.accountPaymentProfile;
+                if (paymentProfile == null || !context.mounted) {
+                  return;
+                }
+
+                unawaited(
+                  context.read<SavedPaymentsCubit>().loadSavedPayments(),
+                );
+              }
+
+              if (result.isCreditCardDeleted == true) {
+                if (!context.mounted) {
+                  return;
+                }
+
+                unawaited(
+                  context.read<SavedPaymentsCubit>().loadSavedPayments(),
+                );
+              }
             },
             child: Container(
               color: Colors.white,
