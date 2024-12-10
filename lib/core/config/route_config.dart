@@ -379,16 +379,10 @@ List<NavigationNode> _getNavigationRoot() {
     builder: (context, state) {
       final callbackHelper = state.extra as VMILocationSelectCallbackHelper;
 
-      final onVMILocationUpdated = callbackHelper.onSelectVMILocation;
-      final onWarehouseLocationSelected =
-          callbackHelper.onWarehouseLocationSelected;
-      final WarehouseEntity? selectedPickupWarehouse =
-          callbackHelper.selectedPickupWarehouse;
+      final selectedPickupWarehouse = callbackHelper.selectedPickupWarehouse;
 
       return LocationSearchScreen(
-        onVMILocationUpdated: onVMILocationUpdated,
         locationSearchType: callbackHelper.locationSearchType,
-        onWarehouseLocationSelected: onWarehouseLocationSelected,
         selectedPickupWarehouse: selectedPickupWarehouse,
       );
     },

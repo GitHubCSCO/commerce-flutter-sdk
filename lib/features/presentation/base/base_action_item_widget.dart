@@ -164,8 +164,7 @@ mixin BaseActionItemWidget {
       case ActionType.locationFinder:
         return () {
           AppRoute.locationSearch.navigateBackStack(context,
-              extra: VMILocationSelectCallbackHelper(
-                  onSelectVMILocation: (location) {},
+              extra: const VMILocationSelectCallbackHelper(
                   locationSearchType: LocationSearchType.locationFinder));
         };
       case ActionType.changeCustomer:

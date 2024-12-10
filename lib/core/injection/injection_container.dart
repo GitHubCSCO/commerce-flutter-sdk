@@ -97,6 +97,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/auto_complete/quick_order_auto_complete_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/invoice_history/invoice_email/invoice_email_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/location_search_handler/location_search_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quote/job_quote_details/job_quote_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_communication/quote_communication_bloc.dart';
@@ -248,6 +249,7 @@ Future<void> initInjectionContainer() async {
     // location  search
     ..registerFactory(() => LocationSearchBloc(locationSearchUseCase: sl()))
     ..registerFactory(() => LocationSearchUseCase())
+    ..registerFactory(() => LocationSearchHandlerCubit())
 
     // gmap cubit
     ..registerFactory(() => GMapCubit())

@@ -15,6 +15,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_location
 import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/dealer_location_finder/dealer_location_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/location_search_handler/location_search_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/pick_up_location_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/location_finder_dealer/dealer_location_widget.dart';
@@ -26,14 +27,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class LocationSearchScreen extends StatelessWidget {
   final LocationSearchType locationSearchType;
   final WarehouseEntity? selectedPickupWarehouse;
-  final void Function(CurrentLocationDataEntity)? onVMILocationUpdated;
-  final void Function(WarehouseEntity)? onWarehouseLocationSelected;
-  const LocationSearchScreen(
-      {super.key,
-      this.onVMILocationUpdated,
-      this.selectedPickupWarehouse,
-      required this.locationSearchType,
-      this.onWarehouseLocationSelected});
+  const LocationSearchScreen({
+    super.key,
+    this.selectedPickupWarehouse,
+    required this.locationSearchType,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,24 +52,19 @@ class LocationSearchScreen extends StatelessWidget {
                     selectedPickupWarehouse: selectedPickupWarehouse)))
         ],
         child: LocationSearchPage(
-          onVMILocationUpdated: onVMILocationUpdated,
           locationSearchType: locationSearchType,
-          onWarehouseLocationSelected: onWarehouseLocationSelected,
         ));
   }
 }
 
 class LocationSearchPage extends StatelessWidget {
-  final void Function(CurrentLocationDataEntity)? onVMILocationUpdated;
-  final void Function(WarehouseEntity)? onWarehouseLocationSelected;
   final LocationSearchType locationSearchType;
   final WarehouseEntity? selectedPickupWarehouse;
-  LocationSearchPage(
-      {super.key,
-      this.selectedPickupWarehouse,
-      this.onVMILocationUpdated,
-      required this.locationSearchType,
-      this.onWarehouseLocationSelected});
+  LocationSearchPage({
+    super.key,
+    this.selectedPickupWarehouse,
+    required this.locationSearchType,
+  });
   final textEditingController = TextEditingController();
 
   String getTitle() {
@@ -206,7 +199,9 @@ class LocationSearchPage extends StatelessWidget {
                         return VMILocationScreen(
                           onLocationSelected:
                               (CurrentLocationDataEntity locationData) {
-                            onVMILocationUpdated!(locationData);
+                            context
+                                .read<LocationSearchHandlerCubit>()
+                                .setLocationData(locationData);
                           },
                         );
                       }
@@ -217,7 +212,9 @@ class LocationSearchPage extends StatelessWidget {
                     case LocationSearchType.pickUpLocation:
                       return PickUpLocationScreen(
                           onWarehouseLocationSelected: (locationData) {
-                        onWarehouseLocationSelected!(locationData);
+                        context
+                            .read<LocationSearchHandlerCubit>()
+                            .setWarehouseData(locationData);
                       });
                   }
                 } else if (state is LocationSearchLoadedState) {
@@ -227,7 +224,9 @@ class LocationSearchPage extends StatelessWidget {
                         return VMILocationScreen(
                           onLocationSelected:
                               (CurrentLocationDataEntity locationData) {
-                            onVMILocationUpdated!(locationData);
+                            context
+                                .read<LocationSearchHandlerCubit>()
+                                .setLocationData(locationData);
                           },
                         );
                       }
@@ -238,7 +237,9 @@ class LocationSearchPage extends StatelessWidget {
                     case LocationSearchType.pickUpLocation:
                       return PickUpLocationScreen(
                           onWarehouseLocationSelected: (locationData) {
-                        onWarehouseLocationSelected!(locationData);
+                        context
+                            .read<LocationSearchHandlerCubit>()
+                            .setWarehouseData(locationData);
                       });
                   }
                 } else if (state is LocationSearchFocusState) {
@@ -248,7 +249,9 @@ class LocationSearchPage extends StatelessWidget {
                     return VMILocationScreen(
                       onLocationSelected:
                           (CurrentLocationDataEntity locationData) {
-                        onVMILocationUpdated!(locationData);
+                        context
+                            .read<LocationSearchHandlerCubit>()
+                            .setLocationData(locationData);
                       },
                     );
                   } else {
