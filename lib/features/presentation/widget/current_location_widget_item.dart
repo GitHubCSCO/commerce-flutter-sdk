@@ -91,7 +91,9 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                             .read<CurrentLocationCubit>()
                             .onLoadLocationData());
 
-                        context.read<LocationSearchHandlerCubit>().clearLocationData();
+                        context
+                            .read<LocationSearchHandlerCubit>()
+                            .clearLocationData();
                       }
                     },
                     child: Visibility(
