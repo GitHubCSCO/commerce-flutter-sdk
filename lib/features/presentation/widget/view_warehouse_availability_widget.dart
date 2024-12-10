@@ -44,14 +44,14 @@ void viewWarehouseWidget(BuildContext context, String? id, String productNumber,
                     children: [
                       Container(
                         alignment: Alignment.bottomLeft,
-                        child: LoadingAnimationWidget.prograssiveDots(
+                        child: LoadingAnimationWidget.progressiveDots(
                           color: OptiAppColors.iconPrimary,
                           size: 30,
                         ),
                       ),
                       Container(
                         alignment: Alignment.bottomLeft,
-                        child: LoadingAnimationWidget.prograssiveDots(
+                        child: LoadingAnimationWidget.progressiveDots(
                           color: OptiAppColors.iconPrimary,
                           size: 30,
                         ),

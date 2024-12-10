@@ -14,6 +14,7 @@ Future<void> initInjectionContainerMock() async {
     ..registerLazySingleton<ICoreServiceProvider>(
         () => MockCoreServiceProvider())
     //services
+    ..registerLazySingleton<IAuthStreamService>(() => FakeAuthStreamService())
     ..registerLazySingleton<IWebsiteService>(() => MockWebsiteService())
     ..registerLazySingleton<IProductService>(() => MockProductService())
     ..registerLazySingleton<IAuthenticationService>(

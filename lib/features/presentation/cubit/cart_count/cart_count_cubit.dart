@@ -19,14 +19,12 @@ class CartCountCubit extends Cubit<CountState> {
       case Success(value: final data):
         var cart = data;
         if (cart?.cartLines == null || cart!.cartLines!.isEmpty) {
-          emitCartCount(0);
+          await emitCartCount(0);
           return;
         }
-        emitCartCount(cart.cartLines!.length);
-        break;
+        await emitCartCount(cart.cartLines!.length);
       case Failure(errorResponse: final errorResponse):
-        emitCartCount(0);
-        break;
+        await emitCartCount(0);
     }
   }
 

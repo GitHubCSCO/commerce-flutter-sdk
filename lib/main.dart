@@ -3,10 +3,12 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/config/analytics_config.dart';
 import 'package:commerce_flutter_app/core/config/prod_config_constants.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
+import 'package:commerce_flutter_app/core/config/test_config_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/firebase_options_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/core/utils/bloc_observer.dart';
+import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/load_website_url/load_website_url_bloc.dart';
@@ -138,31 +140,41 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoadWebsiteUrlBloc, LoadWebsiteUrlState>(
-      listener: (context, state) {
-        switch (state) {
-          case LoadWebsiteUrlLoadedState():
-            launchUrlString(state.authorizedURL);
-          case LoadCustomUrlLoadedState():
-            launchUrlString(state.customURL);
-          case LoadWebsiteUrlFailureState():
-            CustomSnackBar.showSnackBarMessage(
-              context,
-              state.error,
+    return MultiBlocListener(
+        listeners: [
+          BlocListener<LoadWebsiteUrlBloc, LoadWebsiteUrlState>(
+            listener: (_, state) {
+              switch (state) {
+                case LoadWebsiteUrlLoadedState():
+                  launchUrlString(state.authorizedURL);
+                case LoadCustomUrlLoadedState():
+                  launchUrlString(state.customURL);
+                case LoadWebsiteUrlFailureState():
+                  CustomSnackBar.showSnackBarMessage(
+                    context,
+                    state.error,
+                  );
+              }
+            },
+          ),
+          BlocListener<AuthCubit, AuthState>(
+            listener: (_, state) async {
+              if (state.status == AuthStatus.unauthenticated) {
+                await sl<CartCountCubit>().onCartItemChange();
+              }
+            },
+          )
+        ],
+        child: BlocBuilder<RootBloc, RootState>(
+          buildWhen: (previous, current) => current is RootInitial,
+          builder: (context, state) {
+            final lightTheme = getTheme();
+            return MaterialApp.router(
+              title: sl<IDeviceService>().applicationName ?? 'Commerce Mobile',
+              routerConfig: sl<GoRouter>(),
+              theme: lightTheme,
             );
-        }
-      },
-      child: BlocBuilder<RootBloc, RootState>(
-        buildWhen: (previous, current) => current is RootInitial,
-        builder: (context, state) {
-          final lightTheme = getTheme();
-          return MaterialApp.router(
-            title: sl<IDeviceService>().applicationName ?? 'Commerce Mobile',
-            routerConfig: sl<GoRouter>(),
-            theme: lightTheme,
-          );
-        },
-      ),
-    );
+          },
+        ));
   }
 }

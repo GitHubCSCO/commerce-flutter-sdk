@@ -91,7 +91,7 @@ class QuickOrderItemWidget extends StatelessWidget {
                   return Container(
                     padding: const EdgeInsets.only(left: 20, top: 12),
                     alignment: Alignment.bottomLeft,
-                    child: LoadingAnimationWidget.prograssiveDots(
+                    child: LoadingAnimationWidget.progressiveDots(
                       color: OptiAppColors.iconPrimary,
                       size: 30,
                     ),
@@ -379,7 +379,7 @@ class _OrderProductQuantityGroupWidgetState
                         return Container(
                           padding: const EdgeInsets.only(left: 20, top: 12),
                           alignment: Alignment.center,
-                          child: LoadingAnimationWidget.prograssiveDots(
+                          child: LoadingAnimationWidget.progressiveDots(
                             color: OptiAppColors.iconPrimary,
                             size: 30,
                           ),
