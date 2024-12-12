@@ -217,7 +217,7 @@ class ContentConfigurationService implements IContentConfigurationService {
       PageContentManagement response, PageContentType contentType) {
     var json = response.toJson();
     var jsonString = jsonEncode(json);
-    Uint8List bytes = Uint8List.fromList(utf8.encode(jsonString));
+    var bytes = Uint8List.fromList(utf8.encode(jsonString));
     var persistenceKey = getPersistenceKeyForContentType(contentType);
     _commerceAPIServiceProvider
         .getCacheService()

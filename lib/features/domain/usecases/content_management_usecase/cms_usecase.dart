@@ -78,7 +78,7 @@ class CmsUseCase extends BaseUseCase {
   Future<List<WidgetEntity>> getWidgetEntityListClassic(
       List<PageClassicWidgetEntity> pageClassicWidgets,
       Session? currentSession) async {
-    List<WidgetEntity> widgetEntities = [];
+    var widgetEntities = <WidgetEntity>[];
 
     if (pageClassicWidgets.isEmpty) {
       return <WidgetEntity>[];
@@ -171,12 +171,12 @@ class CmsUseCase extends BaseUseCase {
   Future<SearchHistoryWidgetEntity> convertWidgetToSearchHistoryEntityClassic(
       PageClassicWidgetEntity pageClassicWidget,
       Session? currentSession) async {
-    var searchhistoryWidget = SearchHistoryWidgetEntity();
+    var searchHistoryWidget = SearchHistoryWidgetEntity();
 
-    searchhistoryWidget = searchhistoryWidget.copyWith(
+    searchHistoryWidget = searchHistoryWidget.copyWith(
         itemsCount: pageClassicWidget.numberOfPreviousSearches.toString(),
         title: pageClassicWidget.title);
-    return searchhistoryWidget;
+    return searchHistoryWidget;
   }
 
   Future<CarouselWidgetEntity> convertWidgetToCarouselWidgetEntityClassic(
@@ -189,7 +189,7 @@ class CmsUseCase extends BaseUseCase {
     carouselWidget = carouselWidget.copyWith(
         animationSpeed: pageClassicWidget.animationSpeed);
 
-    List<CarouselSlideWidgetEntity> carouselSlideEntityList = [];
+    var carouselSlideEntityList = <CarouselSlideWidgetEntity>[];
 
     for (final slide in pageClassicWidget.childWidgets ?? []) {
       if (slide is PageClassicChildWidgetEntity) {
@@ -218,7 +218,7 @@ class CmsUseCase extends BaseUseCase {
   // spire
   Future<List<WidgetEntity>> getWidgetEntityListSpire(
       List<PageWidgetEntity> pageWidgets, Session? currentSession) async {
-    List<WidgetEntity> widgetEntities = [];
+    var widgetEntities = <WidgetEntity>[];
 
     if (pageWidgets.isEmpty) {
       return <WidgetEntity>[];
@@ -271,10 +271,10 @@ class CmsUseCase extends BaseUseCase {
 
   Future<SearchHistoryWidgetEntity> convertWidgetToSearchHistoryEntity(
       PageWidgetEntity pageWidget, Session? currentSession) async {
-    var searchhistoryWidget = SearchHistoryWidgetEntity();
+    var searchHistoryWidget = SearchHistoryWidgetEntity();
     if (pageWidget.generalFields != null &&
         pageWidget.generalFields?.previousSearches != null) {
-      searchhistoryWidget = searchhistoryWidget.copyWith(
+      searchHistoryWidget = searchHistoryWidget.copyWith(
           itemsCount: pageWidget.generalFields?.previousSearches.toString());
     }
 
@@ -283,12 +283,12 @@ class CmsUseCase extends BaseUseCase {
       titles.forEach((key, value) {
         if (currentSession?.language != null &&
             currentSession?.language?.id == key) {
-          searchhistoryWidget = searchhistoryWidget.copyWith(title: value);
+          searchHistoryWidget = searchHistoryWidget.copyWith(title: value);
         }
       });
     }
 
-    return searchhistoryWidget;
+    return searchHistoryWidget;
   }
 
   Future<ProductCarouselWidgetEntity> convertWidgetToProductCarouselListEntity(
@@ -371,7 +371,7 @@ class CmsUseCase extends BaseUseCase {
       carouselWidget = carouselWidget.copyWith(
           animationSpeed: pageWidget.generalFields?.animationSpeed);
 
-      List<CarouselSlideWidgetEntity> carouselSlideEntityList = [];
+      var carouselSlideEntityList = <CarouselSlideWidgetEntity>[];
       if (pageWidget.generalFields?.slides != null &&
           pageWidget.generalFields!.slides!.isNotEmpty) {
         for (final item in pageWidget.generalFields!.slides!) {
