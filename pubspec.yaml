@@ -4,7 +4,8 @@ publish_to: "none"
 version: 4.0.2+1
 
 environment:
-  sdk: ">=3.0.6 <4.0.0"
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: 3.27.0
 
 dependencies:
   flutter:
@@ -17,7 +18,7 @@ dependencies:
   optimizely_commerce_api:
     git:
       url: git@github.com:InsiteSoftware/commerce-dart-sdk.git
-      ref: story/ICM-4944-dart
+      ref: develop
   shared_preferences: ^2.2.0
   get_it: ^7.6.4
   flutter_bloc: ^8.1.3

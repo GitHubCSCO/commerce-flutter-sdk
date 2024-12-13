@@ -1176,8 +1176,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "story/ICM-4944-dart"
-      resolved-ref: efc8a7586464151cbab4e073cb61df9670e71363
+      ref: develop
+      resolved-ref: "91556de84c3b50022e0ceaac8644c0cf9cf732dc"
       url: "git@github.com:InsiteSoftware/commerce-dart-sdk.git"
     source: git
     version: "0.1.1"
@@ -1908,4 +1908,4 @@ packages:
     version: "3.1.2"
 sdks:
   dart: ">=3.5.0 <4.0.0"
-  flutter: ">=3.24.0"
+  flutter: ">=3.27.0"
