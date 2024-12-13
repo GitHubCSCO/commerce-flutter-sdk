@@ -9,9 +9,9 @@ class InAppBrowserScreen extends StatelessWidget {
   final String url;
 
   const InAppBrowserScreen({
-    super.key,
+    Key? key,
     required this.url,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +36,9 @@ class InAppBrowser extends StatefulWidget {
 
 class _InAppBrowserState extends State<InAppBrowser> {
   late WebViewController _controller;
+  int _tokenInjectionCount = 0;
+  String? _token;
+  bool _webViewInitialized = false; // track if webview is loaded
 
   @override
   void initState() {
@@ -45,38 +48,22 @@ class _InAppBrowserState extends State<InAppBrowser> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageFinished: (String url) async {
-// Retrieve the token from the Cubit
-            final cubit = context.read<InAppBrowserCubit>();
-            final token = cubit.accessToken;
+            // final cookiesString = await _controller
+            //     .runJavaScriptReturningResult("document.cookie");
+            // print("Cookies: $cookiesString");
 
-            if (token != null && token.isNotEmpty) {
-              // Inject JavaScript to include the token in outgoing requests
-              await _controller.runJavaScript(
-                """
-                (function() {
-                  const token = "$token";
-
-                  // Patch XMLHttpRequest to include Authorization header
-                  const open = XMLHttpRequest.prototype.open;
-                  XMLHttpRequest.prototype.open = function() {
-                    open.apply(this, arguments);
-                    this.setRequestHeader('Authorization', 'Bearer ' + token);
-                  };
-
-                  // Patch fetch to include Authorization header
-                  const originalFetch = window.fetch;
-                  window.fetch = function(input, init = {}) {
-                    if (!init.headers) {
-                      init.headers = {};
-                    }
-                    init.headers['Authorization'] = 'Bearer ' + token;
-                    return originalFetch(input, init);
-                  };
-                })();
-                """,
-              );
+            // If token is available, try injecting it again if not already done
+            if (_token != null &&
+                _token!.isNotEmpty &&
+                _tokenInjectionCount < 2) {
+              try {
+                await _injectToken(_token!);
+                _tokenInjectionCount++;
+              } catch (e) {
+                print("Error injecting token: $e");
+              }
             } else {
-              print("No token available to inject.");
+              print("No token available or injection limit reached.");
             }
           },
           onHttpError: (HttpResponseError error) {
@@ -98,60 +85,70 @@ class _InAppBrowserState extends State<InAppBrowser> {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<InAppBrowserCubit>();
-
-    return BlocListener<InAppBrowserCubit, InAppBrowserState>(
-      listener: (context, state) {
+    return BlocConsumer<InAppBrowserCubit, InAppBrowserState>(
+      listener: (context, state) async {
         if (state is InAppBrowserTokenUpdatedState) {
-          _updateWebViewWithToken(state.token);
+          // We got a token, initialize the webview now
+          _token = state.token;
+          if (!_webViewInitialized) {
+            await _initializeWebView(_token!);
+            setState(() {
+              _webViewInitialized = true;
+            });
+          } else {
+            // Token updated after initial load, re-inject token
+            await _injectToken(_token!);
+          }
         } else if (state is InAppBrowserErrorState) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Error: ${state.message}")),
           );
         }
       },
-      child: Scaffold(
-        appBar: AppBar(title: Text('')),
-        body: FutureBuilder<void>(
-          future: _initializeWebView(cubit.accessToken),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            }
-            return WebViewWidget(controller: _controller);
-          },
-        ),
-      ),
+      builder: (context, state) {
+        // If we haven't initialized the webview yet, show a loading indicator
+        if (!_webViewInitialized) {
+          return Scaffold(
+            appBar: AppBar(title: Text('')),
+            body: const Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        // Once initialized, show the WebView
+        return Scaffold(
+          appBar: AppBar(title: Text('')),
+          body: WebViewWidget(controller: _controller),
+        );
+      },
     );
   }
 
   Future<void> _initializeWebView(String bearerToken) async {
     final uri = Uri.parse(widget.url);
-
-    // Add headers
     final headers = {'Authorization': 'Bearer $bearerToken'};
 
-    // Load the request
     try {
       await _controller.loadRequest(uri, headers: headers);
-    } catch (error) {}
+    } catch (error) {
+      print("Error loading initial request: $error");
+    }
   }
 
-  void _updateWebViewWithToken(String newToken) {
+  Future<void> _injectToken(String newToken) async {
     try {
-      _controller.runJavaScript(
+      await _controller.runJavaScript(
         """
         (function() {
           const token = "$newToken";
 
-          // Patch XMLHttpRequest to include the updated Authorization header
+          // Patch XMLHttpRequest to include Authorization header
           const open = XMLHttpRequest.prototype.open;
           XMLHttpRequest.prototype.open = function() {
             open.apply(this, arguments);
             this.setRequestHeader('Authorization', 'Bearer ' + token);
           };
 
-          // Patch fetch API to include the updated Authorization header
+          // Patch fetch API to include Authorization header
           const originalFetch = window.fetch;
           window.fetch = function(input, init = {}) {
             if (!init.headers) {
