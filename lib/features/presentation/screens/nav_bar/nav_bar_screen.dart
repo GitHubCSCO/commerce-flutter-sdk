@@ -21,25 +21,20 @@ class NavBarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CartCountCubit, CountState>(builder: (context, state) {
-      return NavBarPage(
-        navigationShell: navigationShell,
-        cartCount: state
-            .cartItemCount, // Pass the cartCount from the state to the NavBarPage.
-      );
-    });
+    return NavBarPage(
+      navigationShell: navigationShell,
+    );
   }
 }
 
 class NavBarPage extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
-  int cartCount;
 
-  NavBarPage(
-      {super.key, required this.navigationShell, required this.cartCount});
+  const NavBarPage({
+    super.key,
+    required this.navigationShell,
+  });
 
-  /// Navigate to the current location of the branch at the provided index when
-  /// tapping an item in the BottomNavigationBar.
   void _onTap(BuildContext context, int index) {
     if (index == 3) {
       context.read<CartCountCubit>().onSelectCartTab();
@@ -55,7 +50,6 @@ class NavBarPage extends StatelessWidget {
     return BlocListener<RootBloc, RootState>(
       listener: (context, state) {
         if (state is RootInitiateSearch) {
-          //Navigate to search tab
           int index = 1;
           navigationShell.goBranch(
             index,
@@ -66,13 +60,17 @@ class NavBarPage extends StatelessWidget {
       },
       child: Scaffold(
         backgroundColor: OptiAppColors.backgroundGray,
-        bottomNavigationBar: bottomNavigationBar(context),
+        bottomNavigationBar: BlocBuilder<CartCountCubit, CountState>(
+          builder: (context, state) {
+            return bottomNavigationBar(context, state.cartItemCount);
+          },
+        ),
         body: navigationShell,
       ),
     );
   }
 
-  Container bottomNavigationBar(BuildContext context) {
+  Container bottomNavigationBar(BuildContext context, int cartCount) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -81,7 +79,7 @@ class NavBarPage extends StatelessWidget {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 3,
             blurRadius: 5,
-            offset: const Offset(0, 3), // changes position of shadow
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -92,14 +90,14 @@ class NavBarPage extends StatelessWidget {
         unselectedItemColor: Colors.black,
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
-        items: _buildBottomNavigationBarItems(),
+        items: _buildBottomNavigationBarItems(cartCount),
         currentIndex: navigationShell.currentIndex,
         onTap: (int index) => _onTap(context, index),
       ),
     );
   }
 
-  List<BottomNavigationBarItem> _buildBottomNavigationBarItems() {
+  List<BottomNavigationBarItem> _buildBottomNavigationBarItems(int cartCount) {
     return [
       _buildBottomNavigationBarItem(
         0,
@@ -124,6 +122,7 @@ class NavBarPage extends StatelessWidget {
         AssetConstants.cartIcon,
         AssetConstants.cartSelectedIcon,
         LocalizationConstants.cart.localized(),
+        cartCount,
       ),
     ];
   }
@@ -132,8 +131,9 @@ class NavBarPage extends StatelessWidget {
     int index,
     String unselectedIconPath,
     String selectedIconPath,
-    String label,
-  ) {
+    String label, [
+    int cartCount = 0,
+  ]) {
     return BottomNavigationBarItem(
       icon: Padding(
         padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),

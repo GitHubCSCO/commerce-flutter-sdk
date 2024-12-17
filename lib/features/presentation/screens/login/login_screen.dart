@@ -466,7 +466,7 @@ class _LoginPageState extends State<LoginPage> {
               child: BlocBuilder<LoginCubit, LoginState>(
                 builder: (context, state) {
                   if (state is LoginInfoLoadingState) {
-                    return LoadingAnimationWidget.prograssiveDots(
+                    return LoadingAnimationWidget.progressiveDots(
                       color: OptiAppColors.iconPrimary,
                       size: 30,
                     );
