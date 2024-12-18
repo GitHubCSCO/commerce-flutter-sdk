@@ -3,7 +3,7 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 extension UrlStringExtensions on String? {
   String makeValidUrl() {
-    String urlString = this!;
+    var urlString = this!;
     if (urlString.isNotEmpty) {
       if (!urlString.startsWith("http")) {
         urlString = "https://$urlString";
@@ -21,7 +21,7 @@ extension UrlStringExtensions on String? {
   }
 
   String makeSimpleUrl() {
-    String urlString = this!;
+    var urlString = this!;
     if (urlString.isNotEmpty) {
       if (urlString.contains("https://")) {
         urlString = urlString.replaceAll("https://", '');
@@ -63,7 +63,7 @@ extension UrlStringExtensions on String? {
   }
 
   String makeAbsoluteUrl() {
-    String path = this!;
+    var path = this!;
     if (path.isEmpty) {
       return '';
     }
