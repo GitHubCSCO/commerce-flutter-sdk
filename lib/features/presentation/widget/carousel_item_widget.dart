@@ -18,7 +18,7 @@ class CarouselItemWidget extends StatelessWidget {
       onTap: () {
         var link = carouselSlideWidgetEntity.link.makeAbsoluteUrl();
 
-        var trimmedLink = link.trim(); 
+        var trimmedLink = link.trim();
 
         if (trimmedLink.isNotEmpty) {
           unawaited(launchUrlString(trimmedLink));
