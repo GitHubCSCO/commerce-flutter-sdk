@@ -17,8 +17,11 @@ class CarouselItemWidget extends StatelessWidget {
     return InkWell(
       onTap: () {
         var link = carouselSlideWidgetEntity.link.makeAbsoluteUrl();
-        if (link.isNotEmpty) {
-          unawaited(launchUrlString(link));
+
+        var trimmedLink = link.trim(); 
+
+        if (trimmedLink.isNotEmpty) {
+          unawaited(launchUrlString(trimmedLink));
         }
       },
       child: SizedBox(
