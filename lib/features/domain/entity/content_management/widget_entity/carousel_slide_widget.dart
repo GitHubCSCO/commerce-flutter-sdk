@@ -2,7 +2,7 @@ import 'package:commerce_flutter_app/features/domain/entity/content_management/w
 
 enum TextJustification {
   left,
-  cache,
+  center,
   right,
 }
 
