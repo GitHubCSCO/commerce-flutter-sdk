@@ -343,7 +343,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                           initialData:
                               LocalizationConstants.continueText.localized(),
                           builder: (context, snapshot) {
-                            String buttonText = snapshot.data!;
+                            var buttonText = snapshot.data!;
                             var index = context
                                 .read<ExpansionPanelCubit>()
                                 .expansionIndex;
@@ -390,7 +390,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                           .cart
                                           ?.paymentMethod !=
                                       null;
-                                  var isPaymentMethodSelectedasCreditCard =
+                                  var isPaymentMethodSelectedAsCreditCard =
                                       context
                                               .read<CheckoutBloc>()
                                               .cart
@@ -412,7 +412,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                   }
 
                                   if (!isPaymentMethodSelectedInCard ||
-                                      isPaymentMethodSelectedasCreditCard) {
+                                      isPaymentMethodSelectedAsCreditCard) {
                                     context.read<CheckoutBloc>().add(
                                         SelectPaymentMethodEvent(context
                                             .read<PaymentDetailsBloc>()
