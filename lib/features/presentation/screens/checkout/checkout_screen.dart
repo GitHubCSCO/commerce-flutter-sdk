@@ -4,9 +4,6 @@ import 'package:commerce_flutter_app/core/constants/localization_constants.dart'
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/models/expansion_panel_item.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
-import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shipping_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
@@ -306,144 +303,18 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                 .expansionIndex;
                             return PrimaryButton(
                               onPressed: () {
-                                void handleCareerService() {
-                                  final carrier = context
-                                      .read<CheckoutBloc>()
-                                      .selectedCarrier;
-                                  final service = context
-                                      .read<CheckoutBloc>()
-                                      .selectedService;
-
-                                  if ((state.shippingMethod.equalsIgnoreCase(
-                                              ShippingOption.ship.name) &&
-                                          carrier != null &&
-                                          service != null) ||
-                                      state.shippingMethod.equalsIgnoreCase(
-                                          ShippingOption.pickUp.name)) {
-                                    context
-                                        .read<ExpansionPanelCubit>()
-                                        .onContinueClick();
-                                  }
-                                }
-
-                                void handlePayment() {
-                                  var isPaymentCardType = context
-                                          .read<PaymentDetailsBloc>()
-                                          .selectedPaymentMethod
-                                          ?.cardType !=
-                                      null;
-                                  var isCreditCardSectionCompleted = context
-                                      .read<PaymentDetailsBloc>()
-                                      .isCreditCardSectionCompleted;
-                                  var isSelectedNewAddedCard = context
-                                      .read<PaymentDetailsBloc>()
-                                      .isSelectedNewAddedCard;
-                                  var isCVVFieldOpened = context
-                                      .read<PaymentDetailsBloc>()
-                                      .isCVVFieldOpened;
-
-                                  var isPaymentMethodSelectedInCard = context
-                                          .read<CheckoutBloc>()
-                                          .cart
-                                          ?.paymentMethod !=
-                                      null;
-                                  var isPaymentMethodSelectedAsCreditCard =
-                                      context
-                                              .read<CheckoutBloc>()
-                                              .cart
-                                              ?.paymentMethod
-                                              ?.isCreditCard ==
-                                          true;
-
-                                  var isOrderNotesShowed = context
-                                      .read<PaymentDetailsBloc>()
-                                      .shouldShowOrderNotes;
-                                  var orderNotes = context
-                                      .read<PaymentDetailsBloc>()
-                                      .getOrderNotes();
-
-                                  if (isOrderNotesShowed) {
-                                    context
-                                        .read<CheckoutBloc>()
-                                        .add(UpdateOrderNotesEvent(orderNotes));
-                                  }
-
-                                  if (!isPaymentMethodSelectedInCard ||
-                                      isPaymentMethodSelectedAsCreditCard) {
-                                    context.read<CheckoutBloc>().add(
-                                        SelectPaymentMethodEvent(context
-                                            .read<PaymentDetailsBloc>()
-                                            .selectedPaymentMethod!));
-                                  }
-
-                                  if (isSelectedNewAddedCard) {
-                                    context
-                                        .read<ExpansionPanelCubit>()
-                                        .onContinueClick();
-                                  } else if (isPaymentCardType &&
-                                      !isCreditCardSectionCompleted &&
-                                      !isSelectedNewAddedCard &&
-                                      isCVVFieldOpened) {
-                                    context
-                                        .read<TokenExBloc>()
-                                        .add(TokenExValidateEvent());
-                                  } else {
-                                    var poNumber = context
-                                        .read<PaymentDetailsBloc>()
-                                        .getPONumber();
-                                    var cart =
-                                        context.read<PaymentDetailsBloc>().cart;
-
-                                    if (cart!.requiresPoNumber! &&
-                                        poNumber.isNullOrEmpty) {
-                                      CustomSnackBar.showPoNumberRequired(
-                                          context);
-                                    } else {
-                                      context
-                                          .read<CheckoutBloc>()
-                                          .add(UpdatePONumberEvent(poNumber));
-
-                                      context
-                                          .read<ExpansionPanelCubit>()
-                                          .onContinueClick();
-                                    }
-                                  }
-                                }
-
-                                void handleReviewOrder() {
-                                  final reviewOrderEntity =
-                                      prepareReviewOrderEntity(state, context);
-
-                                  trackEcommercePurchaseEvent(
-                                      context,
-                                      state.cart.orderGrandTotal?.toString() ??
-                                          '0',
-                                      state.cart.currencySymbol ?? '',
-                                      state.cart.shippingAndHandling
-                                              ?.toString() ??
-                                          '0',
-                                      state.cart.totalTax?.toString() ?? '0',
-                                      state.cart.orderNumber ?? '',
-                                      state.cart.promotionCode ?? '');
-
-                                  context.read<CheckoutBloc>().add(
-                                      PlaceOrderEvent(
-                                          reviewOrderEntity:
-                                              reviewOrderEntity));
-                                }
-
                                 switch (index) {
                                   case 0:
-                                    handleCareerService();
+                                    handleCareerService(context, state);
                                   case 1:
                                     if (context
                                             .read<CheckoutBloc>()
                                             .cart
                                             ?.requiresApproval !=
                                         true) {
-                                      handlePayment();
+                                      handlePayment(context, state);
                                     } else {
-                                      handleReviewOrder();
+                                      handleReviewOrder(context, state);
                                     }
                                   case 2:
                                     if (context
@@ -451,7 +322,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                             .cart
                                             ?.requiresApproval !=
                                         true) {
-                                      handleReviewOrder();
+                                      handleReviewOrder(context, state);
                                     } else {
                                       context
                                           .read<ExpansionPanelCubit>()
@@ -489,6 +360,84 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
         },
       ),
     );
+  }
+
+  void handleCareerService(BuildContext context, CheckoutDataLoaded state) {
+    final carrier = context.read<CheckoutBloc>().selectedCarrier;
+    final service = context.read<CheckoutBloc>().selectedService;
+
+    if ((state.shippingMethod.equalsIgnoreCase(ShippingOption.ship.name) &&
+            carrier != null &&
+            service != null) ||
+        state.shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)) {
+      context.read<ExpansionPanelCubit>().onContinueClick();
+    }
+  }
+
+  void handlePayment(BuildContext context, CheckoutDataLoaded state) {
+    var isPaymentCardType =
+        context.read<PaymentDetailsBloc>().selectedPaymentMethod?.cardType !=
+            null;
+    var isCreditCardSectionCompleted =
+        context.read<PaymentDetailsBloc>().isCreditCardSectionCompleted;
+    var isSelectedNewAddedCard =
+        context.read<PaymentDetailsBloc>().isSelectedNewAddedCard;
+    var isCVVFieldOpened = context.read<PaymentDetailsBloc>().isCVVFieldOpened;
+
+    var isPaymentMethodSelectedInCard =
+        context.read<CheckoutBloc>().cart?.paymentMethod != null;
+    var isPaymentMethodSelectedAsCreditCard =
+        context.read<CheckoutBloc>().cart?.paymentMethod?.isCreditCard == true;
+
+    var isOrderNotesShowed =
+        context.read<PaymentDetailsBloc>().shouldShowOrderNotes;
+    var orderNotes = context.read<PaymentDetailsBloc>().getOrderNotes();
+
+    if (isOrderNotesShowed) {
+      context.read<CheckoutBloc>().add(UpdateOrderNotesEvent(orderNotes));
+    }
+
+    if (!isPaymentMethodSelectedInCard || isPaymentMethodSelectedAsCreditCard) {
+      context.read<CheckoutBloc>().add(SelectPaymentMethodEvent(
+          context.read<PaymentDetailsBloc>().selectedPaymentMethod!));
+    }
+
+    if (isSelectedNewAddedCard) {
+      context.read<ExpansionPanelCubit>().onContinueClick();
+    } else if (isPaymentCardType &&
+        !isCreditCardSectionCompleted &&
+        !isSelectedNewAddedCard &&
+        isCVVFieldOpened) {
+      context.read<TokenExBloc>().add(TokenExValidateEvent());
+    } else {
+      var poNumber = context.read<PaymentDetailsBloc>().getPONumber();
+      var cart = context.read<PaymentDetailsBloc>().cart;
+
+      if (cart!.requiresPoNumber! && poNumber.isNullOrEmpty) {
+        CustomSnackBar.showPoNumberRequired(context);
+      } else {
+        context.read<CheckoutBloc>().add(UpdatePONumberEvent(poNumber));
+
+        context.read<ExpansionPanelCubit>().onContinueClick();
+      }
+    }
+  }
+
+  void handleReviewOrder(BuildContext context, CheckoutDataLoaded state) {
+    final reviewOrderEntity = prepareReviewOrderEntity(state, context);
+
+    trackEcommercePurchaseEvent(
+        context,
+        state.cart.orderGrandTotal?.toString() ?? '0',
+        state.cart.currencySymbol ?? '',
+        state.cart.shippingAndHandling?.toString() ?? '0',
+        state.cart.totalTax?.toString() ?? '0',
+        state.cart.orderNumber ?? '',
+        state.cart.promotionCode ?? '');
+
+    context
+        .read<CheckoutBloc>()
+        .add(PlaceOrderEvent(reviewOrderEntity: reviewOrderEntity));
   }
 
   void _handleAddressSelectionCallBack(BuildContext context, Object result) {
