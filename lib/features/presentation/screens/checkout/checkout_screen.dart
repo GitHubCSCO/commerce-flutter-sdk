@@ -33,26 +33,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-ReviewOrderEntity prepareReviewOrderEntiity(
-    CheckoutDataLoaded state, BuildContext context) {
-  return ReviewOrderEntity(
-      billTo: state.billToAddress,
-      shipTo: state.shipToAddress,
-      warehouse: state.wareHouse,
-      shippingMethod:
-          (state.shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)
-              ? ShippingOption.pickUp
-              : ShippingOption.ship),
-      carriers: state.cart.carriers,
-      cartSettings: state.cartSettings,
-      paymentMethod: context.read<CheckoutBloc>().cart!.paymentMethod,
-      selectedCarrier: state.selectedCarrier,
-      selectedService: state.selectedService,
-      requestDeliveryDate: state.requestDeliveryDate,
-      allowCreateNewShipToAddress: state.allowCreateNewShipToAddress,
-      orderNotes: context.read<CheckoutBloc>().getOrderNote());
-}
-
 class CheckoutScreen extends BaseStatelessWidget {
   final Cart cart;
 
@@ -205,36 +185,13 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                   }
 
                                   final billingShippingEntity =
-                                      BillingShippingEntity(
-                                    billTo: state.billToAddress,
-                                    shipTo: state.shipToAddress,
-                                    warehouse: state.wareHouse,
-                                    shippingMethod: (state.shippingMethod
-                                            .equalsIgnoreCase(
-                                                ShippingOption.pickUp.name)
-                                        ? ShippingOption.pickUp
-                                        : ShippingOption.ship),
-                                    carriers: state.cart.carriers,
-                                    cartSettings: state.cartSettings,
-                                    selectedCarrier: state.selectedCarrier,
-                                    selectedService: state.selectedService,
-                                    requestDeliveryDate:
-                                        state.requestDeliveryDate,
-                                    allowCreateNewShipToAddress:
-                                        state.allowCreateNewShipToAddress,
-                                    requestDateWarningMessage:
-                                        state.requestDateWarningMessage,
-                                  );
+                                      prepareBillingShippingEntity(state);
 
                                   final paymentSummaryEntity =
-                                      PaymentSummaryEntity(
-                                          cart: state.cart,
-                                          cartSettings: state.cartSettings,
-                                          promotions: state.promotions,
-                                          isCustomerOrderApproval: false);
+                                      preparePaymentSummaryEntity(state);
 
                                   final reviewOrderEntity =
-                                      prepareReviewOrderEntiity(state, context);
+                                      prepareReviewOrderEntity(state, context);
 
                                   return ExpansionPanelList(
                                     expansionCallback:
@@ -455,7 +412,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
 
                                 void handleReviewOrder() {
                                   final reviewOrderEntity =
-                                      prepareReviewOrderEntiity(state, context);
+                                      prepareReviewOrderEntity(state, context);
 
                                   trackEcommercePurchaseEvent(
                                       context,
