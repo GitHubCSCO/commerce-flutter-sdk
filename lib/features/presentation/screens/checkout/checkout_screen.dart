@@ -2,7 +2,6 @@ import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/core/models/expansion_panel_item.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
@@ -101,7 +100,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
       String currency,
       String shipping,
       String tax,
-      String transcationId,
+      String transactionId,
       String promoCode) {
     context.read<RootBloc>().add(RootAnalyticsEvent(AnalyticsEvent(
             AnalyticsConstants.eventEcommercePurchase,
@@ -113,7 +112,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
         .withProperty(name: AnalyticsConstants.eventPropertyTax, strValue: tax)
         .withProperty(
             name: AnalyticsConstants.eventPropertyTransactionId,
-            strValue: transcationId)
+            strValue: transactionId)
         .withProperty(
             name: AnalyticsConstants.eventPromoCode, strValue: promoCode)
         .withProperty(
@@ -175,20 +174,23 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                               BlocBuilder<ExpansionPanelCubit,
                                   ExpansionPanelState>(
                                 builder: (_, panelState) {
-                                  List<ExpansionPanelItem>? list;
-                                  switch (panelState) {
-                                    case ExpansionPanelChangeState():
-                                      list = panelState.list;
-                                  }
+                                  final list =
+                                      panelState is ExpansionPanelChangeState
+                                          ? panelState.list
+                                          : null;
 
                                   final billingShippingEntity =
                                       prepareBillingShippingEntity(state);
-
                                   final paymentSummaryEntity =
                                       preparePaymentSummaryEntity(state);
-
                                   final reviewOrderEntity =
                                       prepareReviewOrderEntity(state, context);
+
+                                  final checkoutBloc =
+                                      context.watch<CheckoutBloc>();
+                                  final requiresApproval =
+                                      checkoutBloc.cart?.requiresApproval ==
+                                          true;
 
                                   return ExpansionPanelList(
                                     expansionCallback:
@@ -199,72 +201,68 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                                     },
                                     children: [
                                       ExpansionPanel(
+                                        headerBuilder: (BuildContext context,
+                                            bool isExpanded) {
+                                          return ListTile(
+                                            title: Text(LocalizationConstants
+                                                .billingShipping
+                                                .localized()),
+                                          );
+                                        },
+                                        body: BillingShippingWidget(
+                                          billingShippingEntity:
+                                              billingShippingEntity,
+                                          onCallBack:
+                                              _handleAddressSelectionCallBack,
+                                        ),
+                                        isExpanded: list?[0].isExpanded ?? true,
+                                        canTapOnHeader: true,
+                                      ),
+                                      if (!requiresApproval)
+                                        ExpansionPanel(
                                           headerBuilder: (BuildContext context,
                                               bool isExpanded) {
                                             return ListTile(
                                               title: Text(LocalizationConstants
-                                                  .billingShipping
+                                                  .paymentDetails
                                                   .localized()),
                                             );
                                           },
-                                          body: BillingShippingWidget(
-                                            billingShippingEntity:
-                                                billingShippingEntity,
-                                            onCallBack:
-                                                _handleAddressSelectionCallBack,
-                                          ),
-                                          isExpanded:
-                                              list?[0].isExpanded ?? true,
-                                          canTapOnHeader: true),
-                                      if (context
-                                              .watch<CheckoutBloc>()
-                                              .cart
-                                              ?.requiresApproval !=
-                                          true)
-                                        ExpansionPanel(
-                                            headerBuilder:
-                                                (BuildContext context,
-                                                    bool isExpanded) {
-                                              return ListTile(
-                                                title: Text(
-                                                    LocalizationConstants
-                                                        .paymentDetails
-                                                        .localized()),
+                                          body: CheckoutPaymentDetails(
+                                            cart: checkoutBloc.cart!,
+                                            onCompleteCheckoutPaymentSection:
+                                                () {
+                                              final paymentDetailsBloc = context
+                                                  .read<PaymentDetailsBloc>();
+                                              checkoutBloc.add(
+                                                SelectPaymentEvent(
+                                                    paymentDetailsBloc
+                                                        .cart!.paymentOptions!),
                                               );
                                             },
-                                            body: CheckoutPaymentDetails(
-                                                cart: context
-                                                    .read<CheckoutBloc>()
-                                                    .cart!,
-                                                onCompleteCheckoutPaymentSection:
-                                                    () {
-                                                  context.read<CheckoutBloc>().add(
-                                                      SelectPaymentEvent(context
-                                                          .read<
-                                                              PaymentDetailsBloc>()
-                                                          .cart!
-                                                          .paymentOptions!));
-                                                }),
-                                            isExpanded:
-                                                list?[1].isExpanded ?? false,
-                                            canTapOnHeader: true),
-                                      ExpansionPanel(
-                                          headerBuilder: (BuildContext context,
-                                              bool isExpanded) {
-                                            return ListTile(
-                                              title: Text(LocalizationConstants
-                                                  .reviewOrder
-                                                  .localized()),
-                                            );
-                                          },
-                                          body: ReviewOrderWidget(
-                                              reviewOrderEntity:
-                                                  reviewOrderEntity,
-                                              paymentSummaryEntity:
-                                                  paymentSummaryEntity),
+                                          ),
                                           isExpanded:
-                                              list?.last.isExpanded ?? false,
-                                          canTapOnHeader: true),
+                                              list?[1].isExpanded ?? false,
+                                          canTapOnHeader: true,
+                                        ),
+                                      ExpansionPanel(
+                                        headerBuilder: (BuildContext context,
+                                            bool isExpanded) {
+                                          return ListTile(
+                                            title: Text(LocalizationConstants
+                                                .reviewOrder
+                                                .localized()),
+                                          );
+                                        },
+                                        body: ReviewOrderWidget(
+                                          reviewOrderEntity: reviewOrderEntity,
+                                          paymentSummaryEntity:
+                                              paymentSummaryEntity,
+                                        ),
+                                        isExpanded:
+                                            list?.last.isExpanded ?? false,
+                                        canTapOnHeader: true,
+                                      ),
                                     ],
                                   );
                                 },
@@ -297,55 +295,41 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
                           initialData:
                               LocalizationConstants.continueText.localized(),
                           builder: (context, snapshot) {
-                            var buttonText = snapshot.data!;
-                            var index = context
-                                .read<ExpansionPanelCubit>()
-                                .expansionIndex;
+                            final buttonText = snapshot.data ??
+                                LocalizationConstants.continueText.localized();
+                            final expansionPanelCubit =
+                                context.read<ExpansionPanelCubit>();
+                            final checkoutBloc = context.read<CheckoutBloc>();
+                            final index = expansionPanelCubit.expansionIndex;
+                            final requiresApproval =
+                                checkoutBloc.cart?.requiresApproval == true;
+                            final isCheckoutStep =
+                                index == (requiresApproval ? 1 : 2);
+
                             return PrimaryButton(
                               onPressed: () {
                                 switch (index) {
                                   case 0:
                                     handleCareerService(context, state);
                                   case 1:
-                                    if (context
-                                            .read<CheckoutBloc>()
-                                            .cart
-                                            ?.requiresApproval !=
-                                        true) {
+                                    if (!requiresApproval) {
                                       handlePayment(context, state);
                                     } else {
                                       handleReviewOrder(context, state);
                                     }
                                   case 2:
-                                    if (context
-                                            .read<CheckoutBloc>()
-                                            .cart
-                                            ?.requiresApproval !=
-                                        true) {
+                                    if (!requiresApproval) {
                                       handleReviewOrder(context, state);
                                     } else {
-                                      context
-                                          .read<ExpansionPanelCubit>()
-                                          .onContinueClick();
+                                      expansionPanelCubit.onContinueClick();
                                     }
                                   default:
-                                    context
-                                        .read<ExpansionPanelCubit>()
-                                        .onContinueClick();
+                                    expansionPanelCubit.onContinueClick();
                                 }
                               },
                               text: buttonText,
-                              isEnabled: (index ==
-                                          (context
-                                                      .read<CheckoutBloc>()
-                                                      .cart
-                                                      ?.requiresApproval !=
-                                                  true
-                                              ? 2
-                                              : 1) &&
-                                      isCheckoutButtonEnabled == false)
-                                  ? false
-                                  : true,
+                              isEnabled:
+                                  !(isCheckoutStep && !isCheckoutButtonEnabled),
                             );
                           },
                         ),
@@ -363,62 +347,67 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
   }
 
   void handleCareerService(BuildContext context, CheckoutDataLoaded state) {
-    final carrier = context.read<CheckoutBloc>().selectedCarrier;
-    final service = context.read<CheckoutBloc>().selectedService;
+    final checkoutBloc = context.read<CheckoutBloc>();
+    final carrier = checkoutBloc.selectedCarrier;
+    final service = checkoutBloc.selectedService;
 
-    if ((state.shippingMethod.equalsIgnoreCase(ShippingOption.ship.name) &&
-            carrier != null &&
-            service != null) ||
-        state.shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)) {
+    final isShipMethod =
+        state.shippingMethod.equalsIgnoreCase(ShippingOption.ship.name);
+    final isPickUpMethod =
+        state.shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name);
+
+    if ((isShipMethod && carrier != null && service != null) ||
+        isPickUpMethod) {
       context.read<ExpansionPanelCubit>().onContinueClick();
     }
   }
 
   void handlePayment(BuildContext context, CheckoutDataLoaded state) {
-    var isPaymentCardType =
-        context.read<PaymentDetailsBloc>().selectedPaymentMethod?.cardType !=
-            null;
-    var isCreditCardSectionCompleted =
-        context.read<PaymentDetailsBloc>().isCreditCardSectionCompleted;
-    var isSelectedNewAddedCard =
-        context.read<PaymentDetailsBloc>().isSelectedNewAddedCard;
-    var isCVVFieldOpened = context.read<PaymentDetailsBloc>().isCVVFieldOpened;
+    final paymentDetailsBloc = context.read<PaymentDetailsBloc>();
+    final checkoutBloc = context.read<CheckoutBloc>();
+    final expansionPanelCubit = context.read<ExpansionPanelCubit>();
+    final tokenExBloc = context.read<TokenExBloc>();
 
-    var isPaymentMethodSelectedInCard =
-        context.read<CheckoutBloc>().cart?.paymentMethod != null;
-    var isPaymentMethodSelectedAsCreditCard =
-        context.read<CheckoutBloc>().cart?.paymentMethod?.isCreditCard == true;
+    final selectedPaymentMethod = paymentDetailsBloc.selectedPaymentMethod;
+    final isPaymentCardType = selectedPaymentMethod?.cardType != null;
+    final isCreditCardSectionCompleted =
+        paymentDetailsBloc.isCreditCardSectionCompleted;
+    final isSelectedNewAddedCard = paymentDetailsBloc.isSelectedNewAddedCard;
+    final isCVVFieldOpened = paymentDetailsBloc.isCVVFieldOpened;
 
-    var isOrderNotesShowed =
-        context.read<PaymentDetailsBloc>().shouldShowOrderNotes;
-    var orderNotes = context.read<PaymentDetailsBloc>().getOrderNotes();
+    final cart = checkoutBloc.cart;
+    final isPaymentMethodSelectedInCard = cart?.paymentMethod != null;
+    final isPaymentMethodSelectedAsCreditCard =
+        cart?.paymentMethod?.isCreditCard == true;
 
-    if (isOrderNotesShowed) {
-      context.read<CheckoutBloc>().add(UpdateOrderNotesEvent(orderNotes));
+    final isOrderNotesShown = paymentDetailsBloc.shouldShowOrderNotes;
+    final orderNotes = paymentDetailsBloc.getOrderNotes();
+
+    if (isOrderNotesShown) {
+      checkoutBloc.add(UpdateOrderNotesEvent(orderNotes));
     }
 
     if (!isPaymentMethodSelectedInCard || isPaymentMethodSelectedAsCreditCard) {
-      context.read<CheckoutBloc>().add(SelectPaymentMethodEvent(
-          context.read<PaymentDetailsBloc>().selectedPaymentMethod!));
+      if (selectedPaymentMethod != null) {
+        checkoutBloc.add(SelectPaymentMethodEvent(selectedPaymentMethod));
+      }
     }
 
     if (isSelectedNewAddedCard) {
-      context.read<ExpansionPanelCubit>().onContinueClick();
+      expansionPanelCubit.onContinueClick();
     } else if (isPaymentCardType &&
         !isCreditCardSectionCompleted &&
-        !isSelectedNewAddedCard &&
         isCVVFieldOpened) {
-      context.read<TokenExBloc>().add(TokenExValidateEvent());
+      tokenExBloc.add(TokenExValidateEvent());
     } else {
-      var poNumber = context.read<PaymentDetailsBloc>().getPONumber();
-      var cart = context.read<PaymentDetailsBloc>().cart;
+      final poNumber = paymentDetailsBloc.getPONumber();
+      final requiresPoNumber = cart?.requiresPoNumber ?? false;
 
-      if (cart!.requiresPoNumber! && poNumber.isNullOrEmpty) {
+      if (requiresPoNumber && (poNumber.isEmpty)) {
         CustomSnackBar.showPoNumberRequired(context);
       } else {
-        context.read<CheckoutBloc>().add(UpdatePONumberEvent(poNumber));
-
-        context.read<ExpansionPanelCubit>().onContinueClick();
+        checkoutBloc.add(UpdatePONumberEvent(poNumber));
+        expansionPanelCubit.onContinueClick();
       }
     }
   }
