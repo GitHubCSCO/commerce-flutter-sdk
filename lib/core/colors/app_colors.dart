@@ -82,6 +82,8 @@ class OptiAppColors {
     if (hexColor.length == 6) {
       hexColor = "FF$hexColor"; // add alpha if it's not provided
     }
-    return Color(int.parse(hexColor, radix: 16));
+
+    final colorValue = int.tryParse(hexColor, radix: 16);
+    return colorValue != null ? Color(colorValue) : const Color(0xFF000000);
   }
 }

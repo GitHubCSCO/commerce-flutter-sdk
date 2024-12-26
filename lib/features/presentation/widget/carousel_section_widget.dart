@@ -18,7 +18,7 @@ class CarouselSectionWidget extends StatelessWidget {
       CarouselSlider.builder(
         itemCount: carouselWidgetEntity.childWidgets?.length ?? 0,
         itemBuilder: (context, index, viewIndex) {
-          CarouselSlideWidgetEntity carouselSlideWidgetEntity =
+          var carouselSlideWidgetEntity =
               carouselWidgetEntity.childWidgets![index];
           return CarouselItemWidget(
               carouselSlideWidgetEntity: carouselSlideWidgetEntity);

@@ -5,8 +5,8 @@ class TextJustificationConverter {
     switch (enumString.toLowerCase()) {
       case "left":
         return TextJustification.left;
-      case "cache":
-        return TextJustification.cache;
+      case "center":
+        return TextJustification.center;
       case "right":
         return TextJustification.right;
       default:
