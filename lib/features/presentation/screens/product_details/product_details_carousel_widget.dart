@@ -3,6 +3,7 @@ import 'package:commerce_flutter_app/features/domain/entity/product_image_entity
 import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/carousel_slider/carousel_slider.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_carousel_item_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/full_screen_iamge_carousel_widget.dart';
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,9 +35,24 @@ class _ProductDetailsCarouselWidgetState
           carouselController: _carouselController,
           itemCount: thumbnails.length,
           itemBuilder: (context, index, realIndex) {
-            return ProductDetailsCarouselItemWidget(
-              productImageEntity: thumbnails[index],
-            );
+            final productImageEntity = thumbnails?[index];
+            return GestureDetector(
+                onTap: () {
+                  // When tapped, open fullscreen starting at `index`
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => FullScreenImageCarouselPage(
+                      images: thumbnails ?? [],
+                      initialIndex: index,
+                    ),
+                  ));
+                },
+                child: ProductDetailsCarouselItemWidget(
+                  productImageEntity: thumbnails[index],
+                ));
+
+            // return ProductDetailsCarouselItemWidget(
+            //   productImageEntity: thumbnails[index],
+            // );
           },
           options: CarouselOptions(
             enlargeCenterPage: true,
