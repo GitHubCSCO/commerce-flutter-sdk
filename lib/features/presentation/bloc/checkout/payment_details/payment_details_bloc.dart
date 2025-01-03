@@ -59,14 +59,10 @@ class PaymentDetailsBloc
         : event.cart;
     settings = cartSettings.getResultSuccessValue();
     _setUpSelectedPaymentMethod(cart!);
-    var showPOField = cart?.showPoNumber;
-    emit(PaymentDetailsLoaded(
-        isNewCreditCard: false,
-        showPOField: showPOField,
-        poTextEditingController: _poNumberController,
-        orderNotesTextEditingController: _orderNotesController,
-        shouldShowOrderNotes: shouldShowOrderNotes,
-        cart: cart));
+    await _setupPaymentDataSources(
+        UpdatePaymentMethodEvent(
+            isCVVRequired: true, paymentMethodDto: selectedPaymentMethod),
+        emit);
   }
 
   Future<void> _updateNewAccountPaymentPorfile(
