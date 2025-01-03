@@ -7,7 +7,6 @@ import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -27,23 +26,28 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
   ProductSettings? productSettings;
   String? promoItemMessage;
 
-  CheckoutBloc({required CheckoutUsecase checkoutUsecase})
-      : _checkoutUseCase = checkoutUsecase,
+  CheckoutBloc({required CheckoutUsecase checkoutUseCase})
+      : _checkoutUseCase = checkoutUseCase,
         super(CheckoutInitial()) {
-    on<LoadCheckoutEvent>((event, emit) => _onCheckoutLoadEvent(event, emit));
-    on<PlaceOrderEvent>((event, emit) => _onPlaceOrderEvent(event, emit));
+    on<LoadCheckoutEvent>(
+        (event, emit) async => _onCheckoutLoadEvent(event, emit));
+    on<PlaceOrderEvent>((event, emit) async => _onPlaceOrderEvent(event, emit));
     on<RequestDeliveryDateEvent>(
         (event, emit) => _onRequestDeliveryDateSelect(event, emit));
-    on<SelectCarrierEvent>((event, emit) => _onCarrierSelect(event, emit));
-    on<SelectServiceEvent>((event, emit) => _onServiceSelect(event, emit));
+    on<SelectCarrierEvent>(
+        (event, emit) async => _onCarrierSelect(event, emit));
+    on<SelectServiceEvent>(
+        (event, emit) async => _onServiceSelect(event, emit));
     on<SelectPaymentMethodEvent>(
-        (event, emit) => _onPaymentMethodSelect(event, emit));
-    on<SelectPaymentEvent>((event, emit) => _onPaymentSelect(event, emit));
+        (event, emit) async => _onPaymentMethodSelect(event, emit));
+    on<SelectPaymentEvent>(
+        (event, emit) async => _onPaymentSelect(event, emit));
     on<UpdatePONumberEvent>((event, emit) => _onUpdatePONumber(event, emit));
     on<UpdateOrderNotesEvent>(
         (event, emit) => _onUpdateOrderNotes(event, emit));
-    on<AddShiptoAddressEvent>((event, emit) => _onAddShipTo(event, emit));
-    on<UpdateShiptoAddressEvent>((event, emit) => _onUpdateShipto(event, emit));
+    on<AddShiptoAddressEvent>((event, emit) async => _onAddShipTo(event, emit));
+    on<UpdateShiptoAddressEvent>(
+        (event, emit) async => _onUpdateShipto(event, emit));
   }
 
   Cart removeQuoteRequiredProductsIfNeeded(Cart cart) {
@@ -100,10 +104,9 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
         final shipToAddress = cartData.shipTo;
         final wareHouse = session?.pickUpWarehouse;
         var shippingMethod = session?.fulfillmentMethod;
-        PromotionCollectionModel? promotionCollection =
-            (await _checkoutUseCase.loadCartPromotions())
-                .getResultSuccessValue();
-        CartSettings? cartSettings =
+        var promotionCollection = (await _checkoutUseCase.loadCartPromotions())
+            .getResultSuccessValue();
+        var cartSettings =
             (await _checkoutUseCase.getCartSetting()).getResultSuccessValue();
         final cartWarningMsg = await getCartWarningMessage(
             cartData, shippingMethod, _checkoutUseCase);
@@ -146,12 +149,10 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
             CheckoutDataFetchFailed(error: failedReason),
           );
         }
-        break;
       case Failure(errorResponse: final errorResponse):
         _checkoutUseCase.trackError(errorResponse);
         emit(CheckoutDataFetchFailed(
             error: errorResponse.errorDescription ?? ''));
-        break;
     }
   }
 
@@ -164,7 +165,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
     final result = await _checkoutUseCase.patchCart(cart!);
     switch (result) {
       case Success(value: final cartData):
-        String orderNumber = ((cartData?.erpOrderNumber != null &&
+        var orderNumber = ((cartData?.erpOrderNumber != null &&
                     cartData!.erpOrderNumber!.isNotEmpty)
                 ? cartData.erpOrderNumber
                 : cartData?.orderNumber) ??
@@ -190,17 +191,15 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
           message: message,
         ));
 
-        break;
       case Failure(errorResponse: final errorResponse):
         _checkoutUseCase.trackError(errorResponse);
         emit(CheckoutPlaceOrderFailed(
             error: errorResponse.errorDescription ?? ''));
-        break;
     }
   }
 
   List<CartLineEntity> getCartLines() {
-    List<CartLineEntity> cartlines = [];
+    var cartLines = <CartLineEntity>[];
     for (var cartLine in cart?.cartLines ?? []) {
       var cartLineEntity = CartLineEntityMapper.toEntity(cartLine);
       var shouldShowWarehouseInventoryButton =
@@ -210,9 +209,9 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
       cartLineEntity = cartLineEntity.copyWith(
           showInventoryAvailability: shouldShowWarehouseInventoryButton,
           promoItemMessage: promoItemMessage);
-      cartlines.add(cartLineEntity);
+      cartLines.add(cartLineEntity);
     }
-    return cartlines;
+    return cartLines;
   }
 
   void _onRequestDeliveryDateSelect(
