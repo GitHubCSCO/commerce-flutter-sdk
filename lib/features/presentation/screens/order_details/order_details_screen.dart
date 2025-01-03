@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/utils/platform_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
@@ -20,6 +22,7 @@ import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_wi
 import 'package:commerce_flutter_app/features/presentation/widget/order_details_body_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -52,10 +55,36 @@ class OrderDetailsScreen extends StatelessWidget {
       child: Builder(builder: (context) {
         return BlocListener<BottomMenuCubit, BottomMenuState>(
           // for determining the print path
-          listener: (context, state) {
+          listener: (context, state) async {
             switch (state) {
               case BottomMenuWebsiteUrlLoaded():
-                unawaited(launchUrlString(state.url));
+                final isWebViewEnabled =
+                    await PlatformUtils.isSystemWebViewEnabled(state.url);
+                if (isWebViewEnabled) {
+                  await context.pushNamed(
+                    AppRoute.inAppBrowser.name,
+                    extra: state.url,
+                  );
+                } else {
+                  // Show prompt to the user
+                  displayDialogWidget(
+                    context: context,
+                    title: LocalizationConstants.externalBrowserOpenWarningTitle
+                        .localized(),
+                    message: LocalizationConstants.externalBrowserOpenWarningMsg
+                        .localized(),
+                    actions: [
+                      DialogPlainButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          unawaited(launchUrlString(state.url));
+                        },
+                        child: Text(LocalizationConstants.oK.localized()),
+                      ),
+                    ],
+                  );
+                }
+
               case BottomMenuWebsiteUrlFailed():
                 displayDialogWidget(
                   context: context,

@@ -12,9 +12,13 @@ import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import android.content.pm.PackageInfo
+import android.util.Log
+import android.webkit.WebView
 
 class MainActivity : FlutterFragmentActivity() {
     private val CHANNEL = "biometric_channel"
+    private val UTILITYCHANNEL = "utility_channel"
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
@@ -23,6 +27,15 @@ class MainActivity : FlutterFragmentActivity() {
             if (call.method == "getBiometricType") {
                 val biometricType = getBiometricType(this)
                 result.success(biometricType)
+            } else {
+                result.notImplemented()
+            }
+        }
+
+         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, UTILITYCHANNEL).setMethodCallHandler { call, result ->
+            if (call.method == "isWebViewEnabled") {
+                val isEnabled = isWebViewEnabled(this)
+                result.success(isEnabled)
             } else {
                 result.notImplemented()
             }
@@ -50,4 +63,26 @@ class MainActivity : FlutterFragmentActivity() {
             else -> "Unknown"
         }
     }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun isWebViewEnabled(context: Context): Boolean {
+       return try {
+        // Check for Android System WebView package
+        val packageName = "com.google.android.webview"
+ 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // For Android 7.0 (API 24) and above
+            val webViewPackage = WebView.getCurrentWebViewPackage()?.packageName
+            Log.d("WebViewCheck", "Current WebView Package: $webViewPackage")
+            webViewPackage == packageName
+        } else {
+            // For Android 6.0 (API 23) and below
+            val packageInfo = context.packageManager.getPackageInfo(packageName, 0)
+            packageInfo.applicationInfo.enabled
+        }
+    } catch (e: PackageManager.NameNotFoundException) {
+        Log.e("WebViewCheck", "Android System WebView is not installed.")
+        false
+    }
+    }       
 }

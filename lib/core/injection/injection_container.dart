@@ -24,6 +24,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/p
 import 'package:commerce_flutter_app/features/domain/usecases/curent_location_usecase/current_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/dealer_location_usecase/dealer_location_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/in_app_browser/in_app_browser_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/language_usecase/language_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/invoice_usecase/invoice_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/location_note_usecase/location_note_usecase.dart';
@@ -96,6 +97,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/product_details/
 import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/auto_complete/quick_order_auto_complete_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/in_app_browser/in_app_browser_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/invoice_history/invoice_email/invoice_email_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/quote/job_quote_details/job_quote_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_bloc.dart';
@@ -559,6 +561,10 @@ Future<void> initInjectionContainer() async {
 
     //core service provider
     ..registerLazySingleton<ICoreServiceProvider>(() => CoreServiceProvider())
+
+    // In app browser
+    ..registerFactory(() => InAppBrowserCubit(inAppBrowserUsecase: sl()))
+    ..registerFactory(() => InAppBrowserUsecase())
 
     //services
     ..registerLazySingleton<ITrackingService>(() => CompositeTrackingService(
