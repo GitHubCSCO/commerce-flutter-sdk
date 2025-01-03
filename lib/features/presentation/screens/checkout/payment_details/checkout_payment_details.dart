@@ -28,12 +28,12 @@ class CheckoutPaymentDetails extends StatelessWidget {
   final OnCompleteCheckoutPaymentSection onCompleteCheckoutPaymentSection;
   final bool? isVmiCheckout;
 
-  CheckoutPaymentDetails({
-    Key? key,
+  const CheckoutPaymentDetails({
+    super.key,
     required this.cart,
     required this.onCompleteCheckoutPaymentSection,
     this.isVmiCheckout,
-  }) : super(key: key);
+  });
 
   PaymentMethodDto? getPaymenmentMedthodDtoFromCart(
       Cart cart, AccountPaymentProfile accountPaymentProfile) {
