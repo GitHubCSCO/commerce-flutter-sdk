@@ -39,7 +39,7 @@ PODS:
   - firebase_core (3.9.0):
     - Firebase/CoreOnly (= 11.4.0)
     - Flutter
-  - firebase_crashlytics (4.0.3):
+  - firebase_crashlytics (4.2.0):
     - Firebase/Crashlytics (= 11.4.0)
     - firebase_core
     - Flutter
@@ -367,7 +367,7 @@ SPEC CHECKSUMS:
   Firebase: cf1b19f21410b029b6786a54e9764a0cacad3c99
   firebase_analytics: e07a0ec33c87483218a148b1a7ba85ad83201db7
   firebase_core: b62a5080210edad3f2934314a8b2c6f5124e8e10
-  firebase_crashlytics: c8494e9cf939854999af38295ec1fc1364cd9112
+  firebase_crashlytics: 757e252772ed3dd37c07638f9fcd4dceb5f101c8
   firebase_remote_config: 30927fdde71728145e70831e107ce469bb23ecc5
   FirebaseABTesting: aef1719704fade00b200827e7973f352efc4caee
   FirebaseAnalytics: 3feef9ae8733c567866342a1000691baaa7cad49
