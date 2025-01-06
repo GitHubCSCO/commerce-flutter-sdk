@@ -420,7 +420,7 @@ Future<void> initInjectionContainer() async {
 
     //checkout
     ..registerFactory(() => ExpansionPanelCubit())
-    ..registerFactory(() => CheckoutBloc(checkoutUsecase: sl()))
+    ..registerFactory(() => CheckoutBloc(checkoutUseCase: sl()))
     ..registerFactory(() => CheckoutUsecase())
     ..registerFactory(() => PaymentDetailsBloc(paymentDetailsUseCase: sl()))
     ..registerFactory(() => PaymentDetailsUseCase())

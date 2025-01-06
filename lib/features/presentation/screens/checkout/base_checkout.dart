@@ -1,11 +1,14 @@
-import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shipping_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/promotion_type.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -31,6 +34,72 @@ mixin BaseCheckout {
       ],
       automaticallyImplyLeading: false,
     );
+  }
+
+  BillingShippingEntity prepareBillingShippingEntity(CheckoutDataLoaded state) {
+    return BillingShippingEntity(
+      billTo: state.billToAddress,
+      shipTo: state.shipToAddress,
+      warehouse: state.wareHouse,
+      shippingMethod:
+          (state.shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)
+              ? ShippingOption.pickUp
+              : ShippingOption.ship),
+      carriers: state.cart.carriers,
+      cartSettings: state.cartSettings,
+      selectedCarrier: state.selectedCarrier,
+      selectedService: state.selectedService,
+      requestDeliveryDate: state.requestDeliveryDate,
+      allowCreateNewShipToAddress: state.allowCreateNewShipToAddress,
+      requestDateWarningMessage: state.requestDateWarningMessage,
+    );
+  }
+
+  BillingShippingEntity prepareVmiBillingShippingEntity(
+      CheckoutDataLoaded state) {
+    return BillingShippingEntity(
+      billTo: state.billToAddress,
+      shipTo: state.shipToAddress,
+      warehouse: state.wareHouse,
+      shippingMethod:
+          (state.shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)
+              ? ShippingOption.pickUp
+              : ShippingOption.ship),
+      carriers: state.cart.carriers,
+      cartSettings: state.cartSettings,
+      selectedCarrier: state.selectedCarrier,
+      selectedService: state.selectedService,
+      requestDeliveryDate: state.requestDeliveryDate,
+      allowCreateNewShipToAddress: state.allowCreateNewShipToAddress,
+    );
+  }
+
+  PaymentSummaryEntity preparePaymentSummaryEntity(CheckoutDataLoaded state) {
+    return PaymentSummaryEntity(
+        cart: state.cart,
+        cartSettings: state.cartSettings,
+        promotions: state.promotions,
+        isCustomerOrderApproval: false);
+  }
+
+  ReviewOrderEntity prepareReviewOrderEntity(
+      CheckoutDataLoaded state, BuildContext context) {
+    return ReviewOrderEntity(
+        billTo: state.billToAddress,
+        shipTo: state.shipToAddress,
+        warehouse: state.wareHouse,
+        shippingMethod:
+            (state.shippingMethod.equalsIgnoreCase(ShippingOption.pickUp.name)
+                ? ShippingOption.pickUp
+                : ShippingOption.ship),
+        carriers: state.cart.carriers,
+        cartSettings: state.cartSettings,
+        paymentMethod: context.read<CheckoutBloc>().cart!.paymentMethod,
+        selectedCarrier: state.selectedCarrier,
+        selectedService: state.selectedService,
+        requestDeliveryDate: state.requestDeliveryDate,
+        allowCreateNewShipToAddress: state.allowCreateNewShipToAddress,
+        orderNotes: context.read<CheckoutBloc>().getOrderNote());
   }
 
   Widget buildSummary(

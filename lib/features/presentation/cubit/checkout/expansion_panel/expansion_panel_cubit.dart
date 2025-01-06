@@ -40,10 +40,10 @@ class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
     }
   }
 
-  Future<void> onPanelExpansionChange(int index) async {
+  void onPanelExpansionChange(int index) {
     if (expansionIndex > index) {
       expansionIndex = index;
-      for (int i = 0; i < list.length; i++) {
+      for (var i = 0; i < list.length; i++) {
         if (index == i) {
           list[i].isExpanded = true;
         } else {
@@ -59,11 +59,11 @@ class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
     }
   }
 
-  Future<void> onContinueClick() async {
+  void onContinueClick() {
     if (expansionIndex >= (numberOfPanels == 2 ? 1 : 2)) {
     } else {
       expansionIndex++;
-      for (int i = 0; i < list.length; i++) {
+      for (var i = 0; i < list.length; i++) {
         if (expansionIndex == i) {
           list[i].isExpanded = true;
         } else {
@@ -83,7 +83,7 @@ class ExpansionPanelCubit extends Cubit<ExpansionPanelState> {
     _continueButtonController.add(text);
   }
 
-  void dispose() {
-    _continueButtonController.close();
+  Future<void> dispose() async {
+    await _continueButtonController.close();
   }
 }
