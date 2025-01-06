@@ -78,7 +78,7 @@ class MainActivity : FlutterFragmentActivity() {
         } else {
             // For Android 6.0 (API 23) and below
             val packageInfo = context.packageManager.getPackageInfo(packageName, 0)
-            packageInfo.applicationInfo.enabled
+            packageInfo.applicationInfo?.enabled ?: false
         }
     } catch (e: PackageManager.NameNotFoundException) {
         Log.e("WebViewCheck", "Android System WebView is not installed.")
