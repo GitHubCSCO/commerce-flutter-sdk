@@ -75,6 +75,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wis
 import 'package:commerce_flutter_app/features/presentation/widget/add_credit_card_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/add_shipping_address_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/selection_item_widget.dart';
+import 'package:commerce_flutter_app/in_app_webview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -129,6 +130,18 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.login.name,
     path: AppRoute.login.suffix,
     builder: (context, state) => const LoginScreen(),
+    navigatorKey: _rootNavigator,
+    parent: null,
+  );
+
+  // path: /login
+  final inAppBrowser = createSeparateRoute(
+    name: AppRoute.inAppBrowser.name,
+    path: AppRoute.inAppBrowser.suffix,
+    builder: (context, state) {
+      final url = state.extra as String;
+      return InAppBrowserScreen(url: url);
+    },
     navigatorKey: _rootNavigator,
     parent: null,
   );
@@ -818,5 +831,6 @@ List<NavigationNode> _getNavigationRoot() {
     userSelection,
     salesRepSelection,
     quoteLineNotes,
+    inAppBrowser
   ];
 }
