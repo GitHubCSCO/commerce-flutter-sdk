@@ -64,25 +64,35 @@ class MainActivity : FlutterFragmentActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun isWebViewEnabled(context: Context): Boolean {
-       return try {
-        // Check for Android System WebView package
-        val packageName = "com.google.android.webview"
- 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            // For Android 7.0 (API 24) and above
-            val webViewPackage = WebView.getCurrentWebViewPackage()?.packageName
-            Log.d("WebViewCheck", "Current WebView Package: $webViewPackage")
-            webViewPackage == packageName
-        } else {
-            // For Android 6.0 (API 23) and below
-            val packageInfo = context.packageManager.getPackageInfo(packageName, 0)
-            packageInfo.applicationInfo.enabled
+        return try {
+            val packageName = "com.google.android.webview"
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                // For Android 8.0 (API 26) and above
+                val webViewPackage = try {
+                    val method = WebView::class.java.getMethod("getCurrentWebViewPackage")
+                    method.invoke(null) as? PackageInfo
+                } catch (e: Exception) {
+                    Log.e("WebViewCheck", "Reflection error: ${e.message}")
+                    null
+                }
+                val webViewPackageName = webViewPackage?.packageName
+                Log.d("WebViewCheck", "Current WebView Package: $webViewPackageName")
+                webViewPackageName == packageName
+            } else {
+                // For Android 5.0 (API 21) to Android 7.1 (API 25)
+                val packageInfo = try {
+                    context.packageManager.getPackageInfo(packageName, 0)
+                } catch (e: PackageManager.NameNotFoundException) {
+                    Log.e("WebViewCheck", "Android System WebView is not installed.")
+                    null
+                }
+                packageInfo?.applicationInfo?.enabled == true
+            }
+        } catch (e: Exception) {
+            Log.e("WebViewCheck", "Error checking WebView status: ${e.message}")
+            false
         }
-    } catch (e: PackageManager.NameNotFoundException) {
-        Log.e("WebViewCheck", "Android System WebView is not installed.")
-        false
     }
-    }       
 }
