@@ -110,7 +110,7 @@ class _FullScreenImageCarouselPageState
       return Center(
         child: Image.network(
           productImageEntity.mediumImagePath.makeImageUrl() ?? '',
-          fit: BoxFit.contain,
+          fit: BoxFit.fitWidth,
           errorBuilder: (context, error, stackTrace) {
             return Container(
               color: Colors.black,

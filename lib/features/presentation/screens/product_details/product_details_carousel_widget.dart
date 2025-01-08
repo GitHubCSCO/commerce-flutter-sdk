@@ -1,11 +1,10 @@
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_image_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/carousel_slider/carousel_slider.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_carousel_item_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/full_screen_iamge_carousel_widget.dart';
 import 'package:flutter/material.dart' hide CarouselController;
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class ProductDetailsCarouselWidget extends StatefulWidget {
   final ProductDetailsGeneralInfoEntity generalInfoEntity;
@@ -38,21 +37,13 @@ class _ProductDetailsCarouselWidgetState
             final productImageEntity = thumbnails?[index];
             return GestureDetector(
                 onTap: () {
-                  // When tapped, open fullscreen starting at `index`
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => FullScreenImageCarouselPage(
-                      images: thumbnails ?? [],
-                      initialIndex: index,
-                    ),
-                  ));
+                  AppRoute.fullScreenImageCarousel.navigateBackStack(context,
+                      pathParameters: {"initialIndex": index.toString()},
+                      extra: thumbnails);
                 },
                 child: ProductDetailsCarouselItemWidget(
                   productImageEntity: thumbnails[index],
                 ));
-
-            // return ProductDetailsCarouselItemWidget(
-            //   productImageEntity: thumbnails[index],
-            // );
           },
           options: CarouselOptions(
             enlargeCenterPage: true,

@@ -18,20 +18,20 @@ class ProductDetailsCarouselItemWidget extends StatelessWidget {
     }
 
     return '''
-<!DOCTYPE html>
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-  <script src="https://scripts.sirv.com/sirv.js"></script>
-</head>
-<body>
-  <div class="Sirv"
-       data-src="$imagePath?fullscreen=false&spinOnAnyDrag=false"
-       data-mobile-options="spinOnAnyDrag:false;">
-  </div>
-</body>
-</html>
-''';
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+      <script src="https://scripts.sirv.com/sirv.js"></script>
+    </head>
+    <body>
+      <div class="Sirv"
+          data-src="$imagePath?fullscreen=false&spinOnAnyDrag=false"
+          data-mobile-options="spinOnAnyDrag:false;">
+      </div>
+    </body>
+    </html>
+    ''';
   }
 
   @override

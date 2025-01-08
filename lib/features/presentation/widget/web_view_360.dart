@@ -17,11 +17,8 @@ class _WebView360WidgetState extends State<WebView360Widget> {
   void initState() {
     super.initState();
 
-    // 1. Create the controller
     _webViewController = WebViewController()
-      // 2. Set JavaScript (if needed)
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      // 3. Optionally set navigation delegates
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (String url) {
@@ -35,7 +32,6 @@ class _WebView360WidgetState extends State<WebView360Widget> {
           },
         ),
       )
-      // 4. Load the HTML as a data URI
       ..loadRequest(
         Uri.dataFromString(
           widget.htmlString,
@@ -47,7 +43,6 @@ class _WebView360WidgetState extends State<WebView360Widget> {
 
   @override
   Widget build(BuildContext context) {
-    // Now pass the controller to a WebViewWidget
     return WebViewWidget(controller: _webViewController);
   }
 }
