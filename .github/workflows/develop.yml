@@ -1,5 +1,18 @@
 name: Dev Build
 on:
+  push:
+    branches:
+      - main
+      - develop
+      - dev
+  pull_request:
+    branches:
+      - main
+      - develop
+      - dev
+      - "epic/**"
+      - "feature/**"
+      - "story/**"
   workflow_dispatch:
     inputs:
       release:
