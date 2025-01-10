@@ -5,6 +5,6 @@ class NetworkService implements INetworkService {
   @override
   Future<bool> isOnline() async {
     final connectivityResult = await Connectivity().checkConnectivity();
-    return (connectivityResult != ConnectivityResult.none);
+    return !connectivityResult.contains(ConnectivityResult.none);
   }
 }

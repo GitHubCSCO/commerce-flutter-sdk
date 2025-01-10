@@ -71,6 +71,7 @@ class RouteNames {
   static const String quoteLineNotes = 'quoteLineNotes';
   static const String language = 'language';
   static const String invoiceEmail = 'invoiceEmail';
+  static const String inAppBrowser = 'inAppBrowser';
 }
 
 class RoutePaths {
@@ -160,6 +161,7 @@ class RoutePaths {
   static const String language =
       '${RoutePaths.settings}/${RouteNames.language}';
   static const String invoiceEmail = '/${RoutePaths.invoiceDetail}/email';
+  static const String inAppBrowser = '/${RouteNames.inAppBrowser}';
 }
 
 enum AppRoute {
@@ -302,7 +304,10 @@ enum AppRoute {
     name: RouteNames.invoiceEmail,
     fullPath: RoutePaths.invoiceEmail,
   ),
-  ;
+  inAppBrowser(
+    name: RouteNames.inAppBrowser,
+    fullPath: RoutePaths.inAppBrowser,
+  );
 
   const AppRoute({
     required this.name,

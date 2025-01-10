@@ -27,9 +27,9 @@ class PaymentDetailsBloc
       : _paymentDetailsUseCase = paymentDetailsUseCase,
         super(PaymentDetailsInitial()) {
     on<LoadPaymentDetailsEvent>(
-        (event, emit) => _loadPaymentDetailsData(event, emit));
+        (event, emit) async => _loadPaymentDetailsData(event, emit));
     on<UpdatePaymentMethodEvent>(
-        (event, emit) => _updatePaymentMethod(event, emit));
+        (event, emit) async => _updatePaymentMethod(event, emit));
     on<UpdateCreditCartInfoEvent>(
         (event, emit) => _updateCreditCardInfoToCart(event, emit));
     on<UpdateNewAccountPaymentProfileEvent>((event, emit) async {
@@ -120,12 +120,8 @@ class PaymentDetailsBloc
               (x) =>
                   x != null && x.cardIdentifier == selectedPaymentMethod!.name);
           if (creditCard != null) {
-            if (cart?.paymentOptions == null) {
-              cart?.paymentOptions = PaymentOptionsDto();
-            }
-            if (cart?.paymentOptions?.creditCard == null) {
-              cart?.paymentOptions?.creditCard = CreditCardDto();
-            }
+            cart?.paymentOptions ??= PaymentOptionsDto();
+            cart?.paymentOptions?.creditCard ??= CreditCardDto();
 
             cart?.paymentOptions?.creditCard?.cardHolderName =
                 creditCard.cardHolderName;
@@ -154,7 +150,6 @@ class PaymentDetailsBloc
               switch (tokenExResponse) {
                 case Success(value: final tokenExDto):
                   tokenExConfiguration = tokenExDto;
-                  break;
                 case Failure(errorResponse: final errorResponse):
                   isCVVFieldOpened = false;
                   emit(PaymentDetailsLoaded(
@@ -179,7 +174,7 @@ class PaymentDetailsBloc
             );
 
             var tokeExUrl = _paymentDetailsUseCase.tokenExIFrameUrl;
-            var tokenExEnity = TokenExEntity(
+            var tokenExEntity = TokenExEntity(
                 tokenExConfiguration: tokenExConfiguration,
                 tokenexStyle: tokenExStyle,
                 tokenexMode: TokenExViewMode.cvv,
@@ -188,7 +183,7 @@ class PaymentDetailsBloc
 
             emit(PaymentDetailsLoaded(
                 isNewCreditCard: false,
-                tokenExEntity: tokenExEnity,
+                tokenExEntity: tokenExEntity,
                 cardDetails: cardDetails,
                 showPOField: showPOField,
                 poTextEditingController: _poNumberController,
@@ -212,21 +207,20 @@ class PaymentDetailsBloc
   }
 
   String _getCardDetails(AccountPaymentProfile creditCard) {
-    String creditCardType = creditCard.cardType!.capitalize();
+    var creditCardType = creditCard.cardType!.capitalize();
     return "$creditCardType ${creditCard.maskedCardNumber} ${creditCard.expirationDate}";
   }
 
   void _setUpSelectedPaymentMethod(Cart cart) {
     if (cart.paymentOptions?.paymentMethods != null) {
-      List<PaymentMethodDto> paymentMethods =
-          cart.paymentOptions!.paymentMethods!;
+      var paymentMethods = cart.paymentOptions!.paymentMethods!;
       if (cart.paymentMethod?.isCreditCard != null &&
           cart.paymentMethod?.isCreditCard == false) {
         selectedPaymentMethod = cart.paymentMethod;
       }
 
       if (selectedPaymentMethod == null) {
-        for (PaymentMethodDto method in paymentMethods) {
+        for (var method in paymentMethods) {
           if (method.isCreditCard == false) {
             selectedPaymentMethod = method;
             cart.paymentMethod = selectedPaymentMethod;
@@ -234,7 +228,7 @@ class PaymentDetailsBloc
           }
         }
       } else {
-        for (PaymentMethodDto method in paymentMethods) {
+        for (var method in paymentMethods) {
           if (method.name == selectedPaymentMethod?.name &&
               method.isCreditCard == false) {
             selectedPaymentMethod = method;
@@ -263,8 +257,7 @@ class PaymentDetailsBloc
     List<PaymentMethodDto>? paymentMethods = [];
 
     if (cart?.paymentOptions?.paymentMethods != null) {
-      for (PaymentMethodDto paymentMethod
-          in cart!.paymentOptions!.paymentMethods!) {
+      for (var paymentMethod in cart!.paymentOptions!.paymentMethods!) {
         if (paymentMethod.isCreditCard == null ||
             !paymentMethod.isCreditCard!) {
           paymentMethods.add(paymentMethod);

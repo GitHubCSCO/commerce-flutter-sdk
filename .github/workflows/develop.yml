@@ -1,5 +1,18 @@
 name: Dev Build
 on:
+  push:
+    branches:
+      - main
+      - develop
+      - dev
+  pull_request:
+    branches:
+      - main
+      - develop
+      - dev
+      - "epic/**"
+      - "feature/**"
+      - "story/**"
   workflow_dispatch:
     inputs:
       release:
@@ -42,6 +55,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+          flutter-version-file: pubspec.yaml
           cache: true
 
       - run: flutter --version
@@ -54,11 +68,17 @@ jobs:
           name: id_rsa
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
+      - name: Determine config
+        id: config
+        run: |
+          echo "Using analytics config: ${{ github.event.inputs.analytics_config || 'flutter' }}"
+          echo "analytics_config=${{ github.event.inputs.analytics_config || 'flutter' }}" >> $GITHUB_ENV
+
       - name: Cloning build scripts
         uses: actions/checkout@master
         with:
           repository: InsiteSoftware/commerce-mobile-build-scripts
-          ref: refs/heads/${{ github.event.inputs.analytics_config }}
+          ref: refs/heads/${{ env.analytics_config }}
           token: ${{ secrets.my_pat }}
           path: build-scripts
       - name: List out everything
@@ -72,7 +92,7 @@ jobs:
 
       - name: Fastlane
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
+          if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ github.event_name }}" = "push" ]; then
             echo "Running in PR. Using default value."
             RELEASE_GROUP='qa'
           else
@@ -116,6 +136,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+          flutter-version-file: pubspec.yaml
           cache: true
 
       - run: flutter --version
@@ -128,11 +149,17 @@ jobs:
           name: id_rsa
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
+      - name: Determine config
+        id: config
+        run: |
+          echo "Using analytics config: ${{ github.event.inputs.analytics_config || 'flutter' }}"
+          echo "analytics_config=${{ github.event.inputs.analytics_config || 'flutter' }}" >> $GITHUB_ENV
+
       - name: Cloning build scripts
         uses: actions/checkout@master
         with:
           repository: InsiteSoftware/commerce-mobile-build-scripts
-          ref: refs/heads/${{ github.event.inputs.analytics_config }}
+          ref: refs/heads/${{ env.analytics_config }}
           token: ${{ secrets.my_pat }}
           path: build-scripts
       - name: List out everything
@@ -146,7 +173,7 @@ jobs:
 
       - name: Fastlane
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
+          if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ github.event_name }}" = "push" ]; then
             echo "Running in PR. Using default value."
             RELEASE_GROUP='qa'
           else

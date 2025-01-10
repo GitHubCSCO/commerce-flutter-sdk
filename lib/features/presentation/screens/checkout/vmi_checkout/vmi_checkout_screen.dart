@@ -311,7 +311,7 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
       } else {
         context.read<CheckoutBloc>().add(UpdatePONumberEvent(poNumber));
         context.read<CheckoutBloc>().add(PlaceOrderEvent(
-            reviewOrderEntity: prepareReviewOrderEntiity(state, context)));
+            reviewOrderEntity: prepareReviewOrderEntity(state, context)));
       }
     }
   }
