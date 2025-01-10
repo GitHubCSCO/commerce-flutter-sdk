@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/tokenex_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/token_ex_view_mode.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
@@ -23,6 +24,32 @@ int getTokenEXMode(TokenExViewMode mode) {
   }
 }
 
+class TokenExWidget extends StatelessWidget {
+  final TokenExEntity tokenExEntity;
+  final Function handleWebViewRequestFromTokenEX;
+  final Function handleTokenExFinishedData;
+  final ValueNotifier<bool>? tokenExValidateNotifier;
+
+  const TokenExWidget(
+      {super.key,
+      required this.tokenExEntity,
+      required this.handleWebViewRequestFromTokenEX,
+      required this.handleTokenExFinishedData,
+      required this.tokenExValidateNotifier});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<TokenExBloc>(
+      create: (context) => sl<TokenExBloc>(),
+      child: TokenExWebView(
+          tokenExEntity: tokenExEntity,
+          handleWebViewRequestFromTokenEX: handleWebViewRequestFromTokenEX,
+          handleTokenExFinishedData: handleTokenExFinishedData,
+          tokenExValidateNotifier: tokenExValidateNotifier),
+    );
+  }
+}
+
 class TokenExWebView extends StatefulWidget {
   final TokenExEntity tokenExEntity;
   final Function handleWebViewRequestFromTokenEX;
@@ -34,7 +61,7 @@ class TokenExWebView extends StatefulWidget {
       required this.tokenExEntity,
       required this.handleWebViewRequestFromTokenEX,
       required this.handleTokenExFinishedData,
-      this.tokenExValidateNotifier});
+      required this.tokenExValidateNotifier});
 
   @override
   State<TokenExWebView> createState() => _TokenExWebViewState();

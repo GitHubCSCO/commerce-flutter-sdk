@@ -45,7 +45,6 @@ class CheckoutScreen extends BaseStatelessWidget {
         BlocProvider<CheckoutBloc>(
             create: (context) =>
                 sl<CheckoutBloc>()..add(LoadCheckoutEvent(cart: cart))),
-        BlocProvider<TokenExBloc>(create: (context) => sl<TokenExBloc>()),
         BlocProvider<ReviewOrderCubit>(
             create: (context) => sl<ReviewOrderCubit>()),
         BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
@@ -366,7 +365,6 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
     final paymentDetailsBloc = context.read<PaymentDetailsBloc>();
     final checkoutBloc = context.read<CheckoutBloc>();
     final expansionPanelCubit = context.read<ExpansionPanelCubit>();
-    final tokenExBloc = context.read<TokenExBloc>();
 
     final selectedPaymentMethod = paymentDetailsBloc.selectedPaymentMethod;
     final isPaymentCardType = selectedPaymentMethod?.cardType != null;
@@ -398,7 +396,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
     } else if (isPaymentCardType &&
         !isCreditCardSectionCompleted &&
         isCVVFieldOpened) {
-      tokenExBloc.add(TokenExValidateEvent());
+      paymentDetailsBloc.add(ValidateTokenEvent());
     } else {
       final poNumber = paymentDetailsBloc.getPONumber();
       final requiresPoNumber = cart?.requiresPoNumber ?? false;

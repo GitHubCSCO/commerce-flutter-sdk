@@ -26,9 +26,10 @@ typedef OnCompleteCheckoutPaymentSection = void Function();
 class CheckoutPaymentDetails extends StatelessWidget {
   final Cart cart;
   final OnCompleteCheckoutPaymentSection onCompleteCheckoutPaymentSection;
+  final ValueNotifier<bool> validateNotifier = ValueNotifier(false);
   final bool? isVmiCheckout;
 
-  const CheckoutPaymentDetails({
+  CheckoutPaymentDetails({
     super.key,
     required this.cart,
     required this.onCompleteCheckoutPaymentSection,
@@ -51,10 +52,6 @@ class CheckoutPaymentDetails extends StatelessWidget {
     return BlocListener<PaymentDetailsBloc, PaymentDetailsState>(
       listener: (_, state) {
         if (state is PaymentDetailsLoaded) {
-          if (state.tokenExEntity != null) {
-            context.read<TokenExBloc>().resetTokenExData();
-          }
-
           if (context.read<PaymentDetailsBloc>().accountPaymentProfile !=
                   null &&
               state.isNewCreditCard == false) {
@@ -69,11 +66,18 @@ class CheckoutPaymentDetails extends StatelessWidget {
                   ),
                 );
           }
+        } else if (state is PaymentDetailsNewCardSelectedState) {
+        } else if (state is PaymentDetailsValidateTokenState) {
+          validatePaymentToken(true);
         }
-
-        if (state is PaymentDetailsNewCardSelectedState) {}
       },
       child: BlocBuilder<PaymentDetailsBloc, PaymentDetailsState>(
+        buildWhen: (previous, current) {
+          if (current is! PaymentDetailsValidateTokenState) {
+            return true;
+          }
+          return false;
+        },
         builder: (_, state) {
           switch (state) {
             case PaymentDetailsInitial():
@@ -185,11 +189,11 @@ class CheckoutPaymentDetails extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(24.0, 0, 24.0, 0),
       child: SizedBox(
         height: 60,
-        child: TokenExWebView(
+        child: TokenExWidget(
           tokenExEntity: state.tokenExEntity!,
-          handleWebViewRequestFromTokenEX: (urlString) {
-            context
-                .read<TokenExBloc>()
+          handleWebViewRequestFromTokenEX: (urlString, mContext) {
+            mContext
+                ?.read<TokenExBloc>()
                 .add(HandleTokenExEvent(urlString: urlString));
           },
           handleTokenExFinishedData:
@@ -208,6 +212,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
 
             onCompleteCheckoutPaymentSection();
           },
+          tokenExValidateNotifier: validateNotifier,
         ),
       ),
     );
@@ -309,5 +314,9 @@ class CheckoutPaymentDetails extends StatelessWidget {
         LocalizationConstants.newPaymentMethod.localized(),
       ),
     );
+  }
+
+  void validatePaymentToken(bool value) {
+    validateNotifier.value = value;
   }
 }

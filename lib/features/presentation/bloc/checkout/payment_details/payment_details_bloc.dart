@@ -38,6 +38,9 @@ class PaymentDetailsBloc
     on<UpdateNewAccountPaymentProfileEvent>((event, emit) async {
       await _updateNewAccountPaymentPorfile(event, emit);
     });
+    on<ValidateTokenEvent>((event, emit) async {
+      emit(PaymentDetailsValidateTokenState());
+    });
   }
 
   void _updateCreditCardInfoToCart(

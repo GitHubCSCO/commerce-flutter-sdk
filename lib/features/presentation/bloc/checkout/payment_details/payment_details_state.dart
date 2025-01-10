@@ -36,3 +36,5 @@ class PaymentDetailsLoaded extends PaymentDetailsState {
 class PaymentDetailsCompletedState extends PaymentDetailsState {}
 
 class PaymentDetailsNewCardSelectedState extends PaymentDetailsState {}
+
+class PaymentDetailsValidateTokenState extends PaymentDetailsState {}

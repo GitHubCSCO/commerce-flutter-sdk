@@ -69,8 +69,6 @@ class AddCreditCardScreen extends StatelessWidget {
               BlocProvider<BillingAddressCubit>(
                   create: (context) => sl<BillingAddressCubit>()
                     ..setUpDataBillingAddress(addCreditCardEntity)),
-              //Need to remove this TokenExBloc provider after refactor done. TokenExBloc will be only under TokenExWebView
-              BlocProvider<TokenExBloc>(create: (context) => sl<TokenExBloc>()),
               BlocProvider<CardExpirationCubit>(
                   create: (context) => sl<CardExpirationCubit>()),
             ],
@@ -382,7 +380,7 @@ class AddCreditCardPage extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(24.0, 0, 24.0, 0),
       child: SizedBox(
         height: 120,
-        child: TokenExWebView(
+        child: TokenExWidget(
           tokenExEntity: tokenExEntity,
           handleWebViewRequestFromTokenEX: (urlString, mContext) {
             mContext
