@@ -1,5 +1,6 @@
+import 'package:collection/collection.dart';
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/tokenex_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/token_ex_view_mode.dart';
@@ -15,6 +16,7 @@ class PaymentDetailsBloc
   final PaymentDetailsUseCase _paymentDetailsUseCase;
   PaymentMethodDto? selectedPaymentMethod;
   Cart? cart;
+  CartSettings? settings;
   AccountPaymentProfile? accountPaymentProfile;
   TokenExDto? tokenExConfiguration;
   final _poNumberController = TextEditingController();
@@ -51,18 +53,16 @@ class PaymentDetailsBloc
     emit(PaymentDetailsLoading());
 
     var cartResponse = await _paymentDetailsUseCase.getCurrentCart();
+    var cartSettings = await _paymentDetailsUseCase.getCartSetting();
     cart = (cartResponse is Success)
         ? (cartResponse as Success).value
         : event.cart;
+    settings = cartSettings.getResultSuccessValue();
     _setUpSelectedPaymentMethod(cart!);
-    var showPOField = cart?.showPoNumber;
-    emit(PaymentDetailsLoaded(
-        isNewCreditCard: false,
-        showPOField: showPOField,
-        poTextEditingController: _poNumberController,
-        orderNotesTextEditingController: _orderNotesController,
-        shouldShowOrderNotes: shouldShowOrderNotes,
-        cart: cart));
+    await _setupPaymentDataSources(
+        UpdatePaymentMethodEvent(
+            isCVVRequired: true, paymentMethodDto: selectedPaymentMethod),
+        emit);
   }
 
   Future<void> _updateNewAccountPaymentPorfile(
@@ -90,120 +90,136 @@ class PaymentDetailsBloc
       UpdatePaymentMethodEvent event, Emitter<PaymentDetailsState> emit) async {
     if (!event.isCVVRequired) {
       isSelectedNewAddedCard = true;
-      emit(PaymentDetailsLoaded(
-          tokenExEntity: null,
-          showPOField: false,
-          poTextEditingController: _poNumberController,
-          orderNotesTextEditingController: _orderNotesController,
+      emit(_buildPaymentDetailsLoadedState(
           isNewCreditCard: true,
-          cardDetails: _getCardDetails(accountPaymentProfile!),
-          shouldShowOrderNotes: shouldShowOrderNotes,
-          cart: cart));
+          cardDetails: _getCardDetails(accountPaymentProfile!)));
       return;
     }
+
     isSelectedNewAddedCard = false;
-    var showPOField = cart?.showPoNumber;
-    if (selectedPaymentMethod != null &&
-        selectedPaymentMethod?.isCreditCard != null &&
-        !selectedPaymentMethod!.isCreditCard! &&
-        selectedPaymentMethod?.cardType != null) {
-      var parameters = PaymentProfileQueryParameters(
-        page: 1,
-        pageSize: double.maxFinite.toInt(),
-      );
+    var showPOField = cart?.showPoNumber ?? false;
 
-      final response =
-          await _paymentDetailsUseCase.getPaymentProfileData(parameters);
-      switch (response) {
-        case Success(value: final paymentProfiles):
-          var creditCard = paymentProfiles?.accountPaymentProfiles?.firstWhere(
-              (x) =>
-                  x != null && x.cardIdentifier == selectedPaymentMethod!.name);
-          if (creditCard != null) {
-            cart?.paymentOptions ??= PaymentOptionsDto();
-            cart?.paymentOptions?.creditCard ??= CreditCardDto();
+    if (_isCreditCardSelected()) {
+      final response = await _fetchPaymentProfiles();
+      if (response is Success) {
+        final paymentProfiles = response.getResultSuccessValue();
+        final creditCard = _findCreditCard(paymentProfiles);
 
-            cart?.paymentOptions?.creditCard?.cardHolderName =
-                creditCard.cardHolderName;
-            cart?.paymentOptions?.creditCard?.cardNumber =
-                creditCard.cardIdentifier;
-            cart?.paymentOptions?.creditCard?.cardType = creditCard.cardType;
-            cart?.paymentOptions?.creditCard?.expirationMonth =
-                creditCard.expirationMonth;
-            cart?.paymentOptions?.creditCard?.expirationYear =
-                creditCard.expirationYear;
+        if (creditCard != null) {
+          _populateCartWithCreditCard(creditCard);
 
-            // Display information
-            var cardName = creditCard.cardHolderName;
-            var cardNumber =
-                "${creditCard.cardType} ${LocalizationConstants.endingIn.localized()} ${creditCard.cardNumberEnding}";
-            var expDate =
-                "${LocalizationConstants.expires.localized()} ${creditCard.expirationDate}";
+          final cardDetails = _getCardDetails(creditCard);
 
-            var cardDetails = _getCardDetails(creditCard);
-            if (tokenExConfiguration == null ||
-                (tokenExConfiguration != null &&
-                    !tokenExConfiguration!.token
-                        .equalsIgnoreCase(creditCard.cardIdentifier))) {
-              var tokenExResponse = await _paymentDetailsUseCase
-                  .getTokenExConfiguration(creditCard.cardIdentifier!);
-              switch (tokenExResponse) {
-                case Success(value: final tokenExDto):
-                  tokenExConfiguration = tokenExDto;
-                case Failure(errorResponse: final errorResponse):
-                  isCVVFieldOpened = false;
-                  emit(PaymentDetailsLoaded(
-                      isNewCreditCard: false,
-                      tokenExEntity: null,
-                      cardDetails: cardDetails,
-                      showPOField: showPOField,
-                      poTextEditingController: _poNumberController,
-                      orderNotesTextEditingController: _orderNotesController,
-                      shouldShowOrderNotes: shouldShowOrderNotes,
-                      cart: cart));
-                  return;
-              }
-            }
-            isCreditCardSectionCompleted = false;
-            isCVVFieldOpened = true;
-            var tokenExStyle = TokenExStyleDto(
-              baseColor: OptiAppColors.lightGrayTextColor.toString(),
-              focusColor: OptiAppColors.primaryColor.toString(),
-              errorColor: OptiAppColors.invalidColor.toString(),
-              textColor: OptiAppColors.darkGrayTextColor.toString(),
-            );
+          if (!_isCVVBypassedForSavedCards(creditCard)) {
+            final tokenExResponse =
+                await _fetchTokenExConfiguration(creditCard.cardIdentifier!);
 
-            var tokeExUrl = _paymentDetailsUseCase.tokenExIFrameUrl;
-            var tokenExEntity = TokenExEntity(
-                tokenExConfiguration: tokenExConfiguration,
-                tokenexStyle: tokenExStyle,
-                tokenexMode: TokenExViewMode.cvv,
-                cardType: creditCard.cardType,
-                tokenExUrl: tokeExUrl);
+            if (tokenExResponse is Success) {
+              final tokenExDto = tokenExResponse.value;
+              tokenExConfiguration = tokenExDto;
 
-            emit(PaymentDetailsLoaded(
+              emit(_buildPaymentDetailsLoadedState(
                 isNewCreditCard: false,
-                tokenExEntity: tokenExEntity,
                 cardDetails: cardDetails,
                 showPOField: showPOField,
-                poTextEditingController: _poNumberController,
-                orderNotesTextEditingController: _orderNotesController,
-                shouldShowOrderNotes: shouldShowOrderNotes,
-                cart: cart));
+                tokenExEntity: _createTokenExEntity(creditCard),
+                isCVVFieldOpened: true,
+              ));
+              return;
+            }
           }
-        case Failure(errorResponse: final errorResponse):
-          break;
+
+          emit(_buildPaymentDetailsLoadedState(
+            isNewCreditCard: false,
+            cardDetails: cardDetails,
+            showPOField: showPOField,
+          ));
+          return;
+        }
       }
-    } else {
-      emit(PaymentDetailsLoaded(
-          isNewCreditCard: false,
-          tokenExEntity: null,
-          showPOField: showPOField,
-          poTextEditingController: _poNumberController,
-          orderNotesTextEditingController: _orderNotesController,
-          shouldShowOrderNotes: shouldShowOrderNotes,
-          cart: cart));
     }
+
+    emit(_buildPaymentDetailsLoadedState(
+      isNewCreditCard: false,
+      showPOField: showPOField,
+    ));
+  }
+
+  bool _isCreditCardSelected() {
+    return selectedPaymentMethod != null &&
+        selectedPaymentMethod!.isCreditCard == false &&
+        selectedPaymentMethod?.cardType != null;
+  }
+
+  Future<Result<AccountPaymentProfileCollectionResult, ErrorResponse>>
+      _fetchPaymentProfiles() {
+    var parameters = PaymentProfileQueryParameters(
+        page: 1, pageSize: double.maxFinite.toInt());
+    return _paymentDetailsUseCase.getPaymentProfileData(parameters);
+  }
+
+  AccountPaymentProfile? _findCreditCard(
+      AccountPaymentProfileCollectionResult? paymentProfiles) {
+    return paymentProfiles?.accountPaymentProfiles?.firstWhereOrNull(
+      (x) => x.cardIdentifier == selectedPaymentMethod!.name,
+    );
+  }
+
+  void _populateCartWithCreditCard(AccountPaymentProfile creditCard) {
+    cart?.paymentOptions ??= PaymentOptionsDto();
+    cart?.paymentOptions?.creditCard = CreditCardDto(
+      cardHolderName: creditCard.cardHolderName,
+      cardNumber: creditCard.cardIdentifier,
+      cardType: creditCard.cardType,
+      expirationMonth: creditCard.expirationMonth,
+      expirationYear: creditCard.expirationYear,
+    );
+  }
+
+  bool _isCVVBypassedForSavedCards(AccountPaymentProfile creditCard) {
+    return settings?.bypassCvvForSavedCards == true ||
+        (tokenExConfiguration != null &&
+            tokenExConfiguration!.token
+                .equalsIgnoreCase(creditCard.cardIdentifier));
+  }
+
+  Future<Result> _fetchTokenExConfiguration(String cardIdentifier) {
+    return _paymentDetailsUseCase.getTokenExConfiguration(cardIdentifier);
+  }
+
+  TokenExEntity _createTokenExEntity(AccountPaymentProfile creditCard) {
+    return TokenExEntity(
+      tokenExConfiguration: tokenExConfiguration,
+      tokenexStyle: TokenExStyleDto(
+        baseColor: OptiAppColors.lightGrayTextColor.toString(),
+        focusColor: OptiAppColors.primaryColor.toString(),
+        errorColor: OptiAppColors.invalidColor.toString(),
+        textColor: OptiAppColors.darkGrayTextColor.toString(),
+      ),
+      tokenexMode: TokenExViewMode.cvv,
+      cardType: creditCard.cardType,
+      tokenExUrl: _paymentDetailsUseCase.tokenExIFrameUrl,
+    );
+  }
+
+  PaymentDetailsLoaded _buildPaymentDetailsLoadedState({
+    required bool isNewCreditCard,
+    TokenExEntity? tokenExEntity,
+    String? cardDetails,
+    bool showPOField = false,
+    bool isCVVFieldOpened = false,
+  }) {
+    this.isCVVFieldOpened = isCVVFieldOpened;
+    return PaymentDetailsLoaded(
+      isNewCreditCard: isNewCreditCard,
+      tokenExEntity: tokenExEntity,
+      cardDetails: cardDetails,
+      showPOField: showPOField,
+      poTextEditingController: _poNumberController,
+      orderNotesTextEditingController: _orderNotesController,
+      shouldShowOrderNotes: shouldShowOrderNotes,
+      cart: cart,
+    );
   }
 
   String _getCardDetails(AccountPaymentProfile creditCard) {
