@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/tokenex_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/credit_card_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/token_ex_view_mode.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/add_credit_card_usecase/add_credit_card_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/add_credit_card/add_credit_card_event.dart';
@@ -23,6 +24,8 @@ class AddCreditCardBloc extends Bloc<AddCreditCardEvent, AddCreditCardState> {
       SiteMessageConstants.defaultValueAddressZipRequired;
   String messageStateRequired =
       SiteMessageConstants.defaultAllProductCountExceed;
+
+  CreditCardInfoEntity? cardInfo;
 
   AddCreditCardBloc({required AddCreditCardUsecase addCreditCardUsecase})
       : _addCreditCardUsecase = addCreditCardUsecase,
@@ -115,6 +118,10 @@ class AddCreditCardBloc extends Bloc<AddCreditCardEvent, AddCreditCardState> {
       case Failure():
         emit(CreditCardDeletedFailureState());
     }
+  }
+
+  void updateCreditCardInfo(CreditCardInfoEntity? cardInfo) {
+    this.cardInfo = cardInfo;
   }
 
   Future<void> _loadSiteMessages() async {

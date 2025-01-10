@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-typedef handleWebViewRequestFromTokenEX = void Function(String urlString);
+typedef handleWebViewRequestFromTokenEX = void Function(
+    String urlString, BuildContext? mContext);
 typedef handleTokenExFinishedData = void Function(
     String cardNumber, String cardType, String securityCode, bool isInvalidCVV);
 
@@ -22,16 +23,46 @@ int getTokenEXMode(TokenExViewMode mode) {
   }
 }
 
-class TokenExWebView extends StatelessWidget {
+class TokenExWebView extends StatefulWidget {
   final TokenExEntity tokenExEntity;
-  final WebViewController _webViewController = WebViewController();
   final Function handleWebViewRequestFromTokenEX;
   final Function handleTokenExFinishedData;
-  TokenExWebView(
+  final ValueNotifier<bool>? tokenExValidateNotifier;
+
+  const TokenExWebView(
       {super.key,
       required this.tokenExEntity,
       required this.handleWebViewRequestFromTokenEX,
-      required this.handleTokenExFinishedData});
+      required this.handleTokenExFinishedData,
+      this.tokenExValidateNotifier});
+
+  @override
+  State<TokenExWebView> createState() => _TokenExWebViewState();
+}
+
+class _TokenExWebViewState extends State<TokenExWebView> {
+  final WebViewController _webViewController = WebViewController();
+
+  @override
+  void initState() {
+    super.initState();
+    widget.tokenExValidateNotifier
+        ?.addListener(_onTokenExValidateNotifierChanged);
+  }
+
+  @override
+  void dispose() {
+    widget.tokenExValidateNotifier
+        ?.removeListener(_onTokenExValidateNotifierChanged);
+    super.dispose();
+  }
+
+  void _onTokenExValidateNotifierChanged() {
+    final validate = widget.tokenExValidateNotifier?.value ?? false;
+    if (validate) {
+      context.read<TokenExBloc>().add(TokenExValidateEvent());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +77,11 @@ class TokenExWebView extends StatelessWidget {
               TokenExScripts.getTokenExValidateScript();
           _webViewController.runJavaScript(tokenExValidateScript);
         } else if (state is TokenExEncodingFinishedState) {
-          handleTokenExFinishedData(
+          widget.handleTokenExFinishedData(
               state.cardNumber, state.cardType, state.securityCode, false);
         } else if (state is TokenExInvalidCvvState) {
-          handleTokenExFinishedData(null, null, null, state.showInvalidCVV);
+          widget.handleTokenExFinishedData(
+              null, null, null, state.showInvalidCVV);
         }
       },
       child: WebViewWidget(
@@ -71,10 +103,10 @@ class TokenExWebView extends StatelessWidget {
                 if (!isTokenExConfigurationSet) {
                   String tokenExSetGetawayJSAction =
                       TokenExScripts.getTokenExSetupScript(
-                    json.encode(tokenExEntity.tokenExConfiguration),
-                    json.encode(tokenExEntity.tokenexStyle),
-                    getTokenEXMode(tokenExEntity.tokenexMode!),
-                    json.encode(tokenExEntity.cardType!),
+                    json.encode(widget.tokenExEntity.tokenExConfiguration),
+                    json.encode(widget.tokenExEntity.tokenexStyle),
+                    getTokenEXMode(widget.tokenExEntity.tokenexMode!),
+                    json.encode(widget.tokenExEntity.cardType!),
                   );
                   _webViewController.runJavaScript(tokenExSetGetawayJSAction);
                   // Create viewport meta tag script
@@ -95,7 +127,7 @@ class TokenExWebView extends StatelessWidget {
                 final isTokenExConfigurationSet =
                     context.read<TokenExBloc>().isTokenExConfigurationSet;
 
-                handleWebViewRequestFromTokenEX(request.url);
+                widget.handleWebViewRequestFromTokenEX(request.url, '', '', '');
 
                 if (request.url.endsWith('loaded')) {
                   // Handle loaded event
@@ -116,7 +148,7 @@ class TokenExWebView extends StatelessWidget {
               },
             ),
           )
-          ..loadRequest(Uri.parse(tokenExEntity.tokenExUrl!)),
+          ..loadRequest(Uri.parse(widget.tokenExEntity.tokenExUrl!)),
       ),
     );
   }

@@ -69,6 +69,7 @@ class AddCreditCardScreen extends StatelessWidget {
               BlocProvider<BillingAddressCubit>(
                   create: (context) => sl<BillingAddressCubit>()
                     ..setUpDataBillingAddress(addCreditCardEntity)),
+              //Need to remove this TokenExBloc provider after refactor done. TokenExBloc will be only under TokenExWebView
               BlocProvider<TokenExBloc>(create: (context) => sl<TokenExBloc>()),
               BlocProvider<CardExpirationCubit>(
                   create: (context) => sl<CardExpirationCubit>()),
@@ -82,6 +83,8 @@ class AddCreditCardScreen extends StatelessWidget {
 }
 
 class AddCreditCardPage extends StatelessWidget {
+  final ValueNotifier<bool> validateNotifier = ValueNotifier(false);
+
   final AddCreditCardEntity addCreditCardEntity;
 
   final void Function(AccountPaymentProfile) onCreditCardAdded;
@@ -125,9 +128,6 @@ class AddCreditCardPage extends StatelessWidget {
               }
               if (state is CreditCardDeletedFailureState) {
                 CustomSnackBar.showCreditCardDeletedFailed(context);
-              }
-              if (state is AddCreditCardLoadedState) {
-                context.read<TokenExBloc>().resetTokenExData();
               }
               if (state is SavedPaymentAddedSuccessState) {
                 onCreditCardAdded(state.accountPaymentProfile);
@@ -320,7 +320,7 @@ class AddCreditCardPage extends StatelessWidget {
       var selectState = context.read<BillingAddressCubit>().selectedState;
       var expirationDate =
           "${expirationMonth?.value.toString().padLeft(2, '0')}/${expirationYear!.key % 100}";
-      context.read<TokenExBloc>().add(TokenExValidateEvent());
+      validatePaymentToken(true);
 
       if (context.read<BillingAddressCubit>().billingAddressAddNewToggle) {
         var billTo = context.read<BillingAddressCubit>().billTo;
@@ -340,9 +340,11 @@ class AddCreditCardPage extends StatelessWidget {
           expirationDate: expirationDate,
           country: selectCountry?.abbreviation,
           state: selectState?.abbreviation,
-          securityCode: context.read<TokenExBloc>().cardInfo?.securityCode,
-          cardIdentifier: context.read<TokenExBloc>().cardInfo?.cardIdentifier,
-          cardType: context.read<TokenExBloc>().cardInfo?.cardType,
+          securityCode:
+              context.read<AddCreditCardBloc>().cardInfo?.securityCode,
+          cardIdentifier:
+              context.read<AddCreditCardBloc>().cardInfo?.cardIdentifier,
+          cardType: context.read<AddCreditCardBloc>().cardInfo?.cardType,
           isDefault: context.read<AddCreditCardBloc>().useAsDefaultCard,
         );
 
@@ -382,9 +384,9 @@ class AddCreditCardPage extends StatelessWidget {
         height: 120,
         child: TokenExWebView(
           tokenExEntity: tokenExEntity,
-          handleWebViewRequestFromTokenEX: (urlString) {
-            context
-                .read<TokenExBloc>()
+          handleWebViewRequestFromTokenEX: (urlString, mContext) {
+            mContext
+                ?.read<TokenExBloc>()
                 .add(HandleTokenExEvent(urlString: urlString));
           },
           handleTokenExFinishedData:
@@ -393,12 +395,13 @@ class AddCreditCardPage extends StatelessWidget {
               CustomSnackBar.showInvalidCVV(context);
               return;
             }
-            context.read<TokenExBloc>().add(UpdateCreditCardInfo(
-                cardInfoEntity: CreditCardInfoEntity(
+            context.read<AddCreditCardBloc>().updateCreditCardInfo(
+                CreditCardInfoEntity(
                     cardIdentifier: cardNumber,
                     cardType: cardType,
-                    securityCode: securityCode)));
+                    securityCode: securityCode));
           },
+          tokenExValidateNotifier: validateNotifier,
         ),
       ),
     );
@@ -884,6 +887,10 @@ class AddCreditCardPage extends StatelessWidget {
         return Container();
       }
     });
+  }
+
+  void validatePaymentToken(bool value) {
+    validateNotifier.value = value;
   }
 
   void _onYearSelect(BuildContext context, Object item) {
