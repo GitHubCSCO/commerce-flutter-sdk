@@ -99,9 +99,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
                           Text(state.cardDetails!, style: OptiTextStyles.body),
                     )
                   },
-                  if (state.tokenExEntity != null) ...{
-                    _buildTokenExWebView(state, context),
-                  },
+                  _buildPaymentIFrame(state, context),
                   if (state.showPOField == true) ...{
                     _buildPOField(state, context)
                   },
@@ -120,6 +118,17 @@ class CheckoutPaymentDetails extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Widget _buildPaymentIFrame(PaymentDetailsLoaded state, BuildContext context) {
+    if (state.useSpreedlyDropIn == true) {
+      // build spreedly widget here
+    } else {
+      if (state.tokenExEntity != null) {
+        return _buildTokenExWebView(state, context);
+      }
+    }
+    return const Center();
   }
 
   int getIndexForSelectedPaymentMethod(List<PaymentMethodDto>? paymentMethods,
@@ -174,7 +183,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
       PaymentDetailsLoaded state, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24.0, 0, 24.0, 0),
-      child: Container(
+      child: SizedBox(
         height: 60,
         child: TokenExWebView(
           tokenExEntity: state.tokenExEntity!,
