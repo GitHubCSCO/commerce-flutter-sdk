@@ -98,6 +98,11 @@ jobs:
           ref: refs/heads/${{ env.analytics_config }}
           token: ${{ secrets.my_pat }}
           path: build-scripts
+      - name: Movie build-scripts to root folder
+        run: |
+          mv build-scripts/* ./
+          ls -l
+          ls -l fastlane
       - name: Extract branch name
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: extract_branch
@@ -187,6 +192,11 @@ jobs:
           ref: refs/heads/${{ env.analytics_config }}
           token: ${{ secrets.my_pat }}
           path: build-scripts
+      - name: Movie build-scripts to root folder
+        run: |
+          mv build-scripts/* ./
+          ls -l
+          ls -l fastlane
       - name: Extract branch name
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: extract_branch
