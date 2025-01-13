@@ -74,6 +74,19 @@ jobs:
           echo "Using analytics config: ${{ github.event.inputs.analytics_config || 'flutter' }}"
           echo "analytics_config=${{ github.event.inputs.analytics_config || 'flutter' }}" >> $GITHUB_ENV
 
+      - name: Trigger iOS Debug Build
+        run: |
+          flutter clean
+          flutter pub get
+          flutter build ios --simulator
+      - name: Upload iOS Debug Build as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-debug-app
+          path: build/ios/iphonesimulator/Runner.app
+          if-no-files-found: warn
+
       - name: Cloning build scripts
         uses: actions/checkout@master
         with:
@@ -81,11 +94,6 @@ jobs:
           ref: refs/heads/${{ env.analytics_config }}
           token: ${{ secrets.my_pat }}
           path: build-scripts
-      - name: List out everything
-        run: |
-          mv build-scripts/* ./
-          ls -l
-          ls -l fastlane
       - name: Extract branch name
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: extract_branch
@@ -114,13 +122,6 @@ jobs:
           BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
           RELEASE_TAG1: ${{ github.event.inputs.release_tag1 }}
           RELEASE_TAG2: ${{ github.event.inputs.release_tag2 }}
-      - name: Upload Debug APP as artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: artifacts
-          path: build/ios/iphonesimulator/Runner.app
-          if-no-files-found: warn
   android:
     runs-on: macos-latest
     steps:
@@ -162,6 +163,19 @@ jobs:
           echo "Using analytics config: ${{ github.event.inputs.analytics_config || 'flutter' }}"
           echo "analytics_config=${{ github.event.inputs.analytics_config || 'flutter' }}" >> $GITHUB_ENV
 
+      - name: Trigger Android Debug Build
+        run: |
+          flutter clean
+          flutter pub get
+          flutter build apk --debug
+      - name: Upload iOS Debug Build as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-app
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          if-no-files-found: warn
+
       - name: Cloning build scripts
         uses: actions/checkout@master
         with:
@@ -169,11 +183,6 @@ jobs:
           ref: refs/heads/${{ env.analytics_config }}
           token: ${{ secrets.my_pat }}
           path: build-scripts
-      - name: List out everything
-        run: |
-          mv build-scripts/* ./
-          ls -l
-          ls -l fastlane
       - name: Extract branch name
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: extract_branch
@@ -206,10 +215,3 @@ jobs:
           BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
           RELEASE_TAG1: ${{ github.event.inputs.release_tag1 }}
           RELEASE_TAG2: ${{ github.event.inputs.release_tag2 }}
-      - name: Upload Debug APK as artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: artifacts
-          path: build/app/outputs/flutter-apk/app-debug.apk
-          if-no-files-found: warn
