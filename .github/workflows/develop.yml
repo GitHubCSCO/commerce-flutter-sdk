@@ -1,5 +1,18 @@
 name: Dev Build
 on:
+  push:
+    branches:
+      - main
+      - develop
+      - dev
+  pull_request:
+    branches:
+      - main
+      - develop
+      - dev
+      - "epic/**"
+      - "feature/**"
+      - "story/**"
   workflow_dispatch:
     inputs:
       release:
@@ -55,14 +68,37 @@ jobs:
           name: id_rsa
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
+      - name: Determine config
+        id: config
+        run: |
+          echo "Using analytics config: ${{ github.event.inputs.analytics_config || 'flutter' }}"
+          echo "analytics_config=${{ github.event.inputs.analytics_config || 'flutter' }}" >> $GITHUB_ENV
+
+      - name: Trigger iOS Debug Build
+        run: |
+          flutter clean
+          flutter pub get
+          cd ios
+          pod deintegrate
+          pod install
+          cd ..
+          flutter build ios --simulator
+      - name: Upload iOS Debug Build as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-debug-app
+          path: build/ios/iphonesimulator/Runner.app
+          if-no-files-found: warn
+
       - name: Cloning build scripts
         uses: actions/checkout@master
         with:
           repository: InsiteSoftware/commerce-mobile-build-scripts
-          ref: refs/heads/${{ github.event.inputs.analytics_config }}
+          ref: refs/heads/${{ env.analytics_config }}
           token: ${{ secrets.my_pat }}
           path: build-scripts
-      - name: List out everything
+      - name: Movie build-scripts to root folder
         run: |
           mv build-scripts/* ./
           ls -l
@@ -73,7 +109,7 @@ jobs:
 
       - name: Fastlane
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
+          if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ github.event_name }}" = "push" ]; then
             echo "Running in PR. Using default value."
             RELEASE_GROUP='qa'
           else
@@ -130,14 +166,33 @@ jobs:
           name: id_rsa
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
+      - name: Determine config
+        id: config
+        run: |
+          echo "Using analytics config: ${{ github.event.inputs.analytics_config || 'flutter' }}"
+          echo "analytics_config=${{ github.event.inputs.analytics_config || 'flutter' }}" >> $GITHUB_ENV
+
+      - name: Trigger Android Debug Build
+        run: |
+          flutter clean
+          flutter pub get
+          flutter build apk --debug
+      - name: Upload iOS Debug Build as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-app
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          if-no-files-found: warn
+
       - name: Cloning build scripts
         uses: actions/checkout@master
         with:
           repository: InsiteSoftware/commerce-mobile-build-scripts
-          ref: refs/heads/${{ github.event.inputs.analytics_config }}
+          ref: refs/heads/${{ env.analytics_config }}
           token: ${{ secrets.my_pat }}
           path: build-scripts
-      - name: List out everything
+      - name: Movie build-scripts to root folder
         run: |
           mv build-scripts/* ./
           ls -l
@@ -148,7 +203,7 @@ jobs:
 
       - name: Fastlane
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
+          if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ github.event_name }}" = "push" ]; then
             echo "Running in PR. Using default value."
             RELEASE_GROUP='qa'
           else
