@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-typedef handleWebViewRequestFromTokenEX = void Function(
-    String urlString, BuildContext? mContext);
-typedef handleTokenExFinishedData = void Function(
+typedef HandleWebViewRequestFromTokenEX = void Function(
+    String urlString, BuildContext mContext);
+typedef HandleTokenExFinishedData = void Function(
     String cardNumber, String cardType, String securityCode, bool isInvalidCVV);
 
 int getTokenEXMode(TokenExViewMode mode) {
@@ -26,8 +26,8 @@ int getTokenEXMode(TokenExViewMode mode) {
 
 class TokenExWidget extends StatelessWidget {
   final TokenExEntity tokenExEntity;
-  final Function handleWebViewRequestFromTokenEX;
-  final Function handleTokenExFinishedData;
+  final HandleWebViewRequestFromTokenEX handleWebViewRequestFromTokenEX;
+  final HandleTokenExFinishedData handleTokenExFinishedData;
   final ValueNotifier<bool>? tokenExValidateNotifier;
 
   const TokenExWidget(
@@ -52,8 +52,8 @@ class TokenExWidget extends StatelessWidget {
 
 class TokenExWebView extends StatefulWidget {
   final TokenExEntity tokenExEntity;
-  final Function handleWebViewRequestFromTokenEX;
-  final Function handleTokenExFinishedData;
+  final HandleWebViewRequestFromTokenEX handleWebViewRequestFromTokenEX;
+  final HandleTokenExFinishedData handleTokenExFinishedData;
   final ValueNotifier<bool>? tokenExValidateNotifier;
 
   const TokenExWebView(
@@ -108,7 +108,7 @@ class _TokenExWebViewState extends State<TokenExWebView> {
               state.cardNumber, state.cardType, state.securityCode, false);
         } else if (state is TokenExInvalidCvvState) {
           widget.handleTokenExFinishedData(
-              null, null, null, state.showInvalidCVV);
+              '', '', '', state.showInvalidCVV);
         }
       },
       child: WebViewWidget(
@@ -154,7 +154,7 @@ class _TokenExWebViewState extends State<TokenExWebView> {
                 final isTokenExConfigurationSet =
                     context.read<TokenExBloc>().isTokenExConfigurationSet;
 
-                widget.handleWebViewRequestFromTokenEX(request.url, '', '', '');
+                widget.handleWebViewRequestFromTokenEX(request.url, context);
 
                 if (request.url.endsWith('loaded')) {
                   // Handle loaded event

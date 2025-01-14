@@ -384,7 +384,7 @@ class AddCreditCardPage extends StatelessWidget {
           tokenExEntity: tokenExEntity,
           handleWebViewRequestFromTokenEX: (urlString, mContext) {
             mContext
-                ?.read<TokenExBloc>()
+                .read<TokenExBloc>()
                 .add(HandleTokenExEvent(urlString: urlString));
           },
           handleTokenExFinishedData:
