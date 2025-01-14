@@ -107,8 +107,7 @@ class _TokenExWebViewState extends State<TokenExWebView> {
           widget.handleTokenExFinishedData(
               state.cardNumber, state.cardType, state.securityCode, false);
         } else if (state is TokenExInvalidCvvState) {
-          widget.handleTokenExFinishedData(
-              '', '', '', state.showInvalidCVV);
+          widget.handleTokenExFinishedData('', '', '', state.showInvalidCVV);
         }
       },
       child: WebViewWidget(
