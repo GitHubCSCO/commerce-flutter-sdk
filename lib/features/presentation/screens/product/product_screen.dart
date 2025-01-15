@@ -27,6 +27,15 @@ enum ProductParentType {
   brand,
   brandProductLine,
   brandCategory,
+  ;
+
+  factory ProductParentType.fromJson(Map<String, dynamic> json) =>
+      ProductParentType.values.firstWhere(
+        (e) => e.toString().split('.').last == json['productParentType'],
+      );
+
+  Map<String, dynamic> toJson() =>
+      {'productParentType': toString().split('.').last};
 }
 
 class ProductPageEntity {
@@ -71,6 +80,41 @@ class ProductPageEntity {
       brandEntityId: brandEntityId ?? this.brandEntityId,
       brandEntityTitle: brandEntityTitle ?? this.brandEntityTitle,
     );
+  }
+
+  factory ProductPageEntity.fromJson(Map<String, dynamic> json) {
+    return ProductPageEntity(
+      json['query'],
+      ProductParentType.fromJson(json['productParentType']),
+      pageTitle: json['pageTitle'],
+      category:
+          json['category'] != null ? Category.fromJson(json['category']) : null,
+      categoryId: json['categoryId'],
+      categoryTitle: json['categoryTitle'],
+      brandEntity: json['brandEntity'] != null
+          ? BrandEntity.fromJson(json['brandEntity'])
+          : null,
+      brandEntityId: json['brandEntityId'],
+      brandEntityTitle: json['brandEntityTitle'],
+      brandProductLine: json['brandProductLine'] != null
+          ? BrandProductLine.fromJson(json['brandProductLine'])
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'query': query,
+      'productParentType': parentType.toJson(),
+      'pageTitle': pageTitle,
+      'category': category?.toJson(),
+      'categoryId': categoryId,
+      'categoryTitle': categoryTitle,
+      'brandEntity': brandEntity?.toJson(),
+      'brandEntityId': brandEntityId,
+      'brandEntityTitle': brandEntityTitle,
+      'brandProductLine': brandProductLine?.toJson(),
+    };
   }
 }
 

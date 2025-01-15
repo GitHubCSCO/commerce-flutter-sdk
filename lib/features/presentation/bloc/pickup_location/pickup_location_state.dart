@@ -1,22 +1,16 @@
-import 'package:collection/collection.dart';
-import 'package:commerce_flutter_app/core/models/lat_long.dart';
-import 'package:commerce_flutter_app/features/domain/entity/current_location_data_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
 import 'package:equatable/equatable.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 abstract class PickUpLocationState extends Equatable {}
 
 class PickUpLocationInitialState extends PickUpLocationState {
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }
 
 class PickUpLocationLoadingState extends PickUpLocationState {
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }
 
 class PickUpLocationLoadedState extends PickUpLocationState {
@@ -33,12 +27,10 @@ class PickUpLocationLoadedState extends PickUpLocationState {
 
 class PickUpLocationFailureState extends PickUpLocationState {
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }
 
 class PickUpSeachPlaceLocationUpdatedState extends PickUpLocationState {
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }

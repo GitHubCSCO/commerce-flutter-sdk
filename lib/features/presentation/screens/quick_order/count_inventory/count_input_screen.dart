@@ -6,7 +6,6 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
@@ -24,6 +23,24 @@ class CountInventoryEntity {
 
   CountInventoryEntity(
       {required this.vmiBinEntity, this.previousOrder, this.qty});
+
+  factory CountInventoryEntity.fromJson(Map<String, dynamic> json) {
+    return CountInventoryEntity(
+      vmiBinEntity: VmiBinModelEntity.fromJson(json),
+      previousOrder: json['previousOrder'] != null
+          ? OrderEntity.fromJson(json['previousOrder'])
+          : null,
+      qty: json['qty'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'vmiBinEntity': vmiBinEntity.toJson(),
+      'previousOrder': previousOrder?.toJson(),
+      'qty': qty,
+    };
+  }
 }
 
 class CountInventoryScreen extends StatelessWidget {

@@ -8,11 +8,25 @@ import 'package:commerce_flutter_app/features/domain/enums/location_search_type.
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/location_search_handler/location_search_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-enum ShippingOption { ship, pickUp }
+enum ShippingOption {
+  ship,
+  pickUp,
+  ;
+
+  factory ShippingOption.fromJson(Map<String, dynamic> json) =>
+      ShippingOption.values.firstWhere(
+        (e) => e.toString().split('.').last == json['shippingOption'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        'shippingOption': toString().split('.').last,
+      };
+}
 
 class CartShippingWidget extends StatelessWidget with MapDirection {
   final ShippingEntity shippingEntity;
@@ -89,67 +103,75 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
                     ],
                   ),
                   if (shippingOption == ShippingOption.pickUp) ...{
-                    InkWell(
-                      onTap: () {
-                        AppRoute.locationSearch.navigateBackStack(context,
-                            extra: VMILocationSelectCallbackHelper(
-                                onSelectVMILocation: (location) {},
-                                onWarehouseLocationSelected: (wareHouse) {
-                                  onCallBack?.call(context, wareHouse);
-                                },
-                                locationSearchType:
-                                    LocationSearchType.pickUpLocation));
+                    BlocListener<LocationSearchHandlerCubit,
+                        LocationSearchHandlerState>(
+                      listener: (context, state) {
+                        if (state.warehouseData != null) {
+                          onCallBack?.call(context, state.warehouseData!);
+                          context
+                              .read<LocationSearchHandlerCubit>()
+                              .clearWarehouseData();
+                        }
                       },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 24),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    LocalizationConstants.pickUpLocation
-                                        .localized(),
-                                    textAlign: TextAlign.start,
-                                    style: OptiTextStyles.subtitle,
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    shippingEntity.warehouse?.description ?? '',
-                                    textAlign: TextAlign.start,
-                                    style: OptiTextStyles.subtitle,
-                                  ),
-                                  Text(
-                                    _wareHouseAddress(),
-                                    textAlign: TextAlign.start,
-                                    style: OptiTextStyles.body,
-                                  ),
-                                  Text(
-                                    _wareHouseCity(),
-                                    textAlign: TextAlign.start,
-                                    style: OptiTextStyles.body,
-                                  ),
-                                  Text(
-                                    shippingEntity.warehouse?.phone ?? '',
-                                    textAlign: TextAlign.start,
-                                    style: OptiTextStyles.body,
-                                  ),
-                                ],
+                      child: InkWell(
+                        onTap: () {
+                          AppRoute.locationSearch.navigateBackStack(context,
+                              extra: const VMILocationSelectCallbackHelper(
+                                  locationSearchType:
+                                      LocationSearchType.pickUpLocation));
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 24),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      LocalizationConstants.pickUpLocation
+                                          .localized(),
+                                      textAlign: TextAlign.start,
+                                      style: OptiTextStyles.subtitle,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      shippingEntity.warehouse?.description ??
+                                          '',
+                                      textAlign: TextAlign.start,
+                                      style: OptiTextStyles.subtitle,
+                                    ),
+                                    Text(
+                                      _wareHouseAddress(),
+                                      textAlign: TextAlign.start,
+                                      style: OptiTextStyles.body,
+                                    ),
+                                    Text(
+                                      _wareHouseCity(),
+                                      textAlign: TextAlign.start,
+                                      style: OptiTextStyles.body,
+                                    ),
+                                    Text(
+                                      shippingEntity.warehouse?.phone ?? '',
+                                      textAlign: TextAlign.start,
+                                      style: OptiTextStyles.body,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            const Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.grey,
-                              size: 20,
-                            )
-                          ],
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.grey,
+                                size: 20,
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),

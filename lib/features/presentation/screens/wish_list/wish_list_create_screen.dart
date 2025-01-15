@@ -95,7 +95,7 @@ class _WishListCreatePageState extends State<WishListCreatePage> {
             if (widget.onWishListCreated != null) {
               widget.onWishListCreated!();
             }
-            context.pop();
+            context.pop(true);
           }
 
           if (state.status == WishListStatus.listCreateFailure) {
