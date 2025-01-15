@@ -74,6 +74,23 @@ jobs:
           echo "Using analytics config: ${{ github.event.inputs.analytics_config || 'flutter' }}"
           echo "analytics_config=${{ github.event.inputs.analytics_config || 'flutter' }}" >> $GITHUB_ENV
 
+      - name: Trigger iOS Debug Build
+        run: |
+          flutter clean
+          flutter pub get
+          cd ios
+          pod deintegrate
+          pod install
+          cd ..
+          flutter build ios --simulator
+      - name: Upload iOS Debug Build as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-debug-app
+          path: build/ios/iphonesimulator/Runner.app
+          if-no-files-found: warn
+
       - name: Cloning build scripts
         uses: actions/checkout@master
         with:
@@ -81,7 +98,7 @@ jobs:
           ref: refs/heads/${{ env.analytics_config }}
           token: ${{ secrets.my_pat }}
           path: build-scripts
-      - name: List out everything
+      - name: Movie build-scripts to root folder
         run: |
           mv build-scripts/* ./
           ls -l
@@ -155,6 +172,19 @@ jobs:
           echo "Using analytics config: ${{ github.event.inputs.analytics_config || 'flutter' }}"
           echo "analytics_config=${{ github.event.inputs.analytics_config || 'flutter' }}" >> $GITHUB_ENV
 
+      - name: Trigger Android Debug Build
+        run: |
+          flutter clean
+          flutter pub get
+          flutter build apk --debug
+      - name: Upload iOS Debug Build as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-app
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          if-no-files-found: warn
+
       - name: Cloning build scripts
         uses: actions/checkout@master
         with:
@@ -162,7 +192,7 @@ jobs:
           ref: refs/heads/${{ env.analytics_config }}
           token: ${{ secrets.my_pat }}
           path: build-scripts
-      - name: List out everything
+      - name: Movie build-scripts to root folder
         run: |
           mv build-scripts/* ./
           ls -l
