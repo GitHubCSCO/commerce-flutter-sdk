@@ -217,9 +217,6 @@ class __OrderApprovalListWidgetState extends State<_OrderApprovalListWidget> {
                   pathParameters: {
                     'cartId': widget.cartList[index].id ?? '',
                   },
-                  extra: () {
-                    context.read<OrderApprovalCubit>().loadOrderApprovalList();
-                  },
                 );
               },
               hidePricingEnable: state.hidePricingEnable,

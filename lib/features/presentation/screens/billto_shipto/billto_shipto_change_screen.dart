@@ -15,6 +15,7 @@ import 'package:commerce_flutter_app/features/presentation/components/buttons.da
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/location_search_handler/location_search_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
@@ -274,42 +275,48 @@ class _BillToShipToChangePageState extends State<BillToShipToChangePage> {
       padding: const EdgeInsets.all(20.0),
       child: Column(
         children: [
-          InkWell(
-            onTap: () {
-              AppRoute.locationSearch.navigateBackStack(context,
-                  extra: VMILocationSelectCallbackHelper(
-                      selectedPickupWarehouse: WarehouseEntityMapper.toEntity(
-                          wareHouse ?? Warehouse()),
-                      onSelectVMILocation: (location) {},
-                      onWarehouseLocationSelected: (wareHouse) {
-                        setState(() {
-                          _isSwitched = false;
-                        });
-                        context.read<BillToShipToBloc>().add(PickUpUpdateEvent(
-                            WarehouseEntityMapper.toModel(wareHouse)));
-                      },
-                      locationSearchType: LocationSearchType.pickUpLocation));
+          BlocListener<LocationSearchHandlerCubit, LocationSearchHandlerState>(
+            listener: (context, state) {
+              if (state.warehouseData != null) {
+                final wareHouse = state.warehouseData!;
+                setState(() {
+                  _isSwitched = false;
+                });
+                context.read<BillToShipToBloc>().add(PickUpUpdateEvent(
+                    WarehouseEntityMapper.toModel(wareHouse)));
+
+                context.read<LocationSearchHandlerCubit>().clearWarehouseData();
+              }
             },
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: PickupLocationWidget(
-                    description: wareHouse?.description,
-                    address: wareHouse.wareHouseAddress(),
-                    city: wareHouse.wareHouseCity(),
-                    phone: wareHouse?.phone,
-                    buildSeperator: false,
+            child: InkWell(
+              onTap: () {
+                AppRoute.locationSearch.navigateBackStack(context,
+                    extra: VMILocationSelectCallbackHelper(
+                        selectedPickupWarehouse: WarehouseEntityMapper.toEntity(
+                            wareHouse ?? Warehouse()),
+                        locationSearchType: LocationSearchType.pickUpLocation));
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: PickupLocationWidget(
+                      description: wareHouse?.description,
+                      address: wareHouse.wareHouseAddress(),
+                      city: wareHouse.wareHouseCity(),
+                      phone: wareHouse?.phone,
+                      buildSeperator: false,
+                    ),
                   ),
-                ),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.grey,
-                  size: 20,
-                )
-              ],
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.grey,
+                    size: 20,
+                  )
+                ],
+              ),
             ),
           ),
           Container(

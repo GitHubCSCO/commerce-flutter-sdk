@@ -33,6 +33,30 @@ class CheckoutSuccessEntity {
     this.isOrderApproval = false,
     this.message,
   });
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'orderNumber': orderNumber,
+      'isVmiCheckout': isVmiCheckout,
+      'isOrderApproval': isOrderApproval,
+      'cart': cart.toJson(),
+      'reviewOrderEntity': reviewOrderEntity?.toJson(),
+      'message': message,
+    };
+  }
+
+  factory CheckoutSuccessEntity.fromJson(Map<String, dynamic> json) {
+    return CheckoutSuccessEntity(
+      orderNumber: json['orderNumber'],
+      isVmiCheckout: json['isVmiCheckout'],
+      isOrderApproval: json['isOrderApproval'],
+      cart: Cart.fromJson(json['cart']),
+      reviewOrderEntity: json['reviewOrderEntity'] != null
+          ? ReviewOrderEntity.fromJson(json['reviewOrderEntity'])
+          : null,
+      message: json['message'],
+    );
+  }
 }
 
 class CheckoutSuccessScreen extends StatelessWidget {

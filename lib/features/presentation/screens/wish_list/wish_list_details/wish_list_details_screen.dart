@@ -20,7 +20,6 @@ import 'package:commerce_flutter_app/features/presentation/components/snackbar_c
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_details/wish_list_details_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
@@ -30,20 +29,15 @@ import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_wi
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
-
-final GlobalKey _wishListDetailsPageScaffoldKey = GlobalKey();
 
 class WishListDetailsScreen extends BaseStatelessWidget {
   final String wishListId;
-  final void Function()? onWishListUpdated;
-  final void Function()? onWishListDeleted;
 
   const WishListDetailsScreen({
     super.key,
     required this.wishListId,
-    this.onWishListUpdated,
-    this.onWishListDeleted,
   });
 
   @override
@@ -67,8 +61,6 @@ class WishListDetailsScreen extends BaseStatelessWidget {
             }
           },
           child: WishListDetailsPage(
-            onWishListUpdated: onWishListUpdated,
-            onWishListDeleted: onWishListDeleted,
             wishListId: wishListId,
           ),
         );
@@ -91,14 +83,10 @@ class WishListDetailsScreen extends BaseStatelessWidget {
 class WishListDetailsPage extends StatefulWidget {
   const WishListDetailsPage({
     super.key,
-    this.onWishListUpdated,
-    this.onWishListDeleted,
     required this.wishListId,
   });
 
   final String wishListId;
-  final void Function()? onWishListUpdated;
-  final void Function()? onWishListDeleted;
 
   @override
   State<WishListDetailsPage> createState() => _WishListDetailsPageState();
@@ -116,7 +104,6 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _wishListDetailsPageScaffoldKey,
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
         backgroundColor: OptiAppColors.backgroundWhite,
@@ -124,7 +111,12 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
         title: Text(
           context.watch<WishListDetailsCubit>().state.wishList.name ?? '',
         ),
-        actions: [_OptionsMenu(onWishListUpdated: widget.onWishListUpdated)],
+        actions: [
+          _OptionsMenu(
+            onWishListUpdated: () =>
+                context.read<WishListHandlerCubit>().shouldRefreshWishList(),
+          )
+        ],
       ),
       body: Column(
         children: [
@@ -285,9 +277,10 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                       context,
                       LocalizationConstants.listSaved.localized(),
                     );
-                    if (widget.onWishListUpdated != null) {
-                      widget.onWishListUpdated!();
-                    }
+
+                    context
+                        .read<WishListHandlerCubit>()
+                        .shouldRefreshWishList();
                   }
 
                   if (state.status == WishListStatus.listUpdateFailure) {
@@ -307,9 +300,10 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                       context,
                       LocalizationConstants.listDeleted.localized(),
                     );
-                    if (widget.onWishListDeleted != null) {
-                      widget.onWishListDeleted!();
-                    }
+
+                    context
+                        .read<WishListHandlerCubit>()
+                        .shouldRefreshWishList();
 
                     Navigator.of(context).pop();
                   }
@@ -337,9 +331,9 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                       LocalizationConstants.listCopied.localized(),
                     );
 
-                    if (widget.onWishListUpdated != null) {
-                      widget.onWishListUpdated!();
-                    }
+                    context
+                        .read<WishListHandlerCubit>()
+                        .shouldRefreshWishList();
                   }
 
                   if (state.status == WishListStatus.listCopyLoading) {
@@ -355,9 +349,9 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                   }
 
                   if (state.status == WishListStatus.listLeaveSuccess) {
-                    if (widget.onWishListUpdated != null) {
-                      widget.onWishListUpdated!();
-                    }
+                    context
+                        .read<WishListHandlerCubit>()
+                        .shouldRefreshWishList();
 
                     Navigator.of(context).pop();
                   }
@@ -597,25 +591,26 @@ class _OptionsMenu extends StatelessWidget {
           toolMenuList: [
             ToolMenu(
               title: LocalizationConstants.listInformation.localized(),
-              action: () {
-                AppRoute.wishListInfo.navigateBackStack(
-                  context,
-                  extra: WishListInfoScreenCallbackHelper(
-                    wishList: state.wishList,
-                    onWishListUpdated: () {
-                      unawaited(
-                        _wishListDetailsPageScaffoldKey.currentContext
-                            ?.read<WishListDetailsCubit>()
-                            .loadWishListDetails(
-                              state.wishList.id ?? '',
-                            ),
-                      );
-                      if (onWishListUpdated != null) {
-                        onWishListUpdated!();
-                      }
-                    },
-                  ),
+              action: () async {
+                final result = await context.pushNamed(
+                  AppRoute.wishListInfo.name,
+                  extra: state.wishList,
                 );
+
+                if (!context.mounted) {
+                  return;
+                }
+
+                if (result == true) {
+                  unawaited(
+                    context
+                        .read<WishListDetailsCubit>()
+                        .loadWishListDetails(state.wishList.id ?? ''),
+                  );
+                  if (onWishListUpdated != null) {
+                    onWishListUpdated!();
+                  }
+                }
               },
             ),
             if (state.wishList.isSharedList != true &&
