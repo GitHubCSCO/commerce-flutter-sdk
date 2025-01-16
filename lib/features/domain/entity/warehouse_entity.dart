@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:commerce_flutter_app/core/models/lat_long.dart';
 import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/warehouse_mapper.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WarehouseEntity extends AvailabilityEntity {
   final String? id;
@@ -114,4 +116,9 @@ class WarehouseEntity extends AvailabilityEntity {
       latLong: latLong ?? this.latLong,
     );
   }
+
+  factory WarehouseEntity.fromJson(Map<String, dynamic> json) =>
+      WarehouseEntityMapper.toEntity(Warehouse.fromJson(json));
+
+  Map<String, dynamic> toJson() => WarehouseEntityMapper.toModel(this).toJson();
 }

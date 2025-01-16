@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/html_string_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_app/core/models/screen_parameters.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
@@ -246,8 +247,14 @@ class CategoryCarouselWidget extends StatelessWidget {
                         .read<BrandDetailsCubit>()
                         .onSelectBrandCategory(brandCategory);
                     if (result?.subCategories?.isNotEmpty == true) {
-                      AppRoute.brandCategory.navigateBackStack(context,
-                          extra: (brand, brandCategory, null));
+                      AppRoute.brandCategory.navigateBackStack(
+                        context,
+                        extra: BrandCategoryScreenParameters(
+                          brand: brand,
+                          brandCategory: brandCategory,
+                          brandSubCategoriesResult: null,
+                        ),
+                      );
                     } else {
                       final brandEntity = BrandEntityMapper.toEntity(brand);
                       final productPageEntity = ProductPageEntity(
@@ -290,14 +297,17 @@ class CategoryCarouselWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
             child: TertiaryButton(
               onPressed: () async {
-                //! TODO caution
-                //! TODO we are passing multiple objects through extra using record
-                //! TODO either we need to organize this record in a better way or use any other data structure
                 var result = await context
                     .read<BrandDetailsCubit>()
                     .getShopAllBrandStartingCategory();
-                AppRoute.brandCategory
-                    .navigateBackStack(context, extra: (brand, result, null));
+                AppRoute.brandCategory.navigateBackStack(
+                  context,
+                  extra: BrandCategoryScreenParameters(
+                    brand: brand,
+                    brandCategory: result,
+                    brandSubCategoriesResult: null,
+                  ),
+                );
               },
               text: LocalizationConstants.shopAllBrandCategories.localized(),
             ),

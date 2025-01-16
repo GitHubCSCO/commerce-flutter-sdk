@@ -26,11 +26,9 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class OrderApprovalDetailsScreen extends StatelessWidget {
   final String cartId;
-  final void Function() refreshOrderApprovals;
   const OrderApprovalDetailsScreen({
     super.key,
     required this.cartId,
-    required this.refreshOrderApprovals,
   });
 
   @override
@@ -52,7 +50,9 @@ class OrderApprovalDetailsScreen extends StatelessWidget {
             }
           },
           child: OrderApprovalDetailsPage(
-            refreshOrderApprovals: refreshOrderApprovals,
+            refreshOrderApprovals: context
+                .read<OrderApprovalHandlerCubit>()
+                .shouldRefreshOrderApproval,
           ),
         );
       }),

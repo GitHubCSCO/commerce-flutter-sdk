@@ -17,6 +17,7 @@ import 'package:commerce_flutter_app/features/domain/entity/score_explanation_en
 import 'package:commerce_flutter_app/features/domain/entity/specification_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/style_trait_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
 import 'package:equatable/equatable.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -531,4 +532,9 @@ class ProductEntity extends Equatable {
 
   @override
   List<Object?> get props => [id];
+
+  factory ProductEntity.fromJson(Map<String, dynamic> json) =>
+      ProductEntityMapper.toEntity(Product.fromJson(json));
+
+  Map<String, dynamic> toJson() => ProductEntityMapper.toModel(this).toJson();
 }

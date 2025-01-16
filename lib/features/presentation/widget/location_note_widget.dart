@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
@@ -7,9 +9,9 @@ import 'package:commerce_flutter_app/features/domain/entity/content_management/w
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/location_note/location_note_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/location_note/location_note_state.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_note_callback_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class LocationNoteWidget extends StatelessWidget {
   LocationNoteWidgetEntity locationNoteWidgetEntity;
@@ -69,19 +71,22 @@ class LocationNoteWidget extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: TertiaryButton(
-                            borderColor: OptiAppColors.grayBackgroundColor,
-                            backgroundColor: OptiAppColors.grayBackgroundColor,
-                            text: LocalizationConstants.editLocationNote
-                                .localized(),
-                            onPressed: () {
-                              AppRoute.vmilocaitonote.navigateBackStack(context,
-                                  extra: VMILocationNoteCallbackHelper(
-                                      onUpdateVMILocationNote: () {
-                                context
-                                    .read<LocationNoteCubit>()
-                                    .loadLocationNote();
-                              }));
-                            }),
+                          borderColor: OptiAppColors.grayBackgroundColor,
+                          backgroundColor: OptiAppColors.grayBackgroundColor,
+                          text: LocalizationConstants.editLocationNote
+                              .localized(),
+                          onPressed: () async {
+                            final result = await context.pushNamed(
+                              AppRoute.vmilocaitonote.name,
+                            );
+
+                            if (result == true && context.mounted) {
+                              unawaited(context
+                                  .read<LocationNoteCubit>()
+                                  .loadLocationNote());
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ],

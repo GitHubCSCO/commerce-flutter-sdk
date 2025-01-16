@@ -14,4 +14,12 @@ class OrderApprovalHandlerState extends Equatable {
 
   @override
   List<Object> get props => [status];
+
+  OrderApprovalHandlerState copyWith({
+    OrderApprovalHandlerStatus? status,
+  }) {
+    return OrderApprovalHandlerState(
+      status: status ?? this.status,
+    );
+  }
 }
