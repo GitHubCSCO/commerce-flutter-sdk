@@ -36,5 +36,4 @@ class PaymentDetailsUseCase extends BaseUseCase {
     var url = coreServiceProvider.getAppConfigurationService().tokenExIFrameUrl;
     return url;
   }
-
 }
