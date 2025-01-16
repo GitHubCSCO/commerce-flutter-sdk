@@ -37,11 +37,4 @@ class PaymentDetailsUseCase extends BaseUseCase {
     return url;
   }
 
-  bool get shouldShowOrderNotes {
-    return !(coreServiceProvider
-            .getAppConfigurationService()
-            .baseConfig
-            ?.customHideCheckoutOrderNotes ??
-        false);
-  }
 }

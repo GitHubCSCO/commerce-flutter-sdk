@@ -8,6 +8,7 @@ import 'package:commerce_flutter_app/features/domain/enums/address_type.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/warehouse_extension.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/shipping_address_add_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
@@ -20,11 +21,12 @@ import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BillingShippingWidget extends StatelessWidget {
+  final _orderNotesController = TextEditingController();
   final BillingShippingEntity billingShippingEntity;
   final bool? isVmiCheckout;
   final void Function(BuildContext, Object)? onCallBack;
 
-  const BillingShippingWidget({
+  BillingShippingWidget({
     super.key,
     required this.billingShippingEntity,
     this.onCallBack,
@@ -118,6 +120,10 @@ class BillingShippingWidget extends StatelessWidget {
           billingShippingEntity.requestDeliveryDate,
           billingShippingEntity.shippingMethod,
           billingShippingEntity.requestDateWarningMessage));
+    }
+
+    if (context.read<CheckoutBloc>().shouldShowOrderNotes) {
+      list.add(_buildOrderNotes(context));
     }
 
     return list;
@@ -343,6 +349,26 @@ class BillingShippingWidget extends StatelessWidget {
         ),
         const SizedBox(height: 16),
       ],
+    );
+  }
+
+  Widget _buildOrderNotes(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 16.0),
+      child: Input(
+        label: LocalizationConstants.orderNotes.localized(),
+        hintText: LocalizationConstants.orderNotesOptional.localized(),
+        controller: _orderNotesController,
+        onChanged: (value) {
+          context.read<CheckoutBloc>().add(OrderNotesEvent(value));
+        },
+        onTapOutside: (_) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        onEditingComplete: () {
+          FocusManager.instance.primaryFocus?.nextFocus();
+        },
+      ),
     );
   }
 
