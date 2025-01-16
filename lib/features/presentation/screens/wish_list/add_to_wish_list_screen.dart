@@ -16,6 +16,7 @@ import 'package:commerce_flutter_app/features/presentation/components/input.dart
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_add_to/wish_list_add_to_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_widget.dart';
@@ -30,12 +31,10 @@ final GlobalKey _wishListAddToPageScaffoldKey = GlobalKey();
 
 class AddToWishListScreen extends StatelessWidget {
   final WishListAddToCartCollection addToCartCollection;
-  final void Function()? onWishListUpdated;
 
   const AddToWishListScreen({
     super.key,
     required this.addToCartCollection,
-    this.onWishListUpdated,
   });
 
   @override
@@ -62,13 +61,16 @@ class AddToWishListScreen extends StatelessWidget {
               if (state.status == WishListStatus.allowMultipleListsFailure) {
                 return AddToSingleWishListPage(
                   addToCartCollection: addToCartCollection,
-                  onWishListUpdated: onWishListUpdated,
+                  onWishListUpdated: context
+                      .read<WishListHandlerCubit>()
+                      .shouldRefreshWishList,
                 );
               }
 
               return AddToWishListPage(
                 addToCartCollection: addToCartCollection,
-                onWishListUpdated: onWishListUpdated,
+                onWishListUpdated:
+                    context.read<WishListHandlerCubit>().shouldRefreshWishList,
               );
             },
           );
@@ -113,7 +115,7 @@ class AddToSingleWishListPage extends StatelessWidget {
             onWishListUpdated!();
           }
 
-          context.pop();
+          context.pop(true);
         }
 
         if (state.status == WishListStatus.listItemAddToListFailure) {
@@ -300,19 +302,23 @@ class _AddToWishListPageState extends State<AddToWishListPage> {
             actions: [
               PrimaryButton(
                 text: LocalizationConstants.createNewList.localized(),
-                onPressed: () {
-                  AppRoute.wishListCreate.navigateBackStack(
-                    context,
+                onPressed: () async {
+                  final result = await context.pushNamed(
+                    AppRoute.wishListCreate.name,
                     extra: WishListCreateScreenCallbackHelper(
-                      onWishListCreated: () {
-                        if (widget.onWishListUpdated != null) {
-                          widget.onWishListUpdated!();
-                        }
-                        context.pop();
-                      },
                       addToCartCollection: widget.addToCartCollection,
                     ),
                   );
+
+                  if (result == true) {
+                    if (widget.onWishListUpdated != null) {
+                      widget.onWishListUpdated!();
+                    }
+
+                    if (context.mounted) {
+                      context.pop();
+                    }
+                  }
                 },
               ),
             ],

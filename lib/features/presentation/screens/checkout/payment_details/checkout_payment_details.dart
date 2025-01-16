@@ -12,13 +12,13 @@ import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/callback/credit_card_add_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/token_ex_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/add_credit_card_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/add_promotion_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 typedef OnCompleteCheckoutPaymentSection = void Function();
@@ -240,34 +240,42 @@ class CheckoutPaymentDetails extends StatelessWidget {
 
   Widget _buildAddPaymentMethodButton(BuildContext context) {
     return TextButton(
-      onPressed: () {
+      onPressed: () async {
         trackNewPaymentCheckoutEvent(context);
-        AppRoute.addCreditCard.navigateBackStack(context,
-            extra: CreditCardAddCallbackHelper(
-                addCreditCardEntity:
-                    AddCreditCardEntity(isAddNewCreditCard: true),
-                onAddedCeditCard: (paymentProfile) {
-                  context.read<PaymentDetailsBloc>().add(
-                        UpdateNewAccountPaymentProfileEvent(
-                          accountPaymentProfile: paymentProfile,
-                        ),
-                      );
-                  context.read<CheckoutBloc>().add(
-                        SelectPaymentMethodEvent(PaymentMethodDto(
-                            name: paymentProfile.cardIdentifier,
-                            cardType: paymentProfile.cardType,
-                            isCreditCard: true,
-                            description:
-                                "${paymentProfile.cardType} ${paymentProfile.maskedCardNumber}",
-                            isPaymentProfile: true)),
-                      );
-                  context
-                      .read<PaymentDetailsBloc>()
-                      .add(LoadPaymentDetailsEvent(
-                        cart: context.read<PaymentDetailsBloc>().cart!,
-                      ));
-                  onCompleteCheckoutPaymentSection();
-                }));
+        final result = await context.pushNamed(
+          AppRoute.addCreditCard.name,
+          extra: AddCreditCardEntity(isAddNewCreditCard: true),
+        ) as AddCreditCardScreenResponse?;
+
+        if (result == null) {
+          return;
+        }
+
+        if (result.isAddNewCreditCard == true) {
+          final paymentProfile = result.accountPaymentProfile;
+          if (paymentProfile == null || !context.mounted) {
+            return;
+          }
+
+          context.read<PaymentDetailsBloc>().add(
+                UpdateNewAccountPaymentProfileEvent(
+                  accountPaymentProfile: paymentProfile,
+                ),
+              );
+          context.read<CheckoutBloc>().add(
+                SelectPaymentMethodEvent(PaymentMethodDto(
+                    name: paymentProfile.cardIdentifier,
+                    cardType: paymentProfile.cardType,
+                    isCreditCard: true,
+                    description:
+                        "${paymentProfile.cardType} ${paymentProfile.maskedCardNumber}",
+                    isPaymentProfile: true)),
+              );
+          context.read<PaymentDetailsBloc>().add(LoadPaymentDetailsEvent(
+                cart: context.read<PaymentDetailsBloc>().cart!,
+              ));
+          onCompleteCheckoutPaymentSection();
+        }
       },
       style: TextButton.styleFrom(
         foregroundColor: Colors.blue,

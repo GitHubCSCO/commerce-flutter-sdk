@@ -21,6 +21,28 @@ class BillToShipToAddressSelectionEntity {
 
   BillToShipToAddressSelectionEntity(
       {this.selectedBillTo, this.selectedShipTo, required this.addressType});
+
+  factory BillToShipToAddressSelectionEntity.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return BillToShipToAddressSelectionEntity(
+      selectedBillTo: json['selectedBillTo'] != null
+          ? BillTo.fromJson(json['selectedBillTo'])
+          : null,
+      selectedShipTo: json['selectedShipTo'] != null
+          ? ShipTo.fromJson(json['selectedShipTo'])
+          : null,
+      addressType: AddressType.fromJson(json['addressType']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'selectedBillTo': selectedBillTo?.toJson(),
+      'selectedShipTo': selectedShipTo?.toJson(),
+      'addressType': addressType.toJson(),
+    };
+  }
 }
 
 class BillToShipToAddressSelectionScreen extends StatelessWidget {

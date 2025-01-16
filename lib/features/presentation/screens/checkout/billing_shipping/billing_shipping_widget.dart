@@ -10,7 +10,6 @@ import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkou
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/checkout/review_order/review_order_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/callback/shipping_address_add_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/billto_shipto/billto_shipto_address_selection_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/date_picker_widget.dart';
@@ -137,12 +136,18 @@ class BillingShippingWidget extends StatelessWidget {
 
   Widget _buildAddShippingAddressButton(BuildContext context) {
     return TextButton(
-      onPressed: () {
+      onPressed: () async {
         trackNewAddressCheckoutEvent(context);
-        AppRoute.addShippingAddress.navigateBackStack(context, extra:
-            ShippingAddressAddCallbackHelper(onShippingAddressAdded: (shiptTo) {
-          context.read<CheckoutBloc>().add(AddShiptoAddressEvent(shiptTo));
-        }));
+        final result = await context.pushNamed(
+          AppRoute.addShippingAddress.name,
+        );
+
+        if (result != null && result is ShipTo) {
+          final shipTo = result;
+          if (context.mounted) {
+            context.read<CheckoutBloc>().add(AddShiptoAddressEvent(shipTo));
+          }
+        }
       },
       style: TextButton.styleFrom(
         foregroundColor: Colors.blue,

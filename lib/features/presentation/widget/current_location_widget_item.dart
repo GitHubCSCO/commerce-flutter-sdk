@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/mixins/map_mixin.dart';
@@ -5,6 +7,7 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/current_location_data_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/location_search_type.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/location_search_handler/location_search_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -76,18 +79,36 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
                     },
                   ),
                   const SizedBox(width: 16),
-                  Visibility(
-                      visible: isVMILocationfinder,
-                      child: InkWell(
-                        child: Text(
-                          LocalizationConstants.changeLocation.localized(),
-                          textAlign: TextAlign.center,
-                          style: OptiTextStyles.link,
-                        ),
-                        onTap: () {
-                          _onChangeLocationClick(context);
-                        },
-                      ))
+                  BlocListener<LocationSearchHandlerCubit,
+                      LocationSearchHandlerState>(
+                    listener: (context, state) {
+                      if (state.locationData != null) {
+                        unawaited(context
+                            .read<CurrentLocationCubit>()
+                            .onLocationSelectEvent(state.locationData!));
+
+                        unawaited(context
+                            .read<CurrentLocationCubit>()
+                            .onLoadLocationData());
+
+                        context
+                            .read<LocationSearchHandlerCubit>()
+                            .clearLocationData();
+                      }
+                    },
+                    child: Visibility(
+                        visible: isVMILocationfinder,
+                        child: InkWell(
+                          child: Text(
+                            LocalizationConstants.changeLocation.localized(),
+                            textAlign: TextAlign.center,
+                            style: OptiTextStyles.link,
+                          ),
+                          onTap: () {
+                            _onChangeLocationClick(context);
+                          },
+                        )),
+                  )
                 ],
               ),
             ),
@@ -113,13 +134,7 @@ class CurrentLocationWidgetItem extends StatelessWidget with MapDirection {
 
   Future<void> _onChangeLocationClick(BuildContext context) async {
     AppRoute.locationSearch.navigateBackStack(context,
-        extra: VMILocationSelectCallbackHelper(
-            onSelectVMILocation: (location) {
-              context
-                  .read<CurrentLocationCubit>()
-                  .onLocationSelectEvent(location);
-              context.read<CurrentLocationCubit>().onLoadLocationData();
-            },
+        extra: const VMILocationSelectCallbackHelper(
             locationSearchType: LocationSearchType.vmi));
   }
 }

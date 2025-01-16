@@ -12,7 +12,7 @@ class OrderApprovalHandlerCubit extends Cubit<OrderApprovalHandlerState> {
 
   void shouldRefreshOrderApproval() {
     emit(
-      const OrderApprovalHandlerState(
+      state.copyWith(
         status: OrderApprovalHandlerStatus.shouldRefreshOrderApproval,
       ),
     );
