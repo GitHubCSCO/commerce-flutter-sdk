@@ -144,7 +144,7 @@ jobs:
             -d '{
               "event_type": "run-automation-tests",
               "client_payload": {
-                "artifact_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts",
+                "artifact_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ github.artifact_id }}",
                 "pr_number": "${{ github.event.pull_request.number }}"
               }
             }'
