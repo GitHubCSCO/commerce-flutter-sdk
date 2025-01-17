@@ -21,11 +21,9 @@ class WishListInformationScreen extends BaseStatelessWidget {
   const WishListInformationScreen({
     super.key,
     required this.wishList,
-    this.onWishListUpdated,
   });
 
   final WishListEntity wishList;
-  final void Function()? onWishListUpdated;
 
   @override
   Widget buildContent(BuildContext context) {
@@ -37,7 +35,6 @@ class WishListInformationScreen extends BaseStatelessWidget {
       },
       child: WishListInformationPage(
         wishList: wishList,
-        onWishListUpdated: onWishListUpdated,
       ),
     );
   }
@@ -56,12 +53,10 @@ class WishListInformationScreen extends BaseStatelessWidget {
 
 class WishListInformationPage extends StatefulWidget {
   final WishListEntity wishList;
-  final void Function()? onWishListUpdated;
 
   const WishListInformationPage({
     super.key,
     required this.wishList,
-    this.onWishListUpdated,
   });
 
   @override
@@ -105,10 +100,8 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
               context,
               LocalizationConstants.listUpdated.localized(),
             );
-            if (widget.onWishListUpdated != null) {
-              widget.onWishListUpdated!();
-            }
-            context.pop();
+
+            context.pop(true);
           }
 
           if (state.status == WishListStatus.listUpdateFailure) {

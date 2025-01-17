@@ -32,6 +32,18 @@ class VmiCheckoutEntity {
   final ScanningMode scanningMode;
 
   VmiCheckoutEntity(this.cart, this.scanningMode);
+
+  factory VmiCheckoutEntity.fromJson(Map<String, dynamic> json) {
+    return VmiCheckoutEntity(
+      Cart.fromJson(json['cart']),
+      ScanningMode.fromJson(json['scanningMode']),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'cart': cart.toJson(),
+        'scanningMode': scanningMode.toJson(),
+      };
 }
 
 class VmiCheckoutScreen extends StatelessWidget {
