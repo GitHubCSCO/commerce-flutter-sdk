@@ -146,7 +146,7 @@ jobs:
             -d '{
               "event_type": "run-automation-tests",
               "client_payload": {
-                "artifact_url": "${{ needs.ios.outputs.artifact_url }},
+                "artifact_url": "${{ needs.ios.outputs.artifact_url }}",
                 "pr_number": "${{ github.event.pull_request.number }}"
               }
             }'
