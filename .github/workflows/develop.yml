@@ -131,6 +131,23 @@ jobs:
           BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
           RELEASE_TAG1: ${{ github.event.inputs.release_tag1 }}
           RELEASE_TAG2: ${{ github.event.inputs.release_tag2 }}
+  trigger-automation:
+    runs-on: macos-latest
+    needs: ios
+    steps:
+      - name: Trigger iOS Automation Repo Workflow
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.my_pat }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/InsiteSoftware/mobile-automation-test/dispatches \
+            -d '{
+              "event_type": "run-automation-tests",
+              "client_payload": {
+                "artifact_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts",
+                "pr_number": "${{ github.event.pull_request.number }}"
+              }
+            }'
   android:
     runs-on: macos-latest
     steps:
