@@ -142,7 +142,7 @@ jobs:
           PAYLOAD='{
             "event_type": "ios-automation-tests",
             "client_payload": {
-              "ios_artifact_id": "${{ needs.ios.outputs.artifact_id }}"
+              "ios_artifact_id": "${{ needs.ios.outputs.artifact_id }}"'
 
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             PAYLOAD="$PAYLOAD, \"pr_number\": \"${{ github.event.number }}\""
