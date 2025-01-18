@@ -93,50 +93,149 @@ jobs:
           name: ios-debug-app
           path: build/ios/iphonesimulator/Runner.app
           if-no-files-found: warn
+      # - name: Cloning build scripts
+      #   uses: actions/checkout@master
+      #   with:
+      #     repository: InsiteSoftware/commerce-mobile-build-scripts
+      #     ref: refs/heads/${{ env.analytics_config }}
+      #     token: ${{ secrets.my_pat }}
+      #     path: build-scripts
+      # - name: Movie build-scripts to root folder
+      #   run: |
+      #     mv build-scripts/* ./
+      #     ls -l
+      #     ls -l fastlane
+      # - name: Extract branch name
+      #   run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+      #   id: extract_branch
 
-        # - name: Cloning build scripts
-        #   uses: actions/checkout@master
-        #   with:
-        #     repository: InsiteSoftware/commerce-mobile-build-scripts
-        #     ref: refs/heads/${{ env.analytics_config }}
-        #     token: ${{ secrets.my_pat }}
-        #     path: build-scripts
-        # - name: Movie build-scripts to root folder
-        #   run: |
-        #     mv build-scripts/* ./
-        #     ls -l
-        #     ls -l fastlane
-        # - name: Extract branch name
-        #   run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-        #   id: extract_branch
+      # - name: Fastlane
+      #   run: |
+      #     if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ github.event_name }}" = "push" ]; then
+      #       echo "Running in PR. Using default value."
+      #       RELEASE_GROUP='qa'
+      #     else
+      #       echo "Not running in PR."
+      #       RELEASE_GROUP='${{ github.event.inputs.release }}'
+      #     fi
 
-        # - name: Fastlane
-        #   run: |
-        #     if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ github.event_name }}" = "push" ]; then
-        #       echo "Running in PR. Using default value."
-        #       RELEASE_GROUP='qa'
-        #     else
-        #       echo "Not running in PR."
-        #       RELEASE_GROUP='${{ github.event.inputs.release }}'
-        #     fi
+      #     echo "Using RELEASE_GROUP: $RELEASE_GROUP"
 
-        #     echo "Using RELEASE_GROUP: $RELEASE_GROUP"
+      #     fastlane ios qa release:$RELEASE_GROUP
+      #   env:
+      #     MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      #     FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+      #     MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+      #     APPCENTER_API_TOKEN: ${{ secrets.APPCENTER_API_TOKEN }}
+      #     AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+      #     AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      #     AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+      #     BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
+      #     RELEASE_TAG1: ${{ github.event.inputs.release_tag1 }}
+      #     RELEASE_TAG2: ${{ github.event.inputs.release_tag2 }}
+  android:
+    runs-on: macos-latest
+    outputs:
+      artifact_id: ${{ steps.upload.outputs.artifact-id }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: "0"
+      - name: List
+        run: |
+          ls -l
 
-        #     fastlane ios qa release:$RELEASE_GROUP
-        env:
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
-          APPCENTER_API_TOKEN: ${{ secrets.APPCENTER_API_TOKEN }}
-          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
-          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
-          BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
-          RELEASE_TAG1: ${{ github.event.inputs.release_tag1 }}
-          RELEASE_TAG2: ${{ github.event.inputs.release_tag2 }}
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "17"
+          cache: "gradle"
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          flutter-version-file: pubspec.yaml
+          cache: true
+
+      - run: flutter --version
+
+      - run: flutter doctor -v
+
+      - uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          name: id_rsa
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - name: Determine config
+        id: config
+        run: |
+          echo "Using analytics config: ${{ github.event.inputs.analytics_config || 'flutter' }}"
+          echo "analytics_config=${{ github.event.inputs.analytics_config || 'flutter' }}" >> $GITHUB_ENV
+
+      - name: Trigger Android Debug Build
+        run: |
+          flutter clean
+          flutter pub get
+          flutter build apk --debug
+      - name: Upload iOS Debug Build as artifact
+        if: always()
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-app
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          if-no-files-found: warn
+      # - name: Cloning build scripts
+      #   uses: actions/checkout@master
+      #   with:
+      #     repository: InsiteSoftware/commerce-mobile-build-scripts
+      #     ref: refs/heads/${{ env.analytics_config }}
+      #     token: ${{ secrets.my_pat }}
+      #     path: build-scripts
+      # - name: Movie build-scripts to root folder
+      #   run: |
+      #     mv build-scripts/* ./
+      #     ls -l
+      #     ls -l fastlane
+      # - name: Extract branch name
+      #   run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+      #   id: extract_branch
+
+      # - name: Fastlane
+      #   run: |
+      #     if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ github.event_name }}" = "push" ]; then
+      #       echo "Running in PR. Using default value."
+      #       RELEASE_GROUP='qa'
+      #     else
+      #       echo "Not running in PR."
+      #       RELEASE_GROUP='${{ github.event.inputs.release }}'
+      #     fi
+
+      #     echo "Using RELEASE_GROUP: $RELEASE_GROUP"
+
+      #     fastlane android qa release:$RELEASE_GROUP
+      #   env:
+      #     MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      #     FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+      #     MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+      #     APPCENTER_API_TOKEN: ${{ secrets.APPCENTER_API_TOKEN }}
+      #     ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+      #     ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+      #     ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      #     ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+      #     AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+      #     AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      #     AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+      #     BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
+      #     RELEASE_TAG1: ${{ github.event.inputs.release_tag1 }}
+      #     RELEASE_TAG2: ${{ github.event.inputs.release_tag2 }}
   trigger-automation:
     runs-on: macos-latest
-    needs: ios
+    needs: [ios, android]
     steps:
       - name: Trigger iOS Automation Repo Workflow
         run: |
@@ -147,105 +246,7 @@ jobs:
             -d '{
               "event_type": "run-automation-tests",
               "client_payload": {
-                "artifact_id": "${{ needs.ios.outputs.artifact_id }}",
-                "pr_number": "${{ github.event.pull_request.number }}"
+                "ios_artifact_id": "${{ needs.ios.outputs.artifact_id }}",
+                "android_artifact_id": "${{ needs.android.outputs.artifact_id }}"
               }
             }'
-  # android:
-  #   runs-on: macos-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: "0"
-  #     - name: List
-  #       run: |
-  #         ls -l
-
-  #     - name: Set up Java
-  #       uses: actions/setup-java@v4
-  #       with:
-  #         distribution: "zulu"
-  #         java-version: "17"
-  #         cache: "gradle"
-
-  #     - name: Install Flutter
-  #       uses: subosito/flutter-action@v2
-  #       with:
-  #         channel: "stable"
-  #         flutter-version-file: pubspec.yaml
-  #         cache: true
-
-  #     - run: flutter --version
-
-  #     - run: flutter doctor -v
-
-  #     - uses: shimataro/ssh-key-action@v2
-  #       with:
-  #         key: ${{ secrets.SSH_PRIVATE_KEY }}
-  #         name: id_rsa
-  #         known_hosts: ${{ secrets.KNOWN_HOSTS }}
-
-  #     - name: Determine config
-  #       id: config
-  #       run: |
-  #         echo "Using analytics config: ${{ github.event.inputs.analytics_config || 'flutter' }}"
-  #         echo "analytics_config=${{ github.event.inputs.analytics_config || 'flutter' }}" >> $GITHUB_ENV
-
-  #     - name: Trigger Android Debug Build
-  #       run: |
-  #         flutter clean
-  #         flutter pub get
-  #         flutter build apk --debug
-  #     - name: Upload iOS Debug Build as artifact
-  #       if: always()
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: android-debug-app
-  #         path: build/app/outputs/flutter-apk/app-debug.apk
-  #         if-no-files-found: warn
-
-  #     - name: Cloning build scripts
-  #       uses: actions/checkout@master
-  #       with:
-  #         repository: InsiteSoftware/commerce-mobile-build-scripts
-  #         ref: refs/heads/${{ env.analytics_config }}
-  #         token: ${{ secrets.my_pat }}
-  #         path: build-scripts
-  #     - name: Movie build-scripts to root folder
-  #       run: |
-  #         mv build-scripts/* ./
-  #         ls -l
-  #         ls -l fastlane
-  #     - name: Extract branch name
-  #       run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-  #       id: extract_branch
-
-  #     - name: Fastlane
-  #       run: |
-  #         if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ github.event_name }}" = "push" ]; then
-  #           echo "Running in PR. Using default value."
-  #           RELEASE_GROUP='qa'
-  #         else
-  #           echo "Not running in PR."
-  #           RELEASE_GROUP='${{ github.event.inputs.release }}'
-  #         fi
-
-  #         echo "Using RELEASE_GROUP: $RELEASE_GROUP"
-
-  #         fastlane android qa release:$RELEASE_GROUP
-  #       env:
-  #         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-  #         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-  #         MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
-  #         APPCENTER_API_TOKEN: ${{ secrets.APPCENTER_API_TOKEN }}
-  #         ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
-  #         ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
-  #         ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-  #         ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-  #         AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-  #         AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
-  #         AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
-  #         BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
-  #         RELEASE_TAG1: ${{ github.event.inputs.release_tag1 }}
-  #         RELEASE_TAG2: ${{ github.event.inputs.release_tag2 }}
