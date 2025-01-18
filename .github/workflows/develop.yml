@@ -133,6 +133,22 @@ jobs:
       #     BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
       #     RELEASE_TAG1: ${{ github.event.inputs.release_tag1 }}
       #     RELEASE_TAG2: ${{ github.event.inputs.release_tag2 }}
+  trigger-ios-automation:
+    runs-on: macos-latest
+    needs: ios
+    steps:
+      - name: Trigger iOS Automation Repo Workflow
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.my_pat }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/InsiteSoftware/mobile-automation/dispatches \
+            -d '{
+              "event_type": "run-ios-automation-tests",
+              "client_payload": {
+                "ios_artifact_id": "${{ needs.ios.outputs.artifact_id }}"
+              }
+            }'
   android:
     runs-on: macos-latest
     outputs:
@@ -235,7 +251,7 @@ jobs:
       #     RELEASE_TAG2: ${{ github.event.inputs.release_tag2 }}
   trigger-automation:
     runs-on: macos-latest
-    needs: [ios, android]
+    needs: android
     steps:
       - name: Trigger iOS Automation Repo Workflow
         run: |
@@ -244,9 +260,8 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/InsiteSoftware/mobile-automation/dispatches \
             -d '{
-              "event_type": "run-automation-tests",
+              "event_type": "run-android-automation-tests",
               "client_payload": {
-                "ios_artifact_id": "${{ needs.ios.outputs.artifact_id }}",
                 "android_artifact_id": "${{ needs.android.outputs.artifact_id }}"
               }
             }'
