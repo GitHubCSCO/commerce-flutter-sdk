@@ -161,7 +161,6 @@ jobs:
       - name: Wait for iOS Automation Workflow to Complete
         run: |
           STATUS="queued"
-          echo "Waiting UUID=$UUID"
           while [[ -z "$STATUS" || "$STATUS" == "null" || "$STATUS" == "queued" || "$STATUS" == "in_progress" ]]; do
             sleep 5
             STATUS=$(curl -s -H "Authorization: Bearer ${{ secrets.my_pat }}" \
@@ -180,6 +179,10 @@ jobs:
                         | jq -r '.workflow_runs[] | select(.name == "iOS ['"$UUID"']") | .conclusion' | head -n 1)
           echo "iOS Automation Workflow completed successfully."
           echo "Conclusion: $CONCLUSION"
+          if [[ "$CONCLUSION" != "success" ]]; then
+            echo "iOS Automation Failed"
+            exit 1
+          fi
   android:
     runs-on: macos-latest
     outputs:
@@ -308,7 +311,6 @@ jobs:
       - name: Wait for Android Automation Workflow to Complete
         run: |
           STATUS="queued"
-          echo "Waiting UUID=$UUID"
           while [[ -z "$STATUS" || "$STATUS" == "null" || "$STATUS" == "queued" || "$STATUS" == "in_progress" ]]; do
             sleep 5
             STATUS=$(curl -s -H "Authorization: Bearer ${{ secrets.my_pat }}" \
@@ -327,3 +329,7 @@ jobs:
                         | jq -r '.workflow_runs[] | select(.name == "Android ['"$UUID"']") | .conclusion' | head -n 1)
           echo "Android Automation Workflow completed successfully."
           echo "Conclusion: $CONCLUSION"
+          if [[ "$CONCLUSION" != "success" ]]; then
+            echo "Android Automation Failed"
+            exit 1
+          fi
