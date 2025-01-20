@@ -139,10 +139,13 @@ jobs:
     steps:
       - name: Trigger iOS Automation Repo Workflow
         run: |
+          UUID=$(uuidgen)
+          echo "UUID=$UUID"
+          echo "UUID=$UUID" >> $GITHUB_ENV
           PAYLOAD='{
             "event_type": "ios-automation-tests",
             "client_payload": {
-              "ios_artifact_id": "${{ needs.ios.outputs.artifact_id }}"'
+              "ios_artifact_id": "${{ needs.ios.outputs.artifact_id }}","uuid": "$UUID"'
 
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             PAYLOAD="$PAYLOAD, \"pr_number\": \"${{ github.event.number }}\""
@@ -158,6 +161,7 @@ jobs:
       - name: Wait for iOS Automation Workflow to Complete
         run: |
           STATUS="queued"
+          echo "Waiting UUID=$UUID"
           while [[ -z "$STATUS" || "$STATUS" == "null" || "$STATUS" == "queued" || "$STATUS" == "in_progress" ]]; do
             sleep 5
             STATUS=$(curl -s -H "Authorization: Bearer ${{ secrets.my_pat }}" \
@@ -277,10 +281,13 @@ jobs:
     steps:
       - name: Trigger iOS Automation Repo Workflow
         run: |
+          UUID=$(uuidgen)
+          echo "UUID=$UUID"
+          echo "UUID=$UUID" >> $GITHUB_ENV
           PAYLOAD='{
             "event_type": "android-automation-tests",
             "client_payload": {
-              "android_artifact_id": "${{ needs.android.outputs.artifact_id }}"'
+              "android_artifact_id": "${{ needs.android.outputs.artifact_id }}","uuid": "$UUID"'
 
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             PAYLOAD="$PAYLOAD, \"pr_number\": \"${{ github.event.number }}\""
@@ -296,6 +303,7 @@ jobs:
       - name: Wait for Android Automation Workflow to Complete
         run: |
           STATUS="queued"
+          echo "Waiting UUID=$UUID"
           while [[ -z "$STATUS" || "$STATUS" == "null" || "$STATUS" == "queued" || "$STATUS" == "in_progress" ]]; do
             sleep 5
             STATUS=$(curl -s -H "Authorization: Bearer ${{ secrets.my_pat }}" \
