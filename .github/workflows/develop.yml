@@ -134,7 +134,7 @@ jobs:
       #     RELEASE_TAG1: ${{ github.event.inputs.release_tag1 }}
       #     RELEASE_TAG2: ${{ github.event.inputs.release_tag2 }}
   trigger-ios-automation:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     needs: ios
     steps:
       - name: Trigger iOS Automation Repo Workflow
@@ -256,7 +256,7 @@ jobs:
       #     RELEASE_TAG1: ${{ github.event.inputs.release_tag1 }}
       #     RELEASE_TAG2: ${{ github.event.inputs.release_tag2 }}
   trigger-android-automation:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     needs: android
     steps:
       - name: Trigger iOS Automation Repo Workflow
