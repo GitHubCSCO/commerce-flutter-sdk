@@ -351,7 +351,8 @@ class AddCreditCardPage extends StatelessWidget {
       var selectState = context.read<BillingAddressCubit>().selectedState;
       var expirationDate =
           "${expirationMonth?.value.toString().padLeft(2, '0')}/${expirationYear!.key % 100}";
-      validatePaymentToken(true, name, expirationMonth?.value, expirationYear.value);
+      validatePaymentToken(
+          true, name, expirationMonth?.value, expirationYear.value);
 
       if (context.read<BillingAddressCubit>().billingAddressAddNewToggle) {
         var billTo = context.read<BillingAddressCubit>().billTo;
@@ -954,9 +955,11 @@ class AddCreditCardPage extends StatelessWidget {
     });
   }
 
-  void validatePaymentToken(bool value, String fullName, int? expirationMonth, int? expirationYear) {
+  void validatePaymentToken(
+      bool value, String fullName, int? expirationMonth, int? expirationYear) {
     tokenExValidateNotifier.value = value;
-    spreedlyValidateNotifier.value = SpreedlyField(fullName, expirationMonth.toString(), expirationYear.toString());
+    spreedlyValidateNotifier.value = SpreedlyField(
+        fullName, expirationMonth.toString(), expirationYear.toString());
   }
 
   void _onYearSelect(BuildContext context, Object item) {
