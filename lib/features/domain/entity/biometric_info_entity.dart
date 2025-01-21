@@ -23,4 +23,20 @@ class BiometricInfoEntity extends Equatable {
       password: password ?? this.password,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'biometricOption': biometricOption.toJson(),
+      'password': password,
+    };
+  }
+
+  factory BiometricInfoEntity.fromJson(Map<String, dynamic> json) {
+    return BiometricInfoEntity(
+      biometricOption: DeviceAuthenticationOption.fromJson(
+        json['biometricOption'] as Map<String, dynamic>,
+      ),
+      password: json['password'],
+    );
+  }
 }

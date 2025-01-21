@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/features/domain/mapper/order_mapper.dart';
 import 'package:equatable/equatable.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -391,4 +392,9 @@ class OrderEntity extends Equatable {
       poNumberLabel: poNumberLabel ?? this.poNumberLabel,
     );
   }
+
+  factory OrderEntity.fromJson(Map<String, dynamic> json) =>
+      OrderEntityMapper.toEntity(Order.fromJson(json));
+
+  Map<String, dynamic> toJson() => OrderEntityMapper.toModel(this).toJson();
 }

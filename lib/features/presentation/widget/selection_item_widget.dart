@@ -10,6 +10,22 @@ class CatalogTypeSelectingParameter {
     required this.currentItem,
     required this.removeMyself,
   });
+
+  factory CatalogTypeSelectingParameter.fromJson(Map<String, dynamic> json) {
+    return CatalogTypeSelectingParameter(
+      currentItem: json['currentItem'] != null
+          ? CatalogTypeDto.fromJson(json['currentItem'])
+          : null,
+      removeMyself: json['removeMyself'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'currentItem': currentItem?.toJson(),
+      'removeMyself': removeMyself,
+    };
+  }
 }
 
 class SelectionItemWidget extends StatelessWidget {
