@@ -38,7 +38,8 @@ class ProductDetailsStyleTraitWidget extends StatelessWidget {
                         .productDetailDataEntity
                         .selectedStyleValues,
                     onSelectItemCallback: (BuildContext context, Object item) {
-                      _onSelectStyle(context, item);
+                      _onSelectStyle(
+                          context, item, styleTrait.styleTraitId);
                     },
                   ),
                 ],
@@ -50,7 +51,7 @@ class ProductDetailsStyleTraitWidget extends StatelessWidget {
     );
   }
 
-  void _onSelectStyle(BuildContext context, Object item) {
+  void _onSelectStyle(BuildContext context, Object item, String? styleTraitId) {
     StyleValueEntity? selectedValue;
     if (item is ProductDetailStyleValue) {
       selectedValue = item.styleValue!;
@@ -58,6 +59,7 @@ class ProductDetailsStyleTraitWidget extends StatelessWidget {
       selectedValue = item as StyleValueEntity;
     }
     var productDetailsBloc = context.read<ProductDetailsBloc>();
-    productDetailsBloc.add(StyleTraitSelectedEvent(selectedValue));
+    productDetailsBloc
+        .add(StyleTraitSelectedEvent(selectedValue, styleTraitId));
   }
 }
