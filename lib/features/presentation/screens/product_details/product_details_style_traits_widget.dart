@@ -38,8 +38,7 @@ class ProductDetailsStyleTraitWidget extends StatelessWidget {
                         .productDetailDataEntity
                         .selectedStyleValues,
                     onSelectItemCallback: (BuildContext context, Object item) {
-                      _onSelectStyle(
-                          context, item, styleTrait.styleTraitId);
+                      _onSelectStyle(context, item, styleTrait.styleTraitId);
                     },
                   ),
                 ],

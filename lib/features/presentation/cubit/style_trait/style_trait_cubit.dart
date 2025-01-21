@@ -70,8 +70,12 @@ class StyleTraitCubit extends Cubit<StyleTraitState> {
 
   void updateStyledProductBasedOnSelection(
       StyleValueEntity selectedStyleValue) {
-    var styledProduct = _styleTraitsUseCase.getStyledProductBasedOnSelection(null,
-        selectedStyleValue, product, availableStyleValues, selectedStyleValues);
+    var styledProduct = _styleTraitsUseCase.getStyledProductBasedOnSelection(
+        null,
+        selectedStyleValue,
+        product,
+        availableStyleValues,
+        selectedStyleValues);
 
     styledProductEntity = styledProduct;
 
