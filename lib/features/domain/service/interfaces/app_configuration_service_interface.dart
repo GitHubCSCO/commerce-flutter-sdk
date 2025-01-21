@@ -33,6 +33,8 @@ abstract class IAppConfigurationService {
   Future<Result<TokenExDto, ErrorResponse>> getTokenExConfiguration(
       String token);
 
+  Future<Result<SpreedlyDto, ErrorResponse>> getSpreedlyConfiguration();
+
   Future<bool?> productPricingEnabled();
 
   Future<bool?> addToCartEnabled();

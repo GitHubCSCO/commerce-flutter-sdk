@@ -18,6 +18,7 @@ import 'package:commerce_flutter_app/features/presentation/cubit/billing_address
 import 'package:commerce_flutter_app/features/presentation/cubit/card_expiration_cubit.dart/card_expiration_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/card_expiration_cubit.dart/card_expiration_state.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/spreedly_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/token_ex_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
@@ -101,7 +102,9 @@ class AddCreditCardScreen extends StatelessWidget {
 }
 
 class AddCreditCardPage extends StatelessWidget {
-  final ValueNotifier<bool> validateNotifier = ValueNotifier(false);
+  final ValueNotifier<bool> tokenExValidateNotifier = ValueNotifier(false);
+  final ValueNotifier<SpreedlyField?> spreedlyValidateNotifier =
+      ValueNotifier(null);
 
   final AddCreditCardEntity addCreditCardEntity;
 
@@ -214,12 +217,17 @@ class AddCreditCardPage extends StatelessWidget {
 
   List<Widget> _buildItems(
       AddCreditCardLoadedState state, BuildContext context) {
-    List<Widget> list = [];
+    var list = <Widget>[];
     list.add(_buildNameField(context));
 
     if (addCreditCardEntity.isAddNewCreditCard) {
-      list.add(
-          _buildTokenExWebViewForAddCreditCard(state.tokenExEntity!, context));
+      if (state.websiteSettings?.useSpreedlyDropIn == true) {
+        list.add(_buildSpreedlyWebViewForAddCreditCard(
+            state.spreedlyEnvironmentKey ?? '', context));
+      } else {
+        list.add(_buildTokenExWebViewForAddCreditCard(
+            state.tokenExEntity!, context));
+      }
     } else {
       list.add(const SizedBox(height: 20));
       list.add(_buildMaskedCardNumberWidget(context));
@@ -343,7 +351,7 @@ class AddCreditCardPage extends StatelessWidget {
       var selectState = context.read<BillingAddressCubit>().selectedState;
       var expirationDate =
           "${expirationMonth?.value.toString().padLeft(2, '0')}/${expirationYear!.key % 100}";
-      validatePaymentToken(true);
+      validatePaymentToken(true, name, expirationMonth?.value, expirationYear.value);
 
       if (context.read<BillingAddressCubit>().billingAddressAddNewToggle) {
         var billTo = context.read<BillingAddressCubit>().billTo;
@@ -355,6 +363,7 @@ class AddCreditCardPage extends StatelessWidget {
       }
 
       if (addCreditCardEntity.isAddNewCreditCard) {
+        var number = context.read<AddCreditCardBloc>().cardInfo?.cardIdentifier;
         AccountPaymentProfile? paymentProfile = AccountPaymentProfile(
           cardHolderName: name,
           address1: address,
@@ -365,11 +374,13 @@ class AddCreditCardPage extends StatelessWidget {
           state: selectState?.abbreviation,
           securityCode:
               context.read<AddCreditCardBloc>().cardInfo?.securityCode,
-          cardIdentifier:
-              context.read<AddCreditCardBloc>().cardInfo?.cardIdentifier,
+          cardIdentifier: number,
           cardType: context.read<AddCreditCardBloc>().cardInfo?.cardType,
+          maskedCardNumber:
+              context.read<AddCreditCardBloc>().cardInfo?.maskedCardNumber,
           isDefault: context.read<AddCreditCardBloc>().useAsDefaultCard,
         );
+        debugPrint('Card Number: $number');
 
         context.read<AddCreditCardBloc>().add(
             SavePaymentProfileEvent(accountPaymentProfile: paymentProfile));
@@ -387,6 +398,8 @@ class AddCreditCardPage extends StatelessWidget {
             cardIdentifier:
                 addCreditCardEntity.accountPaymentProfile?.cardIdentifier,
             cardType: addCreditCardEntity.accountPaymentProfile?.cardType,
+            maskedCardNumber:
+                context.read<AddCreditCardBloc>().cardInfo?.maskedCardNumber,
             isDefault: context.read<AddCreditCardBloc>().useAsDefaultCard,
             id: addCreditCardEntity.accountPaymentProfile?.id);
 
@@ -418,13 +431,42 @@ class AddCreditCardPage extends StatelessWidget {
               CustomSnackBar.showInvalidCVV(context);
               return;
             }
+            debugPrint('TokenEx Card Number: $cardNumber');
+
             context.read<AddCreditCardBloc>().updateCreditCardInfo(
                 CreditCardInfoEntity(
                     cardIdentifier: cardNumber,
                     cardType: cardType,
                     securityCode: securityCode));
           },
-          tokenExValidateNotifier: validateNotifier,
+          tokenExValidateNotifier: tokenExValidateNotifier,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSpreedlyWebViewForAddCreditCard(
+      String environmentKey, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12.0, 0, 12.0, 0),
+      child: SizedBox(
+        height: 120,
+        child: SpreedlyWidget(
+          environmentKey: environmentKey,
+          handleSpreedlyFinishedData: (cardNumber, cardType, cardIdentifier) {
+            context.read<AddCreditCardBloc>().updateCreditCardInfo(
+                CreditCardInfoEntity(
+                    cardIdentifier: cardIdentifier,
+                    cardType: cardType,
+                    maskedCardNumber: cardNumber));
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text(
+                      'Token: $cardIdentifier, Card Number: $cardNumber, Card Type: $cardType')),
+            );
+          },
+          spreedlyFieldUpdateNotifier: spreedlyValidateNotifier,
         ),
       ),
     );
@@ -912,8 +954,9 @@ class AddCreditCardPage extends StatelessWidget {
     });
   }
 
-  void validatePaymentToken(bool value) {
-    validateNotifier.value = value;
+  void validatePaymentToken(bool value, String fullName, int? expirationMonth, int? expirationYear) {
+    tokenExValidateNotifier.value = value;
+    spreedlyValidateNotifier.value = SpreedlyField(fullName, expirationMonth.toString(), expirationYear.toString());
   }
 
   void _onYearSelect(BuildContext context, Object item) {
