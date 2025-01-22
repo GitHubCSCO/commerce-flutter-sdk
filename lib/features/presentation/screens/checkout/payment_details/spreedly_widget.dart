@@ -136,6 +136,9 @@ class _SpreedlyWidgetState extends State<SpreedlyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return WebViewWidget(controller: _webViewController);
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: WebViewWidget(controller: _webViewController),
+    );
   }
 }

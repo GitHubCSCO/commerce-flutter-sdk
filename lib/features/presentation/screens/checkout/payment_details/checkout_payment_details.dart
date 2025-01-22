@@ -126,13 +126,11 @@ class CheckoutPaymentDetails extends StatelessWidget {
 
   Widget _buildPaymentIFrame(PaymentDetailsLoaded state, BuildContext context) {
     if (state.useSpreedlyDropIn == true) {
-      // build spreedly widget here
-    } else {
-      if (state.tokenExEntity != null) {
-        return _buildTokenExWebView(state, context);
-      }
+      return const Center();
     }
-    return const Center();
+    return state.tokenExEntity != null
+        ? _buildTokenExWebView(state, context)
+        : const Center();
   }
 
   int getIndexForSelectedPaymentMethod(List<PaymentMethodDto>? paymentMethods,
