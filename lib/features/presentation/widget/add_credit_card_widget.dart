@@ -337,56 +337,66 @@ class AddCreditCardPage extends StatelessWidget {
     );
   }
 
-  void getInputData(BuildContext context) {
-    if (_formKey.currentState?.validate() ?? false) {
-      var name = nameController.text;
-      var address = addressController.text;
-      var city = cityController.text;
-      var postalCode = postalCodeController.text;
-      var expirationMonth =
-          context.read<CardExpirationCubit>().selectedExpirationMonth;
-      var expirationYear =
-          context.read<CardExpirationCubit>().selectedExpirationYear;
-      var selectCountry = context.read<BillingAddressCubit>().selectedCountry;
-      var selectState = context.read<BillingAddressCubit>().selectedState;
-      var expirationDate =
-          "${expirationMonth?.value.toString().padLeft(2, '0')}/${expirationYear!.key % 100}";
+  void submitCardInfo(BuildContext context) {
+    final billingAddressCubit = context.read<BillingAddressCubit>();
+    final cardExpirationCubit = context.read<CardExpirationCubit>();
+
+    if (!(_formKey.currentState?.validate() ?? false)) {
+      cardExpirationCubit.validateExpirationDate();
+      billingAddressCubit.validateBillingAddress();
+      return;
+    }
+
+    final addCreditCardBloc = context.read<AddCreditCardBloc>();
+    final cardInfo = addCreditCardBloc.cardInfo;
+
+    final isBillingAddressAddNew =
+        billingAddressCubit.billingAddressAddNewToggle;
+    final billTo = billingAddressCubit.billTo;
+
+    final name = nameController.text;
+    final address = isBillingAddressAddNew
+        ? (billTo?.fullAddress ?? "")
+        : addressController.text;
+    final city =
+        isBillingAddressAddNew ? (billTo?.city ?? "") : cityController.text;
+    final postalCode = isBillingAddressAddNew
+        ? (billTo?.postalCode ?? "")
+        : postalCodeController.text;
+    final selectCountry = isBillingAddressAddNew
+        ? billTo?.country
+        : billingAddressCubit.selectedCountry;
+    final selectState = isBillingAddressAddNew
+        ? billTo?.state
+        : billingAddressCubit.selectedState;
+
+    final expirationMonth = cardExpirationCubit.selectedExpirationMonth;
+    final expirationYear = cardExpirationCubit.selectedExpirationYear;
+    final expirationDate =
+        "${expirationMonth?.value.toString().padLeft(2, '0')}/${expirationYear!.key % 100}";
+
+    if ((cardInfo?.cardIdentifier ?? '').isEmpty) {
       validatePaymentToken(
           true, name, expirationMonth?.value, expirationYear.value);
+      return;
+    }
 
-      if (context.read<BillingAddressCubit>().billingAddressAddNewToggle) {
-        var billTo = context.read<BillingAddressCubit>().billTo;
-        address = billTo?.fullAddress ?? "";
-        city = billTo?.city ?? "";
-        postalCode = billTo?.postalCode ?? "";
-        selectCountry = billTo?.country;
-        selectState = billTo?.state;
-      }
-
-      if (addCreditCardEntity.isAddNewCreditCard) {
-        var number = context.read<AddCreditCardBloc>().cardInfo?.cardIdentifier;
-        AccountPaymentProfile? paymentProfile = AccountPaymentProfile(
-          cardHolderName: name,
-          address1: address,
-          city: city,
-          postalCode: postalCode,
-          expirationDate: expirationDate,
-          country: selectCountry?.abbreviation,
-          state: selectState?.abbreviation,
-          securityCode:
-              context.read<AddCreditCardBloc>().cardInfo?.securityCode,
-          cardIdentifier: number,
-          cardType: context.read<AddCreditCardBloc>().cardInfo?.cardType,
-          maskedCardNumber:
-              context.read<AddCreditCardBloc>().cardInfo?.maskedCardNumber,
-          isDefault: context.read<AddCreditCardBloc>().useAsDefaultCard,
-        );
-        debugPrint('Card Number: $number');
-
-        context.read<AddCreditCardBloc>().add(
-            SavePaymentProfileEvent(accountPaymentProfile: paymentProfile));
-      } else {
-        AccountPaymentProfile? paymentProfile = AccountPaymentProfile(
+    final paymentProfile = addCreditCardEntity.isAddNewCreditCard
+        ? AccountPaymentProfile(
+            cardHolderName: name,
+            address1: address,
+            city: city,
+            postalCode: postalCode,
+            expirationDate: expirationDate,
+            country: selectCountry?.abbreviation,
+            state: selectState?.abbreviation,
+            securityCode: cardInfo?.securityCode,
+            cardIdentifier: cardInfo?.cardIdentifier,
+            cardType: cardInfo?.cardType,
+            maskedCardNumber: cardInfo?.maskedCardNumber,
+            isDefault: addCreditCardBloc.useAsDefaultCard,
+          )
+        : AccountPaymentProfile(
             cardHolderName: name,
             address1: address,
             city: city,
@@ -399,18 +409,12 @@ class AddCreditCardPage extends StatelessWidget {
             cardIdentifier:
                 addCreditCardEntity.accountPaymentProfile?.cardIdentifier,
             cardType: addCreditCardEntity.accountPaymentProfile?.cardType,
-            maskedCardNumber:
-                context.read<AddCreditCardBloc>().cardInfo?.maskedCardNumber,
-            isDefault: context.read<AddCreditCardBloc>().useAsDefaultCard,
+            maskedCardNumber: cardInfo?.maskedCardNumber,
+            isDefault: addCreditCardBloc.useAsDefaultCard,
             id: addCreditCardEntity.accountPaymentProfile?.id);
 
-        context.read<AddCreditCardBloc>().add(
-            SavePaymentProfileEvent(accountPaymentProfile: paymentProfile));
-      }
-    } else {
-      context.read<CardExpirationCubit>().validateExpirationDate();
-      context.read<BillingAddressCubit>().validateBillingAddress();
-    }
+    addCreditCardBloc
+        .add(SavePaymentProfileEvent(accountPaymentProfile: paymentProfile));
   }
 
   Widget _buildTokenExWebViewForAddCreditCard(
@@ -439,6 +443,8 @@ class AddCreditCardPage extends StatelessWidget {
                     cardIdentifier: cardNumber,
                     cardType: cardType,
                     securityCode: securityCode));
+
+            submitCardInfo(context);
           },
           tokenExValidateNotifier: tokenExValidateNotifier,
         ),
@@ -461,11 +467,7 @@ class AddCreditCardPage extends StatelessWidget {
                     cardType: cardType,
                     maskedCardNumber: cardNumber));
 
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text(
-                      'Token: $cardIdentifier, Card Number: $cardNumber, Card Type: $cardType')),
-            );
+            submitCardInfo(context);
           },
           spreedlyFieldUpdateNotifier: spreedlyValidateNotifier,
         ),
@@ -512,7 +514,7 @@ class AddCreditCardPage extends StatelessWidget {
       PrimaryButton(
         text: LocalizationConstants.save.localized(),
         onPressed: () {
-          getInputData(context);
+          submitCardInfo(context);
         },
       ),
     ]);
@@ -557,7 +559,7 @@ class AddCreditCardPage extends StatelessWidget {
       PrimaryButton(
         text: LocalizationConstants.save.localized(),
         onPressed: () {
-          getInputData(context);
+          submitCardInfo(context);
         },
       ),
     ]);

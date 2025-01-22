@@ -121,7 +121,7 @@ class _SpreedlyWidgetState extends State<SpreedlyWidget> {
       case 'paymentMethod':
         final token = data['token'];
         final paymentMethod = data['paymentMethod'];
-        final String cardNumber = paymentMethod['last_four_digits'];
+        final String cardNumber = paymentMethod['number'];
         final String cardType = paymentMethod['card_type'];
         final String cardIdentifier = token;
 
