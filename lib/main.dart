@@ -16,6 +16,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.d
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/location_search_handler/location_search_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_handler/order_approval_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
@@ -69,6 +70,8 @@ Future<void> main() async {
         BlocProvider<SearchHistoryCubit>(
           create: (context) => sl<SearchHistoryCubit>()..getSearchHistory(),
         ),
+        BlocProvider<LocationSearchHandlerCubit>(
+            create: (context) => sl<LocationSearchHandlerCubit>()),
       ],
       child: const MyApp(),
     ),

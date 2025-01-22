@@ -1,15 +1,16 @@
+import 'dart:convert';
+
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/core/models/screen_parameters.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_image_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/callback/credit_card_add_callback_helper.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/callback/shipping_address_add_callback_helper.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_note_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/vmi_location_select_callback_helper.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
@@ -87,6 +88,7 @@ final GlobalKey<NavigatorState> _rootNavigator = GlobalKey(debugLabel: 'root');
 
 GoRouter getRouter({required OptiLoggerService loggerService}) {
   return GoRouter(
+    extraCodec: const RoutingCodec(),
     navigatorKey: _rootNavigator,
     initialLocation: AppRoute.root.fullPath,
     debugLogDiagnostics: loggerService.isDebugLogEnabled,
@@ -107,8 +109,8 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.landing.name,
     path: AppRoute.landing.suffix,
     builder: (context, state) {
-      final domainChangePossible = state.extra as bool;
-      return LandingScreen(domainChangePossible: domainChangePossible);
+      final domainChangePossible = state.extra as bool?;
+      return LandingScreen(domainChangePossible: domainChangePossible == true);
     },
     parent: null,
   );
@@ -214,16 +216,10 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.addCreditCard.name,
     path: AppRoute.addCreditCard.suffix,
     builder: (context, state) {
-      final callbackHelper = state.extra as CreditCardAddCallbackHelper;
-
-      final onCreaditCardAdded = callbackHelper.onAddedCeditCard;
-      final addCreditCardEntity = callbackHelper.addCreditCardEntity;
-      final onCreditCardDeleted = callbackHelper.onDeletedCreditCard;
+      final addCreditCardEntity = state.extra as AddCreditCardEntity;
 
       return AddCreditCardScreen(
-        onCreditCardAdded: onCreaditCardAdded,
         addCreditCardEntity: addCreditCardEntity,
-        onCreditCardDeleted: onCreditCardDeleted,
       );
     },
     parent: null,
@@ -234,12 +230,7 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.addShippingAddress.name,
     path: AppRoute.addShippingAddress.suffix,
     builder: (context, state) {
-      final callbackHelper = state.extra as ShippingAddressAddCallbackHelper;
-
-      final onShippingAddressAdded = callbackHelper.onShippingAddressAdded;
-
-      return AddShippingAddressScreen(
-          onShippingAddressAdded: onShippingAddressAdded);
+      return const AddShippingAddressScreen();
     },
     parent: null,
   );
@@ -272,7 +263,7 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.productDetails.suffix,
     builder: (context, state) => ProductDetailsScreen(
         productId: state.pathParameters['productId'] ?? '',
-        product: state.extra as ProductEntity),
+        product: state.extra as ProductEntity?),
     parent: shop,
   );
 
@@ -281,7 +272,7 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.topLevelProductDetails.fullPath,
     builder: (context, state) => ProductDetailsScreen(
         productId: state.pathParameters['productId'] ?? '',
-        product: state.extra as ProductEntity),
+        product: state.extra as ProductEntity?),
     parent: null,
   );
 
@@ -374,13 +365,7 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.vmilocaitonote.name,
     path: AppRoute.vmilocaitonote.suffix,
     builder: (context, state) {
-      final callbackHelper = state.extra as VMILocationNoteCallbackHelper;
-
-      final onVMILocationNoteUpdated = callbackHelper.onUpdateVMILocationNote;
-
-      return VmiLocationNoteScreen(
-        onVMILocationNoteUpdated: onVMILocationNoteUpdated,
-      );
+      return const VmiLocationNoteScreen();
     },
     navigatorKey: _rootNavigator,
     parent: null,
@@ -409,16 +394,10 @@ List<NavigationNode> _getNavigationRoot() {
     builder: (context, state) {
       final callbackHelper = state.extra as VMILocationSelectCallbackHelper;
 
-      final onVMILocationUpdated = callbackHelper.onSelectVMILocation;
-      final onWarehouseLocationSelected =
-          callbackHelper.onWarehouseLocationSelected;
-      final WarehouseEntity? selectedPickupWarehouse =
-          callbackHelper.selectedPickupWarehouse;
+      final selectedPickupWarehouse = callbackHelper.selectedPickupWarehouse;
 
       return LocationSearchScreen(
-        onVMILocationUpdated: onVMILocationUpdated,
         locationSearchType: callbackHelper.locationSearchType,
-        onWarehouseLocationSelected: onWarehouseLocationSelected,
         selectedPickupWarehouse: selectedPickupWarehouse,
       );
     },
@@ -430,12 +409,9 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.wishlistsDetails.suffix,
     builder: (context, state) {
       final wishListId = state.pathParameters['id'] ?? '';
-      final callbackHelper = state.extra as WishListScreenCallbackHelper;
 
       return WishListDetailsScreen(
         wishListId: wishListId,
-        onWishListUpdated: callbackHelper.onWishListUpdated,
-        onWishListDeleted: callbackHelper.onWishListDeleted,
       );
     },
     parent: wishlists,
@@ -445,14 +421,10 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.wishListInfo.name,
     path: AppRoute.wishListInfo.suffix,
     builder: (context, state) {
-      final callbackHelper = state.extra as WishListInfoScreenCallbackHelper;
-
-      final wishList = callbackHelper.wishList;
-      final onWishListUpdated = callbackHelper.onWishListUpdated;
+      final wishList = state.extra as WishListEntity?;
 
       return WishListInformationScreen(
-        wishList: wishList,
-        onWishListUpdated: onWishListUpdated,
+        wishList: wishList!,
       );
     },
     parent: null,
@@ -465,7 +437,6 @@ List<NavigationNode> _getNavigationRoot() {
       final callbackHelper = state.extra as WishListCreateScreenCallbackHelper;
 
       return WishListCreateScreen(
-        onWishListCreated: callbackHelper.onWishListCreated,
         addToCartCollection: callbackHelper.addToCartCollection,
       );
     },
@@ -479,7 +450,6 @@ List<NavigationNode> _getNavigationRoot() {
       final callbackHelper = state.extra as WishListAddToListCallbackHelper;
 
       return AddToWishListScreen(
-        onWishListUpdated: callbackHelper.onWishListUpdated,
         addToCartCollection: callbackHelper.addToCartCollection,
       );
     },
@@ -502,7 +472,7 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.orderDetails.suffix,
     builder: (context, state) {
       final orderNumber = state.pathParameters['orderNumber'] ?? '';
-      final isFromVMI = state.extra as bool;
+      final isFromVMI = state.extra as bool?;
       return OrderDetailsScreen(orderNumber: orderNumber, isFromVMI: isFromVMI);
     },
     parent: orderHistory,
@@ -514,7 +484,7 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.vmiOrderDetails.suffix,
     builder: (context, state) {
       final orderNumber = state.pathParameters['orderNumber'] ?? '';
-      final isFromVMI = state.extra as bool;
+      final isFromVMI = state.extra as bool?;
       return OrderDetailsScreen(orderNumber: orderNumber, isFromVMI: isFromVMI);
     },
     parent: vmi,
@@ -583,15 +553,11 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.brandCategory.name,
     path: AppRoute.brandCategory.suffix,
     builder: (context, state) {
-      //! TODO caution
-      //! TODO we are passing multiple objects through extra using record
-      //! TODO either we need to organize this record in a better way or use any other data structure
-      final brandCategory =
-          state.extra as (Brand, BrandCategory?, GetBrandSubCategoriesResult?);
+      final brandCategory = state.extra as BrandCategoryScreenParameters;
       return BrandCategoryScreen(
-          brand: brandCategory.$1,
-          brandCategory: brandCategory.$2,
-          brandSubCategories: brandCategory.$3);
+          brand: brandCategory.brand,
+          brandCategory: brandCategory.brandCategory,
+          brandSubCategories: brandCategory.brandSubCategoriesResult);
     },
     parent: shopBrandDetails,
   );
@@ -743,9 +709,7 @@ List<NavigationNode> _getNavigationRoot() {
     path: AppRoute.orderApprovalDetails.suffix,
     builder: (context, state) {
       final cartId = state.pathParameters['cartId'] ?? '';
-      final refreshOrderApprovals = state.extra as void Function();
-      return OrderApprovalDetailsScreen(
-          cartId: cartId, refreshOrderApprovals: refreshOrderApprovals);
+      return OrderApprovalDetailsScreen(cartId: cartId);
     },
     parent: orderApproval,
   );
@@ -851,4 +815,41 @@ List<NavigationNode> _getNavigationRoot() {
     inAppBrowser,
     fullScreenImageCarousel
   ];
+}
+
+class RoutingCodec extends Codec<Object?, Object?> {
+  const RoutingCodec();
+
+  @override
+  Converter<Object?, Object?> get decoder => const _RoutingDecoder();
+
+  @override
+  Converter<Object?, Object?> get encoder => const _RoutingEncoder();
+}
+
+class _RoutingDecoder extends Converter<Object?, Object?> {
+  const _RoutingDecoder();
+
+  @override
+  Object? convert(Object? input) {
+    if (input == null) {
+      return null;
+    }
+
+    final inputAsList = input as List<Object?>;
+    return inputAsList[1];
+  }
+}
+
+class _RoutingEncoder extends Converter<Object?, Object?> {
+  const _RoutingEncoder();
+
+  @override
+  Object? convert(Object? input) {
+    if (input == null) {
+      return null;
+    }
+
+    return [input.runtimeType.toString(), input];
+  }
 }

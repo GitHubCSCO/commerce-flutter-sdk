@@ -12,14 +12,12 @@ import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wis
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class AddShippingAddressScreen extends StatelessWidget {
-  final void Function(ShipTo) onShippingAddressAdded;
-
   const AddShippingAddressScreen({
     super.key,
-    required this.onShippingAddressAdded,
   });
 
   @override
@@ -30,20 +28,15 @@ class AddShippingAddressScreen extends StatelessWidget {
           title: Text(LocalizationConstants.shippingAddress.localized()),
           centerTitle: false,
         ),
-        body: MultiBlocProvider(
-            providers: [
-              BlocProvider<AddShippingAddressCubit>(
-                  create: (context) => sl<AddShippingAddressCubit>()
-                    ..setUpDataShippingAddress()),
-            ],
-            child: AddShippingAddressPage(
-                onShippingAddressAdded: onShippingAddressAdded)));
+        body: MultiBlocProvider(providers: [
+          BlocProvider<AddShippingAddressCubit>(
+              create: (context) =>
+                  sl<AddShippingAddressCubit>()..setUpDataShippingAddress()),
+        ], child: AddShippingAddressPage()));
   }
 }
 
 class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
-  final void Function(ShipTo) onShippingAddressAdded;
-
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController firstNameController = TextEditingController();
@@ -58,7 +51,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phonenumberController = TextEditingController();
 
-  AddShippingAddressPage({super.key, required this.onShippingAddressAdded});
+  AddShippingAddressPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -303,8 +296,7 @@ class AddShippingAddressPage extends StatelessWidget with ValidatorMixin {
 
             shipto.validation = customerValidation;
 
-            onShippingAddressAdded(shipto);
-            Navigator.pop(context);
+            context.pop(shipto);
 
             // Handle the data (e.g., send it to the backend or another cubit)
           }

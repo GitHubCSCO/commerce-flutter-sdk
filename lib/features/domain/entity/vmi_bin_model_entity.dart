@@ -1,5 +1,7 @@
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/vmi_bin_model_entity_mapper.dart';
 import 'package:equatable/equatable.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class VmiBinModelEntity extends Equatable {
   final String id;
@@ -36,4 +38,10 @@ class VmiBinModelEntity extends Equatable {
 
   @override
   List<Object?> get props => [id];
+
+  factory VmiBinModelEntity.fromJson(Map<String, dynamic> json) =>
+      VmiBinModelEntityMapper.toEntity(VmiBinModel.fromJson(json));
+
+  Map<String, dynamic> toJson() =>
+      VmiBinModelEntityMapper.toModel(this).toJson();
 }

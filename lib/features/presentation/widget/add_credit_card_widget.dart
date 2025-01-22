@@ -23,6 +23,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wis
 import 'package:commerce_flutter_app/features/presentation/widget/list_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class AddCreditCardEntity {
@@ -32,17 +33,38 @@ class AddCreditCardEntity {
     required this.isAddNewCreditCard,
     this.accountPaymentProfile,
   });
+
+  factory AddCreditCardEntity.fromJson(Map<String, dynamic> json) {
+    return AddCreditCardEntity(
+        isAddNewCreditCard: json['isAddNewCreditCard'],
+        accountPaymentProfile: json['accountPaymentProfile'] != null
+            ? AccountPaymentProfile.fromJson(json['accountPaymentProfile'])
+            : null);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'isAddNewCreditCard': isAddNewCreditCard,
+      'accountPaymentProfile': accountPaymentProfile?.toJson()
+    };
+  }
+}
+
+class AddCreditCardScreenResponse {
+  final AccountPaymentProfile? accountPaymentProfile;
+  final bool isAddNewCreditCard;
+  final bool isCreditCardDeleted;
+
+  AddCreditCardScreenResponse({
+    required this.isAddNewCreditCard,
+    this.accountPaymentProfile,
+    required this.isCreditCardDeleted,
+  });
 }
 
 class AddCreditCardScreen extends StatelessWidget {
   final AddCreditCardEntity addCreditCardEntity;
-  final void Function(AccountPaymentProfile) onCreditCardAdded;
-  final void Function()? onCreditCardDeleted;
-  const AddCreditCardScreen(
-      {super.key,
-      this.onCreditCardDeleted,
-      required this.onCreditCardAdded,
-      required this.addCreditCardEntity});
+  const AddCreditCardScreen({super.key, required this.addCreditCardEntity});
 
   String getTitle() {
     if (addCreditCardEntity.isAddNewCreditCard) {
@@ -74,8 +96,6 @@ class AddCreditCardScreen extends StatelessWidget {
                   create: (context) => sl<CardExpirationCubit>()),
             ],
             child: AddCreditCardPage(
-              onCreditCardAdded: onCreditCardAdded,
-              onCreditCardDeleted: onCreditCardDeleted,
               addCreditCardEntity: addCreditCardEntity,
             )));
   }
@@ -84,8 +104,6 @@ class AddCreditCardScreen extends StatelessWidget {
 class AddCreditCardPage extends StatelessWidget {
   final AddCreditCardEntity addCreditCardEntity;
 
-  final void Function(AccountPaymentProfile) onCreditCardAdded;
-  final void Function()? onCreditCardDeleted;
   final TextEditingController addressController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
@@ -94,8 +112,6 @@ class AddCreditCardPage extends StatelessWidget {
 
   AddCreditCardPage({
     super.key,
-    this.onCreditCardDeleted,
-    required this.onCreditCardAdded,
     required this.addCreditCardEntity,
   });
 
@@ -120,8 +136,12 @@ class AddCreditCardPage extends StatelessWidget {
                 listener: (_, state) {
               if (state is CreditCardDeletedSuccessState) {
                 CustomSnackBar.showCreditCardDeletedsuccess(context);
-                onCreditCardDeleted!();
-                Navigator.pop(context);
+                context.pop(
+                  AddCreditCardScreenResponse(
+                    isAddNewCreditCard: false,
+                    isCreditCardDeleted: true,
+                  ),
+                );
               }
               if (state is CreditCardDeletedFailureState) {
                 CustomSnackBar.showCreditCardDeletedFailed(context);
@@ -130,8 +150,13 @@ class AddCreditCardPage extends StatelessWidget {
                 context.read<TokenExBloc>().resetTokenExData();
               }
               if (state is SavedPaymentAddedSuccessState) {
-                onCreditCardAdded(state.accountPaymentProfile);
-                Navigator.pop(context);
+                context.pop(
+                  AddCreditCardScreenResponse(
+                    isAddNewCreditCard: true,
+                    isCreditCardDeleted: false,
+                    accountPaymentProfile: state.accountPaymentProfile,
+                  ),
+                );
               }
               if (state is SavedPaymentAddedFailureState) {
                 CustomSnackBar.showCreditCardSavedFailure(context);
