@@ -2,9 +2,7 @@ import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/carousel_slider/carousel_slider.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_carousel_item_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/full_screen_iamge_carousel_widget.dart';
 import 'package:flutter/material.dart' hide CarouselController;
-import 'package:go_router/go_router.dart';
 
 class ProductDetailsCarouselWidget extends StatefulWidget {
   final ProductDetailsGeneralInfoEntity generalInfoEntity;
@@ -34,15 +32,20 @@ class _ProductDetailsCarouselWidgetState
           carouselController: _carouselController,
           itemCount: thumbnails.length,
           itemBuilder: (context, index, realIndex) {
-            final productImageEntity = thumbnails?[index];
             return GestureDetector(
-                onTap: () {
-                  AppRoute.fullScreenImageCarousel.navigateBackStack(context,
-                      pathParameters: {"initialIndex": index.toString()},
-                      extra: thumbnails);
-                },
+                onTap: () {},
                 child: ProductDetailsCarouselItemWidget(
+                  onOpen360Fullscreen: () {
+                    AppRoute.fullScreenImageCarousel.navigateBackStack(context,
+                        pathParameters: {"initialIndex": index.toString()},
+                        extra: thumbnails);
+                  },
                   productImageEntity: thumbnails[index],
+                  onNormalImageTap: () {
+                    AppRoute.fullScreenImageCarousel.navigateBackStack(context,
+                        pathParameters: {"initialIndex": index.toString()},
+                        extra: thumbnails);
+                  },
                 ));
           },
           options: CarouselOptions(
@@ -70,7 +73,8 @@ class _ProductDetailsCarouselWidgetState
               mainAxisAlignment: MainAxisAlignment.center,
               children: thumbnails.asMap().entries.map((entry) {
                 return GestureDetector(
-                  onTap: () => _carouselController.animateToPage(entry.key),
+                  onTap: () async =>
+                      _carouselController.animateToPage(entry.key),
                   child: Container(
                     width: 8.0,
                     height: 8.0,

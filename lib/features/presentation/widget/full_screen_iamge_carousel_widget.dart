@@ -1,11 +1,18 @@
 import 'dart:convert';
+
+import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_image_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:commerce_flutter_app/features/presentation/helper/carousel_slider/carousel_slider.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_carousel_item_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/full_screen_iamge_carousel_widget.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide CarouselController;
+import 'package:go_router/go_router.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-/// A fullscreen page showing a carousel of images (including 360 ones).
 class FullScreenImageCarouselPage extends StatefulWidget {
   final List<ProductImageEntity> images;
   final int initialIndex;
@@ -37,18 +44,19 @@ class _FullScreenImageCarouselPageState
     final images = widget.images;
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white, // Ensure white background
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.white),
+          icon: const Icon(Icons.close,
+              color: Colors.black), // Updated icon color
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: Stack(
         children: [
-          // Carousel of full-screen images
+          // Full-screen Carousel
           CarouselSlider.builder(
             carouselController: _carouselController,
             itemCount: images.length,
@@ -87,8 +95,8 @@ class _FullScreenImageCarouselPageState
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: _currentIndex == index
-                        ? Colors.white
-                        : Colors.white.withOpacity(0.4),
+                        ? Colors.black
+                        : Colors.black.withOpacity(0.4),
                   ),
                 );
               }).toList(),
@@ -103,19 +111,22 @@ class _FullScreenImageCarouselPageState
     final is360 =
         (productImageEntity.imageType ?? '').trim().toLowerCase() == '360';
     if (is360) {
-      // Build a WebView for 360
-      return _build360Image(productImageEntity);
+      // Build 360° Image WebView with restricted gesture area
+      return Container(
+        color: Colors.white, // Match the container background to the Scaffold
+        child: Center(child: _build360Image(productImageEntity)),
+      );
     } else {
       // Build a normal Image
       return Center(
         child: Image.network(
-          productImageEntity.mediumImagePath.makeImageUrl() ?? '',
+          productImageEntity.mediumImagePath?.makeImageUrl() ?? '',
           fit: BoxFit.fitWidth,
           errorBuilder: (context, error, stackTrace) {
             return Container(
-              color: Colors.black,
+              color: Colors.white, // Match the background color
               alignment: Alignment.center,
-              child: const Icon(Icons.broken_image, color: Colors.white),
+              child: const Icon(Icons.broken_image, color: Colors.grey),
             );
           },
         ),
@@ -139,9 +150,16 @@ class _FullScreenImageCarouselPageState
         ),
       );
 
-    return Center(
-      child: SizedBox.expand(
-        child: WebViewWidget(controller: controller),
+    return FractionallySizedBox(
+      widthFactor: 0.8, // Restrict the WebView size to allow carousel swipe
+      child: WebViewWidget(
+        controller: controller,
+        gestureRecognizers: {
+          Factory<OneSequenceGestureRecognizer>(
+            () =>
+                EagerGestureRecognizer(), // WebView captures gestures inside its bounds
+          ),
+        },
       ),
     );
   }
@@ -155,7 +173,7 @@ class _FullScreenImageCarouselPageState
   <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
   <script src="https://scripts.sirv.com/sirv.js"></script>
 </head>
-<body style="margin:0; padding:0; background-color:#000;">
+<body style="margin:0; padding:0; background-color:#fff;"> <!-- Match background -->
   <div class="Sirv"
        style="width:100%; height:100%;"
        data-src="$imagePath?fullscreen=false&spinOnAnyDrag=true"
