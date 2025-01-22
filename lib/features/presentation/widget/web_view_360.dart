@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 
 class WebView360Widget extends StatefulWidget {
   final String htmlString;
@@ -21,15 +23,10 @@ class _WebView360WidgetState extends State<WebView360Widget> {
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
-          onPageStarted: (String url) {
-            debugPrint('Loading 360 HTML: $url');
-          },
-          onPageFinished: (String url) {
-            debugPrint('Finished loading: $url');
-          },
-          onWebResourceError: (WebResourceError error) {
-            debugPrint('Error: $error');
-          },
+          onPageStarted: (String url) => debugPrint('Loading 360 HTML: $url'),
+          onPageFinished: (String url) => debugPrint('Finished loading: $url'),
+          onWebResourceError: (WebResourceError error) =>
+              debugPrint('Error: $error'),
         ),
       )
       ..loadRequest(
@@ -43,6 +40,13 @@ class _WebView360WidgetState extends State<WebView360Widget> {
 
   @override
   Widget build(BuildContext context) {
-    return WebViewWidget(controller: _webViewController);
+    return WebViewWidget(
+      controller: _webViewController,
+      gestureRecognizers: {
+        Factory<OneSequenceGestureRecognizer>(
+          () => EagerGestureRecognizer(),
+        ),
+      },
+    );
   }
 }

@@ -53,4 +53,6 @@ class AssetConstants {
   static const String iconEyeOff = "assets/images/icon_eye_off.svg";
 
   static const String jsonPath = "assets/config/";
+
+  static const String exapandIcon = "assets/images/expand.svg";
 }
