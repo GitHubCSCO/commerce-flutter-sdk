@@ -579,8 +579,8 @@ class _QuickOrderPageState extends State<QuickOrderPage> {
   void _popSearchBar() {
     textEditingController.clear();
     context.closeKeyboard();
-    context.read<QuickOrderAutoCompleteBloc>().add(QuickOrderEndSearchEvent());
     context.read<QuickOrderAutoCompleteBloc>().add(QuickOrderTypingEvent(''));
+    context.read<QuickOrderAutoCompleteBloc>().add(QuickOrderEndSearchEvent());
   }
 
   Widget _buildAutoCompleteContainer(QuickOrderAutoCompleteState state) {
