@@ -111,13 +111,9 @@ class PaymentDetailsBloc
           final cardDetails = _getCardDetails(creditCard);
 
           if (!_isCVVBypassedForSavedCards(creditCard)) {
-            final tokenExResponse =
-                await _fetchTokenExConfiguration(creditCard.cardIdentifier!);
-
-            if (tokenExResponse is Success) {
-              final tokenExDto = tokenExResponse.value;
-              tokenExConfiguration = tokenExDto;
-
+            if (tokenExConfiguration != null &&
+                tokenExConfiguration!.token
+                    .equalsIgnoreCase(creditCard.cardIdentifier)) {
               emit(_buildPaymentDetailsLoadedState(
                 isNewCreditCard: false,
                 cardDetails: cardDetails,
@@ -126,6 +122,23 @@ class PaymentDetailsBloc
                 isCVVFieldOpened: true,
               ));
               return;
+            } else {
+              final tokenExResponse =
+                  await _fetchTokenExConfiguration(creditCard.cardIdentifier!);
+
+              if (tokenExResponse is Success) {
+                final tokenExDto = tokenExResponse.value;
+                tokenExConfiguration = tokenExDto;
+
+                emit(_buildPaymentDetailsLoadedState(
+                  isNewCreditCard: false,
+                  cardDetails: cardDetails,
+                  showPOField: showPOField,
+                  tokenExEntity: _createTokenExEntity(creditCard),
+                  isCVVFieldOpened: true,
+                ));
+                return;
+              }
             }
           }
 
@@ -177,10 +190,7 @@ class PaymentDetailsBloc
   }
 
   bool _isCVVBypassedForSavedCards(AccountPaymentProfile creditCard) {
-    return settings?.bypassCvvForSavedCards == true ||
-        (tokenExConfiguration != null &&
-            tokenExConfiguration!.token
-                .equalsIgnoreCase(creditCard.cardIdentifier));
+    return settings?.bypassCvvForSavedCards == true;
   }
 
   Future<Result> _fetchTokenExConfiguration(String cardIdentifier) {
