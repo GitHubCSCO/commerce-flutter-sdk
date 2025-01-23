@@ -230,6 +230,10 @@ class OrderApprovalDetailsPage extends StatelessWidget {
                           stPostalCodeLabel: context
                               .watch<OrderApprovalDetailsCubit>()
                               .shipToCityStatePostalCodeDisplay,
+                          orderNotesValue: context
+                                  .watch<OrderApprovalDetailsCubit>()
+                                  .orderNotesValue ??
+                              "",
                         ),
                         CartOrderProductsSectionWidget(
                           cartLines: context
@@ -426,20 +430,22 @@ class _OrderApprovalInfoWidget extends StatelessWidget {
   final String stAddressLabel;
   final String stPostalCodeLabel;
 
-  const _OrderApprovalInfoWidget({
-    required this.orderStatusValueLabel,
-    required this.poValueLabel,
-    required this.orderDateTitleLabel,
-    required this.orderStatusLabel,
-    required this.poTitleLabel,
-    required this.orderDateValueLabel,
-    required this.companyNameLabel,
-    required this.addressLabel,
-    required this.postalCodeLabel,
-    required this.stCompanyNameLabel,
-    required this.stAddressLabel,
-    required this.stPostalCodeLabel,
-  });
+  final String orderNotesValue;
+
+  const _OrderApprovalInfoWidget(
+      {required this.orderStatusValueLabel,
+      required this.poValueLabel,
+      required this.orderDateTitleLabel,
+      required this.orderStatusLabel,
+      required this.poTitleLabel,
+      required this.orderDateValueLabel,
+      required this.companyNameLabel,
+      required this.addressLabel,
+      required this.postalCodeLabel,
+      required this.stCompanyNameLabel,
+      required this.stAddressLabel,
+      required this.stPostalCodeLabel,
+      required this.orderNotesValue});
 
   @override
   Widget build(BuildContext context) {
@@ -497,9 +503,44 @@ class _OrderApprovalInfoWidget extends StatelessWidget {
                   address: stCompanyNameLabel,
                   city: '$stAddressLabel\n$stPostalCodeLabel',
                 ),
+              const SizedBox(height: 20),
+              if (orderNotesValue.isNotEmpty)
+                OrderNotesWidget(orderNoteValue: orderNotesValue)
             ],
           ),
         ),
+      ],
+    );
+  }
+}
+
+class OrderNotesWidget extends StatelessWidget {
+  final String? orderNoteValue;
+
+  const OrderNotesWidget({
+    super.key,
+    this.orderNoteValue,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          LocalizationConstants.orderNotes.localized(),
+          textAlign: TextAlign.start,
+          style: OptiTextStyles.subtitle,
+        ),
+        const SizedBox(height: 8),
+        if (!orderNoteValue.isNullOrEmpty)
+          Text(
+            orderNoteValue ?? '',
+            textAlign: TextAlign.start,
+            style: OptiTextStyles.body,
+          ),
       ],
     );
   }
