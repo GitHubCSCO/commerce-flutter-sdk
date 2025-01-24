@@ -760,13 +760,12 @@ List<NavigationNode> _getNavigationRoot() {
     builder: (context, state) => LanguageScreen(),
     parent: settings,
   );
+
   final fullScreenImageCarousel = createNode(
     name: AppRoute.fullScreenImageCarousel.name,
     path: AppRoute.fullScreenImageCarousel.fullPath,
     builder: (context, state) {
-      // Retrieve the `initialIndex` parameter and parse it to an int
       final initialIndex = int.parse(state.pathParameters['initialIndex']!);
-      // Retrieve the extra data (images)
       final images = state.extra as List<ProductImageEntity>;
       return FullScreenImageCarouselPage(
         images: images,
