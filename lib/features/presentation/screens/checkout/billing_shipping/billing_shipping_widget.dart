@@ -122,7 +122,8 @@ class BillingShippingWidget extends StatelessWidget {
     }
 
     if (context.read<CheckoutBloc>().shouldShowOrderNotes) {
-      list.add(_buildOrderNotes(context));
+      list.add(_buildOrderNotes(
+          context, context.read<CheckoutBloc>().orderNotesValue));
     }
 
     return list;
@@ -357,7 +358,8 @@ class BillingShippingWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildOrderNotes(BuildContext context) {
+  Widget _buildOrderNotes(BuildContext context, String? orderNotesValue) {
+    _orderNotesController.text = orderNotesValue ?? '';
     return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 16.0),
       child: Input(
