@@ -340,4 +340,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
   bool get shouldShowOrderNotes {
     return _checkoutUseCase.shouldShowOrderNotes;
   }
+
+  String? get orderNotesValue {
+    return cart?.notes ?? '';
+  }
 }
