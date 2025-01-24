@@ -26,16 +26,14 @@ class PaymentDetailsUseCase extends BaseUseCase {
         .getTokenExConfiguration(token);
   }
 
+  Future<Result<CartSettings, ErrorResponse>> getCartSetting() {
+    return commerceAPIServiceProvider
+        .getSettingsService()
+        .getCartSettingAsync();
+  }
+
   String? get tokenExIFrameUrl {
     var url = coreServiceProvider.getAppConfigurationService().tokenExIFrameUrl;
     return url;
-  }
-
-  bool get shouldShowOrderNotes {
-    return !(coreServiceProvider
-            .getAppConfigurationService()
-            .baseConfig
-            ?.customHideCheckoutOrderNotes ??
-        false);
   }
 }
