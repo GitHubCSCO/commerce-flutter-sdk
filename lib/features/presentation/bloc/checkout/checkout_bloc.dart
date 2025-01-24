@@ -43,11 +43,10 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
     on<SelectPaymentEvent>(
         (event, emit) async => _onPaymentSelect(event, emit));
     on<UpdatePONumberEvent>((event, emit) => _onUpdatePONumber(event, emit));
-    on<UpdateOrderNotesEvent>(
-        (event, emit) => _onUpdateOrderNotes(event, emit));
     on<AddShiptoAddressEvent>((event, emit) async => _onAddShipTo(event, emit));
     on<UpdateShiptoAddressEvent>(
         (event, emit) async => _onUpdateShipto(event, emit));
+    on<OrderNotesEvent>((event, emit) => _onUpdateOrderNotes(event, emit));
   }
 
   Cart removeQuoteRequiredProductsIfNeeded(Cart cart) {
@@ -240,6 +239,11 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
     add(LoadCheckoutEvent(cart: cart!));
   }
 
+  Future<void> _onUpdateOrderNotes(
+      OrderNotesEvent event, Emitter<CheckoutState> emit) async {
+    cart?.notes = event.orderNotes;
+  }
+
   Future<void> _onPaymentMethodSelect(
       SelectPaymentMethodEvent event, Emitter<CheckoutState> emit) async {
     cart?.paymentMethod = event.paymentMethod;
@@ -263,11 +267,6 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
   void _onUpdatePONumber(
       UpdatePONumberEvent event, Emitter<CheckoutState> emit) {
     cart?.poNumber = event.poNumber;
-  }
-
-  void _onUpdateOrderNotes(
-      UpdateOrderNotesEvent event, Emitter<CheckoutState> emit) {
-    cart?.notes = event.orderNotes;
   }
 
   String? getOrderNote() {
@@ -336,5 +335,9 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
     }
 
     return cart?.canCheckOut == true && !isCartEmpty && hasCheckout;
+  }
+
+  bool get shouldShowOrderNotes {
+    return _checkoutUseCase.shouldShowOrderNotes;
   }
 }

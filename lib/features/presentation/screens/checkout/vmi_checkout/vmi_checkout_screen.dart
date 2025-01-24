@@ -290,14 +290,6 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
           context.read<PaymentDetailsBloc>().selectedPaymentMethod!));
     }
 
-    var isOrderNotesShowed =
-        context.read<PaymentDetailsBloc>().shouldShowOrderNotes;
-    var orderNotes = context.read<PaymentDetailsBloc>().getOrderNotes();
-
-    if (isOrderNotesShowed) {
-      context.read<CheckoutBloc>().cart?.notes = orderNotes;
-    }
-
     if (isPaymentCardType &&
         !isCreditCardSectionCompleted &&
         isCVVFieldOpened) {
