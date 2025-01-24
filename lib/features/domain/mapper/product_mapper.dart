@@ -198,6 +198,7 @@ class ProductEntityMapper {
             ?.map((e) => ChildTraitValueEntityMapper.toEntity(e))
             .toList(),
         properties: model.properties,
+        allowZeroPricing: model.allowZeroPricing,
       );
 
   static Product toModel(ProductEntity entity) => Product(
@@ -375,5 +376,6 @@ class ProductEntityMapper {
         childTraitValues: entity.childTraitValues
             ?.map((e) => ChildTraitValueEntityMapper.toModel(e))
             .toList(),
+        allowZeroPricing: entity.allowZeroPricing,
       )..properties = entity.properties;
 }
