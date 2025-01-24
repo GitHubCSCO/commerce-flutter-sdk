@@ -14,7 +14,10 @@ extension WishListLineExtensions on WishListLineEntity? {
       if (this!.quoteRequired != null && this!.quoteRequired!) {
         return LocalizationConstants.requiresQuote.localized().toString();
       } else {
-        priceValueText = this!.pricing.getPriceValue() ?? "";
+        priceValueText = this!
+                .pricing
+                .getPriceValue(allowZeroPricing: this?.allowZeroPricing) ??
+            "";
       }
     }
 

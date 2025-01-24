@@ -3,12 +3,12 @@ import 'package:commerce_flutter_app/features/domain/converter/discount_value_co
 import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
 
 extension ProductPriceExtensions on ProductPriceEntity? {
-  String? getPriceValue() {
+  String? getPriceValue({bool? allowZeroPricing}) {
     if (this == null) {
       return SiteMessageConstants.valueRealTimePricingLoadFail;
     }
 
-    if (this?.unitNetPrice == 0) {
+    if (this?.unitNetPrice == 0 && allowZeroPricing != true) {
       return SiteMessageConstants.valuePricingZeroPriceMessage;
     }
 
