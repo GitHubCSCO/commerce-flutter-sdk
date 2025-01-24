@@ -47,10 +47,18 @@ Widget buildStyleTraitSelectorWidget(
   switch (styleTraitTypeFromString(displayType!)) {
     case StyleTraitType.swatchDropdown:
       return _buildStyleTraitDropdownWidget(
-          styleTrait.styleValues, title, onSelectItemCallback);
+          styleTrait.styleValues,
+          selectedStyleValues?[
+              styleTrait.selectedStyleValue?.styleValue?.styleTraitId],
+          title,
+          onSelectItemCallback);
     case StyleTraitType.dropdown:
       return _buildStyleTraitDropdownWidget(
-          styleTrait.styleValues, title, onSelectItemCallback);
+          styleTrait.styleValues,
+          selectedStyleValues?[
+              styleTrait.selectedStyleValue?.styleValue?.styleTraitId],
+          title,
+          onSelectItemCallback);
     case StyleTraitType.button:
       return Column(
         children: [
@@ -105,8 +113,21 @@ Widget buildStyleTraitSelectorWidget(
 
 Widget _buildStyleTraitDropdownWidget(
     List<ProductDetailStyleValue>? styleValues,
+    StyleValueEntity? selectedVaue,
     String? title,
     void Function(BuildContext context, Object item) onSelectItemCallback) {
+  int getSelectedIndex() {
+    if (styleValues == null || selectedVaue == null) {
+      return 0;
+    }
+    for (var val in styleValues) {
+      if (val.styleValue?.styleTraitValueId == selectedVaue.styleTraitValueId) {
+        return styleValues.indexOf(val);
+      }
+    }
+    return 0;
+  }
+
   return Padding(
     padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
     child: Column(
@@ -134,7 +155,9 @@ Widget _buildStyleTraitDropdownWidget(
                       child: Padding(
                     padding: const EdgeInsets.only(left: 10.0),
                     child: ListPickerWidget(
-                        items: styleValues!, callback: onSelectItemCallback),
+                        items: styleValues!,
+                        callback: onSelectItemCallback,
+                        selectedIndex: getSelectedIndex()),
                   )),
                 ],
               ),
