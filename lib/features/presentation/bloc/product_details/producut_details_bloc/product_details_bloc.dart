@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_data_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
@@ -190,7 +191,7 @@ class ProductDetailsBloc
     }
 
     var selectedStyleValues = _productDetailsStyleTraitsUseCase
-        .getSelectedStyleValues(product, styledProduct);
+        .getSelectedStyleValues(product, styledProduct, null);
     var availableStyleValues =
         _productDetailsStyleTraitsUseCase.getAvailableStyleValues(product);
 
@@ -229,7 +230,7 @@ class ProductDetailsBloc
   }
 
   void onSelectedConfiguration(ConfigSectionOptionEntity option) {
-    if (option.sectionOptionId!.isEmpty) {
+    if (option.sectionOptionId == null || option.sectionOptionId!.isEmpty) {
       productDetailDataEntity.selectedConfigurations?[option.sectionName!] =
           null;
     } else {
@@ -241,19 +242,38 @@ class ProductDetailsBloc
   void _onStyleTraitSelected(
       StyleTraitSelectedEvent event, Emitter<ProductDetailsState> emit) async {
     var selectedStyleValue = event.selectedStyleValue;
+    var selectedStyletraitId = event.styleTraitId;
     var product = productDetailDataEntity.product!;
 
-    if (event.selectedStyleValue.styleTraitId == null) {
+    if (selectedStyleValue.styleTraitValueId != null &&
+        selectedStyleValue.styleTraitValueId!.isEmpty) {
+      productDetailDataEntity
+          .selectedStyleValues?[selectedStyleValue.styleTraitId!] = null;
+    } else if (selectedStyleValue.styleTraitValueId != null) {
+      productDetailDataEntity
+              .selectedStyleValues?[selectedStyleValue.styleTraitId!] =
+          selectedStyleValue;
+    } else {
+      productDetailDataEntity.selectedStyleValues?[selectedStyletraitId!] =
+          null;
+    }
+
+    if (productDetailDataEntity.selectedStyleValues == null ||
+        (productDetailDataEntity.selectedStyleValues != null &&
+            productDetailDataEntity.selectedStyleValues!.values
+                .every((value) => value == null))) {
       productDetailDataEntity.styledProduct = null;
       productDetailDataEntity.selectedStyleValues =
           _productDetailsStyleTraitsUseCase.getSelectedStyleValues(
-              product, null);
+              product, null, productDetailDataEntity.selectedStyleValues);
+
       await _makeAllDetailsItems(product, emit);
       return;
     }
 
     var styledProduct =
         _productDetailsStyleTraitsUseCase.getStyledProductBasedOnSelection(
+            selectedStyletraitId,
             selectedStyleValue,
             productDetailDataEntity.product!,
             productDetailDataEntity.availableStyleValues!,

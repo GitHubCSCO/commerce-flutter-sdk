@@ -23,6 +23,7 @@ class ProductDetailsStyletraitsEntity extends ProductDetailsBaseEntity {
 }
 
 class ProductDetailStyleTrait extends Equatable {
+  final String? styleTraitId;
   final String? styleTraitName;
   String? displayType;
   int? numberOfSwatchesVisible;
@@ -30,6 +31,7 @@ class ProductDetailStyleTrait extends Equatable {
   final List<ProductDetailStyleValue>? styleValues;
   final ProductDetailStyleValue? selectedStyleValue;
   ProductDetailStyleTrait({
+    this.styleTraitId,
     this.styleTraitName,
     this.styleValues,
     this.selectedStyleValue,
@@ -44,6 +46,7 @@ class ProductDetailStyleTrait extends Equatable {
       ProductDetailStyleValue? selectedStyleValue,
       String? displayType,
       int? numberOfSwatchesVisible,
+      String? styleTraitId,
       bool? displayTextWithSwatch}) {
     return ProductDetailStyleTrait(
       styleTraitName: styleTraitName ?? this.styleTraitName,
@@ -54,6 +57,7 @@ class ProductDetailStyleTrait extends Equatable {
           numberOfSwatchesVisible ?? this.numberOfSwatchesVisible,
       displayTextWithSwatch:
           displayTextWithSwatch ?? this.displayTextWithSwatch,
+      styleTraitId: styleTraitId ?? this.styleTraitId,
     );
   }
 
