@@ -35,7 +35,10 @@ extension WishListLineExtensions on WishListLineEntity? {
       if (this!.quoteRequired != null && this!.quoteRequired!) {
         return LocalizationConstants.requiresQuote.localized().toString();
       } else {
-        subtotalValueText = this!.pricing.getSubtotalValue() ?? "";
+        subtotalValueText = this!
+                .pricing
+                .getSubtotalValue(allowZeroPricing: this?.allowZeroPricing) ??
+            "";
       }
     }
 

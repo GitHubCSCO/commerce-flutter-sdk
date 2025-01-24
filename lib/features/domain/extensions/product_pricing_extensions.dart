@@ -15,12 +15,12 @@ extension ProductPriceExtensions on ProductPriceEntity? {
     return this?.unitNetPriceDisplay;
   }
 
-  String? getSubtotalValue() {
+  String? getSubtotalValue({bool? allowZeroPricing}) {
     if (this == null) {
       return SiteMessageConstants.valueRealTimePricingLoadFail;
     }
 
-    if (this?.unitNetPrice == 0) {
+    if (this?.unitNetPrice == 0 && allowZeroPricing != true) {
       return SiteMessageConstants.valuePricingZeroPriceMessage;
     }
 
