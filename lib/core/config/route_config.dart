@@ -761,8 +761,6 @@ List<NavigationNode> _getNavigationRoot() {
     parent: settings,
   );
 
-
-  
   final fullScreenImageCarousel = createNode(
     name: AppRoute.fullScreenImageCarousel.name,
     path: AppRoute.fullScreenImageCarousel.fullPath,

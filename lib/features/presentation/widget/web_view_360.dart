@@ -7,7 +7,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 class WebView360Widget extends StatefulWidget {
   final String htmlString;
 
-  const WebView360Widget({Key? key, required this.htmlString}) : super(key: key);
+  const WebView360Widget({Key? key, required this.htmlString})
+      : super(key: key);
 
   @override
   State<WebView360Widget> createState() => _WebView360WidgetState();
