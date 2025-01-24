@@ -14,8 +14,9 @@ class FetchProductDetailsEvent extends ProductDetailsEvent {
 
 class StyleTraitSelectedEvent extends ProductDetailsEvent {
   final StyleValueEntity selectedStyleValue;
+  final String? styleTraitId;
 
-  StyleTraitSelectedEvent(this.selectedStyleValue);
+  StyleTraitSelectedEvent(this.selectedStyleValue, this.styleTraitId);
 }
 
 class UnitOfMeasuteChangeEvent extends ProductDetailsEvent {
