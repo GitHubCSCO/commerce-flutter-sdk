@@ -33,7 +33,7 @@ class StyleTraitCubit extends Cubit<StyleTraitState> {
     }
     availableStyleValues = _styleTraitsUseCase.getAvailableStyleValues(product);
     selectedStyleValues = _styleTraitsUseCase.getSelectedStyleValues(
-        product, styledProductEntity);
+        product, styledProductEntity, null);
   }
 
   Future<void> fetchStyleTraitValues(ProductEntity product) async {
@@ -71,7 +71,11 @@ class StyleTraitCubit extends Cubit<StyleTraitState> {
   void updateStyledProductBasedOnSelection(
       StyleValueEntity selectedStyleValue) {
     var styledProduct = _styleTraitsUseCase.getStyledProductBasedOnSelection(
-        selectedStyleValue, product, availableStyleValues, selectedStyleValues);
+        null,
+        selectedStyleValue,
+        product,
+        availableStyleValues,
+        selectedStyleValues);
 
     styledProductEntity = styledProduct;
 

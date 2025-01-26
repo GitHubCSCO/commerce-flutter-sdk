@@ -378,13 +378,6 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
     final isPaymentMethodSelectedAsCreditCard =
         cart?.paymentMethod?.isCreditCard == true;
 
-    final isOrderNotesShown = paymentDetailsBloc.shouldShowOrderNotes;
-    final orderNotes = paymentDetailsBloc.getOrderNotes();
-
-    if (isOrderNotesShown) {
-      checkoutBloc.add(UpdateOrderNotesEvent(orderNotes));
-    }
-
     if (!isPaymentMethodSelectedInCard || isPaymentMethodSelectedAsCreditCard) {
       if (selectedPaymentMethod != null) {
         checkoutBloc.add(SelectPaymentMethodEvent(selectedPaymentMethod));

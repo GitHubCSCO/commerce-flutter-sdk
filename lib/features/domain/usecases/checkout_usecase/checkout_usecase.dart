@@ -84,4 +84,12 @@ class CheckoutUsecase extends BaseUseCase {
   Future<bool> hasCheckout() async {
     return await coreServiceProvider.getAppConfigurationService().hasCheckout();
   }
+
+  bool get shouldShowOrderNotes {
+    return !(coreServiceProvider
+            .getAppConfigurationService()
+            .baseConfig
+            ?.customHideCheckoutOrderNotes ??
+        false);
+  }
 }
