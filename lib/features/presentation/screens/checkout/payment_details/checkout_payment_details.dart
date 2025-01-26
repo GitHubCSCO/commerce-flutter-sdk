@@ -107,9 +107,6 @@ class CheckoutPaymentDetails extends StatelessWidget {
                   if (state.showPOField == true) ...{
                     _buildPOField(state, context)
                   },
-                  if (state.shouldShowOrderNotes == true) ...{
-                    _buildOrderNotesWidget(state, context)
-                  },
                   if (state.cart?.showCreditCard != false &&
                       isVmiCheckout != true) ...{
                     _buildAddPaymentMethodButton(context)
@@ -214,24 +211,6 @@ class CheckoutPaymentDetails extends StatelessWidget {
           },
           tokenExValidateNotifier: validateNotifier,
         ),
-      ),
-    );
-  }
-
-  Widget _buildOrderNotesWidget(
-      PaymentDetailsLoaded state, BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Input(
-        label: LocalizationConstants.orderNotes.localized(),
-        hintText: LocalizationConstants.orderNotesOptional.localized(),
-        controller: state.orderNotesTextEditingController,
-        onTapOutside: (_) {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        onEditingComplete: () {
-          FocusManager.instance.primaryFocus?.nextFocus();
-        },
       ),
     );
   }

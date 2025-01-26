@@ -227,6 +227,8 @@ class OrderApprovalDetailsCubit extends Cubit<OrderApprovalDetailsState> {
       ? DateFormat(CoreConstants.dateFormatString).format(state.cart.orderDate!)
       : '';
 
+  String? get orderNotesValue => state.cart.notes ?? '';
+
   String get poValue => state.cart.poNumber ?? '';
 
   String get statusValue => state.cart.status ?? '';

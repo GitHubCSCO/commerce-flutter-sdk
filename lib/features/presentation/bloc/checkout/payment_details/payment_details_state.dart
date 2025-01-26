@@ -13,7 +13,6 @@ class PaymentDetailsLoaded extends PaymentDetailsState {
   final String? cardDetails;
   final bool? showPOField;
   final TextEditingController? poTextEditingController;
-  final TextEditingController? orderNotesTextEditingController;
   final Cart? cart;
   final bool isNewCreditCard;
   final bool? shouldShowOrderNotes;
@@ -27,7 +26,6 @@ class PaymentDetailsLoaded extends PaymentDetailsState {
       this.cardDetails,
       this.showPOField,
       this.poTextEditingController,
-      this.orderNotesTextEditingController,
       this.shouldShowOrderNotes,
       this.useTokenExGateway,
       this.useSpreedlyDropIn});

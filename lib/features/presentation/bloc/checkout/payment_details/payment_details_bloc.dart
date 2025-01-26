@@ -21,7 +21,6 @@ class PaymentDetailsBloc
   AccountPaymentProfile? accountPaymentProfile;
   TokenExDto? tokenExConfiguration;
   final _poNumberController = TextEditingController();
-  final _orderNotesController = TextEditingController();
   bool isSelectedNewAddedCard = false;
   bool isCreditCardSectionCompleted = false;
   bool isCVVFieldOpened = false;
@@ -117,13 +116,9 @@ class PaymentDetailsBloc
           final cardDetails = _getCardDetails(creditCard);
 
           if (!_isCVVBypassedForSavedCards(creditCard)) {
-            final tokenExResponse =
-                await _fetchTokenExConfiguration(creditCard.cardIdentifier!);
-
-            if (tokenExResponse is Success) {
-              final tokenExDto = tokenExResponse.value;
-              tokenExConfiguration = tokenExDto;
-
+            if (tokenExConfiguration != null &&
+                tokenExConfiguration!.token
+                    .equalsIgnoreCase(creditCard.cardIdentifier)) {
               emit(_buildPaymentDetailsLoadedState(
                 isNewCreditCard: false,
                 cardDetails: cardDetails,
@@ -132,6 +127,23 @@ class PaymentDetailsBloc
                 isCVVFieldOpened: true,
               ));
               return;
+            } else {
+              final tokenExResponse =
+                  await _fetchTokenExConfiguration(creditCard.cardIdentifier!);
+
+              if (tokenExResponse is Success) {
+                final tokenExDto = tokenExResponse.value;
+                tokenExConfiguration = tokenExDto;
+
+                emit(_buildPaymentDetailsLoadedState(
+                  isNewCreditCard: false,
+                  cardDetails: cardDetails,
+                  showPOField: showPOField,
+                  tokenExEntity: _createTokenExEntity(creditCard),
+                  isCVVFieldOpened: true,
+                ));
+                return;
+              }
             }
           }
 
@@ -183,10 +195,7 @@ class PaymentDetailsBloc
   }
 
   bool _isCVVBypassedForSavedCards(AccountPaymentProfile creditCard) {
-    return settings?.bypassCvvForSavedCards == true ||
-        (tokenExConfiguration != null &&
-            tokenExConfiguration!.token
-                .equalsIgnoreCase(creditCard.cardIdentifier));
+    return settings?.bypassCvvForSavedCards == true;
   }
 
   Future<Result> _fetchTokenExConfiguration(String cardIdentifier) {
@@ -222,8 +231,6 @@ class PaymentDetailsBloc
         cardDetails: cardDetails,
         showPOField: showPOField,
         poTextEditingController: _poNumberController,
-        orderNotesTextEditingController: _orderNotesController,
-        shouldShowOrderNotes: shouldShowOrderNotes,
         cart: cart,
         useTokenExGateway: websiteSettings?.useTokenExGateway ?? false,
         useSpreedlyDropIn: websiteSettings?.useSpreedlyDropIn ?? false);
@@ -265,15 +272,10 @@ class PaymentDetailsBloc
   void updateCart(Emitter<PaymentDetailsState> emit) {
     cart?.paymentMethod = selectedPaymentMethod;
     cart?.poNumber = _poNumberController.text;
-    cart?.notes = _orderNotesController.text;
   }
 
   String getPONumber() {
     return _poNumberController.text;
-  }
-
-  String getOrderNotes() {
-    return _orderNotesController.text;
   }
 
   List<PaymentMethodDto>? getPaymentMethods(Cart? cart) {
@@ -289,9 +291,5 @@ class PaymentDetailsBloc
     }
 
     return paymentMethods;
-  }
-
-  bool get shouldShowOrderNotes {
-    return _paymentDetailsUseCase.shouldShowOrderNotes;
   }
 }
