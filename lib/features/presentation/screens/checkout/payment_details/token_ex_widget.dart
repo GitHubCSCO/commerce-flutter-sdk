@@ -40,7 +40,7 @@ class TokenExWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<TokenExBloc>(
-      create: (context) => sl<TokenExBloc>(),
+      create: (context) => sl<TokenExBloc>()..resetTokenExData(),
       child: TokenExWebView(
           tokenExEntity: tokenExEntity,
           handleWebViewRequestFromTokenEX: handleWebViewRequestFromTokenEX,

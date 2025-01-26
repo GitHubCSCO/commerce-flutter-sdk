@@ -183,6 +183,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
   Widget _buildTokenExWebView(
       PaymentDetailsLoaded state, BuildContext context) {
     return Padding(
+      key: UniqueKey(),
       padding: const EdgeInsets.fromLTRB(24.0, 0, 24.0, 0),
       child: SizedBox(
         height: 60,
