@@ -83,6 +83,14 @@ class AddToCartSignInWidget extends StatelessWidget {
         } else if (state is ProductDetailsAddtoCartError) {
           CustomSnackBar.showAddToCartFailed(context,
               context.read<ProductDetailsAddToCartBloc>().messageAddtoCartFail);
+        } else if (state is ProductDetailsAddToCartInvalidPrice) {
+          CustomSnackBar.showSnackBarMessage(
+            context,
+            context
+                .read<ProductDetailsAddToCartBloc>()
+                .messageAddtoCartFailInvalidPrice,
+            seconds: 4,
+          );
         } else if (state is ProductDetailsAddtoCartWarning) {
           _displayQuanityWarningDialog(
               context,
@@ -96,7 +104,8 @@ class AddToCartSignInWidget extends StatelessWidget {
         buildWhen: (previous, current) {
           if (current is ProductDetailsProdctAddedToCartSuccess ||
               current is ProductDetailsAddtoCartError ||
-              current is ProductDetailsAddtoCartWarning) {
+              current is ProductDetailsAddtoCartWarning ||
+              current is ProductDetailsAddToCartInvalidPrice) {
             return false;
           }
           return true;
