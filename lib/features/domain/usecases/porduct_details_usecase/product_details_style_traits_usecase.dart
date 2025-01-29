@@ -35,8 +35,13 @@ class ProductDetailsStyleTraitsUseCase {
   }
 
   Map<String, StyleValueEntity?>? getSelectedStyleValues(
-      ProductEntity product, StyledProductEntity? styledProduct) {
+      ProductEntity product,
+      StyledProductEntity? styledProduct,
+      Map<String, StyleValueEntity?>? selectedStyleValuesPersisted) {
     Map<String, StyleValueEntity?>? selectedStyleValues = {};
+    if (selectedStyleValuesPersisted != null) {
+      selectedStyleValues = selectedStyleValuesPersisted;
+    }
 
     if (product.styleParentId != null) {
       selectedStyleValues = styledProduct?.styleValues
@@ -54,16 +59,20 @@ class ProductDetailsStyleTraitsUseCase {
   }
 
   StyledProductEntity? getStyledProductBasedOnSelection(
+      String? selectedStyletraitId,
       StyleValueEntity selectedStyleValue,
       ProductEntity product,
       Map<String, List<StyleValueEntity>?> availableStyleValues,
       Map<String, StyleValueEntity?>? selectedStyleValues) {
     StyledProductEntity? styledProduct;
-    if (selectedStyleValue.styleTraitValueId!.isEmpty) {
+    if (selectedStyleValue.styleTraitValueId != null &&
+        selectedStyleValue.styleTraitValueId!.isEmpty) {
       selectedStyleValues?[selectedStyleValue.styleTraitId!] = null;
-    } else {
+    } else if (selectedStyleValue.styleTraitValueId != null) {
       selectedStyleValues?[selectedStyleValue.styleTraitId!] =
           selectedStyleValue;
+    } else {
+      selectedStyleValues?[selectedStyletraitId!] = null;
     }
 
     var isStyleSelectionComplete =
@@ -179,6 +188,7 @@ class ProductDetailsStyleTraitsUseCase {
       List<ProductDetailStyleValue> styleValues,
       ProductDetailStyleValue selectedStyle) {
     return ProductDetailStyleTrait(
+        styleTraitId: styleTrait.styleTraitId,
         styleTraitName: styleTrait.nameDisplay,
         styleValues: styleValues,
         selectedStyleValue: selectedStyle,

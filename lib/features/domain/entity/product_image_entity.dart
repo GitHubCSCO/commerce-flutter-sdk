@@ -56,4 +56,30 @@ class ProductImageEntity extends Equatable {
       imageType: imageType ?? this.imageType,
     );
   }
+
+  factory ProductImageEntity.fromJson(Map<String, dynamic> json) {
+    return ProductImageEntity(
+      id: json['id'] as String?,
+      sortOrder: json['sortOrder'] as int?,
+      name: json['name'] as String?,
+      smallImagePath: json['smallImagePath'] as String?,
+      mediumImagePath: json['mediumImagePath'] as String?,
+      largeImagePath: json['largeImagePath'] as String?,
+      altText: json['altText'] as String?,
+      imageType: json['imageType'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'sortOrder': sortOrder,
+      'name': name,
+      'smallImagePath': smallImagePath,
+      'mediumImagePath': mediumImagePath,
+      'largeImagePath': largeImagePath,
+      'altText': altText,
+      'imageType': imageType,
+    };
+  }
 }

@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/models/screen_parameters.dart';
 import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_image_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
@@ -75,6 +76,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/welcome/welco
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_details/wish_list_details_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/add_credit_card_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/add_shipping_address_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/widget/full_screen_iamge_carousel_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/selection_item_widget.dart';
 import 'package:commerce_flutter_app/in_app_webview.dart';
 import 'package:flutter/material.dart';
@@ -759,6 +761,20 @@ List<NavigationNode> _getNavigationRoot() {
     parent: settings,
   );
 
+  final fullScreenImageCarousel = createNode(
+    name: AppRoute.fullScreenImageCarousel.name,
+    path: AppRoute.fullScreenImageCarousel.fullPath,
+    builder: (context, state) {
+      final initialIndex = int.parse(state.pathParameters['initialIndex']!);
+      final images = state.extra as List<ProductImageEntity>;
+      return FullScreenImageCarouselPage(
+        images: images,
+        initialIndex: initialIndex,
+      );
+    },
+    parent: null,
+  );
+
   return [
     root,
     landing,
@@ -795,7 +811,8 @@ List<NavigationNode> _getNavigationRoot() {
     userSelection,
     salesRepSelection,
     quoteLineNotes,
-    inAppBrowser
+    inAppBrowser,
+    fullScreenImageCarousel
   ];
 }
 

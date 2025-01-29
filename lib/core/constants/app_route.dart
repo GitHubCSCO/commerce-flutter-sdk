@@ -72,6 +72,7 @@ class RouteNames {
   static const String language = 'language';
   static const String invoiceEmail = 'invoiceEmail';
   static const String inAppBrowser = 'inAppBrowser';
+  static const String fullScreenImageCarousel = 'fullScreenImageCarousel';
 }
 
 class RoutePaths {
@@ -162,6 +163,8 @@ class RoutePaths {
       '${RoutePaths.settings}/${RouteNames.language}';
   static const String invoiceEmail = '/${RoutePaths.invoiceDetail}/email';
   static const String inAppBrowser = '/${RouteNames.inAppBrowser}';
+  static const String fullScreenImageCarousel =
+      '/${RouteNames.fullScreenImageCarousel}/:initialIndex';
 }
 
 enum AppRoute {
@@ -307,6 +310,10 @@ enum AppRoute {
   inAppBrowser(
     name: RouteNames.inAppBrowser,
     fullPath: RoutePaths.inAppBrowser,
+  ),
+  fullScreenImageCarousel(
+    name: RouteNames.fullScreenImageCarousel,
+    fullPath: RoutePaths.fullScreenImageCarousel,
   );
 
   const AppRoute({
