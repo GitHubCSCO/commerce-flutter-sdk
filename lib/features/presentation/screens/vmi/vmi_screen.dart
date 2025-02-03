@@ -13,6 +13,8 @@ import 'package:commerce_flutter_app/features/presentation/cubit/location_note/l
 import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders_cubit/previous_orders_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
+import 'package:go_router/go_router.dart';
 
 class VMIScreen extends StatelessWidget {
   const VMIScreen({super.key});
@@ -57,8 +59,25 @@ class VMIPage extends StatelessWidget with BaseDynamicContentScreen {
           BlocListener<CurrentLocationCubit, CurrentLocationState>(
               listener: (_, state) {
             if (state is CurrentLocationLoadedState) {
-              context.read<PreviousOrdersCubit>().loadPreviousOrders();
-              context.read<LocationNoteCubit>().loadLocationNote();
+              if (state.currentLocationDataEntity.vmiLocation == null) {
+                displayDialogWidget(
+                  context: context,
+                  barrierDismissible: false,
+                  message: LocalizationConstants.noVMILocationFound.localized(),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        context.pop();
+                      },
+                      child: Text(LocalizationConstants.oK.localized()),
+                    ),
+                  ],
+                );
+              } else {
+                context.read<PreviousOrdersCubit>().loadPreviousOrders();
+                context.read<LocationNoteCubit>().loadLocationNote();
+              }
             }
           }),
           BlocListener<VMIPageBloc, VMIPageState>(
