@@ -66,7 +66,8 @@ void main() {
         productSubscription: null,
         isRestricted: false,
         isActive: true,
-        brand: BrandEntityMapper.toModel(BrandEntity(id: "B123", name: "BrandX")),
+        brand:
+            BrandEntityMapper.toModel(BrandEntity(id: "B123", name: "BrandX")),
         status: "Available",
         notes: "Special instructions",
         vmiBinId: "VMI-001",
@@ -91,9 +92,11 @@ void main() {
       expect(result.shortDescription, cartLine.shortDescription);
       expect(result.erpNumber, cartLine.erpNumber);
       expect(result.unitOfMeasureDisplay, cartLine.unitOfMeasureDisplay);
-      expect(result.unitOfMeasureDescription, cartLine.unitOfMeasureDescription);
+      expect(
+          result.unitOfMeasureDescription, cartLine.unitOfMeasureDescription);
       expect(result.baseUnitOfMeasure, cartLine.baseUnitOfMeasure);
-      expect(result.baseUnitOfMeasureDisplay, cartLine.baseUnitOfMeasureDisplay);
+      expect(
+          result.baseUnitOfMeasureDisplay, cartLine.baseUnitOfMeasureDisplay);
       expect(result.qtyPerBaseUnitOfMeasure, cartLine.qtyPerBaseUnitOfMeasure);
       expect(result.costCode, cartLine.costCode);
       expect(result.qtyLeft, cartLine.qtyLeft);
@@ -104,7 +107,8 @@ void main() {
       expect(result.qtyOnHand, cartLine.qtyOnHand);
       expect(result.canAddToCart, cartLine.canAddToCart);
       expect(result.isQtyAdjusted, cartLine.isQtyAdjusted);
-      expect(result.hasInsufficientInventory, cartLine.hasInsufficientInventory);
+      expect(
+          result.hasInsufficientInventory, cartLine.hasInsufficientInventory);
       expect(result.canBackOrder, cartLine.canBackOrder);
       expect(result.salePriceLabel, cartLine.salePriceLabel);
       expect(result.isSubscription, cartLine.isSubscription);

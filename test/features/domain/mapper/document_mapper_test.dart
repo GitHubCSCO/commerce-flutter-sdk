@@ -65,7 +65,8 @@ void main() {
       expect(result.fileTypeString, 'application/pdf');
     });
 
-    test('should handle null values correctly when mapping to DocumentEntity', () {
+    test('should handle null values correctly when mapping to DocumentEntity',
+        () {
       // Arrange
       final document = Document(
         id: '1',

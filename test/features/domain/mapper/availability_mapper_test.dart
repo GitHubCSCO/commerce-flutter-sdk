@@ -36,7 +36,8 @@ void main() {
       // Assert
       expect(result.messageType, entity.messageType);
       expect(result.message, entity.message);
-      expect(result.requiresRealTimeInventory, entity.requiresRealTimeInventory);
+      expect(
+          result.requiresRealTimeInventory, entity.requiresRealTimeInventory);
     });
 
     test('should handle null Availability model correctly', () {

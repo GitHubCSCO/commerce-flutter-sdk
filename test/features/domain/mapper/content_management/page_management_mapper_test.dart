@@ -6,7 +6,9 @@ void main() {
   final mapper = PageContentManagementMapper();
 
   group('PageContentManagementMapper', () {
-    test('should map PageContentManagement to PageContentManagementEntity correctly', () {
+    test(
+        'should map PageContentManagement to PageContentManagementEntity correctly',
+        () {
       // Arrange
       final pageContentManagement = PageContentManagement(
         page: PageInformation(
@@ -61,12 +63,16 @@ void main() {
       expect(result.authorizationFailed, false);
       expect(result.isAuthenticatedOnServer, true);
       expect(result.requiresAuthorization, true);
-      expect(result.alternateLanguageUrls, {"en": "/en/home", "fr": "/fr/accueil"});
+      expect(result.alternateLanguageUrls,
+          {"en": "/en/home", "fr": "/fr/accueil"});
       expect(result.page?.generalFields?.hideFooter, true);
       expect(result.page?.generalFields?.tags, ["tag1", "tag2"]);
-      expect(result.page?.translatableFields?.title, {"en": "Localized Title", "fr": "Titre Localisé"});
-      expect(result.page?.translatableFields?.links, {"en": "link1", "fr": "lien1"});
-      expect(result.page?.translatableFields?.slides, {"en": "slide1", "fr": "diapositive1"});
+      expect(result.page?.translatableFields?.title,
+          {"en": "Localized Title", "fr": "Titre Localisé"});
+      expect(result.page?.translatableFields?.links,
+          {"en": "link1", "fr": "lien1"});
+      expect(result.page?.translatableFields?.slides,
+          {"en": "slide1", "fr": "diapositive1"});
     });
 
     test('should handle null values correctly', () {
