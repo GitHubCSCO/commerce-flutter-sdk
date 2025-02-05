@@ -681,6 +681,7 @@ enum LocalizationConstants {
   failedToLoadUrl(keyword: "Failed to load url."),
   noBrandDetailsFound(keyword: "No details found for this brand"),
   viewMore(keyword: "View More"),
+  viewMoreCartItems(keyword: "View More Cart Items"),
   tryAgain(keyword: "Try Again"),
   errorLoading(keyword: "Error Loading"),
   noInternet(keyword: "No Internet"),

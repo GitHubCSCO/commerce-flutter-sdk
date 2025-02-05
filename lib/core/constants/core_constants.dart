@@ -1,5 +1,6 @@
 class CoreConstants {
   static const int productQuantityTextMaxLength = 6;
+  static const int maximumItemDisplayInCart = 5;
   static const int cloudflareGatewayTimeoutHTTPStatusCode = 524;
   static const int vmiLocationSearchRadius = 200;
   static const int defaultPageSize = 16;
