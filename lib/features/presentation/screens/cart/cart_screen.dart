@@ -475,19 +475,6 @@ class CartPage extends StatelessWidget {
                 ? ShippingOption.pickUp
                 : ShippingOption.ship));
 
-    if (!(hidePricingEnable ?? false)) {
-      list.add(
-          CartPaymentSummaryWidget(paymentSummaryEntity: paymentSummaryEntity));
-    }
-    list.add(BlocProvider<CartShippingSelectionBloc>(
-      create: (context) => sl<CartShippingSelectionBloc>()
-        ..add(CartShippingOptionDefaultEvent(shippingEntity.shippingMethod!)),
-      child: CartShippingWidget(
-        shippingEntity: shippingEntity,
-        onCallBack: _handlePickUpLocationCallBack,
-      ),
-    ));
-
     list.add(BlocProvider<CartContentBloc>(
       create: (context) => sl<CartContentBloc>(),
       child: Builder(
@@ -524,6 +511,20 @@ class CartPage extends StatelessWidget {
         },
       ),
     ));
+
+    if (!(hidePricingEnable ?? false)) {
+      list.add(
+          CartPaymentSummaryWidget(paymentSummaryEntity: paymentSummaryEntity));
+    }
+    list.add(BlocProvider<CartShippingSelectionBloc>(
+      create: (context) => sl<CartShippingSelectionBloc>()
+        ..add(CartShippingOptionDefaultEvent(shippingEntity.shippingMethod!)),
+      child: CartShippingWidget(
+        shippingEntity: shippingEntity,
+        onCallBack: _handlePickUpLocationCallBack,
+      ),
+    ));
+
     list.add(const SizedBox(height: 8));
 
     return list;
