@@ -38,24 +38,30 @@ class _InAppBrowserState extends State<InAppBrowser> {
   late WebViewController _controller;
   int _tokenInjectionCount = 0;
   String? _token;
-  bool _webViewInitialized = false; // track if webview is loaded
+  bool _webViewInitialized = false; 
+  bool _isLoading = false; // For tracking the loading state of the WebView
 
   @override
   void initState() {
     super.initState();
+
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
+          onPageStarted: (String url) {
+            setState(() {
+              _isLoading = true;
+            });
+          },
           onPageFinished: (String url) async {
-            // final cookiesString = await _controller
-            //     .runJavaScriptReturningResult("document.cookie");
-            // print("Cookies: $cookiesString");
+            // Hide the loading indicator
+            setState(() {
+              _isLoading = false;
+            });
 
             // If token is available, try injecting it again if not already done
-            if (_token != null &&
-                _token!.isNotEmpty &&
-                _tokenInjectionCount < 2) {
+            if (_token != null && _token!.isNotEmpty && _tokenInjectionCount < 2) {
               try {
                 await _injectToken(_token!);
                 _tokenInjectionCount++;
@@ -106,7 +112,8 @@ class _InAppBrowserState extends State<InAppBrowser> {
         }
       },
       builder: (context, state) {
-        // If we haven't initialized the webview yet, show a loading indicator
+        // If we haven't initialized the webview yet (e.g., token not loaded),
+        // show a loading indicator
         if (!_webViewInitialized) {
           return Scaffold(
             appBar: AppBar(title: Text('')),
@@ -114,10 +121,18 @@ class _InAppBrowserState extends State<InAppBrowser> {
           );
         }
 
-        // Once initialized, show the WebView
+        // Once initialized, show the WebView with a Stack to overlay the loader
         return Scaffold(
           appBar: AppBar(title: Text('')),
-          body: WebViewWidget(controller: _controller),
+          body: Stack(
+            children: [
+              // The WebView itself
+              WebViewWidget(controller: _controller),
+              // A centered CircularProgressIndicator when page is loading
+              if (_isLoading)
+                const Center(child: CircularProgressIndicator()),
+            ],
+          ),
         );
       },
     );
