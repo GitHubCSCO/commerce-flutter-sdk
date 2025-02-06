@@ -38,7 +38,7 @@ class _InAppBrowserState extends State<InAppBrowser> {
   late WebViewController _controller;
   int _tokenInjectionCount = 0;
   String? _token;
-  bool _webViewInitialized = false; 
+  bool _webViewInitialized = false;
   bool _isLoading = false; // For tracking the loading state of the WebView
 
   @override
@@ -61,7 +61,9 @@ class _InAppBrowserState extends State<InAppBrowser> {
             });
 
             // If token is available, try injecting it again if not already done
-            if (_token != null && _token!.isNotEmpty && _tokenInjectionCount < 2) {
+            if (_token != null &&
+                _token!.isNotEmpty &&
+                _tokenInjectionCount < 2) {
               try {
                 await _injectToken(_token!);
                 _tokenInjectionCount++;
@@ -129,8 +131,7 @@ class _InAppBrowserState extends State<InAppBrowser> {
               // The WebView itself
               WebViewWidget(controller: _controller),
               // A centered CircularProgressIndicator when page is loading
-              if (_isLoading)
-                const Center(child: CircularProgressIndicator()),
+              if (_isLoading) const Center(child: CircularProgressIndicator()),
             ],
           ),
         );
