@@ -225,88 +225,98 @@ class CartPage extends StatelessWidget {
               ),
             ),
             // Bottom Draggable Panel
-            DraggableScrollableSheet(
-              initialChildSize:
-                  0.17, // Initial size (Only Checkout button visible)
-              minChildSize: 0.17, // Minimum collapsed size
-              maxChildSize: 0.4, // Maximum expanded size
-              builder: (context, scrollController) {
-                return Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(16)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 10,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: SingleChildScrollView(
-                    controller: scrollController,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // Drag Handle
-                          Container(
-                            width: 50,
-                            height: 5,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[400],
-                              borderRadius: BorderRadius.circular(10),
+            BlocBuilder<CartPageBloc, CartPageState>(
+              builder: (context, state) {
+                if (state is CartPageLoadedState) {
+                  return DraggableScrollableSheet(
+                    initialChildSize:
+                        0.17, // Initial size (Only Checkout button visible)
+                    minChildSize: 0.17, // Minimum collapsed size
+                    maxChildSize: 0.4, // Maximum expanded size
+                    builder: (context, scrollController) {
+                      return Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(16)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 10,
+                              spreadRadius: 2,
+                            ),
+                          ],
+                        ),
+                        child: SingleChildScrollView(
+                          controller: scrollController,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Drag Handle
+                                Container(
+                                  width: 50,
+                                  height: 5,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[400],
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                _buildSubTotal(),
+                                const SizedBox(height: 10),
+                                TertiaryBlackButton(
+                                  text: LocalizationConstants.addAllToList
+                                      .localized(),
+                                  onPressed: () {
+                                    final currentState =
+                                        context.read<AuthCubit>().state;
+                                    handleAuthStatusForAddToWishList(
+                                        context, currentState.status);
+                                  },
+                                ),
+                                TertiaryBlackButton(
+                                  text: LocalizationConstants.saveOrder
+                                      .localized(),
+                                  onPressed: () {
+                                    final currentState =
+                                        context.read<AuthCubit>().state;
+                                    // handleAuthStatusForSaveOrder(
+                                    //     context, currentState.status, state);
+                                  },
+                                ),
+                                Visibility(
+                                  visible: context
+                                      .watch<CartPageBloc>()
+                                      .canSubmitForQuote,
+                                  child: SecondaryButton(
+                                    onPressed: () {
+                                      final currentState =
+                                          context.read<AuthCubit>().state;
+                                      // handleAuthStatusForSubmitQuote(
+                                      //     context, currentState.status, state);
+                                    },
+                                    text: context
+                                        .watch<CartPageBloc>()
+                                        .submitForQuoteTitle,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 10),
+
+                                // Checkout Button (Always at the Bottom)
+                                _buildCheckoutButton(context),
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 20),
-                          _buildSubTotal(),
-                          const SizedBox(height: 10),
-                          TertiaryBlackButton(
-                            text:
-                                LocalizationConstants.addAllToList.localized(),
-                            onPressed: () {
-                              final currentState =
-                                  context.read<AuthCubit>().state;
-                              handleAuthStatusForAddToWishList(
-                                  context, currentState.status);
-                            },
-                          ),
-                          TertiaryBlackButton(
-                            text: LocalizationConstants.saveOrder.localized(),
-                            onPressed: () {
-                              final currentState =
-                                  context.read<AuthCubit>().state;
-                              // handleAuthStatusForSaveOrder(
-                              //     context, currentState.status, state);
-                            },
-                          ),
-                          Visibility(
-                            visible:
-                                context.watch<CartPageBloc>().canSubmitForQuote,
-                            child: SecondaryButton(
-                              onPressed: () {
-                                final currentState =
-                                    context.read<AuthCubit>().state;
-                                // handleAuthStatusForSubmitQuote(
-                                //     context, currentState.status, state);
-                              },
-                              text: context
-                                  .watch<CartPageBloc>()
-                                  .submitForQuoteTitle,
-                            ),
-                          ),
-
-                          const SizedBox(height: 10),
-
-                          // Checkout Button (Always at the Bottom)
-                          _buildCheckoutButton(context),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  return const Center();
+                }
               },
             ),
           ],
