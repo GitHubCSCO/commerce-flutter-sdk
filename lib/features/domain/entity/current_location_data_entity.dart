@@ -42,14 +42,42 @@ class CurrentLocationDataEntity extends Equatable {
   }
 
   factory CurrentLocationDataEntity.fromVmiLocation(VmiLocationModel? value) {
+    String? getFirstLineValue() {
+      final address1 = value?.customer?.address1;
+      final address2 = value?.customer?.address2;
+
+      if (isNullOrWhiteSpace(address1) && isNullOrWhiteSpace(address2))
+        return null;
+      if (isNullOrWhiteSpace(address1)) return address2;
+      if (isNullOrWhiteSpace(address2)) return address1;
+      return "$address1, $address2";
+    }
+
+    String? getSecondLineValue() {
+      final city = value?.customer?.city;
+      final state = value?.customer?.state?.name;
+      final postalCode = value?.customer?.postalCode;
+
+      if (isNullOrWhiteSpace(city) &&
+          isNullOrWhiteSpace(state) &&
+          isNullOrWhiteSpace(postalCode)) return null;
+
+      final statePostal = [
+        if (!isNullOrWhiteSpace(state)) state,
+        if (!isNullOrWhiteSpace(postalCode)) postalCode,
+      ].join(' ');
+
+      final parts = [
+        if (!isNullOrWhiteSpace(city)) city,
+        if (!isNullOrWhiteSpace(statePostal)) statePostal,
+      ];
+
+      return parts.join(', ');
+    }
+
     return CurrentLocationDataEntity(
-        firestLineValue: isNullOrWhiteSpace(value?.customer?.address2)
-            ? value?.customer?.address1
-            : "${value?.customer?.address1}, ${value?.customer?.address2}",
-        secondLineValue: isNullOrWhiteSpace(value?.customer?.state?.name) &&
-                isNullOrWhiteSpace(value?.customer?.postalCode)
-            ? "${value?.customer?.city}"
-            : "${value?.customer?.city}, ${value?.customer?.state?.name} ${value?.customer?.postalCode}",
+        firestLineValue: getFirstLineValue(),
+        secondLineValue: getSecondLineValue(),
         thridLineValue: value?.customer?.phone,
         locationName: value?.name,
         vmiLocation: value);
