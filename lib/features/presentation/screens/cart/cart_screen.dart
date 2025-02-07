@@ -123,160 +123,224 @@ class CartPage extends StatelessWidget {
             },
           )
         ],
-        child: RefreshIndicator(
-          onRefresh: () async {
-            _reloadCartPage(context);
-          },
-          child: BlocBuilder<CartPageBloc, CartPageState>(
-            buildWhen: (previous, current) {
-              if (current is CartPageWarningDialogShowState ||
-                  current is CartProceedToCheckoutState ||
-                  current is CartPageCheckoutButtonLoadingState) {
-                return false;
-              }
-              return true;
-            },
-            builder: (_, state) {
-              switch (state) {
-                case CartPageInitialState():
-                case CartPageLoadingState():
-                  return const Center(child: CircularProgressIndicator());
-                case CartPageLoadedState():
-                  return Column(
-                    children: [
-                      if (state.cartWarningMsg.isNotEmpty)
-                        BuildCartErrorWidget(
-                            cartErrorMsg: state.cartWarningMsg),
-                      Expanded(
-                        child: ListView(
-                          children: _buildCartWidgets(
-                              state.cart,
-                              state.cartSettings,
-                              state.warehouse,
-                              state.promotions,
-                              state.isCustomerOrderApproval,
-                              state.hasWillCall,
-                              state.shippingMethod,
-                              state.hidePricingEnable,
-                              state.hideInventoryEnable,
-                              context),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 32, vertical: 16),
-                        clipBehavior: Clip.antiAlias,
-                        decoration: const BoxDecoration(color: Colors.white),
+        child: Stack(
+          children: [
+            RefreshIndicator(
+              onRefresh: () async {
+                _reloadCartPage(context);
+              },
+              child: BlocBuilder<CartPageBloc, CartPageState>(
+                buildWhen: (previous, current) {
+                  if (current is CartPageWarningDialogShowState ||
+                      current is CartProceedToCheckoutState ||
+                      current is CartPageCheckoutButtonLoadingState) {
+                    return false;
+                  }
+                  return true;
+                },
+                builder: (_, state) {
+                  switch (state) {
+                    case CartPageInitialState():
+                    case CartPageLoadingState():
+                      return const Center(child: CircularProgressIndicator());
+                    case CartPageLoadedState():
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 80), // Add space for the bottom panel
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: TertiaryBlackButton(
-                                    text: LocalizationConstants.addAllToList
-                                        .localized(),
-                                    onPressed: () {
-                                      final currentState =
-                                          context.read<AuthCubit>().state;
-                                      handleAuthStatusForAddToWishList(
-                                          context, currentState.status);
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: TertiaryBlackButton(
-                                    text: LocalizationConstants.saveOrder
-                                        .localized(),
-                                    onPressed: () {
-                                      final currentState =
-                                          context.read<AuthCubit>().state;
-                                      handleAuthStatusForSaveOrder(
-                                          context, currentState.status, state);
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Visibility(
-                              visible: context
-                                  .watch<CartPageBloc>()
-                                  .canSubmitForQuote,
-                              child: PrimaryButton(
-                                onPressed: () {
-                                  final currentState =
-                                      context.read<AuthCubit>().state;
-                                  handleAuthStatusForSubmitQuote(
-                                      context, currentState.status, state);
-                                },
-                                text: context
-                                    .watch<CartPageBloc>()
-                                    .submitForQuoteTitle,
+                            if (state.cartWarningMsg.isNotEmpty)
+                              BuildCartErrorWidget(
+                                  cartErrorMsg: state.cartWarningMsg),
+                            Expanded(
+                              child: ListView(
+                                children: _buildCartWidgets(
+                                    state.cart,
+                                    state.cartSettings,
+                                    state.warehouse,
+                                    state.promotions,
+                                    state.isCustomerOrderApproval,
+                                    state.hasWillCall,
+                                    state.shippingMethod,
+                                    state.hidePricingEnable,
+                                    state.hideInventoryEnable,
+                                    context),
                               ),
                             ),
-                            _buildCheckoutButton(context),
                           ],
                         ),
+                      );
+                    case CartPageNoDataState():
+                      return CustomScrollView(slivers: <Widget>[
+                        SliverFillRemaining(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 50,
+                                height: 50,
+                                padding: const EdgeInsets.all(10),
+                                child: const SvgAssetImage(
+                                  assetName: AssetConstants.iconCart,
+                                  fit: BoxFit.fitWidth,
+                                ),
+                              ),
+                              Text(state.message),
+                              Padding(
+                                padding: const EdgeInsets.all(24),
+                                child: TertiaryButton(
+                                  onPressed: () {
+                                    _trackContinueShoppingEvent(
+                                        context,
+                                        context
+                                                .read<CartPageBloc>()
+                                                .cart
+                                                ?.orderNumber ??
+                                            '');
+                                    AppRoute.shop.navigate(context);
+                                  },
+                                  text: LocalizationConstants.continueShopping
+                                      .localized(),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ]);
+                    default:
+                      return CustomScrollView(
+                        slivers: <Widget>[
+                          SliverFillRemaining(
+                              child: OptiErrorWidget(
+                            onRetry: () {
+                              _reloadCartPage(context);
+                            },
+                            errorText: LocalizationConstants.errorLoadingCart
+                                .localized(),
+                          )),
+                        ],
+                      );
+                  }
+                },
+              ),
+            ),
+            // Bottom Draggable Panel
+            DraggableScrollableSheet(
+              initialChildSize:
+                  0.17, // Initial size (Only Checkout button visible)
+              minChildSize: 0.17, // Minimum collapsed size
+              maxChildSize: 0.4, // Maximum expanded size
+              builder: (context, scrollController) {
+                return Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(16)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 10,
+                        spreadRadius: 2,
                       ),
                     ],
-                  );
-                case CartPageNoDataState():
-                  return CustomScrollView(slivers: <Widget>[
-                    SliverFillRemaining(
+                  ),
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
+                          // Drag Handle
                           Container(
                             width: 50,
-                            height: 50,
-                            padding: const EdgeInsets.all(10),
-                            child: const SvgAssetImage(
-                              assetName: AssetConstants.iconCart,
-                              fit: BoxFit.fitWidth,
+                            height: 5,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[400],
+                              borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          Text(state.message),
-                          Padding(
-                            padding: const EdgeInsets.all(24),
-                            child: TertiaryButton(
+                          const SizedBox(height: 20),
+                          _buildSubTotal(),
+                          const SizedBox(height: 10),
+                          TertiaryBlackButton(
+                            text:
+                                LocalizationConstants.addAllToList.localized(),
+                            onPressed: () {
+                              final currentState =
+                                  context.read<AuthCubit>().state;
+                              handleAuthStatusForAddToWishList(
+                                  context, currentState.status);
+                            },
+                          ),
+                          TertiaryBlackButton(
+                            text: LocalizationConstants.saveOrder.localized(),
+                            onPressed: () {
+                              final currentState =
+                                  context.read<AuthCubit>().state;
+                              // handleAuthStatusForSaveOrder(
+                              //     context, currentState.status, state);
+                            },
+                          ),
+                          Visibility(
+                            visible:
+                                context.watch<CartPageBloc>().canSubmitForQuote,
+                            child: SecondaryButton(
                               onPressed: () {
-                                _trackContinueShoppingEvent(
-                                    context,
-                                    context
-                                            .read<CartPageBloc>()
-                                            .cart
-                                            ?.orderNumber ??
-                                        '');
-                                AppRoute.shop.navigate(context);
+                                final currentState =
+                                    context.read<AuthCubit>().state;
+                                // handleAuthStatusForSubmitQuote(
+                                //     context, currentState.status, state);
                               },
-                              text: LocalizationConstants.continueShopping
-                                  .localized(),
+                              text: context
+                                  .watch<CartPageBloc>()
+                                  .submitForQuoteTitle,
                             ),
-                          )
+                          ),
+
+                          const SizedBox(height: 10),
+
+                          // Checkout Button (Always at the Bottom)
+                          _buildCheckoutButton(context),
                         ],
                       ),
                     ),
-                  ]);
-                default:
-                  return CustomScrollView(
-                    slivers: <Widget>[
-                      SliverFillRemaining(
-                          child: OptiErrorWidget(
-                        onRetry: () {
-                          _reloadCartPage(context);
-                        },
-                        errorText:
-                            LocalizationConstants.errorLoadingCart.localized(),
-                      )),
-                    ],
-                  );
-              }
-            },
-          ),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSubTotal() {
+    String title = 'Subtotal (1 item)';
+    String body = '121321.00';
+    TextStyle textStyle = OptiTextStyles.subtitle;
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.only(right: 8),
+            child: Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.start,
+              style: textStyle,
+            ),
+          ),
+        ),
+        Text(
+          body,
+          textAlign: TextAlign.start,
+          style: textStyle,
+        )
+      ],
     );
   }
 
