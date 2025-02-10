@@ -5,6 +5,7 @@ import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
+import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
@@ -56,10 +57,15 @@ class CartScreen extends StatelessWidget {
   }
 }
 
-class CartPage extends StatelessWidget {
-  final websitePath = WebsitePaths.cartWebsitePath;
-
+class CartPage extends StatefulWidget {
   const CartPage({super.key});
+
+  @override
+  State<CartPage> createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
+  final websitePath = WebsitePaths.cartWebsitePath;
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +79,11 @@ class CartPage extends StatelessWidget {
               websitePath: websitePath,
               screenName: AnalyticsConstants.screenNameCart)
         ],
+      ),
+      bottomNavigationBar: Container(
+        color: Colors.white,
+        padding: const EdgeInsets.only(bottom: 16.0, right: 16.0, left: 16.0),
+        child: _buildCheckoutButton(context),
       ),
       body: MultiBlocListener(
         listeners: [
@@ -226,13 +237,27 @@ class CartPage extends StatelessWidget {
             ),
             // Bottom Draggable Panel
             BlocBuilder<CartPageBloc, CartPageState>(
+              buildWhen: (previous, current) {
+                if (current is CartPageWarningDialogShowState ||
+                    current is CartProceedToCheckoutState ||
+                    current is CartPageCheckoutButtonLoadingState) {
+                  return false;
+                }
+                return true;
+              },
               builder: (context, state) {
                 if (state is CartPageLoadedState) {
+                  var isQuoteAndCheckoutVisible =
+                      context.watch<CartPageBloc>().canSubmitForQuote &&
+                          context.watch<CartPageBloc>().checkoutButtonVisible;
+
                   return DraggableScrollableSheet(
                     initialChildSize:
-                        0.17, // Initial size (Only Checkout button visible)
-                    minChildSize: 0.17, // Minimum collapsed size
-                    maxChildSize: 0.4, // Maximum expanded size
+                        0.11, // Initial size (Only Checkout button visible)
+                    minChildSize: 0.11, // Minimum collapsed size
+                    maxChildSize: isQuoteAndCheckoutVisible
+                        ? 0.35
+                        : 0.27, // Maximum expanded size
                     builder: (context, scrollController) {
                       return Container(
                         decoration: const BoxDecoration(
@@ -264,7 +289,7 @@ class CartPage extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 20),
-                                _buildSubTotal(),
+                                _buildSubTotal(state),
                                 const SizedBox(height: 10),
                                 TertiaryBlackButton(
                                   text: LocalizationConstants.addAllToList
@@ -282,31 +307,24 @@ class CartPage extends StatelessWidget {
                                   onPressed: () {
                                     final currentState =
                                         context.read<AuthCubit>().state;
-                                    // handleAuthStatusForSaveOrder(
-                                    //     context, currentState.status, state);
+                                    handleAuthStatusForSaveOrder(
+                                        context, currentState.status, state);
                                   },
                                 ),
                                 Visibility(
-                                  visible: context
-                                      .watch<CartPageBloc>()
-                                      .canSubmitForQuote,
+                                  visible: isQuoteAndCheckoutVisible,
                                   child: SecondaryButton(
                                     onPressed: () {
                                       final currentState =
                                           context.read<AuthCubit>().state;
-                                      // handleAuthStatusForSubmitQuote(
-                                      //     context, currentState.status, state);
+                                      handleAuthStatusForSubmitQuote(
+                                          context, currentState.status, state);
                                     },
                                     text: context
                                         .watch<CartPageBloc>()
                                         .submitForQuoteTitle,
                                   ),
                                 ),
-
-                                const SizedBox(height: 10),
-
-                                // Checkout Button (Always at the Bottom)
-                                _buildCheckoutButton(context),
                               ],
                             ),
                           ),
@@ -325,10 +343,15 @@ class CartPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSubTotal() {
-    String title = 'Subtotal (1 item)';
-    String body = '121321.00';
-    TextStyle textStyle = OptiTextStyles.subtitle;
+  Widget _buildSubTotal(CartPageLoadedState state) {
+    var title = state.cart == null
+        ? LocalizationConstants.subtotal.localized()
+        : LocalizationConstants.subtotalItems
+            .localized()
+            .format([state.cart?.totalCountDisplay ?? '']);
+    var body = state.cart?.orderSubTotalDisplay ?? '';
+    var textStyle = OptiTextStyles.subtitle;
+
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -394,25 +417,45 @@ class CartPage extends StatelessWidget {
   }
 
   Widget _buildCheckoutButton(BuildContext context) {
+    var cartPageBloc = context.watch<CartPageBloc>();
+
     return BlocBuilder<CartPageBloc, CartPageState>(
       builder: (_, state) {
         if (state is CartPageCheckoutButtonLoadingState) {
           return const Center(child: CircularProgressIndicator());
+        } else if (state is CartPageLoadedState) {
+          if (cartPageBloc.checkoutButtonVisible) {
+            return SizedBox(
+              height: 45,
+              child: PrimaryButton(
+                isEnabled: cartPageBloc.isCheckoutButtonEnabled,
+                onPressed: () {
+                  final currentState = context.read<AuthCubit>().state;
+                  handleAuthStatusForCheckout(context, currentState.status,
+                      context.read<CartPageBloc>());
+                },
+                text: cartPageBloc.approvalButtonVisible
+                    ? LocalizationConstants.checkoutForApproval.localized()
+                    : LocalizationConstants.checkout.localized(),
+              ),
+            );
+          } else if (cartPageBloc.canSubmitForQuote) {
+            return SizedBox(
+              height: 45,
+              child: SecondaryButton(
+                onPressed: () {
+                  final currentState = context.read<AuthCubit>().state;
+                  handleAuthStatusForSubmitQuote(
+                      context, currentState.status, state);
+                },
+                text: cartPageBloc.submitForQuoteTitle,
+              ),
+            );
+          } else {
+            return const SizedBox(height: 45, child: Center());
+          }
         } else {
-          return Visibility(
-            visible: context.watch<CartPageBloc>().checkoutButtonVisible,
-            child: PrimaryButton(
-              isEnabled: context.watch<CartPageBloc>().isCheckoutButtonEnabled,
-              onPressed: () {
-                final currentState = context.read<AuthCubit>().state;
-                handleAuthStatusForCheckout(
-                    context, currentState.status, context.read<CartPageBloc>());
-              },
-              text: context.watch<CartPageBloc>().approvalButtonVisible
-                  ? LocalizationConstants.checkoutForApproval.localized()
-                  : LocalizationConstants.checkout.localized(),
-            ),
-          );
+          return const SizedBox(height: 45, child: Center());
         }
       },
     );
