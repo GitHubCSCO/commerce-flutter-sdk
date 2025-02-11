@@ -90,6 +90,7 @@ void displayDialogWidget({
   showDialog(
     context: context,
     useRootNavigator: false,
+    barrierDismissible: barrierDismissible,
     builder: (BuildContext context) {
       return AlertDialog(
         title: title != null
