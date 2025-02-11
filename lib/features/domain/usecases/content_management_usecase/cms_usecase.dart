@@ -249,16 +249,6 @@ class CmsUseCase extends BaseUseCase {
             final mobileCartWidget =
                 await convertWidgetToMobileCartButtonWidgetEntity(
                     pageWidget, currentSession);
-            // going for now for development, later backend will add cart widgets support
-            //
-            widgetEntities.add(const OrderSummaryWidgetEntity(
-                type: WidgetType.mobileOrderSummary, title: "Order Summary"));
-            widgetEntities.add(const ShippingMethodWidgetEntity(
-                type: WidgetType.mobileShippingMethod,
-                title: "Shipping Method"));
-            widgetEntities.add(const CartContentsWidgetEntity(
-                type: WidgetType.mobileCartContents, title: "Cart Contents"));
-
             widgetEntities.add(mobileCartWidget);
           case WidgetType.unknown:
           default:
@@ -442,6 +432,10 @@ class CmsUseCase extends BaseUseCase {
               case 'saveOrder':
                 cartWidget =
                     cartWidget.copyWith(isSavedOrderEnabled: innerValue);
+                break;
+              case 'addToList':
+                cartWidget =
+                    cartWidget.copyWith(isAddToListEnabled: innerValue);
                 break;
             }
           });
