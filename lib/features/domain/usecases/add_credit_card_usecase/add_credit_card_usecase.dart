@@ -24,6 +24,12 @@ class AddCreditCardUsecase extends BaseUseCase {
         .getTokenExConfiguration(token);
   }
 
+  Future<Result<SpreedlyDto, ErrorResponse>> getSpreedlyConfiguration() async {
+    return await coreServiceProvider
+        .getAppConfigurationService()
+        .getSpreedlyConfiguration();
+  }
+
   Future<Result<AccountPaymentProfile, ErrorResponse>> savePaymentProfile(
       AccountPaymentProfile paymentProfile) async {
     return await commerceAPIServiceProvider
@@ -36,5 +42,11 @@ class AddCreditCardUsecase extends BaseUseCase {
     return await commerceAPIServiceProvider
         .getAccountService()
         .deletePaymentProfile(paymentProfileId);
+  }
+
+  Future<Result<WebsiteSettings, ErrorResponse>> getWebSiteSetting() {
+    return commerceAPIServiceProvider
+        .getSettingsService()
+        .getWebsiteSettingsAsync();
   }
 }
