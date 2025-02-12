@@ -7,6 +7,11 @@ class AddToCartSuccess extends AddToCartState {
   AddToCartSuccess({required this.addToCartMsg});
 }
 
+class AddToCartInvalidPrice extends AddToCartState {
+  final String errorResponse;
+  AddToCartInvalidPrice({required this.errorResponse});
+}
+
 class AddToCartFailure extends AddToCartState {
   final String errorResponse;
   AddToCartFailure({required this.errorResponse});

@@ -18,6 +18,8 @@ class ProductDetailsAddToCartBloc
   String messageAddtoCartFail = SiteMessageConstants.defaultValueAddToCartFail;
   String messageAddToCartQuantityAdjusted =
       SiteMessageConstants.defaultValueAddToCartQuantityAdjusted;
+  String messageAddtoCartFailInvalidPrice =
+      SiteMessageConstants.defaultValueCartInvalidPrice;
 
   ProductDetailsAddToCartBloc(
       {required ProductDetailsAddToCartUseCase productDetailsAddToCartUseCase,
@@ -64,6 +66,14 @@ class ProductDetailsAddToCartBloc
         .productDetailsAddToCartEntity.productDetailsPriceEntity?.styledProduct;
     var productId = styledProduct?.productId ?? product?.id;
     var quantity = int.parse(event.productDetailsAddToCartEntity.quantityText!);
+
+    if (product?.allowZeroPricing != true &&
+        product?.pricing != null &&
+        product?.pricing?.unitNetPrice == 0) {
+      emit(ProductDetailsAddToCartInvalidPrice());
+      return;
+    }
+
     List<SectionOptionDto> sectionOptions =
         event.productDetailsDataEntity.selectedConfigurations?.values.map((s) {
               return SectionOptionDto(
@@ -114,11 +124,16 @@ class ProductDetailsAddToCartBloc
         SiteMessageConstants.nameAddToCartQuantityAdjusted,
         SiteMessageConstants.defaultValueAddToCartQuantityAdjusted,
       ),
+      _productDetailsAddToCartUseCase.getSiteMessage(
+        SiteMessageConstants.nameCartInvalidPrice,
+        SiteMessageConstants.defaultValueCartInvalidPrice,
+      ),
     ]);
 
     messageAddToCartSuccess = futureResult[0];
     messageAddtoCartFail = futureResult[1];
     messageAddToCartQuantityAdjusted = futureResult[2];
+    messageAddtoCartFailInvalidPrice = futureResult[3];
 
     return;
   }
