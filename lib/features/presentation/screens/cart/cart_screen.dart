@@ -347,12 +347,21 @@ class CartPage extends StatelessWidget {
   }
 
   double getInitialBottomSheetSize(double height) {
-    var initialHeight = 70;
+    var initialHeight = CoreConstants.cartBottomSheetInitialSize;
     return initialHeight / height;
   }
 
+  /// Calculates the expanded size of the bottom sheet as a fraction of the screen height.
+  ///
+  /// The bottom sheet contains fixed and dynamic buttons:
+  /// - There are always two fixed buttons (e.g., "Add to List" and "Save Order").
+  /// - If `isQuoteVisible` is `true`, an additional "Request a Quote" button is included.
+  /// - The total height is then adjusted by `cartBottomSheetInitialSize`.
   double getExpandedBottomSheetSize(double height, isQuoteVisible) {
-    var initialHeight = isQuoteVisible ? 220 : 170;
+    var initialHeight = (isQuoteVisible
+            ? CoreConstants.cartBottomPerButtonSize * 3
+            : CoreConstants.cartBottomPerButtonSize * 2) +
+        CoreConstants.cartBottomSheetInitialSize;
     return initialHeight / height;
   }
 
@@ -433,6 +442,14 @@ class CartPage extends StatelessWidget {
     return SizedBox(
       height: 60,
       child: BlocBuilder<CartPageBloc, CartPageState>(
+        buildWhen: (previous, current) {
+          if (current is CartPageWarningDialogShowState ||
+              current is CartProceedToCheckoutState ||
+              current is CartPageCheckoutButtonLoadingState) {
+            return false;
+          }
+          return true;
+        },
         builder: (_, state) {
           if (state is CartPageCheckoutButtonLoadingState) {
             return const Center(child: CircularProgressIndicator());
