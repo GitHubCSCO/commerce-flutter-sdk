@@ -57,11 +57,13 @@ class VMIService extends ServiceBase implements IVmiService {
 
     switch (result) {
       case Success(value: final data):
-        closestVmiLocation = data?.vmiLocations.first;
-        currentVmiLocation = closestVmiLocation;
-        await _commerceAPIServiceProvider
-            .getCacheService()
-            .persistData<VmiLocationModel>(key, closestVmiLocation!);
+        if (data?.vmiLocations.isNotEmpty == true) {
+          closestVmiLocation = data?.vmiLocations.first;
+          currentVmiLocation = closestVmiLocation;
+          await _commerceAPIServiceProvider
+              .getCacheService()
+              .persistData<VmiLocationModel>(key, closestVmiLocation!);
+        }
       case Failure(errorResponse: final errorResponse):
         _coreServiceProvider
             .getTrackingService()
