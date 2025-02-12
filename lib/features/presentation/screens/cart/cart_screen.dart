@@ -75,11 +75,7 @@ class CartPage extends StatelessWidget {
               screenName: AnalyticsConstants.screenNameCart)
         ],
       ),
-      bottomNavigationBar: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.only(bottom: 16.0, right: 16.0, left: 16.0),
-        child: _buildCheckoutButton(context),
-      ),
+      bottomNavigationBar: _buildFooterWidget(context),
       body: MultiBlocListener(
           listeners: [
             BlocListener<RootBloc, RootState>(
@@ -433,49 +429,57 @@ class CartPage extends StatelessWidget {
             strValue: grandTotal)));
   }
 
-  Widget _buildCheckoutButton(BuildContext context) {
-    var cartPageBloc = context.watch<CartPageBloc>();
-
-    return BlocBuilder<CartPageBloc, CartPageState>(
-      builder: (_, state) {
-        if (state is CartPageCheckoutButtonLoadingState) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is CartPageLoadedState) {
-          if (cartPageBloc.checkoutButtonVisible) {
-            return SizedBox(
-              height: 45,
-              child: PrimaryButton(
-                isEnabled: cartPageBloc.isCheckoutButtonEnabled,
-                onPressed: () {
-                  final currentState = context.read<AuthCubit>().state;
-                  handleAuthStatusForCheckout(context, currentState.status,
-                      context.read<CartPageBloc>());
-                },
-                text: cartPageBloc.approvalButtonVisible
-                    ? LocalizationConstants.checkoutForApproval.localized()
-                    : LocalizationConstants.checkout.localized(),
-              ),
-            );
-          } else if (cartPageBloc.canSubmitForQuote) {
-            return SizedBox(
-              height: 45,
-              child: SecondaryButton(
-                onPressed: () {
-                  final currentState = context.read<AuthCubit>().state;
-                  handleAuthStatusForSubmitQuote(
-                      context, currentState.status, state);
-                },
-                text: cartPageBloc.submitForQuoteTitle,
-              ),
-            );
-          } else {
-            return const SizedBox(height: 45, child: Center());
+  Widget _buildFooterWidget(BuildContext context) {
+    return SizedBox(
+      height: 60,
+      child: BlocBuilder<CartPageBloc, CartPageState>(
+        builder: (_, state) {
+          if (state is CartPageCheckoutButtonLoadingState) {
+            return const Center(child: CircularProgressIndicator());
           }
-        } else {
-          return const SizedBox(height: 45, child: Center());
-        }
-      },
+
+          if (state is! CartPageLoadedState) {
+            return const Center();
+          }
+
+          return Container(
+            color: Colors.white,
+            padding:
+                const EdgeInsets.only(bottom: 16.0, right: 16.0, left: 16.0),
+            child: _buildFooterButton(context, state),
+          );
+        },
+      ),
     );
+  }
+
+  Widget _buildFooterButton(BuildContext context, CartPageLoadedState state) {
+    var cartPageBloc = context.watch<CartPageBloc>();
+    var authCubit = context.read<AuthCubit>();
+
+    if (cartPageBloc.checkoutButtonVisible) {
+      return PrimaryButton(
+        isEnabled: cartPageBloc.isCheckoutButtonEnabled,
+        onPressed: () {
+          final currentState = authCubit.state;
+          handleAuthStatusForCheckout(
+              context, currentState.status, context.read<CartPageBloc>());
+        },
+        text: cartPageBloc.approvalButtonVisible
+            ? LocalizationConstants.checkoutForApproval.localized()
+            : LocalizationConstants.checkout.localized(),
+      );
+    } else if (cartPageBloc.canSubmitForQuote) {
+      return SecondaryButton(
+        onPressed: () {
+          final currentState = authCubit.state;
+          handleAuthStatusForSubmitQuote(context, currentState.status, state);
+        },
+        text: cartPageBloc.submitForQuoteTitle,
+      );
+    } else {
+      return const Center();
+    }
   }
 
   void handleAuthStatusForCheckout(
