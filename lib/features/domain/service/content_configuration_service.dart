@@ -140,13 +140,13 @@ class ContentConfigurationService implements IContentConfigurationService {
   Future<Result<PageContentManagement, ErrorResponse>>
       getPageContentManagmentDataRepresentationForContentType(
           PageContentType contentType, bool useCache) async {
-     var pageKey = getPageKeyForContentType(contentType);
+    var pageKey = getPageKeyForContentType(contentType);
     var response = await _commerceAPIServiceProvider
         .getMobileSpireContentService()
         .getPageContenManagmentSpire(pageKey);
     switch (response) {
       case Success(value: final value):
-        { 
+        {
           if (value != null && value.statusCode != 404 && value.page != null) {
             currentCMSMode = CMSMode.spire;
             return Success(value);
@@ -166,10 +166,8 @@ class ContentConfigurationService implements IContentConfigurationService {
 
               case Failure(errorResponse: final errorResponse):
                 {
-                  
                   var cmcLocalData = await _loadCMSFromLocally(pageKey);
                   return Success(cmcLocalData);
-
                 }
             }
           }

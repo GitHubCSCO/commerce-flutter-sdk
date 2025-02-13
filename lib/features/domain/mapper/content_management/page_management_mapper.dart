@@ -50,7 +50,6 @@ class PageContentManagementMapper {
         addToList: model.addToList,
         saveOrder: model.saveOrder,
         addDiscount: model.addDiscount,
-        
       );
   PageClassicChildWidgetEntity toPageClassicChildWidgetEntity(
           PageClassicChildWidget model) =>
