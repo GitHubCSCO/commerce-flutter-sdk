@@ -7,7 +7,7 @@ class ShopUseCase extends CmsUseCase {
   ShopUseCase({super.contentType});
 
   @override
-  PageContentType get contentType => PageContentType.shop;
+  PageContentType get contentType => PageContentType.cart;
 
   Future<Result<List<WidgetEntity>, ErrorResponse>> loadData() async {
     var result = await super.getCMSData();

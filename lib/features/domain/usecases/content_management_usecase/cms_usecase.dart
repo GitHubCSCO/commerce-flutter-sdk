@@ -118,6 +118,11 @@ class CmsUseCase extends BaseUseCase {
             final locationNoteWidget =
                 LocationNoteWidgetEntity(title: pageClassicWidget.title);
             widgetEntities.add(locationNoteWidget);
+          case WidgetType.mobileCartButtonsWidget:
+            final mobileCartWidget =
+                await convertWidgetToMobileCartButtonWidgetEntityClassic(
+                    pageClassicWidget);
+            widgetEntities.add(mobileCartWidget);
           case WidgetType.unknown:
           default:
             break;
@@ -213,6 +218,21 @@ class CmsUseCase extends BaseUseCase {
     );
 
     return carouselWidget;
+  }
+
+  Future<CartButtonsWidgetEntity>
+      convertWidgetToMobileCartButtonWidgetEntityClassic(
+          PageClassicWidgetEntity pageClassicWidget) async {
+    var cartWidget = const CartButtonsWidgetEntity();
+
+    cartWidget =
+        cartWidget.copyWith(isAddToListEnabled: pageClassicWidget.addToList);
+    cartWidget = cartWidget.copyWith(
+        isAddDiscountEnabled: pageClassicWidget.addDiscount);
+    cartWidget =
+        cartWidget.copyWith(isSavedOrderEnabled: pageClassicWidget.saveOrder);
+
+    return cartWidget;
   }
 
   // spire

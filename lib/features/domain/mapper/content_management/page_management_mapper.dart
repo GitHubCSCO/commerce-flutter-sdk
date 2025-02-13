@@ -47,6 +47,10 @@ class PageContentManagementMapper {
         cssClass: model.cssClass,
         timerSpeed: model.timerSpeed,
         animationSpeed: model.animationSpeed,
+        addToList: model.addToList,
+        saveOrder: model.saveOrder,
+        addDiscount: model.addDiscount,
+        
       );
   PageClassicChildWidgetEntity toPageClassicChildWidgetEntity(
           PageClassicChildWidget model) =>
