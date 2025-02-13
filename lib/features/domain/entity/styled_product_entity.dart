@@ -28,6 +28,7 @@ class StyledProductEntity extends Equatable {
   final List<WarehouseEntity>? warehouses;
   final bool? trackInventory;
   final Properties? properties;
+  final bool? allowZeroPricing;
 
   const StyledProductEntity({
     this.availability,
@@ -48,6 +49,7 @@ class StyledProductEntity extends Equatable {
     this.trackInventory,
     this.warehouses,
     this.properties,
+    this.allowZeroPricing,
   });
 
   @override
@@ -70,6 +72,7 @@ class StyledProductEntity extends Equatable {
         warehouses,
         trackInventory,
         properties,
+        allowZeroPricing,
       ];
 
   StyledProductEntity copyWith({
@@ -91,6 +94,7 @@ class StyledProductEntity extends Equatable {
     List<WarehouseEntity>? warehouses,
     bool? trackInventory,
     Properties? properties,
+    bool? allowZeroPricing,
   }) {
     return StyledProductEntity(
       productId: productId ?? this.productId,
@@ -112,6 +116,7 @@ class StyledProductEntity extends Equatable {
       warehouses: warehouses ?? this.warehouses,
       trackInventory: trackInventory ?? this.trackInventory,
       properties: properties ?? this.properties,
+      allowZeroPricing: allowZeroPricing ?? this.allowZeroPricing,
     );
   }
 }

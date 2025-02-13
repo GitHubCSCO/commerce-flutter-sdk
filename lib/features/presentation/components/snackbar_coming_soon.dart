@@ -153,7 +153,7 @@ class CustomSnackBar {
   static void showCreditCardSavedFailure(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text("Can not add  card"),
+        content: Text("Can not add card"),
         duration: Duration(seconds: 1),
       ),
     );

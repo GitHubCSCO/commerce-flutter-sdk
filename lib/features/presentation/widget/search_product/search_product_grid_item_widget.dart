@@ -109,6 +109,14 @@ class SearchProductGridItemWidget extends StatelessWidget
                                   CustomSnackBar.showProductAddedToCart(
                                       context, state.addToCartMsg);
                                 }
+
+                                if (state is AddToCartInvalidPrice) {
+                                  CustomSnackBar.showSnackBarMessage(
+                                    context,
+                                    state.errorResponse,
+                                    seconds: 4,
+                                  );
+                                }
                               },
                               child:
                                   BlocBuilder<AddToCartCubit, AddToCartState>(

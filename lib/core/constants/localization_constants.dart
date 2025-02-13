@@ -689,6 +689,9 @@ enum LocalizationConstants {
   recentlyViewed(keyword: "Recently Viewed"),
   webCrossSells(keyword: "Cross Sells"),
   externalBrowserOpenWarningTitle(keyword: "System WebView disabled"),
+  noVMILocationFound(
+      keyword:
+          "No vmi location found. Assign a VMI location before continuing."),
   externalBrowserOpenWarningMsg(
       keyword:
           "System WebView is disabled. We are opening the link in an external browser. Please note, you will not be logged in."),
