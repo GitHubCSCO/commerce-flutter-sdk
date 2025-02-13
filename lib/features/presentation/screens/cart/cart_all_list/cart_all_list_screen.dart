@@ -22,12 +22,22 @@ class CartAllListScreenArguments {
 
   factory CartAllListScreenArguments.fromJson(Map<String, dynamic> json) {
     return CartAllListScreenArguments(
-      orderNumber: json['orderNumber'],
+      orderNumber: json['orderNumber'] ?? '',
       showClearCart: json['showClearCart'],
       hidePricingEnable: json['hidePricingEnable'],
       hideInventoryEnable: json['hideInventoryEnable'],
-      cartLineEntities: json['cartLineEntities'],
+      cartLineEntities: json['cartLineEntities'] ?? [],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'orderNumber': orderNumber,
+      'showClearCart': showClearCart,
+      'hidePricingEnable': hidePricingEnable,
+      'hideInventoryEnable': hideInventoryEnable,
+      'cartLineEntities': cartLineEntities,
+    };
   }
 }
 
