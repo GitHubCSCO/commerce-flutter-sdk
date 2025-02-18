@@ -785,7 +785,7 @@ List<NavigationNode> _getNavigationRoot() {
         showClearCart: arguments.showClearCart,
         hidePricingEnable: arguments.hidePricingEnable,
         hideInventoryEnable: arguments.hideInventoryEnable,
-        cartLineEntities: arguments.cartLineEntities,
+        cart: arguments.cart,
       );
     },
     parent: null,
