@@ -1,23 +1,24 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_header_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class CartAllListScreenArguments {
   final String orderNumber;
   final bool? showClearCart;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
-  final List<CartLineEntity> cartLineEntities;
+  final Cart cart;
 
   CartAllListScreenArguments({
     required this.orderNumber,
     this.showClearCart,
     this.hidePricingEnable,
     this.hideInventoryEnable,
-    required this.cartLineEntities,
+    required this.cart,
   });
 
   factory CartAllListScreenArguments.fromJson(Map<String, dynamic> json) {
@@ -26,7 +27,7 @@ class CartAllListScreenArguments {
       showClearCart: json['showClearCart'],
       hidePricingEnable: json['hidePricingEnable'],
       hideInventoryEnable: json['hideInventoryEnable'],
-      cartLineEntities: json['cartLineEntities'] ?? [],
+      cart: json['cart'],
     );
   }
 
@@ -36,7 +37,7 @@ class CartAllListScreenArguments {
       'showClearCart': showClearCart,
       'hidePricingEnable': hidePricingEnable,
       'hideInventoryEnable': hideInventoryEnable,
-      'cartLineEntities': cartLineEntities,
+      'cart': cart,
     };
   }
 }
@@ -46,7 +47,7 @@ class CartAllListScreen extends StatelessWidget {
   final bool? showClearCart;
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
-  final List<CartLineEntity> cartLineEntities;
+  final Cart cart;
 
   const CartAllListScreen({
     super.key,
@@ -54,7 +55,7 @@ class CartAllListScreen extends StatelessWidget {
     this.showClearCart,
     this.hidePricingEnable,
     this.hideInventoryEnable,
-    required this.cartLineEntities,
+    required this.cart,
   });
 
   @override
@@ -71,17 +72,20 @@ class CartAllListScreen extends StatelessWidget {
             child: SafeArea(
               child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: cartLineEntities.length + 1,
+                itemCount: cart.cartLines?.length ?? 0 + 1,
                 itemBuilder: (context, index) {
                   if (index == 0) {
                     return CartContentHeaderWidget(
                       orderNumber: orderNumber,
                       showClearCart: showClearCart,
-                      cartCount: cartLineEntities.length,
+                      cartCount: cart.cartLines?.length ?? 0,
                     );
                   }
 
-                  final cartLineEntity = cartLineEntities[index - 1];
+                  final cartLineEntity = CartLineEntityMapper.toEntity(
+                    cart.cartLines?[index - 1] ?? CartLine(),
+                  );
+
                   return CartLineWidget(
                     cartLineEntity: cartLineEntity,
                     showRemoveButton:
