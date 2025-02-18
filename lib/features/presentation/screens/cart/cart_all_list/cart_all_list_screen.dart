@@ -12,6 +12,7 @@ class CartAllListScreenArguments {
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
   final Cart cart;
+  final String shippingMethod;
 
   CartAllListScreenArguments({
     required this.orderNumber,
@@ -19,6 +20,7 @@ class CartAllListScreenArguments {
     this.hidePricingEnable,
     this.hideInventoryEnable,
     required this.cart,
+    required this.shippingMethod,
   });
 
   factory CartAllListScreenArguments.fromJson(Map<String, dynamic> json) {
@@ -28,6 +30,7 @@ class CartAllListScreenArguments {
       hidePricingEnable: json['hidePricingEnable'],
       hideInventoryEnable: json['hideInventoryEnable'],
       cart: json['cart'],
+      shippingMethod: json['shippingMethod'],
     );
   }
 
@@ -38,6 +41,7 @@ class CartAllListScreenArguments {
       'hidePricingEnable': hidePricingEnable,
       'hideInventoryEnable': hideInventoryEnable,
       'cart': cart,
+      'shippingMethod': shippingMethod,
     };
   }
 }
@@ -48,7 +52,7 @@ class CartAllListScreen extends StatelessWidget {
   final bool? hidePricingEnable;
   final bool? hideInventoryEnable;
   final Cart cart;
-
+  final String shippingMethod;
   const CartAllListScreen({
     super.key,
     required this.orderNumber,
@@ -56,6 +60,7 @@ class CartAllListScreen extends StatelessWidget {
     this.hidePricingEnable,
     this.hideInventoryEnable,
     required this.cart,
+    required this.shippingMethod,
   });
 
   @override

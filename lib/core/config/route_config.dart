@@ -786,6 +786,7 @@ List<NavigationNode> _getNavigationRoot() {
         hidePricingEnable: arguments.hidePricingEnable,
         hideInventoryEnable: arguments.hideInventoryEnable,
         cart: arguments.cart,
+        shippingMethod: arguments.shippingMethod,
       );
     },
     parent: null,
