@@ -778,17 +778,7 @@ List<NavigationNode> _getNavigationRoot() {
   final cartAllList = createNode(
     name: AppRoute.cartAllList.name,
     path: AppRoute.cartAllList.suffix,
-    builder: (context, state) {
-      final arguments = state.extra as CartAllListScreenArguments;
-      return CartAllListScreen(
-        orderNumber: arguments.orderNumber,
-        showClearCart: arguments.showClearCart,
-        hidePricingEnable: arguments.hidePricingEnable,
-        hideInventoryEnable: arguments.hideInventoryEnable,
-        cart: arguments.cart,
-        shippingMethod: arguments.shippingMethod,
-      );
-    },
+    builder: (context, state) => const CartAllListScreen(),
     parent: null,
   );
 
