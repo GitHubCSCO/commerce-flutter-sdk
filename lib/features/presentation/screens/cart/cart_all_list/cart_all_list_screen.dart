@@ -17,7 +17,6 @@ import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.d
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_state.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_header_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_widget.dart';
@@ -93,18 +92,6 @@ class CartAllListPage extends StatelessWidget {
               }
             },
           ),
-          BlocListener<CartCountCubit, CountState>(
-            listener: (context, state) {
-              if (state is CartTabReloadState) {
-                final isCartItemChanged =
-                    context.read<CartCountCubit>().cartItemChanged();
-                if (isCartItemChanged) {
-                  context.read<CartCountCubit>().setCartItemChange(false);
-                  _reloadCartItemsList(context);
-                }
-              }
-            },
-          ),
         ],
         child: RefreshIndicator(
           onRefresh: () async {
@@ -118,8 +105,7 @@ class CartAllListPage extends StatelessWidget {
               if (state is CartContentClearAllSuccessState ||
                   state is CartContentItemRemovedSuccessState) {
                 unawaited(context.read<CartCountCubit>().onCartItemChange());
-                unawaited(context.read<CartCountCubit>().onSelectCartTab());
-                context.read<CartPageBloc>().add(CartPageLoadEvent());
+                context.read<RootBloc>().add(RootCartUpdateEvent());
               } else if (state is CartContentQuantityChangedSuccessState) {
                 if (state.message != null) {
                   CustomSnackBar.showSnackBarMessage(
@@ -128,8 +114,7 @@ class CartAllListPage extends StatelessWidget {
                   );
                 }
                 unawaited(context.read<CartCountCubit>().onCartItemChange());
-                unawaited(context.read<CartCountCubit>().onSelectCartTab());
-                context.read<CartPageBloc>().add(CartPageLoadEvent());
+                context.read<RootBloc>().add(RootCartUpdateEvent());
               }
             },
             builder: (context, state) {
