@@ -271,8 +271,10 @@ List<NavigationNode> _getNavigationRoot() {
     name: AppRoute.topLevelProductDetails.name,
     path: AppRoute.topLevelProductDetails.fullPath,
     builder: (context, state) => ProductDetailsScreen(
-        productId: state.pathParameters['productId'] ?? '',
-        product: state.extra as ProductEntity?),
+      productId: state.pathParameters['productId'] ?? '',
+      product: state.extra as ProductEntity?,
+      shouldEagerReloadCart: true,
+    ),
     parent: null,
   );
 
