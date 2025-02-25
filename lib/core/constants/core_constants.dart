@@ -49,6 +49,8 @@ class CoreConstants {
   static const double drawRectWidthFactor = 0.80;
   static const double drawRectHeightFactor = 0.70;
   static const double topOffsetFactor = 0.70;
+  static const double cartBottomSheetInitialSize = 70;
+  static const double cartBottomPerButtonSize = 50;
   static const String domainKey = 'DomainKey';
   static const String devMode = 'DevMode';
 }
