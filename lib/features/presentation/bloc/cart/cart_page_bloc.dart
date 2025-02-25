@@ -156,7 +156,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
   }
 
   List<CartLineEntity> getCartLines() {
-    List<CartLineEntity> cartlines = [];
+    var cartLines = <CartLineEntity>[];
     for (var cartLine in cart?.cartLines ?? []) {
       var cartLineEntity = CartLineEntityMapper.toEntity(cartLine);
       var shouldShowWarehouseInventoryButton =
@@ -166,9 +166,9 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
       cartLineEntity = cartLineEntity.copyWith(
           showInventoryAvailability: shouldShowWarehouseInventoryButton,
           promoItemMessage: promoItemMessage);
-      cartlines.add(cartLineEntity);
+      cartLines.add(cartLineEntity);
     }
-    return cartlines;
+    return cartLines;
   }
 
   List<AddCartLine> getAddCartLines() {

@@ -2,6 +2,7 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
@@ -475,23 +476,12 @@ class CartPage extends StatelessWidget {
                 ? ShippingOption.pickUp
                 : ShippingOption.ship));
 
-    if (!(hidePricingEnable ?? false)) {
-      list.add(
-          CartPaymentSummaryWidget(paymentSummaryEntity: paymentSummaryEntity));
-    }
-    list.add(BlocProvider<CartShippingSelectionBloc>(
-      create: (context) => sl<CartShippingSelectionBloc>()
-        ..add(CartShippingOptionDefaultEvent(shippingEntity.shippingMethod!)),
-      child: CartShippingWidget(
-        shippingEntity: shippingEntity,
-        onCallBack: _handlePickUpLocationCallBack,
-      ),
-    ));
-
     list.add(BlocProvider<CartContentBloc>(
       create: (context) => sl<CartContentBloc>(),
       child: Builder(
         builder: (context) {
+          var items = context.read<CartPageBloc>().getCartLines();
+
           return BlocListener<SavedOrderHandlerCubit, SavedOrderHandlerState>(
             listener: (context, state) {
               if (state.status == SavedOrderHandlerStatus.shouldClearCart) {
@@ -510,20 +500,53 @@ class CartPage extends StatelessWidget {
                 );
               }
             },
-            child: CartLineWidgetList(
-              oderNumber: context.read<CartPageBloc>().cart?.orderNumber ?? '',
-              cartLineEntities: context.read<CartPageBloc>().getCartLines(),
-              onCartChangeCallBack: (context) {
-                context.read<CartCountCubit>().loadCurrentCartCount();
-                context.read<CartPageBloc>().add(CartPageLoadEvent());
-              },
-              hidePricingEnable: hidePricingEnable,
-              hideInventoryEnable: hideInventoryEnable,
+            child: Column(
+              children: [
+                CartLineWidgetList(
+                  oderNumber:
+                      context.read<CartPageBloc>().cart?.orderNumber ?? '',
+                  cartLineEntities: items
+                      .take(CoreConstants.maximumItemDisplayInCart)
+                      .toList(),
+                  onCartChangeCallBack: (context) {
+                    context.read<CartCountCubit>().loadCurrentCartCount();
+                    context.read<CartPageBloc>().add(CartPageLoadEvent());
+                  },
+                  hidePricingEnable: hidePricingEnable,
+                  hideInventoryEnable: hideInventoryEnable,
+                ),
+                if (items.length > CoreConstants.maximumItemDisplayInCart) ...{
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 16),
+                    clipBehavior: Clip.antiAlias,
+                    decoration: const BoxDecoration(color: Colors.white),
+                    child: TertiaryBlackButton(
+                      text: LocalizationConstants.viewMoreCartItems.localized(),
+                      onPressed: () {},
+                    ),
+                  ),
+                }
+              ],
             ),
           );
         },
       ),
     ));
+
+    if (!(hidePricingEnable ?? false)) {
+      list.add(
+          CartPaymentSummaryWidget(paymentSummaryEntity: paymentSummaryEntity));
+    }
+    list.add(BlocProvider<CartShippingSelectionBloc>(
+      create: (context) => sl<CartShippingSelectionBloc>()
+        ..add(CartShippingOptionDefaultEvent(shippingEntity.shippingMethod!)),
+      child: CartShippingWidget(
+        shippingEntity: shippingEntity,
+        onCallBack: _handlePickUpLocationCallBack,
+      ),
+    ));
+
     list.add(const SizedBox(height: 8));
 
     return list;
