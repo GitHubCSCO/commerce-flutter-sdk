@@ -4,6 +4,7 @@ class CartButtonsWidgetEntity extends WidgetEntity {
   final String? title;
   final bool? isAddDiscountEnabled;
   final bool? isSavedOrderEnabled;
+  final bool? isAddToListEnabled;
 
   const CartButtonsWidgetEntity(
       {String? id,
@@ -11,7 +12,8 @@ class CartButtonsWidgetEntity extends WidgetEntity {
       String? subType,
       this.title,
       this.isAddDiscountEnabled,
-      this.isSavedOrderEnabled})
+      this.isSavedOrderEnabled,
+      this.isAddToListEnabled})
       : super(id: id, type: type, subType: subType);
 
   @override
@@ -25,6 +27,7 @@ class CartButtonsWidgetEntity extends WidgetEntity {
     String? title,
     bool? isAddDiscountEnabled,
     bool? isSavedOrderEnabled,
+    bool? isAddToListEnabled,
   }) {
     return CartButtonsWidgetEntity(
       id: id ?? this.id,
@@ -33,6 +36,7 @@ class CartButtonsWidgetEntity extends WidgetEntity {
       title: title ?? this.title,
       isAddDiscountEnabled: isAddDiscountEnabled ?? this.isAddDiscountEnabled,
       isSavedOrderEnabled: isSavedOrderEnabled ?? this.isSavedOrderEnabled,
+      isAddToListEnabled: isAddToListEnabled ?? this.isAddToListEnabled,
     );
   }
 }
