@@ -17,6 +17,7 @@ class PaymentDetailsBloc
   PaymentMethodDto? selectedPaymentMethod;
   Cart? cart;
   CartSettings? settings;
+  WebsiteSettings? websiteSettings;
   AccountPaymentProfile? accountPaymentProfile;
   TokenExDto? tokenExConfiguration;
   final _poNumberController = TextEditingController();
@@ -36,6 +37,9 @@ class PaymentDetailsBloc
     on<UpdateNewAccountPaymentProfileEvent>((event, emit) async {
       await _updateNewAccountPaymentPorfile(event, emit);
     });
+    on<ValidateTokenEvent>((event, emit) async {
+      emit(PaymentDetailsValidateTokenState());
+    });
   }
 
   void _updateCreditCardInfoToCart(
@@ -53,10 +57,12 @@ class PaymentDetailsBloc
 
     var cartResponse = await _paymentDetailsUseCase.getCurrentCart();
     var cartSettings = await _paymentDetailsUseCase.getCartSetting();
+    var webSiteSetting = await _paymentDetailsUseCase.getWebSiteSetting();
     cart = (cartResponse is Success)
         ? (cartResponse as Success).value
         : event.cart;
     settings = cartSettings.getResultSuccessValue();
+    websiteSettings = webSiteSetting.getResultSuccessValue();
     _setUpSelectedPaymentMethod(cart!);
     await _setupPaymentDataSources(
         UpdatePaymentMethodEvent(
@@ -220,13 +226,14 @@ class PaymentDetailsBloc
   }) {
     this.isCVVFieldOpened = isCVVFieldOpened;
     return PaymentDetailsLoaded(
-      isNewCreditCard: isNewCreditCard,
-      tokenExEntity: tokenExEntity,
-      cardDetails: cardDetails,
-      showPOField: showPOField,
-      poTextEditingController: _poNumberController,
-      cart: cart,
-    );
+        isNewCreditCard: isNewCreditCard,
+        tokenExEntity: tokenExEntity,
+        cardDetails: cardDetails,
+        showPOField: showPOField,
+        poTextEditingController: _poNumberController,
+        cart: cart,
+        useTokenExGateway: websiteSettings?.useTokenExGateway ?? false,
+        useSpreedlyDropIn: websiteSettings?.useSpreedlyDropIn ?? false);
   }
 
   String _getCardDetails(AccountPaymentProfile creditCard) {

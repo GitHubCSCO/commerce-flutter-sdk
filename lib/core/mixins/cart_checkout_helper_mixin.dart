@@ -48,6 +48,23 @@ mixin CartCheckoutHelperMixin {
       errorMessageBuilder.write(msg);
     }
 
+    final hasInvalidPrice = cart.cartLines != null &&
+        cart.cartLines!.any(
+          (cartLine) =>
+              cartLine.allowZeroPricing != true &&
+              cartLine.pricing?.unitNetPrice == 0 &&
+              cartLine.isPromotionItem != true &&
+              cartLine.isDiscounted != true,
+        );
+
+    if (hasInvalidPrice) {
+      var msg = await useCase.getSiteMessage(
+        SiteMessageConstants.nameCartInvalidPriceAtCheckout,
+        SiteMessageConstants.defaultValueCartInvalidPriceAtCheckout,
+      );
+      errorMessageBuilder.write(msg);
+    }
+
     return Future.value(errorMessageBuilder.toString());
   }
 

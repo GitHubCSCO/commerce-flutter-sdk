@@ -81,6 +81,7 @@ class QuoteLineEntity extends CartLineEntity {
       this.hidePricingEnable,
       this.quoteLinePricingBreakList,
       super.promoItemMessage,
+      super.allowZeroPricing,
       super.properties})
       : super();
   @override
@@ -141,6 +142,7 @@ class QuoteLineEntity extends CartLineEntity {
       bool? hidePricingEnable,
       bool? hideInventoryEnable,
       String? promoItemMessage,
+      bool? allowZeroPricing,
       Properties? properties}) {
     return QuoteLineEntity(
         quoteLinePricingBreakList:
@@ -202,6 +204,7 @@ class QuoteLineEntity extends CartLineEntity {
         hidePricingEnable: hidePricingEnable ?? this.hidePricingEnable,
         hideInventoryEnable: hideInventoryEnable ?? this.hideInventoryEnable,
         promoItemMessage: promoItemMessage ?? this.promoItemMessage,
+        allowZeroPricing: allowZeroPricing ?? this.allowZeroPricing,
         properties: properties ?? this.properties);
   }
 

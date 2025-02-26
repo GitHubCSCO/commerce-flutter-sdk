@@ -81,6 +81,10 @@ class SiteMessageConstants {
       "Cart_InsufficientInventoryAtCheckout";
   static String get nameCartInsufficientPickupInventory =>
       "Cart_InsufficientPickupInventory";
+  static String get nameCartInvalidPrice => "Cart_InvalidPrice";
+  static String get nameCartInvalidPriceAtCheckout =>
+      "Cart_InvalidPriceAtCheckout";
+
   static String get nameMobileAppSignInAgreement =>
       "MobileApp_SignIn_Agreement";
 
@@ -268,6 +272,10 @@ class SiteMessageConstants {
       "Please review the items not available for pick up.";
   static String get defaultMobileAppSignInAgreement =>
       "By logging in, you agree to the {0} and {1}";
+  static String get defaultValueCartInvalidPrice =>
+      "Unable to add item to cart because item has an invalid price. Please contact support.";
+  static String get defaultValueCartInvalidPriceAtCheckout =>
+      "Some items in your cart have an invalid price. Please review your cart before proceeding.";
 
   static String get defaultMobileAppAlertNoInternet => "No Internet Connection";
   static String get defaultMobileAppAlertNoInternetDescription =>
@@ -335,7 +343,7 @@ class SiteMessageConstants {
   static String get defaultAllProductCountExceed =>
       "Counts meet or exceeds their max available quantity.";
   static String get defaultSomeProductCountExceed =>
-      "Some products not been added to checkout as they exceed max qty count.";
+      "Some products could not be added to checkout as they exceed max qty count.";
 
   // values
   static String valueRealTimePricingLoadFail =

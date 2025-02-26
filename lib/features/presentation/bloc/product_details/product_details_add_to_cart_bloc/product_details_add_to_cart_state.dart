@@ -26,6 +26,9 @@ class ProductDetailsAddtoCartWarning extends ProductDetailsAddtoCartState {
   ProductDetailsAddtoCartWarning({this.warningMsg});
 }
 
+class ProductDetailsAddToCartInvalidPrice
+    extends ProductDetailsAddtoCartState {}
+
 // product added to cart
 class ProductDetailsProdctAddedToCartSuccess
     extends ProductDetailsAddtoCartState {}

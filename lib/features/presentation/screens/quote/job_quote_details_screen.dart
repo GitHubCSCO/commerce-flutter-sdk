@@ -321,7 +321,8 @@ class _ProductSection extends StatelessWidget {
                   ? LocalizationConstants.requiresQuote.localized()
                   : ProductPriceEntityMapper.toEntity(
                           jobQuoteLine.pricing ?? ProductPrice())
-                      .getPriceValue(),
+                      .getPriceValue(
+                          allowZeroPricing: cartLineEntity.allowZeroPricing),
               unitOfMeasureValueText: cartLineEntity.pricing?.getUnitOfMeasure(
                 !jobQuoteLine.unitOfMeasureDescription.isNullOrEmpty
                     ? ' / ${jobQuoteLine.unitOfMeasureDescription!}'

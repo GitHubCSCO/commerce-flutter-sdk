@@ -52,6 +52,7 @@ class AppConfigurationService extends ServiceBase
         json.decode(customConfigurationString) as Map<String, dynamic>);
   }
 
+  static const String _spreedlyConfigurationUrl = "/api/v1/spreedly/config";
   static const String _tokenExConfigurationUrl = "/api/v1/tokenexconfig";
   static const String _tokenExIFramePath = "mobilecreditcard";
 
@@ -274,5 +275,23 @@ class AppConfigurationService extends ServiceBase
   @override
   void setHidePricingEnable(bool enable) {
     hidePricingEnable = enable;
+  }
+
+  @override
+  Future<Result<SpreedlyDto, ErrorResponse>> getSpreedlyConfiguration() async {
+    var spreedlyDtoResponse = await getAsyncNoCache<SpreedlyDto>(
+        _spreedlyConfigurationUrl, SpreedlyDto.fromJson);
+
+    switch (spreedlyDtoResponse) {
+      case Success(value: final value):
+        {
+          return Success(value!);
+        }
+      case Failure(errorResponse: final errorResponse):
+        {
+          return Failure(
+              ErrorResponse(errorDescription: errorResponse.errorDescription));
+        }
+    }
   }
 }

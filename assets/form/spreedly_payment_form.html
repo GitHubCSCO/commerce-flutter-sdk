@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spreedly iFrame in Flutter</title>
+    <!-- Load the Spreedly iFrame JavaScript library -->
+    <script src="https://core.spreedly.com/iframe/iframe-v1.min.js"></script>
+    <style>
+      /* Styling for mobile responsiveness and Flutter-like underline input fields */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        background-color: #fff;
+      }
+
+      #spreedly-number,
+      #spreedly-cvv {
+        width: 100%;
+        height: 30px;
+        margin: 12px 0;
+        border: none;
+        border-bottom: 2px solid #ccc;
+        font-size: 16px;
+        background-color: transparent;
+        outline: none;
+      }
+      #spreedly-number:focus,
+      #spreedly-cvv:focus {
+        border-bottom: 2px solid #007bff;
+      }
+    </style>
+</head>
+<body>
+<div id="card-container">
+    <!-- Spreedly iFrame fields -->
+    <div id="spreedly-number"></div>
+    <div id="spreedly-cvv"></div>
+</div>
+
+<script>
+      // We'll set this later from Flutter:
+      let environmentKey = null;
+
+      function setEnvKey(key) {
+        environmentKey = key;
+        console.log("Environment key set: " + environmentKey);
+
+        // Initialize Spreedly iFrame
+        Spreedly.init(environmentKey, {
+          numberEl: "spreedly-number",
+          cvvEl: "spreedly-cvv",
+        });
+
+        // Listen for the "ready" event
+        Spreedly.on("ready", function () {
+          Spreedly.setPlaceholder("number", "Card Number");
+          Spreedly.setPlaceholder("cvv", "CVV");
+          console.log("Spreedly iFrame is ready.");
+        });
+
+        // Handle validation or tokenization errors
+        Spreedly.on("errors", function (errors) {
+          // Send errors to Flutter
+          if (window.FlutterChannel && window.FlutterChannel.postMessage) {
+            window.FlutterChannel.postMessage(
+              JSON.stringify({ event: "errors", data: errors })
+            );
+          }
+        });
+
+        // Handle successful tokenization
+        Spreedly.on("paymentMethod", function (token, pmData) {
+          if (window.FlutterChannel && window.FlutterChannel.postMessage) {
+            window.FlutterChannel.postMessage(
+              JSON.stringify({
+                event: "paymentMethod",
+                data: {
+                  token: token,
+                  paymentMethod: pmData,
+                },
+              })
+            );
+          }
+        });
+      }
+    </script>
+</body>
+</html>
