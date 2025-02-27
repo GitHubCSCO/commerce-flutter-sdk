@@ -25,6 +25,8 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
   ProductSettings? productSettings;
   String? promoItemMessage;
   bool hasInvalidPrice = false;
+  bool trackScreen = true;
+
   CartPageBloc(
       {required CartUseCase cartUseCase,
       required PricingInventoryUseCase pricingInventoryUseCase})
@@ -67,7 +69,8 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
       switch (result) {
         case Success(value: final data):
           cart = data;
-          if (event.trackScreen) {
+          if (trackScreen) {
+            trackScreen = false;
             _trackViewCartScreen();
           }
           if (cart?.cartLines == null || cart!.cartLines!.isEmpty) {
