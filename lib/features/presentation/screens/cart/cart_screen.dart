@@ -11,6 +11,7 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/shipping_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/cart_buttons_widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
@@ -287,11 +288,18 @@ class CartPage extends StatelessWidget with BaseDynamicContentScreen {
                                       .watch<CartPageBloc>()
                                       .checkoutButtonVisible;
 
+                              var isAddToListVisible =
+                                  isAddToListEnabled(cmsState.widgetEntities);
+                              var isSavedOrderVisible =
+                                  isSavedOrderEnabled(cmsState.widgetEntities);
+
                               var initialSize = getInitialBottomSheetSize(
                                   constraints.maxHeight);
                               var maxSize = getExpandedBottomSheetSize(
                                   constraints.maxHeight,
-                                  isQuoteAndCheckoutVisible);
+                                  isQuoteAndCheckoutVisible,
+                                  isAddToListVisible,
+                                  isSavedOrderVisible);
 
                               return DraggableScrollableSheet(
                                 initialChildSize:
@@ -334,32 +342,38 @@ class CartPage extends StatelessWidget with BaseDynamicContentScreen {
                                             const SizedBox(height: 20),
                                             _buildSubTotal(state),
                                             const SizedBox(height: 10),
-                                            TertiaryBlackButton(
-                                              text: LocalizationConstants
-                                                  .addAllToList
-                                                  .localized(),
-                                              onPressed: () {
-                                                final currentState = context
-                                                    .read<AuthCubit>()
-                                                    .state;
-                                                handleAuthStatusForAddToWishList(
-                                                    context,
-                                                    currentState.status);
-                                              },
+                                            Visibility(
+                                              visible: isAddToListVisible,
+                                              child: TertiaryBlackButton(
+                                                text: LocalizationConstants
+                                                    .addAllToList
+                                                    .localized(),
+                                                onPressed: () {
+                                                  final currentState = context
+                                                      .read<AuthCubit>()
+                                                      .state;
+                                                  handleAuthStatusForAddToWishList(
+                                                      context,
+                                                      currentState.status);
+                                                },
+                                              ),
                                             ),
-                                            TertiaryBlackButton(
-                                              text: LocalizationConstants
-                                                  .saveOrder
-                                                  .localized(),
-                                              onPressed: () {
-                                                final currentState = context
-                                                    .read<AuthCubit>()
-                                                    .state;
-                                                handleAuthStatusForSaveOrder(
-                                                    context,
-                                                    currentState.status,
-                                                    state);
-                                              },
+                                            Visibility(
+                                              visible: isSavedOrderVisible,
+                                              child: TertiaryBlackButton(
+                                                text: LocalizationConstants
+                                                    .saveOrder
+                                                    .localized(),
+                                                onPressed: () {
+                                                  final currentState = context
+                                                      .read<AuthCubit>()
+                                                      .state;
+                                                  handleAuthStatusForSaveOrder(
+                                                      context,
+                                                      currentState.status,
+                                                      state);
+                                                },
+                                              ),
                                             ),
                                             Visibility(
                                               visible:
@@ -413,6 +427,22 @@ class CartPage extends StatelessWidget with BaseDynamicContentScreen {
     );
   }
 
+  bool isAddToListEnabled(List<WidgetEntity> widgetEntities) {
+    return widgetEntities
+            .whereType<CartButtonsWidgetEntity>()
+            .firstOrNull
+            ?.isAddToListEnabled ==
+        true;
+  }
+
+  bool isSavedOrderEnabled(List<WidgetEntity> widgetEntities) {
+    return widgetEntities
+            .whereType<CartButtonsWidgetEntity>()
+            .firstOrNull
+            ?.isSavedOrderEnabled ==
+        true;
+  }
+
   double getInitialBottomSheetSize(double height) {
     var initialHeight = CoreConstants.cartBottomSheetInitialSize;
     return initialHeight / height;
@@ -424,11 +454,18 @@ class CartPage extends StatelessWidget with BaseDynamicContentScreen {
   /// - There are always two fixed buttons (e.g., "Add to List" and "Save Order").
   /// - If `isQuoteVisible` is `true`, an additional "Request a Quote" button is included.
   /// - The total height is then adjusted by `cartBottomSheetInitialSize`.
-  double getExpandedBottomSheetSize(double height, isQuoteVisible) {
-    var initialHeight = (isQuoteVisible
-            ? CoreConstants.cartBottomPerButtonSize * 3
-            : CoreConstants.cartBottomPerButtonSize * 2) +
-        CoreConstants.cartBottomSheetInitialSize;
+  double getExpandedBottomSheetSize(double height, bool isQuoteVisible,
+      bool isAddToListVisible, bool isSavedOrderVisible) {
+    var visibleButtonCount = [
+      isQuoteVisible,
+      isAddToListVisible,
+      isSavedOrderVisible
+    ].where((isVisible) => isVisible).length;
+
+    var initialHeight =
+        (CoreConstants.cartBottomPerButtonSize * visibleButtonCount) +
+            CoreConstants.cartBottomSheetInitialSize;
+
     return initialHeight / height;
   }
 
