@@ -427,6 +427,14 @@ class CartPage extends StatelessWidget with BaseDynamicContentScreen {
     );
   }
 
+  bool isAddDiscountEnabled(List<WidgetEntity> widgetEntities) {
+    return widgetEntities
+            .whereType<CartButtonsWidgetEntity>()
+            .firstOrNull
+            ?.isAddDiscountEnabled ==
+        true;
+  }
+
   bool isAddToListEnabled(List<WidgetEntity> widgetEntities) {
     return widgetEntities
             .whereType<CartButtonsWidgetEntity>()
@@ -727,7 +735,8 @@ class CartPage extends StatelessWidget with BaseDynamicContentScreen {
         cart: cart,
         cartSettings: settings,
         promotions: promotions,
-        isCustomerOrderApproval: isCustomerOrderApproval);
+        isCustomerOrderApproval: isCustomerOrderApproval,
+        isAddDiscountEnable: isAddDiscountEnabled(widgetEntities));
     final shippingEntity = ShippingEntity(
         hasWillCall: hasWillCall,
         warehouse: warehouse,

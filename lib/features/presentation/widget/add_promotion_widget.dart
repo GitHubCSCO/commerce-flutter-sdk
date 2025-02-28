@@ -13,12 +13,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class AddPromotionWidget extends StatelessWidget {
   final bool shouldShowPromotionList;
   final bool fromCartPage;
+  final bool isAddDiscountEnable;
   final TextEditingController promoCodeController = TextEditingController();
 
   AddPromotionWidget(
       {super.key,
       required this.shouldShowPromotionList,
-      required this.fromCartPage});
+      required this.fromCartPage,
+      this.isAddDiscountEnable = true});
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +99,9 @@ class AddPromotionWidget extends StatelessWidget {
                     ),
                   ),
                   Visibility(
-                    visible: !context.read<PromoCodeCubit>().showPromotionField,
+                    visible:
+                        !context.read<PromoCodeCubit>().showPromotionField &&
+                            isAddDiscountEnable,
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: TertiaryButton(
