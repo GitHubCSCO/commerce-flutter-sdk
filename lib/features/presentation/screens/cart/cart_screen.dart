@@ -47,7 +47,6 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 void _reloadCartPage(BuildContext context) {
   context.read<CartCountCubit>().loadCurrentCartCount();
-  // context.read<CartPageBloc>().add(CartPageLoadEvent());
   context.read<CartCmsPageBloc>().add(const CartCmsPageLoadEvent());
 }
 
@@ -792,7 +791,9 @@ class CartPage extends StatelessWidget with BaseDynamicContentScreen {
                     decoration: const BoxDecoration(color: Colors.white),
                     child: TertiaryBlackButton(
                       text: LocalizationConstants.viewMoreCartItems.localized(),
-                      onPressed: () {},
+                      onPressed: () {
+                        AppRoute.cartAllList.navigateBackStack(context);
+                      },
                     ),
                   ),
                 }
