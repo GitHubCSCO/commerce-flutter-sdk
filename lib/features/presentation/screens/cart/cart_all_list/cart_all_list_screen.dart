@@ -42,8 +42,7 @@ class CartAllListScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              sl<CartPageBloc>()..add(CartPageLoadEvent(trackScreen: true)),
+          create: (context) => sl<CartPageBloc>()..add(CartPageLoadEvent()),
         ),
         BlocProvider<CartContentBloc>(
           create: (context) => sl<CartContentBloc>(),
