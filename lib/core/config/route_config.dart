@@ -6,7 +6,6 @@ import 'package:commerce_flutter_app/features/domain/entity/biometric_info_entit
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_image_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
 import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
@@ -17,6 +16,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/routing/naviga
 import 'package:commerce_flutter_app/features/presentation/helper/routing/route_generator.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_category_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/brand/brand_product_lines_screen.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_all_list/cart_all_list_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/invoice_history/invoice_detail_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/invoice_history/invoice_email_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/invoice_history/invoice_history_screen.dart';
@@ -775,6 +775,23 @@ List<NavigationNode> _getNavigationRoot() {
     parent: null,
   );
 
+  final cartAllList = createNode(
+    name: AppRoute.cartAllList.name,
+    path: AppRoute.cartAllList.suffix,
+    builder: (context, state) {
+      final arguments = state.extra as CartAllListScreenArguments;
+      return CartAllListScreen(
+        orderNumber: arguments.orderNumber,
+        showClearCart: arguments.showClearCart,
+        hidePricingEnable: arguments.hidePricingEnable,
+        hideInventoryEnable: arguments.hideInventoryEnable,
+        cart: arguments.cart,
+        shippingMethod: arguments.shippingMethod,
+      );
+    },
+    parent: null,
+  );
+
   return [
     root,
     landing,
@@ -812,7 +829,8 @@ List<NavigationNode> _getNavigationRoot() {
     salesRepSelection,
     quoteLineNotes,
     inAppBrowser,
-    fullScreenImageCarousel
+    fullScreenImageCarousel,
+    cartAllList
   ];
 }
 
