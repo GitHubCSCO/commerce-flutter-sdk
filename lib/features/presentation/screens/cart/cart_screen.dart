@@ -11,19 +11,26 @@ import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/cart/shipping_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/cart_buttons_widget_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/features/domain/mapper/warehouse_mapper.dart';
+import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart_cms/cart_cms_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart_cms/cart_cms_event.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart_cms/cart_cms_state.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_state.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/promo_code_cubit/promo_code_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
@@ -40,7 +47,8 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 void _reloadCartPage(BuildContext context) {
   context.read<CartCountCubit>().loadCurrentCartCount();
-  context.read<CartPageBloc>().add(CartPageLoadEvent());
+  // context.read<CartPageBloc>().add(CartPageLoadEvent());
+  context.read<CartCmsPageBloc>().add(const CartCmsPageLoadEvent());
 }
 
 class CartScreen extends StatelessWidget {
@@ -49,15 +57,18 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
-      BlocProvider<CartPageBloc>(
-          create: (context) =>
-              sl<CartPageBloc>()..add(CartPageLoadEvent(trackScreen: true))),
+      BlocProvider<CmsCubit>(create: (context) => sl<CmsCubit>()),
+      BlocProvider<CartCmsPageBloc>(
+        create: (context) =>
+            sl<CartCmsPageBloc>()..add(const CartCmsPageLoadEvent()),
+      ),
+      BlocProvider<CartPageBloc>(create: (context) => sl<CartPageBloc>()),
       BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
     ], child: const CartPage());
   }
 }
 
-class CartPage extends StatelessWidget {
+class CartPage extends StatelessWidget with BaseDynamicContentScreen {
   const CartPage({super.key});
 
   final websitePath = WebsitePaths.cartWebsitePath;
@@ -113,6 +124,19 @@ class CartPage extends StatelessWidget {
                 }
               },
             ),
+            BlocListener<CartCmsPageBloc, CartCmsPageState>(
+              listener: (context, state) {
+                switch (state) {
+                  case CartCmsPageLoadingState():
+                    context.read<CmsCubit>().loading();
+                  case CartCmsPageLoadedState():
+                    context.read<CmsCubit>().buildCMSWidgets(state.pageWidgets);
+                    context.read<CartPageBloc>().add(CartPageLoadEvent());
+                  case CartCmsPageFailureState():
+                    context.read<CmsCubit>().failedLoading();
+                }
+              },
+            ),
             BlocListener<CartPageBloc, CartPageState>(
               listener: (_, state) {
                 if (state is CartPageWarningDialogShowState) {
@@ -125,225 +149,306 @@ class CartPage extends StatelessWidget {
               },
             )
           ],
-          child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-            return Stack(
-              children: [
-                RefreshIndicator(
-                  onRefresh: () async {
-                    _reloadCartPage(context);
-                  },
-                  child: BlocBuilder<CartPageBloc, CartPageState>(
-                    buildWhen: (previous, current) {
-                      if (current is CartPageWarningDialogShowState ||
-                          current is CartProceedToCheckoutState ||
-                          current is CartPageCheckoutButtonLoadingState) {
-                        return false;
-                      }
-                      return true;
-                    },
-                    builder: (_, state) {
-                      switch (state) {
-                        case CartPageInitialState():
-                        case CartPageLoadingState():
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        case CartPageLoadedState():
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                                bottom: 70), // Add space for the bottom panel
-                            child: Column(
-                              children: [
-                                if (state.cartWarningMsg.isNotEmpty)
-                                  BuildCartErrorWidget(
-                                      cartErrorMsg: state.cartWarningMsg),
-                                Expanded(
-                                  child: ListView(
-                                    children: _buildCartWidgets(
-                                        state.cart,
-                                        state.cartSettings,
-                                        state.warehouse,
-                                        state.promotions,
-                                        state.isCustomerOrderApproval,
-                                        state.hasWillCall,
-                                        state.shippingMethod,
-                                        state.hidePricingEnable,
-                                        state.hideInventoryEnable,
-                                        context),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        case CartPageNoDataState():
-                          return CustomScrollView(slivers: <Widget>[
-                            SliverFillRemaining(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 50,
-                                    height: 50,
-                                    padding: const EdgeInsets.all(10),
-                                    child: const SvgAssetImage(
-                                      assetName: AssetConstants.iconCart,
-                                      fit: BoxFit.fitWidth,
+          child: BlocBuilder<CmsCubit, CmsState>(
+            builder: (context, cmsState) {
+              switch (cmsState) {
+                case CmsInitialState():
+                case CmsLoadingState():
+                  return const Center(child: CircularProgressIndicator());
+                case CmsLoadedState():
+                  return LayoutBuilder(builder:
+                      (BuildContext context, BoxConstraints constraints) {
+                    return Stack(
+                      children: [
+                        RefreshIndicator(
+                          onRefresh: () async {
+                            _reloadCartPage(context);
+                          },
+                          child: BlocBuilder<CartPageBloc, CartPageState>(
+                            buildWhen: (previous, current) {
+                              if (current is CartPageWarningDialogShowState ||
+                                  current is CartProceedToCheckoutState ||
+                                  current
+                                      is CartPageCheckoutButtonLoadingState) {
+                                return false;
+                              }
+                              return true;
+                            },
+                            builder: (_, state) {
+                              switch (state) {
+                                case CartPageInitialState():
+                                case CartPageLoadingState():
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                case CartPageLoadedState():
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom:
+                                            70), // Add space for the bottom panel
+                                    child: Column(
+                                      children: [
+                                        if (state.cartWarningMsg.isNotEmpty)
+                                          BuildCartErrorWidget(
+                                              cartErrorMsg:
+                                                  state.cartWarningMsg),
+                                        Expanded(
+                                          child: ListView(
+                                            children: _buildCartWidgets(
+                                                cmsState.widgetEntities,
+                                                state.cart,
+                                                state.cartSettings,
+                                                state.warehouse,
+                                                state.promotions,
+                                                state.isCustomerOrderApproval,
+                                                state.hasWillCall,
+                                                state.shippingMethod,
+                                                state.hidePricingEnable,
+                                                state.hideInventoryEnable,
+                                                context),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  Text(state.message),
-                                  Padding(
-                                    padding: const EdgeInsets.all(24),
-                                    child: TertiaryButton(
-                                      onPressed: () {
-                                        _trackContinueShoppingEvent(
-                                            context,
-                                            context
-                                                    .read<CartPageBloc>()
-                                                    .cart
-                                                    ?.orderNumber ??
-                                                '');
-                                        AppRoute.shop.navigate(context);
-                                      },
-                                      text: LocalizationConstants
-                                          .continueShopping
-                                          .localized(),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ]);
-                        default:
-                          return CustomScrollView(
-                            slivers: <Widget>[
-                              SliverFillRemaining(
-                                  child: OptiErrorWidget(
-                                onRetry: () {
-                                  _reloadCartPage(context);
-                                },
-                                errorText: LocalizationConstants
-                                    .errorLoadingCart
-                                    .localized(),
-                              )),
-                            ],
-                          );
-                      }
-                    },
-                  ),
-                ),
-                // Bottom Draggable Panel
-                BlocBuilder<CartPageBloc, CartPageState>(
-                  buildWhen: (previous, current) {
-                    if (current is CartPageWarningDialogShowState ||
-                        current is CartProceedToCheckoutState ||
-                        current is CartPageCheckoutButtonLoadingState) {
-                      return false;
-                    }
-                    return true;
-                  },
-                  builder: (context, state) {
-                    if (state is CartPageLoadedState) {
-                      var isQuoteAndCheckoutVisible = context
-                              .watch<CartPageBloc>()
-                              .canSubmitForQuote &&
-                          context.watch<CartPageBloc>().checkoutButtonVisible;
-
-                      var initialSize =
-                          getInitialBottomSheetSize(constraints.maxHeight);
-                      var maxSize = getExpandedBottomSheetSize(
-                          constraints.maxHeight, isQuoteAndCheckoutVisible);
-
-                      return DraggableScrollableSheet(
-                        initialChildSize:
-                            initialSize, // Initial size (Only Checkout button visible)
-                        minChildSize: initialSize, // Minimum collapsed size
-                        maxChildSize: maxSize, // Maximum expanded size
-                        builder: (context, scrollController) {
-                          return Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(16)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black26,
-                                  blurRadius: 10,
-                                  spreadRadius: 1,
-                                ),
-                              ],
-                            ),
-                            child: SingleChildScrollView(
-                              controller: scrollController,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 12.0, horizontal: 16.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    // Drag Handle
-                                    Container(
-                                      width: 50,
-                                      height: 5,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[400],
-                                        borderRadius: BorderRadius.circular(10),
+                                  );
+                                case CartPageNoDataState():
+                                  return CustomScrollView(slivers: <Widget>[
+                                    SliverFillRemaining(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            width: 50,
+                                            height: 50,
+                                            padding: const EdgeInsets.all(10),
+                                            child: const SvgAssetImage(
+                                              assetName:
+                                                  AssetConstants.iconCart,
+                                              fit: BoxFit.fitWidth,
+                                            ),
+                                          ),
+                                          Text(state.message),
+                                          Padding(
+                                            padding: const EdgeInsets.all(24),
+                                            child: TertiaryButton(
+                                              onPressed: () {
+                                                _trackContinueShoppingEvent(
+                                                    context,
+                                                    context
+                                                            .read<
+                                                                CartPageBloc>()
+                                                            .cart
+                                                            ?.orderNumber ??
+                                                        '');
+                                                AppRoute.shop.navigate(context);
+                                              },
+                                              text: LocalizationConstants
+                                                  .continueShopping
+                                                  .localized(),
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     ),
-                                    const SizedBox(height: 20),
-                                    _buildSubTotal(state),
-                                    const SizedBox(height: 10),
-                                    TertiaryBlackButton(
-                                      text: LocalizationConstants.addAllToList
-                                          .localized(),
-                                      onPressed: () {
-                                        final currentState =
-                                            context.read<AuthCubit>().state;
-                                        handleAuthStatusForAddToWishList(
-                                            context, currentState.status);
-                                      },
-                                    ),
-                                    TertiaryBlackButton(
-                                      text: LocalizationConstants.saveOrder
-                                          .localized(),
-                                      onPressed: () {
-                                        final currentState =
-                                            context.read<AuthCubit>().state;
-                                        handleAuthStatusForSaveOrder(context,
-                                            currentState.status, state);
-                                      },
-                                    ),
-                                    Visibility(
-                                      visible: isQuoteAndCheckoutVisible,
-                                      child: SecondaryButton(
-                                        onPressed: () {
-                                          final currentState =
-                                              context.read<AuthCubit>().state;
-                                          handleAuthStatusForSubmitQuote(
-                                              context,
-                                              currentState.status,
-                                              state);
+                                  ]);
+                                default:
+                                  return CustomScrollView(
+                                    slivers: <Widget>[
+                                      SliverFillRemaining(
+                                          child: OptiErrorWidget(
+                                        onRetry: () {
+                                          _reloadCartPage(context);
                                         },
-                                        text: context
-                                            .watch<CartPageBloc>()
-                                            .submitForQuoteTitle,
+                                        errorText: LocalizationConstants
+                                            .errorLoadingCart
+                                            .localized(),
+                                      )),
+                                    ],
+                                  );
+                              }
+                            },
+                          ),
+                        ),
+                        // Bottom Draggable Panel
+                        BlocBuilder<CartPageBloc, CartPageState>(
+                          buildWhen: (previous, current) {
+                            if (current is CartPageWarningDialogShowState ||
+                                current is CartProceedToCheckoutState ||
+                                current is CartPageCheckoutButtonLoadingState) {
+                              return false;
+                            }
+                            return true;
+                          },
+                          builder: (context, state) {
+                            if (state is CartPageLoadedState) {
+                              var isQuoteAndCheckoutVisible = context
+                                      .watch<CartPageBloc>()
+                                      .canSubmitForQuote &&
+                                  context
+                                      .watch<CartPageBloc>()
+                                      .checkoutButtonVisible;
+
+                              var isAddToListVisible =
+                                  isAddToListEnabled(cmsState.widgetEntities);
+                              var isSavedOrderVisible =
+                                  isSavedOrderEnabled(cmsState.widgetEntities);
+
+                              var initialSize = getInitialBottomSheetSize(
+                                  constraints.maxHeight);
+                              var maxSize = getExpandedBottomSheetSize(
+                                  constraints.maxHeight,
+                                  isQuoteAndCheckoutVisible,
+                                  isAddToListVisible,
+                                  isSavedOrderVisible);
+
+                              return DraggableScrollableSheet(
+                                initialChildSize:
+                                    initialSize, // Initial size (Only Checkout button visible)
+                                minChildSize:
+                                    initialSize, // Minimum collapsed size
+                                maxChildSize: maxSize, // Maximum expanded size
+                                builder: (context, scrollController) {
+                                  return Container(
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(16)),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black26,
+                                          blurRadius: 10,
+                                          spreadRadius: 1,
+                                        ),
+                                      ],
+                                    ),
+                                    child: SingleChildScrollView(
+                                      controller: scrollController,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12.0, horizontal: 16.0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            // Drag Handle
+                                            Container(
+                                              width: 50,
+                                              height: 5,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[400],
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 20),
+                                            _buildSubTotal(state),
+                                            const SizedBox(height: 10),
+                                            Visibility(
+                                              visible: isAddToListVisible,
+                                              child: TertiaryBlackButton(
+                                                text: LocalizationConstants
+                                                    .addAllToList
+                                                    .localized(),
+                                                onPressed: () {
+                                                  final currentState = context
+                                                      .read<AuthCubit>()
+                                                      .state;
+                                                  handleAuthStatusForAddToWishList(
+                                                      context,
+                                                      currentState.status);
+                                                },
+                                              ),
+                                            ),
+                                            Visibility(
+                                              visible: isSavedOrderVisible,
+                                              child: TertiaryBlackButton(
+                                                text: LocalizationConstants
+                                                    .saveOrder
+                                                    .localized(),
+                                                onPressed: () {
+                                                  final currentState = context
+                                                      .read<AuthCubit>()
+                                                      .state;
+                                                  handleAuthStatusForSaveOrder(
+                                                      context,
+                                                      currentState.status,
+                                                      state);
+                                                },
+                                              ),
+                                            ),
+                                            Visibility(
+                                              visible:
+                                                  isQuoteAndCheckoutVisible,
+                                              child: SecondaryButton(
+                                                onPressed: () {
+                                                  final currentState = context
+                                                      .read<AuthCubit>()
+                                                      .state;
+                                                  handleAuthStatusForSubmitQuote(
+                                                      context,
+                                                      currentState.status,
+                                                      state);
+                                                },
+                                                text: context
+                                                    .watch<CartPageBloc>()
+                                                    .submitForQuoteTitle,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
+                                  );
+                                },
+                              );
+                            } else {
+                              return const Center();
+                            }
+                          },
+                        ),
+                      ],
+                    );
+                  });
+                default:
+                  return CustomScrollView(
+                    slivers: <Widget>[
+                      SliverFillRemaining(
+                          child: OptiErrorWidget(
+                        onRetry: () {
+                          _reloadCartPage(context);
                         },
-                      );
-                    } else {
-                      return const Center();
-                    }
-                  },
-                ),
-              ],
-            );
-          })),
+                        errorText:
+                            LocalizationConstants.errorLoadingCart.localized(),
+                      )),
+                    ],
+                  );
+              }
+            },
+          )),
     );
+  }
+
+  bool isAddDiscountEnabled(List<WidgetEntity> widgetEntities) {
+    return widgetEntities
+            .whereType<CartButtonsWidgetEntity>()
+            .firstOrNull
+            ?.isAddDiscountEnabled ==
+        true;
+  }
+
+  bool isAddToListEnabled(List<WidgetEntity> widgetEntities) {
+    return widgetEntities
+            .whereType<CartButtonsWidgetEntity>()
+            .firstOrNull
+            ?.isAddToListEnabled ==
+        true;
+  }
+
+  bool isSavedOrderEnabled(List<WidgetEntity> widgetEntities) {
+    return widgetEntities
+            .whereType<CartButtonsWidgetEntity>()
+            .firstOrNull
+            ?.isSavedOrderEnabled ==
+        true;
   }
 
   double getInitialBottomSheetSize(double height) {
@@ -357,11 +462,18 @@ class CartPage extends StatelessWidget {
   /// - There are always two fixed buttons (e.g., "Add to List" and "Save Order").
   /// - If `isQuoteVisible` is `true`, an additional "Request a Quote" button is included.
   /// - The total height is then adjusted by `cartBottomSheetInitialSize`.
-  double getExpandedBottomSheetSize(double height, isQuoteVisible) {
-    var initialHeight = (isQuoteVisible
-            ? CoreConstants.cartBottomPerButtonSize * 3
-            : CoreConstants.cartBottomPerButtonSize * 2) +
-        CoreConstants.cartBottomSheetInitialSize;
+  double getExpandedBottomSheetSize(double height, bool isQuoteVisible,
+      bool isAddToListVisible, bool isSavedOrderVisible) {
+    var visibleButtonCount = [
+      isQuoteVisible,
+      isAddToListVisible,
+      isSavedOrderVisible
+    ].where((isVisible) => isVisible).length;
+
+    var initialHeight =
+        (CoreConstants.cartBottomPerButtonSize * visibleButtonCount) +
+            CoreConstants.cartBottomSheetInitialSize;
+
     return initialHeight / height;
   }
 
@@ -606,6 +718,7 @@ class CartPage extends StatelessWidget {
   }
 
   List<Widget> _buildCartWidgets(
+      List<WidgetEntity> widgetEntities,
       Cart? cart,
       CartSettings? settings,
       Warehouse? warehouse,
@@ -622,7 +735,8 @@ class CartPage extends StatelessWidget {
         cart: cart,
         cartSettings: settings,
         promotions: promotions,
-        isCustomerOrderApproval: isCustomerOrderApproval);
+        isCustomerOrderApproval: isCustomerOrderApproval,
+        isAddDiscountEnable: isAddDiscountEnabled(widgetEntities));
     final shippingEntity = ShippingEntity(
         hasWillCall: hasWillCall,
         warehouse: warehouse,
@@ -688,6 +802,8 @@ class CartPage extends StatelessWidget {
         },
       ),
     ));
+
+    list.addAll(buildContentWidgets(widgetEntities));
 
     if (!(hidePricingEnable ?? false)) {
       list.add(
