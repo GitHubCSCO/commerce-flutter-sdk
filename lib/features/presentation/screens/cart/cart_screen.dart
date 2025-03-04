@@ -330,10 +330,10 @@ class CartPage extends StatelessWidget with BaseDynamicContentScreen {
                                           children: [
                                             // Drag Handle
                                             Container(
-                                              width: 50,
+                                              width: 70,
                                               height: 5,
                                               decoration: BoxDecoration(
-                                                color: Colors.grey[400],
+                                                color: Colors.black,
                                                 borderRadius:
                                                     BorderRadius.circular(10),
                                               ),
