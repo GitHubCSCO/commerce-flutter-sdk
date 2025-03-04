@@ -477,11 +477,14 @@ class CartPage extends StatelessWidget with BaseDynamicContentScreen {
   }
 
   Widget _buildSubTotal(CartPageLoadedState state) {
-    var title = state.cart == null
+    var title = (state.cart == null)
         ? LocalizationConstants.subtotal.localized()
-        : LocalizationConstants.subtotalItems
+        : (state.cart?.totalCountDisplay == 1
+                ? LocalizationConstants.subtotalItem
+                : LocalizationConstants.subtotalItems)
             .localized()
             .format([state.cart?.totalCountDisplay ?? '']);
+
     var body = state.cart?.orderSubTotalDisplay ?? '';
     var textStyle = OptiTextStyles.subtitle;
 
