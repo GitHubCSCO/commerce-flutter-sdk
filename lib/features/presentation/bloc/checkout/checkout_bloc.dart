@@ -43,6 +43,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
     on<SelectPaymentEvent>(
         (event, emit) async => _onPaymentSelect(event, emit));
     on<UpdatePONumberEvent>((event, emit) => _onUpdatePONumber(event, emit));
+    on<UpdatePaymentInfoEvent>(
+        (event, emit) => _onUpdatePaymentInfo(event, emit));
     on<AddShiptoAddressEvent>((event, emit) async => _onAddShipTo(event, emit));
     on<UpdateShiptoAddressEvent>(
         (event, emit) async => _onUpdateShipto(event, emit));
@@ -251,7 +253,11 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState>
 
   Future<void> _onPaymentSelect(
       SelectPaymentEvent event, Emitter<CheckoutState> emit) async {
-    // selectedPayment = event.paymentOption;
+    selectedPayment = event.paymentOption;
+  }
+
+  void _onUpdatePaymentInfo(
+      UpdatePaymentInfoEvent event, Emitter<CheckoutState> emit) {
     cart?.paymentOptions?.creditCard?.cardHolderName =
         selectedPayment?.creditCard?.cardHolderName;
     cart?.paymentOptions?.creditCard?.cardNumber =

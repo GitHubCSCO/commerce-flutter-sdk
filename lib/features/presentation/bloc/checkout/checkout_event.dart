@@ -49,6 +49,8 @@ class UpdatePONumberEvent extends CheckoutEvent {
   UpdatePONumberEvent(this.poNumber);
 }
 
+class UpdatePaymentInfoEvent extends CheckoutEvent {}
+
 class AddShiptoAddressEvent extends CheckoutEvent {
   final ShipTo shipTo;
 

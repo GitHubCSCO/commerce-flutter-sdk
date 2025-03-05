@@ -384,9 +384,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
       }
     }
 
-    if (isSelectedNewAddedCard) {
-      expansionPanelCubit.onContinueClick();
-    } else if (isPaymentCardType &&
+    if (isPaymentCardType &&
         !isCreditCardSectionCompleted &&
         isCVVFieldOpened) {
       paymentDetailsBloc.add(ValidateTokenEvent());
@@ -398,6 +396,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
         CustomSnackBar.showPoNumberRequired(context);
       } else {
         checkoutBloc.add(UpdatePONumberEvent(poNumber));
+        checkoutBloc.add(UpdatePaymentInfoEvent());
         expansionPanelCubit.onContinueClick();
       }
     }
