@@ -41,6 +41,7 @@ class StyledProductEntityMapper {
             .toList(),
         trackInventory: model.trackInventory,
         properties: model.properties,
+        allowZeroPricing: model.allowZeroPricing,
       );
   StyledProduct toModel(StyledProductEntity entity) => StyledProduct(
         productId: entity.productId,
@@ -72,5 +73,6 @@ class StyledProductEntityMapper {
             ?.map((warehouse) => WarehouseEntityMapper.toModel(warehouse))
             .toList(),
         trackInventory: entity.trackInventory,
+        allowZeroPricing: entity.allowZeroPricing,
       )..properties = entity.properties;
 }

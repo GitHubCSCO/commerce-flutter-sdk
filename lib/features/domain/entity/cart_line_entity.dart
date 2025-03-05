@@ -12,6 +12,7 @@ class AddCartLineEntity extends Equatable {
   final String? notes;
   final String? vmiBinId;
   final List<SectionOptionEntity>? sectionOptions;
+  final bool? allowZeroPricing;
 
   const AddCartLineEntity({
     this.notes,
@@ -20,6 +21,7 @@ class AddCartLineEntity extends Equatable {
     this.sectionOptions,
     this.unitOfMeasure,
     this.vmiBinId,
+    this.allowZeroPricing,
   });
 
   @override
@@ -33,6 +35,7 @@ class AddCartLineEntity extends Equatable {
     String? notes,
     String? vmiBinId,
     List<SectionOptionEntity>? sectionOptions,
+    bool? allowZeroPricing,
   }) {
     return AddCartLineEntity(
       productId: productId ?? this.productId,
@@ -41,6 +44,7 @@ class AddCartLineEntity extends Equatable {
       notes: notes ?? this.notes,
       vmiBinId: vmiBinId ?? this.vmiBinId,
       sectionOptions: sectionOptions ?? this.sectionOptions,
+      allowZeroPricing: allowZeroPricing ?? this.allowZeroPricing,
     );
   }
 }
@@ -154,6 +158,7 @@ class CartLineEntity extends AddCartLineEntity {
       this.unitOfMeasureDisplay,
       this.showInventoryAvailability,
       this.promoItemMessage,
+      super.allowZeroPricing,
       this.properties})
       : super(
             notes: notes,
@@ -210,6 +215,7 @@ class CartLineEntity extends AddCartLineEntity {
       String? status,
       bool? showInventoryAvailability,
       String? promoItemMessage,
+      bool? allowZeroPricing,
       Properties? properties}) {
     return CartLineEntity(
       showInventoryAvailability:
@@ -263,6 +269,7 @@ class CartLineEntity extends AddCartLineEntity {
       status: status ?? this.status,
       promoItemMessage: promoItemMessage ?? this.promoItemMessage,
       properties: properties ?? this.properties,
+      allowZeroPricing: allowZeroPricing ?? this.allowZeroPricing,
     );
   }
 }

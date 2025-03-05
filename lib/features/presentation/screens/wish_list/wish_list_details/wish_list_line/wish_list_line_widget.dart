@@ -186,8 +186,7 @@ class WishListLineWidget extends StatelessWidget {
                   );
             },
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 15).copyWith(left: 15),
+              padding: const EdgeInsets.all(10),
               child: SizedBox(
                 width: 30,
                 height: 30,
@@ -206,8 +205,7 @@ class WishListLineWidget extends StatelessWidget {
                   );
             },
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 15).copyWith(left: 15),
+              padding: const EdgeInsets.all(10),
               child: SizedBox(
                 width: 30,
                 height: 30,
@@ -218,7 +216,6 @@ class WishListLineWidget extends StatelessWidget {
               ),
             ),
           ),
-        const SizedBox(width: 20),
       ],
     );
   }

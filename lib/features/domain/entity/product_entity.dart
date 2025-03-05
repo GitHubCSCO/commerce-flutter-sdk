@@ -143,6 +143,7 @@ class ProductEntity extends Equatable {
   final List<ProductImageEntity>? images;
   final List<StyleTraitEntity>? variantTraits;
   final List<ChildTraitValueEntity>? childTraitValues;
+  final bool? allowZeroPricing;
 
   final Properties? properties;
 
@@ -268,6 +269,7 @@ class ProductEntity extends Equatable {
     this.variantTraits,
     this.childTraitValues,
     this.properties,
+    this.allowZeroPricing,
   });
 
   ProductEntity copyWith({
@@ -392,6 +394,7 @@ class ProductEntity extends Equatable {
     List<StyleTraitEntity>? variantTraits,
     List<ChildTraitValueEntity>? childTraitValues,
     Properties? properties,
+    bool? allowZeroPricing,
   }) {
     return ProductEntity(
       id: id ?? this.id,
@@ -527,6 +530,7 @@ class ProductEntity extends Equatable {
       variantTraits: variantTraits ?? this.variantTraits,
       childTraitValues: childTraitValues ?? this.childTraitValues,
       properties: properties ?? this.properties,
+      allowZeroPricing: allowZeroPricing ?? this.allowZeroPricing,
     );
   }
 

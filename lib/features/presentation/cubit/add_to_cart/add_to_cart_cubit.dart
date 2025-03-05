@@ -16,6 +16,18 @@ class AddToCartCubit extends Cubit<AddToCartState> {
         super(AddToCartInitial());
 
   Future<void> searchProductAddToCard(ProductEntity product) async {
+    if (product.allowZeroPricing != true &&
+        product.pricing != null &&
+        product.pricing?.unitNetPrice == 0) {
+      final productAddCartSiteMsg = await _addToCartUsecase.getSiteMessage(
+        SiteMessageConstants.nameCartInvalidPrice,
+        SiteMessageConstants.defaultValueCartInvalidPrice,
+      );
+
+      emit(AddToCartInvalidPrice(errorResponse: productAddCartSiteMsg));
+      return;
+    }
+
     var productId = product.styleParentId ?? product.id;
 
     var addCartLine = AddCartLine(
