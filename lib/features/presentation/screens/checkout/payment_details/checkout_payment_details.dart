@@ -270,10 +270,8 @@ class CheckoutPaymentDetails extends StatelessWidget {
             return;
           }
 
-          context.read<PaymentDetailsBloc>().add(
-                UpdateNewAccountPaymentProfileEvent(
-                  accountPaymentProfile: paymentProfile,
-                ),
+          context.read<PaymentDetailsBloc>().updateNewAccountPaymentPorfile(
+                paymentProfile,
               );
           context.read<CheckoutBloc>().add(
                 SelectPaymentMethodEvent(PaymentMethodDto(

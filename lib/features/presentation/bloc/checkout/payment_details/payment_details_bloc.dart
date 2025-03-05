@@ -34,9 +34,6 @@ class PaymentDetailsBloc
         (event, emit) async => _updatePaymentMethod(event, emit));
     on<UpdateCreditCartInfoEvent>(
         (event, emit) => _updateCreditCardInfoToCart(event, emit));
-    on<UpdateNewAccountPaymentProfileEvent>((event, emit) async {
-      await _updateNewAccountPaymentPorfile(event, emit);
-    });
     on<ValidateTokenEvent>((event, emit) async {
       emit(PaymentDetailsValidateTokenState());
     });
@@ -70,19 +67,18 @@ class PaymentDetailsBloc
         emit);
   }
 
-  Future<void> _updateNewAccountPaymentPorfile(
-      UpdateNewAccountPaymentProfileEvent event,
-      Emitter<PaymentDetailsState> emit) async {
+  void updateNewAccountPaymentPorfile(
+      AccountPaymentProfile accountPaymentProfile) {
     cart?.paymentOptions = PaymentOptionsDto(
         creditCard: CreditCardDto(
-      cardHolderName: event.accountPaymentProfile.cardHolderName,
-      cardNumber: event.accountPaymentProfile.cardIdentifier,
-      cardType: event.accountPaymentProfile.cardType,
-      expirationMonth: event.accountPaymentProfile.expirationMonth,
-      expirationYear: event.accountPaymentProfile.expirationYear,
+      cardHolderName: accountPaymentProfile.cardHolderName,
+      cardNumber: accountPaymentProfile.cardIdentifier,
+      cardType: accountPaymentProfile.cardType,
+      expirationMonth: accountPaymentProfile.expirationMonth,
+      expirationYear: accountPaymentProfile.expirationYear,
     ));
 
-    accountPaymentProfile = event.accountPaymentProfile;
+    this.accountPaymentProfile = accountPaymentProfile;
   }
 
   Future<void> _updatePaymentMethod(
@@ -93,16 +89,18 @@ class PaymentDetailsBloc
 
   Future<void> _setupPaymentDataSources(
       UpdatePaymentMethodEvent event, Emitter<PaymentDetailsState> emit) async {
+    var showPOField = cart?.showPoNumber ?? false;
+
     if (!event.isCVVRequired) {
       isSelectedNewAddedCard = true;
       emit(_buildPaymentDetailsLoadedState(
           isNewCreditCard: true,
+          showPOField: showPOField,
           cardDetails: _getCardDetails(accountPaymentProfile!)));
       return;
     }
 
     isSelectedNewAddedCard = false;
-    var showPOField = cart?.showPoNumber ?? false;
 
     if (_isCreditCardSelected()) {
       final response = await _fetchPaymentProfiles();
