@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_base_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 
@@ -22,6 +23,8 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
   final bool? addToCartVisible;
   final bool? addToCartEnabled;
 
+  final ProductUnitOfMeasureEntity? chosenUnitOfMeasure;
+
   const ProductDetailsPriceEntity(
       {this.productPricingEnabled,
       this.hidePricing,
@@ -38,6 +41,7 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
       this.addToCartVisible,
       this.addToCartEnabled,
       this.quantity,
+      this.chosenUnitOfMeasure,
       required super.detailsSectionType});
 
   @override
@@ -58,7 +62,8 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
       bool? hasCheckout,
       bool? addToCartEnabled,
       bool? addToCartVisible,
-      ProdcutDeatilsPageWidgets? detailsSectionType}) {
+      ProdcutDeatilsPageWidgets? detailsSectionType,
+      ProductUnitOfMeasureEntity? chosenUnitOfMeasure}) {
     return ProductDetailsPriceEntity(
       productPricingEnabled:
           productPricingEnabled ?? this.productPricingEnabled,
@@ -75,6 +80,7 @@ class ProductDetailsPriceEntity extends ProductDetailsBaseEntity {
           selectedUnitOfMeasureValueText ?? this.selectedUnitOfMeasureValueText,
       quantity: quantity ?? this.quantity,
       detailsSectionType: detailsSectionType ?? this.detailsSectionType,
+      chosenUnitOfMeasure: chosenUnitOfMeasure ?? this.chosenUnitOfMeasure,
       viewQuantityPricingButtonShown:
           viewQuantityPricingButtonShown ?? this.viewQuantityPricingButtonShown,
       viewInventoryByWarehouseShown:
