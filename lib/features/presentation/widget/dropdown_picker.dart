@@ -132,7 +132,7 @@ class _DropdownPickerState extends State<DropdownPicker> {
                 elevation: 8,
                 style: OptiTextStyles.body,
                 dropdownColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 onTap: () {
                   setState(() {
                     _isDropdownOpen = !_isDropdownOpen;

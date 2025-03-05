@@ -1,4 +1,3 @@
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
@@ -141,7 +140,6 @@ Widget _buildStyleTraitDropdownWidget(
         ),
         Container(
           decoration: BoxDecoration(
-            color: OptiAppColors.backgroundInput,
             borderRadius: BorderRadius.circular(AppStyle.borderRadius),
           ),
           child: Column(
@@ -150,13 +148,10 @@ Widget _buildStyleTraitDropdownWidget(
               Row(
                 children: [
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: DropdownPickerWidget(
-                        items: styleValues!,
-                        callback: onSelectItemCallback,
-                        selectedIndex: getSelectedIndex(),
-                      ),
+                    child: DropdownPickerWidget(
+                      items: styleValues!,
+                      callback: onSelectItemCallback,
+                      selectedIndex: getSelectedIndex(),
                     ),
                   ),
                 ],
