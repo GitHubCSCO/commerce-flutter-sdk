@@ -54,7 +54,7 @@ class DropdownPicker extends StatefulWidget {
   });
 
   @override
-  _DropdownPickerState createState() => _DropdownPickerState();
+  State<DropdownPicker> createState() => _DropdownPickerState();
 }
 
 class _DropdownPickerState extends State<DropdownPicker> {
@@ -89,86 +89,79 @@ class _DropdownPickerState extends State<DropdownPicker> {
   Widget build(BuildContext context) {
     selectedIndex = widget.selectedIndex ?? 0;
 
-    return Focus(
-      focusNode: _focusNode,
-      child: Container(
-        margin: const EdgeInsets.symmetric(
-          horizontal: AppStyle.inputDropShadowSpreadRadius,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppStyle.borderRadius),
-          boxShadow: _isDropdownOpen
-              ? [
-                  BoxShadow(
-                    color: OptiAppColors.primaryColor.withOpacity(0.3),
-                    spreadRadius: AppStyle.inputDropShadowSpreadRadius,
-                  ),
-                ]
-              : null,
-        ),
-        child: DropdownButtonHideUnderline(
-          child: ButtonTheme(
-            alignedDropdown: true,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppStyle.borderRadius),
-                color: _isDropdownOpen ? Colors.white : AppStyle.neutral100,
-                border: _isDropdownOpen
-                    ? Border.all(color: OptiAppColors.primaryColor)
-                    : null,
-              ),
-              child: DropdownButton<int>(
-                isExpanded: true,
-                value: selectedIndex,
-                icon: AnimatedRotation(
-                  turns: _isDropdownOpen ? 0.25 : 0,
-                  duration: const Duration(milliseconds: 200),
-                  child: const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
-                    color: Colors.grey,
-                  ),
+    return Container(
+      margin: const EdgeInsets.symmetric(
+        horizontal: AppStyle.inputDropShadowSpreadRadius,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppStyle.borderRadius),
+        boxShadow: _isDropdownOpen
+            ? [
+                BoxShadow(
+                  color: OptiAppColors.primaryColor.withValues(alpha: 0.3),
+                  spreadRadius: AppStyle.inputDropShadowSpreadRadius,
                 ),
-                elevation: 8,
-                style: OptiTextStyles.body,
-                dropdownColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                onTap: () {
-                  setState(() {
-                    _isDropdownOpen = !_isDropdownOpen;
-                    if (_isDropdownOpen) {
-                      _focusNode.requestFocus();
-                    }
-                  });
-                },
-                onChanged: (widget.isActionEnabled == true)
-                    ? (int? newValue) {
-                        setState(() {
-                          selectedIndex = newValue!;
-                          _isDropdownOpen = false;
-                        });
-                        if (widget.callback != null &&
-                            widget.items.isNotEmpty) {
-                          widget.callback!(
-                              context, widget.items[selectedIndex]);
-                        }
-                      }
-                    : null,
-                items: List.generate(widget.items.length, (index) {
-                  return DropdownMenuItem<int>(
-                    value: index,
-                    enabled: _isOptionAvailable(widget.items[index]),
-                    child: (index > 0 && widget.items.isNotEmpty)
-                        ? _getDescriptionWidget(widget.items[index])
-                        : Text(
-                            _getDescriptions(widget.items[index]),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: OptiTextStyles.body,
-                          ),
-                  );
-                }),
+              ]
+            : null,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: ButtonTheme(
+          alignedDropdown: true,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(AppStyle.borderRadius),
+              color: _isDropdownOpen ? Colors.white : AppStyle.neutral100,
+              border: _isDropdownOpen
+                  ? Border.all(color: OptiAppColors.primaryColor)
+                  : null,
+            ),
+            child: DropdownButton<int>(
+              isExpanded: true,
+              value: selectedIndex,
+              focusNode: _focusNode,
+              icon: AnimatedRotation(
+                turns: _isDropdownOpen ? 0.25 : 0,
+                duration: const Duration(milliseconds: 200),
+                child: const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Colors.grey,
+                ),
               ),
+              elevation: 8,
+              style: OptiTextStyles.body,
+              dropdownColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              onTap: () {
+                setState(() {
+                  _isDropdownOpen = !_isDropdownOpen;
+                });
+              },
+              onChanged: (widget.isActionEnabled == true)
+                  ? (int? newValue) {
+                      setState(() {
+                        selectedIndex = newValue!;
+                        _isDropdownOpen = false;
+                      });
+                      if (widget.callback != null && widget.items.isNotEmpty) {
+                        widget.callback!(context, widget.items[selectedIndex]);
+                      }
+                    }
+                  : null,
+              items: List.generate(widget.items.length, (index) {
+                return DropdownMenuItem<int>(
+                  value: index,
+                  enabled: _isOptionAvailable(widget.items[index]),
+                  child: (index > 0 && widget.items.isNotEmpty)
+                      ? _getDescriptionWidget(widget.items[index])
+                      : Text(
+                          _getDescriptions(widget.items[index]),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: OptiTextStyles.body,
+                        ),
+                );
+              }),
             ),
           ),
         ),
