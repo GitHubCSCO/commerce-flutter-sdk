@@ -184,7 +184,7 @@ class _DropdownPickerState extends State<DropdownPicker> {
     return true;
   }
 
-  Widget _getAvatar(Object item) {
+  Widget? _getAvatar(Object item) {
     if (item is StyleValueEntity) {
       if (!_getValueAvailability(item)) {
         return Container(
@@ -219,15 +219,16 @@ class _DropdownPickerState extends State<DropdownPicker> {
       }
     }
 
-    return const SizedBox.shrink();
+    return null;
   }
 
   Widget _getDescriptionWidget(Object item) {
     if (item is ProductDetailStyleValue) {
+      final avatar = _getAvatar(item.styleValue ?? '');
       return Row(
         children: [
-          _getAvatar(item.styleValue ?? ''),
-          const SizedBox(width: 16),
+          avatar ?? const SizedBox.shrink(),
+          if (avatar != null) const SizedBox(width: 16),
           Text(
             item.displayName ?? "",
             maxLines: 1,
