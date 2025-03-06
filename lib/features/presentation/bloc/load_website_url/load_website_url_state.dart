@@ -9,8 +9,10 @@ class LoadWebsiteUrlInitialState extends LoadWebsiteUrlState {}
 class LoadWebsiteUrlLoadingState extends LoadWebsiteUrlState {}
 
 class LoadWebsiteUrlLoadedState extends LoadWebsiteUrlState {
+  final bool isloadInAppBrowser;
   final String authorizedURL;
-  const LoadWebsiteUrlLoadedState({required this.authorizedURL});
+  const LoadWebsiteUrlLoadedState(
+      {required this.authorizedURL, required this.isloadInAppBrowser});
 }
 
 class LoadCustomUrlLoadedState extends LoadWebsiteUrlState {
