@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/tokenex_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/token_ex_view_mode.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
@@ -8,8 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-typedef handleWebViewRequestFromTokenEX = void Function(String urlString);
-typedef handleTokenExFinishedData = void Function(
+typedef HandleWebViewRequestFromTokenEX = void Function(
+    String urlString, BuildContext mContext);
+typedef HandleTokenExFinishedData = void Function(
     String cardNumber, String cardType, String securityCode, bool isInvalidCVV);
 
 int getTokenEXMode(TokenExViewMode mode) {
@@ -22,16 +24,72 @@ int getTokenEXMode(TokenExViewMode mode) {
   }
 }
 
-class TokenExWebView extends StatelessWidget {
+class TokenExWidget extends StatelessWidget {
   final TokenExEntity tokenExEntity;
-  final WebViewController _webViewController = WebViewController();
-  final Function handleWebViewRequestFromTokenEX;
-  final Function handleTokenExFinishedData;
-  TokenExWebView(
+  final HandleWebViewRequestFromTokenEX handleWebViewRequestFromTokenEX;
+  final HandleTokenExFinishedData handleTokenExFinishedData;
+  final ValueNotifier<bool>? tokenExValidateNotifier;
+
+  const TokenExWidget(
       {super.key,
       required this.tokenExEntity,
       required this.handleWebViewRequestFromTokenEX,
-      required this.handleTokenExFinishedData});
+      required this.handleTokenExFinishedData,
+      required this.tokenExValidateNotifier});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<TokenExBloc>(
+      create: (context) => sl<TokenExBloc>()..resetTokenExData(),
+      child: TokenExWebView(
+          tokenExEntity: tokenExEntity,
+          handleWebViewRequestFromTokenEX: handleWebViewRequestFromTokenEX,
+          handleTokenExFinishedData: handleTokenExFinishedData,
+          tokenExValidateNotifier: tokenExValidateNotifier),
+    );
+  }
+}
+
+class TokenExWebView extends StatefulWidget {
+  final TokenExEntity tokenExEntity;
+  final HandleWebViewRequestFromTokenEX handleWebViewRequestFromTokenEX;
+  final HandleTokenExFinishedData handleTokenExFinishedData;
+  final ValueNotifier<bool>? tokenExValidateNotifier;
+
+  const TokenExWebView(
+      {super.key,
+      required this.tokenExEntity,
+      required this.handleWebViewRequestFromTokenEX,
+      required this.handleTokenExFinishedData,
+      required this.tokenExValidateNotifier});
+
+  @override
+  State<TokenExWebView> createState() => _TokenExWebViewState();
+}
+
+class _TokenExWebViewState extends State<TokenExWebView> {
+  final WebViewController _webViewController = WebViewController();
+
+  @override
+  void initState() {
+    super.initState();
+    widget.tokenExValidateNotifier
+        ?.addListener(_onTokenExValidateNotifierChanged);
+  }
+
+  @override
+  void dispose() {
+    widget.tokenExValidateNotifier
+        ?.removeListener(_onTokenExValidateNotifierChanged);
+    super.dispose();
+  }
+
+  void _onTokenExValidateNotifierChanged() {
+    final validate = widget.tokenExValidateNotifier?.value ?? false;
+    if (validate) {
+      context.read<TokenExBloc>().add(TokenExValidateEvent());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +104,10 @@ class TokenExWebView extends StatelessWidget {
               TokenExScripts.getTokenExValidateScript();
           _webViewController.runJavaScript(tokenExValidateScript);
         } else if (state is TokenExEncodingFinishedState) {
-          handleTokenExFinishedData(
+          widget.handleTokenExFinishedData(
               state.cardNumber, state.cardType, state.securityCode, false);
         } else if (state is TokenExInvalidCvvState) {
-          handleTokenExFinishedData(null, null, null, state.showInvalidCVV);
+          widget.handleTokenExFinishedData('', '', '', state.showInvalidCVV);
         }
       },
       child: WebViewWidget(
@@ -71,10 +129,10 @@ class TokenExWebView extends StatelessWidget {
                 if (!isTokenExConfigurationSet) {
                   String tokenExSetGetawayJSAction =
                       TokenExScripts.getTokenExSetupScript(
-                    json.encode(tokenExEntity.tokenExConfiguration),
-                    json.encode(tokenExEntity.tokenexStyle),
-                    getTokenEXMode(tokenExEntity.tokenexMode!),
-                    json.encode(tokenExEntity.cardType!),
+                    json.encode(widget.tokenExEntity.tokenExConfiguration),
+                    json.encode(widget.tokenExEntity.tokenexStyle),
+                    getTokenEXMode(widget.tokenExEntity.tokenexMode!),
+                    json.encode(widget.tokenExEntity.cardType!),
                   );
                   _webViewController.runJavaScript(tokenExSetGetawayJSAction);
                   // Create viewport meta tag script
@@ -95,7 +153,7 @@ class TokenExWebView extends StatelessWidget {
                 final isTokenExConfigurationSet =
                     context.read<TokenExBloc>().isTokenExConfigurationSet;
 
-                handleWebViewRequestFromTokenEX(request.url);
+                widget.handleWebViewRequestFromTokenEX(request.url, context);
 
                 if (request.url.endsWith('loaded')) {
                   // Handle loaded event
@@ -116,7 +174,7 @@ class TokenExWebView extends StatelessWidget {
               },
             ),
           )
-          ..loadRequest(Uri.parse(tokenExEntity.tokenExUrl!)),
+          ..loadRequest(Uri.parse(widget.tokenExEntity.tokenExUrl!)),
       ),
     );
   }

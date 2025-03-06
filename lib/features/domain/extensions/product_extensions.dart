@@ -35,7 +35,10 @@ extension ProductExtensions on ProductEntity? {
       if (this!.quoteRequired != null && this!.quoteRequired!) {
         return LocalizationConstants.requiresQuote.localized().toString();
       } else {
-        subtotalValueText = this!.pricing.getSubtotalValue() ?? "";
+        subtotalValueText = this!
+                .pricing
+                .getSubtotalValue(allowZeroPricing: this?.allowZeroPricing) ??
+            "";
       }
     }
 
@@ -50,7 +53,10 @@ extension ProductExtensions on ProductEntity? {
     final priceDisplay =
         (this?.pricing != null && (this!.pricing!.isOnSale ?? false))
             ? this!.pricing!.unitNetPriceDisplay
-            : this?.pricing?.getPriceValue() ?? '';
+            : this
+                    ?.pricing
+                    ?.getPriceValue(allowZeroPricing: this?.allowZeroPricing) ??
+                '';
 
     return (productPricingEnabled ?? false)
         ? priceDisplay!

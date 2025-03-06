@@ -160,8 +160,9 @@ class ProductDetailsAddToCartUseCase extends BaseUseCase {
       productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
           subtotalValueText: SiteMessageConstants.valueRealTimePricingLoadFail);
     } else if (productDetailsPriceEntity
-            ?.product?.pricing?.extendedUnitNetPrice ==
-        0) {
+                ?.product?.pricing?.extendedUnitNetPrice ==
+            0 &&
+        productDetailsPriceEntity?.product?.allowZeroPricing != true) {
       productDetailsAddtoCartEntity = productDetailsAddtoCartEntity.copyWith(
           subtotalValueText: SiteMessageConstants.valuePricingZeroPriceMessage);
     } else {
