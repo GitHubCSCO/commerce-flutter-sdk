@@ -75,6 +75,7 @@ class QuoteLineEntityMapper {
         unitOfMeasureDescription: model?.unitOfMeasureDescription,
         unitOfMeasureDisplay: model?.unitOfMeasureDisplay,
         vmiBinId: model?.vmiBinId,
+        allowZeroPricing: model?.allowZeroPricing,
       );
 
   static QuoteLine? toModel(QuoteLineEntity entity) => QuoteLine(
@@ -142,6 +143,7 @@ class QuoteLineEntityMapper {
         ..unitOfMeasure = entity.unitOfMeasure
         ..unitOfMeasureDescription = entity.unitOfMeasureDescription
         ..unitOfMeasureDisplay = entity.unitOfMeasureDisplay
+        ..allowZeroPricing = entity.allowZeroPricing
         ..vmiBinId = entity.vmiBinId;
 }
 

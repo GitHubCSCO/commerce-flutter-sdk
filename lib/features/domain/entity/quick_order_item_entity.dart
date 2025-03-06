@@ -70,12 +70,14 @@ class QuickOrderItemEntity {
       } else {
         priceValueText = (productEntity.quoteRequired!)
             ? LocalizationConstants.requiresQuote.localized()
-            : pricing
-                .getPriceValue(); // Assuming getPriceValue() returns a string
+            : pricing.getPriceValue(
+                allowZeroPricing: productEntity.allowZeroPricing,
+              ); // Assuming getPriceValue() returns a string
         extendedPriceValueText = (productEntity.quoteRequired!)
             ? LocalizationConstants.requiresQuote.localized()
-            : pricing
-                .getSubtotalValue(); // Assuming getSubtotalValue() returns a string
+            : pricing.getSubtotalValue(
+                allowZeroPricing: productEntity.allowZeroPricing,
+              ); // Assuming getSubtotalValue() returns a string
         selectedUnitOfMeasureValueText = pricing.getUnitOfMeasure(
             uomText ?? ''); // Assuming getUnitOfMeasure() returns a string
       }

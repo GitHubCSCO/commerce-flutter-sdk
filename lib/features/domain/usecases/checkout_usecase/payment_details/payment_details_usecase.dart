@@ -32,6 +32,12 @@ class PaymentDetailsUseCase extends BaseUseCase {
         .getCartSettingAsync();
   }
 
+  Future<Result<WebsiteSettings, ErrorResponse>> getWebSiteSetting() {
+    return commerceAPIServiceProvider
+        .getSettingsService()
+        .getWebsiteSettingsAsync();
+  }
+
   String? get tokenExIFrameUrl {
     var url = coreServiceProvider.getAppConfigurationService().tokenExIFrameUrl;
     return url;

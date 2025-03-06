@@ -5,12 +5,13 @@ class CreditCardInfoEntity extends Equatable {
   final String cardIdentifier;
   final String securityCode;
   final String cardType;
+  final String maskedCardNumber;
 
-  CreditCardInfoEntity({
-    required this.cardIdentifier,
-    required this.securityCode,
-    required this.cardType,
-  });
+  CreditCardInfoEntity(
+      {required this.cardIdentifier,
+      this.securityCode = '',
+      required this.cardType,
+      this.maskedCardNumber = ''});
 
   CreditCardInfoEntity copyWith({
     String? cardIdentifier,

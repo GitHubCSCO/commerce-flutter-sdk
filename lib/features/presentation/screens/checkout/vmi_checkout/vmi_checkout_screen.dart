@@ -58,7 +58,6 @@ class VmiCheckoutScreen extends StatelessWidget {
         BlocProvider<CheckoutBloc>(
             create: (context) => sl<CheckoutBloc>()
               ..add(LoadCheckoutEvent(cart: vmiCheckoutEntity.cart))),
-        BlocProvider<TokenExBloc>(create: (context) => sl<TokenExBloc>()),
         BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
         BlocProvider<ReviewOrderCubit>(
             create: (context) => sl<ReviewOrderCubit>()),
@@ -293,7 +292,7 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
     if (isPaymentCardType &&
         !isCreditCardSectionCompleted &&
         isCVVFieldOpened) {
-      context.read<TokenExBloc>().add(TokenExValidateEvent());
+      context.read<PaymentDetailsBloc>().add(ValidateTokenEvent());
     } else {
       var poNumber = context.read<PaymentDetailsBloc>().getPONumber();
       var cart = context.read<PaymentDetailsBloc>().cart;

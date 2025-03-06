@@ -79,6 +79,12 @@ class _SearchProductsWidgetState extends State<SearchProductsWidget> {
                 break;
               case AddToCartFailure():
                 break;
+              case AddToCartInvalidPrice(errorResponse: final message):
+                CustomSnackBar.showSnackBarMessage(
+                  context,
+                  message,
+                  seconds: 4,
+                );
             }
           },
           child: state.searchProductStatus == StateStatus.loading

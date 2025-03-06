@@ -148,7 +148,7 @@ class CartLineWidget extends StatelessWidget {
         onCartLineRemovedCallback(cartLineEntity);
       },
       child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(10.0),
         child: SizedBox(
           width: 30,
           height: 30,
