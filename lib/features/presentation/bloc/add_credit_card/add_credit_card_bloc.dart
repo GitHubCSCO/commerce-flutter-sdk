@@ -1,6 +1,8 @@
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/features/domain/entity/checkout/tokenex_entity.dart';
+import 'package:commerce_flutter_app/features/domain/entity/credit_card_info_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/token_ex_view_mode.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/add_credit_card_usecase/add_credit_card_usecase.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/add_credit_card/add_credit_card_event.dart';
@@ -24,6 +26,8 @@ class AddCreditCardBloc extends Bloc<AddCreditCardEvent, AddCreditCardState> {
   String messageStateRequired =
       SiteMessageConstants.defaultAllProductCountExceed;
 
+  CreditCardInfoEntity? cardInfo;
+
   AddCreditCardBloc({required AddCreditCardUsecase addCreditCardUsecase})
       : _addCreditCardUsecase = addCreditCardUsecase,
         super(AddCreditCardInitialState()) {
@@ -43,38 +47,57 @@ class AddCreditCardBloc extends Bloc<AddCreditCardEvent, AddCreditCardState> {
     }
 
     var currentCartResponse = await _addCreditCardUsecase.getCurrentCart();
+    var webSiteSettingResponse =
+        await _addCreditCardUsecase.getWebSiteSetting();
 
     Cart currentCart = (currentCartResponse is Success)
         ? (currentCartResponse as Success).value
         : null;
-    PaymentOptionsDto? paymentOptions = currentCart.paymentOptions;
+    var paymentOptions = currentCart.paymentOptions;
+    var websiteSetting = webSiteSettingResponse.getResultSuccessValue();
 
-    var tokenExStyle = TokenExStyleDto(
-      baseColor: OptiAppColors.lightGrayTextColor.toString(),
-      focusColor: OptiAppColors.primaryColor.toString(),
-      errorColor: OptiAppColors.invalidColor.toString(),
-      textColor: OptiAppColors.darkGrayTextColor.toString(),
-    );
+    if (websiteSetting?.useSpreedlyDropIn == true) {
+      var spreedlyResponse =
+          await _addCreditCardUsecase.getSpreedlyConfiguration();
+      SpreedlyDto spreedlyConfiguration = (spreedlyResponse is Success)
+          ? (spreedlyResponse as Success).value
+          : null;
+      var spreedlyKey = spreedlyConfiguration.environmentKey;
 
-    var tokenExResponse =
-        await _addCreditCardUsecase.getTokenExConfiguration("");
+      emit(AddCreditCardLoadedState(
+          spreedlyEnvironmentKey: spreedlyKey,
+          expirationMonths: paymentOptions?.expirationMonths,
+          expirationYears: paymentOptions?.expirationYears,
+          websiteSettings: websiteSetting));
+    } else {
+      var tokenExStyle = TokenExStyleDto(
+        baseColor: OptiAppColors.lightGrayTextColor.toString(),
+        focusColor: OptiAppColors.primaryColor.toString(),
+        errorColor: OptiAppColors.invalidColor.toString(),
+        textColor: OptiAppColors.darkGrayTextColor.toString(),
+      );
 
-    var tokenExConfiguration = (tokenExResponse is Success)
-        ? (tokenExResponse as Success).value
-        : null;
+      var tokenExResponse =
+          await _addCreditCardUsecase.getTokenExConfiguration("");
 
-    var tokeExUrl = _addCreditCardUsecase.tokenExIFrameUrl;
-    var tokenExEnity = TokenExEntity(
-        tokenExConfiguration: tokenExConfiguration,
-        tokenexStyle: tokenExStyle,
-        tokenexMode: TokenExViewMode.full,
-        cardType: "",
-        tokenExUrl: tokeExUrl);
+      var tokenExConfiguration = (tokenExResponse is Success)
+          ? (tokenExResponse as Success).value
+          : null;
 
-    emit(AddCreditCardLoadedState(
-        tokenExEntity: tokenExEnity,
-        expirationMonths: paymentOptions?.expirationMonths,
-        expirationYears: paymentOptions?.expirationYears));
+      var tokeExUrl = _addCreditCardUsecase.tokenExIFrameUrl;
+      var tokenExEntity = TokenExEntity(
+          tokenExConfiguration: tokenExConfiguration,
+          tokenexStyle: tokenExStyle,
+          tokenexMode: TokenExViewMode.full,
+          cardType: "",
+          tokenExUrl: tokeExUrl);
+
+      emit(AddCreditCardLoadedState(
+          tokenExEntity: tokenExEntity,
+          expirationMonths: paymentOptions?.expirationMonths,
+          expirationYears: paymentOptions?.expirationYears,
+          websiteSettings: websiteSetting));
+    }
   }
 
   Future<void> _onSavePaymentProfile(
@@ -115,6 +138,10 @@ class AddCreditCardBloc extends Bloc<AddCreditCardEvent, AddCreditCardState> {
       case Failure():
         emit(CreditCardDeletedFailureState());
     }
+  }
+
+  void updateCreditCardInfo(CreditCardInfoEntity? cardInfo) {
+    this.cardInfo = cardInfo;
   }
 
   Future<void> _loadSiteMessages() async {

@@ -161,8 +161,7 @@ class LineItemWidget extends StatelessWidget {
           InkWell(
             onTap: onAddToList,
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 15).copyWith(left: 15),
+              padding: const EdgeInsets.all(10),
               child: SizedBox(
                 width: 30,
                 height: 30,
@@ -177,8 +176,7 @@ class LineItemWidget extends StatelessWidget {
           InkWell(
             onTap: onAddToCart,
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 15).copyWith(left: 15),
+              padding: const EdgeInsets.all(10),
               child: SizedBox(
                 width: 30,
                 height: 30,
@@ -193,8 +191,7 @@ class LineItemWidget extends StatelessWidget {
           InkWell(
             onTap: onDelete,
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 15).copyWith(left: 15),
+              padding: const EdgeInsets.all(10),
               child: SizedBox(
                 width: 30,
                 height: 30,
@@ -205,7 +202,6 @@ class LineItemWidget extends StatelessWidget {
               ),
             ),
           ),
-        const SizedBox(width: 20),
       ],
     );
   }

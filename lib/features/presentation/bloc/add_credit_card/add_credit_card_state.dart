@@ -11,11 +11,15 @@ class AddCreditCardLoadedState extends AddCreditCardState {
   List<KeyValuePair<String, int>>? expirationMonths;
   List<KeyValuePair<int, int>>? expirationYears;
   final TokenExEntity? tokenExEntity;
-  AddCreditCardLoadedState({
-    this.expirationMonths,
-    this.expirationYears,
-    this.tokenExEntity,
-  });
+  final String? spreedlyEnvironmentKey;
+  final WebsiteSettings? websiteSettings;
+
+  AddCreditCardLoadedState(
+      {this.expirationMonths,
+      this.expirationYears,
+      this.tokenExEntity,
+      this.spreedlyEnvironmentKey,
+      this.websiteSettings});
 }
 
 class SavedPaymentAddedSuccessState extends AddCreditCardState {

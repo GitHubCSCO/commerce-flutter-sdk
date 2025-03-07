@@ -16,6 +16,8 @@ class PaymentDetailsLoaded extends PaymentDetailsState {
   final Cart? cart;
   final bool isNewCreditCard;
   final bool? shouldShowOrderNotes;
+  final bool? useTokenExGateway;
+  final bool? useSpreedlyDropIn;
 
   PaymentDetailsLoaded(
       {this.tokenExEntity,
@@ -24,9 +26,13 @@ class PaymentDetailsLoaded extends PaymentDetailsState {
       this.cardDetails,
       this.showPOField,
       this.poTextEditingController,
-      this.shouldShowOrderNotes});
+      this.shouldShowOrderNotes,
+      this.useTokenExGateway,
+      this.useSpreedlyDropIn});
 }
 
 class PaymentDetailsCompletedState extends PaymentDetailsState {}
 
 class PaymentDetailsNewCardSelectedState extends PaymentDetailsState {}
+
+class PaymentDetailsValidateTokenState extends PaymentDetailsState {}

@@ -24,6 +24,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
   bool hasCheckout = true;
   ProductSettings? productSettings;
   String? promoItemMessage;
+  bool hasInvalidPrice = false;
   CartPageBloc(
       {required CartUseCase cartUseCase,
       required PricingInventoryUseCase pricingInventoryUseCase})
@@ -94,6 +95,8 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
                   _pricingInventoryUseCase.getHidePricingEnable();
               final hideInventoryEnable =
                   _pricingInventoryUseCase.getHideInventoryEnable();
+
+              hasInvalidPrice = _hasInvalidPrice;
 
               emit(CartPageLoadedState(
                 cart: data,
@@ -218,7 +221,10 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
       return false;
     }
 
-    return cart?.canCheckOut == true && !isCartEmpty && hasCheckout;
+    return cart?.canCheckOut == true &&
+        !isCartEmpty &&
+        hasCheckout &&
+        !hasInvalidPrice;
   }
 
   bool get canSubmitForQuote {
@@ -237,5 +243,16 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
     } else {
       return LocalizationConstants.submitForQuote.localized();
     }
+  }
+
+  bool get _hasInvalidPrice {
+    return cart?.cartLines != null &&
+        cart!.cartLines!.any(
+          (cartLine) =>
+              cartLine.allowZeroPricing != true &&
+              cartLine.pricing?.unitNetPrice == 0 &&
+              cartLine.isPromotionItem != true &&
+              cartLine.isDiscounted != true,
+        );
   }
 }

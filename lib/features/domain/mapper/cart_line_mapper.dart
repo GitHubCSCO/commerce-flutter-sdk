@@ -18,6 +18,7 @@ class AddCartLineMapper {
         sectionOptions: model?.sectionOptions
             ?.map((e) => SectionOptionEntityMapper.toEntity(e))
             .toList(),
+        allowZeroPricing: model?.allowZeroPricing,
       );
 }
 
@@ -79,6 +80,7 @@ class CartLineEntityMapper {
             ?.map((e) => SectionOptionEntityMapper.toEntity(e))
             .toList(),
         properties: model.properties,
+        allowZeroPricing: model.allowZeroPricing,
       );
 
   static CartLine toModel(CartLineEntity entity) => CartLine(
@@ -132,6 +134,7 @@ class CartLineEntityMapper {
             .toList(),
         productId: entity.productId,
         unitOfMeasure: entity.unitOfMeasure,
+        allowZeroPricing: entity.allowZeroPricing,
       )..properties = entity.properties;
 }
 

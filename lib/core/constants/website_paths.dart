@@ -1,30 +1,35 @@
 class WebsitePaths {
   static const shopWebsitePath = '/';
-  static const cartWebsitePath = 'redirectto/CartPage';
-  static const listsWebsitePath = 'redirectto/MyListsPage';
-  static const listDetailsWebsitePath = 'redirectto/MyListDetailPage?id=%s';
-  static const savedOrdersWebsitePath = 'redirectto/SavedOrderListPage';
+  static const cartWebsitePath = 'redirectto/mobileauth/CartPage';
+  static const listsWebsitePath = 'redirectto/mobileauth/MyListsPage';
+  static const listDetailsWebsitePath =
+      'redirectto/mobileauth/MyListDetailPage?id=%s';
+  static const savedOrdersWebsitePath =
+      'redirectto/mobileauth/SavedOrderListPage';
   static const savedOrderDetailsWebsitePath =
-      'redirectto/SavedOrderDetailPage?cartId=%s';
-  static const orderApprovalWebsitePath = 'redirectto/OrderApprovalListPage';
+      'redirectto/mobileauth/SavedOrderDetailPage?cartId=%s';
+  static const orderApprovalWebsitePath =
+      'redirectto/mobileauth/OrderApprovalListPage';
   static const orderApprovalDetailsWebsitePath =
-      'redirectto/OrderApprovalDetailPage?cartId=%s';
-  static const brandsWebsitePath = 'redirectto/BrandsPage';
-  static const accountWebsitePath = 'redirectto/myaccountpage';
-  static const ordersPath = 'redirectto/OrdersPage';
+      'redirectto/mobileauth/OrderApprovalDetailPage?cartId=%s';
+  static const brandsWebsitePath = 'redirectto/mobileauth/BrandsPage';
+  static const accountWebsitePath = 'redirectto/mobileauth/myaccountpage';
+  static const ordersPath = 'redirectto/mobileauth/OrdersPage';
   static const vmiOrdersPath =
-      'redirectto/VmiOrdersPage?customerSequence=-1&vmiLocationId=%s';
-  static const invoiceHistoryWebsitePath = 'redirectto/InvoicesPage';
+      'redirectto/mobileauth/VmiOrdersPage?customerSequence=-1&vmiLocationId=%s';
+  static const invoiceHistoryWebsitePath = 'redirectto/mobileauth/InvoicesPage';
   static const invoiceDetailWebsitePath =
-      'redirectto/InvoiceDetailPage?invoiceNumber=%s';
-  static const myQuotesWebsitePath = 'redirectto/RfqMyQuotesPage';
-  static const jobQuotesWebsitePath = 'redirectto/RfqJobQuotesPage';
+      'redirectto/mobileauth/InvoiceDetailPage?invoiceNumber=%s';
+  static const myQuotesWebsitePath = 'redirectto/mobileauth/RfqMyQuotesPage';
+  static const jobQuotesWebsitePath = 'redirectto/mobileauth/RfqJobQuotesPage';
   static const myQuoteDetailsWebsitePath =
-      'redirectto/RfqQuoteDetailsPage?quoteId=%s';
+      'redirectto/mobileauth/RfqQuoteDetailsPage?quoteId=%s';
   static const jobQuoteDetailsWebsitePath =
-      'redirectto/RfqJobQuoteDetailsPage?jobQuoteId=%s';
-  static const quoteRequestWebsitePath = 'redirectto/QuoteRequestPage';
-  static const savedPaymentsWebsitePath = 'redirectto/MySavedPaymentsPage';
+      'redirectto/mobileauth/RfqJobQuoteDetailsPage?jobQuoteId=%s';
+  static const quoteRequestWebsitePath =
+      'redirectto/mobileauth/QuoteRequestPage';
+  static const savedPaymentsWebsitePath =
+      'redirectto/mobileauth/MySavedPaymentsPage';
 }
 
 class PrintPaths {

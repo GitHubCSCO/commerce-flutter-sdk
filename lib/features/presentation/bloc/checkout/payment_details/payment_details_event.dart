@@ -29,3 +29,5 @@ class UpdateNewAccountPaymentProfileEvent extends PaymentDetailsEvent {
   final AccountPaymentProfile accountPaymentProfile;
   UpdateNewAccountPaymentProfileEvent({required this.accountPaymentProfile});
 }
+
+class ValidateTokenEvent extends PaymentDetailsEvent {}

@@ -82,7 +82,7 @@ class ProductDetailsPricingBloc
       var priceValueText =
           (data != null && data.isOnSale != null && data.isOnSale!)
               ? data.unitNetPriceDisplay
-              : data.getPriceValue();
+              : data.getPriceValue(allowZeroPricing: product.allowZeroPricing);
       var discountMessage = data.getDiscountValue();
 
       var selectedUnitOfMeasureValueText = '';
