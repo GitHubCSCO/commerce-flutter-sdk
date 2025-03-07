@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
@@ -74,6 +76,8 @@ class CartPage extends StatelessWidget with BaseDynamicContentScreen {
 
   @override
   Widget build(BuildContext context) {
+    final draggableController = DraggableScrollableController();
+
     return Scaffold(
       backgroundColor: OptiAppColors.backgroundGray,
       appBar: AppBar(
@@ -301,6 +305,7 @@ class CartPage extends StatelessWidget with BaseDynamicContentScreen {
                                   isSavedOrderVisible);
 
                               return DraggableScrollableSheet(
+                                controller: draggableController,
                                 initialChildSize:
                                     initialSize, // Initial size (Only Checkout button visible)
                                 minChildSize:
@@ -324,21 +329,47 @@ class CartPage extends StatelessWidget with BaseDynamicContentScreen {
                                       controller: scrollController,
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
-                                            vertical: 12.0, horizontal: 16.0),
+                                            horizontal: 16.0),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             // Drag Handle
-                                            Container(
-                                              width: 70,
-                                              height: 5,
-                                              decoration: BoxDecoration(
-                                                color: Colors.black,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
+                                            GestureDetector(
+                                              onTap: () {
+                                                var currentSize =
+                                                    draggableController.size >
+                                                            initialSize
+                                                        ? initialSize
+                                                        : maxSize;
+                                                unawaited(draggableController
+                                                    .animateTo(
+                                                  currentSize, // Adjust this value to your initial size
+                                                  duration: const Duration(
+                                                      milliseconds: 300),
+                                                  curve: Curves.easeInOut,
+                                                ));
+                                              },
+                                              child: Container(
+                                                width: double.infinity,
+                                                color: Colors.transparent,
+                                                child: Column(
+                                                  children: [
+                                                    const SizedBox(height: 12),
+                                                    Container(
+                                                      width: 70,
+                                                      height: 5,
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.black,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 20),
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                            const SizedBox(height: 20),
                                             _buildSubTotal(state),
                                             const SizedBox(height: 10),
                                             Visibility(
