@@ -149,7 +149,9 @@ class MyApp extends StatelessWidget {
             listener: (_, state) {
               switch (state) {
                 case LoadWebsiteUrlLoadedState():
-                  launchUrlString(state.authorizedURL);
+                  if (!state.isloadInAppBrowser) {
+                    launchUrlString(state.authorizedURL);
+                  }
                 case LoadCustomUrlLoadedState():
                   launchUrlString(state.customURL);
                 case LoadWebsiteUrlFailureState():

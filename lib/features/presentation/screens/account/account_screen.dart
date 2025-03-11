@@ -3,14 +3,18 @@ import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_app/core/utils/platform_utils.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/account/account_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/load_website_url/load_website_url_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
+import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/components/style.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/account_header/account_header_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
@@ -20,6 +24,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/base_screen.d
 import 'package:commerce_flutter_app/features/presentation/widget/error_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -72,6 +77,45 @@ class AccountPage extends StatelessWidget with BaseDynamicContentScreen {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
+        BlocListener<LoadWebsiteUrlBloc, LoadWebsiteUrlState>(
+          listener: (context, state) async {
+            if (state is LoadWebsiteUrlLoadedState &&
+                state.isloadInAppBrowser) {
+              final isWebViewEnabled =
+                  await PlatformUtils.isSystemWebViewEnabled(
+                      state.authorizedURL);
+              if (isWebViewEnabled) {
+                await context.pushNamed(
+                  AppRoute.inAppBrowser.name,
+                  extra: state.authorizedURL,
+                );
+              } else {
+                // Show prompt to the user
+                displayDialogWidget(
+                  context: context,
+                  title: LocalizationConstants.externalBrowserOpenWarningTitle
+                      .localized(),
+                  message: LocalizationConstants.externalBrowserOpenWarningMsg
+                      .localized(),
+                  actions: [
+                    DialogPlainButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        launchUrlString(state.authorizedURL);
+                      },
+                      child: Text(LocalizationConstants.oK.localized()),
+                    ),
+                  ],
+                );
+              }
+            } else if (state is LoadWebsiteUrlFailureState) {
+              CustomSnackBar.showSnackBarMessage(
+                context,
+                state.error,
+              );
+            }
+          },
+        ),
         BlocListener<RootBloc, RootState>(
           listener: (context, state) async {
             if (state is RootConfigReload) {

@@ -124,9 +124,13 @@ class ProductDetailsPricingWidget extends StatelessWidget {
             onTap: () {
               viewWarehouseWidget(
                   context,
-                  state.productDetailsPriceEntity.product?.id,
+                  state.productDetailsPriceEntity.styledProduct != null
+                      ? state.productDetailsPriceEntity.styledProduct?.productId
+                      : state.productDetailsPriceEntity.product?.id,
                   state.productDetailsPriceEntity.product.getProductNumber(),
-                  state.productDetailsPriceEntity.product?.unitOfMeasure ?? "");
+                  state.productDetailsPriceEntity.chosenUnitOfMeasure
+                          ?.unitOfMeasure ??
+                      "");
             },
             child: Text(
               LocalizationConstants.viewAvailabilityWarehouse.localized(),
