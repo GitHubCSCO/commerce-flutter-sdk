@@ -196,7 +196,8 @@ mixin BaseActionItemWidget {
       case ActionType.viewAccountOnWebsite:
         return () {
           context.read<LoadWebsiteUrlBloc>().add(LoadWebsiteUrlLoadEvent(
-              redirectUrl: WebsitePaths.accountWebsitePath));
+              redirectUrl: WebsitePaths.accountWebsitePath,
+              isloadInAppBrowser: true));
         };
       case ActionType.quotes:
         return () {

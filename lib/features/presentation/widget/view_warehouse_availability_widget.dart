@@ -96,9 +96,12 @@ void viewWarehouseWidget(BuildContext context, String? id, String productNumber,
                                                       : warehouse
                                                           .description!)),
                                               Text(
-                                                (warehouse.qty ?? 0)
-                                                    .toInt()
-                                                    .toString(),
+                                                (warehouse.qty ?? 0) % 1 == 0
+                                                    ? (warehouse.qty ?? 0)
+                                                        .toInt()
+                                                        .toString() // Show as integer if no decimal part
+                                                    : (warehouse.qty ?? 0)
+                                                        .toStringAsFixed(4),
                                                 style: TextStyle(
                                                     color:
                                                         AvailabilityColorConverter

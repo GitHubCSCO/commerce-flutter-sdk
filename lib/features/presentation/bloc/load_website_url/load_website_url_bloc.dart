@@ -40,7 +40,8 @@ class LoadWebsiteUrlBloc
     emit(LoadWebsiteUrlInitialState());
     var result = await _platformUsecase.getAuthorizedURL(event.redirectUrl);
     if (result != null) {
-      emit(LoadWebsiteUrlLoadedState(authorizedURL: result));
+      emit(LoadWebsiteUrlLoadedState(
+          authorizedURL: result, isloadInAppBrowser: event.isloadInAppBrowser));
     } else {
       emit(LoadWebsiteUrlFailureState(
           LocalizationConstants.failedToLoadUrl.localized()));
