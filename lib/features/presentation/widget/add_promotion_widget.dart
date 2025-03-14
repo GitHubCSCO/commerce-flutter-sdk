@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
@@ -33,7 +35,7 @@ class _AddPromotionWidgetState extends State<AddPromotionWidget> {
   void initState() {
     super.initState();
     context.read<PromoCodeCubit>().resetShowPromotionField();
-    context.read<PromoCodeCubit>().loadCartPromotions();
+    unawaited(context.read<PromoCodeCubit>().loadCartPromotions());
   }
 
   @override
@@ -57,7 +59,7 @@ class _AddPromotionWidgetState extends State<AddPromotionWidget> {
         },
         builder: (context, state) {
           if (state is PromoCodeLoadingState) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (state is PromoCodeLoadedState) {
             return Padding(
               padding: const EdgeInsets.all(10.0),
@@ -73,7 +75,7 @@ class _AddPromotionWidgetState extends State<AddPromotionWidget> {
                             child: Flexible(
                               fit: FlexFit.loose,
                               child: ListView.builder(
-                                padding: EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
                                 shrinkWrap: true,
                                 itemCount: state.promotions?.length,
                                 itemBuilder: (context, index) {
@@ -104,9 +106,10 @@ class _AddPromotionWidgetState extends State<AddPromotionWidget> {
                             backgroundColor: OptiAppColors.grayBackgroundColor,
                             text: LocalizationConstants.apply.localized(),
                             onPressed: () {
-                              context.read<PromoCodeCubit>().applyPromoCode(
-                                  promoCodeController.text,
-                                  widget.fromCartPage);
+                              unawaited(context
+                                  .read<PromoCodeCubit>()
+                                  .applyPromoCode(promoCodeController.text,
+                                      widget.fromCartPage));
                             }),
                       ],
                     ),
@@ -125,7 +128,9 @@ class _AddPromotionWidgetState extends State<AddPromotionWidget> {
                             context
                                 .read<PromoCodeCubit>()
                                 .updateShowPromotionField();
-                            context.read<PromoCodeCubit>().loadCartPromotions();
+                            unawaited(context
+                                .read<PromoCodeCubit>()
+                                .loadCartPromotions());
                           }),
                     ),
                   )
