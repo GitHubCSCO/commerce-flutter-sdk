@@ -65,14 +65,27 @@ class CartScreen extends StatelessWidget {
       ),
       BlocProvider<CartPageBloc>(create: (context) => sl<CartPageBloc>()),
       BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
-    ], child: const CartPage());
+    ], child: CartPage());
   }
 }
 
-class CartPage extends StatelessWidget with BaseDynamicContentScreen {
-  const CartPage({super.key});
+class CartPage extends StatefulWidget with BaseDynamicContentScreen {
+  CartPage({super.key});
+
+  @override
+  State<CartPage> createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
+  final ScrollController _scrollController = ScrollController();
 
   final websitePath = WebsitePaths.cartWebsitePath;
+
+  void _scrollToBottom(bool? scrollToBottom) {
+    if (_scrollController.hasClients && (scrollToBottom ?? false)) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +131,7 @@ class CartPage extends StatelessWidget with BaseDynamicContentScreen {
             BlocListener<CartCountCubit, CountState>(
               listener: (context, state) {
                 if (state is CartTabReloadState) {
-                  bool isCartItemChanged =
+                  var isCartItemChanged =
                       context.read<CartCountCubit>().cartItemChanged();
                   if (isCartItemChanged) {
                     context.read<CartCountCubit>().setCartItemChange(false);
@@ -148,6 +161,9 @@ class CartPage extends StatelessWidget with BaseDynamicContentScreen {
                 } else if (state is CartProceedToCheckoutState) {
                   var cartPageBloc = context.read<CartPageBloc>();
                   navigateToCheckout(context, cartPageBloc);
+                } else if (state is CartPageLoadedState) {
+                  WidgetsBinding.instance.addPostFrameCallback(
+                      (_) => _scrollToBottom(state.scrollToBottom));
                 }
               },
             )
@@ -196,6 +212,7 @@ class CartPage extends StatelessWidget with BaseDynamicContentScreen {
                                                   state.cartWarningMsg),
                                         Expanded(
                                           child: ListView(
+                                            controller: _scrollController,
                                             children: _buildCartWidgets(
                                                 cmsState.widgetEntities,
                                                 state.cart,
@@ -455,6 +472,12 @@ class CartPage extends StatelessWidget with BaseDynamicContentScreen {
             },
           )),
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   bool isAddDiscountEnabled(List<WidgetEntity> widgetEntities) {
@@ -762,7 +785,7 @@ class CartPage extends StatelessWidget with BaseDynamicContentScreen {
       bool? hidePricingEnable,
       bool? hideInventoryEnable,
       BuildContext context) {
-    List<Widget> list = [];
+    var list = <Widget>[];
 
     final paymentSummaryEntity = PaymentSummaryEntity(
         cart: cart,
@@ -838,7 +861,7 @@ class CartPage extends StatelessWidget with BaseDynamicContentScreen {
       ),
     ));
 
-    list.addAll(buildContentWidgets(widgetEntities));
+    list.addAll(widget.buildContentWidgets(widgetEntities));
 
     if (!(hidePricingEnable ?? false)) {
       list.add(

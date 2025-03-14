@@ -45,7 +45,7 @@ class AddPromotionWidget extends StatelessWidget {
         },
         builder: (context, state) {
           if (state is PromoCodeLoadingState) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (state is PromoCodeLoadedState) {
             return Padding(
               padding: const EdgeInsets.all(10.0),
@@ -61,7 +61,7 @@ class AddPromotionWidget extends StatelessWidget {
                             child: Flexible(
                               fit: FlexFit.loose,
                               child: ListView.builder(
-                                padding: EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
                                 shrinkWrap: true,
                                 itemCount: state.promotions?.length,
                                 itemBuilder: (context, index) {
