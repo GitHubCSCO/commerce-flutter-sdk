@@ -15,6 +15,8 @@ class CarouselSlideWidgetEntity extends WidgetEntity {
   final String? primaryTextColorHex;
   final String? secondaryTextColorHex;
   final TextJustification? textJustification;
+  final String? background;
+  final String? backgroundColor;
 
   const CarouselSlideWidgetEntity({
     required this.imagePath,
@@ -25,6 +27,8 @@ class CarouselSlideWidgetEntity extends WidgetEntity {
     required this.primaryTextColorHex,
     required this.secondaryTextColorHex,
     required this.textJustification,
+    this.background,
+    this.backgroundColor,
   });
 
   @override
@@ -37,5 +41,7 @@ class CarouselSlideWidgetEntity extends WidgetEntity {
         primaryTextColorHex,
         secondaryTextColorHex,
         textJustification,
+        background,
+        backgroundColor,
       ];
 }

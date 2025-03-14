@@ -47,23 +47,30 @@ class CarouselItemWidget extends StatelessWidget {
           alignment: Alignment.center,
           fit: StackFit.expand,
           children: [
-            Image.network(
-              carouselSlideWidgetEntity.imagePath.makeImageUrl(),
-              fit: BoxFit.fitWidth,
-              errorBuilder:
-                  (BuildContext context, Object error, StackTrace? stackTrace) {
-                // This function is called when the image fails to load
-                return Container(
-                  color: OptiAppColors.backgroundGray, // Placeholder color
-                  alignment: Alignment.center,
-                  child: const Icon(
-                    Icons.image, // Icon to display
-                    color: Colors.grey, // Icon color
-                    size: 90, // Icon size
-                  ),
-                );
-              },
-            ),
+            if (carouselSlideWidgetEntity.background == "image")
+              Image.network(
+                carouselSlideWidgetEntity.imagePath.makeImageUrl(),
+                fit: BoxFit.fitWidth,
+                errorBuilder: (BuildContext context, Object error,
+                    StackTrace? stackTrace) {
+                  // This function is called when the image fails to load
+                  return Container(
+                    color: OptiAppColors.backgroundGray, // Placeholder color
+                    alignment: Alignment.center,
+                    child: const Icon(
+                      Icons.image, // Icon to display
+                      color: Colors.grey, // Icon color
+                      size: 90, // Icon size
+                    ),
+                  );
+                },
+              )
+            else
+              Container(
+                color: OptiAppColors.rgbaToColor(
+                  carouselSlideWidgetEntity.backgroundColor ?? '',
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.all(15),
               child: Column(
