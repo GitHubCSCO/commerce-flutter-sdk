@@ -10,26 +10,38 @@ import 'package:commerce_flutter_app/features/presentation/widget/promo_code_wid
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AddPromotionWidget extends StatelessWidget {
+class AddPromotionWidget extends StatefulWidget {
   final bool shouldShowPromotionList;
   final bool fromCartPage;
   final bool isAddDiscountEnable;
+
+  const AddPromotionWidget({
+    super.key,
+    required this.shouldShowPromotionList,
+    required this.fromCartPage,
+    this.isAddDiscountEnable = true,
+  });
+
+  @override
+  State<AddPromotionWidget> createState() => _AddPromotionWidgetState();
+}
+
+class _AddPromotionWidgetState extends State<AddPromotionWidget> {
   final TextEditingController promoCodeController = TextEditingController();
 
-  AddPromotionWidget(
-      {super.key,
-      required this.shouldShowPromotionList,
-      required this.fromCartPage,
-      this.isAddDiscountEnable = true});
+  @override
+  void initState() {
+    super.initState();
+    context.read<PromoCodeCubit>().resetShowPromotionField();
+    context.read<PromoCodeCubit>().loadCartPromotions();
+  }
 
   @override
   Widget build(BuildContext context) {
-    context.read<PromoCodeCubit>().resetShowPromotionField();
-    context.read<PromoCodeCubit>().loadCartPromotions();
     return BlocListener<PromoCodeCubit, PromoCodeState>(
       listener: (context, state) {
         if (state is PromoCodeApplySuccessState) {
-          if (fromCartPage) {
+          if (widget.fromCartPage) {
             context.read<CartPageBloc>().add(CartPageLoadEvent());
           }
 
@@ -57,7 +69,7 @@ class AddPromotionWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Visibility(
-                            visible: shouldShowPromotionList,
+                            visible: widget.shouldShowPromotionList,
                             child: Flexible(
                               fit: FlexFit.loose,
                               child: ListView.builder(
@@ -93,7 +105,8 @@ class AddPromotionWidget extends StatelessWidget {
                             text: LocalizationConstants.apply.localized(),
                             onPressed: () {
                               context.read<PromoCodeCubit>().applyPromoCode(
-                                  promoCodeController.text, fromCartPage);
+                                  promoCodeController.text,
+                                  widget.fromCartPage);
                             }),
                       ],
                     ),
@@ -101,7 +114,7 @@ class AddPromotionWidget extends StatelessWidget {
                   Visibility(
                     visible:
                         !context.read<PromoCodeCubit>().showPromotionField &&
-                            isAddDiscountEnable,
+                            widget.isAddDiscountEnable,
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: TertiaryButton(
