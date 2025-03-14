@@ -39,6 +39,12 @@ class _AddPromotionWidgetState extends State<AddPromotionWidget> {
   }
 
   @override
+  void dispose() {
+    promoCodeController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocListener<PromoCodeCubit, PromoCodeState>(
       listener: (context, state) {
