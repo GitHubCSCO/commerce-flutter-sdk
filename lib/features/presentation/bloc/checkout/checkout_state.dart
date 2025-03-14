@@ -21,6 +21,7 @@ class CheckoutDataLoaded extends CheckoutState {
   final String? requestDateWarningMessage;
   final String cartWarningMsg;
   final String? orderNotes;
+  final bool? useSpreedlyDropIn;
 
   CheckoutDataLoaded(
       {required this.cart,
@@ -36,7 +37,8 @@ class CheckoutDataLoaded extends CheckoutState {
       required this.allowCreateNewShipToAddress,
       required this.requestDateWarningMessage,
       required this.cartWarningMsg,
-      required this.orderNotes});
+      required this.orderNotes,
+      required this.useSpreedlyDropIn});
 }
 
 class CheckoutNoDataState extends CheckoutState {
@@ -69,6 +71,17 @@ class CheckoutPlaceOrderFailed extends CheckoutState {
   final String error;
 
   CheckoutPlaceOrderFailed({required this.error});
+}
+
+class CheckoutPlaceOrderPending extends CheckoutState {
+  final String cartId;
+  final String environmentKey;
+  final String transactionToken;
+
+  CheckoutPlaceOrderPending(
+      {required this.cartId,
+      required this.environmentKey,
+      required this.transactionToken});
 }
 
 class CheckoutShipToAddressAddedState extends CheckoutState {}

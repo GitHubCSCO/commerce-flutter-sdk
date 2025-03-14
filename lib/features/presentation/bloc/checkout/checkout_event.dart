@@ -9,8 +9,14 @@ class LoadCheckoutEvent extends CheckoutEvent {
 }
 
 class PlaceOrderEvent extends CheckoutEvent {
+  final String? browserInfo;
   final ReviewOrderEntity? reviewOrderEntity;
-  PlaceOrderEvent({this.reviewOrderEntity});
+  PlaceOrderEvent({this.browserInfo, this.reviewOrderEntity});
+}
+
+class PlaceOrderWithPaymentEvent extends CheckoutEvent {
+  final String cartId;
+  PlaceOrderWithPaymentEvent({required this.cartId});
 }
 
 class RequestDeliveryDateEvent extends CheckoutEvent {

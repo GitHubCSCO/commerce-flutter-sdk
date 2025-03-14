@@ -7,8 +7,6 @@ import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dar
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
@@ -23,6 +21,8 @@ import 'package:commerce_flutter_app/features/presentation/screens/checkout/chec
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/spreedly_utils.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/checkout/payment_details/three_ds_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/checkout/review_order/review_order_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/product_list_with_basicInfo.dart';
 import 'package:flutter/material.dart';
@@ -123,7 +123,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
     return Scaffold(
       appBar: buildAppBar(context),
       body: BlocConsumer<CheckoutBloc, CheckoutState>(
-        listener: (_, state) {
+        listener: (_, state) async {
           if (state is CheckoutShipToAddressAddedState) {
             context.read<CheckoutBloc>().add(
                 LoadCheckoutEvent(cart: context.read<CheckoutBloc>().cart!));
@@ -147,6 +147,9 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
             context.read<ExpansionPanelCubit>().onPanelExpansionChange(0);
             showAlert(context,
                 message: LocalizationConstants.orderFailed.localized());
+          } else if (state is CheckoutPlaceOrderPending) {
+            await _handle3DSAuthentication(context, state.cartId,
+                state.environmentKey, state.transactionToken);
           }
         },
         builder: (_, state) {
@@ -402,7 +405,8 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
     }
   }
 
-  void handleReviewOrder(BuildContext context, CheckoutDataLoaded state) {
+  Future<void> handleReviewOrder(
+      BuildContext context, CheckoutDataLoaded state) async {
     final reviewOrderEntity = prepareReviewOrderEntity(state, context);
 
     trackEcommercePurchaseEvent(
@@ -414,14 +418,47 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
         state.cart.orderNumber ?? '',
         state.cart.promotionCode ?? '');
 
-    context
-        .read<CheckoutBloc>()
-        .add(PlaceOrderEvent(reviewOrderEntity: reviewOrderEntity));
+    if (state.useSpreedlyDropIn ?? false) {
+      final browserInfo = await SpreedlyUtils.getBrowserInfo(context);
+
+      context.read<CheckoutBloc>().add(PlaceOrderEvent(
+          browserInfo: browserInfo, reviewOrderEntity: reviewOrderEntity));
+    } else {
+      context
+          .read<CheckoutBloc>()
+          .add(PlaceOrderEvent(reviewOrderEntity: reviewOrderEntity));
+    }
   }
 
   void _handleAddressSelectionCallBack(BuildContext context, Object result) {
     if (result is ShipTo) {
       context.read<CheckoutBloc>().add(UpdateShiptoAddressEvent(result));
+    }
+  }
+
+  Future<void> _handle3DSAuthentication(BuildContext context, String cartId,
+      String environmentKey, String transactionToken) async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Spreedly3DSWebView(
+        environmentKey: environmentKey,
+        transactionToken: transactionToken,
+        onAuthenticationComplete: (success) {
+          Navigator.of(context).pop(success);
+        },
+      ),
+    );
+
+    if (result == true) {
+      context
+          .read<CheckoutBloc>()
+          .add(PlaceOrderWithPaymentEvent(cartId: cartId));
+    } else {
+      context.read<ExpansionPanelCubit>().onPanelExpansionChange(0);
+      showAlert(context,
+          message:
+              LocalizationConstants.paymentAuthenticationFailed.localized());
     }
   }
 }
