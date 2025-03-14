@@ -343,7 +343,7 @@ class SiteMessageConstants {
   static String get defaultAllProductCountExceed =>
       "Counts meet or exceeds their max available quantity.";
   static String get defaultSomeProductCountExceed =>
-      "Some products not been added to checkout as they exceed max qty count.";
+      "Some products could not be added to checkout as they exceed max qty count.";
 
   // values
   static String valueRealTimePricingLoadFail =
