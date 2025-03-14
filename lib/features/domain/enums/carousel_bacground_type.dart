@@ -1,0 +1,1 @@
+enum CarouselBacgroundType { image, color }
