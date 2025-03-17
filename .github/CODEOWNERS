@@ -1,0 +1,13 @@
+analysis_options.yaml @Mosabbir-Khan
+ios/* @tawhidjoarder
+android/* @anisuroptimizely
+fastlane/* @anayaian
+pubspec.yaml @tawhidjoarder
+
+**/wish_list*.dart @Mosabbir-Khan
+**/wishlist*.dart @Mosabbir-Khan
+
+**/cart*.dart @anisuroptimizely
+**/search*.dart @anisuroptimizely
+
+**/vmi*.dart @tawhidjoarder

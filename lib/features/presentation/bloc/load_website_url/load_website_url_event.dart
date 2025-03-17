@@ -4,8 +4,10 @@ abstract class LoadWebsiteUrlEvent {}
 
 class LoadWebsiteUrlLoadEvent extends LoadWebsiteUrlEvent {
   String redirectUrl;
+  bool isloadInAppBrowser;
   LoadWebsiteUrlLoadEvent({
     required this.redirectUrl,
+    required this.isloadInAppBrowser,
   });
 }
 
