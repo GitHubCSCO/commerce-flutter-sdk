@@ -399,7 +399,7 @@ class CartPage extends StatelessWidget {
 
   void navigateToCheckout(BuildContext context, CartPageBloc cartPageBloc) {
     _trackBeginCheckoutEvent(context,
-        context.read<CartPageBloc>().cart?.orderGrandTotalDisplay ?? '');
+        context.read<CartPageBloc>().cart?.orderGrandTotal.toString() ?? '');
     AppRoute.checkout.navigateBackStack(context, extra: cartPageBloc.cart);
   }
 
