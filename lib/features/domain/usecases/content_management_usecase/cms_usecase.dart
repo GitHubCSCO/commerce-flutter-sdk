@@ -376,6 +376,8 @@ class CmsUseCase extends BaseUseCase {
           pageWidget.generalFields!.slides!.isNotEmpty) {
         for (final item in pageWidget.generalFields!.slides!) {
           final slideWidget = CarouselSlideWidgetEntity(
+              background: item.slide?.background,
+              backgroundColor: item.slide?.backgroundColor,
               imagePath: item.slide?.image,
               link: item.slide?.link,
               primaryText: item.slide?.heading,
@@ -399,6 +401,8 @@ class CmsUseCase extends BaseUseCase {
             if (pageSlides.isNotEmpty) {
               for (var item in pageSlides) {
                 var slideWidget = CarouselSlideWidgetEntity(
+                    background: item.slide?.background,
+                    backgroundColor: item.slide?.backgroundColor,
                     imagePath: item.slide?.image,
                     link: item.slide?.link,
                     primaryText: item.slide?.heading,
