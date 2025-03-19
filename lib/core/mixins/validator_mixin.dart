@@ -18,6 +18,9 @@ mixin ValidatorMixin {
     if (value == null || value.isEmpty) {
       return emptyWarning ?? 'Phone Number cannot be empty';
     }
+    if (value.length < 10) {
+      return emptyWarning ?? 'Phone number must contain at least 10 digits';
+    }
     // Regular expression for basic phone number validation
     String pattern = r'^\+?[1-9]\d{1,14}$';
     RegExp regex = RegExp(pattern);
