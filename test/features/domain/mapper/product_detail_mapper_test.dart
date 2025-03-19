@@ -57,12 +57,14 @@ void main() {
       expect(entity.hasMsds, equals(model.hasMsds));
       expect(entity.isSpecialOrder, equals(model.isSpecialOrder));
       expect(entity.isGiftCard, equals(model.isGiftCard));
-      expect(entity.allowAnyGiftCardAmount, equals(model.allowAnyGiftCardAmount));
+      expect(
+          entity.allowAnyGiftCardAmount, equals(model.allowAnyGiftCardAmount));
       expect(entity.taxCode1, equals(model.taxCode1));
       expect(entity.taxCode2, equals(model.taxCode2));
       expect(entity.taxCategory, equals(model.taxCategory));
       expect(entity.vatCodeId, equals(model.vatCodeId));
-      expect(entity.shippingClassification, equals(model.shippingClassification));
+      expect(
+          entity.shippingClassification, equals(model.shippingClassification));
       expect(entity.shippingLength, equals(model.shippingLength));
       expect(entity.shippingWidth, equals(model.shippingWidth));
       expect(entity.shippingHeight, equals(model.shippingHeight));
@@ -80,7 +82,8 @@ void main() {
       expect(entity.sku, isNull);
       expect(entity.upcCode, isNull);
       expect(entity.unspsc, isNull);
-      expect(entity.configuration, isNotNull); // Default LegacyConfiguration is created
+      expect(entity.configuration,
+          isNotNull); // Default LegacyConfiguration is created
     });
 
     test('toEntity should handle ProductDetail with null properties', () {
@@ -117,7 +120,8 @@ void main() {
       expect(entity.shippingWidth, isNull);
       expect(entity.shippingHeight, isNull);
       expect(entity.shippingWeight, isNull);
-      expect(entity.configuration, isNotNull); // Default LegacyConfiguration is created
+      expect(entity.configuration,
+          isNotNull); // Default LegacyConfiguration is created
     });
 
     test('toModel should map ProductDetailEntity to ProductDetail', () {
@@ -171,12 +175,14 @@ void main() {
       expect(model?.hasMsds, equals(entity.hasMsds));
       expect(model?.isSpecialOrder, equals(entity.isSpecialOrder));
       expect(model?.isGiftCard, equals(entity.isGiftCard));
-      expect(model?.allowAnyGiftCardAmount, equals(entity.allowAnyGiftCardAmount));
+      expect(
+          model?.allowAnyGiftCardAmount, equals(entity.allowAnyGiftCardAmount));
       expect(model?.taxCode1, equals(entity.taxCode1));
       expect(model?.taxCode2, equals(entity.taxCode2));
       expect(model?.taxCategory, equals(entity.taxCategory));
       expect(model?.vatCodeId, equals(entity.vatCodeId));
-      expect(model?.shippingClassification, equals(entity.shippingClassification));
+      expect(
+          model?.shippingClassification, equals(entity.shippingClassification));
       expect(model?.shippingLength, equals(entity.shippingLength));
       expect(model?.shippingWidth, equals(entity.shippingWidth));
       expect(model?.shippingHeight, equals(entity.shippingHeight));
@@ -264,20 +270,25 @@ void main() {
       expect(resultModel?.productCode, equals(originalModel.productCode));
       expect(resultModel?.priceCode, equals(originalModel.priceCode));
       expect(resultModel?.sortOrder, equals(originalModel.sortOrder));
-      expect(resultModel?.multipleSaleQty, equals(originalModel.multipleSaleQty));
+      expect(
+          resultModel?.multipleSaleQty, equals(originalModel.multipleSaleQty));
       expect(resultModel?.canBackOrder, equals(originalModel.canBackOrder));
       expect(resultModel?.roundingRule, equals(originalModel.roundingRule));
-      expect(resultModel?.replacementProductId, equals(originalModel.replacementProductId));
-      expect(resultModel?.isHazardousGood, equals(originalModel.isHazardousGood));
+      expect(resultModel?.replacementProductId,
+          equals(originalModel.replacementProductId));
+      expect(
+          resultModel?.isHazardousGood, equals(originalModel.isHazardousGood));
       expect(resultModel?.hasMsds, equals(originalModel.hasMsds));
       expect(resultModel?.isSpecialOrder, equals(originalModel.isSpecialOrder));
       expect(resultModel?.isGiftCard, equals(originalModel.isGiftCard));
-      expect(resultModel?.allowAnyGiftCardAmount, equals(originalModel.allowAnyGiftCardAmount));
+      expect(resultModel?.allowAnyGiftCardAmount,
+          equals(originalModel.allowAnyGiftCardAmount));
       expect(resultModel?.taxCode1, equals(originalModel.taxCode1));
       expect(resultModel?.taxCode2, equals(originalModel.taxCode2));
       expect(resultModel?.taxCategory, equals(originalModel.taxCategory));
       expect(resultModel?.vatCodeId, equals(originalModel.vatCodeId));
-      expect(resultModel?.shippingClassification, equals(originalModel.shippingClassification));
+      expect(resultModel?.shippingClassification,
+          equals(originalModel.shippingClassification));
       expect(resultModel?.shippingLength, equals(originalModel.shippingLength));
       expect(resultModel?.shippingWidth, equals(originalModel.shippingWidth));
       expect(resultModel?.shippingHeight, equals(originalModel.shippingHeight));

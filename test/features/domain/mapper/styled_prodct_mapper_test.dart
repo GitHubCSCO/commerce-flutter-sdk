@@ -72,7 +72,8 @@ void main() {
       expect(entity.styleValues?[0].value, equals('red'));
       expect(entity.styleValues?[1].styleTraitId, equals('size'));
       expect(entity.availability?.message, equals(model.availability?.message));
-      expect(entity.availability?.messageType, equals(model.availability?.messageType));
+      expect(entity.availability?.messageType,
+          equals(model.availability?.messageType));
       expect(entity.productUnitOfMeasures?.length, equals(1));
       expect(entity.productUnitOfMeasures?[0].unitOfMeasure, equals('EA'));
       expect(entity.trackInventory, equals(model.trackInventory));
@@ -100,7 +101,8 @@ void main() {
       expect(entity.productUnitOfMeasures, isNull);
       expect(entity.productImages, isNull);
       expect(entity.warehouses, isNull);
-      expect(entity.availability, isNotNull); // Default availability should be created
+      expect(entity.availability,
+          isNotNull); // Default availability should be created
       expect(entity.pricing, isNotNull); // Default pricing should be created
     });
 
@@ -145,8 +147,10 @@ void main() {
         ),
         quoteRequired: false,
         styleValues: [
-          StyleValueEntity(styleTraitId: 'color', value: 'red', valueDisplay: 'Red'),
-          StyleValueEntity(styleTraitId: 'size', value: 'l', valueDisplay: 'Large'),
+          StyleValueEntity(
+              styleTraitId: 'color', value: 'red', valueDisplay: 'Red'),
+          StyleValueEntity(
+              styleTraitId: 'size', value: 'l', valueDisplay: 'Large'),
         ],
         availability: AvailabilityEntity(
           message: 'In Stock',
@@ -184,7 +188,8 @@ void main() {
       expect(model.styleValues?[0].value, equals('red'));
       expect(model.styleValues?[1].styleTraitId, equals('size'));
       expect(model.availability?.message, equals(entity.availability?.message));
-      expect(model.availability?.messageType, equals(entity.availability?.messageType));
+      expect(model.availability?.messageType,
+          equals(entity.availability?.messageType));
       expect(model.productUnitOfMeasures?.length, equals(1));
       expect(model.productUnitOfMeasures?[0].unitOfMeasure, equals('EA'));
       expect(model.trackInventory, equals(entity.trackInventory));
@@ -212,7 +217,8 @@ void main() {
       expect(model.productUnitOfMeasures, isNull);
       expect(model.productImages, isNull);
       expect(model.warehouses, isNull);
-      expect(model.availability, isNotNull); // Default availability should be created
+      expect(model.availability,
+          isNotNull); // Default availability should be created
       expect(model.pricing, isNotNull); // Default pricing should be created
     });
 
@@ -283,24 +289,35 @@ void main() {
       // Assert
       expect(resultModel.productId, equals(originalModel.productId));
       expect(resultModel.name, equals(originalModel.name));
-      expect(resultModel.shortDescription, equals(originalModel.shortDescription));
+      expect(
+          resultModel.shortDescription, equals(originalModel.shortDescription));
       expect(resultModel.erpNumber, equals(originalModel.erpNumber));
-      expect(resultModel.mediumImagePath, equals(originalModel.mediumImagePath));
+      expect(
+          resultModel.mediumImagePath, equals(originalModel.mediumImagePath));
       expect(resultModel.smallImagePath, equals(originalModel.smallImagePath));
       expect(resultModel.largeImagePath, equals(originalModel.largeImagePath));
       expect(resultModel.qtyOnHand, equals(originalModel.qtyOnHand));
       expect(resultModel.numberInCart, equals(originalModel.numberInCart));
-      expect(resultModel.pricing?.unitNetPrice, equals(originalModel.pricing?.unitNetPrice));
+      expect(resultModel.pricing?.unitNetPrice,
+          equals(originalModel.pricing?.unitNetPrice));
       expect(resultModel.quoteRequired, equals(originalModel.quoteRequired));
-      expect(resultModel.styleValues?.length, equals(originalModel.styleValues?.length));
-      expect(resultModel.styleValues?[0].styleTraitId, equals(originalModel.styleValues?[0].styleTraitId));
-      expect(resultModel.styleValues?[0].value, equals(originalModel.styleValues?[0].value));
-      expect(resultModel.availability?.message, equals(originalModel.availability?.message));
-      expect(resultModel.availability?.messageType, equals(originalModel.availability?.messageType));
-      expect(resultModel.productUnitOfMeasures?.length, equals(originalModel.productUnitOfMeasures?.length));
-      expect(resultModel.productUnitOfMeasures?[0].unitOfMeasure, equals(originalModel.productUnitOfMeasures?[0].unitOfMeasure));
+      expect(resultModel.styleValues?.length,
+          equals(originalModel.styleValues?.length));
+      expect(resultModel.styleValues?[0].styleTraitId,
+          equals(originalModel.styleValues?[0].styleTraitId));
+      expect(resultModel.styleValues?[0].value,
+          equals(originalModel.styleValues?[0].value));
+      expect(resultModel.availability?.message,
+          equals(originalModel.availability?.message));
+      expect(resultModel.availability?.messageType,
+          equals(originalModel.availability?.messageType));
+      expect(resultModel.productUnitOfMeasures?.length,
+          equals(originalModel.productUnitOfMeasures?.length));
+      expect(resultModel.productUnitOfMeasures?[0].unitOfMeasure,
+          equals(originalModel.productUnitOfMeasures?[0].unitOfMeasure));
       expect(resultModel.trackInventory, equals(originalModel.trackInventory));
-      expect(resultModel.allowZeroPricing, equals(originalModel.allowZeroPricing));
+      expect(
+          resultModel.allowZeroPricing, equals(originalModel.allowZeroPricing));
     });
   });
 }

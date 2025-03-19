@@ -33,10 +33,12 @@ void main() {
         vatAmount: 2.99,
         vatAmountDisplay: '\$2.99',
         unitListBreakPrices: [
-          BreakPriceDto(breakQty: 10, breakPrice: 18.99, breakPriceDisplay: '\$18.99')
+          BreakPriceDto(
+              breakQty: 10, breakPrice: 18.99, breakPriceDisplay: '\$18.99')
         ],
         unitRegularBreakPrices: [
-          BreakPriceDto(breakQty: 10, breakPrice: 14.99, breakPriceDisplay: '\$14.99')
+          BreakPriceDto(
+              breakQty: 10, breakPrice: 14.99, breakPriceDisplay: '\$14.99')
         ],
         regularPrice: 15.99,
         regularPriceDisplay: '\$15.99',
@@ -47,10 +49,12 @@ void main() {
         extendedActualPrice: 74.95,
         extendedActualPriceDisplay: '\$74.95',
         regularBreakPrices: [
-          BreakPriceDto(breakQty: 10, breakPrice: 14.99, breakPriceDisplay: '\$14.99')
+          BreakPriceDto(
+              breakQty: 10, breakPrice: 14.99, breakPriceDisplay: '\$14.99')
         ],
         actualBreakPrices: [
-          BreakPriceDto(breakQty: 10, breakPrice: 13.99, breakPriceDisplay: '\$13.99')
+          BreakPriceDto(
+              breakQty: 10, breakPrice: 13.99, breakPriceDisplay: '\$13.99')
         ],
       );
 
@@ -68,40 +72,47 @@ void main() {
       expect(entity.unitListPrice, equals(model.unitListPrice));
       expect(entity.unitListPriceDisplay, equals(model.unitListPriceDisplay));
       expect(entity.extendedUnitListPrice, equals(model.extendedUnitListPrice));
-      expect(entity.extendedUnitListPriceDisplay, equals(model.extendedUnitListPriceDisplay));
+      expect(entity.extendedUnitListPriceDisplay,
+          equals(model.extendedUnitListPriceDisplay));
       expect(entity.unitRegularPrice, equals(model.unitRegularPrice));
-      expect(entity.unitRegularPriceDisplay, equals(model.unitRegularPriceDisplay));
-      expect(entity.extendedUnitRegularPrice, equals(model.extendedUnitRegularPrice));
-      expect(entity.extendedUnitRegularPriceDisplay, equals(model.extendedUnitRegularPriceDisplay));
+      expect(entity.unitRegularPriceDisplay,
+          equals(model.unitRegularPriceDisplay));
+      expect(entity.extendedUnitRegularPrice,
+          equals(model.extendedUnitRegularPrice));
+      expect(entity.extendedUnitRegularPriceDisplay,
+          equals(model.extendedUnitRegularPriceDisplay));
       expect(entity.unitNetPrice, equals(model.unitNetPrice));
       expect(entity.unitNetPriceDisplay, equals(model.unitNetPriceDisplay));
       expect(entity.extendedUnitNetPrice, equals(model.extendedUnitNetPrice));
-      expect(entity.extendedUnitNetPriceDisplay, equals(model.extendedUnitNetPriceDisplay));
+      expect(entity.extendedUnitNetPriceDisplay,
+          equals(model.extendedUnitNetPriceDisplay));
       expect(entity.unitOfMeasure, equals(model.unitOfMeasure));
       expect(entity.vatRate, equals(model.vatRate));
       expect(entity.vatAmount, equals(model.vatAmount));
       expect(entity.vatAmountDisplay, equals(model.vatAmountDisplay));
-      
+
       // Check break prices collections
       expect(entity.unitListBreakPrices?.length, equals(1));
       expect(entity.unitListBreakPrices?[0].breakQty, equals(10));
       expect(entity.unitListBreakPrices?[0].breakPrice, equals(18.99));
-      
+
       expect(entity.unitRegularBreakPrices?.length, equals(1));
       expect(entity.unitRegularBreakPrices?[0].breakQty, equals(10));
-      
+
       expect(entity.regularPrice, equals(model.regularPrice));
       expect(entity.regularPriceDisplay, equals(model.regularPriceDisplay));
       expect(entity.extendedRegularPrice, equals(model.extendedRegularPrice));
-      expect(entity.extendedRegularPriceDisplay, equals(model.extendedRegularPriceDisplay));
+      expect(entity.extendedRegularPriceDisplay,
+          equals(model.extendedRegularPriceDisplay));
       expect(entity.actualPrice, equals(model.actualPrice));
       expect(entity.actualPriceDisplay, equals(model.actualPriceDisplay));
       expect(entity.extendedActualPrice, equals(model.extendedActualPrice));
-      expect(entity.extendedActualPriceDisplay, equals(model.extendedActualPriceDisplay));
-      
+      expect(entity.extendedActualPriceDisplay,
+          equals(model.extendedActualPriceDisplay));
+
       expect(entity.regularBreakPrices?.length, equals(1));
       expect(entity.regularBreakPrices?[0].breakPrice, equals(14.99));
-      
+
       expect(entity.actualBreakPrices?.length, equals(1));
       expect(entity.actualBreakPrices?[0].breakPrice, equals(13.99));
     });
@@ -185,10 +196,12 @@ void main() {
         vatAmount: 2.99,
         vatAmountDisplay: '\$2.99',
         unitListBreakPrices: [
-          BreakPriceDTOEntity(breakQty: 10, breakPrice: 18.99, breakPriceDisplay: '\$18.99')
+          BreakPriceDTOEntity(
+              breakQty: 10, breakPrice: 18.99, breakPriceDisplay: '\$18.99')
         ],
         unitRegularBreakPrices: [
-          BreakPriceDTOEntity(breakQty: 10, breakPrice: 14.99, breakPriceDisplay: '\$14.99')
+          BreakPriceDTOEntity(
+              breakQty: 10, breakPrice: 14.99, breakPriceDisplay: '\$14.99')
         ],
         regularPrice: 15.99,
         regularPriceDisplay: '\$15.99',
@@ -199,10 +212,12 @@ void main() {
         extendedActualPrice: 74.95,
         extendedActualPriceDisplay: '\$74.95',
         regularBreakPrices: [
-          BreakPriceDTOEntity(breakQty: 10, breakPrice: 14.99, breakPriceDisplay: '\$14.99')
+          BreakPriceDTOEntity(
+              breakQty: 10, breakPrice: 14.99, breakPriceDisplay: '\$14.99')
         ],
         actualBreakPrices: [
-          BreakPriceDTOEntity(breakQty: 10, breakPrice: 13.99, breakPriceDisplay: '\$13.99')
+          BreakPriceDTOEntity(
+              breakQty: 10, breakPrice: 13.99, breakPriceDisplay: '\$13.99')
         ],
       );
 
@@ -220,40 +235,47 @@ void main() {
       expect(model.unitListPrice, equals(entity.unitListPrice));
       expect(model.unitListPriceDisplay, equals(entity.unitListPriceDisplay));
       expect(model.extendedUnitListPrice, equals(entity.extendedUnitListPrice));
-      expect(model.extendedUnitListPriceDisplay, equals(entity.extendedUnitListPriceDisplay));
+      expect(model.extendedUnitListPriceDisplay,
+          equals(entity.extendedUnitListPriceDisplay));
       expect(model.unitRegularPrice, equals(entity.unitRegularPrice));
-      expect(model.unitRegularPriceDisplay, equals(entity.unitRegularPriceDisplay));
-      expect(model.extendedUnitRegularPrice, equals(entity.extendedUnitRegularPrice));
-      expect(model.extendedUnitRegularPriceDisplay, equals(entity.extendedUnitRegularPriceDisplay));
+      expect(model.unitRegularPriceDisplay,
+          equals(entity.unitRegularPriceDisplay));
+      expect(model.extendedUnitRegularPrice,
+          equals(entity.extendedUnitRegularPrice));
+      expect(model.extendedUnitRegularPriceDisplay,
+          equals(entity.extendedUnitRegularPriceDisplay));
       expect(model.unitNetPrice, equals(entity.unitNetPrice));
       expect(model.unitNetPriceDisplay, equals(entity.unitNetPriceDisplay));
       expect(model.extendedUnitNetPrice, equals(entity.extendedUnitNetPrice));
-      expect(model.extendedUnitNetPriceDisplay, equals(entity.extendedUnitNetPriceDisplay));
+      expect(model.extendedUnitNetPriceDisplay,
+          equals(entity.extendedUnitNetPriceDisplay));
       expect(model.unitOfMeasure, equals(entity.unitOfMeasure));
       expect(model.vatRate, equals(entity.vatRate));
       expect(model.vatAmount, equals(entity.vatAmount));
       expect(model.vatAmountDisplay, equals(entity.vatAmountDisplay));
-      
+
       // Check break prices collections
       expect(model.unitListBreakPrices?.length, equals(1));
       expect(model.unitListBreakPrices?[0].breakQty, equals(10));
       expect(model.unitListBreakPrices?[0].breakPrice, equals(18.99));
-      
+
       expect(model.unitRegularBreakPrices?.length, equals(1));
       expect(model.unitRegularBreakPrices?[0].breakQty, equals(10));
-      
+
       expect(model.regularPrice, equals(entity.regularPrice));
       expect(model.regularPriceDisplay, equals(entity.regularPriceDisplay));
       expect(model.extendedRegularPrice, equals(entity.extendedRegularPrice));
-      expect(model.extendedRegularPriceDisplay, equals(entity.extendedRegularPriceDisplay));
+      expect(model.extendedRegularPriceDisplay,
+          equals(entity.extendedRegularPriceDisplay));
       expect(model.actualPrice, equals(entity.actualPrice));
       expect(model.actualPriceDisplay, equals(entity.actualPriceDisplay));
       expect(model.extendedActualPrice, equals(entity.extendedActualPrice));
-      expect(model.extendedActualPriceDisplay, equals(entity.extendedActualPriceDisplay));
-      
+      expect(model.extendedActualPriceDisplay,
+          equals(entity.extendedActualPriceDisplay));
+
       expect(model.regularBreakPrices?.length, equals(1));
       expect(model.regularBreakPrices?[0].breakPrice, equals(14.99));
-      
+
       expect(model.actualBreakPrices?.length, equals(1));
       expect(model.actualBreakPrices?[0].breakPrice, equals(13.99));
     });
@@ -307,10 +329,12 @@ void main() {
         unitNetPriceDisplay: '\$14.99',
         unitOfMeasure: 'EA',
         unitListBreakPrices: [
-          BreakPriceDto(breakQty: 10, breakPrice: 18.99, breakPriceDisplay: '\$18.99')
+          BreakPriceDto(
+              breakQty: 10, breakPrice: 18.99, breakPriceDisplay: '\$18.99')
         ],
         actualBreakPrices: [
-          BreakPriceDto(breakQty: 10, breakPrice: 13.99, breakPriceDisplay: '\$13.99')
+          BreakPriceDto(
+              breakQty: 10, breakPrice: 13.99, breakPriceDisplay: '\$13.99')
         ],
       );
 
@@ -322,18 +346,26 @@ void main() {
       expect(resultModel.productId, equals(originalModel.productId));
       expect(resultModel.isOnSale, equals(originalModel.isOnSale));
       expect(resultModel.unitListPrice, equals(originalModel.unitListPrice));
-      expect(resultModel.unitListPriceDisplay, equals(originalModel.unitListPriceDisplay));
+      expect(resultModel.unitListPriceDisplay,
+          equals(originalModel.unitListPriceDisplay));
       expect(resultModel.unitNetPrice, equals(originalModel.unitNetPrice));
-      expect(resultModel.unitNetPriceDisplay, equals(originalModel.unitNetPriceDisplay));
+      expect(resultModel.unitNetPriceDisplay,
+          equals(originalModel.unitNetPriceDisplay));
       expect(resultModel.unitOfMeasure, equals(originalModel.unitOfMeasure));
-      
-      expect(resultModel.unitListBreakPrices?.length, equals(originalModel.unitListBreakPrices?.length));
-      expect(resultModel.unitListBreakPrices?[0].breakQty, equals(originalModel.unitListBreakPrices?[0].breakQty));
-      expect(resultModel.unitListBreakPrices?[0].breakPrice, equals(originalModel.unitListBreakPrices?[0].breakPrice));
-      
-      expect(resultModel.actualBreakPrices?.length, equals(originalModel.actualBreakPrices?.length));
-      expect(resultModel.actualBreakPrices?[0].breakQty, equals(originalModel.actualBreakPrices?[0].breakQty));
-      expect(resultModel.actualBreakPrices?[0].breakPrice, equals(originalModel.actualBreakPrices?[0].breakPrice));
+
+      expect(resultModel.unitListBreakPrices?.length,
+          equals(originalModel.unitListBreakPrices?.length));
+      expect(resultModel.unitListBreakPrices?[0].breakQty,
+          equals(originalModel.unitListBreakPrices?[0].breakQty));
+      expect(resultModel.unitListBreakPrices?[0].breakPrice,
+          equals(originalModel.unitListBreakPrices?[0].breakPrice));
+
+      expect(resultModel.actualBreakPrices?.length,
+          equals(originalModel.actualBreakPrices?.length));
+      expect(resultModel.actualBreakPrices?[0].breakQty,
+          equals(originalModel.actualBreakPrices?[0].breakQty));
+      expect(resultModel.actualBreakPrices?[0].breakPrice,
+          equals(originalModel.actualBreakPrices?[0].breakPrice));
     });
   });
 }

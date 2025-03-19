@@ -115,10 +115,13 @@ void main() {
       // Assert
       expect(resultModel.breakQty, equals(originalModel.breakQty));
       expect(resultModel.breakPrice, equals(originalModel.breakPrice));
-      expect(resultModel.breakPriceDisplay, equals(originalModel.breakPriceDisplay));
+      expect(resultModel.breakPriceDisplay,
+          equals(originalModel.breakPriceDisplay));
       expect(resultModel.savingsMessage, equals(originalModel.savingsMessage));
-      expect(resultModel.breakPriceWithVat, equals(originalModel.breakPriceWithVat));
-      expect(resultModel.breakPriceWithVatDisplay, equals(originalModel.breakPriceWithVatDisplay));
+      expect(resultModel.breakPriceWithVat,
+          equals(originalModel.breakPriceWithVat));
+      expect(resultModel.breakPriceWithVatDisplay,
+          equals(originalModel.breakPriceWithVatDisplay));
     });
   });
 }

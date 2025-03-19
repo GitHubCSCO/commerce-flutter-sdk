@@ -18,7 +18,7 @@ void main() {
         swatchColorValue: '#FF0000',
         swatchType: 'Color',
       );
-      
+
       final model = StyleTrait(
         styleTraitId: 'color-trait',
         name: 'Color',
@@ -43,7 +43,8 @@ void main() {
       expect(entity.unselectedValue, equals(model.unselectedValue));
       expect(entity.sortOrder, equals(model.sortOrder));
       expect(entity.displayType, equals(model.displayType));
-      expect(entity.numberOfSwatchesVisible, equals(model.numberOfSwatchesVisible));
+      expect(entity.numberOfSwatchesVisible,
+          equals(model.numberOfSwatchesVisible));
       expect(entity.displayTextWithSwatch, equals(model.displayTextWithSwatch));
       expect(entity.id, equals(model.id));
       expect(entity.styleValues?.length, equals(1));
@@ -107,7 +108,7 @@ void main() {
         swatchColorValue: '#FF0000',
         swatchType: 'Color',
       );
-      
+
       const entity = StyleTraitEntity(
         styleTraitId: 'color-trait',
         name: 'Color',
@@ -193,7 +194,7 @@ void main() {
         swatchColorValue: '#FF0000',
         swatchType: 'Color',
       );
-      
+
       final originalModel = StyleTrait(
         styleTraitId: 'color-trait',
         name: 'Color',
@@ -216,14 +217,20 @@ void main() {
       expect(resultModel.styleTraitId, equals(originalModel.styleTraitId));
       expect(resultModel.name, equals(originalModel.name));
       expect(resultModel.nameDisplay, equals(originalModel.nameDisplay));
-      expect(resultModel.unselectedValue, equals(originalModel.unselectedValue));
+      expect(
+          resultModel.unselectedValue, equals(originalModel.unselectedValue));
       expect(resultModel.sortOrder, equals(originalModel.sortOrder));
       expect(resultModel.id, equals(originalModel.id));
-      expect(resultModel.styleValues?.length, equals(originalModel.styleValues?.length));
-      expect(resultModel.styleValues?[0].styleTraitId, equals(originalModel.styleValues?[0].styleTraitId));
-      expect(resultModel.styleValues?[0].value, equals(originalModel.styleValues?[0].value));
-      expect(resultModel.traitValues?.length, equals(originalModel.traitValues?.length));
-      expect(resultModel.traitValues?[0].styleTraitId, equals(originalModel.traitValues?[0].styleTraitId));
+      expect(resultModel.styleValues?.length,
+          equals(originalModel.styleValues?.length));
+      expect(resultModel.styleValues?[0].styleTraitId,
+          equals(originalModel.styleValues?[0].styleTraitId));
+      expect(resultModel.styleValues?[0].value,
+          equals(originalModel.styleValues?[0].value));
+      expect(resultModel.traitValues?.length,
+          equals(originalModel.traitValues?.length));
+      expect(resultModel.traitValues?[0].styleTraitId,
+          equals(originalModel.traitValues?[0].styleTraitId));
     });
   });
 }
