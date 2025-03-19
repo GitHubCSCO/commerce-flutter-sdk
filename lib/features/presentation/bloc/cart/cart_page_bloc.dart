@@ -88,8 +88,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
           var promotionsResult = await _cartUseCase.loadCartPromotions();
           var cartWarningMsg =
               await getCartWarningMessage(cart, shippingMethod, _cartUseCase);
-          PromotionCollectionModel? promotionCollection =
-              promotionsResult.getResultSuccessValue();
+          var promotionCollection = promotionsResult.getResultSuccessValue();
 
           var settingResult = await _cartUseCase.loadCartSetting();
           switch (settingResult) {
@@ -112,6 +111,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
                 cartWarningMsg: cartWarningMsg,
                 hidePricingEnable: hidePricingEnable,
                 hideInventoryEnable: hideInventoryEnable,
+                scrollToBottom: event.scrollToBottom,
               ));
               break;
             case Failure(errorResponse: final errorResponse):
