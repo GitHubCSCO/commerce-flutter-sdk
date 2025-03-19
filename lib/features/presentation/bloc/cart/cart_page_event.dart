@@ -3,9 +3,9 @@ part of 'cart_page_bloc.dart';
 abstract class CartPageEvent {}
 
 class CartPageLoadEvent extends CartPageEvent {
-  bool trackScreen;
+  bool? scrollToBottom;
 
-  CartPageLoadEvent({this.trackScreen = false});
+  CartPageLoadEvent({this.scrollToBottom});
 }
 
 class CartPagePickUpLocationChangeEvent extends CartPageEvent {

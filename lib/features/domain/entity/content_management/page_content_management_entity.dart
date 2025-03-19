@@ -88,6 +88,10 @@ class PageClassicWidgetEntity {
   int? animationSpeed;
   int? numberOfPreviousSearches;
 
+  bool? addToList;
+  bool? saveOrder;
+  bool? addDiscount;
+
   PageClassicWidgetEntity(
       {this.id,
       this.type,
@@ -108,7 +112,10 @@ class PageClassicWidgetEntity {
       this.cssClass,
       this.timerSpeed,
       this.animationSpeed,
-      this.numberOfPreviousSearches});
+      this.numberOfPreviousSearches,
+      this.addToList,
+      this.saveOrder,
+      this.addDiscount});
 }
 
 class PageInformationEntity {
