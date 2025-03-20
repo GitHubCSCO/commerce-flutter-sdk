@@ -65,6 +65,8 @@ class ProductDetailsPricingBloc
         event.productDetailsDataEntity.selectedStyleValues;
     final hasCheckout = event.productDetailsDataEntity.hasCheckout!;
     final addToCartEnabled = event.productDetailsDataEntity.addToCartEnabled!;
+    final choosenUnitOfMeasure =
+        event.productDetailsDataEntity.chosenUnitOfMeasure;
 
     final result = await _productDetailsPricingUseCase.loadProductPricing(
         product,
@@ -130,7 +132,8 @@ class ProductDetailsPricingBloc
             selectedStyleValues,
             hasCheckout,
             addToCartEnabled,
-            quantity);
+            quantity,
+            choosenUnitOfMeasure);
     this.productDetailsPricingEntity = productDetailsPricingEntity;
     emit(ProductDetailsPricingLoaded(
         productDetailsPriceEntity: productDetailsPricingEntity));
@@ -168,7 +171,8 @@ class ProductDetailsPricingBloc
       Map<String, StyleValueEntity?>? selectedStyleValues,
       bool hasCheckout,
       bool addToCartEnabled,
-      int quantity) async {
+      int quantity,
+      ProductUnitOfMeasureEntity? choosenUnitOfMeasure) async {
     var availability = styledProduct == null
         ? product.availability
         : styledProduct.availability;
@@ -241,6 +245,7 @@ class ProductDetailsPricingBloc
     }
 
     productDetailsPricingEntity = productDetailsPricingEntity.copyWith(
+        chosenUnitOfMeasure: choosenUnitOfMeasure,
         viewQuantityPricingButtonShown: (product.canShowPrice == true) &&
             !(product.quoteRequired == true) &&
             productPricing != null &&

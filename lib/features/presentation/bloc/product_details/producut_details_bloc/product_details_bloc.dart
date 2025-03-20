@@ -280,8 +280,13 @@ class ProductDetailsBloc
             productDetailDataEntity.selectedStyleValues);
 
     if (styledProduct != null) {
-      chosenUnitOfMeasure =
-          styledProduct.productUnitOfMeasures?.firstWhere((element) => true);
+      if (chosenUnitOfMeasure?.unitOfMeasure != null) {
+        chosenUnitOfMeasure = styledProduct.productUnitOfMeasures?.firstWhere(
+            (p) => p.unitOfMeasure == chosenUnitOfMeasure?.unitOfMeasure);
+      } else {
+        chosenUnitOfMeasure =
+            styledProduct.productUnitOfMeasures?.firstWhere((element) => true);
+      }
     } else {
       if (product.productUnitOfMeasures!.isNotEmpty) {
         chosenUnitOfMeasure = product.productUnitOfMeasures
