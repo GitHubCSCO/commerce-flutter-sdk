@@ -41,7 +41,7 @@ on:
 
 jobs:
   ios:
-    runs-on: macos-15
+    runs-on: macos-latest
     outputs:
       artifact_id: ${{ steps.upload.outputs.artifact-id }}
     steps:
@@ -184,7 +184,7 @@ jobs:
   #           exit 1
   #         fi
   android:
-    runs-on: macos-15
+    runs-on: macos-latest
     outputs:
       artifact_id: ${{ steps.upload.outputs.artifact-id }}
     steps:
