@@ -115,14 +115,18 @@ mixin PaymentSummaryMixin {
   }
 
   Widget? _buildSubTotal(PaymentSummaryEntity paymentSummaryEntity) {
-    String title = paymentSummaryEntity.cart == null
+    final cart = paymentSummaryEntity.cart;
+
+    var title = (cart == null)
         ? LocalizationConstants.subtotal.localized()
-        : LocalizationConstants.subtotalItems
+        : (cart.totalCountDisplay == 1
+                ? LocalizationConstants.subtotalItem
+                : LocalizationConstants.subtotalItems)
             .localized()
-            .format([paymentSummaryEntity.cart?.totalCountDisplay ?? '']);
-    String body = paymentSummaryEntity.cart?.orderSubTotalDisplay ?? '';
-    TextStyle textStyle = OptiTextStyles.subtitle;
-    return _buildRow(title, body, textStyle);
+            .format([cart.totalCountDisplay ?? '']);
+
+    return _buildRow(
+        title, cart?.orderSubTotalDisplay ?? '', OptiTextStyles.subtitle);
   }
 
   Widget? _buildEstimatedTotal(bool shouldShowTaxAndShipping,

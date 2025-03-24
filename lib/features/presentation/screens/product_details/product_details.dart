@@ -54,8 +54,14 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class ProductDetailsScreen extends StatelessWidget {
   final String productId;
   final ProductEntity? product;
-  const ProductDetailsScreen(
-      {super.key, required this.productId, this.product});
+  final bool shouldEagerReloadCart;
+
+  const ProductDetailsScreen({
+    super.key,
+    required this.productId,
+    this.product,
+    this.shouldEagerReloadCart = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +82,8 @@ class ProductDetailsScreen extends StatelessWidget {
           create: (context) => sl<StyleTraitCubit>(),
         ),
       ],
-      child: ProductDetailsPage(productId, product),
+      child: ProductDetailsPage(productId, product,
+          shouldEagerReloadCart: shouldEagerReloadCart),
     );
   }
 }
@@ -84,7 +91,10 @@ class ProductDetailsScreen extends StatelessWidget {
 class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
   final String productId;
   final ProductEntity? product;
-  const ProductDetailsPage(this.productId, this.product, {super.key});
+  final bool shouldEagerReloadCart;
+
+  const ProductDetailsPage(this.productId, this.product,
+      {super.key, this.shouldEagerReloadCart = false});
 
   @override
   Widget build(BuildContext context) {
@@ -364,7 +374,8 @@ class ProductDetailsPage extends StatelessWidget with BaseDynamicContentScreen {
           CustomSnackBar.showFailure(context);
         }
       },
-      child: const ProductDetailsAddToCartWidget(),
+      child: ProductDetailsAddToCartWidget(
+          shouldEagerReloadCart: shouldEagerReloadCart),
     );
   }
 

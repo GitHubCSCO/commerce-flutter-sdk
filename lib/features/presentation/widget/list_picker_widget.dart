@@ -1,12 +1,8 @@
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/extensions/product_unit_of_measure_extension.dart';
+import 'package:commerce_flutter_app/core/mixins/picker_mixin.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ListPickerWidget extends StatelessWidget {
   final void Function(BuildContext context, Object item)? callback;
@@ -57,7 +53,7 @@ class ListPicker extends StatefulWidget {
   _ListPickerState createState() => _ListPickerState();
 }
 
-class _ListPickerState extends State<ListPicker> {
+class _ListPickerState extends State<ListPicker> with PickerMixin {
   late int selectedIndex;
   late bool isButtonEnabled;
   @override
@@ -65,7 +61,7 @@ class _ListPickerState extends State<ListPicker> {
     super.initState();
     selectedIndex = widget.selectedIndex ?? 0;
     isButtonEnabled = (selectedIndex != -1 && widget.items.isNotEmpty)
-        ? _isOptionAvailable(widget.items[selectedIndex])
+        ? isOptionAvailable(widget.items[selectedIndex])
         : true;
   }
 
@@ -86,7 +82,7 @@ class _ListPickerState extends State<ListPicker> {
             Expanded(
               child: Text(
                 (selectedIndex != -1 && widget.items.isNotEmpty)
-                    ? _getDescriptions(widget.items[selectedIndex!])
+                    ? getItemDescriptions(widget.items[selectedIndex])
                     : widget.descriptionText ?? "",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -113,7 +109,7 @@ class _ListPickerState extends State<ListPicker> {
       return;
     }
 
-    FixedExtentScrollController scrollController =
+    var scrollController =
         FixedExtentScrollController(initialItem: selectedIndex);
 
     showCupertinoModalPopup(
@@ -152,7 +148,7 @@ class _ListPickerState extends State<ListPicker> {
                           if (widget.items.isNotEmpty) {
                             selectedIndex = index;
                             isButtonEnabled =
-                                _isOptionAvailable(widget.items[index]);
+                                isOptionAvailable(widget.items[index]);
                           }
                         });
                       },
@@ -161,7 +157,7 @@ class _ListPickerState extends State<ListPicker> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Text(
-                              _getDescriptions(option),
+                              getItemDescriptions(option),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: OptiTextStyles.body,
@@ -178,46 +174,5 @@ class _ListPickerState extends State<ListPicker> {
         );
       },
     );
-  }
-
-  bool _isOptionAvailable(Object option) {
-    // Assuming isAvailable is a property of the option object
-    if (option is ProductDetailStyleValue) {
-      return option.isAvailable!;
-    } else {
-      return true; // Return true by default if isAvailable property is not found
-    }
-  }
-
-  String _getDescriptions(Object item) {
-    if (item is CarrierDto) {
-      return item.description!;
-    } else if (item is ShipViaDto) {
-      return item.description!;
-    } else if (item is PaymentMethodDto) {
-      if (item.description! != "") {
-        return item.description!;
-      } else {
-        return item.name ?? "";
-      }
-    } else if (item is ConfigSectionOptionEntity) {
-      return item.description!;
-    } else if (item is ProductDetailStyleValue) {
-      return item.displayName!;
-    } else if (item is String) {
-      return item;
-    } else if (item is KeyValuePair) {
-      return item.key.toString();
-    } else if (item is Country) {
-      return item.name ?? "";
-    } else if (item is StateModel) {
-      return item.name ?? "";
-    } else if (item is CalculationMethod) {
-      return item.displayName ?? item.name ?? item.value ?? "";
-    } else if (item is ProductUnitOfMeasureEntity) {
-      return item.getUnitOfMeasureTextDisplayWithQuantity();
-    } else {
-      return '';
-    }
   }
 }

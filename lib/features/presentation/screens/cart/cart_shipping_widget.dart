@@ -51,7 +51,9 @@ class CartShippingWidget extends StatelessWidget with MapDirection {
         BlocConsumer<CartShippingSelectionBloc, CartShippingSelectionState>(
           listener: (context, state) {
             if (state is CartShippingSelectionChangeState) {
-              context.read<CartPageBloc>().add(CartPageLoadEvent());
+              context
+                  .read<CartPageBloc>()
+                  .add(CartPageLoadEvent(scrollToBottom: true));
             }
           },
           builder: (context, state) {
