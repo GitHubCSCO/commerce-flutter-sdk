@@ -90,7 +90,13 @@ class _InAppBrowserState extends State<InAppBrowser> {
               _webViewInitialized = true;
             });
           } else {
-            await _injectToken(_token!);
+            if (_token != null && _token!.isNotEmpty) {
+              try {
+                await _injectToken(_token!);
+              } catch (e) {
+                print("Error injecting token: $e");
+              }
+            }
           }
         } else if (state is InAppBrowserErrorState) {
           ScaffoldMessenger.of(context).showSnackBar(
