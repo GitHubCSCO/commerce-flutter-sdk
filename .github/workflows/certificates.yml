@@ -51,6 +51,11 @@ jobs:
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: extract_branch
 
+      - name: Install Mono
+        run: |
+          brew update
+          brew install mono
+
       - name: Fastlane
         run: |
           if [ "${{ github.event.inputs.match_purpose }}" = "sync" ]; then
