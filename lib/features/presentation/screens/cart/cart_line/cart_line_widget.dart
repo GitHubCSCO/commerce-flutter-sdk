@@ -22,6 +22,7 @@ class CartLineWidget extends StatelessWidget {
   final void Function()? onShowMoreButtonClickedCallback;
   final void Function(int quantity) onCartQuantityChangedCallback;
   final void Function(CartLineEntity) onCartLineRemovedCallback;
+  final bool? navigateWithoutNavbar;
   const CartLineWidget({
     super.key,
     required this.cartLineEntity,
@@ -32,6 +33,7 @@ class CartLineWidget extends StatelessWidget {
     this.onShowMoreButtonClickedCallback,
     this.showRemoveButton = true,
     this.moreButtonWidget,
+    this.navigateWithoutNavbar = false,
   });
 
   @override
@@ -44,8 +46,13 @@ class CartLineWidget extends StatelessWidget {
           FocusScope.of(context).unfocus();
           return;
         }
+
         // Navigate to product details after ensuring keyboard is not in focus
-        _navigateToProductDetails(context);
+        if (navigateWithoutNavbar == true) {
+          _navigateToProductDetailsWithoutNavbar(context);
+        } else {
+          _navigateToProductDetails(context);
+        }
       },
       child: Container(
         color: Colors.white,
@@ -68,6 +75,13 @@ class CartLineWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _navigateToProductDetailsWithoutNavbar(BuildContext context) {
+    var productId = cartLineEntity.productId;
+    AppRoute.topLevelProductDetails.navigateBackStack(context,
+        pathParameters: {"productId": productId.toString()},
+        extra: ProductEntity());
   }
 
   void _navigateToProductDetails(BuildContext context) {

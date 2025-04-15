@@ -25,6 +25,8 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
   ProductSettings? productSettings;
   String? promoItemMessage;
   bool hasInvalidPrice = false;
+  bool trackScreen = true;
+
   CartPageBloc(
       {required CartUseCase cartUseCase,
       required PricingInventoryUseCase pricingInventoryUseCase})
@@ -67,7 +69,8 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
       switch (result) {
         case Success(value: final data):
           cart = data;
-          if (event.trackScreen) {
+          if (trackScreen) {
+            trackScreen = false;
             _trackViewCartScreen();
           }
           if (cart?.cartLines == null || cart!.cartLines!.isEmpty) {
@@ -85,8 +88,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
           var promotionsResult = await _cartUseCase.loadCartPromotions();
           var cartWarningMsg =
               await getCartWarningMessage(cart, shippingMethod, _cartUseCase);
-          PromotionCollectionModel? promotionCollection =
-              promotionsResult.getResultSuccessValue();
+          var promotionCollection = promotionsResult.getResultSuccessValue();
 
           var settingResult = await _cartUseCase.loadCartSetting();
           switch (settingResult) {
@@ -109,6 +111,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
                 cartWarningMsg: cartWarningMsg,
                 hidePricingEnable: hidePricingEnable,
                 hideInventoryEnable: hideInventoryEnable,
+                scrollToBottom: event.scrollToBottom,
               ));
               break;
             case Failure(errorResponse: final errorResponse):
@@ -156,7 +159,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
   }
 
   List<CartLineEntity> getCartLines() {
-    List<CartLineEntity> cartlines = [];
+    var cartLines = <CartLineEntity>[];
     for (var cartLine in cart?.cartLines ?? []) {
       var cartLineEntity = CartLineEntityMapper.toEntity(cartLine);
       var shouldShowWarehouseInventoryButton =
@@ -166,9 +169,9 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState>
       cartLineEntity = cartLineEntity.copyWith(
           showInventoryAvailability: shouldShowWarehouseInventoryButton,
           promoItemMessage: promoItemMessage);
-      cartlines.add(cartLineEntity);
+      cartLines.add(cartLineEntity);
     }
-    return cartlines;
+    return cartLines;
   }
 
   List<AddCartLine> getAddCartLines() {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
@@ -10,24 +12,44 @@ import 'package:commerce_flutter_app/features/presentation/widget/promo_code_wid
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AddPromotionWidget extends StatelessWidget {
+class AddPromotionWidget extends StatefulWidget {
   final bool shouldShowPromotionList;
   final bool fromCartPage;
+  final bool isAddDiscountEnable;
+
+  const AddPromotionWidget({
+    super.key,
+    required this.shouldShowPromotionList,
+    required this.fromCartPage,
+    this.isAddDiscountEnable = true,
+  });
+
+  @override
+  State<AddPromotionWidget> createState() => _AddPromotionWidgetState();
+}
+
+class _AddPromotionWidgetState extends State<AddPromotionWidget> {
   final TextEditingController promoCodeController = TextEditingController();
 
-  AddPromotionWidget(
-      {super.key,
-      required this.shouldShowPromotionList,
-      required this.fromCartPage});
+  @override
+  void initState() {
+    super.initState();
+    context.read<PromoCodeCubit>().resetShowPromotionField();
+    unawaited(context.read<PromoCodeCubit>().loadCartPromotions());
+  }
+
+  @override
+  void dispose() {
+    promoCodeController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    context.read<PromoCodeCubit>().resetShowPromotionField();
-    context.read<PromoCodeCubit>().loadCartPromotions();
     return BlocListener<PromoCodeCubit, PromoCodeState>(
       listener: (context, state) {
         if (state is PromoCodeApplySuccessState) {
-          if (fromCartPage) {
+          if (widget.fromCartPage) {
             context.read<CartPageBloc>().add(CartPageLoadEvent());
           }
 
@@ -43,7 +65,7 @@ class AddPromotionWidget extends StatelessWidget {
         },
         builder: (context, state) {
           if (state is PromoCodeLoadingState) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (state is PromoCodeLoadedState) {
             return Padding(
               padding: const EdgeInsets.all(10.0),
@@ -55,11 +77,11 @@ class AddPromotionWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Visibility(
-                            visible: shouldShowPromotionList,
+                            visible: widget.shouldShowPromotionList,
                             child: Flexible(
                               fit: FlexFit.loose,
                               child: ListView.builder(
-                                padding: EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
                                 shrinkWrap: true,
                                 itemCount: state.promotions?.length,
                                 itemBuilder: (context, index) {
@@ -90,14 +112,18 @@ class AddPromotionWidget extends StatelessWidget {
                             backgroundColor: OptiAppColors.grayBackgroundColor,
                             text: LocalizationConstants.apply.localized(),
                             onPressed: () {
-                              context.read<PromoCodeCubit>().applyPromoCode(
-                                  promoCodeController.text, fromCartPage);
+                              unawaited(context
+                                  .read<PromoCodeCubit>()
+                                  .applyPromoCode(promoCodeController.text,
+                                      widget.fromCartPage));
                             }),
                       ],
                     ),
                   ),
                   Visibility(
-                    visible: !context.read<PromoCodeCubit>().showPromotionField,
+                    visible:
+                        !context.read<PromoCodeCubit>().showPromotionField &&
+                            widget.isAddDiscountEnable,
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: TertiaryButton(
@@ -108,7 +134,9 @@ class AddPromotionWidget extends StatelessWidget {
                             context
                                 .read<PromoCodeCubit>()
                                 .updateShowPromotionField();
-                            context.read<PromoCodeCubit>().loadCartPromotions();
+                            unawaited(context
+                                .read<PromoCodeCubit>()
+                                .loadCartPromotions());
                           }),
                     ),
                   )

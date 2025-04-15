@@ -17,6 +17,7 @@ class CartPageLoadedState extends CartPageState {
   String cartWarningMsg;
   bool? hidePricingEnable;
   bool? hideInventoryEnable;
+  bool? scrollToBottom;
 
   CartPageLoadedState(
       {required this.cart,
@@ -28,7 +29,8 @@ class CartPageLoadedState extends CartPageState {
       required this.hasWillCall,
       this.cartWarningMsg = "",
       this.hidePricingEnable,
-      this.hideInventoryEnable});
+      this.hideInventoryEnable,
+      this.scrollToBottom});
 }
 
 class CartPageNoDataState extends CartPageState {
