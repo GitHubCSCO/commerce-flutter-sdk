@@ -43,6 +43,7 @@ class CartPaymentSummaryWidget extends StatelessWidget
     return AddPromotionWidget(
       shouldShowPromotionList: false,
       fromCartPage: true,
+      isAddDiscountEnable: paymentSummaryEntity.isAddDiscountEnable,
     );
   }
 }

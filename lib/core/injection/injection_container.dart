@@ -14,6 +14,7 @@ import 'package:commerce_flutter_app/features/domain/usecases/brand_usecase/bran
 import 'package:commerce_flutter_app/features/domain/usecases/billto_shipto_usecase/address_selection/billto_shipto_address_selection_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/billto_shipto_usecase/billto_shipto_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/billing_address_create_usecase/billing_address_usecase.dart';
+import 'package:commerce_flutter_app/features/domain/usecases/cart_cms_usecase/cart_cms_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_content_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_shipping_usecase.dart';
 import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_usecase.dart';
@@ -82,6 +83,7 @@ import 'package:commerce_flutter_app/features/presentation/bloc/brand_category/b
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_page_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_shipping/cart_shipping_selection_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/cart_cms/cart_cms_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/category/category_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
@@ -411,6 +413,8 @@ Future<void> initInjectionContainer() async {
     ..registerFactory(() => BrandProductLinesUseCase())
 
     //cart
+    ..registerFactory(() => CartCmsUsecase())
+    ..registerFactory(() => CartCmsPageBloc(cartCmsUsecase: sl()))
     ..registerFactory(
         () => CartPageBloc(cartUseCase: sl(), pricingInventoryUseCase: sl()))
     ..registerFactory(() => CartUseCase())

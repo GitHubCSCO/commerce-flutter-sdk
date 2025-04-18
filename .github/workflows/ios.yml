@@ -36,7 +36,7 @@ on:
 
 jobs:
   ios:
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -55,6 +55,11 @@ jobs:
       - run: flutter --version
 
       - run: flutter doctor -v
+
+      - name: Install Mono
+        run: |
+          brew update
+          brew install mono
 
       - uses: shimataro/ssh-key-action@v2
         with:

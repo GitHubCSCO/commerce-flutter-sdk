@@ -118,8 +118,8 @@ class ProductDetailsPricingWidget extends StatelessWidget {
     return BlocBuilder<ProductDetailsPricingBloc, ProductDetailsPricingState>(
       builder: (_, state) {
         if (state is ProductDetailsPricingLoaded &&
-            state.productDetailsPriceEntity.showInventoryAvailability != null &&
-            state.productDetailsPriceEntity.showInventoryAvailability!) {
+            state.productDetailsPriceEntity.viewInventoryByWarehouseShown ==
+                true) {
           return GestureDetector(
             onTap: () {
               viewWarehouseWidget(

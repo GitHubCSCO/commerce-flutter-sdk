@@ -5,17 +5,74 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 mixin CartCheckoutHelperMixin {
   Future<String> getCartWarningMessage(
-      Cart? cart, String? shippingMethod, BaseUseCase useCase) async {
+    Cart? cart,
+    String? shippingMethod,
+    BaseUseCase useCase,
+  ) async {
+    final siteMessages = await getCartSiteMessages(useCase);
+    return getCartWarningMessageNoAsync(
+      cart,
+      shippingMethod,
+      siteMessages[0],
+      siteMessages[1],
+      siteMessages[2],
+      siteMessages[3],
+      siteMessages[4],
+      siteMessages[5],
+    );
+  }
+
+  Future<List<String>> getCartSiteMessages(BaseUseCase useCase) async {
+    final errorMessages = await Future.wait(
+      [
+        useCase.getSiteMessage(
+          SiteMessageConstants.nameCartInsufficientInventoryAtCheckout,
+          SiteMessageConstants.defaultCartInsufficientInventoryAtCheckout,
+        ),
+        useCase.getSiteMessage(
+          SiteMessageConstants.nameCartInsufficientPickupInventory,
+          SiteMessageConstants.defaultCartInsufficientPickupInventory,
+        ),
+        useCase.getSiteMessage(
+          SiteMessageConstants.nameCartProductCannotBePurchased,
+          SiteMessageConstants.defaultValueCartProductCannotBePurchased,
+        ),
+        useCase.getSiteMessage(
+          SiteMessageConstants.nameCartNoPriceAvailableAtCheckout,
+          SiteMessageConstants.defaultValueCartNoPriceAvailableAtCheckout,
+        ),
+        useCase.getSiteMessage(
+          SiteMessageConstants
+              .nameReviewAndPayNotEnoughInventoryInLocalWarehouse,
+          SiteMessageConstants
+              .defaultReviewAndPayNotEnoughInventoryInLocalWarehouse,
+        ),
+        useCase.getSiteMessage(
+          SiteMessageConstants.nameCartInvalidPriceAtCheckout,
+          SiteMessageConstants.defaultValueCartInvalidPriceAtCheckout,
+        ),
+      ],
+    );
+
+    return errorMessages;
+  }
+
+  String getCartWarningMessageNoAsync(
+    Cart? cart,
+    String? shippingMethod,
+    String messageCartInsufficientInventoryAtCheckout,
+    String messageCartInsufficientPickupInventory,
+    String messageCartProductCannotBePurchased,
+    String messageCartNoPriceAvailableAtCheckout,
+    String messageReviewAndPayNotEnoughInventoryInLocalWarehouse,
+    String messageCartInvalidPriceAtCheckout,
+  ) {
     final errorMessageBuilder = StringBuffer();
     if (cart!.hasInsufficientInventory!) {
       if (shippingMethod == FulfillmentMethodType.Ship.name) {
-        errorMessageBuilder.write(await useCase.getSiteMessage(
-            SiteMessageConstants.nameCartInsufficientInventoryAtCheckout,
-            SiteMessageConstants.defaultCartInsufficientInventoryAtCheckout));
+        errorMessageBuilder.write(messageCartInsufficientInventoryAtCheckout);
       } else if (shippingMethod == FulfillmentMethodType.PickUp.name) {
-        errorMessageBuilder.write(await useCase.getSiteMessage(
-            SiteMessageConstants.nameCartInsufficientPickupInventory,
-            SiteMessageConstants.defaultCartInsufficientPickupInventory));
+        errorMessageBuilder.write(messageCartInsufficientPickupInventory);
       }
     }
     var productsCannotBePurchased = false;
@@ -26,26 +83,16 @@ mixin CartCheckoutHelperMixin {
       }
     }
     if (productsCannotBePurchased) {
-      var msg = await useCase.getSiteMessage(
-          SiteMessageConstants.nameCartProductCannotBePurchased,
-          SiteMessageConstants.defaultValueCartProductCannotBePurchased);
-      errorMessageBuilder.write(msg);
+      errorMessageBuilder.write(messageCartProductCannotBePurchased);
     }
 
     if (cart!.cartLines!.isNotEmpty && cart!.cartNotPriced!) {
-      var msg = await useCase.getSiteMessage(
-          SiteMessageConstants.nameCartNoPriceAvailableAtCheckout,
-          SiteMessageConstants.defaultValueCartNoPriceAvailableAtCheckout);
-      errorMessageBuilder.write(msg);
+      errorMessageBuilder.write(messageCartNoPriceAvailableAtCheckout);
     }
 
     if (_hasIncompleteStock(cart)) {
-      var msg = await useCase.getSiteMessage(
-          SiteMessageConstants
-              .nameReviewAndPayNotEnoughInventoryInLocalWarehouse,
-          SiteMessageConstants
-              .defaultReviewAndPayNotEnoughInventoryInLocalWarehouse);
-      errorMessageBuilder.write(msg);
+      errorMessageBuilder
+          .write(messageReviewAndPayNotEnoughInventoryInLocalWarehouse);
     }
 
     final hasInvalidPrice = cart.cartLines != null &&
@@ -58,14 +105,10 @@ mixin CartCheckoutHelperMixin {
         );
 
     if (hasInvalidPrice) {
-      var msg = await useCase.getSiteMessage(
-        SiteMessageConstants.nameCartInvalidPriceAtCheckout,
-        SiteMessageConstants.defaultValueCartInvalidPriceAtCheckout,
-      );
-      errorMessageBuilder.write(msg);
+      errorMessageBuilder.write(messageCartInvalidPriceAtCheckout);
     }
 
-    return Future.value(errorMessageBuilder.toString());
+    return errorMessageBuilder.toString();
   }
 
   bool _hasIncompleteStock(Cart? cart) {

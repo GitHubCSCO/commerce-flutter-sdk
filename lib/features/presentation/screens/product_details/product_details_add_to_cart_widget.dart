@@ -1,4 +1,6 @@
 import 'package:collection/collection.dart';
+import 'dart:async';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
@@ -29,8 +31,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
+void _updateCart(BuildContext context, bool shouldEagerReloadCart) {
+  unawaited(context.read<CartCountCubit>().onCartItemChange());
+  if (shouldEagerReloadCart) {
+    context.read<RootBloc>().add(RootCartUpdateEvent());
+  }
+}
+
 class ProductDetailsAddToCartWidget extends StatelessWidget {
-  const ProductDetailsAddToCartWidget({super.key});
+  final bool shouldEagerReloadCart;
+
+  const ProductDetailsAddToCartWidget({
+    super.key,
+    this.shouldEagerReloadCart = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +89,13 @@ class AddToCartSignInWidget extends StatelessWidget {
         ProductDetailsAddtoCartState>(
       listener: (bloccontext, state) {
         if (state is ProductDetailsProdctAddedToCartSuccess) {
-          context.read<CartCountCubit>().onCartItemChange();
+          _updateCart(
+              context,
+              context
+                      .findAncestorWidgetOfExactType<
+                          ProductDetailsAddToCartWidget>()
+                      ?.shouldEagerReloadCart ??
+                  false);
           CustomSnackBar.showProductAddedToCart(
               context,
               context
@@ -134,7 +154,13 @@ class AddToCartSignInWidget extends StatelessWidget {
     displayDialogWidget(context: context, message: msg, actions: [
       DialogPlainButton(
         onPressed: () {
-          context.read<CartCountCubit>().onCartItemChange();
+          _updateCart(
+              context,
+              context
+                      .findAncestorWidgetOfExactType<
+                          ProductDetailsAddToCartWidget>()
+                      ?.shouldEagerReloadCart ??
+                  false);
           CustomSnackBar.showProductAddedToCart(
               context,
               context
