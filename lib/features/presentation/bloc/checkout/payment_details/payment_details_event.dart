@@ -3,9 +3,9 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 abstract class PaymentDetailsEvent {}
 
 class LoadPaymentDetailsEvent extends PaymentDetailsEvent {
-  final Cart cart;
+  final String cartId;
 
-  LoadPaymentDetailsEvent({required this.cart});
+  LoadPaymentDetailsEvent({required this.cartId});
 }
 
 class UpdatePaymentMethodEvent extends PaymentDetailsEvent {

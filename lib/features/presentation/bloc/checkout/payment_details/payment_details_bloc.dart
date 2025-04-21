@@ -52,12 +52,14 @@ class PaymentDetailsBloc
       LoadPaymentDetailsEvent event, Emitter<PaymentDetailsState> emit) async {
     emit(PaymentDetailsLoading());
 
-    var cartResponse = await _paymentDetailsUseCase.getCurrentCart();
+    var cartResponse = await _paymentDetailsUseCase.getCart(event.cartId);
     var cartSettings = await _paymentDetailsUseCase.getCartSetting();
     var webSiteSetting = await _paymentDetailsUseCase.getWebSiteSetting();
-    cart = (cartResponse is Success)
-        ? (cartResponse as Success).value
-        : event.cart;
+    if (cartResponse is Success) {
+      cart = (cartResponse as Success).value;
+    } else {
+      return;
+    }
     settings = cartSettings.getResultSuccessValue();
     websiteSettings = webSiteSetting.getResultSuccessValue();
     _setUpSelectedPaymentMethod(cart!);
