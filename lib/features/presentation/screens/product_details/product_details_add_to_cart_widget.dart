@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'dart:async';
 
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
@@ -350,13 +351,17 @@ class ProductDetailsAddCartRow extends StatelessWidget {
       return 0;
     }
 
+    final defaultUom = detailsAddToCartEntity.productUnitOfMeasures
+        ?.firstWhereOrNull((o) => o.isDefault == true);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Visibility(
           visible: detailsAddToCartEntity.productUnitOfMeasures != null &&
-              detailsAddToCartEntity.productUnitOfMeasures!.length > 1,
+              detailsAddToCartEntity.productUnitOfMeasures!.length > 1 &&
+              defaultUom == null,
           child: Container(
             decoration: BoxDecoration(
               color: OptiAppColors.backgroundInput,
@@ -377,11 +382,15 @@ class ProductDetailsAddCartRow extends StatelessWidget {
           ),
         ),
         if (detailsAddToCartEntity.productUnitOfMeasures != null &&
-            detailsAddToCartEntity.productUnitOfMeasures!.length == 1)
+            detailsAddToCartEntity.productUnitOfMeasures!.length == 1 &&
+            defaultUom == null)
           Text(
               detailsAddToCartEntity.productUnitOfMeasures?.first
                       .unitOfMeasureTextDisplayWithQuantity ??
                   "",
+              style: OptiTextStyles.header3),
+        if (defaultUom != null)
+          Text(defaultUom.unitOfMeasureTextDisplayWithQuantity ?? "",
               style: OptiTextStyles.header3)
       ],
     );
