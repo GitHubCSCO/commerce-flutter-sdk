@@ -118,6 +118,11 @@ class CmsUseCase extends BaseUseCase {
             final locationNoteWidget =
                 LocationNoteWidgetEntity(title: pageClassicWidget.title);
             widgetEntities.add(locationNoteWidget);
+          case WidgetType.mobileCartButtonsWidget:
+            final mobileCartWidget =
+                await convertWidgetToMobileCartButtonWidgetEntityClassic(
+                    pageClassicWidget);
+            widgetEntities.add(mobileCartWidget);
           case WidgetType.unknown:
           default:
             break;
@@ -215,6 +220,21 @@ class CmsUseCase extends BaseUseCase {
     return carouselWidget;
   }
 
+  Future<CartButtonsWidgetEntity>
+      convertWidgetToMobileCartButtonWidgetEntityClassic(
+          PageClassicWidgetEntity pageClassicWidget) async {
+    var cartWidget = const CartButtonsWidgetEntity();
+
+    cartWidget =
+        cartWidget.copyWith(isAddToListEnabled: pageClassicWidget.addToList);
+    cartWidget = cartWidget.copyWith(
+        isAddDiscountEnabled: pageClassicWidget.addDiscount);
+    cartWidget =
+        cartWidget.copyWith(isSavedOrderEnabled: pageClassicWidget.saveOrder);
+
+    return cartWidget;
+  }
+
   // spire
   Future<List<WidgetEntity>> getWidgetEntityListSpire(
       List<PageWidgetEntity> pageWidgets, Session? currentSession) async {
@@ -249,16 +269,6 @@ class CmsUseCase extends BaseUseCase {
             final mobileCartWidget =
                 await convertWidgetToMobileCartButtonWidgetEntity(
                     pageWidget, currentSession);
-            // going for now for development, later backend will add cart widgets support
-            //
-            widgetEntities.add(const OrderSummaryWidgetEntity(
-                type: WidgetType.mobileOrderSummary, title: "Order Summary"));
-            widgetEntities.add(const ShippingMethodWidgetEntity(
-                type: WidgetType.mobileShippingMethod,
-                title: "Shipping Method"));
-            widgetEntities.add(const CartContentsWidgetEntity(
-                type: WidgetType.mobileCartContents, title: "Cart Contents"));
-
             widgetEntities.add(mobileCartWidget);
           case WidgetType.unknown:
           default:
@@ -376,6 +386,8 @@ class CmsUseCase extends BaseUseCase {
           pageWidget.generalFields!.slides!.isNotEmpty) {
         for (final item in pageWidget.generalFields!.slides!) {
           final slideWidget = CarouselSlideWidgetEntity(
+              background: item.slide?.background,
+              backgroundColor: item.slide?.backgroundColor,
               imagePath: item.slide?.image,
               link: item.slide?.link,
               primaryText: item.slide?.heading,
@@ -399,6 +411,8 @@ class CmsUseCase extends BaseUseCase {
             if (pageSlides.isNotEmpty) {
               for (var item in pageSlides) {
                 var slideWidget = CarouselSlideWidgetEntity(
+                    background: item.slide?.background,
+                    backgroundColor: item.slide?.backgroundColor,
                     imagePath: item.slide?.image,
                     link: item.slide?.link,
                     primaryText: item.slide?.heading,
@@ -442,6 +456,10 @@ class CmsUseCase extends BaseUseCase {
               case 'saveOrder':
                 cartWidget =
                     cartWidget.copyWith(isSavedOrderEnabled: innerValue);
+                break;
+              case 'addToList':
+                cartWidget =
+                    cartWidget.copyWith(isAddToListEnabled: innerValue);
                 break;
             }
           });

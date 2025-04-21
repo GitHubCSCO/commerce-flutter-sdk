@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_slide_widget.dart';
+import 'package:commerce_flutter_app/features/domain/enums/carousel_bacground_type.dart';
 import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -47,23 +48,31 @@ class CarouselItemWidget extends StatelessWidget {
           alignment: Alignment.center,
           fit: StackFit.expand,
           children: [
-            Image.network(
-              carouselSlideWidgetEntity.imagePath.makeImageUrl(),
-              fit: BoxFit.fitWidth,
-              errorBuilder:
-                  (BuildContext context, Object error, StackTrace? stackTrace) {
-                // This function is called when the image fails to load
-                return Container(
-                  color: OptiAppColors.backgroundGray, // Placeholder color
-                  alignment: Alignment.center,
-                  child: const Icon(
-                    Icons.image, // Icon to display
-                    color: Colors.grey, // Icon color
-                    size: 90, // Icon size
-                  ),
-                );
-              },
-            ),
+            if (carouselSlideWidgetEntity.background ==
+                CarouselBacgroundType.image.name)
+              Image.network(
+                carouselSlideWidgetEntity.imagePath.makeImageUrl(),
+                fit: BoxFit.fitWidth,
+                errorBuilder: (BuildContext context, Object error,
+                    StackTrace? stackTrace) {
+                  // This function is called when the image fails to load
+                  return Container(
+                    color: OptiAppColors.backgroundGray, // Placeholder color
+                    alignment: Alignment.center,
+                    child: const Icon(
+                      Icons.image, // Icon to display
+                      color: Colors.grey, // Icon color
+                      size: 90, // Icon size
+                    ),
+                  );
+                },
+              )
+            else
+              Container(
+                color: OptiAppColors.rgbaToColor(
+                  carouselSlideWidgetEntity.backgroundColor ?? '',
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.all(15),
               child: Column(

@@ -5,12 +5,14 @@ class PaymentSummaryEntity {
   final CartSettings? cartSettings;
   final PromotionCollectionModel? promotions;
   final bool isCustomerOrderApproval;
+  final bool isAddDiscountEnable;
 
   PaymentSummaryEntity({
     this.cart,
     required this.cartSettings,
     required this.promotions,
     required this.isCustomerOrderApproval,
+    this.isAddDiscountEnable = true,
   });
 
   PaymentSummaryEntity copyWith({
@@ -18,6 +20,7 @@ class PaymentSummaryEntity {
     CartSettings? cartSettings,
     PromotionCollectionModel? promotions,
     bool? isCustomerOrderApproval,
+    bool? isAddDiscountEnable,
   }) {
     return PaymentSummaryEntity(
       cart: cart ?? this.cart,
@@ -25,6 +28,7 @@ class PaymentSummaryEntity {
       promotions: promotions ?? this.promotions,
       isCustomerOrderApproval:
           isCustomerOrderApproval ?? this.isCustomerOrderApproval,
+      isAddDiscountEnable: isAddDiscountEnable ?? this.isAddDiscountEnable,
     );
   }
 }

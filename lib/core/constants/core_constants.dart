@@ -1,5 +1,6 @@
 class CoreConstants {
   static const int productQuantityTextMaxLength = 6;
+  static const int maximumItemDisplayInCart = 5;
   static const int cloudflareGatewayTimeoutHTTPStatusCode = 524;
   static const int vmiLocationSearchRadius = 200;
   static const int defaultPageSize = 16;
@@ -48,6 +49,8 @@ class CoreConstants {
   static const double drawRectWidthFactor = 0.80;
   static const double drawRectHeightFactor = 0.70;
   static const double topOffsetFactor = 0.70;
+  static const double cartBottomSheetInitialSize = 70;
+  static const double cartBottomPerButtonSize = 50;
   static const String domainKey = 'DomainKey';
   static const String devMode = 'DevMode';
 }
