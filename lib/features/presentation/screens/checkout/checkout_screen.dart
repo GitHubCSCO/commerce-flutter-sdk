@@ -43,14 +43,14 @@ class CheckoutScreen extends BaseStatelessWidget {
             ..initialize((cart.requiresApproval ?? false) ? 2 : 3),
         ),
         BlocProvider<CheckoutBloc>(
-            create: (context) =>
-                sl<CheckoutBloc>()..add(LoadCheckoutEvent(cart: cart))),
+            create: (context) => sl<CheckoutBloc>()
+              ..add(LoadCheckoutEvent(cartId: cart.id ?? ''))),
         BlocProvider<ReviewOrderCubit>(
             create: (context) => sl<ReviewOrderCubit>()),
         BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
         BlocProvider<PaymentDetailsBloc>(
           create: (context) => sl<PaymentDetailsBloc>()
-            ..add(LoadPaymentDetailsEvent(cart: cart)),
+            ..add(LoadPaymentDetailsEvent(cartId: cart.id ?? '')),
         ),
       ],
       child: CheckoutPage(cart: cart),
@@ -125,8 +125,8 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
       body: BlocConsumer<CheckoutBloc, CheckoutState>(
         listener: (_, state) async {
           if (state is CheckoutShipToAddressAddedState) {
-            context.read<CheckoutBloc>().add(
-                LoadCheckoutEvent(cart: context.read<CheckoutBloc>().cart!));
+            context.read<CheckoutBloc>().add(LoadCheckoutEvent(
+                cartId: context.read<CheckoutBloc>().cart?.id ?? ''));
             context.read<RootBloc>().add(RootCartUpdateEvent());
           } else if (state is CheckoutPlaceOrder) {
             context.read<CartCountCubit>().onCartItemChange();
@@ -458,7 +458,9 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
       context.read<ExpansionPanelCubit>().onPanelExpansionChange(0);
       showAlert(context,
           message:
-              LocalizationConstants.paymentAuthenticationFailed.localized());
+              LocalizationConstants.paymentAuthenticationFailed.localized(),
+          isPaymentFailed: true,
+          cartId: cartId);
     }
   }
 }

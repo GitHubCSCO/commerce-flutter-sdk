@@ -59,13 +59,15 @@ class VmiCheckoutScreen extends StatelessWidget {
       providers: [
         BlocProvider<CheckoutBloc>(
             create: (context) => sl<CheckoutBloc>()
-              ..add(LoadCheckoutEvent(cart: vmiCheckoutEntity.cart))),
+              ..add(
+                  LoadCheckoutEvent(cartId: vmiCheckoutEntity.cart.id ?? ''))),
         BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
         BlocProvider<ReviewOrderCubit>(
             create: (context) => sl<ReviewOrderCubit>()),
         BlocProvider<PaymentDetailsBloc>(
           create: (context) => sl<PaymentDetailsBloc>()
-            ..add(LoadPaymentDetailsEvent(cart: vmiCheckoutEntity.cart)),
+            ..add(LoadPaymentDetailsEvent(
+                cartId: vmiCheckoutEntity.cart.id ?? '')),
         ),
       ],
       child: VmiCheckoutPage(
@@ -178,7 +180,9 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                     onCartChangeCallBack: (context) {
                                       context.read<CheckoutBloc>().add(
                                           LoadCheckoutEvent(
-                                              cart: vmiCheckoutEntity.cart));
+                                              cartId:
+                                                  vmiCheckoutEntity.cart.id ??
+                                                      ''));
                                     },
                                   ),
                                 )
@@ -344,7 +348,9 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
     } else {
       showAlert(context,
           message:
-              LocalizationConstants.paymentAuthenticationFailed.localized());
+              LocalizationConstants.paymentAuthenticationFailed.localized(),
+          isPaymentFailed: true,
+          cartId: cartId);
     }
   }
 }

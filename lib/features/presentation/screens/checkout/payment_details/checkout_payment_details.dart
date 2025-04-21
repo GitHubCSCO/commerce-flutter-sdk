@@ -283,7 +283,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
                     isPaymentProfile: true)),
               );
           context.read<PaymentDetailsBloc>().add(LoadPaymentDetailsEvent(
-                cart: context.read<PaymentDetailsBloc>().cart!,
+                cartId: context.read<PaymentDetailsBloc>().cart?.id ?? '',
               ));
           onCompleteCheckoutPaymentSection();
         }
