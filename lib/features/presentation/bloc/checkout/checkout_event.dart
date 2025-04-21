@@ -4,8 +4,8 @@ part of 'checkout_bloc.dart';
 abstract class CheckoutEvent {}
 
 class LoadCheckoutEvent extends CheckoutEvent {
-  Cart cart;
-  LoadCheckoutEvent({required this.cart});
+  String cartId;
+  LoadCheckoutEvent({required this.cartId});
 }
 
 class PlaceOrderEvent extends CheckoutEvent {
@@ -56,6 +56,12 @@ class UpdatePONumberEvent extends CheckoutEvent {
 }
 
 class UpdatePaymentInfoEvent extends CheckoutEvent {}
+
+class UpdateCartPaymentFailedEvent extends CheckoutEvent {
+  final String cartId;
+
+  UpdateCartPaymentFailedEvent(this.cartId);
+}
 
 class AddShiptoAddressEvent extends CheckoutEvent {
   final ShipTo shipTo;
