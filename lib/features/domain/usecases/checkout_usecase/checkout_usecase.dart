@@ -75,10 +75,10 @@ class CheckoutUsecase extends BaseUseCase {
         .removeOrderApprovalCookieIfAvailable();
   }
 
-  Future<Result<ProductSettings, ErrorResponse>> loadProductSettings() async {
-    return await commerceAPIServiceProvider
-        .getSettingsService()
-        .getProductSettingsAsync();
+  Future<Result<SpreedlyDto, ErrorResponse>> getSpreedlyConfiguration() async {
+    return coreServiceProvider
+        .getAppConfigurationService()
+        .getSpreedlyConfiguration();
   }
 
   Future<bool> hasCheckout() async {
