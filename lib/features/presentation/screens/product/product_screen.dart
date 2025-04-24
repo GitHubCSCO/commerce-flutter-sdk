@@ -171,7 +171,7 @@ class _ProductPageState extends State<ProductPage> with ListGridViewMenuMixIn {
             child: Input(
               hintText: LocalizationConstants.search.localized(),
               suffixIcon: IconButton(
-                icon: const SvgAssetImage(
+                icon: SvgAssetImage(
                   assetName: AssetConstants.iconClear,
                   semanticsLabel: 'search query clear icon',
                   fit: BoxFit.fitWidth,

@@ -241,10 +241,10 @@ class _LoginPageState extends State<LoginPage> {
                               });
                             },
                             icon: _showPassword
-                                ? const SvgAssetImage(
+                                ? SvgAssetImage(
                                     assetName: AssetConstants.iconEyeOff,
                                   )
-                                : const SvgAssetImage(
+                                : SvgAssetImage(
                                     assetName: AssetConstants.iconEye,
                                   ),
                           ),

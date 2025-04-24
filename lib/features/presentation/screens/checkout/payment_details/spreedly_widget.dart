@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:webview_flutter/webview_flutter.dart';
@@ -80,7 +81,7 @@ class _SpreedlyWidgetState extends State<SpreedlyWidget> {
 
   Future<void> _loadLocalHtml() async {
     final htmlContent =
-        await rootBundle.loadString('assets/form/spreedly_payment_form.html');
+        await rootBundle.loadString(AssetConstants.speedredPaymentForm);
     final uri = Uri.dataFromString(htmlContent,
         mimeType: 'text/html', encoding: Encoding.getByName('utf-8'));
     await _webViewController.loadRequest(uri);

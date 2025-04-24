@@ -3,7 +3,6 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/config/analytics_config.dart';
 import 'package:commerce_flutter_app/core/config/prod_config_constants.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
-import 'package:commerce_flutter_app/core/config/test_config_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/firebase_options_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
@@ -35,11 +34,15 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   initialHiveDatabase();
   initCommerceSDK();
   await initInjectionContainer();
   await initAppEssentials();
+  await initApp();
+}
+
+Future<void> initApp() async {
+
 
   //If error log is not enabled we should not do anything when an error is presented
   //By default if isErrorLogEnabled is true: FlutterError.presentError = FlutterError.dumpErrorToConsole

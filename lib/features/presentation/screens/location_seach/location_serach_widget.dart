@@ -104,7 +104,7 @@ class LocationSearchPage extends StatelessWidget {
                               .read<LocationSearchBloc>()
                               .searchBarPlaceholder,
                           suffixIcon: IconButton(
-                            icon: const SvgAssetImage(
+                            icon: SvgAssetImage(
                               assetName: AssetConstants.iconClear,
                               semanticsLabel: 'search query clear icon',
                               fit: BoxFit.fitWidth,

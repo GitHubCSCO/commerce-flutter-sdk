@@ -251,7 +251,7 @@ class _CartPageState extends State<CartPage> {
                                             width: 50,
                                             height: 50,
                                             padding: const EdgeInsets.all(10),
-                                            child: const SvgAssetImage(
+                                            child: SvgAssetImage(
                                               assetName:
                                                   AssetConstants.iconCart,
                                               fit: BoxFit.fitWidth,
@@ -918,7 +918,7 @@ class BuildCartErrorWidget extends StatelessWidget {
               width: 50,
               height: 50,
               padding: const EdgeInsets.all(10),
-              child: const SvgAssetImage(
+              child: SvgAssetImage(
                 assetName: AssetConstants.cartErrorIcon,
                 fit: BoxFit.fitWidth,
                 color: Colors.white,

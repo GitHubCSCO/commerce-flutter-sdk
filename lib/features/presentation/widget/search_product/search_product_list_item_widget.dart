@@ -188,7 +188,7 @@ class SearchProductListItemWidget extends StatelessWidget
                                 color: const Color(0xFFF5F5F5),
                                 borderRadius: BorderRadius.circular(32),
                               ),
-                              child: const SvgAssetImage(
+                              child: SvgAssetImage(
                                 assetName: AssetConstants.addToCart,
                                 fit: BoxFit.fitWidth,
                               ),

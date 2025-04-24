@@ -168,7 +168,7 @@ class SortToolMenu extends StatelessWidget {
     return IconButton(
       padding: const EdgeInsets.all(10),
       onPressed: () async => _showBottomMenu(context, displayOptions),
-      icon: const SvgAssetImage(
+      icon: SvgAssetImage(
         height: 20,
         width: 20,
         assetName: AssetConstants.sortIcon,

@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_app/core/config/log_config.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/constants/website_paths.dart';
 import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_type_converter.dart';
@@ -17,45 +18,45 @@ mixin BaseActionItemWidget {
   String getActionIconPath(ActionLinkEntity actionLink) {
     switch (actionLink.type) {
       case ActionType.categories:
-        return "assets/images/icon_categories.svg";
+        return AssetConstants.categoriesIcon;
       case ActionType.brands:
-        return "assets/images/icon_brands.svg";
+        return AssetConstants.brandsIcon;
       case ActionType.quickOrder:
-        return "assets/images/icon_quick_orders.svg";
+        return AssetConstants.quickOrderIcon;
       case ActionType.orderHistory:
-        return "assets/images/icon_orders.svg";
+        return AssetConstants.orderHistoryIcon;
       case ActionType.lists:
-        return "assets/images/icon_lists.svg";
+        return AssetConstants.listsIcon;
       case ActionType.locationFinder:
-        return "assets/images/icon_store_finder.svg";
+        return AssetConstants.locationFinderIcon;
       case ActionType.settings:
-        return "assets/images/icon_setting.svg";
+        return AssetConstants.settingsIcon;
       case ActionType.changeCustomer:
-        return "assets/images/icon_delivery_method.svg";
+        return AssetConstants.changeCustomerIcon;
       case ActionType.signOut:
-        return "assets/images/icon_sign_out.svg";
+        return AssetConstants.signOutIcon;
       case ActionType.viewAccountOnWebsite:
-        return "assets/images/icon_view_account.svg";
+        return AssetConstants.viewAccountIcon;
       case ActionType.search:
-        return "assets/images/icon_search.svg";
+        return AssetConstants.actionSearchIcon;
       case ActionType.savedOrders:
-        return "assets/images/icon_saved_order.svg";
+        return AssetConstants.savedOrdersIcon;
       case ActionType.orderApproval:
-        return "assets/images/icon_order_approval.svg";
+        return AssetConstants.orderApprovalIcon;
       case ActionType.invoices:
-        return "assets/images/icon_invoice_history.svg";
+        return AssetConstants.invoicesIcon;
       case ActionType.savedPayments:
-        return "assets/images/icon_saved_payments.svg";
+        return AssetConstants.savedPaymentsIcon;
       case ActionType.vmi:
-        return "assets/images/icon_vmi.svg";
+        return AssetConstants.vmiIcon;
       case ActionType.quotes:
-        return "assets/images/icon_quotes.svg";
+        return AssetConstants.quotesIcon;
       case ActionType.showHidePricing:
-        return "assets/images/icon_hide_pricing.svg";
+        return AssetConstants.showHidePricingIcon;
       case ActionType.showHideInventory:
-        return "assets/images/icon_hide_inventory.svg";
+        return AssetConstants.showHideInventoryIcon;
       default:
-        return "assets/images/icon_view_account.svg";
+        return AssetConstants.viewAccountIcon;
     }
   }
 

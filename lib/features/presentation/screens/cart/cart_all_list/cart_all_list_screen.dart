@@ -161,7 +161,7 @@ class CartAllListBody extends StatelessWidget {
                     width: 50,
                     height: 50,
                     padding: const EdgeInsets.all(10),
-                    child: const SvgAssetImage(
+                    child: SvgAssetImage(
                       assetName: AssetConstants.iconCart,
                       fit: BoxFit.fitWidth,
                     ),

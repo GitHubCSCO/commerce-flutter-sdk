@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/core_constants.dart';
 import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
 import 'package:commerce_flutter_app/core/extensions/url_string_extension.dart';
+import 'package:commerce_flutter_app/core/utils/asset_provider.dart';
 import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:flutter/services.dart';
@@ -43,6 +44,7 @@ class AppConfigurationService extends ServiceBase
   Future<void> init() async {
     final baseConfigurationString =
         await rootBundle.loadString(AssetConstants.baseConfig);
+
     baseConfig = BaseConfiguration.fromJson(
         json.decode(baseConfigurationString) as Map<String, dynamic>);
 

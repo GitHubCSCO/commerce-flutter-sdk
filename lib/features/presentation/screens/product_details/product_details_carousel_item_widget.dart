@@ -61,7 +61,7 @@ class ProductDetailsCarouselItemWidget extends StatelessWidget {
             right: 25,
             child: InkWell(
               onTap: onOpen360Fullscreen,
-              child: const SizedBox(
+              child: SizedBox(
                 width: 35.0,
                 height: 35.0,
                 child: SvgAssetImage(

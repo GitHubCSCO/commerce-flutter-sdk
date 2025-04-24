@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_app/core/utils/asset_provider.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeStyle {
@@ -31,10 +32,11 @@ class WelcomeStyle {
 
   static BorderRadius welcomeButtonBorderRadius = BorderRadius.circular(5);
 
-  static const String optimizelyLogo = 'assets/images/optimizely-logo.png';
+  static final String optimizelyLogo =
+      AssetPathResolver.resolve('assets/images/optimizely-logo.png');
 
-  static const String welcomeBackgroundImage =
-      'assets/images/launch_screen_background@3x.png';
+  static final String welcomeBackgroundImage = AssetPathResolver.resolve(
+      'assets/images/launch_screen_background@3x.png');
 
   static const double optimizelyLogoHeight = 120;
 

@@ -19,7 +19,7 @@ class WelcomeBaseScreen extends StatelessWidget {
       body: Stack(
         children: [
           Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(WelcomeStyle.welcomeBackgroundImage),
                 fit: BoxFit.cover,

@@ -123,7 +123,7 @@ class SearchProductFilterWidget extends StatelessWidget {
                 },
               );
             },
-            icon: const SvgAssetImage(
+            icon: SvgAssetImage(
               height: 20,
               width: 20,
               assetName: AssetConstants.filterIcon,

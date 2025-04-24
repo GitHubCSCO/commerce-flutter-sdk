@@ -77,7 +77,7 @@ class OrderHistoryPage extends StatelessWidget with BaseDynamicContentScreen {
             child: Input(
               hintText: LocalizationConstants.search.localized(),
               suffixIcon: IconButton(
-                icon: const SvgAssetImage(
+                icon: SvgAssetImage(
                   assetName: AssetConstants.iconClear,
                   semanticsLabel: 'search query clear icon',
                   fit: BoxFit.fitWidth,
@@ -314,7 +314,7 @@ class _OrderHistoryFilter extends StatelessWidget {
                 context.read<OrderHistoryCubit>().toggleShowMyOrders,
           );
         },
-        icon: const SvgAssetImage(
+        icon: SvgAssetImage(
           height: 20,
           width: 20,
           assetName: AssetConstants.filterIcon,

@@ -111,7 +111,7 @@ class CartContentHeaderWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(
+                  SizedBox(
                     width: 16,
                     height: 16,
                     child: SvgAssetImage(
