@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/usecases/brand_product_lines_usecase/brand_product_lines_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/brand_product_lines_usecase/brand_product_lines_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

@@ -1,8 +1,8 @@
-import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_layout_type_converter.dart';
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_slide_widget.dart';
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
+import 'package:commerce_flutter_sdk/features/domain/converter/cms_converter/action_layout_type_converter.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/widget_entity/carousel_slide_widget.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/widget_entity/widget_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/content_type.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class PageContentManagementEntity {

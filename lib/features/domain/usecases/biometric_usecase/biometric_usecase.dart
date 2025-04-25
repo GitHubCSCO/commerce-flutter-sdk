@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/core/constants/core_constants.dart';
-import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_sdk/core/constants/core_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/device_authentication_option.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/base_usecase.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 

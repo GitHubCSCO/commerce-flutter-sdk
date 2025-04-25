@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/presentation/screens/welcome/welcome_style.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/welcome/welcome_style.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeBaseScreen extends StatelessWidget {

@@ -1,9 +1,9 @@
-import 'package:commerce_flutter_app/features/presentation/cubit/dealer_location_finder/dealer_location_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/dealer_location_finder/dealer_location_state.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/location_finder_dealer/dealer_location_widget_item.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/error_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/map_widget.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/dealer_location_finder/dealer_location_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/dealer_location_finder/dealer_location_state.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/map_cubit/gmap_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/location_finder_dealer/dealer_location_widget_item.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/error_widget.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/map_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

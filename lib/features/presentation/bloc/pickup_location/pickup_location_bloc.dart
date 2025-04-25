@@ -1,8 +1,8 @@
-import 'package:commerce_flutter_app/core/models/gogole_place.dart';
-import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/pickup_location_usecase/pickup_location_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/pickup_location/pickup_location_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/pickup_location/pickup_location_state.dart';
+import 'package:commerce_flutter_sdk/core/models/gogole_place.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/warehouse_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/pickup_location_usecase/pickup_location_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/pickup_location/pickup_location_event.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/pickup_location/pickup_location_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
 

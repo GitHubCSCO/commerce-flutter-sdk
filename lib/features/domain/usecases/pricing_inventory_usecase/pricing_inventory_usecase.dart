@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
+import 'package:commerce_flutter_sdk/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class PricingInventoryUseCase extends BaseUseCase {

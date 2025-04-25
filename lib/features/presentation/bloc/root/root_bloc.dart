@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/root_usecase/root_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/root_usecase/root_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'root_event.dart';

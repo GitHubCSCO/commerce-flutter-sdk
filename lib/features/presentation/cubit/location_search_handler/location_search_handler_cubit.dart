@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/entity/current_location_data_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/current_location_data_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/warehouse_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 

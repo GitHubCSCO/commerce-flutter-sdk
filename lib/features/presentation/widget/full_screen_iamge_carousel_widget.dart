@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:commerce_flutter_app/core/constants/app_route.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_image_entity.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/carousel_slider/carousel_slider.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_carousel_item_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/full_screen_iamge_carousel_widget.dart';
+import 'package:commerce_flutter_sdk/core/constants/app_route.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_details/product_details_general_info_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_image_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/extensions/url_string_extensions.dart';
+import 'package:commerce_flutter_sdk/features/presentation/helper/carousel_slider/carousel_slider.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/product_details/product_details_carousel_item_widget.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/full_screen_iamge_carousel_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide CarouselController;

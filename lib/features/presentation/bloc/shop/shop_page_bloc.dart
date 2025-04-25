@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/shop_usecase/shop_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/widget_entity/widget_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/shop_usecase/shop_usecase.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';

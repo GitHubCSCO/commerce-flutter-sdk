@@ -1,7 +1,7 @@
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_base_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_details/product_details_base_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_details/product_details_price_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_unit_of_measure_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 
 class ProductDetailsAddtoCartEntity extends ProductDetailsBaseEntity {
   final bool? hidePricing;

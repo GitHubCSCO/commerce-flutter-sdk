@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'dart:ui' as ui;
 
-import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/painters/coordinates_translator.dart';
+import 'package:commerce_flutter_sdk/features/presentation/helper/barcode_scanner/painters/coordinates_translator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 

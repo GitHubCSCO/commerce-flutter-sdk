@@ -1,9 +1,9 @@
-import 'package:commerce_flutter_app/core/mixins/map_mixin.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/warehouse_extension.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/pickup_location/pickup_location_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/pickup_location/pickup_location_event.dart';
+import 'package:commerce_flutter_sdk/core/mixins/map_mixin.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/warehouse_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/extensions/warehouse_extension.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/pickup_location/pickup_location_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/pickup_location/pickup_location_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';

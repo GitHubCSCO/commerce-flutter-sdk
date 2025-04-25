@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/entity/break_price_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/break_price_entity.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BreakPriceDtoEntityMapper {

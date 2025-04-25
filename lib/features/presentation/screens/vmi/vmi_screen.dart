@@ -1,19 +1,19 @@
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/features/presentation/base/base_dynamic_content_screen.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_main/vmi_page_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_main/vmi_page_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_main/vmi_page_state.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/cms/cms_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_state.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/location_note/location_note_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/previous_orders_cubit/previous_orders_cubit.dart';
+import 'package:commerce_flutter_sdk/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/injection/injection_container.dart';
+import 'package:commerce_flutter_sdk/features/presentation/base/base_dynamic_content_screen.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/location_search/location_search_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/vmi/vmi_main/vmi_page_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/vmi/vmi_main/vmi_page_event.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/vmi/vmi_main/vmi_page_state.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/cms/cms_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/current_location_cubit/current_location_state.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/location_note/location_note_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/previous_orders_cubit/previous_orders_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/dialog.dart';
 import 'package:go_router/go_router.dart';
 
 class VMIScreen extends StatelessWidget {

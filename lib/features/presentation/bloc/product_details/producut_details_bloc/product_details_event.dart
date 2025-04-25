@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_unit_of_measure_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/style_value_entity.dart';
 
 abstract class ProductDetailsEvent {}
 

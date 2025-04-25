@@ -1,8 +1,8 @@
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/selection/sales_rep_selection/sales_rep_selection_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/selection_item_widget.dart';
+import 'package:commerce_flutter_sdk/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/injection/injection_container.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/selection/sales_rep_selection/sales_rep_selection_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/selection_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

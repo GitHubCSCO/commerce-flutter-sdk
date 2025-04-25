@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
-import 'package:commerce_flutter_app/features/domain/converter/discount_value_convertert.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
+import 'package:commerce_flutter_sdk/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/converter/discount_value_convertert.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_price_entity.dart';
 
 extension ProductPriceExtensions on ProductPriceEntity? {
   String? getPriceValue({bool? allowZeroPricing}) {

@@ -1,16 +1,16 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/constants/app_route.dart';
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/website_paths.dart';
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/saved_payments/saved_payments_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/saved_payments/saved_payments_state.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/add_credit_card_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
+import 'package:commerce_flutter_sdk/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/core/constants/app_route.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/website_paths.dart';
+import 'package:commerce_flutter_sdk/core/injection/injection_container.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/saved_payments/saved_payments_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/saved_payments/saved_payments_state.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/add_credit_card_widget.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

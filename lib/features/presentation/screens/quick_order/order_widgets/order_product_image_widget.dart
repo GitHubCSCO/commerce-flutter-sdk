@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
+import 'package:commerce_flutter_sdk/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/features/domain/extensions/url_string_extensions.dart';
 import 'package:flutter/material.dart';
 
 class OrderProductImageWidget extends StatelessWidget {

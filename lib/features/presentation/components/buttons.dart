@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

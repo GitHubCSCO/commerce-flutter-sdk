@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:commerce_flutter_app/core/config/analytics_config.dart';
-import 'package:commerce_flutter_app/core/extensions/firebase_options_extension.dart';
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_sdk/core/config/analytics_config.dart';
+import 'package:commerce_flutter_sdk/core/extensions/firebase_options_extension.dart';
+import 'package:commerce_flutter_sdk/core/injection/injection_container.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/base_usecase.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class RemoteConfigUsecase extends BaseUseCase {

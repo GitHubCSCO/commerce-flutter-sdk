@@ -1,14 +1,14 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
-import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
-import 'package:commerce_flutter_app/features/domain/entity/settings/wish_list_settings_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_collection_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_details_usecase.dart';
+import 'package:commerce_flutter_sdk/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/settings/wish_list_settings_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/wish_list/wish_list_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/wish_list/wish_list_line_collection_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/wish_list/wish_list_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/wish_list_status.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/wish_list_usecase/wish_list_details_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';

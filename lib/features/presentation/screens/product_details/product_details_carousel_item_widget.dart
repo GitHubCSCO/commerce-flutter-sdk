@@ -1,8 +1,8 @@
-import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_image_entity.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/web_view_360.dart';
+import 'package:commerce_flutter_sdk/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_image_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/extensions/url_string_extensions.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/svg_asset_widget.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/web_view_360.dart';
 import 'package:flutter/material.dart';
 
 class ProductDetailsCarouselItemWidget extends StatelessWidget {

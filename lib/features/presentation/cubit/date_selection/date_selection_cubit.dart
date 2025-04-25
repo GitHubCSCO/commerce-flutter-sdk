@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 

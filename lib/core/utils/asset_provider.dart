@@ -21,7 +21,7 @@ class AssetPathResolver {
 
   /// Resolves to:
   ///  • 'assets/...'(wrapper) if embedded *and* wrapper declared the asset
-  ///  • 'packages/commerce_flutter_app/assets/...'(core) if embedded *and* wrapper did not declare it
+  ///  • 'packages/commerce_flutter_sdk/assets/...'(core) if embedded *and* wrapper did not declare it
   ///  • 'assets/...'(standalone) when not embedded
   static String resolve(String assetPath) {
     assert(_manifestKeys != null,
@@ -34,6 +34,37 @@ class AssetPathResolver {
       return assetPath;
     }
     // otherwise fall back to core package bundle
-    return 'packages/commerce_flutter_app/$assetPath';
+    return 'packages/commerce_flutter_sdk/$assetPath';
   }
+}
+
+/// A utility class which provides the appropriate path to asset files
+/// This ensures the correct path to assets is used whether assets are from a core package or wrapper package
+class CoreAssetProvider {
+  final String _wrapperAssetPath;
+  final String _coreAssetPath;
+
+  CoreAssetProvider({String? wrapperAssetPath})
+      : _wrapperAssetPath = wrapperAssetPath ?? '',
+        _coreAssetPath = 'packages/commerce_flutter_sdk';
+
+  /// Returns the appropriate asset path based on whether a wrapper asset exists
+  ///
+  /// Returns:
+  ///  • 'wrapperPath' if wrapper package declares asset
+  ///  • 'packages/commerce_flutter_sdk/assets/...'(core) if embedded *and* wrapper did not declare it
+  ///  • 'assets/...'(core) if not embedded. In this case, the asset needs to be declared in pubspec.yaml.
+  String getAssetPath(String assetPath) {
+    if (_wrapperAssetPath.isNotEmpty) {
+      return _wrapperAssetPath;
+    }
+    if (_coreAssetPath.isNotEmpty) {
+      return '$_coreAssetPath/$assetPath';
+    }
+    return assetPath;
+  }
+
+  String get coreAssetPath => 'packages/commerce_flutter_sdk/$assetPath';
+
+  static const String assetPath = 'assets';
 }

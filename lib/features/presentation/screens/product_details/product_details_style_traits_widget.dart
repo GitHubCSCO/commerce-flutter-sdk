@@ -1,9 +1,9 @@
-import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/product_details/producut_details_bloc/product_details_event.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/style_trait_widget_items.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/style_value_entity.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/product_details/producut_details_bloc/product_details_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/product_details/producut_details_bloc/product_details_event.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/style_trait_widget_items.dart';
 import 'package:flutter/material.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductDetailsStyleTraitWidget extends StatelessWidget {

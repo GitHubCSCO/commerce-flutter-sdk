@@ -1,11 +1,11 @@
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/constants/core_constants.dart';
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/extensions/context.dart';
-import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/components/input.dart';
+import 'package:commerce_flutter_sdk/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/core/constants/core_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/extensions/context.dart';
+import 'package:commerce_flutter_sdk/core/extensions/string_format_extension.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/wish_list/wish_list_entity.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/input.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

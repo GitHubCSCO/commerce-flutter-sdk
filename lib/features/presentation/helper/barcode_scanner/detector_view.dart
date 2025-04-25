@@ -1,5 +1,5 @@
 import 'package:camera/camera.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/camera_view.dart';
+import 'package:commerce_flutter_sdk/features/presentation/helper/barcode_scanner/camera_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 

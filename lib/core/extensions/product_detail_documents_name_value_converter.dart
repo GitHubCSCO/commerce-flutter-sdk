@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/entity/document._entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/document._entity.dart';
 
 extension ProductDetailDocumentsNameValueConverter on DocumentEntity? {
   String getDocumentDisplayName() {

@@ -1,12 +1,12 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
-import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
-import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/request_quote_type.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/request_quote_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/quote/request_quote/request_quote_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/quote/request_quote/request_quote_state.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_sdk/core/utils/inventory_utils.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/request_quote_type.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/cart_line_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/quote_usecase/request_quote_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/quote/request_quote/request_quote_event.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/quote/request_quote/request_quote_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

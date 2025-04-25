@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
-import 'package:commerce_flutter_app/features/domain/entity/break_price_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/availability_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/brand.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/break_price_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_price_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_unit_of_measure_entity.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WishListLineEntity extends Equatable {

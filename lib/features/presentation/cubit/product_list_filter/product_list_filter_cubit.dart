@@ -1,7 +1,7 @@
-import 'package:commerce_flutter_app/features/domain/enums/product_list_filter_status.dart';
-import 'package:commerce_flutter_app/features/domain/enums/product_list_type.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/product_list_filter_usecase/product_list_filter_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/product_list_filter_status.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/product_list_type.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/product_list_filter_usecase/product_list_filter_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/filter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';

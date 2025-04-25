@@ -1,7 +1,7 @@
-import 'package:commerce_flutter_app/core/constants/core_constants.dart';
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/features/domain/entity/order/order_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
+import 'package:commerce_flutter_sdk/core/constants/core_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/order/order_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_price_entity.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class DiscountValueConverter {

@@ -1,13 +1,13 @@
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/converter/discount_value_convertert.dart';
-import 'package:commerce_flutter_app/features/domain/entity/order/order_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
-import 'package:commerce_flutter_app/features/presentation/components/two_texts_row.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_widget.dart';
+import 'package:commerce_flutter_sdk/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/extensions/string_format_extension.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/domain/converter/discount_value_convertert.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/order/order_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/extensions/product_extensions.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/two_texts_row.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/line_item/line_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

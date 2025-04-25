@@ -1,9 +1,9 @@
-import 'package:commerce_flutter_app/core/extensions/product_unit_of_measure_extension.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
+import 'package:commerce_flutter_sdk/core/extensions/product_unit_of_measure_extension.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/legacy_configuration_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_details/product_details_style_traits_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_unit_of_measure_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/style_value_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

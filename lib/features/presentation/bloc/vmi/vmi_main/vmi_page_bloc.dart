@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_main_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_main/vmi_page_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_main/vmi_page_state.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/vmi_usecase/vmi_main_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/vmi/vmi_main/vmi_page_event.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/vmi/vmi_main/vmi_page_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

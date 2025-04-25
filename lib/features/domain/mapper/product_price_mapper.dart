@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/break_price_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_price_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/break_price_mapper.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductPriceEntityMapper {

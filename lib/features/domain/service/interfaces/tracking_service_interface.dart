@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/analytics_event.dart';
 
 abstract class ITrackingService {
   Future<void> trackEvent(AnalyticsEvent analyticsEvent);

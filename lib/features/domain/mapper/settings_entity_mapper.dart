@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/features/domain/entity/settings/account_settings_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/settings/order_settings_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/settings/wish_list_settings_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/settings/account_settings_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/settings/order_settings_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/settings/wish_list_settings_entity.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WishListSettingsEntityMapper {

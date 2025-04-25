@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/auth_usecase/auth_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/auth_status.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/auth_usecase/auth_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
+import 'package:commerce_flutter_sdk/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/style_value_entity.dart';
 import 'package:flutter/material.dart';
 
 class SingleSelectionOptionChip<T> extends StatefulWidget {

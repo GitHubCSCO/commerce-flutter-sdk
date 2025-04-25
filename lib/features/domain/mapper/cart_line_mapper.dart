@@ -1,11 +1,11 @@
-import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
-import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/brand_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/break_price_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/availability_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/brand.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_price_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/availability_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/brand_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/break_price_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/product_price_mapper.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class AddCartLineMapper {

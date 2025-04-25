@@ -1,8 +1,8 @@
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/show_hide/inventory/show_hide_inventory_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/show_hide/pricing/show_hide_pricing_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/action_list_item_widget.dart';
+import 'package:commerce_flutter_sdk/core/injection/injection_container.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/show_hide/inventory/show_hide_inventory_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/show_hide/pricing/show_hide_pricing_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/action_list_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

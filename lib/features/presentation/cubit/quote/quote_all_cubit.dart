@@ -1,7 +1,7 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_all_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/quote/quote_all_state.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/quote_usecase/quote_all_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/quote/quote_all_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

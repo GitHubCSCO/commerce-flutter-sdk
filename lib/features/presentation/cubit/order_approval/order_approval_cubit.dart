@@ -1,7 +1,7 @@
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
-import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/order_approval_usecase/order_approval_usecase.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
+import 'package:commerce_flutter_sdk/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/order_status.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/order_approval_usecase/order_approval_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';

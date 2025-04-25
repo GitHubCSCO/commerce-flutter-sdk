@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:commerce_flutter_app/features/presentation/cubit/dealer_location_finder/dealer_location_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_state.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/dealer_location_finder/dealer_location_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/map_cubit/gmap_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/map_cubit/gmap_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

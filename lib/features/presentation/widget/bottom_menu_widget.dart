@@ -1,10 +1,10 @@
-import 'package:commerce_flutter_app/core/constants/app_route.dart';
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/core/utils/platform_utils.dart';
-import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/bottom_menu_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
+import 'package:commerce_flutter_sdk/core/constants/app_route.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/injection/injection_container.dart';
+import 'package:commerce_flutter_sdk/core/utils/platform_utils.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/dialog.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/bottom_menu_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/helper/menu/tool_menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

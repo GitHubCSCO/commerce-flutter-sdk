@@ -1,9 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:commerce_flutter_app/features/domain/entity/document._entity.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/document._entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_base_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_details/product_details_base_entity.dart';
 
 class ProductDetailsDocumentsEntity extends ProductDetailsBaseEntity {
   final String? title;

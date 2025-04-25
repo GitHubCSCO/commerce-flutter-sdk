@@ -1,7 +1,7 @@
-import 'package:commerce_flutter_app/features/domain/entity/settings/account_settings_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/settings_entity_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/settings/account_settings_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/account_type.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/settings_entity_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 enum ForgotPasswordStatus {

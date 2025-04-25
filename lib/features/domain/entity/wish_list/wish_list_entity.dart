@@ -1,8 +1,8 @@
-import 'package:commerce_flutter_app/features/domain/mapper/wish_list_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/wish_list_mapper.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:commerce_flutter_app/features/domain/entity/pagination_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/pagination_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/wish_list/wish_list_line_entity.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WishListEntity extends Equatable {

@@ -1,12 +1,12 @@
-import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/language/language_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/language/language_item_widget.dart';
+import 'package:commerce_flutter_sdk/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/injection/injection_container.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/language/language_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/root/root_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/base_screen.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/language/language_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

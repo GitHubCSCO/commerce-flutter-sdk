@@ -1,8 +1,8 @@
-import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
-import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
-import 'package:commerce_flutter_app/features/domain/entity/settings/account_settings_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/account_type.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/forgot_password_usecase.dart';
+import 'package:commerce_flutter_sdk/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/settings/account_settings_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/account_type.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/login_usecase/forgot_password_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 

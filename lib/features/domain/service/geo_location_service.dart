@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/service/interfaces/geo_location_service_interface.dart';
+import 'package:commerce_flutter_sdk/features/domain/service/interfaces/geo_location_service_interface.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 

@@ -1,9 +1,9 @@
-import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
-import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/quote_line_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_confirmation_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/quote/quote_confirmation/quote_confirmation_state.dart';
+import 'package:commerce_flutter_sdk/core/utils/inventory_utils.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/quote_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/quote_line_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/quote_usecase/quote_confirmation_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/quote/quote_confirmation/quote_confirmation_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

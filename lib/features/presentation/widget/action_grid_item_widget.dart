@@ -1,7 +1,7 @@
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/base/base_action_item_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
+import 'package:commerce_flutter_sdk/features/presentation/base/base_action_item_widget.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 
 class ActionGridItemWidget extends StatelessWidget with BaseActionItemWidget {

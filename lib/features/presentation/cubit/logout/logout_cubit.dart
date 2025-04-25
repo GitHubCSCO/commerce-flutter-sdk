@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/logout_usecase/logout_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 

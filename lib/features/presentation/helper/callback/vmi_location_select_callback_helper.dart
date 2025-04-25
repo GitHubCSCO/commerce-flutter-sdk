@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/location_search_type.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/warehouse_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/location_search_type.dart';
 
 class VMILocationSelectCallbackHelper {
   final LocationSearchType locationSearchType;

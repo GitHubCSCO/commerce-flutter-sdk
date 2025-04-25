@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/features/domain/entity/credit_card_info_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_state.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/credit_card_info_entity.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_event.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/checkout/payment_details/token_ex_bloc/token_ex_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TokenExBloc extends Bloc<TokenExEvent, TokenExState> {

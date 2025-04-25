@@ -1,11 +1,11 @@
-import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_state.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_header_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_line/cart_line_widget.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/cart_line_mapper.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/cart/cart_content/cart_content_state.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/cart/cart_line/cart_line_header_widget.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/cart/cart_line/cart_line_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

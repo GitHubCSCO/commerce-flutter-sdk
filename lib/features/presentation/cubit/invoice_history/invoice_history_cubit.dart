@@ -1,8 +1,8 @@
-import 'package:commerce_flutter_app/core/constants/core_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
-import 'package:commerce_flutter_app/features/domain/enums/invoice_sort_order.dart';
-import 'package:commerce_flutter_app/features/domain/enums/invoice_status.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/invoice_usecase/invoice_usecase.dart';
+import 'package:commerce_flutter_sdk/core/constants/core_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/invoice_sort_order.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/invoice_status.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/invoice_usecase/invoice_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';

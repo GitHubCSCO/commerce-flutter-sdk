@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/core/models/gogole_place.dart';
-import 'package:commerce_flutter_app/core/models/lat_long.dart';
+import 'package:commerce_flutter_sdk/core/models/gogole_place.dart';
+import 'package:commerce_flutter_sdk/core/models/lat_long.dart';
 
 abstract class LoactionSearchState {}
 

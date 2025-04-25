@@ -1,9 +1,9 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
-import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
-import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/search_usecase/search_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/product/product_screen.dart';
+import 'package:commerce_flutter_sdk/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_sdk/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/search_usecase/search_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/product/product_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';

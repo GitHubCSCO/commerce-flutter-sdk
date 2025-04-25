@@ -1,15 +1,15 @@
-import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
-import 'package:commerce_flutter_app/features/domain/entity/order/get_order_collection_result_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/order/order_history_tax_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/order/order_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/order/order_promotion_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/order/shipment_package_dto_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/brand_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/pagination_entity_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/availability_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/brand.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/order/get_order_collection_result_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/order/order_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/order/order_history_tax_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/order/order_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/order/order_promotion_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/order/shipment_package_dto_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/availability_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/brand_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/cart_line_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/pagination_entity_mapper.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class OrderEntityMapper {

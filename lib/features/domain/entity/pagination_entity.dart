@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:commerce_flutter_app/features/domain/entity/sort_options_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/sort_options_entity.dart';
 
 class PaginationEntity extends Equatable {
   /// Gets or sets the current page.

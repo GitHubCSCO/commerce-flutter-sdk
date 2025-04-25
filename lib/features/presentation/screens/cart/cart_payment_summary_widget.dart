@@ -1,8 +1,8 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/mixins/payment_summary_mixin.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/cart/payment_summary_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/add_promotion_widget.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/mixins/payment_summary_mixin.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/cart/payment_summary_entity.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/add_promotion_widget.dart';
 import 'package:flutter/material.dart';
 
 class CartPaymentSummaryWidget extends StatelessWidget

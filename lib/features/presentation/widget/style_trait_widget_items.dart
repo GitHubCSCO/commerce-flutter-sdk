@@ -1,10 +1,10 @@
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/components/single_selection_option_chip.dart';
-import 'package:commerce_flutter_app/features/presentation/components/single_selection_swatch_chip.dart';
-import 'package:commerce_flutter_app/features/presentation/components/style.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/dropdown_picker.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_details/product_details_style_traits_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/style_value_entity.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/single_selection_option_chip.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/single_selection_swatch_chip.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/style.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/dropdown_picker.dart';
 import 'package:flutter/material.dart';
 
 enum StyleTraitType {

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-import 'package:commerce_flutter_app/features/domain/enums/token_ex_view_mode.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/token_ex_view_mode.dart';
 
 class TokenExEntity extends Equatable {
   TokenExDto? tokenExConfiguration;

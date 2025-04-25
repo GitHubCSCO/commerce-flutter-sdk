@@ -1,3 +1,3 @@
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 
 class RecentBinNoteWidgetEntity extends WidgetEntity {}

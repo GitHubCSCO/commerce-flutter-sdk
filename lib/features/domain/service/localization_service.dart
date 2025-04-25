@@ -1,7 +1,7 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/exceptions/language_exceptions.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/localization_interface.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/exceptions/language_exceptions.dart';
+import 'package:commerce_flutter_sdk/features/domain/service/interfaces/core_service_provider_interface.dart';
+import 'package:commerce_flutter_sdk/features/domain/service/interfaces/localization_interface.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class LocalizationService implements ILocalizationService {

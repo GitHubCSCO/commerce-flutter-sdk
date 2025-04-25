@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/core/colors/app_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

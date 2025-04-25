@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:commerce_flutter_app/core/models/quick_order_item.dart';
+import 'package:commerce_flutter_sdk/core/models/quick_order_item.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

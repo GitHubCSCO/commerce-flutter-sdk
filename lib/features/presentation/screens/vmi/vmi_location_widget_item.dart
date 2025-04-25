@@ -1,10 +1,10 @@
-import 'package:commerce_flutter_app/core/mixins/map_mixin.dart';
-import 'package:commerce_flutter_app/core/models/lat_long.dart';
-import 'package:commerce_flutter_app/features/domain/entity/current_location_data_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_state.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/current_location_widget_item.dart';
+import 'package:commerce_flutter_sdk/core/mixins/map_mixin.dart';
+import 'package:commerce_flutter_sdk/core/models/lat_long.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/current_location_data_entity.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/vmi/vmi_locations/vmi_location_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/vmi/vmi_locations/vmi_location_event.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/vmi/vmi_locations/vmi_location_state.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/current_location_widget_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

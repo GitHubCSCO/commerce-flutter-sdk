@@ -1,8 +1,8 @@
-import 'package:commerce_flutter_app/core/config/analytics_config.dart';
-import 'package:commerce_flutter_app/core/extensions/firebase_options_extension.dart';
-import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
-import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/tracking_service_interface.dart';
+import 'package:commerce_flutter_sdk/core/config/analytics_config.dart';
+import 'package:commerce_flutter_sdk/core/extensions/firebase_options_extension.dart';
+import 'package:commerce_flutter_sdk/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/features/domain/service/interfaces/tracking_service_interface.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';

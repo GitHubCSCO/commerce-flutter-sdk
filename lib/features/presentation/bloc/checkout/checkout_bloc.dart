@@ -1,12 +1,12 @@
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
-import 'package:commerce_flutter_app/core/mixins/cart_checkout_helper_mixin.dart';
-import 'package:commerce_flutter_app/core/utils/inventory_utils.dart';
-import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/checkout/review_order_entity.dart';
-import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
+import 'package:commerce_flutter_sdk/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_sdk/core/mixins/cart_checkout_helper_mixin.dart';
+import 'package:commerce_flutter_sdk/core/utils/inventory_utils.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/checkout/review_order_entity.dart';
+import 'package:commerce_flutter_sdk/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/cart_line_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/checkout_usecase/checkout_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

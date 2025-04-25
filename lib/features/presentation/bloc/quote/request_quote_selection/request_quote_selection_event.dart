@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/enums/request_quote_type.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/request_quote_type.dart';
 
 abstract class RequestQuoteSelectionEvent {}
 

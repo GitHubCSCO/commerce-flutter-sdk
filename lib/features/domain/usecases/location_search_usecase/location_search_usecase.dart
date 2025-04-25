@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/core/models/gogole_place.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_sdk/core/models/gogole_place.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/base_usecase.dart';
 
 class LocationSearchUseCase extends BaseUseCase {
   LocationSearchUseCase() : super();

@@ -1,10 +1,10 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/cart_line_extentions.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_widget.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/extensions/cart_line_extentions.dart';
+import 'package:commerce_flutter_sdk/features/domain/extensions/product_extensions.dart';
+import 'package:commerce_flutter_sdk/features/domain/extensions/product_pricing_extensions.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/line_item/line_item_widget.dart';
 import 'package:flutter/material.dart';
 
 class CartOrderProductsSectionWidget extends StatelessWidget {

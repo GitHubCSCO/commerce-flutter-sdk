@@ -1,13 +1,13 @@
-import 'package:commerce_flutter_app/core/constants/core_constants.dart';
-import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_collection_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/wish_list_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_usecase.dart';
+import 'package:commerce_flutter_sdk/core/constants/core_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/availability_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/wish_list/wish_list_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/wish_list/wish_list_line_collection_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/wish_list/wish_list_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/wish_list_status.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/availability_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/product_price_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/wish_list_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/wish_list_usecase/wish_list_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WishListDetailsUsecase extends WishListUsecase {

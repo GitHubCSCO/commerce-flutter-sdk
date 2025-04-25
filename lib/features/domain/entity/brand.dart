@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:commerce_flutter_app/features/domain/mapper/brand_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/brand_mapper.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_entity.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BrandEntity extends Equatable {

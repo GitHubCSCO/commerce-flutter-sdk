@@ -1,8 +1,8 @@
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/extensions/product_detail_documents_name_value_converter.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_documents_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_sdk/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/core/extensions/product_detail_documents_name_value_converter.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_details/product_details_documents_entity.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 

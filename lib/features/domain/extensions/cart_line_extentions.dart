@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/extensions/product_pricing_extensions.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 extension CartLineExtensions on CartLineEntity? {

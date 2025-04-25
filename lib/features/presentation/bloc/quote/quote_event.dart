@@ -2,7 +2,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-import 'package:commerce_flutter_app/features/domain/enums/quote_page_type.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/quote_page_type.dart';
 
 abstract class QuoteEvent extends Equatable {}
 

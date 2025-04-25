@@ -1,7 +1,7 @@
-import 'package:commerce_flutter_app/features/domain/entity/settings/wish_list_settings_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/wish_list_usecase/wish_list_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/settings/wish_list_settings_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/wish_list/wish_list_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/wish_list_status.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/wish_list_usecase/wish_list_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 

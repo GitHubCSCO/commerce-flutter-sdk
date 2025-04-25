@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 
 class ProductCarouselTypeConverter {
   static ProductCarouselType convert(String enumString) {

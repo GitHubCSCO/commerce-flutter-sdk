@@ -1,11 +1,11 @@
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
+import 'package:commerce_flutter_sdk/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/style_value_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/styled_product_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/extensions/product_pricing_extensions.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductDetailsAddToCartUseCase extends BaseUseCase {

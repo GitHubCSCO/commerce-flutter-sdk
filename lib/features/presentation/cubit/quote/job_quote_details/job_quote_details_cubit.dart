@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/enums/job_quote_details_status.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_details_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/job_quote_details_status.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/quote_usecase/quote_details_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';

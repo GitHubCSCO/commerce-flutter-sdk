@@ -1,10 +1,10 @@
-import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_layout_type_converter.dart';
-import 'package:commerce_flutter_app/features/domain/converter/cms_converter/page_type_converter.dart';
-import 'package:commerce_flutter_app/features/domain/converter/cms_converter/page_widget_type_converter.dart';
-import 'package:commerce_flutter_app/features/domain/converter/cms_converter/product_carousel_type_converter.dart';
-import 'package:commerce_flutter_app/features/domain/converter/cms_converter/text_justification_converter.dart';
-import 'package:commerce_flutter_app/features/domain/converter/cms_converter/top_sellers_categories_converter.dart';
-import 'package:commerce_flutter_app/features/domain/entity/content_management/page_content_management_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/converter/cms_converter/action_layout_type_converter.dart';
+import 'package:commerce_flutter_sdk/features/domain/converter/cms_converter/page_type_converter.dart';
+import 'package:commerce_flutter_sdk/features/domain/converter/cms_converter/page_widget_type_converter.dart';
+import 'package:commerce_flutter_sdk/features/domain/converter/cms_converter/product_carousel_type_converter.dart';
+import 'package:commerce_flutter_sdk/features/domain/converter/cms_converter/text_justification_converter.dart';
+import 'package:commerce_flutter_sdk/features/domain/converter/cms_converter/top_sellers_categories_converter.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/page_content_management_entity.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class PageContentManagementMapper {

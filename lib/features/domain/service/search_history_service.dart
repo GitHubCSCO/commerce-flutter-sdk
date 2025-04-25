@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:commerce_flutter_app/features/domain/service/interfaces/search_history_service_interface.dart';
+import 'package:commerce_flutter_sdk/features/domain/service/interfaces/search_history_service_interface.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class SearchHistoryService implements ISearchHistoryService {

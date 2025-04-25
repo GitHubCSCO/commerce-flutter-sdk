@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/core/models/gogole_place.dart';
-import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
+import 'package:commerce_flutter_sdk/core/models/gogole_place.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/warehouse_entity.dart';
 
 abstract class PickUpLocationEvent {}
 

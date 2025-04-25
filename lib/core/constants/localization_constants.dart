@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/localization_interface.dart';
+import 'package:commerce_flutter_sdk/core/injection/injection_container.dart';
+import 'package:commerce_flutter_sdk/features/domain/service/interfaces/localization_interface.dart';
 
 enum LocalizationConstants {
   firstTimeWelcome(keyword: "Welcome to Optimizely B2B Mobile App"),

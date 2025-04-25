@@ -1,13 +1,13 @@
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/quick_order/count_inventory/count_inventory_item_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_list/quick_order_item_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_screen.dart';
+import 'package:commerce_flutter_sdk/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_sdk/core/injection/injection_container.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/quick_order_item_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/scanning_mode.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/quick_order/order_list/order_list_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/quick_order/count_inventory/count_inventory_item_widget.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/quick_order/quick_order_list/quick_order_item_widget.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/quick_order/quick_order_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

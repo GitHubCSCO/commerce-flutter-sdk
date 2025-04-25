@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
 import 'package:flutter/material.dart';
 
 class SearchHistoryItemWidget extends StatelessWidget {

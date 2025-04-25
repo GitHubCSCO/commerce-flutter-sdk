@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/entity/inventory_warehouse_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/inventory_warehouse_entity.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class InventoryWarehouseEntityMapper {

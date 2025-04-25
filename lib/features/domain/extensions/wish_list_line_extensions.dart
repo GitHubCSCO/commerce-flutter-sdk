@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/product_pricing_extensions.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/wish_list/wish_list_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/extensions/product_pricing_extensions.dart';
 
 extension WishListLineExtensions on WishListLineEntity? {
   String get updatePriceValueText {

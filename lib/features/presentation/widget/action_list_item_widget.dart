@@ -1,11 +1,11 @@
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_type_converter.dart';
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/base/base_action_item_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/show_hide/inventory/show_hide_inventory_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/show_hide/pricing/show_hide_pricing_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/domain/converter/cms_converter/action_type_converter.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
+import 'package:commerce_flutter_sdk/features/presentation/base/base_action_item_widget.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/root/root_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/show_hide/inventory/show_hide_inventory_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/show_hide/pricing/show_hide_pricing_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

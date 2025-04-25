@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/search_history_usecase/search_history_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'search_history_state.dart';

@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/core/constants/app_route.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
+import 'package:commerce_flutter_sdk/core/constants/app_route.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

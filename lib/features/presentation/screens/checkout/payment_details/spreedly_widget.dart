@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/asset_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:webview_flutter/webview_flutter.dart';

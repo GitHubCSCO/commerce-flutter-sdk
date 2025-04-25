@@ -1,11 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
-import 'package:commerce_flutter_app/features/domain/entity/break_price_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/pricing_rfq_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/quote_line_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/availability_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/brand.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/break_price_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/pricing_rfq_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_price_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/quote_line_mapper.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class QuoteLinePricingEntity {

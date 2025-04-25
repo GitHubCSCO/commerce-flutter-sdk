@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
+import 'package:commerce_flutter_sdk/core/injection/injection_container.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 extension UrlStringExtensions on String? {

@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/features/domain/entity/vmi_bin_model_entity.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/quick_order_usecase/count_inventory_usecase.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/vmi_bin_model_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/quick_order_usecase/count_inventory_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

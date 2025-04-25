@@ -1,15 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/extensions/context.dart';
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
-import 'package:commerce_flutter_app/features/presentation/components/input.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/vmi_location_note/vmi_location_note_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/vmi_location_note/vmi_location_note_state.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_widget.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/extensions/context.dart';
+import 'package:commerce_flutter_sdk/core/injection/injection_container.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/input.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/vmi_location_note/vmi_location_note_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/vmi_location_note/vmi_location_note_state.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/wish_list/wish_list_info_widget.dart';
 import 'package:go_router/go_router.dart';
 
 class VmiLocationNoteScreen extends StatelessWidget {

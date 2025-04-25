@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/action_link_usecase/action_link_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

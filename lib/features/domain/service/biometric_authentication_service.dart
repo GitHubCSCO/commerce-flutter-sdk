@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/service/interfaces/biometric_authentication_interface.dart';
+import 'package:commerce_flutter_sdk/features/domain/service/interfaces/biometric_authentication_interface.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BiometricAuthenticationService

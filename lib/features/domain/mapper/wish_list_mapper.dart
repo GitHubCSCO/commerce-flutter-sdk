@@ -1,13 +1,13 @@
-import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_collection_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_collection_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/brand_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/break_price_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/pagination_entity_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/product_unit_of_measure_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/wish_list/wish_list_collection_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/wish_list/wish_list_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/wish_list/wish_list_line_collection_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/wish_list/wish_list_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/availability_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/brand_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/break_price_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/pagination_entity_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/product_price_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/product_unit_of_measure_mapper.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WishListEntityMapper {

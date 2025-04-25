@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/presentation/helper/routing/navigation_node.dart';
+import 'package:commerce_flutter_sdk/features/presentation/helper/routing/navigation_node.dart';
 import 'package:go_router/go_router.dart';
 
 RouteBase generateRoutes(NavigationNode root) {

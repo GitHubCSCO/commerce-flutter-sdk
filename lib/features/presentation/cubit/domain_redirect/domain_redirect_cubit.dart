@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:commerce_flutter_app/features/domain/enums/domain_redirect_status.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/domain_usecase/domain_usecase.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/language_usecase/language_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/domain_redirect_status.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/domain_usecase/domain_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/language_usecase/language_usecase.dart';
 
 class DomainRedirectState extends Equatable {
   final DomainRedirectStatus status;

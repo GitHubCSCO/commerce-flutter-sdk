@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/features/presentation/helper/menu/tool_menu.dart';
 import 'package:flutter/material.dart';
 
 mixin ListGridViewMenuMixIn<T extends StatefulWidget> on State<T> {

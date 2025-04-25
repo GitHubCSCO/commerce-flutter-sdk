@@ -1,10 +1,10 @@
-import 'package:commerce_flutter_app/core/models/gogole_place.dart';
-import 'package:commerce_flutter_app/core/models/lat_long.dart';
-import 'package:commerce_flutter_app/features/domain/entity/current_location_data_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/vmi_location_list_status.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_location_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/vmi/vmi_locations/vmi_location_state.dart';
+import 'package:commerce_flutter_sdk/core/models/gogole_place.dart';
+import 'package:commerce_flutter_sdk/core/models/lat_long.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/current_location_data_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/vmi_location_list_status.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/vmi_usecase/vmi_location_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/vmi/vmi_locations/vmi_location_event.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/vmi/vmi_locations/vmi_location_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';

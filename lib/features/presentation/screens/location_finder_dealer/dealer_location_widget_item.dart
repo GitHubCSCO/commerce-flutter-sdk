@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/mixins/map_mixin.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/mixins/map_mixin.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';

@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class ProductCarouselEntity extends Equatable {

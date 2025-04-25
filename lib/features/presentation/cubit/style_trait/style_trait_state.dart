@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:equatable/equatable.dart';
 
 sealed class StyleTraitState extends Equatable {

@@ -1,7 +1,7 @@
-import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_sdk/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 

@@ -1,12 +1,12 @@
-import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
-import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
-import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_content_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_state.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
+import 'package:commerce_flutter_sdk/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/cart_line_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/cart_usecase/cart_content_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/cart/cart_content/cart_content_state.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/root/root_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

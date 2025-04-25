@@ -1,7 +1,7 @@
-import 'package:commerce_flutter_app/core/constants/core_constants.dart';
-import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
-import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/biometric_usecase/biometric_usecase.dart';
+import 'package:commerce_flutter_sdk/core/constants/core_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/device_authentication_option.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/login_status.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/biometric_usecase/biometric_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class LoginResponse {

@@ -1,14 +1,14 @@
-import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
-import 'package:commerce_flutter_app/core/models/quick_order_item.dart';
-import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/scanning_mode.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/order_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/product_unit_of_measure_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/vmi_bin_model_entity_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_sdk/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_sdk/core/models/quick_order_item.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/order/order_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/quick_order_item_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/scanning_mode.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/order_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/product_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/product_unit_of_measure_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/vmi_bin_model_entity_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/base_usecase.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

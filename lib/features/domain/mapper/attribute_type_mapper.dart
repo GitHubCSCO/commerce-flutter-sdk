@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/entity/attribute_type_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/attribute_value_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/attribute_type_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/attribute_value_mapper.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class AttributeTypeEntityMapper {

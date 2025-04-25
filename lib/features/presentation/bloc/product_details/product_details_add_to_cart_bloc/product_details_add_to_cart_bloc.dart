@@ -1,12 +1,12 @@
-import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
-import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
+import 'package:commerce_flutter_sdk/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/features/domain/extensions/product_extensions.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_event.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_add_to_cart_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/product_details/product_details_add_to_cart_bloc/product_details_add_to_cart_state.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductDetailsAddToCartBloc

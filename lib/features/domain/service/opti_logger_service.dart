@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
+import 'package:commerce_flutter_sdk/features/domain/service/interfaces/interfaces.dart';
 
 class OptiLogger implements OptiLoggerService {
   final bool _enableApiLog;

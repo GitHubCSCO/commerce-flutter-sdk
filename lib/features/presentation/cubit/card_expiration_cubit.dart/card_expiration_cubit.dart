@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/presentation/cubit/card_expiration_cubit.dart/card_expiration_state.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/add_credit_card_widget.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/card_expiration_cubit.dart/card_expiration_state.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/add_credit_card_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

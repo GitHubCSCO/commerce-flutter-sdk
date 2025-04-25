@@ -1,7 +1,7 @@
-import 'package:commerce_flutter_app/core/models/gogole_place.dart';
-import 'package:commerce_flutter_app/features/domain/entity/current_location_data_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/warehouse_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/map_cubit/gmap_state.dart';
+import 'package:commerce_flutter_sdk/core/models/gogole_place.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/current_location_data_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/warehouse_entity.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/map_cubit/gmap_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';

@@ -1,9 +1,9 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/presentation/components/number_text_field.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_image_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/line_item/line_item_title_widget.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/number_text_field.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/line_item/line_item_image_widget.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/line_item/line_item_pricing_widgert.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/line_item/line_item_title_widget.dart';
 import 'package:flutter/material.dart';
 
 class JobQuoteLineWidget extends StatelessWidget {

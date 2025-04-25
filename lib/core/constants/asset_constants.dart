@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/core/utils/asset_provider.dart';
+import 'package:commerce_flutter_sdk/core/utils/asset_provider.dart';
 
 class AssetConstants {
   static final String logo =

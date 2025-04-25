@@ -1,11 +1,11 @@
-import 'package:commerce_flutter_app/features/domain/mapper/order_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/order_mapper.dart';
 import 'package:equatable/equatable.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-import 'package:commerce_flutter_app/features/domain/entity/order/order_history_tax_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/order/order_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/order/order_promotion_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/order/shipment_package_dto_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/order/order_history_tax_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/order/order_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/order/order_promotion_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/order/shipment_package_dto_entity.dart';
 
 class OrderEntity extends Equatable {
   final String? id;

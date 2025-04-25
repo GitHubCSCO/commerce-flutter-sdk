@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/usecases/in_app_browser/in_app_browser_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/in_app_browser/in_app_browser_state.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/in_app_browser/in_app_browser_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/in_app_browser/in_app_browser_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class InAppBrowserCubit extends Cubit<InAppBrowserState> {

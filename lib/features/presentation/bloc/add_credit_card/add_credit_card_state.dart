@@ -1,5 +1,5 @@
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
-import 'package:commerce_flutter_app/features/domain/entity/checkout/tokenex_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/checkout/tokenex_entity.dart';
 
 abstract class AddCreditCardState {}
 

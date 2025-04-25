@@ -1,9 +1,9 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/style_trait_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_details/product_details_style_traits_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/style_trait_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/style_value_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/styled_product_entity.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductDetailsStyleTraitsUseCase {

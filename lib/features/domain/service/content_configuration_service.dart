@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
-import 'package:commerce_flutter_app/features/domain/entity/content_management/page_content_management_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/cms_mode.dart';
-import 'package:commerce_flutter_app/features/domain/enums/content_mode.dart';
-import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/content_management/page_management_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/content_configuration_service_interface.dart';
+import 'package:commerce_flutter_sdk/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/page_content_management_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/cms_mode.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/content_mode.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/content_type.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/content_management/page_management_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/service/interfaces/content_configuration_service_interface.dart';
 import 'package:flutter/services.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/constants/core_constants.dart';
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
-import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/detector_view.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/painters/coordinates_translator.dart';
+import 'package:commerce_flutter_sdk/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/core/constants/core_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/buttons.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/dialog.dart';
+import 'package:commerce_flutter_sdk/features/presentation/helper/barcode_scanner/detector_view.dart';
+import 'package:commerce_flutter_sdk/features/presentation/helper/barcode_scanner/painters/coordinates_translator.dart';
 
 class BarcodeScannerView extends StatefulWidget {
   final Function(BuildContext, {String resultText, BarcodeFormat format})

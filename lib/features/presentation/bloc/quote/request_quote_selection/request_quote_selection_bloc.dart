@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/presentation/bloc/quote/request_quote_selection/request_quote_selection_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/quote/request_quote_selection/request_quote_selection_state.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/quote/request_quote_selection/request_quote_selection_event.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/quote/request_quote_selection/request_quote_selection_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RequestQuoteSelectionBloc

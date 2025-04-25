@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/usecases/vmi_usecase/vmi_location_note_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/vmi_location_note/vmi_location_note_state.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/vmi_usecase/vmi_location_note_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/vmi_location_note/vmi_location_note_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

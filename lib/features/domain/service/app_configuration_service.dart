@@ -2,16 +2,16 @@
 
 import 'dart:convert';
 
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/config/base_configuration.dart';
-import 'package:commerce_flutter_app/core/config/custom_configuration.dart';
-import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
-import 'package:commerce_flutter_app/core/constants/core_constants.dart';
-import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
-import 'package:commerce_flutter_app/core/extensions/url_string_extension.dart';
-import 'package:commerce_flutter_app/core/utils/asset_provider.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
+import 'package:commerce_flutter_sdk/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/core/config/base_configuration.dart';
+import 'package:commerce_flutter_sdk/core/config/custom_configuration.dart';
+import 'package:commerce_flutter_sdk/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/core_constants.dart';
+import 'package:commerce_flutter_sdk/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_sdk/core/extensions/url_string_extension.dart';
+import 'package:commerce_flutter_sdk/core/utils/asset_provider.dart';
+import 'package:commerce_flutter_sdk/features/domain/service/interfaces/interfaces.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/product_carousel/product_carousel_cubit.dart';
 import 'package:flutter/services.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

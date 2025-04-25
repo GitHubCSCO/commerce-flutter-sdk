@@ -1,13 +1,13 @@
-import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
-import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
+import 'package:commerce_flutter_sdk/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/asset_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/cart/cart_content/cart_content_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/cart/cart_content/cart_content_event.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/root/root_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/dialog.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

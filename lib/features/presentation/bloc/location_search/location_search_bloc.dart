@@ -1,7 +1,7 @@
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/location_search_usecase/location_search_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/location_search/location_search_state.dart';
+import 'package:commerce_flutter_sdk/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/location_search_usecase/location_search_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/location_search/location_search_event.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/location_search/location_search_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LocationSearchBloc

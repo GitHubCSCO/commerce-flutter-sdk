@@ -1,6 +1,6 @@
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/cart/cart_shipping_widget.dart';
 
 class ReviewOrderEntity {
   final BillTo? billTo;

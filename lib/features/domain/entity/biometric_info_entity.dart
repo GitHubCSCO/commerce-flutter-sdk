@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/device_authentication_option.dart';
 
 class BiometricInfoEntity extends Equatable {
   final DeviceAuthenticationOption biometricOption;

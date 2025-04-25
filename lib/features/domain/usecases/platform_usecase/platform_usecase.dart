@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/base_usecase.dart';
 
 class PlatformUseCase extends BaseUseCase {
   Future<String?> getAuthorizedURL(String path) async {

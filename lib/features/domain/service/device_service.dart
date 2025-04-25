@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:commerce_flutter_app/features/domain/enums/device_authentication_option.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/device_interface.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/device_authentication_option.dart';
+import 'package:commerce_flutter_sdk/features/domain/service/interfaces/device_interface.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:package_info_plus/package_info_plus.dart';

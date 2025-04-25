@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_type_converter.dart';
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/converter/cms_converter/action_type_converter.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ActionLinkUseCase extends BaseUseCase {

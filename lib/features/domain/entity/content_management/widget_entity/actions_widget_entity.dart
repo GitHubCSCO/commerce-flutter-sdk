@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_layout_type_converter.dart';
-import 'package:commerce_flutter_app/features/domain/converter/cms_converter/action_type_converter.dart';
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/converter/cms_converter/action_layout_type_converter.dart';
+import 'package:commerce_flutter_sdk/features/domain/converter/cms_converter/action_type_converter.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class ActionLinkEntity extends Equatable {

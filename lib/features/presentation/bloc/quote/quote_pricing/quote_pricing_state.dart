@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/quote_line_pricing_break_item_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/quote_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/quote_line_pricing_break_item_entity.dart';
 import 'package:equatable/equatable.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

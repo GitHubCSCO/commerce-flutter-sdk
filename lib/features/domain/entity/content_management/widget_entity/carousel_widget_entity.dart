@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_slide_widget.dart';
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/widget_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/widget_entity/carousel_slide_widget.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/widget_entity/widget_entity.dart';
 
 class CarouselWidgetEntity extends WidgetEntity {
   final List<CarouselSlideWidgetEntity>? childWidgets;

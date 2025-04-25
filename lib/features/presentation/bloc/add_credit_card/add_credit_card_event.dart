@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:commerce_flutter_app/features/presentation/widget/add_credit_card_widget.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/add_credit_card_widget.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class AddCreditCardEvent {}

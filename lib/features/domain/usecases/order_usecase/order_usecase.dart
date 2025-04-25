@@ -1,14 +1,14 @@
-import 'package:commerce_flutter_app/core/constants/core_constants.dart';
-import 'package:commerce_flutter_app/features/domain/entity/order/get_order_collection_result_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/order/order_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/settings/order_settings_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/order_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/pagination_entity_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/settings_entity_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
+import 'package:commerce_flutter_sdk/core/constants/core_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/order/get_order_collection_result_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/order/order_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/order/order_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/settings/order_settings_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/order_status.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/order_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/pagination_entity_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/settings_entity_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/filter.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:collection/collection.dart';
 

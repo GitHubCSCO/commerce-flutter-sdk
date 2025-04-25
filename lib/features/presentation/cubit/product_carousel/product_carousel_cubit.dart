@@ -1,7 +1,7 @@
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_carousel/product_carousel_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_carousel/product_carousel_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/product_price_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';

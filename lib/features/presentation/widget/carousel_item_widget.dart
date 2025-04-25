@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/carousel_slide_widget.dart';
-import 'package:commerce_flutter_app/features/domain/enums/carousel_bacground_type.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/url_string_extensions.dart';
+import 'package:commerce_flutter_sdk/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/widget_entity/carousel_slide_widget.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/carousel_bacground_type.dart';
+import 'package:commerce_flutter_sdk/features/domain/extensions/url_string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:url_launcher/url_launcher_string.dart';

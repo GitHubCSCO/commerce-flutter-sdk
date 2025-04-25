@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/tracking_service_interface.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/features/domain/service/interfaces/tracking_service_interface.dart';
 
 class CompositeTrackingService implements ITrackingService {
   final List<ITrackingService> trackers;

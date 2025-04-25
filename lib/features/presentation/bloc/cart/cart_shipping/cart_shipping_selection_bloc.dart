@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/usecases/cart_usecase/cart_shipping_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/cart_usecase/cart_shipping_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,13 +1,13 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/features/domain/entity/legacy_configuration_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_price_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/base_usecase.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/legacy_configuration_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_details/product_details_price_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_price_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_unit_of_measure_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/styled_product_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/availability_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/product_price_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/base_usecase.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ProductDetailsPricingUseCase extends BaseUseCase {

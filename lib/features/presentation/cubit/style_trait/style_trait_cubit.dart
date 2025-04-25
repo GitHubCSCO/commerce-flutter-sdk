@@ -1,9 +1,9 @@
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_style_traits_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/styled_product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/style_trait/style_trait_state.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_details/product_details_style_traits_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/style_value_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/styled_product_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/porduct_details_usecase/product_details_style_traits_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/style_trait/style_trait_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StyleTraitCubit extends Cubit<StyleTraitState> {

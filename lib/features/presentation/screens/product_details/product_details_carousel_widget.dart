@@ -1,7 +1,7 @@
-import 'package:commerce_flutter_app/core/constants/app_route.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/carousel_slider/carousel_slider.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_carousel_item_widget.dart';
+import 'package:commerce_flutter_sdk/core/constants/app_route.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_details/product_details_general_info_entity.dart';
+import 'package:commerce_flutter_sdk/features/presentation/helper/carousel_slider/carousel_slider.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/product_details/product_details_carousel_item_widget.dart';
 import 'package:flutter/material.dart' hide CarouselController;
 
 class ProductDetailsCarouselWidget extends StatefulWidget {

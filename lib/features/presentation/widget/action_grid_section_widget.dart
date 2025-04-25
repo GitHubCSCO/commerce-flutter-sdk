@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/action_grid_item_widget.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/action_grid_item_widget.dart';
 import 'package:flutter/material.dart';
 
 class ActionGridSectionWidget extends StatelessWidget {

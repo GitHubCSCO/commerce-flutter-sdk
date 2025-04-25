@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/service/interfaces/app_configuration_service_interface.dart';
+import 'package:commerce_flutter_sdk/features/domain/service/interfaces/app_configuration_service_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, TargetPlatform;

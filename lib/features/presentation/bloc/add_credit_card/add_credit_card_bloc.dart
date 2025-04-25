@@ -1,12 +1,12 @@
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
-import 'package:commerce_flutter_app/core/extensions/result_extension.dart';
-import 'package:commerce_flutter_app/features/domain/entity/checkout/tokenex_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/credit_card_info_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/token_ex_view_mode.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/add_credit_card_usecase/add_credit_card_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/add_credit_card/add_credit_card_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/add_credit_card/add_credit_card_state.dart';
+import 'package:commerce_flutter_sdk/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_sdk/core/extensions/result_extension.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/checkout/tokenex_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/credit_card_info_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/token_ex_view_mode.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/add_credit_card_usecase/add_credit_card_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/add_credit_card/add_credit_card_event.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/add_credit_card/add_credit_card_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

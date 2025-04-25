@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/core_service_provider_interface.dart';
+import 'package:commerce_flutter_sdk/core/injection/injection_container.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class BaseUseCase {

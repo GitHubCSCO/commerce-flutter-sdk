@@ -1,15 +1,15 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
-import 'package:commerce_flutter_app/core/constants/website_paths.dart';
-import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
-import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
-import 'package:commerce_flutter_app/features/domain/entity/order/get_order_collection_result_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/filter_status.dart';
-import 'package:commerce_flutter_app/features/domain/enums/order_status.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/order_usecase/order_usecase.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/components/filter.dart';
+import 'package:commerce_flutter_sdk/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/website_paths.dart';
+import 'package:commerce_flutter_sdk/core/extensions/string_format_extension.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/order/get_order_collection_result_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/filter_status.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/order_status.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/order_usecase/order_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/filter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';

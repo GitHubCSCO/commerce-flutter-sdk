@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/core/constants/site_message_constants.dart';
-import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_cubit.dart';
+import 'package:commerce_flutter_sdk/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/wish_list_status.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/wish_list/wish_list_cubit.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WishListAddToCubit extends WishListCubit {

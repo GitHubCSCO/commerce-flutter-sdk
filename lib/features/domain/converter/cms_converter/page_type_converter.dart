@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/enums/content_type.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/content_type.dart';
 
 class PageTypeConverter {
   static PageType convert(String enumString) {

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:commerce_flutter_app/features/domain/entity/pagination_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/pagination_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/wish_list/wish_list_line_entity.dart';
 
 class WishListLineCollectionEntity extends Equatable {
   final List<WishListLineEntity>? wishListLines;

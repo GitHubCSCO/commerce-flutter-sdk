@@ -1,8 +1,8 @@
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/content_management/widget_entity/current_location_widget_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/current_location_cubit/current_location_state.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/current_location_widget_item.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/content_management/widget_entity/current_location_widget_entity.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/current_location_cubit/current_location_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/current_location_cubit/current_location_state.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/current_location_widget_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_unit_of_measure_entity.dart';
 
 extension ProductUnitOfMeasureExtension on ProductUnitOfMeasureEntity {
   String getUnitOfMeasureTextDisplayWithQuantity() {

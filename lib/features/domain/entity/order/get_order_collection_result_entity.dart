@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:commerce_flutter_app/features/domain/entity/order/order_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/pagination_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/order/order_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/pagination_entity.dart';
 
 class GetOrderCollectionResultEntity extends Equatable {
   final PaginationEntity? pagination;

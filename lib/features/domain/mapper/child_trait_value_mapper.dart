@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/entity/child_trait_value_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/child_trait_value_entity.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class ChildTraitValueEntityMapper {

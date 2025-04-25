@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/entity/style_trait_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/style_value_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/style_trait_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/style_value_mapper.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class StyleTraitEntityMapper {

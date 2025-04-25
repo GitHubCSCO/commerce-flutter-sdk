@@ -1,12 +1,13 @@
 import 'dart:async';
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/features/domain/entity/quote_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/quote_line_pricing_break_item_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/quote_line_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/quote_usecase/quote_pricing_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_pricing/quote_pricing_event.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/quote/quote_pricing/quote_pricing_state.dart';
+import 'dart:developer';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/quote_line_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/quote_line_pricing_break_item_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/quote_line_mapper.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/pricing_inventory_usecase/pricing_inventory_usecase.dart';
+import 'package:commerce_flutter_sdk/features/domain/usecases/quote_usecase/quote_pricing_usecase.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/quote/quote_pricing/quote_pricing_event.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/quote/quote_pricing/quote_pricing_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

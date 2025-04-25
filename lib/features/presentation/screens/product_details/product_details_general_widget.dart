@@ -1,8 +1,8 @@
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_details/product_details_general_info_entity.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/product_details/product_details_carousel_widget.dart';
+import 'package:commerce_flutter_sdk/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/product_details/product_details_general_info_entity.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/carousel_indicator/carousel_indicator_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/product_details/product_details_carousel_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

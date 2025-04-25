@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
-import 'package:commerce_flutter_app/features/domain/entity/current_location_data_entity.dart';
-import 'package:commerce_flutter_app/features/domain/enums/vmi_location_list_status.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/current_location_data_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/vmi_location_list_status.dart';
 
 abstract class VMILocationState extends Equatable {}
 

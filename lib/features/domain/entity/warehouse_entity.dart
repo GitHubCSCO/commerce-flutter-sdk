@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:commerce_flutter_app/core/models/lat_long.dart';
-import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/warehouse_mapper.dart';
+import 'package:commerce_flutter_sdk/core/models/lat_long.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/availability_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/mapper/warehouse_mapper.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WarehouseEntity extends AvailabilityEntity {

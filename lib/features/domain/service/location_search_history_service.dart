@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/service/interfaces/location_search_history_service.dart';
-import 'package:commerce_flutter_app/features/domain/service/search_history_service.dart';
+import 'package:commerce_flutter_sdk/features/domain/service/interfaces/location_search_history_service.dart';
+import 'package:commerce_flutter_sdk/features/domain/service/search_history_service.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class LocationSearchHistoryService extends SearchHistoryService

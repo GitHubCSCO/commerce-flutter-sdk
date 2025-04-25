@@ -1,11 +1,11 @@
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/features/domain/entity/quick_order_item_entity.dart';
-import 'package:commerce_flutter_app/features/domain/extensions/product_extensions.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/quick_order/order_widgets/order_product_image_widget.dart';
-import 'package:commerce_flutter_app/features/presentation/screens/quick_order/quick_order_screen.dart';
-import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/features/domain/entity/quick_order_item_entity.dart';
+import 'package:commerce_flutter_sdk/features/domain/extensions/product_extensions.dart';
+import 'package:commerce_flutter_sdk/features/presentation/helper/menu/tool_menu.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/quick_order/order_widgets/order_product_image_widget.dart';
+import 'package:commerce_flutter_sdk/features/presentation/screens/quick_order/quick_order_screen.dart';
+import 'package:commerce_flutter_sdk/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:flutter/material.dart';
 
 class CountInventoryItemWidget extends StatelessWidget {

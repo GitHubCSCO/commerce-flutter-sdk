@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:commerce_flutter_app/core/constants/core_constants.dart';
-import 'package:commerce_flutter_app/core/utils/camera_utils.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/helper/barcode_scanner/scanner_camera_preview.dart';
+import 'package:commerce_flutter_sdk/core/constants/core_constants.dart';
+import 'package:commerce_flutter_sdk/core/utils/camera_utils.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/barcode_scan/barcode_scan_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/helper/barcode_scanner/scanner_camera_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

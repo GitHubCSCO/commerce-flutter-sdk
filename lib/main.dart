@@ -1,26 +1,26 @@
 import 'package:appcenter_analytics/appcenter_analytics.dart';
-import 'package:commerce_flutter_app/core/colors/app_colors.dart';
-import 'package:commerce_flutter_app/core/config/analytics_config.dart';
-import 'package:commerce_flutter_app/core/config/prod_config_constants.dart';
-import 'package:commerce_flutter_app/core/constants/core_constants.dart';
-import 'package:commerce_flutter_app/core/extensions/firebase_options_extension.dart';
-import 'package:commerce_flutter_app/core/injection/injection_container.dart';
-import 'package:commerce_flutter_app/core/themes/theme.dart';
-import 'package:commerce_flutter_app/core/utils/bloc_observer.dart';
-import 'package:commerce_flutter_app/features/domain/enums/auth_status.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/auth/auth_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/load_website_url/load_website_url_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
-import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/cart_count/cart_count_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/domain/domain_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/location_search_handler/location_search_handler_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/order_approval/order_approval_handler/order_approval_handler_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/search_history/search_history_cubit.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
+import 'package:commerce_flutter_sdk/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/core/config/analytics_config.dart';
+import 'package:commerce_flutter_sdk/core/config/prod_config_constants.dart';
+import 'package:commerce_flutter_sdk/core/constants/core_constants.dart';
+import 'package:commerce_flutter_sdk/core/extensions/firebase_options_extension.dart';
+import 'package:commerce_flutter_sdk/core/injection/injection_container.dart';
+import 'package:commerce_flutter_sdk/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/core/utils/bloc_observer.dart';
+import 'package:commerce_flutter_sdk/features/domain/enums/auth_status.dart';
+import 'package:commerce_flutter_sdk/features/domain/service/interfaces/interfaces.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/auth/auth_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/load_website_url/load_website_url_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/bloc/root/root_bloc.dart';
+import 'package:commerce_flutter_sdk/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/cart_count/cart_count_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/domain/domain_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/location_search_handler/location_search_handler_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/logout/logout_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/order_approval/order_approval_handler/order_approval_handler_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/search_history/search_history_cubit.dart';
+import 'package:commerce_flutter_sdk/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -42,8 +42,6 @@ Future<void> main() async {
 }
 
 Future<void> initApp() async {
-
-
   //If error log is not enabled we should not do anything when an error is presented
   //By default if isErrorLogEnabled is true: FlutterError.presentError = FlutterError.dumpErrorToConsole
   if (sl<OptiLoggerService>().isErrorLogEnabled == false) {

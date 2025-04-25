@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/core/models/expansion_panel_item.dart';
+import 'package:commerce_flutter_sdk/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/core/models/expansion_panel_item.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'expansion_panel_state.dart';
