@@ -359,15 +359,24 @@ class ProductDetailsAddCartRow extends StatelessWidget {
     final defaultUom = detailsAddToCartEntity.productUnitOfMeasures
         ?.firstWhereOrNull((o) => o.isDefault == true);
 
+    final alternateUnitsOfMeasureEnabled = context
+            .watch<ProductDetailsBloc>()
+            .productDetailDataEntity
+            .productSettings
+            ?.alternateUnitsOfMeasure ??
+        false;
+
+    final showMultipleUoM =
+        detailsAddToCartEntity.productUnitOfMeasures != null &&
+            detailsAddToCartEntity.productUnitOfMeasures!.length > 1 &&
+            alternateUnitsOfMeasureEnabled;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Visibility(
-          visible: detailsAddToCartEntity.productUnitOfMeasures != null &&
-              detailsAddToCartEntity.productUnitOfMeasures!.length > 1 &&
-              defaultUom == null,
-          child: Container(
+        showMultipleUoM
+            ? Container(
                 decoration: BoxDecoration(
                   color: OptiAppColors.backgroundInput,
                   borderRadius: BorderRadius.circular(10),
@@ -384,19 +393,23 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                               .chosenUnitOfMeasure),
                       callback: onUnitOfMeasureSelec),
                 ),
-          ),
-        ),
+              )
+            : () {
                 if (detailsAddToCartEntity.productUnitOfMeasures != null &&
-            detailsAddToCartEntity.productUnitOfMeasures!.length == 1 &&
-            defaultUom == null)
-          Text(
+                    detailsAddToCartEntity.productUnitOfMeasures!.length == 1) {
+                  return Text(
                       detailsAddToCartEntity.productUnitOfMeasures?.first
                               .unitOfMeasureTextDisplayWithQuantity ??
                           "",
-              style: OptiTextStyles.header3),
-        if (defaultUom != null)
-          Text(defaultUom.unitOfMeasureTextDisplayWithQuantity ?? "",
-              style: OptiTextStyles.header3)
+                      style: OptiTextStyles.header3);
+                } else if (defaultUom != null) {
+                  return Text(
+                      defaultUom.unitOfMeasureTextDisplayWithQuantity ?? "",
+                      style: OptiTextStyles.header3);
+                } else {
+                  return const SizedBox.shrink();
+                }
+              }(),
       ],
     );
   }
