@@ -117,9 +117,7 @@ class CartLineWidget extends StatelessWidget {
               availabilityText: cartLineEntity.availability?.message,
               productId: cartLineEntity.productId,
               erpNumber: cartLineEntity.getProductNumber(),
-              unitOfMeasure: cartLineEntity.pricing?.getUnitOfMeasure(
-                cartLineEntity.baseUnitOfMeasure ?? '',
-              ),
+              unitOfMeasure: cartLineEntity.baseUnitOfMeasure ?? '',
               availabilityMessageType: cartLineEntity.availability?.messageType,
               showViewAvailabilityByWarehouse:
                   cartLineEntity.showInventoryAvailability ?? false,
