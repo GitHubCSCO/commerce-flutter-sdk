@@ -232,6 +232,10 @@ class ProductDetailsAddCartRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isUnitOfMeasureEnabled =
+        detailsAddToCartEntity.productUnitOfMeasures != null &&
+            (detailsAddToCartEntity.productUnitOfMeasures?.length ?? 0) > 0;
+
     return SizedBox(
       height: 170,
       width: double.infinity,
@@ -251,13 +255,14 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                     style: OptiTextStyles.subtitle,
                   ),
                 ),
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    LocalizationConstants.unitOfMeasure.localized(),
-                    style: OptiTextStyles.subtitle,
-                  ),
-                )
+                if (isUnitOfMeasureEnabled)
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      LocalizationConstants.unitOfMeasure.localized(),
+                      style: OptiTextStyles.subtitle,
+                    ),
+                  )
               ],
             ),
             const SizedBox(
@@ -363,31 +368,31 @@ class ProductDetailsAddCartRow extends StatelessWidget {
               detailsAddToCartEntity.productUnitOfMeasures!.length > 1 &&
               defaultUom == null,
           child: Container(
-            decoration: BoxDecoration(
-              color: OptiAppColors.backgroundInput,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10.0),
-              child: ListPickerWidget(
-                  items: detailsAddToCartEntity.productUnitOfMeasures ?? [],
-                  selectedIndex: getIndexOfUOM(
-                      detailsAddToCartEntity.productUnitOfMeasures,
-                      context
-                          .read<ProductDetailsBloc>()
-                          .productDetailDataEntity
-                          .chosenUnitOfMeasure),
-                  callback: onUnitOfMeasureSelec),
-            ),
+                decoration: BoxDecoration(
+                  color: OptiAppColors.backgroundInput,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: ListPickerWidget(
+                      items: detailsAddToCartEntity.productUnitOfMeasures ?? [],
+                      selectedIndex: getIndexOfUOM(
+                          detailsAddToCartEntity.productUnitOfMeasures,
+                          context
+                              .read<ProductDetailsBloc>()
+                              .productDetailDataEntity
+                              .chosenUnitOfMeasure),
+                      callback: onUnitOfMeasureSelec),
+                ),
           ),
         ),
-        if (detailsAddToCartEntity.productUnitOfMeasures != null &&
+                if (detailsAddToCartEntity.productUnitOfMeasures != null &&
             detailsAddToCartEntity.productUnitOfMeasures!.length == 1 &&
             defaultUom == null)
           Text(
-              detailsAddToCartEntity.productUnitOfMeasures?.first
-                      .unitOfMeasureTextDisplayWithQuantity ??
-                  "",
+                      detailsAddToCartEntity.productUnitOfMeasures?.first
+                              .unitOfMeasureTextDisplayWithQuantity ??
+                          "",
               style: OptiTextStyles.header3),
         if (defaultUom != null)
           Text(defaultUom.unitOfMeasureTextDisplayWithQuantity ?? "",
@@ -419,7 +424,7 @@ class ProductDetailsAddCartTtitleSubTitleColumn extends StatelessWidget {
           title,
           style: OptiTextStyles.subtitle,
         ),
-        SizedBox(
+        const SizedBox(
           height: 5.0,
         ),
         FittedBox(
