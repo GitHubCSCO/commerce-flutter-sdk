@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_sdk/ui_factory.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/content_management/widget_entity/actions_widget_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/action_grid_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class ActionGridSectionWidget extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             final action = actionsWidgetEntity.actions![index];
-            return ActionGridItemWidget(action: action);
+            return UIFactory.actionGridItemBuilder(context, action);
           }),
     );
   }
