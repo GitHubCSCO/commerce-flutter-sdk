@@ -1,5 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/app_route.dart';
@@ -29,12 +35,6 @@ import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wis
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_details/wish_list_line/wish_list_line_image_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WishListsScreen extends BaseStatelessWidget {
   const WishListsScreen({super.key});
@@ -362,7 +362,8 @@ class _WishListItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 16,
-        vertical: 20,
+      ).copyWith(
+        right: 0,
       ),
       color: OptiAppColors.backgroundWhite,
       child: InkWell(
@@ -381,6 +382,7 @@ class _WishListItem extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 20),
                   Text(
                     wishList.name ?? '',
                     style: OptiTextStyles.body,
@@ -446,34 +448,43 @@ class _WishListItem extends StatelessWidget {
                     style: OptiTextStyles.bodySmall.copyWith(
                       color: OptiAppColors.textSecondary,
                     ),
-                  )
+                  ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
-            if (context
-                .read<WishListCubit>()
-                .canDeleteWishList(wishList: wishList))
-              InkWell(
-                onTap: () async {
-                  displayWishListDeleteWidget(
-                    wishList: wishList,
-                    context: context,
-                    onDelete: () {
-                      context.read<WishListCubit>().deleteWishList(
-                            wishListId: wishList.id,
-                          );
-                    },
-                  );
-                },
-                child: SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: SvgPicture.asset(
-                    AssetConstants.cartItemRemoveIcon,
-                    fit: BoxFit.fitWidth,
-                  ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: BottomMenuWidget(
+                screenName: AnalyticsConstants.screenNameLists,
+                websitePath: WebsitePaths.listDetailsWebsitePath.format(
+                  [
+                    wishList.id ?? '',
+                  ],
                 ),
+                toolMenuList: [
+                  if (context
+                      .read<WishListCubit>()
+                      .canDeleteWishList(wishList: wishList))
+                    ToolMenu(
+                      title: LocalizationConstants.delete.localized(),
+                      action: () {
+                        displayWishListDeleteWidget(
+                          wishList: wishList,
+                          context: context,
+                          onDelete: () {
+                            unawaited(
+                              context
+                                  .read<WishListCubit>()
+                                  .deleteWishList(wishListId: wishList.id),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                ],
               ),
+            ),
           ],
         ),
       ),
