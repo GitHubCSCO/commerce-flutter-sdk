@@ -12,6 +12,7 @@ import 'package:commerce_flutter_app/core/extensions/string_format_extension.dar
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/core/themes/theme.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/root/root_bloc.dart';
@@ -25,6 +26,7 @@ import 'package:commerce_flutter_app/features/presentation/helper/menu/sort_tool
 import 'package:commerce_flutter_app/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_delete_widget.dart';
+import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_details/wish_list_line/wish_list_line_image_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_app/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
@@ -392,6 +394,38 @@ class _WishListItem extends StatelessWidget {
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: wishList.wishListLineCollection?.map(
+                          (wishListLineEntity) {
+                            void navigateToProductDetails(
+                                BuildContext context) {
+                              var productId = wishListLineEntity.productId;
+                              AppRoute.productDetails.navigateBackStack(context,
+                                  pathParameters: {
+                                    "productId": productId.toString()
+                                  },
+                                  extra: ProductEntity());
+                            }
+
+                            return InkWell(
+                              onTap: () => navigateToProductDetails(context),
+                              child: WishListContentProductImageWidget(
+                                imagePath:
+                                    wishListLineEntity.smallImagePath ?? '',
+                                width: 60,
+                                height: 60,
+                                padding: const EdgeInsets.only(
+                                  top: 8,
+                                  bottom: 8,
+                                  right: 10,
+                                ),
+                              ),
+                            );
+                          },
+                        ).toList() ??
+                        [],
                   ),
                   Text(
                     _constructListSharingDisplay(),
