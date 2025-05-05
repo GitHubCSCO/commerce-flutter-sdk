@@ -463,6 +463,24 @@ class _WishListItem extends StatelessWidget {
                   ],
                 ),
                 toolMenuList: [
+                  ToolMenu(
+                    title: LocalizationConstants.listInformation.localized(),
+                    action: () async {
+                      final result = await context.pushNamed(
+                        AppRoute.wishListInfo.name,
+                        extra: wishList,
+                      );
+
+                      if (!context.mounted) {
+                        return;
+                      }
+
+                      if (result == true) {
+                        unawaited(
+                            context.read<WishListCubit>().loadWishLists());
+                      }
+                    },
+                  ),
                   if (context
                       .read<WishListCubit>()
                       .canDeleteWishList(wishList: wishList))
