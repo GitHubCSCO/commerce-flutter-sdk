@@ -8,7 +8,7 @@ class CommerceConfig {
   final bool? isRunningAsPackage;
 
   CommerceConfig({
-    this.isRunningAsPackage,
+    this.isRunningAsPackage = true,
     this.overrideServices,
   });
 }

@@ -7,6 +7,7 @@ void main() async {
 
   await CommerceFlutterSDK.initialize(
     config: CommerceConfig(
+      isRunningAsPackage: false,
       overrideServices: (sl) async {},
     ),
   );
