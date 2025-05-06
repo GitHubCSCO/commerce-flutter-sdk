@@ -82,16 +82,15 @@ class WishListUsecase extends BaseUseCase {
     required WishListEntity wishListEntity,
     required bool isFavorite,
   }) async {
-    final result = await commerceAPIServiceProvider
-        .getWishListService()
-        .updateWishList(
-          WishListEntityMapper.toModel(
-            wishListEntity.copyWith(
-              isFavorite: isFavorite,
-              wishListLineCollection: [],
-            ),
-          ),
-        );
+    final result =
+        await commerceAPIServiceProvider.getWishListService().updateWishList(
+              WishListEntityMapper.toModel(
+                wishListEntity.copyWith(
+                  isFavorite: isFavorite,
+                  wishListLineCollection: [],
+                ),
+              ),
+            );
 
     switch (result) {
       case Success(value: final value):
