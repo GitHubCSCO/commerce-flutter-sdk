@@ -21,6 +21,12 @@ class WishListUsecase extends BaseUseCase {
                 pageSize: CoreConstants.defaultPageSize,
                 page: page,
                 query: searchText != '' ? searchText : null,
+                expand: [
+                  'top3products',
+                  'favorite',
+                  'tags',
+                ],
+                wishListLinesSort: 'mostRecent',
               ),
             );
 
