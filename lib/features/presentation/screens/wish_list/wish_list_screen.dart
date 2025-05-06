@@ -383,11 +383,24 @@ class _WishListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 20),
-                  Text(
-                    wishList.name ?? '',
-                    style: OptiTextStyles.body,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        wishList.name ?? '',
+                        style: OptiTextStyles.body,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      if (wishList.isFavorite == true) ...[
+                        const SizedBox(width: 10),
+                        const SvgAssetImage(
+                          assetName: AssetConstants.iconFavorite,
+                          semanticsLabel: 'favorite icon',
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ],
+                    ],
                   ),
                   Text(
                     wishList.description ?? '',
