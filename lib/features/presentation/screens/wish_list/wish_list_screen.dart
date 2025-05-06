@@ -147,8 +147,28 @@ class _WishListsPageState extends State<WishListsPage> {
               },
               child: BlocConsumer<WishListCubit, WishListState>(
                 listener: (context, state) {
-                  if (state.status == WishListStatus.listDeleteLoading) {
+                  if (state.status == WishListStatus.listDeleteLoading ||
+                      state.status ==
+                          WishListStatus.listFavoriteUpdateLoading) {
                     showPleaseWait(context);
+                  }
+
+                  if (state.status ==
+                      WishListStatus.listFavoriteUpdateSuccess) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    CustomSnackBar.showSnackBarMessage(
+                      context,
+                      LocalizationConstants.listUpdated.localized(),
+                    );
+                  }
+
+                  if (state.status ==
+                      WishListStatus.listFavoriteUpdateFailure) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    CustomSnackBar.showSnackBarMessage(
+                      context,
+                      LocalizationConstants.updateFailed.localized(),
+                    );
                   }
 
                   if (state.status == WishListStatus.listDeleteSuccess) {
@@ -476,6 +496,16 @@ class _WishListItem extends StatelessWidget {
                   ],
                 ),
                 toolMenuList: [
+                  ToolMenu(
+                    title: wishList.isFavorite == true
+                        ? LocalizationConstants.removeFavorite.localized()
+                        : LocalizationConstants.favorite.localized(),
+                    action: () => unawaited(
+                      context
+                          .read<WishListCubit>()
+                          .toggleWishListFavorite(wishList: wishList),
+                    ),
+                  ),
                   ToolMenu(
                     title: LocalizationConstants.listInformation.localized(),
                     action: () async {

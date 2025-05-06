@@ -186,6 +186,51 @@ class WishListCubit extends Cubit<WishListState> {
     emit(state.copyWith(status: result));
   }
 
+  Future<void> toggleWishListFavorite({
+    required WishListEntity wishList,
+  }) async {
+    emit(state.copyWith(status: WishListStatus.listFavoriteUpdateLoading));
+
+    final result = await wishListUsecase.updateWishListFavorite(
+      wishListEntity: wishList,
+      isFavorite: !(wishList.isFavorite == true),
+    );
+
+    if (result == WishListStatus.listFavoriteUpdateSuccess) {
+      final analyticsEvent = AnalyticsEvent(
+        wishList.isFavorite == true
+            ? AnalyticsConstants.eventRemoveFavoriteList
+            : AnalyticsConstants.eventFavoriteList,
+        AnalyticsConstants.screenNameLists,
+      ).withProperty(
+        name: AnalyticsConstants.eventPropertyListId,
+        strValue: wishList.id,
+      );
+
+      wishListUsecase.trackEvent(analyticsEvent);
+    }
+
+    final newCollection = state.wishLists.wishListCollection?.map(
+      (item) {
+        if (item.id != wishList.id) {
+          return item;
+        }
+        return item.copyWith(
+          isFavorite: !(item.isFavorite == true),
+        );
+      },
+    ).toList();
+
+    emit(
+      state.copyWith(
+        status: result,
+        wishLists: state.wishLists.copyWith(
+          wishListCollection: newCollection,
+        ),
+      ),
+    );
+  }
+
   bool canDeleteWishList({required WishListEntity wishList}) {
     return wishListUsecase.canDeleteWishList(
       settings: state.settings,
