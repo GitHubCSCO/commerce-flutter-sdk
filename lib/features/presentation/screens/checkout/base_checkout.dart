@@ -6,6 +6,8 @@ import 'package:commerce_flutter_app/features/domain/entity/checkout/billing_shi
 import 'package:commerce_flutter_app/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_app/features/domain/enums/promotion_type.dart';
 import 'package:commerce_flutter_app/features/presentation/bloc/checkout/checkout_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_bloc.dart';
+import 'package:commerce_flutter_app/features/presentation/bloc/checkout/payment_details/payment_details_event.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/cart/cart_shipping_widget.dart';
@@ -214,7 +216,8 @@ mixin BaseCheckout {
     }
   }
 
-  void showAlert(BuildContext context, {String? title, String? message}) {
+  void showAlert(BuildContext context,
+      {String? title, String? message, bool? isPaymentFailed, String? cartId}) {
     displayDialogWidget(
         context: context,
         title: title,
@@ -222,8 +225,19 @@ mixin BaseCheckout {
         actions: [
           DialogPlainButton(
             onPressed: () {
-              context.read<CheckoutBloc>().add(
-                  LoadCheckoutEvent(cart: context.read<CheckoutBloc>().cart!));
+              final id = cartId ?? context.read<CheckoutBloc>().cart?.id;
+              if (isPaymentFailed == true) {
+                context
+                    .read<CheckoutBloc>()
+                    .add(UpdateCartPaymentFailedEvent(id ?? ''));
+                context
+                    .read<PaymentDetailsBloc>()
+                    .add(LoadPaymentDetailsEvent(cartId: id ?? ''));
+              } else {
+                context
+                    .read<CheckoutBloc>()
+                    .add(LoadCheckoutEvent(cartId: id ?? ''));
+              }
               Navigator.of(context).pop();
             },
             child: Text(

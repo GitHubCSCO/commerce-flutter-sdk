@@ -678,6 +678,7 @@ enum LocalizationConstants {
   saveLocationNote(keyword: "Save Location Note"),
   locationNoteUpdated(keyword: "Location Note Updated"),
   noSavedPaymentsFound(keyword: "No saved payments found."),
+  paymentAuthenticationFailed(keyword: "Payment authentication failed"),
   invalidUrl(keyword: "Invalid url."),
   failedToLoadUrl(keyword: "Failed to load url."),
   noBrandDetailsFound(keyword: "No details found for this brand"),

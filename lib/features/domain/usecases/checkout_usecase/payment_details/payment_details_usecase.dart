@@ -4,12 +4,11 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class PaymentDetailsUseCase extends BaseUseCase {
   PaymentDetailsUseCase() : super();
 
-  Future<Result<Cart, ErrorResponse>> getCurrentCart() async {
+  Future<Result<Cart, ErrorResponse>> getCart(String? cartId) async {
     var cartParameters = CartQueryParameters(expand: ['paymentoptions']);
-
-    return commerceAPIServiceProvider
+    return await commerceAPIServiceProvider
         .getCartService()
-        .getCurrentCart(cartParameters);
+        .getCart(cartId!, cartParameters);
   }
 
   Future<Result<AccountPaymentProfileCollectionResult, ErrorResponse>>
