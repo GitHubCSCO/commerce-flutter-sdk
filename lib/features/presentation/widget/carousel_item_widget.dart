@@ -49,7 +49,13 @@ class CarouselItemWidget extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             if (carouselSlideWidgetEntity.background ==
-                CarouselBacgroundType.image.name)
+                CarouselBacgroundType.color.name)
+              Container(
+                color: OptiAppColors.rgbaToColor(
+                  carouselSlideWidgetEntity.backgroundColor ?? '',
+                ),
+              )
+            else
               Image.network(
                 carouselSlideWidgetEntity.imagePath.makeImageUrl(),
                 fit: BoxFit.fitWidth,
@@ -66,12 +72,6 @@ class CarouselItemWidget extends StatelessWidget {
                     ),
                   );
                 },
-              )
-            else
-              Container(
-                color: OptiAppColors.rgbaToColor(
-                  carouselSlideWidgetEntity.backgroundColor ?? '',
-                ),
               ),
             Padding(
               padding: const EdgeInsets.all(15),
