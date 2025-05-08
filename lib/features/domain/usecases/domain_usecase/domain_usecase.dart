@@ -50,9 +50,20 @@ class DomainUsecase extends BaseUseCase {
       return null;
     }
 
-    ClientConfig.hostUrl = domain;
-    commerceAPIServiceProvider.getClientService().host = domain;
-    commerceAPIServiceProvider.getAdminClientService().host = domain;
+    final validUrlString = domain?.makeValidUrl();
+
+    var domainUri = Uri.parse(validUrlString ?? '');
+    var extractedDomain = domainUri.host;
+
+    // fixes problem when POST request are not redirected automatically when www is omitted
+    if (!extractedDomain.startsWith('www.') &&
+        extractedDomain.split('.').length < 3) {
+      extractedDomain = 'www.$extractedDomain';
+    }
+
+    ClientConfig.hostUrl = extractedDomain;
+    commerceAPIServiceProvider.getClientService().host = extractedDomain;
+    commerceAPIServiceProvider.getAdminClientService().host = extractedDomain;
 
     return domain;
   }
