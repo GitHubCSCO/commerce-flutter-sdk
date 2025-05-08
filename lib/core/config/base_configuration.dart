@@ -5,7 +5,6 @@ part 'base_configuration.g.dart';
 @JsonSerializable(explicitToJson: true)
 class BaseConfiguration {
   BaseConfiguration({
-    this.shouldUseStaticDomain,
     this.domain,
     this.checkoutUrl,
     this.startingCategoryForBrowsing,
@@ -26,8 +25,6 @@ class BaseConfiguration {
     this.appCenterSecretiOS,
     this.appCenterSecretAndroid,
   });
-
-  bool? shouldUseStaticDomain;
 
   String? domain;
 
@@ -94,8 +91,6 @@ class BaseConfiguration {
     String? appCenterSecretAndroid,
   }) {
     return BaseConfiguration(
-      shouldUseStaticDomain:
-          shouldUseStaticDomain ?? this.shouldUseStaticDomain,
       domain: domain ?? this.domain,
       checkoutUrl: checkoutUrl ?? this.checkoutUrl,
       startingCategoryForBrowsing:
