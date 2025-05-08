@@ -7,12 +7,16 @@ import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 class DomainUsecase extends BaseUseCase {
   DomainUsecase() : super();
 
+  bool _isStaticDomain() {
+    return !(coreServiceProvider
+            .getAppConfigurationService()
+            .baseConfig
+            ?.domain)
+        .isNullOrEmpty;
+  }
+
   Future<String?> getDomainInSettingsScreen() async {
-    final isStaticDomain =
-        (coreServiceProvider.getAppConfigurationService().baseConfig?.domain)
-                .isNullOrEmpty
-            ? false
-            : true;
+    final isStaticDomain = _isStaticDomain();
     var devMode = await commerceAPIServiceProvider
         .getLocalStorageService()
         .load(CoreConstants.devMode);
@@ -25,11 +29,7 @@ class DomainUsecase extends BaseUseCase {
         .getLocalStorageService()
         .load(CoreConstants.domainKey);
 
-    final isStaticDomain =
-        (coreServiceProvider.getAppConfigurationService().baseConfig?.domain)
-                .isNullOrEmpty
-            ? false
-            : true;
+    final isStaticDomain = _isStaticDomain();
 
     if (isStaticDomain) {
       domain = (coreServiceProvider
