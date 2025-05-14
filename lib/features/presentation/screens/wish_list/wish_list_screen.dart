@@ -412,6 +412,15 @@ class _WishListItem extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
+                      if (wishList.wishListTags != null &&
+                          wishList.wishListTags!.isNotEmpty) ...[
+                        const SizedBox(width: 10),
+                        const SvgAssetImage(
+                          assetName: AssetConstants.iconPriorityTag,
+                          semanticsLabel: 'priority tag icon',
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ],
                       if (wishList.isFavorite == true) ...[
                         const SizedBox(width: 10),
                         const SvgAssetImage(
