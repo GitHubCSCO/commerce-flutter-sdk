@@ -112,6 +112,19 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
           context.watch<WishListDetailsCubit>().state.wishList.name ?? '',
         ),
         actions: [
+          _FavoriteButton(
+            isFavorite: context
+                    .watch<WishListDetailsCubit>()
+                    .state
+                    .wishList
+                    .isFavorite ==
+                true,
+            onPressed: () {
+              unawaited(
+                context.read<WishListDetailsCubit>().toggleWishListFavorite(),
+              );
+            },
+          ),
           _OptionsMenu(
             onWishListUpdated: () =>
                 context.read<WishListHandlerCubit>().shouldRefreshWishList(),
@@ -373,6 +386,49 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
                       ],
                     );
                   }
+
+                  if (state.status ==
+                      WishListStatus.listFavoriteUpdateLoading) {
+                    showPleaseWait(context);
+                  }
+
+                  if (state.status ==
+                          WishListStatus.listFavoriteUpdateSuccessAdded ||
+                      state.status ==
+                          WishListStatus.listFavoriteUpdateSuccessRemoved) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    CustomSnackBar.showSnackBarMessage(
+                      context,
+                      state.wishList.isFavorite == true
+                          ? LocalizationConstants.addedToFavorites.localized()
+                          : LocalizationConstants.removedFromFavorites
+                              .localized(),
+                    );
+
+                    context
+                        .read<WishListHandlerCubit>()
+                        .shouldRefreshWishListWithoutDetails();
+                  }
+
+                  if (state.status ==
+                      WishListStatus.listFavoriteUpdateFailure) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    displayDialogWidget(
+                      context: context,
+                      title: LocalizationConstants.error.localized(),
+                      message: context
+                          .watch<WishListDetailsCubit>()
+                          .siteMessageMobileAppAlertCommunicationError,
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(LocalizationConstants.oK.localized()),
+                        )
+                      ],
+                    );
+                  }
                 },
                 builder: (context, state) {
                   if (state.status == WishListStatus.loading ||
@@ -478,6 +534,32 @@ class _WishListDetailsPageState extends State<WishListDetailsPage> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _FavoriteButton extends StatelessWidget {
+  const _FavoriteButton({
+    required this.isFavorite,
+    required this.onPressed,
+  });
+
+  final bool isFavorite;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: SvgAssetImage(
+        assetName: isFavorite
+            ? AssetConstants.iconFavorite
+            : AssetConstants.iconUnfavorite,
+        semanticsLabel: isFavorite ? 'favorite icon' : 'unfavorite icon',
+        fit: BoxFit.fitWidth,
+        width: 24,
+        height: 24,
+      ),
+      onPressed: onPressed,
     );
   }
 }
