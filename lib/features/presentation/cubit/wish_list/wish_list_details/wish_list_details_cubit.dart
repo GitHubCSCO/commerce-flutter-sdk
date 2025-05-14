@@ -515,7 +515,7 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
 
     final result = await _wishListDetailsUsecase.updateWishListFavorite(
       wishListEntity: state.wishList,
-      isFavorite: !(state.wishList.isFavorite == true),
+      isFavorite: state.wishList.isFavorite != true,
     );
 
     if (result == WishListStatus.listFavoriteUpdateSuccessAdded ||
