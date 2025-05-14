@@ -552,12 +552,10 @@ class _FavoriteButton extends StatelessWidget {
     return IconButton(
       icon: SvgAssetImage(
         assetName: isFavorite
-            ? AssetConstants.iconFavorite
-            : AssetConstants.iconUnfavorite,
+            ? AssetConstants.iconHeartFilled
+            : AssetConstants.iconHeartUnfilled,
         semanticsLabel: isFavorite ? 'favorite icon' : 'unfavorite icon',
         fit: BoxFit.fitWidth,
-        width: 24,
-        height: 24,
       ),
       onPressed: onPressed,
     );
