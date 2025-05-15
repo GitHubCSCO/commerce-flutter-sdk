@@ -1,0 +1,29 @@
+{
+    "agingBucketFuture": {
+        "label": "Future",
+        "amount": 1000,
+        "amountDisplay": "$1,000.00"
+    },
+    "agingBucketTotal": {
+        "label": "Total",
+        "amount": 5000,
+        "amountDisplay": "$5,000.00"
+    },
+    "agingBuckets": [
+        {
+            "label": "0-30 days",
+            "amount": 1000,
+            "amountDisplay": "$1,000.00"
+        },
+        {
+            "label": "31-60 days",
+            "amount": 2000,
+            "amountDisplay": "$2,000.00"
+        },
+        {
+            "label": "61-90 days",
+            "amount": 2000,
+            "amountDisplay": "$2,000.00"
+        }
+    ]
+}
