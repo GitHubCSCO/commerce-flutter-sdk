@@ -36,9 +36,9 @@ class CommerceFlutterSDK {
 
     // 1️⃣ Core setup
     await HiveInitializer().init();
-    await initInjectionContainer(); // your existing DI container
+    await initInjectionContainer(); 
     if (config.overrideServices != null) {
-      await config.overrideServices!(GetIt.I); // wrapper’s chance to override
+      await config.overrideServices!(GetIt.I);
     }
     CommerceSdkInitializer().init();
 
