@@ -1,4 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/mapper/content_management/page_management_mapper.dart';
+
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/content_management/page_management_mapper.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
