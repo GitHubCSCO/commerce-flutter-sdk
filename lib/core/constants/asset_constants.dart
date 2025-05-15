@@ -59,4 +59,8 @@ class AssetConstants {
   static const String exapandIcon = "assets/images/expand.svg";
 
   static const String iconPriorityTag = "assets/images/icon_priority_tag.svg";
+
+  static const String iconXmark = "assets/images/icon_xmark.svg";
+
+  static const String iconTag = "assets/images/icon_tag.svg";
 }

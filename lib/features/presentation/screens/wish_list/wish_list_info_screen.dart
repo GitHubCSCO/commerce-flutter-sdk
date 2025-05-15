@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
+import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
@@ -16,6 +17,7 @@ import 'package:commerce_flutter_app/features/presentation/screens/base_screen.d
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 class WishListInformationScreen extends BaseStatelessWidget {
@@ -123,6 +125,7 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ListNameInputWidget(
                         listNameController: _listNameEditingController,
@@ -148,6 +151,57 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                         onTap: () {},
                       ),
                       const SizedBox(height: 32),
+                      if (state.wishList.wishListTags != null &&
+                          state.wishList.wishListTags!.isNotEmpty) ...[
+                        Text(LocalizationConstants.assignedTags.localized()),
+                        const SizedBox(height: 8),
+                        ListView.builder(
+                          itemCount: state.wishList.wishListTags!.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SvgPicture.asset(AssetConstants.iconTag),
+                                      const SizedBox(width: 16),
+                                      Text(
+                                        state.wishList.wishListTags![index]
+                                                .tag ??
+                                            '',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      CustomSnackBar.showSnackBarMessage(
+                                        context,
+                                        'Tag Cleared',
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(4),
+                                      child: SvgPicture.asset(
+                                        AssetConstants.iconXmark,
+                                        height: 16,
+                                        width: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ],
                   ),
                 ),
