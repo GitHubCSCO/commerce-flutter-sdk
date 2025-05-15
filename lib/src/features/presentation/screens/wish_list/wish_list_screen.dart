@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
@@ -111,7 +110,7 @@ class _WishListsPageState extends State<WishListsPage> {
             child: Input(
               hintText: LocalizationConstants.search.localized(),
               suffixIcon: IconButton(
-                icon:  SvgAssetImage(
+                icon: SvgAssetImage(
                   assetName: AssetConstants.iconClear,
                   semanticsLabel: 'search query clear icon',
                   fit: BoxFit.fitWidth,

@@ -153,7 +153,7 @@ class SearchProductGridItemWidget extends StatelessWidget
                                             borderRadius:
                                                 BorderRadius.circular(32),
                                           ),
-                                          child:  SvgAssetImage(
+                                          child: SvgAssetImage(
                                             assetName: AssetConstants.addToCart,
                                             fit: BoxFit.fitWidth,
                                           ),
