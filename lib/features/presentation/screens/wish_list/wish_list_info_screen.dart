@@ -9,6 +9,7 @@ import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_
 import 'package:commerce_flutter_app/features/domain/enums/wish_list_status.dart';
 import 'package:commerce_flutter_app/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
+import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_information/wish_list_information_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
@@ -139,6 +140,14 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                             .watch<WishListInformationCubit>()
                             .canEditNameDesc,
                       ),
+                      const SizedBox(height: 32),
+                      Input(
+                        label: LocalizationConstants.tags.localized(),
+                        hintText:
+                            LocalizationConstants.searchOrAddTag.localized(),
+                        onTap: () {},
+                      ),
+                      const SizedBox(height: 32),
                     ],
                   ),
                 ),
