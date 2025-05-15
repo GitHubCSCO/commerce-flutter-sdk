@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'dart:async';
 
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
@@ -231,6 +232,10 @@ class ProductDetailsAddCartRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isUnitOfMeasureEnabled =
+        detailsAddToCartEntity.productUnitOfMeasures != null &&
+            (detailsAddToCartEntity.productUnitOfMeasures?.length ?? 0) > 0;
+
     return SizedBox(
       height: 170,
       width: double.infinity,
@@ -250,13 +255,14 @@ class ProductDetailsAddCartRow extends StatelessWidget {
                     style: OptiTextStyles.subtitle,
                   ),
                 ),
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    LocalizationConstants.unitOfMeasure.localized(),
-                    style: OptiTextStyles.subtitle,
-                  ),
-                )
+                if (isUnitOfMeasureEnabled)
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      LocalizationConstants.unitOfMeasure.localized(),
+                      style: OptiTextStyles.subtitle,
+                    ),
+                  )
               ],
             ),
             const SizedBox(
@@ -350,39 +356,60 @@ class ProductDetailsAddCartRow extends StatelessWidget {
       return 0;
     }
 
+    final defaultUom = detailsAddToCartEntity.productUnitOfMeasures
+        ?.firstWhereOrNull((o) => o.isDefault == true);
+
+    final alternateUnitsOfMeasureEnabled = context
+            .watch<ProductDetailsBloc>()
+            .productDetailDataEntity
+            .productSettings
+            ?.alternateUnitsOfMeasure ??
+        false;
+
+    final showMultipleUoM =
+        detailsAddToCartEntity.productUnitOfMeasures != null &&
+            detailsAddToCartEntity.productUnitOfMeasures!.length > 1 &&
+            alternateUnitsOfMeasureEnabled;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Visibility(
-          visible: detailsAddToCartEntity.productUnitOfMeasures != null &&
-              detailsAddToCartEntity.productUnitOfMeasures!.length > 1,
-          child: Container(
-            decoration: BoxDecoration(
-              color: OptiAppColors.backgroundInput,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10.0),
-              child: ListPickerWidget(
-                  items: detailsAddToCartEntity.productUnitOfMeasures ?? [],
-                  selectedIndex: getIndexOfUOM(
-                      detailsAddToCartEntity.productUnitOfMeasures,
-                      context
-                          .read<ProductDetailsBloc>()
-                          .productDetailDataEntity
-                          .chosenUnitOfMeasure),
-                  callback: onUnitOfMeasureSelec),
-            ),
-          ),
-        ),
-        if (detailsAddToCartEntity.productUnitOfMeasures != null &&
-            detailsAddToCartEntity.productUnitOfMeasures!.length == 1)
-          Text(
-              detailsAddToCartEntity.productUnitOfMeasures?.first
-                      .unitOfMeasureTextDisplayWithQuantity ??
-                  "",
-              style: OptiTextStyles.header3)
+        showMultipleUoM
+            ? Container(
+                decoration: BoxDecoration(
+                  color: OptiAppColors.backgroundInput,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: ListPickerWidget(
+                      items: detailsAddToCartEntity.productUnitOfMeasures ?? [],
+                      selectedIndex: getIndexOfUOM(
+                          detailsAddToCartEntity.productUnitOfMeasures,
+                          context
+                              .read<ProductDetailsBloc>()
+                              .productDetailDataEntity
+                              .chosenUnitOfMeasure),
+                      callback: onUnitOfMeasureSelec),
+                ),
+              )
+            : () {
+                if (detailsAddToCartEntity.productUnitOfMeasures != null &&
+                    detailsAddToCartEntity.productUnitOfMeasures!.length == 1) {
+                  return Text(
+                      detailsAddToCartEntity.productUnitOfMeasures?.first
+                              .unitOfMeasureTextDisplayWithQuantity ??
+                          "",
+                      style: OptiTextStyles.header3);
+                } else if (defaultUom != null) {
+                  return Text(
+                      defaultUom.unitOfMeasureTextDisplayWithQuantity ?? "",
+                      style: OptiTextStyles.header3);
+                } else {
+                  return const SizedBox.shrink();
+                }
+              }(),
       ],
     );
   }
@@ -410,7 +437,7 @@ class ProductDetailsAddCartTtitleSubTitleColumn extends StatelessWidget {
           title,
           style: OptiTextStyles.subtitle,
         ),
-        SizedBox(
+        const SizedBox(
           height: 5.0,
         ),
         FittedBox(

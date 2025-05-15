@@ -34,9 +34,6 @@ class PaymentDetailsBloc
         (event, emit) async => _updatePaymentMethod(event, emit));
     on<UpdateCreditCartInfoEvent>(
         (event, emit) => _updateCreditCardInfoToCart(event, emit));
-    on<UpdateNewAccountPaymentProfileEvent>((event, emit) async {
-      await _updateNewAccountPaymentPorfile(event, emit);
-    });
     on<ValidateTokenEvent>((event, emit) async {
       emit(PaymentDetailsValidateTokenState());
     });
@@ -55,12 +52,14 @@ class PaymentDetailsBloc
       LoadPaymentDetailsEvent event, Emitter<PaymentDetailsState> emit) async {
     emit(PaymentDetailsLoading());
 
-    var cartResponse = await _paymentDetailsUseCase.getCurrentCart();
+    var cartResponse = await _paymentDetailsUseCase.getCart(event.cartId);
     var cartSettings = await _paymentDetailsUseCase.getCartSetting();
     var webSiteSetting = await _paymentDetailsUseCase.getWebSiteSetting();
-    cart = (cartResponse is Success)
-        ? (cartResponse as Success).value
-        : event.cart;
+    if (cartResponse is Success) {
+      cart = (cartResponse as Success).value;
+    } else {
+      return;
+    }
     settings = cartSettings.getResultSuccessValue();
     websiteSettings = webSiteSetting.getResultSuccessValue();
     _setUpSelectedPaymentMethod(cart!);
@@ -70,19 +69,18 @@ class PaymentDetailsBloc
         emit);
   }
 
-  Future<void> _updateNewAccountPaymentPorfile(
-      UpdateNewAccountPaymentProfileEvent event,
-      Emitter<PaymentDetailsState> emit) async {
+  void updateNewAccountPaymentPorfile(
+      AccountPaymentProfile accountPaymentProfile) {
     cart?.paymentOptions = PaymentOptionsDto(
         creditCard: CreditCardDto(
-      cardHolderName: event.accountPaymentProfile.cardHolderName,
-      cardNumber: event.accountPaymentProfile.cardIdentifier,
-      cardType: event.accountPaymentProfile.cardType,
-      expirationMonth: event.accountPaymentProfile.expirationMonth,
-      expirationYear: event.accountPaymentProfile.expirationYear,
+      cardHolderName: accountPaymentProfile.cardHolderName,
+      cardNumber: accountPaymentProfile.cardIdentifier,
+      cardType: accountPaymentProfile.cardType,
+      expirationMonth: accountPaymentProfile.expirationMonth,
+      expirationYear: accountPaymentProfile.expirationYear,
     ));
 
-    accountPaymentProfile = event.accountPaymentProfile;
+    this.accountPaymentProfile = accountPaymentProfile;
   }
 
   Future<void> _updatePaymentMethod(
@@ -93,16 +91,18 @@ class PaymentDetailsBloc
 
   Future<void> _setupPaymentDataSources(
       UpdatePaymentMethodEvent event, Emitter<PaymentDetailsState> emit) async {
+    var showPOField = cart?.showPoNumber ?? false;
+
     if (!event.isCVVRequired) {
       isSelectedNewAddedCard = true;
       emit(_buildPaymentDetailsLoadedState(
           isNewCreditCard: true,
+          showPOField: showPOField,
           cardDetails: _getCardDetails(accountPaymentProfile!)));
       return;
     }
 
     isSelectedNewAddedCard = false;
-    var showPOField = cart?.showPoNumber ?? false;
 
     if (_isCreditCardSelected()) {
       final response = await _fetchPaymentProfiles();

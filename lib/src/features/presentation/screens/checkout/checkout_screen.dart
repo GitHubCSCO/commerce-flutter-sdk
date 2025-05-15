@@ -23,6 +23,8 @@ import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/cart/cart_shipping_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/billing_shipping/billing_shipping_widget.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/payment_details/spreedly_utils.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/payment_details/three_ds_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/review_order/review_order_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/product_list_with_basicInfo.dart';
 import 'package:flutter/material.dart';
@@ -43,14 +45,14 @@ class CheckoutScreen extends BaseStatelessWidget {
             ..initialize((cart.requiresApproval ?? false) ? 2 : 3),
         ),
         BlocProvider<CheckoutBloc>(
-            create: (context) =>
-                sl<CheckoutBloc>()..add(LoadCheckoutEvent(cart: cart))),
+            create: (context) => sl<CheckoutBloc>()
+              ..add(LoadCheckoutEvent(cartId: cart.id ?? ''))),
         BlocProvider<ReviewOrderCubit>(
             create: (context) => sl<ReviewOrderCubit>()),
         BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
         BlocProvider<PaymentDetailsBloc>(
           create: (context) => sl<PaymentDetailsBloc>()
-            ..add(LoadPaymentDetailsEvent(cart: cart)),
+            ..add(LoadPaymentDetailsEvent(cartId: cart.id ?? '')),
         ),
       ],
       child: CheckoutPage(cart: cart),
@@ -123,10 +125,10 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
     return Scaffold(
       appBar: buildAppBar(context),
       body: BlocConsumer<CheckoutBloc, CheckoutState>(
-        listener: (_, state) {
+        listener: (_, state) async {
           if (state is CheckoutShipToAddressAddedState) {
-            context.read<CheckoutBloc>().add(
-                LoadCheckoutEvent(cart: context.read<CheckoutBloc>().cart!));
+            context.read<CheckoutBloc>().add(LoadCheckoutEvent(
+                cartId: context.read<CheckoutBloc>().cart?.id ?? ''));
             context.read<RootBloc>().add(RootCartUpdateEvent());
           } else if (state is CheckoutPlaceOrder) {
             context.read<CartCountCubit>().onCartItemChange();
@@ -147,6 +149,9 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
             context.read<ExpansionPanelCubit>().onPanelExpansionChange(0);
             showAlert(context,
                 message: LocalizationConstants.orderFailed.localized());
+          } else if (state is CheckoutPlaceOrderPending) {
+            await _handle3DSAuthentication(context, state.cartId,
+                state.environmentKey, state.transactionToken);
           }
         },
         builder: (_, state) {
@@ -384,9 +389,7 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
       }
     }
 
-    if (isSelectedNewAddedCard) {
-      expansionPanelCubit.onContinueClick();
-    } else if (isPaymentCardType &&
+    if (isPaymentCardType &&
         !isCreditCardSectionCompleted &&
         isCVVFieldOpened) {
       paymentDetailsBloc.add(ValidateTokenEvent());
@@ -398,12 +401,14 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
         CustomSnackBar.showPoNumberRequired(context);
       } else {
         checkoutBloc.add(UpdatePONumberEvent(poNumber));
+        checkoutBloc.add(UpdatePaymentInfoEvent());
         expansionPanelCubit.onContinueClick();
       }
     }
   }
 
-  void handleReviewOrder(BuildContext context, CheckoutDataLoaded state) {
+  Future<void> handleReviewOrder(
+      BuildContext context, CheckoutDataLoaded state) async {
     final reviewOrderEntity = prepareReviewOrderEntity(state, context);
 
     trackEcommercePurchaseEvent(
@@ -415,14 +420,49 @@ class CheckoutPage extends StatelessWidget with BaseCheckout {
         state.cart.orderNumber ?? '',
         state.cart.promotionCode ?? '');
 
-    context
-        .read<CheckoutBloc>()
-        .add(PlaceOrderEvent(reviewOrderEntity: reviewOrderEntity));
+    if (state.useSpreedlyDropIn ?? false) {
+      final browserInfo = await SpreedlyUtils.getBrowserInfo(context);
+
+      context.read<CheckoutBloc>().add(PlaceOrderEvent(
+          browserInfo: browserInfo, reviewOrderEntity: reviewOrderEntity));
+    } else {
+      context
+          .read<CheckoutBloc>()
+          .add(PlaceOrderEvent(reviewOrderEntity: reviewOrderEntity));
+    }
   }
 
   void _handleAddressSelectionCallBack(BuildContext context, Object result) {
     if (result is ShipTo) {
       context.read<CheckoutBloc>().add(UpdateShiptoAddressEvent(result));
+    }
+  }
+
+  Future<void> _handle3DSAuthentication(BuildContext context, String cartId,
+      String environmentKey, String transactionToken) async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Spreedly3DSWebView(
+        environmentKey: environmentKey,
+        transactionToken: transactionToken,
+        onAuthenticationComplete: (success) {
+          Navigator.of(context).pop(success);
+        },
+      ),
+    );
+
+    if (result == true) {
+      context
+          .read<CheckoutBloc>()
+          .add(PlaceOrderWithPaymentEvent(cartId: cartId));
+    } else {
+      context.read<ExpansionPanelCubit>().onPanelExpansionChange(0);
+      showAlert(context,
+          message:
+              LocalizationConstants.paymentAuthenticationFailed.localized(),
+          isPaymentFailed: true,
+          cartId: cartId);
     }
   }
 }

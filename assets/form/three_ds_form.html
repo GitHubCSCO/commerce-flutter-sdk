@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://core.spreedly.com/iframe/iframe-v1.min.js"></script>
+    <style>
+           body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+           .hidden { display: none; }
+           /* Ensure the modal fills the full viewport */
+           #challenge-modal {
+           position: fixed;
+           top: 0;
+           left: 0;
+           width: 100vw;
+           height: 100vh;
+           background: white;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           }
+           /* Allow horizontal scrolling if the content overflows */
+           #challenge {
+           width: 100%;
+           height: 100%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           overflow-x: auto; /* Enable horizontal scrolling */
+           overflow-y: hidden; /* No vertical scroll */
+           white-space: nowrap; /* Prevent wrapping */
+           }
+           /* Ensure the iframe can scroll if needed */
+           #challenge iframe {
+           min-width: 100%; /* Ensure it takes full width */
+           height: 100%;
+           border: none;
+           display: block;
+           }
+        </style>
+</head>
+<body>
+<div id="device-fingerprint" class="hidden"></div>
+<div id="challenge-modal" class="hidden">
+    <div id="challenge"></div>
+</div>
+<script>
+  let environmentKey = null;
+  let transactionToken = null;
+
+  function setKeys(envKey, token) {
+    environmentKey = envKey;
+    transactionToken = token;
+    initialize3DS();
+  }
+
+  function initialize3DS() {
+    if (!environmentKey || !transactionToken) {
+      console.error("Environment Key or Transaction Token is not set.");
+      return;
+    }
+
+    var lifecycle = new Spreedly.ThreeDS.Lifecycle({
+      environmentKey: environmentKey,
+      hiddenIframeLocation: "device-fingerprint",
+      challengeIframeLocation: "challenge",
+      transactionToken: transactionToken,
+    });
+
+    Spreedly.on("3ds:status", function (event) {
+      Flutter3DS.postMessage(
+        JSON.stringify({
+          type: "3dsStatus",
+          action: event.action,
+        })
+      );
+
+      if (event.action === "challenge") {
+        document.getElementById("challenge-modal").classList.remove("hidden");
+      }
+    });
+
+    lifecycle.start();
+  }
+</script>
+
+</body>
+</html>

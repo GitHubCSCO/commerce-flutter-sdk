@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:collection/collection.dart';
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
@@ -25,17 +28,31 @@ class ProductDetailsPricingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var event = context.read<ProductDetailsPricingBloc>();
-    var productDetailsBloc = context.read<ProductDetailsBloc>();
-    var orderQuantity =
-        productDetailsBloc.productDetailDataEntity.product?.minimumOrderQty;
+    var productDetailsBloc = context.watch<ProductDetailsBloc>();
 
-    if (orderQuantity == 0) {
-      orderQuantity = 1;
+    final productEntity = productDetailsBloc.productDetailDataEntity.product;
+    final unitOfMeasure = (productEntity?.customerUnitOfMeasure ??
+            productEntity?.productUnitOfMeasures
+                ?.firstWhereOrNull((o) => o.isDefault == true)
+                ?.unitOfMeasure) ??
+        '';
+    var qtyAdjusted = max(productEntity?.minimumOrderQty ?? 0, 1);
+    if (unitOfMeasure.isNotEmpty) {
+      final uom = productEntity?.productUnitOfMeasures?.firstWhereOrNull(
+        (o) => o.unitOfMeasure == unitOfMeasure,
+      );
+      if (uom != null &&
+          (productEntity?.minimumOrderQty ?? 0) > 0 &&
+          (uom.qtyPerBaseUnitOfMeasure ?? 0) > 0) {
+        qtyAdjusted = ((productEntity?.minimumOrderQty ?? 0) /
+                (uom.qtyPerBaseUnitOfMeasure ?? 1.0))
+            .ceil();
+      }
     }
 
     event.add(LoadProductDetailsPricing(
         productDetailsPricingEntity: productDetailsPricingEntity,
-        quantity: orderQuantity,
+        quantity: qtyAdjusted,
         productDetailsDataEntity: productDetailsBloc.productDetailDataEntity));
 
     return Padding(

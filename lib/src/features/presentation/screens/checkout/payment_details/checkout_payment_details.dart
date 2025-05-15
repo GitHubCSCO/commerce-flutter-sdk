@@ -270,10 +270,8 @@ class CheckoutPaymentDetails extends StatelessWidget {
             return;
           }
 
-          context.read<PaymentDetailsBloc>().add(
-                UpdateNewAccountPaymentProfileEvent(
-                  accountPaymentProfile: paymentProfile,
-                ),
+          context.read<PaymentDetailsBloc>().updateNewAccountPaymentPorfile(
+                paymentProfile,
               );
           context.read<CheckoutBloc>().add(
                 SelectPaymentMethodEvent(PaymentMethodDto(
@@ -285,7 +283,7 @@ class CheckoutPaymentDetails extends StatelessWidget {
                     isPaymentProfile: true)),
               );
           context.read<PaymentDetailsBloc>().add(LoadPaymentDetailsEvent(
-                cart: context.read<PaymentDetailsBloc>().cart!,
+                cartId: context.read<PaymentDetailsBloc>().cart?.id ?? '',
               ));
           onCompleteCheckoutPaymentSection();
         }

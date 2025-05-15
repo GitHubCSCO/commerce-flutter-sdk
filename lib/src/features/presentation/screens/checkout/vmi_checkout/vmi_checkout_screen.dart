@@ -22,6 +22,8 @@ import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/checkout_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/checkout_success_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/payment_details/checkout_payment_details.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/payment_details/spreedly_utils.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/screens/checkout/payment_details/three_ds_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,13 +59,15 @@ class VmiCheckoutScreen extends StatelessWidget {
       providers: [
         BlocProvider<CheckoutBloc>(
             create: (context) => sl<CheckoutBloc>()
-              ..add(LoadCheckoutEvent(cart: vmiCheckoutEntity.cart))),
+              ..add(
+                  LoadCheckoutEvent(cartId: vmiCheckoutEntity.cart.id ?? ''))),
         BlocProvider<PromoCodeCubit>(create: (context) => sl<PromoCodeCubit>()),
         BlocProvider<ReviewOrderCubit>(
             create: (context) => sl<ReviewOrderCubit>()),
         BlocProvider<PaymentDetailsBloc>(
           create: (context) => sl<PaymentDetailsBloc>()
-            ..add(LoadPaymentDetailsEvent(cart: vmiCheckoutEntity.cart)),
+            ..add(LoadPaymentDetailsEvent(
+                cartId: vmiCheckoutEntity.cart.id ?? '')),
         ),
       ],
       child: VmiCheckoutPage(
@@ -85,7 +89,7 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
     return Scaffold(
       appBar: buildAppBar(context),
       body: BlocConsumer<CheckoutBloc, CheckoutState>(
-        listener: (_, state) {
+        listener: (_, state) async {
           if (state is CheckoutPlaceOrder) {
             AppRoute.checkoutSuccess.navigate(context,
                 extra: CheckoutSuccessEntity(
@@ -96,6 +100,9 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
           } else if (state is CheckoutPlaceOrderFailed) {
             showAlert(context,
                 message: LocalizationConstants.orderFailed.localized());
+          } else if (state is CheckoutPlaceOrderPending) {
+            await _handle3DSAuthentication(context, state.cartId,
+                state.environmentKey, state.transactionToken);
           }
         },
         buildWhen: (previous, current) =>
@@ -173,7 +180,9 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
                                     onCartChangeCallBack: (context) {
                                       context.read<CheckoutBloc>().add(
                                           LoadCheckoutEvent(
-                                              cart: vmiCheckoutEntity.cart));
+                                              cartId:
+                                                  vmiCheckoutEntity.cart.id ??
+                                                      ''));
                                     },
                                   ),
                                 )
@@ -270,7 +279,8 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
     }
   }
 
-  void _handleSubmitOrderClick(BuildContext context, CheckoutDataLoaded state) {
+  Future<void> _handleSubmitOrderClick(
+      BuildContext context, CheckoutDataLoaded state) async {
     var isPaymentCardType =
         context.read<PaymentDetailsBloc>().selectedPaymentMethod?.cardType !=
             null;
@@ -301,9 +311,46 @@ class VmiCheckoutPage extends StatelessWidget with BaseCheckout {
         CustomSnackBar.showPoNumberRequired(context);
       } else {
         context.read<CheckoutBloc>().add(UpdatePONumberEvent(poNumber));
-        context.read<CheckoutBloc>().add(PlaceOrderEvent(
-            reviewOrderEntity: prepareReviewOrderEntity(state, context)));
+        final reviewOrderEntity = prepareReviewOrderEntity(state, context);
+
+        if (state.useSpreedlyDropIn ?? false) {
+          final browserInfo = await SpreedlyUtils.getBrowserInfo(context);
+
+          context.read<CheckoutBloc>().add(PlaceOrderEvent(
+              browserInfo: browserInfo, reviewOrderEntity: reviewOrderEntity));
+        } else {
+          context
+              .read<CheckoutBloc>()
+              .add(PlaceOrderEvent(reviewOrderEntity: reviewOrderEntity));
+        }
       }
+    }
+  }
+
+  Future<void> _handle3DSAuthentication(BuildContext context, String cartId,
+      String environmentKey, String transactionToken) async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Spreedly3DSWebView(
+        environmentKey: environmentKey,
+        transactionToken: transactionToken,
+        onAuthenticationComplete: (success) {
+          Navigator.of(context).pop(success);
+        },
+      ),
+    );
+
+    if (result == true) {
+      context
+          .read<CheckoutBloc>()
+          .add(PlaceOrderWithPaymentEvent(cartId: cartId));
+    } else {
+      showAlert(context,
+          message:
+              LocalizationConstants.paymentAuthenticationFailed.localized(),
+          isPaymentFailed: true,
+          cartId: cartId);
     }
   }
 }
