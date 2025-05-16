@@ -67,5 +67,7 @@ class AssetConstants {
 
   static const String iconXmark = "assets/images/icon_xmark.svg";
 
+  static const String iconPlusCircle = "assets/images/icon_plus_circle.svg";
+
   static const String iconTag = "assets/images/icon_tag.svg";
 }
