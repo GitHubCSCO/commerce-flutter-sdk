@@ -509,4 +509,40 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       String messageName, String defaultMessage) async {
     return _wishListDetailsUsecase.getSiteMessage(messageName, defaultMessage);
   }
+
+  Future<void> toggleWishListFavorite() async {
+    emit(state.copyWith(status: WishListStatus.listFavoriteUpdateLoading));
+
+    final result = await _wishListDetailsUsecase.updateWishListFavorite(
+      wishListEntity: state.wishList,
+      isFavorite: state.wishList.isFavorite != true,
+    );
+
+    if (result == WishListStatus.listFavoriteUpdateSuccessAdded ||
+        result == WishListStatus.listFavoriteUpdateSuccessRemoved) {
+      final analyticsEvent = AnalyticsEvent(
+        state.wishList.isFavorite == true
+            ? AnalyticsConstants.eventRemoveFavoriteList
+            : AnalyticsConstants.eventFavoriteList,
+        AnalyticsConstants.screenNameListDetail,
+      ).withProperty(
+        name: AnalyticsConstants.eventPropertyListId,
+        strValue: state.wishList.id,
+      );
+
+      _wishListDetailsUsecase.trackEvent(analyticsEvent);
+
+      emit(
+        state.copyWith(
+          status: result,
+          wishList: state.wishList.copyWith(
+            isFavorite: !(state.wishList.isFavorite == true),
+          ),
+        ),
+      );
+      return;
+    }
+
+    emit(state.copyWith(status: result));
+  }
 }

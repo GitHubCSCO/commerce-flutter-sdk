@@ -95,7 +95,9 @@ class WishListUsecase extends BaseUseCase {
     switch (result) {
       case Success(value: final value):
         return value != null
-            ? WishListStatus.listFavoriteUpdateSuccess
+            ? (isFavorite
+                ? WishListStatus.listFavoriteUpdateSuccessAdded
+                : WishListStatus.listFavoriteUpdateSuccessRemoved)
             : WishListStatus.listFavoriteUpdateFailure;
       case Failure():
         return WishListStatus.listFavoriteUpdateFailure;

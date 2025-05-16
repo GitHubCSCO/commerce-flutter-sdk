@@ -196,7 +196,8 @@ class WishListCubit extends Cubit<WishListState> {
       isFavorite: !(wishList.isFavorite == true),
     );
 
-    if (result == WishListStatus.listFavoriteUpdateSuccess) {
+    if (result == WishListStatus.listFavoriteUpdateSuccessAdded ||
+        result == WishListStatus.listFavoriteUpdateSuccessRemoved) {
       final analyticsEvent = AnalyticsEvent(
         wishList.isFavorite == true
             ? AnalyticsConstants.eventRemoveFavoriteList
@@ -208,27 +209,31 @@ class WishListCubit extends Cubit<WishListState> {
       );
 
       wishListUsecase.trackEvent(analyticsEvent);
+
+      final newCollection = state.wishLists.wishListCollection?.map(
+        (item) {
+          if (item.id != wishList.id) {
+            return item;
+          }
+          return item.copyWith(
+            isFavorite: !(item.isFavorite == true),
+          );
+        },
+      ).toList();
+
+      emit(
+        state.copyWith(
+          status: result,
+          wishLists: state.wishLists.copyWith(
+            wishListCollection: newCollection,
+          ),
+        ),
+      );
+
+      return;
     }
 
-    final newCollection = state.wishLists.wishListCollection?.map(
-      (item) {
-        if (item.id != wishList.id) {
-          return item;
-        }
-        return item.copyWith(
-          isFavorite: !(item.isFavorite == true),
-        );
-      },
-    ).toList();
-
-    emit(
-      state.copyWith(
-        status: result,
-        wishLists: state.wishLists.copyWith(
-          wishListCollection: newCollection,
-        ),
-      ),
-    );
+    emit(state.copyWith(status: result));
   }
 
   bool canDeleteWishList({required WishListEntity wishList}) {

@@ -3,6 +3,7 @@ part of 'wish_list_handler_cubit.dart';
 enum WishListHandlerStatus {
   initial,
   shouldRefreshWishList,
+  shouldRefreshWishListWithoutDetails,
 }
 
 class WishListHandlerState extends Equatable {
