@@ -106,6 +106,7 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
   }
 
   void _disposeFocusNode() {
+    // ignore: invalid_use_of_protected_member
     if (_tagInputFocusNode.hasListeners) {
       _tagInputFocusNode.dispose();
     }
@@ -191,6 +192,7 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                             .read<WishListTagsControllerCubit>()
                                             .startEditing();
                                         // Make sure we have a valid focus node
+                                        // ignore: invalid_use_of_protected_member
                                         if (!_tagInputFocusNode.hasListeners) {
                                           _initFocusNode();
                                         }
@@ -351,47 +353,65 @@ class _WishListTagsWidget extends StatelessWidget {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SvgPicture.asset(AssetConstants.iconTag),
-                          const SizedBox(width: 16),
-                          Text(
-                            state.wishList.wishListTags![index].tag ?? '',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                      InkWell(
-                        onTap: () {
-                          CustomSnackBar.showSnackBarMessage(
-                            context,
-                            'Tag Cleared',
-                          );
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          child: SvgPicture.asset(
-                            AssetConstants.iconXmark,
-                            height: 16,
-                            width: 16,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                return _TagItem(
+                  tag: state.wishList.wishListTags![index].tag ?? '',
+                  onDelete: () async {
+                    CustomSnackBar.showSnackBarMessage(
+                      context,
+                      'Tag Cleared',
+                    );
+                  },
                 );
               },
             ),
           ],
         );
       },
+    );
+  }
+}
+
+class _TagItem extends StatelessWidget {
+  final String tag;
+  final Future<void> Function()? onDelete;
+
+  const _TagItem({
+    required this.tag,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(AssetConstants.iconTag),
+              const SizedBox(width: 16),
+              Text(
+                tag,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+          InkWell(
+            onTap: onDelete,
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              child: SvgPicture.asset(
+                AssetConstants.iconXmark,
+                height: 16,
+                width: 16,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
