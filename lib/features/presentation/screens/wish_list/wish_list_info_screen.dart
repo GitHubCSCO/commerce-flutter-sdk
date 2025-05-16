@@ -13,6 +13,7 @@ import 'package:commerce_flutter_app/features/presentation/components/dialog.dar
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_information/wish_list_information_cubit.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_information/wish_list_tags_controller_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/wish_list/wish_list_info_widget.dart';
 import 'package:flutter/material.dart';
@@ -30,12 +31,22 @@ class WishListInformationScreen extends BaseStatelessWidget {
 
   @override
   Widget buildContent(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        final cubit = sl<WishListInformationCubit>();
-        unawaited(cubit.initialize(wishList: wishList));
-        return cubit;
-      },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) {
+            final cubit = sl<WishListInformationCubit>();
+            unawaited(cubit.initialize(wishList: wishList));
+            return cubit;
+          },
+        ),
+        BlocProvider(
+          create: (context) => sl<WishListTagsControllerCubit>()
+            ..initialize(
+              wishListTags: wishList.wishListTags ?? [],
+            ),
+        ),
+      ],
       child: WishListInformationPage(
         wishList: wishList,
       ),
@@ -70,6 +81,7 @@ class WishListInformationPage extends StatefulWidget {
 class _WishListInformationPageState extends State<WishListInformationPage> {
   late final TextEditingController _listNameEditingController;
   late final TextEditingController _listDescriptionEditingController;
+  late FocusNode _tagInputFocusNode;
 
   @override
   void initState() {
@@ -78,13 +90,25 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
         TextEditingController(text: widget.wishList.name);
     _listDescriptionEditingController =
         TextEditingController(text: widget.wishList.description);
+    _initFocusNode();
+  }
+
+  void _initFocusNode() {
+    _tagInputFocusNode = FocusNode();
   }
 
   @override
   void dispose() {
     _listNameEditingController.dispose();
     _listDescriptionEditingController.dispose();
+    _disposeFocusNode();
     super.dispose();
+  }
+
+  void _disposeFocusNode() {
+    if (_tagInputFocusNode.hasListeners) {
+      _tagInputFocusNode.dispose();
+    }
   }
 
   @override
@@ -150,11 +174,36 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                     .canEditNameDesc,
                               ),
                               const SizedBox(height: 32),
-                              Input(
-                                label: LocalizationConstants.tags.localized(),
-                                hintText: LocalizationConstants.searchOrAddTag
-                                    .localized(),
-                                onTap: () {},
+                              Stack(
+                                children: [
+                                  Input(
+                                    label:
+                                        LocalizationConstants.tags.localized(),
+                                    hintText: LocalizationConstants
+                                        .searchOrAddTag
+                                        .localized(),
+                                  ),
+                                  Positioned.fill(
+                                    child: GestureDetector(
+                                      behavior: HitTestBehavior.opaque,
+                                      onTap: () {
+                                        context
+                                            .read<WishListTagsControllerCubit>()
+                                            .startEditing();
+                                        // Make sure we have a valid focus node
+                                        if (!_tagInputFocusNode.hasListeners) {
+                                          _initFocusNode();
+                                        }
+                                        // Request focus on the second input field
+                                        _tagInputFocusNode.requestFocus();
+                                      },
+                                      // Transparent overlay that covers the entire Input
+                                      child: Container(
+                                        color: Colors.transparent,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                               const SizedBox(height: 32),
                               if (state.wishList.wishListTags != null &&
@@ -207,6 +256,70 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                     ),
                   ],
                 ),
+                if (context.watch<WishListTagsControllerCubit>().state
+                    is WishListTagsControllerEditing)
+                  Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    color: OptiAppColors.backgroundWhite,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Input(
+                                  label: LocalizationConstants.tags.localized(),
+                                  hintText: LocalizationConstants.searchOrAddTag
+                                      .localized(),
+                                  autoFocusNode: _tagInputFocusNode,
+                                  onTap: () {
+                                    CustomSnackBar.showSnackBarMessage(
+                                      context,
+                                      'Coming Soon',
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        ListInformationBottomSubmitWidget(
+                          actions: [
+                            SecondaryButton(
+                              text: LocalizationConstants.cancel.localized(),
+                              onPressed: () {
+                                // Safely dispose the focus node before removing from the tree
+                                _disposeFocusNode();
+                                _initFocusNode();
+
+                                context
+                                    .read<WishListTagsControllerCubit>()
+                                    .initialize(
+                                      wishListTags:
+                                          widget.wishList.wishListTags ?? [],
+                                    );
+                              },
+                            ),
+                            PrimaryButton(
+                              text: LocalizationConstants.save.localized(),
+                              isEnabled: true,
+                              onPressed: () {
+                                CustomSnackBar.showSnackBarMessage(
+                                  context,
+                                  'Coming Soon',
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),
