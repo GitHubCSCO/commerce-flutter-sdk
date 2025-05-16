@@ -139,4 +139,39 @@ class WishListTagsControllerCubit extends Cubit<WishListTagsControllerState> {
     }
     return '';
   }
+
+  Future<void> deleteSingleTag({
+    required String wishListId,
+    required String tagId,
+  }) async {
+    final currentWishListTags =
+        (state as WishListTagsControllerInitial).wishListTags;
+
+    emit(
+      WishListTagsControllerLoading(
+        wishListTags: currentWishListTags,
+      ),
+    );
+
+    final result = await _wishListDetailsUsecase.deleteSingleTag(
+      wishListId: wishListId,
+      tagId: tagId,
+    );
+
+    if (result == false) {
+      emit(
+        const WishListTagsControllerError(
+          errorMessage: 'Failed to delete tag',
+        ),
+      );
+    }
+
+    return emit(
+      WishListTagsControllerSingleTagDeleted(
+        wishListTags: currentWishListTags
+            ?.where((element) => element.id != tagId)
+            .toList(),
+      ),
+    );
+  }
 }

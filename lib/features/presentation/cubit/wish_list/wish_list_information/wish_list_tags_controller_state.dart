@@ -61,3 +61,13 @@ final class WishListTagsControllerSuccess extends WishListTagsControllerState {
   @override
   List<Object> get props => [wishListTags ?? []];
 }
+
+final class WishListTagsControllerSingleTagDeleted
+    extends WishListTagsControllerState {
+  final List<WishListTagEntity>? wishListTags;
+
+  const WishListTagsControllerSingleTagDeleted({this.wishListTags});
+
+  @override
+  List<Object> get props => [wishListTags ?? []];
+}

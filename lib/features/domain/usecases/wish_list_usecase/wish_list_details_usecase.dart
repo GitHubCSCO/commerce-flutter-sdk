@@ -350,4 +350,19 @@ class WishListDetailsUsecase extends WishListUsecase {
     final result = await loadWishList(wishListId);
     return result;
   }
+
+  Future<bool> deleteSingleTag({
+    required String wishListId,
+    required String tagId,
+  }) async {
+    final result = await commerceAPIServiceProvider
+        .getWishListService()
+        .deleteWishListTags(wishListId, [tagId]);
+
+    if (result is Failure) {
+      return false;
+    }
+
+    return true;
+  }
 }
