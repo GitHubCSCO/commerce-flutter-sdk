@@ -114,135 +114,165 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
             );
           }
         },
-        builder: (context, state) => Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        builder: (context, state) => Stack(
           children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Container(
-                  color: OptiAppColors.backgroundWhite,
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ListNameInputWidget(
-                        listNameController: _listNameEditingController,
-                        readOnly: !context
-                            .watch<WishListInformationCubit>()
-                            .canEditNameDesc,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Container(
+                      color: OptiAppColors.backgroundWhite,
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ListNameInputWidget(
+                            listNameController: _listNameEditingController,
+                            readOnly: !context
+                                .watch<WishListInformationCubit>()
+                                .canEditNameDesc,
+                          ),
+                          const SizedBox(height: 32),
+                          ListDetailsWidget(wishList: state.wishList),
+                          const SizedBox(height: 32),
+                          ListDescriptionInputWidget(
+                            listDescriptionController:
+                                _listDescriptionEditingController,
+                            readOnly: !context
+                                .watch<WishListInformationCubit>()
+                                .canEditNameDesc,
+                          ),
+                          const SizedBox(height: 32),
+                          Input(
+                            label: LocalizationConstants.tags.localized(),
+                            hintText: LocalizationConstants.searchOrAddTag
+                                .localized(),
+                            onTap: () {},
+                          ),
+                          const SizedBox(height: 32),
+                          if (state.wishList.wishListTags != null &&
+                              state.wishList.wishListTags!.isNotEmpty)
+                            _WishListTagsWidget(context: context),
+                        ],
                       ),
-                      const SizedBox(height: 32),
-                      ListDetailsWidget(wishList: state.wishList),
-                      const SizedBox(height: 32),
-                      ListDescriptionInputWidget(
-                        listDescriptionController:
-                            _listDescriptionEditingController,
-                        readOnly: !context
-                            .watch<WishListInformationCubit>()
-                            .canEditNameDesc,
-                      ),
-                      const SizedBox(height: 32),
-                      Input(
-                        label: LocalizationConstants.tags.localized(),
-                        hintText:
-                            LocalizationConstants.searchOrAddTag.localized(),
-                        onTap: () {},
-                      ),
-                      const SizedBox(height: 32),
-                      if (state.wishList.wishListTags != null &&
-                          state.wishList.wishListTags!.isNotEmpty) ...[
-                        Text(LocalizationConstants.assignedTags.localized()),
-                        const SizedBox(height: 8),
-                        ListView.builder(
-                          itemCount: state.wishList.wishListTags!.length,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      SvgPicture.asset(AssetConstants.iconTag),
-                                      const SizedBox(width: 16),
-                                      Text(
-                                        state.wishList.wishListTags![index]
-                                                .tag ??
-                                            '',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      CustomSnackBar.showSnackBarMessage(
-                                        context,
-                                        'Tag Cleared',
-                                      );
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.all(4),
-                                      child: SvgPicture.asset(
-                                        AssetConstants.iconXmark,
-                                        height: 16,
-                                        width: 16,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ],
+                    ),
                   ),
                 ),
-              ),
+                ListInformationBottomSubmitWidget(
+                  actions: [
+                    PrimaryButton(
+                      text: LocalizationConstants.save.localized(),
+                      isEnabled: context
+                          .watch<WishListInformationCubit>()
+                          .canEditNameDesc,
+                      onPressed: () {
+                        if (_listNameEditingController.text.isEmpty) {
+                          displayDialogWidget(
+                            context: context,
+                            title: LocalizationConstants.error.localized(),
+                            message:
+                                LocalizationConstants.enterListName.localized(),
+                            actions: [
+                              PlainButton(
+                                text: LocalizationConstants.oK.localized(),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+
+                          return;
+                        }
+
+                        unawaited(
+                          context
+                              .read<WishListInformationCubit>()
+                              .updateWishList(
+                                name: _listNameEditingController.text,
+                                description:
+                                    _listDescriptionEditingController.text,
+                              ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
             ),
-            ListInformationBottomSubmitWidget(actions: [
-              PrimaryButton(
-                text: LocalizationConstants.save.localized(),
-                isEnabled:
-                    context.watch<WishListInformationCubit>().canEditNameDesc,
-                onPressed: () {
-                  if (_listNameEditingController.text.isEmpty) {
-                    displayDialogWidget(
-                      context: context,
-                      title: LocalizationConstants.error.localized(),
-                      message: LocalizationConstants.enterListName.localized(),
-                      actions: [
-                        PlainButton(
-                          text: LocalizationConstants.oK.localized(),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-
-                    return;
-                  }
-
-                  unawaited(
-                    context.read<WishListInformationCubit>().updateWishList(
-                          name: _listNameEditingController.text,
-                          description: _listDescriptionEditingController.text,
-                        ),
-                  );
-                },
-              ),
-            ]),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _WishListTagsWidget extends StatelessWidget {
+  final BuildContext context;
+
+  const _WishListTagsWidget({
+    required this.context,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<WishListInformationCubit, WishListInformationState>(
+      builder: (context, state) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(LocalizationConstants.assignedTags.localized()),
+            const SizedBox(height: 8),
+            ListView.builder(
+              itemCount: state.wishList.wishListTags!.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SvgPicture.asset(AssetConstants.iconTag),
+                          const SizedBox(width: 16),
+                          Text(
+                            state.wishList.wishListTags![index].tag ?? '',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                      InkWell(
+                        onTap: () {
+                          CustomSnackBar.showSnackBarMessage(
+                            context,
+                            'Tag Cleared',
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          child: SvgPicture.asset(
+                            AssetConstants.iconXmark,
+                            height: 16,
+                            width: 16,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
