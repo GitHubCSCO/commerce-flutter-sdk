@@ -119,4 +119,24 @@ class WishListTagsControllerCubit extends Cubit<WishListTagsControllerState> {
       );
     }
   }
+
+  String addedTagTitle(String? tag) {
+    if (tag == null || tag.isEmpty) {
+      return '';
+    }
+
+    if (state is WishListTagsControllerEditing) {
+      final currentState = state as WishListTagsControllerEditing;
+      final addedTags = currentState.addedTags ?? [];
+      final existingTags = currentState.wishListTags ?? [];
+
+      if (existingTags.any((element) => element.tag == tag) ||
+          addedTags.any((element) => element.tag == tag)) {
+        return '';
+      }
+
+      return tag;
+    }
+    return '';
+  }
 }
