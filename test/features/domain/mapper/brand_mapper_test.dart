@@ -1,4 +1,3 @@
-
 import 'package:commerce_flutter_sdk/src/features/domain/entity/brand.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/brand_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_mapper.dart';
