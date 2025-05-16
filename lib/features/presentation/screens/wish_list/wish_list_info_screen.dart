@@ -96,114 +96,120 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
         backgroundColor: OptiAppColors.backgroundWhite,
         title: Text(LocalizationConstants.listInformation.localized()),
       ),
-      body: BlocConsumer<WishListInformationCubit, WishListInformationState>(
-        listener: (context, state) {
-          if (state.status == WishListStatus.listUpdateSuccess) {
-            CustomSnackBar.showSnackBarMessage(
-              context,
-              LocalizationConstants.listUpdated.localized(),
-            );
+      body: Container(
+        color: OptiAppColors.backgroundWhite,
+        child: SafeArea(
+          child:
+              BlocConsumer<WishListInformationCubit, WishListInformationState>(
+            listener: (context, state) {
+              if (state.status == WishListStatus.listUpdateSuccess) {
+                CustomSnackBar.showSnackBarMessage(
+                  context,
+                  LocalizationConstants.listUpdated.localized(),
+                );
 
-            context.pop(true);
-          }
+                context.pop(true);
+              }
 
-          if (state.status == WishListStatus.listUpdateFailure) {
-            CustomSnackBar.showSnackBarMessage(
-              context,
-              LocalizationConstants.updateFailed.localized(),
-            );
-          }
-        },
-        builder: (context, state) => Stack(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              if (state.status == WishListStatus.listUpdateFailure) {
+                CustomSnackBar.showSnackBarMessage(
+                  context,
+                  LocalizationConstants.updateFailed.localized(),
+                );
+              }
+            },
+            builder: (context, state) => Stack(
               children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Container(
-                      color: OptiAppColors.backgroundWhite,
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ListNameInputWidget(
-                            listNameController: _listNameEditingController,
-                            readOnly: !context
-                                .watch<WishListInformationCubit>()
-                                .canEditNameDesc,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Container(
+                          color: OptiAppColors.backgroundWhite,
+                          padding: const EdgeInsets.all(24),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ListNameInputWidget(
+                                listNameController: _listNameEditingController,
+                                readOnly: !context
+                                    .watch<WishListInformationCubit>()
+                                    .canEditNameDesc,
+                              ),
+                              const SizedBox(height: 32),
+                              ListDetailsWidget(wishList: state.wishList),
+                              const SizedBox(height: 32),
+                              ListDescriptionInputWidget(
+                                listDescriptionController:
+                                    _listDescriptionEditingController,
+                                readOnly: !context
+                                    .watch<WishListInformationCubit>()
+                                    .canEditNameDesc,
+                              ),
+                              const SizedBox(height: 32),
+                              Input(
+                                label: LocalizationConstants.tags.localized(),
+                                hintText: LocalizationConstants.searchOrAddTag
+                                    .localized(),
+                                onTap: () {},
+                              ),
+                              const SizedBox(height: 32),
+                              if (state.wishList.wishListTags != null &&
+                                  state.wishList.wishListTags!.isNotEmpty)
+                                _WishListTagsWidget(context: context),
+                            ],
                           ),
-                          const SizedBox(height: 32),
-                          ListDetailsWidget(wishList: state.wishList),
-                          const SizedBox(height: 32),
-                          ListDescriptionInputWidget(
-                            listDescriptionController:
-                                _listDescriptionEditingController,
-                            readOnly: !context
-                                .watch<WishListInformationCubit>()
-                                .canEditNameDesc,
-                          ),
-                          const SizedBox(height: 32),
-                          Input(
-                            label: LocalizationConstants.tags.localized(),
-                            hintText: LocalizationConstants.searchOrAddTag
-                                .localized(),
-                            onTap: () {},
-                          ),
-                          const SizedBox(height: 32),
-                          if (state.wishList.wishListTags != null &&
-                              state.wishList.wishListTags!.isNotEmpty)
-                            _WishListTagsWidget(context: context),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                ListInformationBottomSubmitWidget(
-                  actions: [
-                    PrimaryButton(
-                      text: LocalizationConstants.save.localized(),
-                      isEnabled: context
-                          .watch<WishListInformationCubit>()
-                          .canEditNameDesc,
-                      onPressed: () {
-                        if (_listNameEditingController.text.isEmpty) {
-                          displayDialogWidget(
-                            context: context,
-                            title: LocalizationConstants.error.localized(),
-                            message:
-                                LocalizationConstants.enterListName.localized(),
-                            actions: [
-                              PlainButton(
-                                text: LocalizationConstants.oK.localized(),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
+                    ListInformationBottomSubmitWidget(
+                      actions: [
+                        PrimaryButton(
+                          text: LocalizationConstants.save.localized(),
+                          isEnabled: context
+                              .watch<WishListInformationCubit>()
+                              .canEditNameDesc,
+                          onPressed: () {
+                            if (_listNameEditingController.text.isEmpty) {
+                              displayDialogWidget(
+                                context: context,
+                                title: LocalizationConstants.error.localized(),
+                                message: LocalizationConstants.enterListName
+                                    .localized(),
+                                actions: [
+                                  PlainButton(
+                                    text: LocalizationConstants.oK.localized(),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
 
-                          return;
-                        }
+                              return;
+                            }
 
-                        unawaited(
-                          context
-                              .read<WishListInformationCubit>()
-                              .updateWishList(
-                                name: _listNameEditingController.text,
-                                description:
-                                    _listDescriptionEditingController.text,
-                              ),
-                        );
-                      },
+                            unawaited(
+                              context
+                                  .read<WishListInformationCubit>()
+                                  .updateWishList(
+                                    name: _listNameEditingController.text,
+                                    description:
+                                        _listDescriptionEditingController.text,
+                                  ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
