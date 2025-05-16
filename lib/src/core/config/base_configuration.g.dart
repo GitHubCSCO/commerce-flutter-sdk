@@ -8,7 +8,6 @@ part of 'base_configuration.dart';
 
 BaseConfiguration _$BaseConfigurationFromJson(Map<String, dynamic> json) =>
     BaseConfiguration(
-      shouldUseStaticDomain: json['shouldUseStaticDomain'] as bool?,
       domain: json['domain'] as String?,
       checkoutUrl: json['checkoutUrl'] as String?,
       startingCategoryForBrowsing:
@@ -37,7 +36,6 @@ BaseConfiguration _$BaseConfigurationFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$BaseConfigurationToJson(BaseConfiguration instance) =>
     <String, dynamic>{
-      'shouldUseStaticDomain': instance.shouldUseStaticDomain,
       'domain': instance.domain,
       'checkoutUrl': instance.checkoutUrl,
       'startingCategoryForBrowsing': instance.startingCategoryForBrowsing,
