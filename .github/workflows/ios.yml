@@ -109,4 +109,4 @@ jobs:
         with:
           name: artifacts
           path: |
-            build/ios/iphoneos/release/commerce_flutter_sdk.ipa
+            build/ios/iphoneos/release/commerce_flutter_app.ipa
