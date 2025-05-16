@@ -19,6 +19,14 @@ class WishListHandlerCubit extends Cubit<WishListHandlerState> {
     );
   }
 
+  void shouldRefreshWishListWithoutDetails() {
+    emit(
+      state.copyWith(
+        status: WishListHandlerStatus.shouldRefreshWishListWithoutDetails,
+      ),
+    );
+  }
+
   void resetState() {
     emit(
       const WishListHandlerState(

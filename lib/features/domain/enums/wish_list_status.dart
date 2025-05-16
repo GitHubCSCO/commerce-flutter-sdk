@@ -26,7 +26,8 @@ enum WishListStatus {
   listLeaveFailure,
 
   listFavoriteUpdateLoading,
-  listFavoriteUpdateSuccess,
+  listFavoriteUpdateSuccessAdded,
+  listFavoriteUpdateSuccessRemoved,
   listFavoriteUpdateFailure,
 
   listUpdateSuccess,

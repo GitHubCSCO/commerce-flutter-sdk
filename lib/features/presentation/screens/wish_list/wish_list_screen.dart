@@ -54,6 +54,12 @@ class WishListsScreen extends BaseStatelessWidget {
               unawaited(context.read<WishListCubit>().loadWishLists());
               context.read<WishListHandlerCubit>().resetState();
             }
+
+            if (state.status ==
+                WishListHandlerStatus.shouldRefreshWishListWithoutDetails) {
+              unawaited(context.read<WishListCubit>().loadWishLists());
+              context.read<WishListHandlerCubit>().resetState();
+            }
           },
           child: const WishListsPage(),
         );
@@ -154,11 +160,17 @@ class _WishListsPageState extends State<WishListsPage> {
                   }
 
                   if (state.status ==
-                      WishListStatus.listFavoriteUpdateSuccess) {
+                          WishListStatus.listFavoriteUpdateSuccessAdded ||
+                      state.status ==
+                          WishListStatus.listFavoriteUpdateSuccessRemoved) {
                     Navigator.of(context, rootNavigator: true).pop();
                     CustomSnackBar.showSnackBarMessage(
                       context,
-                      LocalizationConstants.listUpdated.localized(),
+                      state.status ==
+                              WishListStatus.listFavoriteUpdateSuccessAdded
+                          ? LocalizationConstants.addedToFavorites.localized()
+                          : LocalizationConstants.removedFromFavorites
+                              .localized(),
                     );
                   }
 

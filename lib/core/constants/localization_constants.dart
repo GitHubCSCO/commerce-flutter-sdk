@@ -635,6 +635,8 @@ enum LocalizationConstants {
   removeItemFromTheList(keyword: "Remove item from the list?"),
   favorite(keyword: "Favorite"),
   removeFavorite(keyword: "Remove Favorite"),
+  addedToFavorites(keyword: "List added to Favorites"),
+  removedFromFavorites(keyword: "List removed from Favorites"),
   quantityIsRequired(keyword: "Quantity is required, 0 or more."),
   notification(keyword: "Notification"),
   vendorManagedInventory(keyword: "Vendor Managed Inventory"),
