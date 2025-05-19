@@ -344,67 +344,68 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 24,
-                                      vertical: 16,
-                                    ),
-                                    child: Input(
-                                      label: LocalizationConstants.tags
-                                          .localized(),
-                                      hintText: LocalizationConstants
-                                          .searchOrAddTag
-                                          .localized(),
-                                      autoFocusNode: _tagInputFocusNode,
-                                      controller: _tagInputEditingController,
-                                      onTapOutside: (p0) {
-                                        _tagInputFocusNode.unfocus();
-                                      },
-                                    ),
-                                  ),
-                                  if (tagSearchInputString.isNotEmpty)
-                                    InkWell(
-                                      onTap: () {
-                                        context
-                                            .read<WishListTagsControllerCubit>()
-                                            .addTag(
-                                              WishListTagEntity(
-                                                tag: tagSearchInputString,
-                                              ),
-                                            );
-                                        _tagInputEditingController.clear();
-                                      },
-                                      child: Container(
-                                        color: OptiAppColors.backgroundGray,
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 16,
-                                          horizontal: 24,
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            SvgPicture.asset(
-                                              AssetConstants.iconPlusCircle,
-                                            ),
-                                            const SizedBox(width: 16),
-                                            Text(
-                                              LocalizationConstants.addTag
-                                                  .localized()
-                                                  .format(
-                                                [tagSearchInputString],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 24,
+                                        vertical: 16,
+                                      ),
+                                      child: Input(
+                                        label: LocalizationConstants.tags
+                                            .localized(),
+                                        hintText: LocalizationConstants
+                                            .searchOrAddTag
+                                            .localized(),
+                                        autoFocusNode: _tagInputFocusNode,
+                                        controller: _tagInputEditingController,
+                                        onTapOutside: (p0) {
+                                          _tagInputFocusNode.unfocus();
+                                        },
                                       ),
                                     ),
-                                  SingleChildScrollView(
-                                    child: Padding(
+                                    if (tagSearchInputString.isNotEmpty)
+                                      InkWell(
+                                        onTap: () {
+                                          context
+                                              .read<
+                                                  WishListTagsControllerCubit>()
+                                              .addTag(
+                                                WishListTagEntity(
+                                                  tag: tagSearchInputString,
+                                                ),
+                                              );
+                                          _tagInputEditingController.clear();
+                                        },
+                                        child: Container(
+                                          color: OptiAppColors.backgroundGray,
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 16,
+                                            horizontal: 24,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              SvgPicture.asset(
+                                                AssetConstants.iconPlusCircle,
+                                              ),
+                                              const SizedBox(width: 16),
+                                              Text(
+                                                LocalizationConstants.addTag
+                                                    .localized()
+                                                    .format(
+                                                  [tagSearchInputString],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 16, horizontal: 24),
                                       child: Column(
@@ -487,8 +488,8 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                         ],
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                             ListInformationBottomSubmitWidget(
