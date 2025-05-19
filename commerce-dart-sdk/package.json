@@ -1,0 +1,10 @@
+{
+  "name": "test-coverage",
+  "description": "Commerce dart sdk test coverage",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:InsiteSoftware/commerce-dart-sdk.git",
+  "dependencies": {
+    "lcov2badge": "^0.1.2"
+  }
+}

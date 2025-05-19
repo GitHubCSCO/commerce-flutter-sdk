@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/features/domain/mapper/attribute_type_mapper.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/attribute_type_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/attribute_type_mapper.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:commerce_flutter_app/features/domain/entity/attribute_type_entity.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 void main() {

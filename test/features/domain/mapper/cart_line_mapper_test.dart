@@ -1,14 +1,14 @@
+import 'package:commerce_flutter_sdk/src/features/domain/entity/availability_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/brand.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/break_price_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/product_price_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/availability_mapper.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/brand_mapper.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/break_price_mapper.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/cart_line_mapper.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_price_mapper.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:commerce_flutter_app/features/domain/entity/cart_line_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/cart_line_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/availability_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/brand_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/break_price_mapper.dart';
-import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
-import 'package:commerce_flutter_app/features/domain/entity/break_price_entity.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 void main() {

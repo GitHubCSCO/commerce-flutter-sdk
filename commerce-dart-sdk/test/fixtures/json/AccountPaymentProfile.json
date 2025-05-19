@@ -1,0 +1,19 @@
+{
+  "id": "string",
+  "description": "Sample Description",
+  "cardType": "Visa",
+  "expirationDate": "12/24",
+  "maskedCardNumber": "**** **** **** 1234",
+  "cardIdentifier": "card123",
+  "cardHolderName": "John Doe",
+  "address1": "123 Main St",
+  "address2": "Apt 101",
+  "address3": "",
+  "address4": "",
+  "city": "Sample City",
+  "state": "CA",
+  "postalCode": "12345",
+  "country": "US",
+  "isDefault": true,
+  "tokenScheme": "SchemeA"
+}

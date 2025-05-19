@@ -1,0 +1,26 @@
+name: optimizely_commerce_api
+description: SDK wrapper for Optimizely (SAAS) Commerce Rest API, serving as the foundation for our customizable Flutter/Dart-based app
+version: 0.1.1
+repository: https://github.com/InsiteSoftware/commerce-dart-sdk
+publish_to: none
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: 3.27.0
+
+dependencies:
+  collection: ^1.17.2
+  cookie_jar: ^4.0.8
+  dio: ^5.3.2
+  dio_cookie_manager: ^3.1.0+1
+  equatable: ^2.0.5
+  intl: ^0.18.1
+  json_annotation: ^4.8.1
+  logger: ^2.0.2+1
+
+dev_dependencies:
+  test: ^1.24.1
+  build_runner: ^2.4.6
+  json_serializable: ^6.7.1
+  mocktail: ^1.0.1
+  lints: ^3.0.0
