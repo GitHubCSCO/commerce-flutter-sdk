@@ -426,7 +426,7 @@ class _WishListItem extends StatelessWidget {
                       ),
                       if (wishList.isFavorite == true) ...[
                         const SizedBox(width: 10),
-                        const SvgAssetImage(
+                        SvgAssetImage(
                           assetName: AssetConstants.iconFavorite,
                           semanticsLabel: 'favorite icon',
                           fit: BoxFit.fitWidth,
