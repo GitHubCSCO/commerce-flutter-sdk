@@ -328,105 +328,205 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                   ),
                   if (context.watch<WishListTagsControllerCubit>().state
                       is WishListTagsControllerEditing)
-                    Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      color: OptiAppColors.backgroundWhite,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 24,
-                                    vertical: 16,
+                    () {
+                      final controllerCubitState = context
+                          .watch<WishListTagsControllerCubit>()
+                          .state as WishListTagsControllerEditing;
+                      final currentWishLists =
+                          controllerCubitState.wishListTags;
+                      final addedWishLists = controllerCubitState.addedTags;
+                      return Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        color: OptiAppColors.backgroundWhite,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 24,
+                                      vertical: 16,
+                                    ),
+                                    child: Input(
+                                      label: LocalizationConstants.tags
+                                          .localized(),
+                                      hintText: LocalizationConstants
+                                          .searchOrAddTag
+                                          .localized(),
+                                      autoFocusNode: _tagInputFocusNode,
+                                      controller: _tagInputEditingController,
+                                      onTapOutside: (p0) {
+                                        _tagInputFocusNode.unfocus();
+                                      },
+                                    ),
                                   ),
-                                  child: Input(
-                                    label:
-                                        LocalizationConstants.tags.localized(),
-                                    hintText: LocalizationConstants
-                                        .searchOrAddTag
-                                        .localized(),
-                                    autoFocusNode: _tagInputFocusNode,
-                                    controller: _tagInputEditingController,
-                                    onTapOutside: (p0) {
-                                      _tagInputFocusNode.unfocus();
-                                    },
-                                  ),
-                                ),
-                                if (tagSearchInputString.isNotEmpty)
-                                  InkWell(
-                                    onTap: () {
-                                      CustomSnackBar.showSnackBarMessage(
-                                        context,
-                                        'Coming Soon',
-                                      );
-                                    },
-                                    child: Container(
-                                      color: OptiAppColors.backgroundGray,
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 16,
-                                        horizontal: 24,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          SvgPicture.asset(
-                                            AssetConstants.iconPlusCircle,
-                                          ),
-                                          const SizedBox(width: 16),
-                                          Text(
-                                            LocalizationConstants.addTag
-                                                .localized()
-                                                .format(
-                                              [tagSearchInputString],
+                                  if (tagSearchInputString.isNotEmpty)
+                                    InkWell(
+                                      onTap: () {
+                                        context
+                                            .read<WishListTagsControllerCubit>()
+                                            .addTag(
+                                              WishListTagEntity(
+                                                tag: tagSearchInputString,
+                                              ),
+                                            );
+                                        _tagInputEditingController.clear();
+                                      },
+                                      child: Container(
+                                        color: OptiAppColors.backgroundGray,
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 16,
+                                          horizontal: 24,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            SvgPicture.asset(
+                                              AssetConstants.iconPlusCircle,
                                             ),
+                                            const SizedBox(width: 16),
+                                            Text(
+                                              LocalizationConstants.addTag
+                                                  .localized()
+                                                  .format(
+                                                [tagSearchInputString],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  SingleChildScrollView(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16, horizontal: 24),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          if ((currentWishLists?.isNotEmpty ??
+                                                  false) ||
+                                              (addedWishLists?.isNotEmpty ??
+                                                  false)) ...[
+                                            Text(
+                                              LocalizationConstants.assignedTags
+                                                  .localized(),
+                                            ),
+                                            const SizedBox(height: 8),
+                                          ],
+                                          ListView.builder(
+                                            shrinkWrap: true,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemCount:
+                                                addedWishLists?.length ?? 0,
+                                            itemBuilder: (context, index) {
+                                              return _TagItem(
+                                                tag: addedWishLists?[index]
+                                                        .tag ??
+                                                    '',
+                                                onDelete: () async {
+                                                  context
+                                                      .read<
+                                                          WishListTagsControllerCubit>()
+                                                      .removeTag(
+                                                        WishListTagEntity(
+                                                          id: addedWishLists?[
+                                                                  index]
+                                                              .id,
+                                                          tag: addedWishLists?[
+                                                                  index]
+                                                              .tag,
+                                                        ),
+                                                      );
+                                                },
+                                              );
+                                            },
+                                          ),
+                                          if (addedWishLists?.isNotEmpty ??
+                                              false)
+                                            const Divider(),
+                                          ListView.builder(
+                                            shrinkWrap: true,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemCount:
+                                                currentWishLists?.length ?? 0,
+                                            itemBuilder: (context, index) {
+                                              return _TagItem(
+                                                tag: currentWishLists?[index]
+                                                        .tag ??
+                                                    '',
+                                                onDelete: () async {
+                                                  context
+                                                      .read<
+                                                          WishListTagsControllerCubit>()
+                                                      .removeTag(
+                                                        WishListTagEntity(
+                                                          id: currentWishLists?[
+                                                                  index]
+                                                              .id,
+                                                          tag:
+                                                              currentWishLists?[
+                                                                      index]
+                                                                  .tag,
+                                                        ),
+                                                      );
+                                                },
+                                              );
+                                            },
                                           ),
                                         ],
                                       ),
                                     ),
                                   ),
+                                ],
+                              ),
+                            ),
+                            ListInformationBottomSubmitWidget(
+                              actions: [
+                                SecondaryButton(
+                                  text:
+                                      LocalizationConstants.cancel.localized(),
+                                  onPressed: () {
+                                    // Safely dispose the focus node before removing from the tree
+                                    _disposeFocusNode();
+                                    _initFocusNode();
+
+                                    context
+                                        .read<WishListTagsControllerCubit>()
+                                        .initialize(
+                                          wishListTags:
+                                              widget.wishList.wishListTags ??
+                                                  [],
+                                        );
+                                  },
+                                ),
+                                PrimaryButton(
+                                  text: LocalizationConstants.saveTags
+                                      .localized(),
+                                  isEnabled: true,
+                                  onPressed: () {
+                                    CustomSnackBar.showSnackBarMessage(
+                                      context,
+                                      'Coming Soon',
+                                    );
+                                  },
+                                ),
                               ],
                             ),
-                          ),
-                          ListInformationBottomSubmitWidget(
-                            actions: [
-                              SecondaryButton(
-                                text: LocalizationConstants.cancel.localized(),
-                                onPressed: () {
-                                  // Safely dispose the focus node before removing from the tree
-                                  _disposeFocusNode();
-                                  _initFocusNode();
-
-                                  context
-                                      .read<WishListTagsControllerCubit>()
-                                      .initialize(
-                                        wishListTags:
-                                            widget.wishList.wishListTags ?? [],
-                                      );
-                                },
-                              ),
-                              PrimaryButton(
-                                text:
-                                    LocalizationConstants.saveTags.localized(),
-                                isEnabled: true,
-                                onPressed: () {
-                                  CustomSnackBar.showSnackBarMessage(
-                                    context,
-                                    'Coming Soon',
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                          ],
+                        ),
+                      );
+                    }(),
                 ],
               ),
             ),

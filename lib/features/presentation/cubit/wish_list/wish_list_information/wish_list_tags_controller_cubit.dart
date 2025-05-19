@@ -54,7 +54,7 @@ class WishListTagsControllerCubit extends Cubit<WishListTagsControllerState> {
         final currentState = state as WishListTagsControllerEditing;
         final updatedTags =
             List<WishListTagEntity>.from(currentState.addedTags ?? [])
-              ..removeWhere((element) => element.id == tag.id);
+              ..removeWhere((element) => element.tag == tag.tag);
         emit(
           WishListTagsControllerEditing(
             wishListTags: currentState.wishListTags,
