@@ -12,6 +12,7 @@ import 'package:commerce_flutter_app/features/presentation/components/buttons.da
 import 'package:commerce_flutter_app/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_app/features/presentation/components/input.dart';
 import 'package:commerce_flutter_app/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_information/wish_list_information_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/cubit/wish_list/wish_list_information/wish_list_tags_controller_cubit.dart';
 import 'package:commerce_flutter_app/features/presentation/screens/base_screen.dart';
@@ -124,58 +125,205 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
       body: Container(
         color: OptiAppColors.backgroundWhite,
         child: SafeArea(
-          child:
-              BlocConsumer<WishListInformationCubit, WishListInformationState>(
-            listener: (context, state) {
-              if (state.status == WishListStatus.listUpdateSuccess) {
-                CustomSnackBar.showSnackBarMessage(
-                  context,
-                  LocalizationConstants.listUpdated.localized(),
-                );
+          child: MultiBlocListener(
+            listeners: [
+              BlocListener<WishListInformationCubit, WishListInformationState>(
+                listener: (context, state) {
+                  if (state.status == WishListStatus.listUpdateSuccess) {
+                    CustomSnackBar.showSnackBarMessage(
+                      context,
+                      LocalizationConstants.listUpdated.localized(),
+                    );
 
-                context.pop(true);
-              }
+                    context.pop(true);
+                  } else if (state.status == WishListStatus.listUpdateFailure) {
+                    CustomSnackBar.showSnackBarMessage(
+                      context,
+                      LocalizationConstants.updateFailed.localized(),
+                    );
+                  }
+                },
+              ),
+              BlocListener<WishListTagsControllerCubit,
+                  WishListTagsControllerState>(
+                listener: (context, state) {
+                  if (state is WishListTagsControllerError) {
+                    context.read<WishListTagsControllerCubit>().initialize(
+                          wishListTags: widget.wishList.wishListTags ?? [],
+                        );
+                    Navigator.of(context, rootNavigator: true).pop();
+                    CustomSnackBar.showSnackBarMessage(
+                      context,
+                      state.errorMessage,
+                    );
+                  } else if (state is WishListTagsControllerSingleTagDeleted) {
+                    context.read<WishListTagsControllerCubit>().initialize(
+                          wishListTags: state.wishListTags ?? [],
+                        );
+                    Navigator.of(context, rootNavigator: true).pop();
+                    CustomSnackBar.showSnackBarMessage(
+                      context,
+                      LocalizationConstants.tagDeleted.localized(),
+                    );
+                    context
+                        .read<WishListHandlerCubit>()
+                        .shouldRefreshWishList();
+                  } else if (state is WishListTagsControllerSuccess) {
+                    context.read<WishListTagsControllerCubit>().initialize(
+                          wishListTags: state.wishListTags ?? [],
+                        );
+                    Navigator.of(context, rootNavigator: true).pop();
+                    CustomSnackBar.showSnackBarMessage(
+                      context,
+                      LocalizationConstants.tagUpdated.localized(),
+                    );
+                    context
+                        .read<WishListHandlerCubit>()
+                        .shouldRefreshWishList();
+                  } else if (state is WishListTagsControllerLoading) {
+                    showPleaseWait(context);
+                  }
+                },
+              ),
+            ],
+            child:
+                BlocBuilder<WishListInformationCubit, WishListInformationState>(
+              builder: (context, state) => Stack(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Container(
+                            color: OptiAppColors.backgroundWhite,
+                            padding: const EdgeInsets.all(24),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ListNameInputWidget(
+                                  listNameController:
+                                      _listNameEditingController,
+                                  readOnly: !context
+                                      .watch<WishListInformationCubit>()
+                                      .canEditNameDesc,
+                                ),
+                                const SizedBox(height: 32),
+                                ListDetailsWidget(wishList: state.wishList),
+                                const SizedBox(height: 32),
+                                ListDescriptionInputWidget(
+                                  listDescriptionController:
+                                      _listDescriptionEditingController,
+                                  readOnly: !context
+                                      .watch<WishListInformationCubit>()
+                                      .canEditNameDesc,
+                                ),
+                                const SizedBox(height: 32),
+                                Stack(
+                                  children: [
+                                    Input(
+                                      label: LocalizationConstants.tags
+                                          .localized(),
+                                      hintText: LocalizationConstants
+                                          .searchOrAddTag
+                                          .localized(),
+                                    ),
+                                    Positioned.fill(
+                                      child: GestureDetector(
+                                        behavior: HitTestBehavior.opaque,
+                                        onTap: () {
+                                          context
+                                              .read<
+                                                  WishListTagsControllerCubit>()
+                                              .startEditing();
+                                          // Make sure we have a valid focus node
+                                          // ignore: invalid_use_of_protected_member
+                                          if (!_tagInputFocusNode
+                                              .hasListeners) {
+                                            _initFocusNode();
+                                          }
+                                          // Request focus on the second input field
+                                          _tagInputFocusNode.requestFocus();
+                                        },
+                                        // Transparent overlay that covers the entire Input
+                                        child: Container(
+                                          color: Colors.transparent,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 32),
+                                if (state.wishList.wishListTags != null &&
+                                    state.wishList.wishListTags!.isNotEmpty)
+                                  _WishListTagsWidget(context: context),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListInformationBottomSubmitWidget(
+                        actions: [
+                          PrimaryButton(
+                            text: LocalizationConstants.save.localized(),
+                            isEnabled: context
+                                .watch<WishListInformationCubit>()
+                                .canEditNameDesc,
+                            onPressed: () {
+                              if (_listNameEditingController.text.isEmpty) {
+                                displayDialogWidget(
+                                  context: context,
+                                  title:
+                                      LocalizationConstants.error.localized(),
+                                  message: LocalizationConstants.enterListName
+                                      .localized(),
+                                  actions: [
+                                    PlainButton(
+                                      text:
+                                          LocalizationConstants.oK.localized(),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
 
-              if (state.status == WishListStatus.listUpdateFailure) {
-                CustomSnackBar.showSnackBarMessage(
-                  context,
-                  LocalizationConstants.updateFailed.localized(),
-                );
-              }
-            },
-            builder: (context, state) => Stack(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Container(
-                          color: OptiAppColors.backgroundWhite,
-                          padding: const EdgeInsets.all(24),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ListNameInputWidget(
-                                listNameController: _listNameEditingController,
-                                readOnly: !context
-                                    .watch<WishListInformationCubit>()
-                                    .canEditNameDesc,
-                              ),
-                              const SizedBox(height: 32),
-                              ListDetailsWidget(wishList: state.wishList),
-                              const SizedBox(height: 32),
-                              ListDescriptionInputWidget(
-                                listDescriptionController:
-                                    _listDescriptionEditingController,
-                                readOnly: !context
-                                    .watch<WishListInformationCubit>()
-                                    .canEditNameDesc,
-                              ),
-                              const SizedBox(height: 32),
-                              Stack(
+                                return;
+                              }
+
+                              unawaited(
+                                context
+                                    .read<WishListInformationCubit>()
+                                    .updateWishList(
+                                      name: _listNameEditingController.text,
+                                      description:
+                                          _listDescriptionEditingController
+                                              .text,
+                                    ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  if (context.watch<WishListTagsControllerCubit>().state
+                      is WishListTagsControllerEditing)
+                    Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      color: OptiAppColors.backgroundWhite,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(24),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Input(
                                     label:
@@ -183,146 +331,52 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                     hintText: LocalizationConstants
                                         .searchOrAddTag
                                         .localized(),
-                                  ),
-                                  Positioned.fill(
-                                    child: GestureDetector(
-                                      behavior: HitTestBehavior.opaque,
-                                      onTap: () {
-                                        context
-                                            .read<WishListTagsControllerCubit>()
-                                            .startEditing();
-                                        // Make sure we have a valid focus node
-                                        // ignore: invalid_use_of_protected_member
-                                        if (!_tagInputFocusNode.hasListeners) {
-                                          _initFocusNode();
-                                        }
-                                        // Request focus on the second input field
-                                        _tagInputFocusNode.requestFocus();
-                                      },
-                                      // Transparent overlay that covers the entire Input
-                                      child: Container(
-                                        color: Colors.transparent,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 32),
-                              if (state.wishList.wishListTags != null &&
-                                  state.wishList.wishListTags!.isNotEmpty)
-                                _WishListTagsWidget(context: context),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    ListInformationBottomSubmitWidget(
-                      actions: [
-                        PrimaryButton(
-                          text: LocalizationConstants.save.localized(),
-                          isEnabled: context
-                              .watch<WishListInformationCubit>()
-                              .canEditNameDesc,
-                          onPressed: () {
-                            if (_listNameEditingController.text.isEmpty) {
-                              displayDialogWidget(
-                                context: context,
-                                title: LocalizationConstants.error.localized(),
-                                message: LocalizationConstants.enterListName
-                                    .localized(),
-                                actions: [
-                                  PlainButton(
-                                    text: LocalizationConstants.oK.localized(),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
+                                    autoFocusNode: _tagInputFocusNode,
+                                    onTap: () {
+                                      CustomSnackBar.showSnackBarMessage(
+                                        context,
+                                        'Coming Soon',
+                                      );
                                     },
                                   ),
                                 ],
-                              );
-
-                              return;
-                            }
-
-                            unawaited(
-                              context
-                                  .read<WishListInformationCubit>()
-                                  .updateWishList(
-                                    name: _listNameEditingController.text,
-                                    description:
-                                        _listDescriptionEditingController.text,
-                                  ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                if (context.watch<WishListTagsControllerCubit>().state
-                    is WishListTagsControllerEditing)
-                  Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    color: OptiAppColors.backgroundWhite,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(24),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Input(
-                                  label: LocalizationConstants.tags.localized(),
-                                  hintText: LocalizationConstants.searchOrAddTag
-                                      .localized(),
-                                  autoFocusNode: _tagInputFocusNode,
-                                  onTap: () {
-                                    CustomSnackBar.showSnackBarMessage(
-                                      context,
-                                      'Coming Soon',
-                                    );
-                                  },
-                                ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                        ListInformationBottomSubmitWidget(
-                          actions: [
-                            SecondaryButton(
-                              text: LocalizationConstants.cancel.localized(),
-                              onPressed: () {
-                                // Safely dispose the focus node before removing from the tree
-                                _disposeFocusNode();
-                                _initFocusNode();
+                          ListInformationBottomSubmitWidget(
+                            actions: [
+                              SecondaryButton(
+                                text: LocalizationConstants.cancel.localized(),
+                                onPressed: () {
+                                  // Safely dispose the focus node before removing from the tree
+                                  _disposeFocusNode();
+                                  _initFocusNode();
 
-                                context
-                                    .read<WishListTagsControllerCubit>()
-                                    .initialize(
-                                      wishListTags:
-                                          widget.wishList.wishListTags ?? [],
-                                    );
-                              },
-                            ),
-                            PrimaryButton(
-                              text: LocalizationConstants.save.localized(),
-                              isEnabled: true,
-                              onPressed: () {
-                                CustomSnackBar.showSnackBarMessage(
-                                  context,
-                                  'Coming Soon',
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
+                                  context
+                                      .read<WishListTagsControllerCubit>()
+                                      .initialize(
+                                        wishListTags:
+                                            widget.wishList.wishListTags ?? [],
+                                      );
+                                },
+                              ),
+                              PrimaryButton(
+                                text: LocalizationConstants.save.localized(),
+                                isEnabled: true,
+                                onPressed: () {
+                                  CustomSnackBar.showSnackBarMessage(
+                                    context,
+                                    'Coming Soon',
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -342,6 +396,14 @@ class _WishListTagsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<WishListInformationCubit, WishListInformationState>(
       builder: (context, state) {
+        final controllerCubitState =
+            context.watch<WishListTagsControllerCubit>().state;
+
+        if (controllerCubitState is! WishListTagsControllerInitial) {
+          return const SizedBox.shrink();
+        }
+
+        final currentWishLists = controllerCubitState.wishListTags;
         return Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -349,16 +411,20 @@ class _WishListTagsWidget extends StatelessWidget {
             Text(LocalizationConstants.assignedTags.localized()),
             const SizedBox(height: 8),
             ListView.builder(
-              itemCount: state.wishList.wishListTags!.length,
+              itemCount: currentWishLists!.length,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return _TagItem(
-                  tag: state.wishList.wishListTags![index].tag ?? '',
+                  tag: currentWishLists[index].tag ?? '',
                   onDelete: () async {
-                    CustomSnackBar.showSnackBarMessage(
-                      context,
-                      'Tag Cleared',
+                    unawaited(
+                      context
+                          .read<WishListTagsControllerCubit>()
+                          .deleteSingleTag(
+                            wishListId: state.wishList.id ?? '',
+                            tagId: state.wishList.wishListTags![index].id ?? '',
+                          ),
                     );
                   },
                 );
