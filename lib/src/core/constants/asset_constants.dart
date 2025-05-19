@@ -82,12 +82,14 @@ class AssetConstants {
   static final String speedredPaymentForm =
       AssetPathResolver.resolve("assets/form/spreedly_payment_form.html'");
 
-  static const String iconFavorite = "assets/images/icon_favorite.svg";
+  static final String iconFavorite =
+      AssetPathResolver.resolve("assets/images/icon_favorite.svg");
 
-  static const String iconHeartUnfilled =
-      "assets/images/icon_heart_unfilled.svg";
+  static final String iconHeartUnfilled =
+      AssetPathResolver.resolve("assets/images/icon_heart_unfilled.svg");
 
-  static const String iconHeartFilled = "assets/images/icon_heart_filled.svg";
+  static final String iconHeartFilled =
+      AssetPathResolver.resolve("assets/images/icon_heart_filled.svg");
 
   // ActionType-related icons
   static final String categoriesIcon =
