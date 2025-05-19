@@ -618,6 +618,7 @@ enum LocalizationConstants {
   unitCost(keyword: "Unit Cost"),
   list(keyword: "List"),
   tags(keyword: "Tags"),
+  saveTags(keyword: "Save Tags"),
   tagDeleted(keyword: "Tag Deleted"),
   tagUpdated(keyword: "Tag Updated"),
   assignedTags(keyword: "Assigned Tags"),

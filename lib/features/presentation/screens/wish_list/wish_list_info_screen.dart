@@ -239,8 +239,8 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                                   WishListTagsControllerCubit>()
                                               .startEditing();
                                           // Make sure we have a valid focus node
-                                          // ignore: invalid_use_of_protected_member
                                           if (!_tagInputFocusNode
+                                              // ignore: invalid_use_of_protected_member
                                               .hasListeners) {
                                             _initFocusNode();
                                           }
@@ -361,7 +361,8 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                 },
                               ),
                               PrimaryButton(
-                                text: LocalizationConstants.save.localized(),
+                                text:
+                                    LocalizationConstants.saveTags.localized(),
                                 isEnabled: true,
                                 onPressed: () {
                                   CustomSnackBar.showSnackBarMessage(
