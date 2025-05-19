@@ -332,11 +332,8 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                         .searchOrAddTag
                                         .localized(),
                                     autoFocusNode: _tagInputFocusNode,
-                                    onTap: () {
-                                      CustomSnackBar.showSnackBarMessage(
-                                        context,
-                                        'Coming Soon',
-                                      );
+                                    onTapOutside: (p0) {
+                                      _tagInputFocusNode.unfocus();
                                     },
                                   ),
                                 ],
