@@ -4,6 +4,7 @@ import 'package:commerce_flutter_app/core/colors/app_colors.dart';
 import 'package:commerce_flutter_app/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_app/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_app/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_app/core/injection/injection_container.dart';
 import 'package:commerce_flutter_app/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_app/features/domain/entity/wish_list/wish_list_entity.dart';
@@ -82,7 +83,9 @@ class WishListInformationPage extends StatefulWidget {
 class _WishListInformationPageState extends State<WishListInformationPage> {
   late final TextEditingController _listNameEditingController;
   late final TextEditingController _listDescriptionEditingController;
+  late final TextEditingController _tagInputEditingController;
   late FocusNode _tagInputFocusNode;
+  String tagSearchInputString = '';
 
   @override
   void initState() {
@@ -91,6 +94,19 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
         TextEditingController(text: widget.wishList.name);
     _listDescriptionEditingController =
         TextEditingController(text: widget.wishList.description);
+    _tagInputEditingController = TextEditingController();
+    _tagInputEditingController.addListener(
+      () {
+        setState(
+          () {
+            tagSearchInputString =
+                context.read<WishListTagsControllerCubit>().addedTagTitle(
+                      _tagInputEditingController.text,
+                    );
+          },
+        );
+      },
+    );
     _initFocusNode();
   }
 
@@ -100,6 +116,7 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
 
   @override
   void dispose() {
+    _tagInputEditingController.dispose();
     _listNameEditingController.dispose();
     _listDescriptionEditingController.dispose();
     _disposeFocusNode();
@@ -320,24 +337,61 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(24),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Input(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 24,
+                                    vertical: 16,
+                                  ),
+                                  child: Input(
                                     label:
                                         LocalizationConstants.tags.localized(),
                                     hintText: LocalizationConstants
                                         .searchOrAddTag
                                         .localized(),
                                     autoFocusNode: _tagInputFocusNode,
+                                    controller: _tagInputEditingController,
                                     onTapOutside: (p0) {
                                       _tagInputFocusNode.unfocus();
                                     },
                                   ),
-                                ],
-                              ),
+                                ),
+                                if (tagSearchInputString.isNotEmpty)
+                                  InkWell(
+                                    onTap: () {
+                                      CustomSnackBar.showSnackBarMessage(
+                                        context,
+                                        'Coming Soon',
+                                      );
+                                    },
+                                    child: Container(
+                                      color: OptiAppColors.backgroundGray,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 16,
+                                        horizontal: 24,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          SvgPicture.asset(
+                                            AssetConstants.iconPlusCircle,
+                                          ),
+                                          const SizedBox(width: 16),
+                                          Text(
+                                            LocalizationConstants.addTag
+                                                .localized()
+                                                .format(
+                                              [tagSearchInputString],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
                           ListInformationBottomSubmitWidget(

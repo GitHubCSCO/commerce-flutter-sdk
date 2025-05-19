@@ -121,7 +121,15 @@ class WishListTagsControllerCubit extends Cubit<WishListTagsControllerState> {
   }
 
   String addedTagTitle(String? tag) {
-    if (tag == null || tag.isEmpty) {
+    if (tag == null) {
+      return '';
+    }
+
+    tag = tag.trim();
+    // Remove all punctuation marks except hyphens (-) and underscores (_)
+    tag = tag.replaceAll(RegExp(r'[^\w\s\-_]'), '');
+
+    if (tag.isEmpty) {
       return '';
     }
 
