@@ -515,9 +515,13 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                       .localized(),
                                   isEnabled: true,
                                   onPressed: () {
-                                    CustomSnackBar.showSnackBarMessage(
-                                      context,
-                                      'Coming Soon',
+                                    unawaited(
+                                      context
+                                          .read<WishListTagsControllerCubit>()
+                                          .saveTags(
+                                            wishListId:
+                                                widget.wishList.id ?? '',
+                                          ),
                                     );
                                   },
                                 ),
