@@ -17,6 +17,10 @@ class WishListDetailsUsecase extends WishListUsecase {
               wishListId,
               WishListQueryParameters(
                 exclude: ['listlines'],
+                expand: [
+                  'favorite',
+                  'tags',
+                ],
               ),
             );
 

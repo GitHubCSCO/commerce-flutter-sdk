@@ -21,6 +21,12 @@ class WishListUsecase extends BaseUseCase {
                 pageSize: CoreConstants.defaultPageSize,
                 page: page,
                 query: searchText != '' ? searchText : null,
+                expand: [
+                  'top3products',
+                  'favorite',
+                  'tags',
+                ],
+                wishListLinesSort: 'mostRecent',
               ),
             );
 
@@ -69,6 +75,32 @@ class WishListUsecase extends BaseUseCase {
             : WishListStatus.listDeleteFailure;
       case Failure():
         return WishListStatus.listDeleteFailure;
+    }
+  }
+
+  Future<WishListStatus> updateWishListFavorite({
+    required WishListEntity wishListEntity,
+    required bool isFavorite,
+  }) async {
+    final result =
+        await commerceAPIServiceProvider.getWishListService().updateWishList(
+              WishListEntityMapper.toModel(
+                wishListEntity.copyWith(
+                  isFavorite: isFavorite,
+                  wishListLineCollection: [],
+                ),
+              ),
+            );
+
+    switch (result) {
+      case Success(value: final value):
+        return value != null
+            ? (isFavorite
+                ? WishListStatus.listFavoriteUpdateSuccessAdded
+                : WishListStatus.listFavoriteUpdateSuccessRemoved)
+            : WishListStatus.listFavoriteUpdateFailure;
+      case Failure():
+        return WishListStatus.listFavoriteUpdateFailure;
     }
   }
 

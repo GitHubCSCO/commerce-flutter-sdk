@@ -4,18 +4,25 @@ import 'package:flutter/material.dart';
 
 class WishListContentProductImageWidget extends StatelessWidget {
   final String imagePath;
+  final double? width;
+  final double? height;
+  final EdgeInsetsGeometry? padding;
+
   const WishListContentProductImageWidget({
     super.key,
     required this.imagePath,
+    this.width,
+    this.height,
+    this.padding,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(26.0, 22.0, 0.0, 0.0),
+      padding: padding ?? const EdgeInsets.fromLTRB(26.0, 22.0, 0.0, 0.0),
       child: Container(
-        width: 65,
-        height: 65,
+        width: width ?? 65,
+        height: height ?? 65,
         clipBehavior: Clip.antiAlias,
         decoration: ShapeDecoration(
           color: Colors.white,
