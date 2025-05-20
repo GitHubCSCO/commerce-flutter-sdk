@@ -377,9 +377,18 @@ class _SearchPageState extends State<SearchPage> with BaseDynamicContentScreen {
   }
 
   Widget _buildSearchAutoComplete(AutocompleteResult? result) {
-    final autoCompleteCategoryList = result?.categories;
-    final autoCompleteBrandList = result?.brands;
+    List<AutocompleteCategory>? autoCompleteCategoryList;
+    List<AutocompleteBrand>? autoCompleteBrandList;
     final autoCompleteProductList = result?.products;
+
+    if (result?.isRetailSearchCompletionResults == true) {
+      autoCompleteCategoryList = result?.attributeResults?.categories;
+      autoCompleteBrandList = result?.attributeResults?.brands;
+    } else {
+      autoCompleteCategoryList = result?.categories;
+      autoCompleteBrandList = result?.brands;
+    }
+
     return ListView(
       padding: const EdgeInsets.only(top: 8),
       children: [

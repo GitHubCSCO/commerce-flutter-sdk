@@ -64,6 +64,11 @@ dev_dependencies:
   bloc_test: ^9.1.5
   json_serializable: ^6.8.0
 
+dependency_overrides:
+  optimizely_commerce_api:
+    path: /Users/anisur.rahaman/Works/Official Projects/Commerce Dart SDK
+
+
 flutter:
   uses-material-design: true
   assets:
