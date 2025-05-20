@@ -1,9 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:commerce_flutter_app/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_app/features/domain/enums/login_status.dart';
-import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/login_usecase/login_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/login/login_cubit.dart';
+import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/enums/login_status.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/localization_interface.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/usecases/login_usecase/login_usecase.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/login/login_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
