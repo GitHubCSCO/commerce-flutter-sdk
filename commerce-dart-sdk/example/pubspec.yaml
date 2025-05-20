@@ -1,0 +1,23 @@
+name: demo
+description: "Demo of Configured Commerce SDK"
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: '>=3.2.2 <4.0.0'
+  flutter: 3.27.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  optimizely_commerce_api:
+    path: ../
+  go_router: ^12.1.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true

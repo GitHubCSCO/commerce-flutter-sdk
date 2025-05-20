@@ -1,0 +1,10 @@
+{
+    "vmiUsers": [
+      {
+        "userId": "user1",
+        "vmiLocationNames": ["Location1", "Location2"],
+        "vmiRoles": ["Role1", "Role2"]
+      }
+    ]
+  }
+  
