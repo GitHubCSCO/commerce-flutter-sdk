@@ -82,6 +82,27 @@ class AssetConstants {
   static final String speedredPaymentForm =
       AssetPathResolver.resolve("assets/form/spreedly_payment_form.html'");
 
+  static final String iconFavorite =
+      AssetPathResolver.resolve("assets/images/icon_favorite.svg");
+
+  static final String iconHeartUnfilled =
+      AssetPathResolver.resolve("assets/images/icon_heart_unfilled.svg");
+
+  static final String iconHeartFilled =
+      AssetPathResolver.resolve("assets/images/icon_heart_filled.svg");
+
+  static final String iconPriorityTag =
+      AssetPathResolver.resolve("assets/images/icon_priority_tag.svg");
+
+  static final String iconXmark =
+      AssetPathResolver.resolve("assets/images/icon_xmark.svg");
+
+  static final String iconPlusCircle =
+      AssetPathResolver.resolve("assets/images/icon_plus_circle.svg");
+
+  static final String iconTag =
+      AssetPathResolver.resolve("assets/images/icon_tag.svg");
+
   // ActionType-related icons
   static final String categoriesIcon =
       AssetPathResolver.resolve("assets/images/icon_categories.svg");

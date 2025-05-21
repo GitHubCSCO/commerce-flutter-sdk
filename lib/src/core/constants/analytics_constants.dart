@@ -93,6 +93,8 @@ class AnalyticsConstants {
   static const String eventSearchOrders = "search_orders";
   static const String eventAddToCart = "add_to_cart";
   static const String eventAddToList = "add_to_list";
+  static const String eventFavoriteList = "favorite_list";
+  static const String eventRemoveFavoriteList = "remove_favorite_list";
   static const String eventViewAttributes = "view_attributes";
   static const String eventViewSpecification = "view_specification";
   static const String eventViewSearchResults = "view_search_results";

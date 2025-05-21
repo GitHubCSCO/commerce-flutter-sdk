@@ -1,4 +1,4 @@
-import '../screens/details_screen.dart';
+import './screens/details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:go_router/go_router.dart';

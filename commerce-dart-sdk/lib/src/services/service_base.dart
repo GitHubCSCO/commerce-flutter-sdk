@@ -116,7 +116,8 @@ class ServiceBase {
         case Success(value: final value):
           {
             if (path.contains('/wishlistlines/batch') ||
-                path.contains('/shareinvoice')) {
+                path.contains('/shareinvoice') ||
+                path.contains('/tags/batch')) {
               // returns empty response
               var model = deserialize<T>({}, fromJson);
               return Success(model);

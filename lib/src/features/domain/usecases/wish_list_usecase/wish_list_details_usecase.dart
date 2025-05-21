@@ -17,6 +17,10 @@ class WishListDetailsUsecase extends WishListUsecase {
               wishListId,
               WishListQueryParameters(
                 exclude: ['listlines'],
+                expand: [
+                  'favorite',
+                  'tags',
+                ],
               ),
             );
 
@@ -314,5 +318,51 @@ class WishListDetailsUsecase extends WishListUsecase {
 
   Future<bool> hasCheckout() async {
     return await coreServiceProvider.getAppConfigurationService().hasCheckout();
+  }
+
+  Future<WishListEntity?> updateWishListTags({
+    required String wishListId,
+    required List<WishListTagEntity>? deletedTags,
+    required List<WishListTagEntity>? addedTags,
+  }) async {
+    final deleteResult = await commerceAPIServiceProvider
+        .getWishListService()
+        .deleteWishListTags(
+          wishListId,
+          deletedTags?.map((e) => e.id!).toList() ?? [],
+        );
+
+    final addResult =
+        await commerceAPIServiceProvider.getWishListService().addWishListTags(
+              wishListId,
+              WishListTagCollectionModel(
+                wishListTags: addedTags
+                        ?.map((e) => WishListTagMapper.toModel(e))
+                        .toList() ??
+                    [],
+              ),
+            );
+
+    if (deleteResult is Failure || addResult is Failure) {
+      return null;
+    }
+
+    final result = await loadWishList(wishListId);
+    return result;
+  }
+
+  Future<bool> deleteSingleTag({
+    required String wishListId,
+    required String tagId,
+  }) async {
+    final result = await commerceAPIServiceProvider
+        .getWishListService()
+        .deleteWishListTags(wishListId, [tagId]);
+
+    if (result is Failure) {
+      return false;
+    }
+
+    return true;
   }
 }
