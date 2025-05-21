@@ -39,4 +39,14 @@ abstract class IWishListService {
     WishListLineCollectionModel wishListLineCollection,
     String? copyFromWishListId,
   );
+
+  Future<Result<bool, ErrorResponse>> addWishListTags(
+    String wishListId,
+    WishListTagCollectionModel wishListTags,
+  );
+
+  Future<Result<bool, ErrorResponse>> deleteWishListTags(
+    String wishListId,
+    List<String> wishListTagIds,
+  );
 }

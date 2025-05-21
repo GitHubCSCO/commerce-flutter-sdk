@@ -1,5 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
+
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
@@ -29,12 +35,6 @@ import 'package:commerce_flutter_sdk/src/features/presentation/screens/wish_list
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/wish_list/wish_list_details/wish_list_line/wish_list_line_image_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/bottom_menu_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/widget/svg_asset_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 class WishListsScreen extends BaseStatelessWidget {
   const WishListsScreen({super.key});
@@ -424,6 +424,15 @@ class _WishListItem extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
+                      if (wishList.wishListTags != null &&
+                          wishList.wishListTags!.isNotEmpty) ...[
+                        const SizedBox(width: 10),
+                        SvgAssetImage(
+                          assetName: AssetConstants.iconPriorityTag,
+                          semanticsLabel: 'priority tag icon',
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ],
                       if (wishList.isFavorite == true) ...[
                         const SizedBox(width: 10),
                         SvgAssetImage(

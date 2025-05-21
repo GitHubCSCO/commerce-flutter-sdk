@@ -248,4 +248,60 @@ class WishListService extends ServiceBase implements IWishListService {
     );
     return response;
   }
+
+  @override
+  Future<Result<bool, ErrorResponse>> addWishListTags(
+    String wishListId,
+    WishListTagCollectionModel wishListTags,
+  ) async {
+    var url = Uri.parse('/api/v1/wishlists/$wishListId/tags/batch');
+    final data = wishListTags.toJson();
+
+    final response = await postAsyncNoCache(
+      url.toString(),
+      data,
+      WishListTagCollectionModel.fromJson,
+    );
+
+    switch (response) {
+      case Success():
+        {
+          return Success(true);
+        }
+      case Failure(errorResponse: final errorResponse):
+        {
+          return Failure(errorResponse);
+        }
+    }
+  }
+
+  @override
+  Future<Result<bool, ErrorResponse>> deleteWishListTags(
+    String wishListId,
+    List<String> wishListTagIds,
+  ) async {
+    if (wishListTagIds.isEmpty) {
+      return const Success(false);
+    }
+
+    String queryString =
+        '?${wishListTagIds.map((o) => 'wishListTagIds=$o').join('&')}';
+
+    final response = await deleteAsync(
+        '/api/v1/wishlists/$wishListId/tags/batch$queryString');
+
+    switch (response) {
+      case Success(value: final value):
+        {
+          bool result =
+              value != null && StatusCodeExtension.isSuccessStatusCode(value);
+
+          return Success(result);
+        }
+      case Failure(errorResponse: final errorResponse):
+        {
+          return Failure(errorResponse);
+        }
+    }
+  }
 }
