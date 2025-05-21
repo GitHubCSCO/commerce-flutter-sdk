@@ -330,7 +330,7 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                       final controllerCubitState = context
                           .watch<WishListTagsControllerCubit>()
                           .state as WishListTagsControllerEditing;
-                      final currentWishLists =
+                      final currentWishListTags =
                           controllerCubitState.wishListTags;
                       final addedWishLists = controllerCubitState.addedTags;
                       return Container(
@@ -411,7 +411,8 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          if ((currentWishLists?.isNotEmpty ??
+                                          if ((currentWishListTags
+                                                      ?.isNotEmpty ??
                                                   false) ||
                                               (addedWishLists?.isNotEmpty ??
                                                   false)) ...[
@@ -458,10 +459,11 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                             physics:
                                                 const NeverScrollableScrollPhysics(),
                                             itemCount:
-                                                currentWishLists?.length ?? 0,
+                                                currentWishListTags?.length ??
+                                                    0,
                                             itemBuilder: (context, index) {
                                               return _TagItem(
-                                                tag: currentWishLists?[index]
+                                                tag: currentWishListTags?[index]
                                                         .tag ??
                                                     '',
                                                 onDelete: () async {
@@ -470,11 +472,11 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                                           WishListTagsControllerCubit>()
                                                       .removeTag(
                                                         WishListTagEntity(
-                                                          id: currentWishLists?[
+                                                          id: currentWishListTags?[
                                                                   index]
                                                               .id,
                                                           tag:
-                                                              currentWishLists?[
+                                                              currentWishListTags?[
                                                                       index]
                                                                   .tag,
                                                         ),
@@ -558,8 +560,8 @@ class _WishListTagsWidget extends StatelessWidget {
           return const SizedBox.shrink();
         }
 
-        final currentWishLists = controllerCubitState.wishListTags;
-        if (currentWishLists == null || currentWishLists.isEmpty) {
+        final currentWishListTags = controllerCubitState.wishListTags;
+        if (currentWishListTags == null || currentWishListTags.isEmpty) {
           return const SizedBox.shrink();
         }
 
@@ -570,12 +572,12 @@ class _WishListTagsWidget extends StatelessWidget {
             Text(LocalizationConstants.assignedTags.localized()),
             const SizedBox(height: 8),
             ListView.builder(
-              itemCount: currentWishLists.length,
+              itemCount: currentWishListTags.length,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return _TagItem(
-                  tag: currentWishLists[index].tag ?? '',
+                  tag: currentWishListTags[index].tag ?? '',
                   onDelete: () async {
                     unawaited(
                       context
