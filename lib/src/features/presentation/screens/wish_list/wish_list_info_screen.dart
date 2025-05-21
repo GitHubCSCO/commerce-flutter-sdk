@@ -273,9 +273,7 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                   ],
                                 ),
                                 const SizedBox(height: 32),
-                                if (state.wishList.wishListTags != null &&
-                                    state.wishList.wishListTags!.isNotEmpty)
-                                  _WishListTagsWidget(context: context),
+                                _WishListTagsWidget(context: context),
                               ],
                             ),
                           ),
@@ -561,6 +559,10 @@ class _WishListTagsWidget extends StatelessWidget {
         }
 
         final currentWishLists = controllerCubitState.wishListTags;
+        if (currentWishLists == null || currentWishLists.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
         return Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -568,7 +570,7 @@ class _WishListTagsWidget extends StatelessWidget {
             Text(LocalizationConstants.assignedTags.localized()),
             const SizedBox(height: 8),
             ListView.builder(
-              itemCount: currentWishLists!.length,
+              itemCount: currentWishLists.length,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
