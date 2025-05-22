@@ -66,7 +66,6 @@ class PageContentManagementMapper {
         secondaryTextColor: model.secondaryTextColor,
         primaryTextColor: model.primaryTextColor,
         imageUrl: model.imageUrl,
-        link: model.link,
         textJustification:
             TextJustificationConverter.convert(model.textJustification ?? ''),
         applyDarkOverlayToImage: model.applyDarkOverlayToImage,
