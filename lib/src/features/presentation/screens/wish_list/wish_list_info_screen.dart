@@ -584,7 +584,7 @@ class _WishListTagsWidget extends StatelessWidget {
                           .read<WishListTagsControllerCubit>()
                           .deleteSingleTag(
                             wishListId: state.wishList.id ?? '',
-                            tagId: state.wishList.wishListTags![index].id ?? '',
+                            tagId: currentWishListTags[index].id ?? '',
                           ),
                     );
                   },
