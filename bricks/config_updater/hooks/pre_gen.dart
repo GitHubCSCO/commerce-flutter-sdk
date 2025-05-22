@@ -6,11 +6,7 @@ import 'exceptions.dart';
 
 Future run(HookContext context) async {
   final logger = context.logger;
-  logger.info(
-    green.wrap(
-      'Executing pregen script',
-    ),
-  );
+  logger.info(green.wrap('Executing pregen script'));
   try {
     final rootPath = Directory.current.path;
     final libPath = path.join(rootPath, 'lib');
@@ -25,13 +21,15 @@ Future run(HookContext context) async {
         'jsonFile': './assets/config/custom_config.json',
         'on-conflict': 'overwrite',
       };
-      final customConfigDart1 =
-          File(path.join(libPath, 'core/config/custom_configuration.dart'));
+      final customConfigDart1 = File(
+        path.join(libPath, 'core/config/custom_configuration.dart'),
+      );
       if (await customConfigDart1.exists()) {
         await customConfigDart1.delete();
       }
-      final customConfigDart2 =
-          File(path.join(libPath, 'core/config/custom_configuration.g.dart'));
+      final customConfigDart2 = File(
+        path.join(libPath, 'core/config/custom_configuration.g.dart'),
+      );
       if (await customConfigDart2.exists()) {
         await customConfigDart2.delete();
       }
