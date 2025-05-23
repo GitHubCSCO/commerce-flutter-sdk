@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
@@ -16,6 +14,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/bloc/root/root_bl
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/dialog.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/quote/quote_tab_switch/quote_tab_switch_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/helper/menu/tool_menu.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/quote/quote_information_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/quote/quote_line_widget.dart';
@@ -323,6 +322,12 @@ class QuoteDetailsPage extends StatelessWidget {
         DialogPlainButton(
           onPressed: () {
             Navigator.of(context).pop();
+            final cubit = context.read<QuoteDetailsBloc>();
+            if (cubit.isJobQuoteProposed == true) {
+              context.pop();
+              context.read<QuoteTabSwitchCubit>().switchTab(1);
+              return;
+            }
             context.read<QuoteDetailsBloc>().add(ProceedToCheckoutEvent());
           },
           child: Text(LocalizationConstants.continueText.localized()),
