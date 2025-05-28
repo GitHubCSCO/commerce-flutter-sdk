@@ -1,6 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:commerce_flutter_app/features/domain/usecases/logout_usecase/logout_usecase.dart';
-import 'package:commerce_flutter_app/features/presentation/cubit/logout/logout_cubit.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/usecases/logout_usecase/logout_usecase.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/cubit/logout/logout_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

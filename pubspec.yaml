@@ -1,7 +1,7 @@
-name: commerce_flutter_app
+name: commerce_flutter_sdk
 description: A new Flutter project.
 publish_to: "none"
-version: 4.0.7+1
+version: 4.1.0+1
 
 environment:
   sdk: ">=3.5.0 <4.0.0"
@@ -16,9 +16,7 @@ dependencies:
   url_launcher: ^6.1.12
   map_launcher: ^3.2.0
   optimizely_commerce_api:
-    git:
-      url: git@github.com:InsiteSoftware/commerce-dart-sdk.git
-      ref: develop
+    path: ./commerce-dart-sdk
   shared_preferences: ^2.2.0
   get_it: ^7.6.4
   flutter_bloc: ^8.1.3

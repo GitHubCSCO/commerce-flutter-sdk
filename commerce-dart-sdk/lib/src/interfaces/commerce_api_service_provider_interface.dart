@@ -1,0 +1,44 @@
+import '../../optimizely_commerce_api.dart';
+
+abstract class ICommerceAPIServiceProvider {
+  IAccountService getAccountService();
+  IAdminAuthenticationService getAdminAuthenticationService();
+  IAdminClientService getAdminClientService();
+  IAuthenticationService getAuthenticationService();
+  IAutocompleteService getAutocompleteService();
+  IBillToService getBillToService();
+  IBrandService getBrandService();
+  ICacheService getCacheService();
+  ICartService getCartService();
+  ICatalogpagesService getCatalogpagesService();
+  ICategoryService getCategoryService();
+  IClientService getClientService();
+  IDashboardPanelsService getDashboardPanelsService();
+  IDealerService getDealerService();
+  IInvoiceService getInvoiceService();
+  IJobQuoteService getJobQuoteService();
+  ILocalStorageService getLocalStorageService();
+  ILoggerService getLoggerService();
+  IMessageService getMessageService();
+  //IMessengerService getMessengerService();
+  IMobileContentService getMobileContentService();
+  IMobileSpireContentService getMobileSpireContentService();
+  INetworkService getNetworkService();
+  //IOptimizelyService getOptimizelyService();
+  IOrderService getOrderService();
+  IProductService getProductService();
+  //IProductV2Service getProductV2Service();
+  IQuoteService getQuoteService();
+  ISecureStorageService getSecureStorageService();
+  ISessionService getSessionService();
+  ISettingsService getSettingsService();
+  ITokenExConfigService getTokenExConfigService();
+  //ITrackingService getTrackingService();
+  ITranslationService getTranslationService();
+  IVmiLocationsService getVmiLocationsService();
+  IWarehouseService getWarehouseService();
+  IWebsiteService getWebsiteService();
+  IWishListService getWishListService();
+  IRealTimePricingService getRealTimePricingService();
+  IRealTimeInventoryService getRealTimeInventoryService();
+}

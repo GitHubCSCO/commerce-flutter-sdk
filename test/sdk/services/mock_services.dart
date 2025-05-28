@@ -1,4 +1,4 @@
-import 'package:commerce_flutter_app/features/domain/service/interfaces/interfaces.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/interfaces.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
