@@ -4,7 +4,6 @@ import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart
 import 'package:commerce_flutter_sdk/src/core/utils/asset_provider.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/opti_logger_service_interface.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/snackbar_coming_soon.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/cubit/quote/quote_tab_switch/quote_tab_switch_cubit.dart';
 import 'package:commerce_flutter_sdk/src/initializers/analytics_initializer.dart';
 import 'package:commerce_flutter_sdk/src/initializers/commerce_sdk_initializer.dart';
 import 'package:commerce_flutter_sdk/src/initializers/essentials_initializer.dart';
@@ -80,7 +79,6 @@ class CommerceFlutterSDK {
         BlocProvider(
             create: (_) => GetIt.I<SearchHistoryCubit>()..getSearchHistory()),
         BlocProvider(create: (_) => GetIt.I<LocationSearchHandlerCubit>()),
-        BlocProvider(create: (_) => GetIt.I<QuoteTabSwitchCubit>()),
       ],
       child: MultiBlocListener(
         listeners: [

@@ -163,7 +163,6 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/promo_code_
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/quick_order/order_item_pricing_inventory_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/quote/quote_all_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/quote/quote_confirmation/quote_confirmation_cubit.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/cubit/quote/quote_tab_switch/quote_tab_switch_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/quote_filter/quote_filter_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/saved_order/saved_order_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
@@ -354,7 +353,6 @@ Future<void> initInjectionContainer() async {
     // my quote
     ..registerFactory(() => QuoteBloc(quoteUsecase: sl()))
     ..registerFactory(() => QuoteUsecase())
-    ..registerFactory(() => QuoteTabSwitchCubit())
 
     // quote filter
     ..registerFactory(() => QuoteFilterCubit(quoteUseCase: sl()))

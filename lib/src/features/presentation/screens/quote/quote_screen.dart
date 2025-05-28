@@ -11,7 +11,6 @@ import 'package:commerce_flutter_sdk/src/features/domain/enums/quote_page_type.d
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_state.dart';
-import 'package:commerce_flutter_sdk/src/features/presentation/cubit/quote/quote_tab_switch/quote_tab_switch_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/quote/quote_filter_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/quote/quote_item_widget.dart';
@@ -81,143 +80,135 @@ class QuotePageState extends State<QuotePage> {
           ),
         ],
       ),
-      body: BlocListener<QuoteTabSwitchCubit, QuoteTabSwitchState>(
-        listener: (context, state) {
-          if (state is QuoteTabSwitchShouldSwitch) {
-            _switchTab(state.index);
-          }
-        },
-        child: Column(
-          children: [
-            Container(
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    context.watch<QuoteBloc>().title,
-                    style: OptiTextStyles.header3,
-                  ),
-                  QuoteFilterWidget(
-                    quoteQueryParameters: context.watch<QuoteBloc>().parameter,
-                    hasFilter: context.watch<QuoteBloc>().hasFilter,
-                    onApply: (parameter) {
-                      context.read<QuoteBloc>().add(
-                            QuoteLoadEvent(
-                              quotePageType: selectedIndex == 1
-                                  ? QuotePageType.activejobs
-                                  : QuotePageType.pending,
-                              quoteParameters: parameter,
-                            ),
-                          );
-                    },
-                  ),
-                ],
-              ),
+      body: Column(
+        children: [
+          Container(
+            height: 50,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  context.watch<QuoteBloc>().title,
+                  style: OptiTextStyles.header3,
+                ),
+                QuoteFilterWidget(
+                  quoteQueryParameters: context.watch<QuoteBloc>().parameter,
+                  hasFilter: context.watch<QuoteBloc>().hasFilter,
+                  onApply: (parameter) {
+                    context.read<QuoteBloc>().add(
+                          QuoteLoadEvent(
+                            quotePageType: selectedIndex == 1
+                                ? QuotePageType.activejobs
+                                : QuotePageType.pending,
+                            quoteParameters: parameter,
+                          ),
+                        );
+                  },
+                ),
+              ],
             ),
-            Expanded(
-              child: TabSwitchWidget(
-                tabTitle0: LocalizationConstants.pending.localized(),
-                tabTitle1: LocalizationConstants.activeJobs.localized(),
-                tabWidget0: Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () async {
-                      context.read<QuoteBloc>().add(
-                            QuoteLoadEvent(
-                              quotePageType: QuotePageType.pending,
-                              quoteParameters: null,
-                            ),
-                          );
-                    },
-                    child:
-                        BlocBuilder<QuoteBloc, QuoteState>(builder: (_, state) {
-                      if (state is QuoteFailed) {
-                        return const Center(
-                          child: Text("No data found"),
+          ),
+          Expanded(
+            child: TabSwitchWidget(
+              key: ValueKey(selectedIndex),
+              tabTitle0: LocalizationConstants.pending.localized(),
+              tabTitle1: LocalizationConstants.activeJobs.localized(),
+              tabWidget0: Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<QuoteBloc>().add(
+                          QuoteLoadEvent(
+                            quotePageType: QuotePageType.pending,
+                            quoteParameters: null,
+                          ),
                         );
-                      } else if (state is QuoteLoading) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (state is QuoteLoaded) {
-                        if (state.quotes == null || state.quotes!.isEmpty) {
-                          return CustomScrollView(
-                            slivers: <Widget>[
-                              SliverFillRemaining(
-                                child: Center(
-                                  child: Text(
-                                    state.notFoundInfoText ?? "",
-                                    style: OptiTextStyles.subtitle,
-                                  ),
+                  },
+                  child:
+                      BlocBuilder<QuoteBloc, QuoteState>(builder: (_, state) {
+                    if (state is QuoteFailed) {
+                      return const Center(
+                        child: Text("No data found"),
+                      );
+                    } else if (state is QuoteLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state is QuoteLoaded) {
+                      if (state.quotes == null || state.quotes!.isEmpty) {
+                        return CustomScrollView(
+                          slivers: <Widget>[
+                            SliverFillRemaining(
+                              child: Center(
+                                child: Text(
+                                  state.notFoundInfoText ?? "",
+                                  style: OptiTextStyles.subtitle,
                                 ),
                               ),
-                            ],
-                          );
-                        } else {
-                          return _PendingQuotesWidget(
-                            goToQuoteDetails: goToQuoteDetails,
-                          );
-                        }
-                      } else {
-                        return Container();
-                      }
-                    }),
-                  ),
-                ),
-                tabWidget1: Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () async {
-                      context.read<QuoteBloc>().add(
-                            QuoteLoadEvent(
-                              quotePageType: QuotePageType.activejobs,
-                              quoteParameters: null,
                             ),
-                          );
-                    },
-                    child: BlocBuilder<QuoteBloc, QuoteState>(
-                        builder: (context, state) {
-                      if (state is QuoteFailed) {
-                        return const Center(
-                          child: Text("No data found"),
+                          ],
                         );
-                      } else if (state is QuoteLoading) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
+                      } else {
+                        return _PendingQuotesWidget(
+                          goToQuoteDetails: goToQuoteDetails,
                         );
-                      } else if (state is JobQuoteLoaded) {
-                        if (state.jobQuotes == null ||
-                            state.jobQuotes!.isEmpty) {
-                          return CustomScrollView(
-                            slivers: <Widget>[
-                              SliverFillRemaining(
-                                child: Center(
-                                  child: Text(
-                                    state.notFoundInfoText ?? "",
-                                    style: OptiTextStyles.subtitle,
-                                  ),
+                      }
+                    } else {
+                      return Container();
+                    }
+                  }),
+                ),
+              ),
+              tabWidget1: Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<QuoteBloc>().add(
+                          QuoteLoadEvent(
+                            quotePageType: QuotePageType.activejobs,
+                            quoteParameters: null,
+                          ),
+                        );
+                  },
+                  child: BlocBuilder<QuoteBloc, QuoteState>(
+                      builder: (context, state) {
+                    if (state is QuoteFailed) {
+                      return const Center(
+                        child: Text("No data found"),
+                      );
+                    } else if (state is QuoteLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state is JobQuoteLoaded) {
+                      if (state.jobQuotes == null || state.jobQuotes!.isEmpty) {
+                        return CustomScrollView(
+                          slivers: <Widget>[
+                            SliverFillRemaining(
+                              child: Center(
+                                child: Text(
+                                  state.notFoundInfoText ?? "",
+                                  style: OptiTextStyles.subtitle,
                                 ),
                               ),
-                            ],
-                          );
-                        } else {
-                          return _buildActiveJobsWidget(
-                              state.jobQuotes, context);
-                        }
+                            ),
+                          ],
+                        );
                       } else {
-                        return Container();
+                        return _buildActiveJobsWidget(state.jobQuotes, context);
                       }
-                    }),
-                  ),
+                    } else {
+                      return Container();
+                    }
+                  }),
                 ),
-                selectedIndex: selectedIndex,
-                onTabSelectionChange: (index) {
-                  _switchTab(index);
-                },
               ),
+              selectedIndex: selectedIndex,
+              onTabSelectionChange: (index) {
+                _switchTab(index);
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -232,8 +223,12 @@ class QuotePageState extends State<QuotePage> {
     }
 
     if (result != null) {
-      context.read<QuoteBloc>().add(QuoteLoadEvent(
-          quotePageType: QuotePageType.pending, quoteParameters: null));
+      if (result == true) {
+        context.read<QuoteBloc>().add(QuoteLoadEvent(
+            quotePageType: QuotePageType.pending, quoteParameters: null));
+      } else {
+        _switchTab(1);
+      }
     }
   }
 
