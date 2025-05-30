@@ -24,6 +24,8 @@ class NumberTextField extends StatefulWidget {
   final void Function(bool hasFocus)? focusListener;
   final bool? isEnabled;
   final bool? showWarningHighlighted;
+  final bool? decimal;
+  final bool? signed;
 
   const NumberTextField({
     super.key,
@@ -43,6 +45,8 @@ class NumberTextField extends StatefulWidget {
     this.isEnabled = true,
     this.onSubmitted,
     this.showWarningHighlighted = false,
+    this.decimal = false,
+    this.signed = false,
   });
 
   @override
@@ -189,7 +193,10 @@ class _NumberTextFieldState extends State<NumberTextField> {
               focusNode: _focusNode,
               textAlign: TextAlign.center,
               textInputAction: TextInputAction.done,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.numberWithOptions(
+                decimal: widget.decimal,
+                signed: widget.signed,
+              ),
               maxLength: widget.max.toString().length +
                   (widget.min.isNegative ? 1 : 0),
               decoration: InputDecoration(
