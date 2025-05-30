@@ -24,8 +24,8 @@ class NumberTextField extends StatefulWidget {
   final void Function(bool hasFocus)? focusListener;
   final bool? isEnabled;
   final bool? showWarningHighlighted;
-  final bool? decimal;
-  final bool? signed;
+  final bool decimal;
+  final bool signed;
 
   const NumberTextField({
     super.key,
