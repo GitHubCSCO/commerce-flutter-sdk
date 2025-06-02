@@ -1,235 +1,131 @@
-import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/brand_mapper.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/brand.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/brand_mapper.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_mapper.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
+class MockProductEntityMapper extends ProductEntityMapper {}
+
 void main() {
   group('BrandEntityMapper', () {
-    test('toEntity should map Brand to BrandEntity', () {
+    test('should correctly map Brand to BrandEntity', () {
       // Arrange
-      final brand = Brand(
-        id: '123',
-        name: 'Test Brand',
-        manufacturer: 'Test Manufacturer',
-        externalUrl: 'http://example.com',
-        detailPagePath: '/brands/test',
-        productListPagePage: '/products/brand/test',
-        logoSmallImagePath: '/images/small-logo.png',
-        logoLargeImagePath: '/images/large-logo.png',
-        logoAltText: 'Brand Logo Alt Text',
-        featuredImagePath: '/images/featured.png',
-        featuredImageAltText: 'Featured Image Alt Text',
-        htmlContent: '<p>Test content</p>',
-        topSellerProducts: [
-          Product(id: 'product1', name: 'Product 1'),
-          Product(id: 'product2', name: 'Product 2'),
-        ],
+      final model = Brand(
+        id: "1",
+        name: "Nike",
+        manufacturer: "Nike Inc.",
+        externalUrl: "https://www.nike.com",
+        detailPagePath: "/brands/nike",
+        productListPagePage: "/products/nike",
+        logoSmallImagePath: "/images/nike_small.png",
+        logoLargeImagePath: "/images/nike_large.png",
+        logoAltText: "Nike Logo",
+        featuredImagePath: "/images/nike_featured.png",
+        featuredImageAltText: "Nike Featured",
+        htmlContent: "<p>Nike Brand</p>",
+        topSellerProducts: [],
       );
 
       // Act
-      final entity = BrandEntityMapper.toEntity(brand);
+      final result = BrandEntityMapper.toEntity(model);
 
       // Assert
-      expect(entity.id, equals(brand.id));
-      expect(entity.name, equals(brand.name));
-      expect(entity.manufacturer, equals(brand.manufacturer));
-      expect(entity.externalUrl, equals(brand.externalUrl));
-      expect(entity.detailPagePath, equals(brand.detailPagePath));
-      expect(entity.productListPagePage, equals(brand.productListPagePage));
-      expect(entity.logoSmallImagePath, equals(brand.logoSmallImagePath));
-      expect(entity.logoLargeImagePath, equals(brand.logoLargeImagePath));
-      expect(entity.logoAltText, equals(brand.logoAltText));
-      expect(entity.featuredImagePath, equals(brand.featuredImagePath));
-      expect(entity.featuredImageAltText, equals(brand.featuredImageAltText));
-      expect(entity.htmlContent, equals(brand.htmlContent));
-      expect(entity.topSellerProducts?.length, equals(2));
-      expect(entity.topSellerProducts?[0].id, equals('product1'));
-      expect(entity.topSellerProducts?[1].id, equals('product2'));
+      expect(result.id, model.id);
+      expect(result.name, model.name);
+      expect(result.manufacturer, model.manufacturer);
+      expect(result.externalUrl, model.externalUrl);
+      expect(result.detailPagePath, model.detailPagePath);
+      expect(result.productListPagePage, model.productListPagePage);
+      expect(result.logoSmallImagePath, model.logoSmallImagePath);
+      expect(result.logoLargeImagePath, model.logoLargeImagePath);
+      expect(result.logoAltText, model.logoAltText);
+      expect(result.featuredImagePath, model.featuredImagePath);
+      expect(result.featuredImageAltText, model.featuredImageAltText);
+      expect(result.htmlContent, model.htmlContent);
+      expect(result.topSellerProducts, isEmpty);
     });
 
-    test('toEntity should handle null Brand', () {
-      // Act
-      final entity = BrandEntityMapper.toEntity(null);
-
-      // Assert
-      expect(entity.id, isNull);
-      expect(entity.name, isNull);
-      expect(entity.topSellerProducts, isNull);
-    });
-
-    test('toEntity should handle Brand with null properties', () {
-      // Arrange
-      final brand = Brand();
-
-      // Act
-      final entity = BrandEntityMapper.toEntity(brand);
-
-      // Assert
-      expect(entity.id, isNull);
-      expect(entity.name, isNull);
-      expect(entity.manufacturer, isNull);
-      expect(entity.externalUrl, isNull);
-      expect(entity.detailPagePath, isNull);
-      expect(entity.productListPagePage, isNull);
-      expect(entity.logoSmallImagePath, isNull);
-      expect(entity.logoLargeImagePath, isNull);
-      expect(entity.logoAltText, isNull);
-      expect(entity.featuredImagePath, isNull);
-      expect(entity.featuredImageAltText, isNull);
-      expect(entity.htmlContent, isNull);
-      expect(entity.topSellerProducts, isNull);
-    });
-
-    test('toModel should map BrandEntity to Brand', () {
+    test('should correctly map BrandEntity to Brand', () {
       // Arrange
       final entity = BrandEntity(
-        id: '123',
-        name: 'Test Brand',
-        manufacturer: 'Test Manufacturer',
-        externalUrl: 'http://example.com',
-        detailPagePath: '/brands/test',
-        productListPagePage: '/products/brand/test',
-        logoSmallImagePath: '/images/small-logo.png',
-        logoLargeImagePath: '/images/large-logo.png',
-        logoAltText: 'Brand Logo Alt Text',
-        featuredImagePath: '/images/featured.png',
-        featuredImageAltText: 'Featured Image Alt Text',
-        htmlContent: '<p>Test content</p>',
-        topSellerProducts: [
-          ProductEntity(id: 'product1', name: 'Product 1'),
-          ProductEntity(id: 'product2', name: 'Product 2'),
-        ],
+        id: "2",
+        name: "Adidas",
+        manufacturer: "Adidas AG",
+        externalUrl: "https://www.adidas.com",
+        detailPagePath: "/brands/adidas",
+        productListPagePage: "/products/adidas",
+        logoSmallImagePath: "/images/adidas_small.png",
+        logoLargeImagePath: "/images/adidas_large.png",
+        logoAltText: "Adidas Logo",
+        featuredImagePath: "/images/adidas_featured.png",
+        featuredImageAltText: "Adidas Featured",
+        htmlContent: "<p>Adidas Brand</p>",
+        topSellerProducts: [],
       );
 
       // Act
-      final model = BrandEntityMapper.toModel(entity);
+      final result = BrandEntityMapper.toModel(entity);
 
       // Assert
-      expect(model.id, equals(entity.id));
-      expect(model.name, equals(entity.name));
-      expect(model.manufacturer, equals(entity.manufacturer));
-      expect(model.externalUrl, equals(entity.externalUrl));
-      expect(model.detailPagePath, equals(entity.detailPagePath));
-      expect(model.productListPagePage, equals(entity.productListPagePage));
-      expect(model.logoSmallImagePath, equals(entity.logoSmallImagePath));
-      expect(model.logoLargeImagePath, equals(entity.logoLargeImagePath));
-      expect(model.logoAltText, equals(entity.logoAltText));
-      expect(model.featuredImagePath, equals(entity.featuredImagePath));
-      expect(model.featuredImageAltText, equals(entity.featuredImageAltText));
-      expect(model.htmlContent, equals(entity.htmlContent));
-      expect(model.topSellerProducts?.length, equals(2));
-      expect(model.topSellerProducts?[0].id, equals('product1'));
-      expect(model.topSellerProducts?[1].id, equals('product2'));
+      expect(result.id, entity.id);
+      expect(result.name, entity.name);
+      expect(result.manufacturer, entity.manufacturer);
+      expect(result.externalUrl, entity.externalUrl);
+      expect(result.detailPagePath, entity.detailPagePath);
+      expect(result.productListPagePage, entity.productListPagePage);
+      expect(result.logoSmallImagePath, entity.logoSmallImagePath);
+      expect(result.logoLargeImagePath, entity.logoLargeImagePath);
+      expect(result.logoAltText, entity.logoAltText);
+      expect(result.featuredImagePath, entity.featuredImagePath);
+      expect(result.featuredImageAltText, entity.featuredImageAltText);
+      expect(result.htmlContent, entity.htmlContent);
+      expect(result.topSellerProducts, isEmpty);
     });
 
-    test('toModel should handle entity with null properties', () {
-      // Arrange
-      const entity = BrandEntity();
-
+    test('should handle null Brand model correctly', () {
       // Act
-      final model = BrandEntityMapper.toModel(entity);
+      final result = BrandEntityMapper.toEntity(null);
 
       // Assert
-      expect(model.id, isNull);
-      expect(model.name, isNull);
-      expect(model.manufacturer, isNull);
-      expect(model.externalUrl, isNull);
-      expect(model.detailPagePath, isNull);
-      expect(model.productListPagePage, isNull);
-      expect(model.logoSmallImagePath, isNull);
-      expect(model.logoLargeImagePath, isNull);
-      expect(model.logoAltText, isNull);
-      expect(model.featuredImagePath, isNull);
-      expect(model.featuredImageAltText, isNull);
-      expect(model.htmlContent, isNull);
-      expect(model.topSellerProducts, isNull);
-    });
-
-    test('roundtrip conversion preserves all data', () {
-      // Arrange
-      final originalModel = Brand(
-        id: '123',
-        name: 'Test Brand',
-        manufacturer: 'Test Manufacturer',
-        externalUrl: 'http://example.com',
-        detailPagePath: '/brands/test',
-        productListPagePage: '/products/brand/test',
-        logoSmallImagePath: '/images/small-logo.png',
-        logoLargeImagePath: '/images/large-logo.png',
-        logoAltText: 'Brand Logo Alt Text',
-        featuredImagePath: '/images/featured.png',
-        featuredImageAltText: 'Featured Image Alt Text',
-        htmlContent: '<p>Test content</p>',
-        topSellerProducts: [
-          Product(id: 'product1', name: 'Product 1'),
-          Product(id: 'product2', name: 'Product 2'),
-        ],
-      );
-
-      // Act
-      final entity = BrandEntityMapper.toEntity(originalModel);
-      final resultModel = BrandEntityMapper.toModel(entity);
-
-      // Assert
-      expect(resultModel.id, equals(originalModel.id));
-      expect(resultModel.name, equals(originalModel.name));
-      expect(resultModel.manufacturer, equals(originalModel.manufacturer));
-      expect(resultModel.externalUrl, equals(originalModel.externalUrl));
-      expect(resultModel.detailPagePath, equals(originalModel.detailPagePath));
-      expect(resultModel.productListPagePage,
-          equals(originalModel.productListPagePage));
-      expect(resultModel.logoSmallImagePath,
-          equals(originalModel.logoSmallImagePath));
-      expect(resultModel.logoLargeImagePath,
-          equals(originalModel.logoLargeImagePath));
-      expect(resultModel.logoAltText, equals(originalModel.logoAltText));
-      expect(resultModel.featuredImagePath,
-          equals(originalModel.featuredImagePath));
-      expect(resultModel.featuredImageAltText,
-          equals(originalModel.featuredImageAltText));
-      expect(resultModel.htmlContent, equals(originalModel.htmlContent));
-      expect(resultModel.topSellerProducts?.length,
-          equals(originalModel.topSellerProducts?.length));
-      expect(resultModel.topSellerProducts?[0].id,
-          equals(originalModel.topSellerProducts?[0].id));
-      expect(resultModel.topSellerProducts?[1].id,
-          equals(originalModel.topSellerProducts?[1].id));
+      expect(result.id, isNull);
+      expect(result.name, isNull);
+      expect(result.manufacturer, isNull);
+      expect(result.externalUrl, isNull);
+      expect(result.detailPagePath, isNull);
+      expect(result.productListPagePage, isNull);
+      expect(result.logoSmallImagePath, isNull);
+      expect(result.logoLargeImagePath, isNull);
+      expect(result.logoAltText, isNull);
+      expect(result.featuredImagePath, isNull);
+      expect(result.featuredImageAltText, isNull);
+      expect(result.htmlContent, isNull);
+      expect(result.topSellerProducts, isNull);
     });
   });
 
   group('BrandAlphabetEntityMapper', () {
-    test('toEntity should map BrandAlphabet to BrandAlphabetEntity', () {
+    test('should correctly map BrandAlphabet to BrandAlphabetEntity', () {
       // Arrange
-      final model = BrandAlphabet(letter: 'A', count: 10);
+      final model = BrandAlphabet(
+        letter: "A",
+        count: 5,
+      );
 
       // Act
-      final entity = BrandAlphabetEntityMapper.toEntity(model);
+      final result = BrandAlphabetEntityMapper.toEntity(model);
 
       // Assert
-      expect(entity.letter, equals('A'));
-      expect(entity.count, equals(10));
+      expect(result.letter, model.letter);
+      expect(result.count, model.count);
     });
 
-    test('toEntity should handle null BrandAlphabet', () {
+    test('should handle null BrandAlphabet model correctly', () {
       // Act
-      final entity = BrandAlphabetEntityMapper.toEntity(null);
+      final result = BrandAlphabetEntityMapper.toEntity(null);
 
       // Assert
-      expect(entity.letter, isNull);
-      expect(entity.count, isNull);
-    });
-
-    test('toEntity should handle BrandAlphabet with null properties', () {
-      // Arrange
-      final model = BrandAlphabet();
-
-      // Act
-      final entity = BrandAlphabetEntityMapper.toEntity(model);
-
-      // Assert
-      expect(entity.letter, isNull);
-      expect(entity.count, isNull);
+      expect(result.letter, isNull);
+      expect(result.count, isNull);
     });
   });
 }

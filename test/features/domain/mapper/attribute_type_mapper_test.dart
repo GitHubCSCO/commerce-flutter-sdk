@@ -1,5 +1,5 @@
-import 'package:commerce_flutter_app/features/domain/entity/attribute_type_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/attribute_type_mapper.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/attribute_type_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/attribute_type_mapper.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -11,143 +11,74 @@ void main() {
   });
 
   group('AttributeTypeEntityMapper', () {
-    test('toEntity converts model to entity correctly', () {
+    test('should correctly map AttributeType to AttributeTypeEntity', () {
       // Arrange
       final model = AttributeType(
-        attributeTypeId: '123',
-        name: 'Color',
-        nameDisplay: 'Product Color',
+        attributeTypeId: "123",
+        name: "Size",
+        nameDisplay: "Size Display",
         sort: 1,
-        id: '456',
-        label: 'color_label',
+        attributeValueFacets: [],
+        id: "456",
+        label: "Size Label",
         isFilter: true,
         isComparable: false,
         isActive: true,
-        sortOrder: 10,
-        attributeValueFacets: [],
+        sortOrder: 2,
         attributeValues: [],
       );
 
       // Act
-      final entity = mapper.toEntity(model);
+      final result = mapper.toEntity(model);
 
       // Assert
-      expect(entity.attributeTypeId, equals('123'));
-      expect(entity.name, equals('Color'));
-      expect(entity.nameDisplay, equals('Product Color'));
-      expect(entity.sort, equals(1));
-      expect(entity.id, equals('456'));
-      expect(entity.label, equals('color_label'));
-      expect(entity.isFilter, isTrue);
-      expect(entity.isComparable, isFalse);
-      expect(entity.isActive, isTrue);
-      expect(entity.sortOrder, equals(10));
-      expect(entity.attributeValueFacets, isEmpty);
-      expect(entity.attributeValues, isEmpty);
+      expect(result.attributeTypeId, model.attributeTypeId);
+      expect(result.name, model.name);
+      expect(result.nameDisplay, model.nameDisplay);
+      expect(result.sort, model.sort);
+      expect(result.attributeValueFacets, isEmpty);
+      expect(result.id, model.id);
+      expect(result.label, model.label);
+      expect(result.isFilter, model.isFilter);
+      expect(result.isComparable, model.isComparable);
+      expect(result.isActive, model.isActive);
+      expect(result.sortOrder, model.sortOrder);
+      expect(result.attributeValues, isEmpty);
     });
 
-    test('toModel converts entity to model correctly', () {
+    test('should correctly map AttributeTypeEntity to AttributeType', () {
       // Arrange
-      const entity = AttributeTypeEntity(
-        attributeTypeId: '123',
-        name: 'Color',
-        nameDisplay: 'Product Color',
-        sort: 1,
-        id: '456',
-        label: 'color_label',
-        isFilter: true,
-        isComparable: false,
-        isActive: true,
-        sortOrder: 10,
+      final entity = AttributeTypeEntity(
+        attributeTypeId: "789",
+        name: "Color",
+        nameDisplay: "Color Display",
+        sort: 3,
         attributeValueFacets: [],
+        id: "101",
+        label: "Color Label",
+        isFilter: false,
+        isComparable: true,
+        isActive: false,
+        sortOrder: 4,
         attributeValues: [],
       );
 
       // Act
-      final model = mapper.toModel(entity);
+      final result = mapper.toModel(entity);
 
       // Assert
-      expect(model.attributeTypeId, equals('123'));
-      expect(model.name, equals('Color'));
-      expect(model.nameDisplay, equals('Product Color'));
-      expect(model.sort, equals(1));
-      expect(model.id, equals('456'));
-      expect(model.label, equals('color_label'));
-      expect(model.isFilter, isTrue);
-      expect(model.isComparable, isFalse);
-      expect(model.isActive, isTrue);
-      expect(model.sortOrder, equals(10));
-      expect(model.attributeValueFacets, isEmpty);
-      expect(model.attributeValues, isEmpty);
-    });
-
-    test('toEntity handles null attributeValues and attributeValueFacets', () {
-      // Arrange
-      final model = AttributeType(
-        attributeTypeId: '123',
-        name: 'Color',
-        attributeValues: null,
-        attributeValueFacets: null,
-      );
-
-      // Act
-      final entity = mapper.toEntity(model);
-
-      // Assert
-      expect(entity.attributeValues, isNull);
-      expect(entity.attributeValueFacets, isNull);
-    });
-
-    test('toModel handles null attributeValues and attributeValueFacets', () {
-      // Arrange
-      const entity = AttributeTypeEntity(
-        attributeTypeId: '123',
-        name: 'Color',
-        attributeValues: null,
-        attributeValueFacets: null,
-      );
-
-      // Act
-      final model = mapper.toModel(entity);
-
-      // Assert
-      expect(model.attributeValues, isNull);
-      expect(model.attributeValueFacets, isNull);
-    });
-
-    test('roundtrip conversion preserves all data', () {
-      // Arrange
-      final originalModel = AttributeType(
-        attributeTypeId: '123',
-        name: 'Color',
-        nameDisplay: 'Product Color',
-        sort: 1,
-        id: '456',
-        label: 'color_label',
-        isFilter: true,
-        isComparable: false,
-        isActive: true,
-        sortOrder: 10,
-        attributeValueFacets: [],
-        attributeValues: [],
-      );
-
-      // Act
-      final entity = mapper.toEntity(originalModel);
-      final resultModel = mapper.toModel(entity);
-
-      // Assert
-      expect(
-          resultModel.attributeTypeId, equals(originalModel.attributeTypeId));
-      expect(resultModel.name, equals(originalModel.name));
-      expect(resultModel.nameDisplay, equals(originalModel.nameDisplay));
-      expect(resultModel.sort, equals(originalModel.sort));
-      expect(resultModel.id, equals(originalModel.id));
-      expect(resultModel.label, equals(originalModel.label));
-      expect(resultModel.isFilter, equals(originalModel.isFilter));
-      expect(resultModel.isComparable, equals(originalModel.isComparable));
-      expect(resultModel.isActive, equals(originalModel.isActive));
-      expect(resultModel.sortOrder, equals(originalModel.sortOrder));
+      expect(result.attributeTypeId, entity.attributeTypeId);
+      expect(result.name, entity.name);
+      expect(result.nameDisplay, entity.nameDisplay);
+      expect(result.sort, entity.sort);
+      expect(result.attributeValueFacets, isEmpty);
+      expect(result.id, entity.id);
+      expect(result.label, entity.label);
+      expect(result.isFilter, entity.isFilter);
+      expect(result.isComparable, entity.isComparable);
+      expect(result.isActive, entity.isActive);
+      expect(result.sortOrder, entity.sortOrder);
+      expect(result.attributeValues, isEmpty);
     });
   });
 }

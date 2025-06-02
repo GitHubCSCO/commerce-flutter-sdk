@@ -41,7 +41,7 @@ on:
 
 jobs:
   ios:
-    runs-on: macos-latest
+    runs-on: macos-15
     outputs:
       artifact_id: ${{ steps.upload.outputs.artifact-id }}
     steps:
@@ -63,6 +63,11 @@ jobs:
       - run: flutter --version
 
       - run: flutter doctor -v
+
+      - name: Install Mono
+        run: |
+          brew update
+          brew install mono
 
       - uses: shimataro/ssh-key-action@v2
         with:
