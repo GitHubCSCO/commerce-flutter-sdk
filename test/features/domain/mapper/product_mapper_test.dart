@@ -1,9 +1,9 @@
-import 'package:commerce_flutter_app/features/domain/entity/availability_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/brand.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_unit_of_measure_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/product_mapper.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/availability_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/brand.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/product_price_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/product_unit_of_measure_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_mapper.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

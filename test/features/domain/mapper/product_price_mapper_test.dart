@@ -1,6 +1,6 @@
-import 'package:commerce_flutter_app/features/domain/entity/break_price_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/product_price_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/product_price_mapper.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/break_price_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/product_price_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_price_mapper.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 

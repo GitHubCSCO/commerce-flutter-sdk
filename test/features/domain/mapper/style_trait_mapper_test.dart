@@ -1,7 +1,7 @@
+import 'package:commerce_flutter_sdk/src/features/domain/entity/style_trait_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/style_value_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/style_trait_mapper.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:commerce_flutter_app/features/domain/entity/style_trait_entity.dart';
-import 'package:commerce_flutter_app/features/domain/entity/style_value_entity.dart';
-import 'package:commerce_flutter_app/features/domain/mapper/style_trait_mapper.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
 void main() {
