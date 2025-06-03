@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
@@ -55,6 +56,8 @@ class ClientService implements IClientService {
   Future<void>? _sessionLoadingCompletedState;
 
   void _createClient() {
+
+    
     var baseOptions = BaseOptions(
       headers: {
         Headers.contentTypeHeader: Headers.jsonContentType,
@@ -62,6 +65,24 @@ class ClientService implements IClientService {
       },
     );
     client = Dio(baseOptions);
+
+    // WARNING: Only for local development/testing. Do NOT use in production.
+    bool bypassCertificateValidation =
+        true; // Set to false for production builds
+    if (bypassCertificateValidation) {
+      (client.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+        // Use IOHttpClientAdapter for Flutter >= 3.7.0
+        // Use DefaultHttpClientAdapter for older versions if needed
+        final client = HttpClient();
+        client.badCertificateCallback =
+            (X509Certificate cert, String host, int port) =>
+                true; // Allow self-signed certs
+        return client;
+      };
+    }
+// --- End of certificate bypass section ---
+
+
     cookieJar = CommerceCookieJar();
     client.interceptors.add(CookieManager(cookieJar));
     if (loggerService.isApiLogEnabled) {

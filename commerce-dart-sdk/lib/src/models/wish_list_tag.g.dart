@@ -16,18 +16,10 @@ WishListTagModel _$WishListTagModelFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$WishListTagModelToJson(WishListTagModel instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('id', instance.id);
-  writeNotNull('tag', instance.tag);
-  return val;
-}
+Map<String, dynamic> _$WishListTagModelToJson(WishListTagModel instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.tag case final value?) 'tag': value,
+    };

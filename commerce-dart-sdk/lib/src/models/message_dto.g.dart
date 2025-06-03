@@ -19,22 +19,15 @@ MessageDto _$MessageDtoFromJson(Map<String, dynamic> json) => MessageDto(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$MessageDtoToJson(MessageDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('customerOrderId', instance.customerOrderId);
-  writeNotNull('toUserProfileId', instance.toUserProfileId);
-  writeNotNull('toUserProfileName', instance.toUserProfileName);
-  writeNotNull('subject', instance.subject);
-  writeNotNull('message', instance.message);
-  writeNotNull('process', instance.process);
-  return val;
-}
+Map<String, dynamic> _$MessageDtoToJson(MessageDto instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.customerOrderId case final value?) 'customerOrderId': value,
+      if (instance.toUserProfileId case final value?) 'toUserProfileId': value,
+      if (instance.toUserProfileName case final value?)
+        'toUserProfileName': value,
+      if (instance.subject case final value?) 'subject': value,
+      if (instance.message case final value?) 'message': value,
+      if (instance.process case final value?) 'process': value,
+    };

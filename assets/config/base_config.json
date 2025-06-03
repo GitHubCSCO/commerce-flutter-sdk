@@ -1,5 +1,5 @@
 {
-    "domain": "",
+    "domain": "https://192.168.0.200/",
     "checkoutUrl": null,
     "startingCategoryForBrowsing": null,
     "hasCheckout": true,
