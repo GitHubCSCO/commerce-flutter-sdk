@@ -41,39 +41,38 @@ Category _$CategoryFromJson(Map<String, dynamic> json) => Category(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$CategoryToJson(Category instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('id', instance.id);
-  writeNotNull('name', instance.name);
-  writeNotNull('shortDescription', instance.shortDescription);
-  writeNotNull('urlSegment', instance.urlSegment);
-  writeNotNull('smallImagePath', instance.smallImagePath);
-  writeNotNull('largeImagePath', instance.largeImagePath);
-  writeNotNull('imageAltText', instance.imageAltText);
-  writeNotNull('activateOn', instance.activateOn?.toIso8601String());
-  writeNotNull('deactivateOn', instance.deactivateOn?.toIso8601String());
-  writeNotNull('metaKeywords', instance.metaKeywords);
-  writeNotNull('metaDescription', instance.metaDescription);
-  writeNotNull('htmlContent', instance.htmlContent);
-  writeNotNull('sortOrder', instance.sortOrder);
-  writeNotNull('isFeatured', instance.isFeatured);
-  writeNotNull('isDynamic', instance.isDynamic);
-  writeNotNull(
-      'subCategories', instance.subCategories?.map((e) => e.toJson()).toList());
-  writeNotNull('path', instance.path);
-  writeNotNull('mobileBannerImageUrl', instance.mobileBannerImageUrl);
-  writeNotNull('mobilePrimaryText', instance.mobilePrimaryText);
-  writeNotNull('mobileSecondaryText', instance.mobileSecondaryText);
-  writeNotNull('mobileTextJustification', instance.mobileTextJustification);
-  writeNotNull('mobileTextColor', instance.mobileTextColor);
-  return val;
-}
+Map<String, dynamic> _$CategoryToJson(Category instance) => <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.shortDescription case final value?)
+        'shortDescription': value,
+      if (instance.urlSegment case final value?) 'urlSegment': value,
+      if (instance.smallImagePath case final value?) 'smallImagePath': value,
+      if (instance.largeImagePath case final value?) 'largeImagePath': value,
+      if (instance.imageAltText case final value?) 'imageAltText': value,
+      if (instance.activateOn?.toIso8601String() case final value?)
+        'activateOn': value,
+      if (instance.deactivateOn?.toIso8601String() case final value?)
+        'deactivateOn': value,
+      if (instance.metaKeywords case final value?) 'metaKeywords': value,
+      if (instance.metaDescription case final value?) 'metaDescription': value,
+      if (instance.htmlContent case final value?) 'htmlContent': value,
+      if (instance.sortOrder case final value?) 'sortOrder': value,
+      if (instance.isFeatured case final value?) 'isFeatured': value,
+      if (instance.isDynamic case final value?) 'isDynamic': value,
+      if (instance.subCategories?.map((e) => e.toJson()).toList()
+          case final value?)
+        'subCategories': value,
+      if (instance.path case final value?) 'path': value,
+      if (instance.mobileBannerImageUrl case final value?)
+        'mobileBannerImageUrl': value,
+      if (instance.mobilePrimaryText case final value?)
+        'mobilePrimaryText': value,
+      if (instance.mobileSecondaryText case final value?)
+        'mobileSecondaryText': value,
+      if (instance.mobileTextJustification case final value?)
+        'mobileTextJustification': value,
+      if (instance.mobileTextColor case final value?) 'mobileTextColor': value,
+    };

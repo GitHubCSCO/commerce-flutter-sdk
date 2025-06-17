@@ -40,41 +40,37 @@ ProductDetail _$ProductDetailFromJson(Map<String, dynamic> json) =>
       vatCodeId: json['vatCodeId'] as String?,
     );
 
-Map<String, dynamic> _$ProductDetailToJson(ProductDetail instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('name', instance.name);
-  writeNotNull('modelNumber', instance.modelNumber);
-  writeNotNull('sku', instance.sku);
-  writeNotNull('upcCode', instance.upcCode);
-  writeNotNull('unspsc', instance.unspsc);
-  writeNotNull('productCode', instance.productCode);
-  writeNotNull('priceCode', instance.priceCode);
-  writeNotNull('sortOrder', instance.sortOrder);
-  writeNotNull('multipleSaleQty', instance.multipleSaleQty);
-  writeNotNull('canBackOrder', instance.canBackOrder);
-  writeNotNull('roundingRule', instance.roundingRule);
-  writeNotNull('replacementProductId', instance.replacementProductId);
-  writeNotNull('isHazardousGood', instance.isHazardousGood);
-  writeNotNull('hasMsds', instance.hasMsds);
-  writeNotNull('isSpecialOrder', instance.isSpecialOrder);
-  writeNotNull('isGiftCard', instance.isGiftCard);
-  writeNotNull('allowAnyGiftCardAmount', instance.allowAnyGiftCardAmount);
-  writeNotNull('taxCode1', instance.taxCode1);
-  writeNotNull('taxCode2', instance.taxCode2);
-  writeNotNull('taxCategory', instance.taxCategory);
-  writeNotNull('vatCodeId', instance.vatCodeId);
-  writeNotNull('shippingClassification', instance.shippingClassification);
-  writeNotNull('shippingLength', instance.shippingLength);
-  writeNotNull('shippingWidth', instance.shippingWidth);
-  writeNotNull('shippingHeight', instance.shippingHeight);
-  writeNotNull('shippingWeight', instance.shippingWeight);
-  writeNotNull('configuration', instance.configuration?.toJson());
-  return val;
-}
+Map<String, dynamic> _$ProductDetailToJson(ProductDetail instance) =>
+    <String, dynamic>{
+      if (instance.name case final value?) 'name': value,
+      if (instance.modelNumber case final value?) 'modelNumber': value,
+      if (instance.sku case final value?) 'sku': value,
+      if (instance.upcCode case final value?) 'upcCode': value,
+      if (instance.unspsc case final value?) 'unspsc': value,
+      if (instance.productCode case final value?) 'productCode': value,
+      if (instance.priceCode case final value?) 'priceCode': value,
+      if (instance.sortOrder case final value?) 'sortOrder': value,
+      if (instance.multipleSaleQty case final value?) 'multipleSaleQty': value,
+      if (instance.canBackOrder case final value?) 'canBackOrder': value,
+      if (instance.roundingRule case final value?) 'roundingRule': value,
+      if (instance.replacementProductId case final value?)
+        'replacementProductId': value,
+      if (instance.isHazardousGood case final value?) 'isHazardousGood': value,
+      if (instance.hasMsds case final value?) 'hasMsds': value,
+      if (instance.isSpecialOrder case final value?) 'isSpecialOrder': value,
+      if (instance.isGiftCard case final value?) 'isGiftCard': value,
+      if (instance.allowAnyGiftCardAmount case final value?)
+        'allowAnyGiftCardAmount': value,
+      if (instance.taxCode1 case final value?) 'taxCode1': value,
+      if (instance.taxCode2 case final value?) 'taxCode2': value,
+      if (instance.taxCategory case final value?) 'taxCategory': value,
+      if (instance.vatCodeId case final value?) 'vatCodeId': value,
+      if (instance.shippingClassification case final value?)
+        'shippingClassification': value,
+      if (instance.shippingLength case final value?) 'shippingLength': value,
+      if (instance.shippingWidth case final value?) 'shippingWidth': value,
+      if (instance.shippingHeight case final value?) 'shippingHeight': value,
+      if (instance.shippingWeight case final value?) 'shippingWeight': value,
+      if (instance.configuration?.toJson() case final value?)
+        'configuration': value,
+    };

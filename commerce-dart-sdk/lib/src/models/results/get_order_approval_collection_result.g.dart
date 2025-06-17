@@ -22,19 +22,12 @@ GetOrderApprovalCollectionResult _$GetOrderApprovalCollectionResultFromJson(
       );
 
 Map<String, dynamic> _$GetOrderApprovalCollectionResultToJson(
-    GetOrderApprovalCollectionResult instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('pagination', instance.pagination?.toJson());
-  writeNotNull('cartCollection',
-      instance.cartCollection?.map((e) => e.toJson()).toList());
-  return val;
-}
+        GetOrderApprovalCollectionResult instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.pagination?.toJson() case final value?) 'pagination': value,
+      if (instance.cartCollection?.map((e) => e.toJson()).toList()
+          case final value?)
+        'cartCollection': value,
+    };

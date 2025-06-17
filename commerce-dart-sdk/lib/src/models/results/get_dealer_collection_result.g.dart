@@ -26,22 +26,17 @@ GetDealerCollectionResult _$GetDealerCollectionResultFromJson(
       );
 
 Map<String, dynamic> _$GetDealerCollectionResultToJson(
-    GetDealerCollectionResult instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('pagination', instance.pagination?.toJson());
-  writeNotNull('dealers', instance.dealers?.map((e) => e.toJson()).toList());
-  writeNotNull('defaultLatitude', instance.defaultLatitude);
-  writeNotNull('defaultLongitude', instance.defaultLongitude);
-  writeNotNull('defaultRadius', instance.defaultRadius);
-  writeNotNull('distanceUnitOfMeasure', instance.distanceUnitOfMeasure);
-  return val;
-}
+        GetDealerCollectionResult instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.pagination?.toJson() case final value?) 'pagination': value,
+      if (instance.dealers?.map((e) => e.toJson()).toList() case final value?)
+        'dealers': value,
+      if (instance.defaultLatitude case final value?) 'defaultLatitude': value,
+      if (instance.defaultLongitude case final value?)
+        'defaultLongitude': value,
+      if (instance.defaultRadius case final value?) 'defaultRadius': value,
+      if (instance.distanceUnitOfMeasure case final value?)
+        'distanceUnitOfMeasure': value,
+    };

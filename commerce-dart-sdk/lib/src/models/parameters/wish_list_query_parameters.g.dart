@@ -19,21 +19,15 @@ WishListQueryParameters _$WishListQueryParametersFromJson(
     );
 
 Map<String, dynamic> _$WishListQueryParametersToJson(
-    WishListQueryParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull(
-      'expand', JsonEncodingMethods.commaSeparatedJson(instance.expand));
-  writeNotNull(
-      'exclude', JsonEncodingMethods.commaSeparatedJson(instance.exclude));
-  return val;
-}
+        WishListQueryParameters instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (JsonEncodingMethods.commaSeparatedJson(instance.expand)
+          case final value?)
+        'expand': value,
+      if (JsonEncodingMethods.commaSeparatedJson(instance.exclude)
+          case final value?)
+        'exclude': value,
+    };

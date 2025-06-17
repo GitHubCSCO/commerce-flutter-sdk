@@ -16,16 +16,9 @@ InventoryAvailability _$InventoryAvailabilityFromJson(
     );
 
 Map<String, dynamic> _$InventoryAvailabilityToJson(
-    InventoryAvailability instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('unitOfMeasure', instance.unitOfMeasure);
-  writeNotNull('availability', instance.availability?.toJson());
-  return val;
-}
+        InventoryAvailability instance) =>
+    <String, dynamic>{
+      if (instance.unitOfMeasure case final value?) 'unitOfMeasure': value,
+      if (instance.availability?.toJson() case final value?)
+        'availability': value,
+    };

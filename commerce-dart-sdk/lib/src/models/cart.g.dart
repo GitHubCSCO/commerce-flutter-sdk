@@ -140,117 +140,139 @@ Cart _$CartFromJson(Map<String, dynamic> json) => Cart(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$CartToJson(Cart instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('cartLinesUri', instance.cartLinesUri);
-  writeNotNull('id', instance.id);
-  writeNotNull('status', instance.status);
-  writeNotNull('statusDisplay', instance.statusDisplay);
-  writeNotNull('type', instance.type);
-  writeNotNull('typeDisplay', instance.typeDisplay);
-  writeNotNull('orderNumber', instance.orderNumber);
-  writeNotNull('erpOrderNumber', instance.erpOrderNumber);
-  writeNotNull('orderDate', instance.orderDate?.toIso8601String());
-  writeNotNull('billTo', instance.billTo?.toJson());
-  writeNotNull('shipTo', instance.shipTo?.toJson());
-  writeNotNull('userLabel', instance.userLabel);
-  writeNotNull('userRoles', instance.userRoles);
-  writeNotNull('shipToLabel', instance.shipToLabel);
-  writeNotNull('notes', instance.notes);
-  writeNotNull('carrier', instance.carrier?.toJson());
-  writeNotNull('shipVia', instance.shipVia?.toJson());
-  writeNotNull('paymentMethod', instance.paymentMethod?.toJson());
-  writeNotNull('fulfillmentMethod', instance.fulfillmentMethod);
-  writeNotNull('poNumber', instance.poNumber);
-  writeNotNull('promotionCode', instance.promotionCode);
-  writeNotNull('initiatedByUserName', instance.initiatedByUserName);
-  writeNotNull('totalQtyOrdered', instance.totalQtyOrdered);
-  writeNotNull('lineCount', instance.lineCount);
-  writeNotNull('totalCountDisplay', instance.totalCountDisplay);
-  writeNotNull('quoteRequiredCount', instance.quoteRequiredCount);
-  writeNotNull('orderSubTotal', instance.orderSubTotal);
-  writeNotNull('orderSubTotalDisplay', instance.orderSubTotalDisplay);
-  writeNotNull('orderSubTotalWithOutProductDiscounts',
-      instance.orderSubTotalWithOutProductDiscounts);
-  writeNotNull('orderSubTotalWithOutProductDiscountsDisplay',
-      instance.orderSubTotalWithOutProductDiscountsDisplay);
-  writeNotNull('totalTax', instance.totalTax);
-  writeNotNull('totalTaxDisplay', instance.totalTaxDisplay);
-  writeNotNull('shippingAndHandling', instance.shippingAndHandling);
-  writeNotNull(
-      'shippingAndHandlingDisplay', instance.shippingAndHandlingDisplay);
-  writeNotNull('shippingChargesDisplay', instance.shippingChargesDisplay);
-  writeNotNull('handlingChargesDisplay', instance.handlingChargesDisplay);
-  writeNotNull('otherChargesDisplay', instance.otherChargesDisplay);
-  writeNotNull('orderGrandTotal', instance.orderGrandTotal);
-  writeNotNull('orderGrandTotalDisplay', instance.orderGrandTotalDisplay);
-  writeNotNull('costCodeLabel', instance.costCodeLabel);
-  writeNotNull('isAuthenticated', instance.isAuthenticated);
-  writeNotNull('isGuestOrder', instance.isGuestOrder);
-  writeNotNull('isSalesperson', instance.isSalesperson);
-  writeNotNull('isSubscribed', instance.isSubscribed);
-  writeNotNull('requiresPoNumber', instance.requiresPoNumber);
-  writeNotNull(
-      'displayContinueShoppingLink', instance.displayContinueShoppingLink);
-  writeNotNull('canModifyOrder', instance.canModifyOrder);
-  writeNotNull('canSaveOrder', instance.canSaveOrder);
-  writeNotNull('canBypassCheckoutAddress', instance.canBypassCheckoutAddress);
-  writeNotNull('canRequisition', instance.canRequisition);
-  writeNotNull('canRequestQuote', instance.canRequestQuote);
-  writeNotNull('canEditCostCode', instance.canEditCostCode);
-  writeNotNull('showTaxAndShipping', instance.showTaxAndShipping);
-  writeNotNull('showLineNotes', instance.showLineNotes);
-  writeNotNull('showCostCode', instance.showCostCode);
-  writeNotNull('showNewsletterSignup', instance.showNewsletterSignup);
-  writeNotNull('showPoNumber', instance.showPoNumber);
-  writeNotNull('showCreditCard', instance.showCreditCard);
-  writeNotNull('showPayPal', instance.showPayPal);
-  writeNotNull('isAwaitingApproval', instance.isAwaitingApproval);
-  writeNotNull('requiresApproval', instance.requiresApproval);
-  writeNotNull('approverReason', instance.approverReason);
-  writeNotNull('hasApprover', instance.hasApprover);
-  writeNotNull('salespersonName', instance.salespersonName);
-  writeNotNull('paymentOptions', instance.paymentOptions?.toJson());
-  writeNotNull(
-      'costCodes', instance.costCodes?.map((e) => e.toJson()).toList());
-  writeNotNull('carriers', instance.carriers?.map((e) => e.toJson()).toList());
-  writeNotNull(
-      'cartLines', instance.cartLines?.map((e) => e.toJson()).toList());
-  writeNotNull('customerOrderTaxes',
-      instance.customerOrderTaxes?.map((e) => e.toJson()).toList());
-  writeNotNull('canCheckOut', instance.canCheckOut);
-  writeNotNull('hasInsufficientInventory', instance.hasInsufficientInventory);
-  writeNotNull('currencySymbol', instance.currencySymbol);
-  writeNotNull('requestedDeliveryDate', instance.requestedDeliveryDate);
-  writeNotNull('requestedDeliveryDateDisplay',
-      instance.requestedDeliveryDateDisplay?.toIso8601String());
-  writeNotNull('requestedPickUpDate', instance.requestedPickUpDate);
-  writeNotNull('requestedPickUpDateDisplay',
-      instance.requestedPickUpDateDisplay?.toIso8601String());
-  writeNotNull('cartNotPriced', instance.cartNotPriced);
-  writeNotNull('messages', instance.messages);
-  writeNotNull(
-      'creditCardBillingAddress', instance.creditCardBillingAddress?.toJson());
-  writeNotNull('alsoPurchasedProducts',
-      instance.alsoPurchasedProducts?.map((e) => e.toJson()).toList());
-  writeNotNull('taxFailureReason', instance.taxFailureReason);
-  writeNotNull(
-      'failedToGetRealTimeInventory', instance.failedToGetRealTimeInventory);
-  writeNotNull('unassignCart', instance.unassignCart);
-  writeNotNull('customerVatNumber', instance.customerVatNumber);
-  writeNotNull('vmiLocationId', instance.vmiLocationId);
-  writeNotNull('defaultWarehouse', instance.defaultWarehouse?.toJson());
-  return val;
-}
+Map<String, dynamic> _$CartToJson(Cart instance) => <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.cartLinesUri case final value?) 'cartLinesUri': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.status case final value?) 'status': value,
+      if (instance.statusDisplay case final value?) 'statusDisplay': value,
+      if (instance.type case final value?) 'type': value,
+      if (instance.typeDisplay case final value?) 'typeDisplay': value,
+      if (instance.orderNumber case final value?) 'orderNumber': value,
+      if (instance.erpOrderNumber case final value?) 'erpOrderNumber': value,
+      if (instance.orderDate?.toIso8601String() case final value?)
+        'orderDate': value,
+      if (instance.billTo?.toJson() case final value?) 'billTo': value,
+      if (instance.shipTo?.toJson() case final value?) 'shipTo': value,
+      if (instance.userLabel case final value?) 'userLabel': value,
+      if (instance.userRoles case final value?) 'userRoles': value,
+      if (instance.shipToLabel case final value?) 'shipToLabel': value,
+      if (instance.notes case final value?) 'notes': value,
+      if (instance.carrier?.toJson() case final value?) 'carrier': value,
+      if (instance.shipVia?.toJson() case final value?) 'shipVia': value,
+      if (instance.paymentMethod?.toJson() case final value?)
+        'paymentMethod': value,
+      if (instance.fulfillmentMethod case final value?)
+        'fulfillmentMethod': value,
+      if (instance.poNumber case final value?) 'poNumber': value,
+      if (instance.promotionCode case final value?) 'promotionCode': value,
+      if (instance.initiatedByUserName case final value?)
+        'initiatedByUserName': value,
+      if (instance.totalQtyOrdered case final value?) 'totalQtyOrdered': value,
+      if (instance.lineCount case final value?) 'lineCount': value,
+      if (instance.totalCountDisplay case final value?)
+        'totalCountDisplay': value,
+      if (instance.quoteRequiredCount case final value?)
+        'quoteRequiredCount': value,
+      if (instance.orderSubTotal case final value?) 'orderSubTotal': value,
+      if (instance.orderSubTotalDisplay case final value?)
+        'orderSubTotalDisplay': value,
+      if (instance.orderSubTotalWithOutProductDiscounts case final value?)
+        'orderSubTotalWithOutProductDiscounts': value,
+      if (instance.orderSubTotalWithOutProductDiscountsDisplay
+          case final value?)
+        'orderSubTotalWithOutProductDiscountsDisplay': value,
+      if (instance.totalTax case final value?) 'totalTax': value,
+      if (instance.totalTaxDisplay case final value?) 'totalTaxDisplay': value,
+      if (instance.shippingAndHandling case final value?)
+        'shippingAndHandling': value,
+      if (instance.shippingAndHandlingDisplay case final value?)
+        'shippingAndHandlingDisplay': value,
+      if (instance.shippingChargesDisplay case final value?)
+        'shippingChargesDisplay': value,
+      if (instance.handlingChargesDisplay case final value?)
+        'handlingChargesDisplay': value,
+      if (instance.otherChargesDisplay case final value?)
+        'otherChargesDisplay': value,
+      if (instance.orderGrandTotal case final value?) 'orderGrandTotal': value,
+      if (instance.orderGrandTotalDisplay case final value?)
+        'orderGrandTotalDisplay': value,
+      if (instance.costCodeLabel case final value?) 'costCodeLabel': value,
+      if (instance.isAuthenticated case final value?) 'isAuthenticated': value,
+      if (instance.isGuestOrder case final value?) 'isGuestOrder': value,
+      if (instance.isSalesperson case final value?) 'isSalesperson': value,
+      if (instance.isSubscribed case final value?) 'isSubscribed': value,
+      if (instance.requiresPoNumber case final value?)
+        'requiresPoNumber': value,
+      if (instance.displayContinueShoppingLink case final value?)
+        'displayContinueShoppingLink': value,
+      if (instance.canModifyOrder case final value?) 'canModifyOrder': value,
+      if (instance.canSaveOrder case final value?) 'canSaveOrder': value,
+      if (instance.canBypassCheckoutAddress case final value?)
+        'canBypassCheckoutAddress': value,
+      if (instance.canRequisition case final value?) 'canRequisition': value,
+      if (instance.canRequestQuote case final value?) 'canRequestQuote': value,
+      if (instance.canEditCostCode case final value?) 'canEditCostCode': value,
+      if (instance.showTaxAndShipping case final value?)
+        'showTaxAndShipping': value,
+      if (instance.showLineNotes case final value?) 'showLineNotes': value,
+      if (instance.showCostCode case final value?) 'showCostCode': value,
+      if (instance.showNewsletterSignup case final value?)
+        'showNewsletterSignup': value,
+      if (instance.showPoNumber case final value?) 'showPoNumber': value,
+      if (instance.showCreditCard case final value?) 'showCreditCard': value,
+      if (instance.showPayPal case final value?) 'showPayPal': value,
+      if (instance.isAwaitingApproval case final value?)
+        'isAwaitingApproval': value,
+      if (instance.requiresApproval case final value?)
+        'requiresApproval': value,
+      if (instance.approverReason case final value?) 'approverReason': value,
+      if (instance.hasApprover case final value?) 'hasApprover': value,
+      if (instance.salespersonName case final value?) 'salespersonName': value,
+      if (instance.paymentOptions?.toJson() case final value?)
+        'paymentOptions': value,
+      if (instance.costCodes?.map((e) => e.toJson()).toList() case final value?)
+        'costCodes': value,
+      if (instance.carriers?.map((e) => e.toJson()).toList() case final value?)
+        'carriers': value,
+      if (instance.cartLines?.map((e) => e.toJson()).toList() case final value?)
+        'cartLines': value,
+      if (instance.customerOrderTaxes?.map((e) => e.toJson()).toList()
+          case final value?)
+        'customerOrderTaxes': value,
+      if (instance.canCheckOut case final value?) 'canCheckOut': value,
+      if (instance.hasInsufficientInventory case final value?)
+        'hasInsufficientInventory': value,
+      if (instance.currencySymbol case final value?) 'currencySymbol': value,
+      if (instance.requestedDeliveryDate case final value?)
+        'requestedDeliveryDate': value,
+      if (instance.requestedDeliveryDateDisplay?.toIso8601String()
+          case final value?)
+        'requestedDeliveryDateDisplay': value,
+      if (instance.requestedPickUpDate case final value?)
+        'requestedPickUpDate': value,
+      if (instance.requestedPickUpDateDisplay?.toIso8601String()
+          case final value?)
+        'requestedPickUpDateDisplay': value,
+      if (instance.cartNotPriced case final value?) 'cartNotPriced': value,
+      if (instance.messages case final value?) 'messages': value,
+      if (instance.creditCardBillingAddress?.toJson() case final value?)
+        'creditCardBillingAddress': value,
+      if (instance.alsoPurchasedProducts?.map((e) => e.toJson()).toList()
+          case final value?)
+        'alsoPurchasedProducts': value,
+      if (instance.taxFailureReason case final value?)
+        'taxFailureReason': value,
+      if (instance.failedToGetRealTimeInventory case final value?)
+        'failedToGetRealTimeInventory': value,
+      if (instance.unassignCart case final value?) 'unassignCart': value,
+      if (instance.customerVatNumber case final value?)
+        'customerVatNumber': value,
+      if (instance.vmiLocationId case final value?) 'vmiLocationId': value,
+      if (instance.defaultWarehouse?.toJson() case final value?)
+        'defaultWarehouse': value,
+    };
 
 CarrierDto _$CarrierDtoFromJson(Map<String, dynamic> json) => CarrierDto(
       id: json['id'] as String?,
@@ -260,20 +282,13 @@ CarrierDto _$CarrierDtoFromJson(Map<String, dynamic> json) => CarrierDto(
           .toList(),
     );
 
-Map<String, dynamic> _$CarrierDtoToJson(CarrierDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('description', instance.description);
-  writeNotNull('shipVias', instance.shipVias?.map((e) => e.toJson()).toList());
-  return val;
-}
+Map<String, dynamic> _$CarrierDtoToJson(CarrierDto instance) =>
+    <String, dynamic>{
+      if (instance.id case final value?) 'id': value,
+      if (instance.description case final value?) 'description': value,
+      if (instance.shipVias?.map((e) => e.toJson()).toList() case final value?)
+        'shipVias': value,
+    };
 
 ShipViaDto _$ShipViaDtoFromJson(Map<String, dynamic> json) => ShipViaDto(
       id: json['id'] as String?,
@@ -281,20 +296,12 @@ ShipViaDto _$ShipViaDtoFromJson(Map<String, dynamic> json) => ShipViaDto(
       isDefault: json['isDefault'] as bool?,
     );
 
-Map<String, dynamic> _$ShipViaDtoToJson(ShipViaDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('description', instance.description);
-  writeNotNull('isDefault', instance.isDefault);
-  return val;
-}
+Map<String, dynamic> _$ShipViaDtoToJson(ShipViaDto instance) =>
+    <String, dynamic>{
+      if (instance.id case final value?) 'id': value,
+      if (instance.description case final value?) 'description': value,
+      if (instance.isDefault case final value?) 'isDefault': value,
+    };
 
 PaymentMethodDto _$PaymentMethodDtoFromJson(Map<String, dynamic> json) =>
     PaymentMethodDto(
@@ -305,22 +312,15 @@ PaymentMethodDto _$PaymentMethodDtoFromJson(Map<String, dynamic> json) =>
       cardType: json['cardType'] as String?,
     );
 
-Map<String, dynamic> _$PaymentMethodDtoToJson(PaymentMethodDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
-  writeNotNull('isCreditCard', instance.isCreditCard);
-  writeNotNull('isPaymentProfile', instance.isPaymentProfile);
-  writeNotNull('cardType', instance.cardType);
-  return val;
-}
+Map<String, dynamic> _$PaymentMethodDtoToJson(PaymentMethodDto instance) =>
+    <String, dynamic>{
+      if (instance.name case final value?) 'name': value,
+      if (instance.description case final value?) 'description': value,
+      if (instance.isCreditCard case final value?) 'isCreditCard': value,
+      if (instance.isPaymentProfile case final value?)
+        'isPaymentProfile': value,
+      if (instance.cardType case final value?) 'cardType': value,
+    };
 
 PaymentOptionsDto _$PaymentOptionsDtoFromJson(Map<String, dynamic> json) =>
     PaymentOptionsDto(
@@ -350,32 +350,30 @@ PaymentOptionsDto _$PaymentOptionsDtoFromJson(Map<String, dynamic> json) =>
       payPalPaymentUrl: json['payPalPaymentUrl'] as String?,
     );
 
-Map<String, dynamic> _$PaymentOptionsDtoToJson(PaymentOptionsDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('paymentMethods',
-      instance.paymentMethods?.map((e) => e.toJson()).toList());
-  writeNotNull(
-      'cardTypes', instance.cardTypes?.map((e) => e.toJson()).toList());
-  writeNotNull('expirationMonths',
-      instance.expirationMonths?.map((e) => e.toJson()).toList());
-  writeNotNull('expirationYears',
-      instance.expirationYears?.map((e) => e.toJson()).toList());
-  writeNotNull('creditCard', instance.creditCard?.toJson());
-  writeNotNull('canStorePaymentProfile', instance.canStorePaymentProfile);
-  writeNotNull('storePaymentProfile', instance.storePaymentProfile);
-  writeNotNull('isPayPal', instance.isPayPal);
-  writeNotNull('payPalPayerId', instance.payPalPayerId);
-  writeNotNull('payPalToken', instance.payPalToken);
-  writeNotNull('payPalPaymentUrl', instance.payPalPaymentUrl);
-  return val;
-}
+Map<String, dynamic> _$PaymentOptionsDtoToJson(PaymentOptionsDto instance) =>
+    <String, dynamic>{
+      if (instance.paymentMethods?.map((e) => e.toJson()).toList()
+          case final value?)
+        'paymentMethods': value,
+      if (instance.cardTypes?.map((e) => e.toJson()).toList() case final value?)
+        'cardTypes': value,
+      if (instance.expirationMonths?.map((e) => e.toJson()).toList()
+          case final value?)
+        'expirationMonths': value,
+      if (instance.expirationYears?.map((e) => e.toJson()).toList()
+          case final value?)
+        'expirationYears': value,
+      if (instance.creditCard?.toJson() case final value?) 'creditCard': value,
+      if (instance.canStorePaymentProfile case final value?)
+        'canStorePaymentProfile': value,
+      if (instance.storePaymentProfile case final value?)
+        'storePaymentProfile': value,
+      if (instance.isPayPal case final value?) 'isPayPal': value,
+      if (instance.payPalPayerId case final value?) 'payPalPayerId': value,
+      if (instance.payPalToken case final value?) 'payPalToken': value,
+      if (instance.payPalPaymentUrl case final value?)
+        'payPalPaymentUrl': value,
+    };
 
 CreditCardDto _$CreditCardDtoFromJson(Map<String, dynamic> json) =>
     CreditCardDto(
@@ -388,43 +386,27 @@ CreditCardDto _$CreditCardDtoFromJson(Map<String, dynamic> json) =>
       browserInfo: json['browserInfo'] as String?,
     );
 
-Map<String, dynamic> _$CreditCardDtoToJson(CreditCardDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('cardType', instance.cardType);
-  writeNotNull('cardHolderName', instance.cardHolderName);
-  writeNotNull('cardNumber', instance.cardNumber);
-  writeNotNull('expirationMonth', instance.expirationMonth);
-  writeNotNull('expirationYear', instance.expirationYear);
-  writeNotNull('securityCode', instance.securityCode);
-  writeNotNull('browserInfo', instance.browserInfo);
-  return val;
-}
+Map<String, dynamic> _$CreditCardDtoToJson(CreditCardDto instance) =>
+    <String, dynamic>{
+      if (instance.cardType case final value?) 'cardType': value,
+      if (instance.cardHolderName case final value?) 'cardHolderName': value,
+      if (instance.cardNumber case final value?) 'cardNumber': value,
+      if (instance.expirationMonth case final value?) 'expirationMonth': value,
+      if (instance.expirationYear case final value?) 'expirationYear': value,
+      if (instance.securityCode case final value?) 'securityCode': value,
+      if (instance.browserInfo case final value?) 'browserInfo': value,
+    };
 
 CostCodeDto _$CostCodeDtoFromJson(Map<String, dynamic> json) => CostCodeDto(
       costCode: json['costCode'] as String?,
       description: json['description'] as String?,
     );
 
-Map<String, dynamic> _$CostCodeDtoToJson(CostCodeDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('costCode', instance.costCode);
-  writeNotNull('description', instance.description);
-  return val;
-}
+Map<String, dynamic> _$CostCodeDtoToJson(CostCodeDto instance) =>
+    <String, dynamic>{
+      if (instance.costCode case final value?) 'costCode': value,
+      if (instance.description case final value?) 'description': value,
+    };
 
 CustomerOrderTaxDto _$CustomerOrderTaxDtoFromJson(Map<String, dynamic> json) =>
     CustomerOrderTaxDto(
@@ -436,23 +418,17 @@ CustomerOrderTaxDto _$CustomerOrderTaxDtoFromJson(Map<String, dynamic> json) =>
       sortOrder: (json['sortOrder'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$CustomerOrderTaxDtoToJson(CustomerOrderTaxDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('taxCode', instance.taxCode);
-  writeNotNull('taxDescription', instance.taxDescription);
-  writeNotNull('taxRate', instance.taxRate);
-  writeNotNull('taxAmount', instance.taxAmount);
-  writeNotNull('taxAmountDisplay', instance.taxAmountDisplay);
-  writeNotNull('sortOrder', instance.sortOrder);
-  return val;
-}
+Map<String, dynamic> _$CustomerOrderTaxDtoToJson(
+        CustomerOrderTaxDto instance) =>
+    <String, dynamic>{
+      if (instance.taxCode case final value?) 'taxCode': value,
+      if (instance.taxDescription case final value?) 'taxDescription': value,
+      if (instance.taxRate case final value?) 'taxRate': value,
+      if (instance.taxAmount case final value?) 'taxAmount': value,
+      if (instance.taxAmountDisplay case final value?)
+        'taxAmountDisplay': value,
+      if (instance.sortOrder case final value?) 'sortOrder': value,
+    };
 
 DefaultWarehouseDto _$DefaultWarehouseDtoFromJson(Map<String, dynamic> json) =>
     DefaultWarehouseDto(
@@ -466,25 +442,18 @@ DefaultWarehouseDto _$DefaultWarehouseDtoFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String?,
     );
 
-Map<String, dynamic> _$DefaultWarehouseDtoToJson(DefaultWarehouseDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('name', instance.name);
-  writeNotNull('address1', instance.address1);
-  writeNotNull('address2', instance.address2);
-  writeNotNull('city', instance.city);
-  writeNotNull('postalCode', instance.postalCode);
-  writeNotNull('state', instance.state);
-  writeNotNull('description', instance.description);
-  return val;
-}
+Map<String, dynamic> _$DefaultWarehouseDtoToJson(
+        DefaultWarehouseDto instance) =>
+    <String, dynamic>{
+      if (instance.id case final value?) 'id': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.address1 case final value?) 'address1': value,
+      if (instance.address2 case final value?) 'address2': value,
+      if (instance.city case final value?) 'city': value,
+      if (instance.postalCode case final value?) 'postalCode': value,
+      if (instance.state case final value?) 'state': value,
+      if (instance.description case final value?) 'description': value,
+    };
 
 CartLineCollectionDto _$CartLineCollectionDtoFromJson(
         Map<String, dynamic> json) =>
@@ -499,21 +468,14 @@ CartLineCollectionDto _$CartLineCollectionDtoFromJson(
     );
 
 Map<String, dynamic> _$CartLineCollectionDtoToJson(
-    CartLineCollectionDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(
-      'cartLines', instance.cartLines?.map((e) => e.toJson()).toList());
-  writeNotNull('notAllAddedToCart', instance.notAllAddedToCart);
-  writeNotNull('pagination', instance.pagination?.toJson());
-  return val;
-}
+        CartLineCollectionDto instance) =>
+    <String, dynamic>{
+      if (instance.cartLines?.map((e) => e.toJson()).toList() case final value?)
+        'cartLines': value,
+      if (instance.notAllAddedToCart case final value?)
+        'notAllAddedToCart': value,
+      if (instance.pagination?.toJson() case final value?) 'pagination': value,
+    };
 
 CartCollectionModel _$CartCollectionModelFromJson(Map<String, dynamic> json) =>
     CartCollectionModel(
@@ -529,18 +491,12 @@ CartCollectionModel _$CartCollectionModelFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$CartCollectionModelToJson(CartCollectionModel instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('carts', instance.carts?.map((e) => e.toJson()).toList());
-  writeNotNull('pagination', instance.pagination?.toJson());
-  return val;
-}
+Map<String, dynamic> _$CartCollectionModelToJson(
+        CartCollectionModel instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.carts?.map((e) => e.toJson()).toList() case final value?)
+        'carts': value,
+      if (instance.pagination?.toJson() case final value?) 'pagination': value,
+    };

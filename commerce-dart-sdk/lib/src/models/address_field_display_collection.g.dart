@@ -75,32 +75,26 @@ AddressFieldDisplayCollection _$AddressFieldDisplayCollectionFromJson(
       );
 
 Map<String, dynamic> _$AddressFieldDisplayCollectionToJson(
-    AddressFieldDisplayCollection instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('address1', instance.address1?.toJson());
-  writeNotNull('address2', instance.address2?.toJson());
-  writeNotNull('address3', instance.address3?.toJson());
-  writeNotNull('address4', instance.address4?.toJson());
-  writeNotNull('attention', instance.attention?.toJson());
-  writeNotNull('city', instance.city?.toJson());
-  writeNotNull('companyName', instance.companyName?.toJson());
-  writeNotNull('contactFullName', instance.contactFullName?.toJson());
-  writeNotNull('country', instance.country?.toJson());
-  writeNotNull('email', instance.email?.toJson());
-  writeNotNull('fax', instance.fax?.toJson());
-  writeNotNull('firstName', instance.firstName?.toJson());
-  writeNotNull('lastName', instance.lastName?.toJson());
-  writeNotNull('phone', instance.phone?.toJson());
-  writeNotNull('postalCode', instance.postalCode?.toJson());
-  writeNotNull('state', instance.state?.toJson());
-  return val;
-}
+        AddressFieldDisplayCollection instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.address1?.toJson() case final value?) 'address1': value,
+      if (instance.address2?.toJson() case final value?) 'address2': value,
+      if (instance.address3?.toJson() case final value?) 'address3': value,
+      if (instance.address4?.toJson() case final value?) 'address4': value,
+      if (instance.attention?.toJson() case final value?) 'attention': value,
+      if (instance.city?.toJson() case final value?) 'city': value,
+      if (instance.companyName?.toJson() case final value?)
+        'companyName': value,
+      if (instance.contactFullName?.toJson() case final value?)
+        'contactFullName': value,
+      if (instance.country?.toJson() case final value?) 'country': value,
+      if (instance.email?.toJson() case final value?) 'email': value,
+      if (instance.fax?.toJson() case final value?) 'fax': value,
+      if (instance.firstName?.toJson() case final value?) 'firstName': value,
+      if (instance.lastName?.toJson() case final value?) 'lastName': value,
+      if (instance.phone?.toJson() case final value?) 'phone': value,
+      if (instance.postalCode?.toJson() case final value?) 'postalCode': value,
+      if (instance.state?.toJson() case final value?) 'state': value,
+    };

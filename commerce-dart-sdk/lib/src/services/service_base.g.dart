@@ -13,17 +13,10 @@ ErrorResponse _$ErrorResponseFromJson(Map<String, dynamic> json) =>
       message: json['message'] as String?,
     );
 
-Map<String, dynamic> _$ErrorResponseToJson(ErrorResponse instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('message', instance.message);
-  writeNotNull('error', instance.error);
-  writeNotNull('error_description', instance.errorDescription);
-  return val;
-}
+Map<String, dynamic> _$ErrorResponseToJson(ErrorResponse instance) =>
+    <String, dynamic>{
+      if (instance.message case final value?) 'message': value,
+      if (instance.error case final value?) 'error': value,
+      if (instance.errorDescription case final value?)
+        'error_description': value,
+    };

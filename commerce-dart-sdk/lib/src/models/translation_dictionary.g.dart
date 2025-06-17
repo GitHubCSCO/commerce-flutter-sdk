@@ -21,21 +21,13 @@ TranslationDictionary _$TranslationDictionaryFromJson(
       );
 
 Map<String, dynamic> _$TranslationDictionaryToJson(
-    TranslationDictionary instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('keyword', instance.keyword);
-  writeNotNull('source', instance.source);
-  writeNotNull('translation', instance.translation);
-  writeNotNull('languageId', instance.languageId);
-  writeNotNull('languageCode', instance.languageCode);
-  return val;
-}
+        TranslationDictionary instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.keyword case final value?) 'keyword': value,
+      if (instance.source case final value?) 'source': value,
+      if (instance.translation case final value?) 'translation': value,
+      if (instance.languageId case final value?) 'languageId': value,
+      if (instance.languageCode case final value?) 'languageCode': value,
+    };

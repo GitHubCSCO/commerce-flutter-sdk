@@ -61,56 +61,55 @@ Session _$SessionFromJson(Map<String, dynamic> json) => Session(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$SessionToJson(Session instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('isAuthenticated', instance.isAuthenticated);
-  writeNotNull('hasRfqUpdates', instance.hasRfqUpdates);
-  writeNotNull('userName', instance.userName);
-  writeNotNull('userProfileId', instance.userProfileId);
-  writeNotNull('userLabel', instance.userLabel);
-  writeNotNull('userRoles', instance.userRoles);
-  writeNotNull('email', instance.email);
-  writeNotNull('password', instance.password);
-  writeNotNull('newPassword', instance.newPassword);
-  writeNotNull('resetPassword', instance.resetPassword);
-  writeNotNull('activateAccount', instance.activateAccount);
-  writeNotNull('resetToken', instance.resetToken);
-  writeNotNull('displayChangeCustomerLink', instance.displayChangeCustomerLink);
-  writeNotNull('redirectToChangeCustomerPageOnSignIn',
-      instance.redirectToChangeCustomerPageOnSignIn);
-  writeNotNull('billTo', instance.billTo?.toJson());
-  writeNotNull('shipTo', instance.shipTo?.toJson());
-  writeNotNull('language', instance.language?.toJson());
-  writeNotNull('currency', instance.currency?.toJson());
-  writeNotNull('deviceType', instance.deviceType);
-  writeNotNull('persona', instance.persona);
-  writeNotNull('personas', instance.personas?.map((e) => e.toJson()).toList());
-  writeNotNull('dashboardIsHomepage', instance.dashboardIsHomepage);
-  writeNotNull('isSalesPerson', instance.isSalesPerson);
-  writeNotNull('customLandingPage', instance.customLandingPage);
-  writeNotNull('hasDefaultCustomer', instance.hasDefaultCustomer);
-  writeNotNull('rememberMe', instance.rememberMe);
-  writeNotNull('isRestrictedProductRemovedFromCart',
-      instance.isRestrictedProductRemovedFromCart);
-  writeNotNull('firstName', instance.firstName);
-  writeNotNull('lastName', instance.lastName);
-  writeNotNull('customerWasUpdated', instance.customerWasUpdated);
-  writeNotNull('isGuest', instance.isGuest);
-  writeNotNull('fulfillmentMethod', instance.fulfillmentMethod);
-  writeNotNull(
-      'displayPricingAndInventory', instance.displayPricingAndInventory);
-  writeNotNull('pickUpWarehouse', instance.pickUpWarehouse?.toJson());
-  return val;
-}
+Map<String, dynamic> _$SessionToJson(Session instance) => <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.isAuthenticated case final value?) 'isAuthenticated': value,
+      if (instance.hasRfqUpdates case final value?) 'hasRfqUpdates': value,
+      if (instance.userName case final value?) 'userName': value,
+      if (instance.userProfileId case final value?) 'userProfileId': value,
+      if (instance.userLabel case final value?) 'userLabel': value,
+      if (instance.userRoles case final value?) 'userRoles': value,
+      if (instance.email case final value?) 'email': value,
+      if (instance.password case final value?) 'password': value,
+      if (instance.newPassword case final value?) 'newPassword': value,
+      if (instance.resetPassword case final value?) 'resetPassword': value,
+      if (instance.activateAccount case final value?) 'activateAccount': value,
+      if (instance.resetToken case final value?) 'resetToken': value,
+      if (instance.displayChangeCustomerLink case final value?)
+        'displayChangeCustomerLink': value,
+      if (instance.redirectToChangeCustomerPageOnSignIn case final value?)
+        'redirectToChangeCustomerPageOnSignIn': value,
+      if (instance.billTo?.toJson() case final value?) 'billTo': value,
+      if (instance.shipTo?.toJson() case final value?) 'shipTo': value,
+      if (instance.language?.toJson() case final value?) 'language': value,
+      if (instance.currency?.toJson() case final value?) 'currency': value,
+      if (instance.deviceType case final value?) 'deviceType': value,
+      if (instance.persona case final value?) 'persona': value,
+      if (instance.personas?.map((e) => e.toJson()).toList() case final value?)
+        'personas': value,
+      if (instance.dashboardIsHomepage case final value?)
+        'dashboardIsHomepage': value,
+      if (instance.isSalesPerson case final value?) 'isSalesPerson': value,
+      if (instance.customLandingPage case final value?)
+        'customLandingPage': value,
+      if (instance.hasDefaultCustomer case final value?)
+        'hasDefaultCustomer': value,
+      if (instance.rememberMe case final value?) 'rememberMe': value,
+      if (instance.isRestrictedProductRemovedFromCart case final value?)
+        'isRestrictedProductRemovedFromCart': value,
+      if (instance.firstName case final value?) 'firstName': value,
+      if (instance.lastName case final value?) 'lastName': value,
+      if (instance.customerWasUpdated case final value?)
+        'customerWasUpdated': value,
+      if (instance.isGuest case final value?) 'isGuest': value,
+      if (instance.fulfillmentMethod case final value?)
+        'fulfillmentMethod': value,
+      if (instance.displayPricingAndInventory case final value?)
+        'displayPricingAndInventory': value,
+      if (instance.pickUpWarehouse?.toJson() case final value?)
+        'pickUpWarehouse': value,
+    };
 
 Persona _$PersonaFromJson(Map<String, dynamic> json) => Persona(
       description: json['description'] as String?,
@@ -119,18 +118,9 @@ Persona _$PersonaFromJson(Map<String, dynamic> json) => Persona(
       name: json['name'] as String?,
     );
 
-Map<String, dynamic> _$PersonaToJson(Persona instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
-  writeNotNull('isDefault', instance.isDefault);
-  return val;
-}
+Map<String, dynamic> _$PersonaToJson(Persona instance) => <String, dynamic>{
+      if (instance.id case final value?) 'id': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.description case final value?) 'description': value,
+      if (instance.isDefault case final value?) 'isDefault': value,
+    };

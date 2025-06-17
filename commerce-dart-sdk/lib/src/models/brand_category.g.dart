@@ -28,27 +28,25 @@ BrandCategory _$BrandCategoryFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$BrandCategoryToJson(BrandCategory instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('brandId', instance.brandId);
-  writeNotNull('categoryId', instance.categoryId);
-  writeNotNull('contentManagerId', instance.contentManagerId);
-  writeNotNull('categoryName', instance.categoryName);
-  writeNotNull('categoryShortDescription', instance.categoryShortDescription);
-  writeNotNull('featuredImagePath', instance.featuredImagePath);
-  writeNotNull('featuredImageAltText', instance.featuredImageAltText);
-  writeNotNull('productListPagePath', instance.productListPagePath);
-  writeNotNull('htmlContent', instance.htmlContent);
-  writeNotNull('subCategories',
-      instance.subCategories?.map((e) => e?.toJson()).toList());
-  return val;
-}
+Map<String, dynamic> _$BrandCategoryToJson(BrandCategory instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.brandId case final value?) 'brandId': value,
+      if (instance.categoryId case final value?) 'categoryId': value,
+      if (instance.contentManagerId case final value?)
+        'contentManagerId': value,
+      if (instance.categoryName case final value?) 'categoryName': value,
+      if (instance.categoryShortDescription case final value?)
+        'categoryShortDescription': value,
+      if (instance.featuredImagePath case final value?)
+        'featuredImagePath': value,
+      if (instance.featuredImageAltText case final value?)
+        'featuredImageAltText': value,
+      if (instance.productListPagePath case final value?)
+        'productListPagePath': value,
+      if (instance.htmlContent case final value?) 'htmlContent': value,
+      if (instance.subCategories?.map((e) => e?.toJson()).toList()
+          case final value?)
+        'subCategories': value,
+    };

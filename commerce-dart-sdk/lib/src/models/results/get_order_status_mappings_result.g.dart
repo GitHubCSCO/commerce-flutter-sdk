@@ -19,18 +19,11 @@ GetOrderStatusMappingsResult _$GetOrderStatusMappingsResultFromJson(
       );
 
 Map<String, dynamic> _$GetOrderStatusMappingsResultToJson(
-    GetOrderStatusMappingsResult instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('orderStatusMappings',
-      instance.orderStatusMappings?.map((e) => e.toJson()).toList());
-  return val;
-}
+        GetOrderStatusMappingsResult instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.orderStatusMappings?.map((e) => e.toJson()).toList()
+          case final value?)
+        'orderStatusMappings': value,
+    };

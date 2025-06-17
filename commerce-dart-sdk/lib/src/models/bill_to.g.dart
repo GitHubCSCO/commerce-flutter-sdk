@@ -59,52 +59,48 @@ BillTo _$BillToFromJson(Map<String, dynamic> json) => BillTo(
       ..fax = json['fax'] as String?
       ..isVmiLocation = json['isVmiLocation'] as bool?;
 
-Map<String, dynamic> _$BillToToJson(BillTo instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('id', instance.id);
-  writeNotNull('customerNumber', instance.customerNumber);
-  writeNotNull('customerSequence', instance.customerSequence);
-  writeNotNull('customerName', instance.customerName);
-  writeNotNull('label', instance.label);
-  writeNotNull('firstName', instance.firstName);
-  writeNotNull('lastName', instance.lastName);
-  writeNotNull('companyName', instance.companyName);
-  writeNotNull('attention', instance.attention);
-  writeNotNull('address1', instance.address1);
-  writeNotNull('address2', instance.address2);
-  writeNotNull('address3', instance.address3);
-  writeNotNull('address4', instance.address4);
-  writeNotNull('city', instance.city);
-  writeNotNull('postalCode', instance.postalCode);
-  writeNotNull('state', instance.state?.toJson());
-  writeNotNull('country', instance.country?.toJson());
-  writeNotNull('phone', instance.phone);
-  writeNotNull('fullAddress', instance.fullAddress);
-  writeNotNull('email', instance.email);
-  writeNotNull('fax', instance.fax);
-  writeNotNull('isVmiLocation', instance.isVmiLocation);
-  writeNotNull('shipTosUri', instance.shipTosUri);
-  writeNotNull('isGuest', instance.isGuest);
-  writeNotNull('budgetEnforcementLevel', instance.budgetEnforcementLevel);
-  writeNotNull('costCodeTitle', instance.costCodeTitle);
-  writeNotNull('customerCurrencySymbol', instance.customerCurrencySymbol);
-  writeNotNull(
-      'costCodes', instance.costCodes?.map((e) => e.toJson()).toList());
-  writeNotNull('shipTos', instance.shipTos?.map((e) => e.toJson()).toList());
-  writeNotNull('validation', instance.validation?.toJson());
-  writeNotNull('isDefault', instance.isDefault);
-  writeNotNull('accountsReceivable', instance.accountsReceivable?.toJson());
-  return val;
-}
+Map<String, dynamic> _$BillToToJson(BillTo instance) => <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.customerNumber case final value?) 'customerNumber': value,
+      if (instance.customerSequence case final value?)
+        'customerSequence': value,
+      if (instance.customerName case final value?) 'customerName': value,
+      if (instance.label case final value?) 'label': value,
+      if (instance.firstName case final value?) 'firstName': value,
+      if (instance.lastName case final value?) 'lastName': value,
+      if (instance.companyName case final value?) 'companyName': value,
+      if (instance.attention case final value?) 'attention': value,
+      if (instance.address1 case final value?) 'address1': value,
+      if (instance.address2 case final value?) 'address2': value,
+      if (instance.address3 case final value?) 'address3': value,
+      if (instance.address4 case final value?) 'address4': value,
+      if (instance.city case final value?) 'city': value,
+      if (instance.postalCode case final value?) 'postalCode': value,
+      if (instance.state?.toJson() case final value?) 'state': value,
+      if (instance.country?.toJson() case final value?) 'country': value,
+      if (instance.phone case final value?) 'phone': value,
+      if (instance.fullAddress case final value?) 'fullAddress': value,
+      if (instance.email case final value?) 'email': value,
+      if (instance.fax case final value?) 'fax': value,
+      if (instance.isVmiLocation case final value?) 'isVmiLocation': value,
+      if (instance.shipTosUri case final value?) 'shipTosUri': value,
+      if (instance.isGuest case final value?) 'isGuest': value,
+      if (instance.budgetEnforcementLevel case final value?)
+        'budgetEnforcementLevel': value,
+      if (instance.costCodeTitle case final value?) 'costCodeTitle': value,
+      if (instance.customerCurrencySymbol case final value?)
+        'customerCurrencySymbol': value,
+      if (instance.costCodes?.map((e) => e.toJson()).toList() case final value?)
+        'costCodes': value,
+      if (instance.shipTos?.map((e) => e.toJson()).toList() case final value?)
+        'shipTos': value,
+      if (instance.validation?.toJson() case final value?) 'validation': value,
+      if (instance.isDefault case final value?) 'isDefault': value,
+      if (instance.accountsReceivable?.toJson() case final value?)
+        'accountsReceivable': value,
+    };
 
 CostCode _$CostCodeFromJson(Map<String, dynamic> json) => CostCode(
       code: json['CostCode'] as String?,
@@ -113,18 +109,9 @@ CostCode _$CostCodeFromJson(Map<String, dynamic> json) => CostCode(
       isActive: json['isActive'] as bool?,
     );
 
-Map<String, dynamic> _$CostCodeToJson(CostCode instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('CostCode', instance.code);
-  writeNotNull('description', instance.description);
-  writeNotNull('isActive', instance.isActive);
-  return val;
-}
+Map<String, dynamic> _$CostCodeToJson(CostCode instance) => <String, dynamic>{
+      if (instance.id case final value?) 'id': value,
+      if (instance.code case final value?) 'CostCode': value,
+      if (instance.description case final value?) 'description': value,
+      if (instance.isActive case final value?) 'isActive': value,
+    };

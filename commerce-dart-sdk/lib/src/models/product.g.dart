@@ -186,151 +186,184 @@ Product _$ProductFromJson(Map<String, dynamic> json) => Product(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$ProductToJson(Product instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('id', instance.id);
-  writeNotNull('orderLineId', instance.orderLineId);
-  writeNotNull('name', instance.name);
-  writeNotNull('customerName', instance.customerName);
-  writeNotNull('shortDescription', instance.shortDescription);
-  writeNotNull('erpNumber', instance.erpNumber);
-  writeNotNull('erpDescription', instance.erpDescription);
-  writeNotNull('urlSegment', instance.urlSegment);
-  writeNotNull('basicListPrice', instance.basicListPrice);
-  writeNotNull('basicSalePrice', instance.basicSalePrice);
-  writeNotNull(
-      'basicSaleStartDate', instance.basicSaleStartDate?.toIso8601String());
-  writeNotNull(
-      'basicSaleEndDate', instance.basicSaleEndDate?.toIso8601String());
-  writeNotNull('smallImagePath', instance.smallImagePath);
-  writeNotNull('mediumImagePath', instance.mediumImagePath);
-  writeNotNull('largeImagePath', instance.largeImagePath);
-  writeNotNull('pricing', instance.pricing?.toJson());
-  writeNotNull('currencySymbol', instance.currencySymbol);
-  writeNotNull('qtyOnHand', instance.qtyOnHand);
-  writeNotNull('isConfigured', instance.isConfigured);
-  writeNotNull('isFixedConfiguration', instance.isFixedConfiguration);
-  writeNotNull('isActive', instance.isActive);
-  writeNotNull('isHazardousGood', instance.isHazardousGood);
-  writeNotNull('isDiscontinued', instance.isDiscontinued);
-  writeNotNull('isSpecialOrder', instance.isSpecialOrder);
-  writeNotNull('isGiftCard', instance.isGiftCard);
-  writeNotNull('isBeingCompared', instance.isBeingCompared);
-  writeNotNull('isSponsored', instance.isSponsored);
-  writeNotNull('isSubscription', instance.isSubscription);
-  writeNotNull('quoteRequired', instance.quoteRequired);
-  writeNotNull('manufacturerItem', instance.manufacturerItem);
-  writeNotNull('packDescription', instance.packDescription);
-  writeNotNull('altText', instance.altText);
-  writeNotNull('customerUnitOfMeasure', instance.customerUnitOfMeasure);
-  writeNotNull('canBackOrder', instance.canBackOrder);
-  writeNotNull('trackInventory', instance.trackInventory);
-  writeNotNull('multipleSaleQty', instance.multipleSaleQty);
-  writeNotNull('minimumOrderQty', instance.minimumOrderQty);
-  writeNotNull('htmlContent', instance.htmlContent);
-  writeNotNull('productCode', instance.productCode);
-  writeNotNull('priceCode', instance.priceCode);
-  writeNotNull('sku', instance.sku);
-  writeNotNull('upcCode', instance.upcCode);
-  writeNotNull('modelNumber', instance.modelNumber);
-  writeNotNull('taxCode1', instance.taxCode1);
-  writeNotNull('taxCode2', instance.taxCode2);
-  writeNotNull('taxCategory', instance.taxCategory);
-  writeNotNull('shippingClassification', instance.shippingClassification);
-  writeNotNull('shippingLength', instance.shippingLength);
-  writeNotNull('shippingWidth', instance.shippingWidth);
-  writeNotNull('shippingHeight', instance.shippingHeight);
-  writeNotNull('shippingWeight', instance.shippingWeight);
-  writeNotNull('qtyPerShippingPackage', instance.qtyPerShippingPackage);
-  writeNotNull('shippingAmountOverride', instance.shippingAmountOverride);
-  writeNotNull('handlingAmountOverride', instance.handlingAmountOverride);
-  writeNotNull('metaDescription', instance.metaDescription);
-  writeNotNull('metaKeywords', instance.metaKeywords);
-  writeNotNull('pageTitle', instance.pageTitle);
-  writeNotNull('allowAnyGiftCardAmount', instance.allowAnyGiftCardAmount);
-  writeNotNull('sortOrder', instance.sortOrder);
-  writeNotNull('hasMsds', instance.hasMsds);
-  writeNotNull('unspsc', instance.unspsc);
-  writeNotNull('roundingRule', instance.roundingRule);
-  writeNotNull('vendorNumber', instance.vendorNumber);
-  writeNotNull('configurationDto', instance.configurationDto?.toJson());
-  writeNotNull('unitOfMeasure', instance.unitOfMeasure);
-  writeNotNull('unitOfMeasureDisplay', instance.unitOfMeasureDisplay);
-  writeNotNull('unitOfMeasureDescription', instance.unitOfMeasureDescription);
-  writeNotNull('selectedUnitOfMeasure', instance.selectedUnitOfMeasure);
-  writeNotNull(
-      'selectedUnitOfMeasureDisplay', instance.selectedUnitOfMeasureDisplay);
-  writeNotNull('productDetailUrl', instance.productDetailUrl);
-  writeNotNull('canAddToCart', instance.canAddToCart);
-  writeNotNull('allowedAddToCart', instance.allowedAddToCart);
-  writeNotNull('canAddToWishlist', instance.canAddToWishlist);
-  writeNotNull('canViewDetails', instance.canViewDetails);
-  writeNotNull('canShowPrice', instance.canShowPrice);
-  writeNotNull('canShowUnitOfMeasure', instance.canShowUnitOfMeasure);
-  writeNotNull('canEnterQuantity', instance.canEnterQuantity);
-  writeNotNull('canConfigure', instance.canConfigure);
-  writeNotNull('isStyleProductParent', instance.isStyleProductParent);
-  writeNotNull('styleParentId', instance.styleParentId);
-  writeNotNull('requiresRealTimeInventory', instance.requiresRealTimeInventory);
-  writeNotNull('availability', instance.availability?.toJson());
-  writeNotNull(
-      'styleTraits', instance.styleTraits?.map((e) => e.toJson()).toList());
-  writeNotNull('styledProducts',
-      instance.styledProducts?.map((e) => e.toJson()).toList());
-  writeNotNull('attributeTypes',
-      instance.attributeTypes?.map((e) => e.toJson()).toList());
-  writeNotNull(
-      'documents', instance.documents?.map((e) => e.toJson()).toList());
-  writeNotNull('specifications',
-      instance.specifications?.map((e) => e.toJson()).toList());
-  writeNotNull(
-      'crossSells', instance.crossSells?.map((e) => e.toJson()).toList());
-  writeNotNull(
-      'accessories', instance.accessories?.map((e) => e.toJson()).toList());
-  writeNotNull('productUnitOfMeasures',
-      instance.productUnitOfMeasures?.map((e) => e.toJson()).toList());
-  writeNotNull(
-      'productImages', instance.productImages?.map((e) => e.toJson()).toList());
-  writeNotNull('score', instance.score);
-  writeNotNull('searchBoost', instance.searchBoost);
-  writeNotNull('salePriceLabel', instance.salePriceLabel);
-  writeNotNull('productSubscription', instance.productSubscription?.toJson());
-  writeNotNull('replacementProductId', instance.replacementProductId);
-  writeNotNull(
-      'warehouses', instance.warehouses?.map((e) => e.toJson()).toList());
-  writeNotNull('brand', instance.brand?.toJson());
-  writeNotNull('productNumber', instance.productNumber);
-  writeNotNull('customerProductNumber', instance.customerProductNumber);
-  writeNotNull('productTitle', instance.productTitle);
-  writeNotNull('canonicalUrl', instance.canonicalUrl);
-  writeNotNull('unitListPrice', instance.unitListPrice);
-  writeNotNull('unitListPriceDisplay', instance.unitListPriceDisplay);
-  writeNotNull('priceFacet', instance.priceFacet);
-  writeNotNull('imageAltText', instance.imageAltText);
-  writeNotNull('configurationType', instance.configurationType);
-  writeNotNull('isVariantParent', instance.isVariantParent);
-  writeNotNull('variantTypeId', instance.variantTypeId);
-  writeNotNull('cantBuy', instance.cantBuy);
-  writeNotNull('productLine', instance.productLine?.toJson());
-  writeNotNull('unitOfMeasures',
-      instance.unitOfMeasures?.map((e) => e.toJson()).toList());
-  writeNotNull('scoreExplanation', instance.scoreExplanation?.toJson());
-  writeNotNull('detail', instance.detail?.toJson());
-  writeNotNull('content', instance.content?.toJson());
-  writeNotNull('images', instance.images?.map((e) => e.toJson()).toList());
-  writeNotNull(
-      'variantTraits', instance.variantTraits?.map((e) => e.toJson()).toList());
-  writeNotNull('childTraitValues',
-      instance.childTraitValues?.map((e) => e.toJson()).toList());
-  writeNotNull('allowZeroPricing', instance.allowZeroPricing);
-  return val;
-}
+Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.orderLineId case final value?) 'orderLineId': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.customerName case final value?) 'customerName': value,
+      if (instance.shortDescription case final value?)
+        'shortDescription': value,
+      if (instance.erpNumber case final value?) 'erpNumber': value,
+      if (instance.erpDescription case final value?) 'erpDescription': value,
+      if (instance.urlSegment case final value?) 'urlSegment': value,
+      if (instance.basicListPrice case final value?) 'basicListPrice': value,
+      if (instance.basicSalePrice case final value?) 'basicSalePrice': value,
+      if (instance.basicSaleStartDate?.toIso8601String() case final value?)
+        'basicSaleStartDate': value,
+      if (instance.basicSaleEndDate?.toIso8601String() case final value?)
+        'basicSaleEndDate': value,
+      if (instance.smallImagePath case final value?) 'smallImagePath': value,
+      if (instance.mediumImagePath case final value?) 'mediumImagePath': value,
+      if (instance.largeImagePath case final value?) 'largeImagePath': value,
+      if (instance.pricing?.toJson() case final value?) 'pricing': value,
+      if (instance.currencySymbol case final value?) 'currencySymbol': value,
+      if (instance.qtyOnHand case final value?) 'qtyOnHand': value,
+      if (instance.isConfigured case final value?) 'isConfigured': value,
+      if (instance.isFixedConfiguration case final value?)
+        'isFixedConfiguration': value,
+      if (instance.isActive case final value?) 'isActive': value,
+      if (instance.isHazardousGood case final value?) 'isHazardousGood': value,
+      if (instance.isDiscontinued case final value?) 'isDiscontinued': value,
+      if (instance.isSpecialOrder case final value?) 'isSpecialOrder': value,
+      if (instance.isGiftCard case final value?) 'isGiftCard': value,
+      if (instance.isBeingCompared case final value?) 'isBeingCompared': value,
+      if (instance.isSponsored case final value?) 'isSponsored': value,
+      if (instance.isSubscription case final value?) 'isSubscription': value,
+      if (instance.quoteRequired case final value?) 'quoteRequired': value,
+      if (instance.manufacturerItem case final value?)
+        'manufacturerItem': value,
+      if (instance.packDescription case final value?) 'packDescription': value,
+      if (instance.altText case final value?) 'altText': value,
+      if (instance.customerUnitOfMeasure case final value?)
+        'customerUnitOfMeasure': value,
+      if (instance.canBackOrder case final value?) 'canBackOrder': value,
+      if (instance.trackInventory case final value?) 'trackInventory': value,
+      if (instance.multipleSaleQty case final value?) 'multipleSaleQty': value,
+      if (instance.minimumOrderQty case final value?) 'minimumOrderQty': value,
+      if (instance.htmlContent case final value?) 'htmlContent': value,
+      if (instance.productCode case final value?) 'productCode': value,
+      if (instance.priceCode case final value?) 'priceCode': value,
+      if (instance.sku case final value?) 'sku': value,
+      if (instance.upcCode case final value?) 'upcCode': value,
+      if (instance.modelNumber case final value?) 'modelNumber': value,
+      if (instance.taxCode1 case final value?) 'taxCode1': value,
+      if (instance.taxCode2 case final value?) 'taxCode2': value,
+      if (instance.taxCategory case final value?) 'taxCategory': value,
+      if (instance.shippingClassification case final value?)
+        'shippingClassification': value,
+      if (instance.shippingLength case final value?) 'shippingLength': value,
+      if (instance.shippingWidth case final value?) 'shippingWidth': value,
+      if (instance.shippingHeight case final value?) 'shippingHeight': value,
+      if (instance.shippingWeight case final value?) 'shippingWeight': value,
+      if (instance.qtyPerShippingPackage case final value?)
+        'qtyPerShippingPackage': value,
+      if (instance.shippingAmountOverride case final value?)
+        'shippingAmountOverride': value,
+      if (instance.handlingAmountOverride case final value?)
+        'handlingAmountOverride': value,
+      if (instance.metaDescription case final value?) 'metaDescription': value,
+      if (instance.metaKeywords case final value?) 'metaKeywords': value,
+      if (instance.pageTitle case final value?) 'pageTitle': value,
+      if (instance.allowAnyGiftCardAmount case final value?)
+        'allowAnyGiftCardAmount': value,
+      if (instance.sortOrder case final value?) 'sortOrder': value,
+      if (instance.hasMsds case final value?) 'hasMsds': value,
+      if (instance.unspsc case final value?) 'unspsc': value,
+      if (instance.roundingRule case final value?) 'roundingRule': value,
+      if (instance.vendorNumber case final value?) 'vendorNumber': value,
+      if (instance.configurationDto?.toJson() case final value?)
+        'configurationDto': value,
+      if (instance.unitOfMeasure case final value?) 'unitOfMeasure': value,
+      if (instance.unitOfMeasureDisplay case final value?)
+        'unitOfMeasureDisplay': value,
+      if (instance.unitOfMeasureDescription case final value?)
+        'unitOfMeasureDescription': value,
+      if (instance.selectedUnitOfMeasure case final value?)
+        'selectedUnitOfMeasure': value,
+      if (instance.selectedUnitOfMeasureDisplay case final value?)
+        'selectedUnitOfMeasureDisplay': value,
+      if (instance.productDetailUrl case final value?)
+        'productDetailUrl': value,
+      if (instance.canAddToCart case final value?) 'canAddToCart': value,
+      if (instance.allowedAddToCart case final value?)
+        'allowedAddToCart': value,
+      if (instance.canAddToWishlist case final value?)
+        'canAddToWishlist': value,
+      if (instance.canViewDetails case final value?) 'canViewDetails': value,
+      if (instance.canShowPrice case final value?) 'canShowPrice': value,
+      if (instance.canShowUnitOfMeasure case final value?)
+        'canShowUnitOfMeasure': value,
+      if (instance.canEnterQuantity case final value?)
+        'canEnterQuantity': value,
+      if (instance.canConfigure case final value?) 'canConfigure': value,
+      if (instance.isStyleProductParent case final value?)
+        'isStyleProductParent': value,
+      if (instance.styleParentId case final value?) 'styleParentId': value,
+      if (instance.requiresRealTimeInventory case final value?)
+        'requiresRealTimeInventory': value,
+      if (instance.availability?.toJson() case final value?)
+        'availability': value,
+      if (instance.styleTraits?.map((e) => e.toJson()).toList()
+          case final value?)
+        'styleTraits': value,
+      if (instance.styledProducts?.map((e) => e.toJson()).toList()
+          case final value?)
+        'styledProducts': value,
+      if (instance.attributeTypes?.map((e) => e.toJson()).toList()
+          case final value?)
+        'attributeTypes': value,
+      if (instance.documents?.map((e) => e.toJson()).toList() case final value?)
+        'documents': value,
+      if (instance.specifications?.map((e) => e.toJson()).toList()
+          case final value?)
+        'specifications': value,
+      if (instance.crossSells?.map((e) => e.toJson()).toList()
+          case final value?)
+        'crossSells': value,
+      if (instance.accessories?.map((e) => e.toJson()).toList()
+          case final value?)
+        'accessories': value,
+      if (instance.productUnitOfMeasures?.map((e) => e.toJson()).toList()
+          case final value?)
+        'productUnitOfMeasures': value,
+      if (instance.productImages?.map((e) => e.toJson()).toList()
+          case final value?)
+        'productImages': value,
+      if (instance.score case final value?) 'score': value,
+      if (instance.searchBoost case final value?) 'searchBoost': value,
+      if (instance.salePriceLabel case final value?) 'salePriceLabel': value,
+      if (instance.productSubscription?.toJson() case final value?)
+        'productSubscription': value,
+      if (instance.replacementProductId case final value?)
+        'replacementProductId': value,
+      if (instance.warehouses?.map((e) => e.toJson()).toList()
+          case final value?)
+        'warehouses': value,
+      if (instance.brand?.toJson() case final value?) 'brand': value,
+      if (instance.productNumber case final value?) 'productNumber': value,
+      if (instance.customerProductNumber case final value?)
+        'customerProductNumber': value,
+      if (instance.productTitle case final value?) 'productTitle': value,
+      if (instance.canonicalUrl case final value?) 'canonicalUrl': value,
+      if (instance.unitListPrice case final value?) 'unitListPrice': value,
+      if (instance.unitListPriceDisplay case final value?)
+        'unitListPriceDisplay': value,
+      if (instance.priceFacet case final value?) 'priceFacet': value,
+      if (instance.imageAltText case final value?) 'imageAltText': value,
+      if (instance.configurationType case final value?)
+        'configurationType': value,
+      if (instance.isVariantParent case final value?) 'isVariantParent': value,
+      if (instance.variantTypeId case final value?) 'variantTypeId': value,
+      if (instance.cantBuy case final value?) 'cantBuy': value,
+      if (instance.productLine?.toJson() case final value?)
+        'productLine': value,
+      if (instance.unitOfMeasures?.map((e) => e.toJson()).toList()
+          case final value?)
+        'unitOfMeasures': value,
+      if (instance.scoreExplanation?.toJson() case final value?)
+        'scoreExplanation': value,
+      if (instance.detail?.toJson() case final value?) 'detail': value,
+      if (instance.content?.toJson() case final value?) 'content': value,
+      if (instance.images?.map((e) => e.toJson()).toList() case final value?)
+        'images': value,
+      if (instance.variantTraits?.map((e) => e.toJson()).toList()
+          case final value?)
+        'variantTraits': value,
+      if (instance.childTraitValues?.map((e) => e.toJson()).toList()
+          case final value?)
+        'childTraitValues': value,
+      if (instance.allowZeroPricing case final value?)
+        'allowZeroPricing': value,
+    };

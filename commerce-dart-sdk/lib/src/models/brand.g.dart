@@ -28,33 +28,30 @@ Brand _$BrandFromJson(Map<String, dynamic> json) => Brand(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$BrandToJson(Brand instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('id', instance.id);
-  writeNotNull('name', instance.name);
-  writeNotNull('manufacturer', instance.manufacturer);
-  writeNotNull('externalUrl', instance.externalUrl);
-  writeNotNull('detailPagePath', instance.detailPagePath);
-  writeNotNull('productListPagePage', instance.productListPagePage);
-  writeNotNull('logoSmallImagePath', instance.logoSmallImagePath);
-  writeNotNull('logoLargeImagePath', instance.logoLargeImagePath);
-  writeNotNull('logoAltText', instance.logoAltText);
-  writeNotNull('featuredImagePath', instance.featuredImagePath);
-  writeNotNull('featuredImageAltText', instance.featuredImageAltText);
-  writeNotNull('htmlContent', instance.htmlContent);
-  writeNotNull('topSellerProducts',
-      instance.topSellerProducts?.map((e) => e.toJson()).toList());
-  return val;
-}
+Map<String, dynamic> _$BrandToJson(Brand instance) => <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.manufacturer case final value?) 'manufacturer': value,
+      if (instance.externalUrl case final value?) 'externalUrl': value,
+      if (instance.detailPagePath case final value?) 'detailPagePath': value,
+      if (instance.productListPagePage case final value?)
+        'productListPagePage': value,
+      if (instance.logoSmallImagePath case final value?)
+        'logoSmallImagePath': value,
+      if (instance.logoLargeImagePath case final value?)
+        'logoLargeImagePath': value,
+      if (instance.logoAltText case final value?) 'logoAltText': value,
+      if (instance.featuredImagePath case final value?)
+        'featuredImagePath': value,
+      if (instance.featuredImageAltText case final value?)
+        'featuredImageAltText': value,
+      if (instance.htmlContent case final value?) 'htmlContent': value,
+      if (instance.topSellerProducts?.map((e) => e.toJson()).toList()
+          case final value?)
+        'topSellerProducts': value,
+    };
 
 BrandAlphabet _$BrandAlphabetFromJson(Map<String, dynamic> json) =>
     BrandAlphabet(
@@ -62,16 +59,8 @@ BrandAlphabet _$BrandAlphabetFromJson(Map<String, dynamic> json) =>
       letter: json['letter'] as String?,
     );
 
-Map<String, dynamic> _$BrandAlphabetToJson(BrandAlphabet instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('letter', instance.letter);
-  writeNotNull('count', instance.count);
-  return val;
-}
+Map<String, dynamic> _$BrandAlphabetToJson(BrandAlphabet instance) =>
+    <String, dynamic>{
+      if (instance.letter case final value?) 'letter': value,
+      if (instance.count case final value?) 'count': value,
+    };

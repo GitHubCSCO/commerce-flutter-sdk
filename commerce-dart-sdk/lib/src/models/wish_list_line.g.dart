@@ -67,60 +67,68 @@ WishListLine _$WishListLineFromJson(Map<String, dynamic> json) => WishListLine(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$WishListLineToJson(WishListLine instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('id', instance.id);
-  writeNotNull('productUri', instance.productUri);
-  writeNotNull('productId', instance.productId);
-  writeNotNull('smallImagePath', instance.smallImagePath);
-  writeNotNull('altText', instance.altText);
-  writeNotNull('productName', instance.productName);
-  writeNotNull('manufacturerItem', instance.manufacturerItem);
-  writeNotNull('customerName', instance.customerName);
-  writeNotNull('shortDescription', instance.shortDescription);
-  writeNotNull('qtyOnHand', instance.qtyOnHand);
-  writeNotNull('qtyOrdered', instance.qtyOrdered);
-  writeNotNull('erpNumber', instance.erpNumber);
-  writeNotNull('pricing', instance.pricing?.toJson());
-  writeNotNull('quoteRequired', instance.quoteRequired);
-  writeNotNull('isActive', instance.isActive);
-  writeNotNull('canEnterQuantity', instance.canEnterQuantity);
-  writeNotNull('canShowPrice', instance.canShowPrice);
-  writeNotNull('canAddToCart', instance.canAddToCart);
-  writeNotNull('canShowUnitOfMeasure', instance.canShowUnitOfMeasure);
-  writeNotNull('canBackOrder', instance.canBackOrder);
-  writeNotNull('trackInventory', instance.trackInventory);
-  writeNotNull('availability', instance.availability?.toJson());
-  writeNotNull(
-      'breakPrices', instance.breakPrices?.map((e) => e.toJson()).toList());
-  writeNotNull('unitOfMeasure', instance.unitOfMeasure);
-  writeNotNull('unitOfMeasureDisplay', instance.unitOfMeasureDisplay);
-  writeNotNull('unitOfMeasureDescription', instance.unitOfMeasureDescription);
-  writeNotNull('baseUnitOfMeasure', instance.baseUnitOfMeasure);
-  writeNotNull('baseUnitOfMeasureDisplay', instance.baseUnitOfMeasureDisplay);
-  writeNotNull('qtyPerBaseUnitOfMeasure', instance.qtyPerBaseUnitOfMeasure);
-  writeNotNull('selectedUnitOfMeasure', instance.selectedUnitOfMeasure);
-  writeNotNull('productUnitOfMeasures',
-      instance.productUnitOfMeasures?.map((e) => e.toJson()).toList());
-  writeNotNull('packDescription', instance.packDescription);
-  writeNotNull('createdOn', instance.createdOn?.toIso8601String());
-  writeNotNull('notes', instance.notes);
-  writeNotNull('createdByDisplayName', instance.createdByDisplayName);
-  writeNotNull('isSharedLine', instance.isSharedLine);
-  writeNotNull('isVisible', instance.isVisible);
-  writeNotNull('isDiscontinued', instance.isDiscontinued);
-  writeNotNull('sortOrder', instance.sortOrder);
-  writeNotNull('brand', instance.brand?.toJson());
-  writeNotNull('isQtyAdjusted', instance.isQtyAdjusted);
-  writeNotNull('allowZeroPricing', instance.allowZeroPricing);
-  return val;
-}
+Map<String, dynamic> _$WishListLineToJson(WishListLine instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.productUri case final value?) 'productUri': value,
+      if (instance.productId case final value?) 'productId': value,
+      if (instance.smallImagePath case final value?) 'smallImagePath': value,
+      if (instance.altText case final value?) 'altText': value,
+      if (instance.productName case final value?) 'productName': value,
+      if (instance.manufacturerItem case final value?)
+        'manufacturerItem': value,
+      if (instance.customerName case final value?) 'customerName': value,
+      if (instance.shortDescription case final value?)
+        'shortDescription': value,
+      if (instance.qtyOnHand case final value?) 'qtyOnHand': value,
+      if (instance.qtyOrdered case final value?) 'qtyOrdered': value,
+      if (instance.erpNumber case final value?) 'erpNumber': value,
+      if (instance.pricing?.toJson() case final value?) 'pricing': value,
+      if (instance.quoteRequired case final value?) 'quoteRequired': value,
+      if (instance.isActive case final value?) 'isActive': value,
+      if (instance.canEnterQuantity case final value?)
+        'canEnterQuantity': value,
+      if (instance.canShowPrice case final value?) 'canShowPrice': value,
+      if (instance.canAddToCart case final value?) 'canAddToCart': value,
+      if (instance.canShowUnitOfMeasure case final value?)
+        'canShowUnitOfMeasure': value,
+      if (instance.canBackOrder case final value?) 'canBackOrder': value,
+      if (instance.trackInventory case final value?) 'trackInventory': value,
+      if (instance.availability?.toJson() case final value?)
+        'availability': value,
+      if (instance.breakPrices?.map((e) => e.toJson()).toList()
+          case final value?)
+        'breakPrices': value,
+      if (instance.unitOfMeasure case final value?) 'unitOfMeasure': value,
+      if (instance.unitOfMeasureDisplay case final value?)
+        'unitOfMeasureDisplay': value,
+      if (instance.unitOfMeasureDescription case final value?)
+        'unitOfMeasureDescription': value,
+      if (instance.baseUnitOfMeasure case final value?)
+        'baseUnitOfMeasure': value,
+      if (instance.baseUnitOfMeasureDisplay case final value?)
+        'baseUnitOfMeasureDisplay': value,
+      if (instance.qtyPerBaseUnitOfMeasure case final value?)
+        'qtyPerBaseUnitOfMeasure': value,
+      if (instance.selectedUnitOfMeasure case final value?)
+        'selectedUnitOfMeasure': value,
+      if (instance.productUnitOfMeasures?.map((e) => e.toJson()).toList()
+          case final value?)
+        'productUnitOfMeasures': value,
+      if (instance.packDescription case final value?) 'packDescription': value,
+      if (instance.createdOn?.toIso8601String() case final value?)
+        'createdOn': value,
+      if (instance.notes case final value?) 'notes': value,
+      if (instance.createdByDisplayName case final value?)
+        'createdByDisplayName': value,
+      if (instance.isSharedLine case final value?) 'isSharedLine': value,
+      if (instance.isVisible case final value?) 'isVisible': value,
+      if (instance.isDiscontinued case final value?) 'isDiscontinued': value,
+      if (instance.sortOrder case final value?) 'sortOrder': value,
+      if (instance.brand?.toJson() case final value?) 'brand': value,
+      if (instance.isQtyAdjusted case final value?) 'isQtyAdjusted': value,
+      if (instance.allowZeroPricing case final value?)
+        'allowZeroPricing': value,
+    };

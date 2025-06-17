@@ -7,33 +7,29 @@ part of 'orders_query_parameters.dart';
 // **************************************************************************
 
 Map<String, dynamic> _$OrdersQueryParametersToJson(
-    OrdersQueryParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('orderNumber', instance.orderNumber);
-  writeNotNull('poNumber', instance.poNumber);
-  writeNotNull('search', instance.search);
-  writeNotNull('status', instance.status);
-  val['customerSequence'] = instance.customerSequence;
-  writeNotNull('fromDate', instance.fromDate?.toIso8601String());
-  writeNotNull('toDate', instance.toDate?.toIso8601String());
-  writeNotNull('orderTotalOperator', instance.orderTotalOperator);
-  writeNotNull('orderTotal', instance.orderTotal);
-  writeNotNull('productErpNumber', instance.productErpNumber);
-  writeNotNull('showMyOrders', instance.showMyOrders);
-  writeNotNull('vmiOrdersOnly', instance.vmiOrdersOnly);
-  writeNotNull('vmiLocationId', instance.vmiLocationId);
-  writeNotNull('vmiBinId', instance.vmiBinId);
-  writeNotNull(
-      'expand', JsonEncodingMethods.commaSeparatedJson(instance.expand));
-  return val;
-}
+        OrdersQueryParameters instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.orderNumber case final value?) 'orderNumber': value,
+      if (instance.poNumber case final value?) 'poNumber': value,
+      if (instance.search case final value?) 'search': value,
+      if (instance.status case final value?) 'status': value,
+      'customerSequence': instance.customerSequence,
+      if (instance.fromDate?.toIso8601String() case final value?)
+        'fromDate': value,
+      if (instance.toDate?.toIso8601String() case final value?) 'toDate': value,
+      if (instance.orderTotalOperator case final value?)
+        'orderTotalOperator': value,
+      if (instance.orderTotal case final value?) 'orderTotal': value,
+      if (instance.productErpNumber case final value?)
+        'productErpNumber': value,
+      if (instance.showMyOrders case final value?) 'showMyOrders': value,
+      if (instance.vmiOrdersOnly case final value?) 'vmiOrdersOnly': value,
+      if (instance.vmiLocationId case final value?) 'vmiLocationId': value,
+      if (instance.vmiBinId case final value?) 'vmiBinId': value,
+      if (JsonEncodingMethods.commaSeparatedJson(instance.expand)
+          case final value?)
+        'expand': value,
+    };

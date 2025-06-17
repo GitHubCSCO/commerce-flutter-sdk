@@ -16,16 +16,8 @@ QuoteLinePricingQueryParameters _$QuoteLinePricingQueryParametersFromJson(
     );
 
 Map<String, dynamic> _$QuoteLinePricingQueryParametersToJson(
-    QuoteLinePricingQueryParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('pricingRfq', instance.pricingRfq?.toJson());
-  return val;
-}
+        QuoteLinePricingQueryParameters instance) =>
+    <String, dynamic>{
+      if (instance.id case final value?) 'id': value,
+      if (instance.pricingRfq?.toJson() case final value?) 'pricingRfq': value,
+    };

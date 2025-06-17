@@ -19,21 +19,14 @@ DashboardPanelsResult _$DashboardPanelsResultFromJson(
       );
 
 Map<String, dynamic> _$DashboardPanelsResultToJson(
-    DashboardPanelsResult instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('dashboardPanels',
-      instance.dashboardPanels?.map((e) => e.toJson()).toList());
-  return val;
-}
+        DashboardPanelsResult instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.dashboardPanels?.map((e) => e.toJson()).toList()
+          case final value?)
+        'dashboardPanels': value,
+    };
 
 DashboardPanel _$DashboardPanelFromJson(Map<String, dynamic> json) =>
     DashboardPanel(
@@ -49,24 +42,16 @@ DashboardPanel _$DashboardPanelFromJson(Map<String, dynamic> json) =>
       openInNewTab: json['openInNewTab'] as bool?,
     );
 
-Map<String, dynamic> _$DashboardPanelToJson(DashboardPanel instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('text', instance.text);
-  writeNotNull('quickLinkText', instance.quickLinkText);
-  writeNotNull('url', instance.url);
-  writeNotNull('count', instance.count);
-  writeNotNull('isPanel', instance.isPanel);
-  writeNotNull('isQuickLink', instance.isQuickLink);
-  writeNotNull('panelType', instance.panelType);
-  writeNotNull('order', instance.order);
-  writeNotNull('quickLinkOrder', instance.quickLinkOrder);
-  writeNotNull('openInNewTab', instance.openInNewTab);
-  return val;
-}
+Map<String, dynamic> _$DashboardPanelToJson(DashboardPanel instance) =>
+    <String, dynamic>{
+      if (instance.text case final value?) 'text': value,
+      if (instance.quickLinkText case final value?) 'quickLinkText': value,
+      if (instance.url case final value?) 'url': value,
+      if (instance.count case final value?) 'count': value,
+      if (instance.isPanel case final value?) 'isPanel': value,
+      if (instance.isQuickLink case final value?) 'isQuickLink': value,
+      if (instance.panelType case final value?) 'panelType': value,
+      if (instance.order case final value?) 'order': value,
+      if (instance.quickLinkOrder case final value?) 'quickLinkOrder': value,
+      if (instance.openInNewTab case final value?) 'openInNewTab': value,
+    };

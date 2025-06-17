@@ -12,17 +12,9 @@ AgingBucket _$AgingBucketFromJson(Map<String, dynamic> json) => AgingBucket(
       label: json['label'] as String?,
     );
 
-Map<String, dynamic> _$AgingBucketToJson(AgingBucket instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('amount', instance.amount);
-  writeNotNull('amountDisplay', instance.amountDisplay);
-  writeNotNull('label', instance.label);
-  return val;
-}
+Map<String, dynamic> _$AgingBucketToJson(AgingBucket instance) =>
+    <String, dynamic>{
+      if (instance.amount case final value?) 'amount': value,
+      if (instance.amountDisplay case final value?) 'amountDisplay': value,
+      if (instance.label case final value?) 'label': value,
+    };

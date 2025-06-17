@@ -22,19 +22,12 @@ TranslationResults _$TranslationResultsFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$TranslationResultsToJson(TranslationResults instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('translationDictionaries',
-      instance.translationDictionaries?.map((e) => e.toJson()).toList());
-  writeNotNull('pagination', instance.pagination?.toJson());
-  return val;
-}
+Map<String, dynamic> _$TranslationResultsToJson(TranslationResults instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.translationDictionaries?.map((e) => e.toJson()).toList()
+          case final value?)
+        'translationDictionaries': value,
+      if (instance.pagination?.toJson() case final value?) 'pagination': value,
+    };

@@ -26,23 +26,18 @@ GetWarehouseCollectionResult _$GetWarehouseCollectionResultFromJson(
       );
 
 Map<String, dynamic> _$GetWarehouseCollectionResultToJson(
-    GetWarehouseCollectionResult instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('pagination', instance.pagination?.toJson());
-  writeNotNull(
-      'warehouses', instance.warehouses?.map((e) => e.toJson()).toList());
-  writeNotNull('distanceUnitOfMeasure', instance.distanceUnitOfMeasure);
-  writeNotNull('defaultLatitude', instance.defaultLatitude);
-  writeNotNull('defaultLongitude', instance.defaultLongitude);
-  writeNotNull('defaultRadius', instance.defaultRadius);
-  return val;
-}
+        GetWarehouseCollectionResult instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.pagination?.toJson() case final value?) 'pagination': value,
+      if (instance.warehouses?.map((e) => e.toJson()).toList()
+          case final value?)
+        'warehouses': value,
+      if (instance.distanceUnitOfMeasure case final value?)
+        'distanceUnitOfMeasure': value,
+      if (instance.defaultLatitude case final value?) 'defaultLatitude': value,
+      if (instance.defaultLongitude case final value?)
+        'defaultLongitude': value,
+      if (instance.defaultRadius case final value?) 'defaultRadius': value,
+    };

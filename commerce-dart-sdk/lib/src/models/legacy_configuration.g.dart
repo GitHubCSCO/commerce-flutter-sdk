@@ -15,20 +15,14 @@ LegacyConfiguration _$LegacyConfigurationFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$LegacyConfigurationToJson(LegacyConfiguration instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('sections', instance.sections?.map((e) => e.toJson()).toList());
-  writeNotNull('hasDefaults', instance.hasDefaults);
-  writeNotNull('isKit', instance.isKit);
-  return val;
-}
+Map<String, dynamic> _$LegacyConfigurationToJson(
+        LegacyConfiguration instance) =>
+    <String, dynamic>{
+      if (instance.sections?.map((e) => e.toJson()).toList() case final value?)
+        'sections': value,
+      if (instance.hasDefaults case final value?) 'hasDefaults': value,
+      if (instance.isKit case final value?) 'isKit': value,
+    };
 
 ConfigSection _$ConfigSectionFromJson(Map<String, dynamic> json) =>
     ConfigSection(
@@ -40,21 +34,14 @@ ConfigSection _$ConfigSectionFromJson(Map<String, dynamic> json) =>
       sortOrder: (json['sortOrder'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$ConfigSectionToJson(ConfigSection instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('sectionName', instance.sectionName);
-  writeNotNull('options', instance.options?.map((e) => e.toJson()).toList());
-  writeNotNull('id', instance.id);
-  writeNotNull('sortOrder', instance.sortOrder);
-  return val;
-}
+Map<String, dynamic> _$ConfigSectionToJson(ConfigSection instance) =>
+    <String, dynamic>{
+      if (instance.sectionName case final value?) 'sectionName': value,
+      if (instance.options?.map((e) => e.toJson()).toList() case final value?)
+        'options': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.sortOrder case final value?) 'sortOrder': value,
+    };
 
 ConfigSectionOption _$ConfigSectionOptionFromJson(Map<String, dynamic> json) =>
     ConfigSectionOption(
@@ -72,26 +59,20 @@ ConfigSectionOption _$ConfigSectionOptionFromJson(Map<String, dynamic> json) =>
       userProductPrice: json['userProductPrice'] as bool?,
     );
 
-Map<String, dynamic> _$ConfigSectionOptionToJson(ConfigSectionOption instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('sectionOptionId', instance.sectionOptionId);
-  writeNotNull('sectionName', instance.sectionName);
-  writeNotNull('productName', instance.productName);
-  writeNotNull('productId', instance.productId);
-  writeNotNull('description', instance.description);
-  writeNotNull('price', instance.price);
-  writeNotNull('userProductPrice', instance.userProductPrice);
-  writeNotNull('selected', instance.selected);
-  writeNotNull('sortOrder', instance.sortOrder);
-  writeNotNull('id', instance.id);
-  writeNotNull('name', instance.name);
-  writeNotNull('quantity', instance.quantity);
-  return val;
-}
+Map<String, dynamic> _$ConfigSectionOptionToJson(
+        ConfigSectionOption instance) =>
+    <String, dynamic>{
+      if (instance.sectionOptionId case final value?) 'sectionOptionId': value,
+      if (instance.sectionName case final value?) 'sectionName': value,
+      if (instance.productName case final value?) 'productName': value,
+      if (instance.productId case final value?) 'productId': value,
+      if (instance.description case final value?) 'description': value,
+      if (instance.price case final value?) 'price': value,
+      if (instance.userProductPrice case final value?)
+        'userProductPrice': value,
+      if (instance.selected case final value?) 'selected': value,
+      if (instance.sortOrder case final value?) 'sortOrder': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.quantity case final value?) 'quantity': value,
+    };

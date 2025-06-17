@@ -22,19 +22,12 @@ WishListTagCollectionModel _$WishListTagCollectionModelFromJson(
       );
 
 Map<String, dynamic> _$WishListTagCollectionModelToJson(
-    WishListTagCollectionModel instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull(
-      'wishListTags', instance.wishListTags?.map((e) => e.toJson()).toList());
-  writeNotNull('pagination', instance.pagination?.toJson());
-  return val;
-}
+        WishListTagCollectionModel instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.wishListTags?.map((e) => e.toJson()).toList()
+          case final value?)
+        'wishListTags': value,
+      if (instance.pagination?.toJson() case final value?) 'pagination': value,
+    };

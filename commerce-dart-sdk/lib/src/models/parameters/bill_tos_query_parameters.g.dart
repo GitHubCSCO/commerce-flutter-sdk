@@ -7,22 +7,16 @@ part of 'bill_tos_query_parameters.dart';
 // **************************************************************************
 
 Map<String, dynamic> _$BillTosQueryParametersToJson(
-    BillTosQueryParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('sort', instance.sort);
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('filter', instance.filter);
-  writeNotNull(
-      'exclude', JsonEncodingMethods.commaSeparatedJson(instance.exclude));
-  writeNotNull(
-      'expand', JsonEncodingMethods.commaSeparatedJson(instance.expand));
-  return val;
-}
+        BillTosQueryParameters instance) =>
+    <String, dynamic>{
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.filter case final value?) 'filter': value,
+      if (JsonEncodingMethods.commaSeparatedJson(instance.exclude)
+          case final value?)
+        'exclude': value,
+      if (JsonEncodingMethods.commaSeparatedJson(instance.expand)
+          case final value?)
+        'expand': value,
+    };

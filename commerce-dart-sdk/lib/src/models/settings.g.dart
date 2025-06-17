@@ -17,20 +17,12 @@ Settings _$SettingsFromJson(Map<String, dynamic> json) => Settings(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$SettingsToJson(Settings instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('settingsCollection', instance.settingsCollection?.toJson());
-  return val;
-}
+Map<String, dynamic> _$SettingsToJson(Settings instance) => <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.settingsCollection?.toJson() case final value?)
+        'settingsCollection': value,
+    };
 
 SettingsCollection _$SettingsCollectionFromJson(Map<String, dynamic> json) =>
     SettingsCollection(
@@ -79,28 +71,31 @@ SettingsCollection _$SettingsCollectionFromJson(Map<String, dynamic> json) =>
               json['pickUpSettings'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$SettingsCollectionToJson(SettingsCollection instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('accountSettings', instance.accountSettings?.toJson());
-  writeNotNull('cartSettings', instance.cartSettings?.toJson());
-  writeNotNull('productSettings', instance.productSettings?.toJson());
-  writeNotNull('searchSettings', instance.searchSettings?.toJson());
-  writeNotNull('customerSettings', instance.customerSettings?.toJson());
-  writeNotNull('invoiceSettings', instance.invoiceSettings?.toJson());
-  writeNotNull('orderSettings', instance.orderSettings?.toJson());
-  writeNotNull('quoteSettings', instance.quoteSettings?.toJson());
-  writeNotNull('wishListSettings', instance.wishListSettings?.toJson());
-  writeNotNull('websiteSettings', instance.websiteSettings?.toJson());
-  writeNotNull('pickUpSettings', instance.pickUpSettings?.toJson());
-  return val;
-}
+Map<String, dynamic> _$SettingsCollectionToJson(SettingsCollection instance) =>
+    <String, dynamic>{
+      if (instance.accountSettings?.toJson() case final value?)
+        'accountSettings': value,
+      if (instance.cartSettings?.toJson() case final value?)
+        'cartSettings': value,
+      if (instance.productSettings?.toJson() case final value?)
+        'productSettings': value,
+      if (instance.searchSettings?.toJson() case final value?)
+        'searchSettings': value,
+      if (instance.customerSettings?.toJson() case final value?)
+        'customerSettings': value,
+      if (instance.invoiceSettings?.toJson() case final value?)
+        'invoiceSettings': value,
+      if (instance.orderSettings?.toJson() case final value?)
+        'orderSettings': value,
+      if (instance.quoteSettings?.toJson() case final value?)
+        'quoteSettings': value,
+      if (instance.wishListSettings?.toJson() case final value?)
+        'wishListSettings': value,
+      if (instance.websiteSettings?.toJson() case final value?)
+        'websiteSettings': value,
+      if (instance.pickUpSettings?.toJson() case final value?)
+        'pickUpSettings': value,
+    };
 
 AccountSettings _$AccountSettingsFromJson(Map<String, dynamic> json) =>
     AccountSettings(
@@ -129,39 +124,40 @@ AccountSettings _$AccountSettingsFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$AccountSettingsToJson(AccountSettings instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('allowCreateAccount', instance.allowCreateAccount);
-  writeNotNull('allowGuestCheckout', instance.allowGuestCheckout);
-  writeNotNull(
-      'allowSubscribeToNewsLetter', instance.allowSubscribeToNewsLetter);
-  writeNotNull(
-      'requireSelectCustomerOnSignIn', instance.requireSelectCustomerOnSignIn);
-  writeNotNull('passwordMinimumLength', instance.passwordMinimumLength);
-  writeNotNull(
-      'passwordMinimumRequiredLength', instance.passwordMinimumRequiredLength);
-  writeNotNull('passwordRequiresSpecialCharacter',
-      instance.passwordRequiresSpecialCharacter);
-  writeNotNull('passwordRequiresUppercase', instance.passwordRequiresUppercase);
-  writeNotNull('passwordRequiresLowercase', instance.passwordRequiresLowercase);
-  writeNotNull('rememberMe', instance.rememberMe);
-  writeNotNull('passwordRequiresDigit', instance.passwordRequiresDigit);
-  writeNotNull('daysToRetainUser', instance.daysToRetainUser);
-  writeNotNull('useEmailAsUserName', instance.useEmailAsUserName);
-  writeNotNull('enableWarehousePickup', instance.enableWarehousePickup);
-  writeNotNull(
-      'logOutUserAfterPasswordChange', instance.logOutUserAfterPasswordChange);
-  return val;
-}
+Map<String, dynamic> _$AccountSettingsToJson(AccountSettings instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.allowCreateAccount case final value?)
+        'allowCreateAccount': value,
+      if (instance.allowGuestCheckout case final value?)
+        'allowGuestCheckout': value,
+      if (instance.allowSubscribeToNewsLetter case final value?)
+        'allowSubscribeToNewsLetter': value,
+      if (instance.requireSelectCustomerOnSignIn case final value?)
+        'requireSelectCustomerOnSignIn': value,
+      if (instance.passwordMinimumLength case final value?)
+        'passwordMinimumLength': value,
+      if (instance.passwordMinimumRequiredLength case final value?)
+        'passwordMinimumRequiredLength': value,
+      if (instance.passwordRequiresSpecialCharacter case final value?)
+        'passwordRequiresSpecialCharacter': value,
+      if (instance.passwordRequiresUppercase case final value?)
+        'passwordRequiresUppercase': value,
+      if (instance.passwordRequiresLowercase case final value?)
+        'passwordRequiresLowercase': value,
+      if (instance.rememberMe case final value?) 'rememberMe': value,
+      if (instance.passwordRequiresDigit case final value?)
+        'passwordRequiresDigit': value,
+      if (instance.daysToRetainUser case final value?)
+        'daysToRetainUser': value,
+      if (instance.useEmailAsUserName case final value?)
+        'useEmailAsUserName': value,
+      if (instance.enableWarehousePickup case final value?)
+        'enableWarehousePickup': value,
+      if (instance.logOutUserAfterPasswordChange case final value?)
+        'logOutUserAfterPasswordChange': value,
+    };
 
 CartSettings _$CartSettingsFromJson(Map<String, dynamic> json) => CartSettings(
       canRequestDeliveryDate: json['canRequestDeliveryDate'] as bool?,
@@ -186,35 +182,36 @@ CartSettings _$CartSettingsFromJson(Map<String, dynamic> json) => CartSettings(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$CartSettingsToJson(CartSettings instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('canRequestDeliveryDate', instance.canRequestDeliveryDate);
-  writeNotNull('canRequisition', instance.canRequisition);
-  writeNotNull('canEditCostCode', instance.canEditCostCode);
-  writeNotNull('maximumDeliveryPeriod', instance.maximumDeliveryPeriod);
-  writeNotNull('showCostCode', instance.showCostCode);
-  writeNotNull('showPoNumber', instance.showPoNumber);
-  writeNotNull('showPayPal', instance.showPayPal);
-  writeNotNull('showCreditCard', instance.showCreditCard);
-  writeNotNull('showTaxAndShipping', instance.showTaxAndShipping);
-  writeNotNull('showLineNotes', instance.showLineNotes);
-  writeNotNull('showNewsletterSignup', instance.showNewsletterSignup);
-  writeNotNull('requiresPoNumber', instance.requiresPoNumber);
-  writeNotNull('addToCartPopupTimeout', instance.addToCartPopupTimeout);
-  writeNotNull('enableRequestPickUpDate', instance.enableRequestPickUpDate);
-  writeNotNull('enableSavedCreditCards', instance.enableSavedCreditCards);
-  writeNotNull('bypassCvvForSavedCards', instance.bypassCvvForSavedCards);
-  return val;
-}
+Map<String, dynamic> _$CartSettingsToJson(CartSettings instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.canRequestDeliveryDate case final value?)
+        'canRequestDeliveryDate': value,
+      if (instance.canRequisition case final value?) 'canRequisition': value,
+      if (instance.canEditCostCode case final value?) 'canEditCostCode': value,
+      if (instance.maximumDeliveryPeriod case final value?)
+        'maximumDeliveryPeriod': value,
+      if (instance.showCostCode case final value?) 'showCostCode': value,
+      if (instance.showPoNumber case final value?) 'showPoNumber': value,
+      if (instance.showPayPal case final value?) 'showPayPal': value,
+      if (instance.showCreditCard case final value?) 'showCreditCard': value,
+      if (instance.showTaxAndShipping case final value?)
+        'showTaxAndShipping': value,
+      if (instance.showLineNotes case final value?) 'showLineNotes': value,
+      if (instance.showNewsletterSignup case final value?)
+        'showNewsletterSignup': value,
+      if (instance.requiresPoNumber case final value?)
+        'requiresPoNumber': value,
+      if (instance.addToCartPopupTimeout case final value?)
+        'addToCartPopupTimeout': value,
+      if (instance.enableRequestPickUpDate case final value?)
+        'enableRequestPickUpDate': value,
+      if (instance.enableSavedCreditCards case final value?)
+        'enableSavedCreditCards': value,
+      if (instance.bypassCvvForSavedCards case final value?)
+        'bypassCvvForSavedCards': value,
+    };
 
 ProductSettings _$ProductSettingsFromJson(Map<String, dynamic> json) =>
     ProductSettings(
@@ -260,55 +257,63 @@ ProductSettings _$ProductSettingsFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$ProductSettingsToJson(ProductSettings instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('allowBackOrder', instance.allowBackOrder);
-  writeNotNull('allowBackOrderForDelivery', instance.allowBackOrderForDelivery);
-  writeNotNull('allowBackOrderForPickup', instance.allowBackOrderForPickup);
-  writeNotNull('showInventoryAvailability', instance.showInventoryAvailability);
-  writeNotNull('showAddToCartConfirmationDialog',
-      instance.showAddToCartConfirmationDialog);
-  writeNotNull('enableProductComparisons', instance.enableProductComparisons);
-  writeNotNull('alternateUnitsOfMeasure', instance.alternateUnitsOfMeasure);
-  writeNotNull('thirdPartyReviews', instance.thirdPartyReviews);
-  writeNotNull('defaultViewType', instance.defaultViewType);
-  writeNotNull('showSavingsAmount', instance.showSavingsAmount);
-  writeNotNull('showSavingsPercent', instance.showSavingsPercent);
-  writeNotNull('realTimePricing', instance.realTimePricing);
-  writeNotNull('realTimeInventory', instance.realTimeInventory);
-  writeNotNull(
-      'inventoryIncludedWithPricing', instance.inventoryIncludedWithPricing);
-  writeNotNull('storefrontAccess', instance.storefrontAccess);
-  writeNotNull('canShowPriceFilters', instance.canShowPriceFilters);
-  writeNotNull('canSeeProducts', instance.canSeeProducts);
-  writeNotNull('canSeePrices', instance.canSeePrices);
-  writeNotNull('canAddToCart', instance.canAddToCart);
-  writeNotNull('pricingService', instance.pricingService);
-  writeNotNull('displayAttributesintabs', instance.displayAttributesintabs);
-  writeNotNull('attributesTabSortOrder', instance.attributesTabSortOrder);
-  writeNotNull('displayDocumentsintabs', instance.displayDocumentsintabs);
-  writeNotNull('documentsTabSortOrder', instance.documentsTabSortOrder);
-  writeNotNull(
-      'displayInventoryPerWarehouse', instance.displayInventoryPerWarehouse);
-  writeNotNull('displayInventoryPerWarehouseOnlyOnProductDetail',
-      instance.displayInventoryPerWarehouseOnlyOnProductDetail);
-  writeNotNull(
-      'displayFacetsForStockedItems', instance.displayFacetsForStockedItems);
-  writeNotNull('imageProvider', instance.imageProvider);
-  writeNotNull('catalogUrlPath', instance.catalogUrlPath);
-  writeNotNull('enableVat', instance.enableVat);
-  writeNotNull('vatPriceDisplay', instance.vatPriceDisplay);
-  return val;
-}
+Map<String, dynamic> _$ProductSettingsToJson(ProductSettings instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.allowBackOrder case final value?) 'allowBackOrder': value,
+      if (instance.allowBackOrderForDelivery case final value?)
+        'allowBackOrderForDelivery': value,
+      if (instance.allowBackOrderForPickup case final value?)
+        'allowBackOrderForPickup': value,
+      if (instance.showInventoryAvailability case final value?)
+        'showInventoryAvailability': value,
+      if (instance.showAddToCartConfirmationDialog case final value?)
+        'showAddToCartConfirmationDialog': value,
+      if (instance.enableProductComparisons case final value?)
+        'enableProductComparisons': value,
+      if (instance.alternateUnitsOfMeasure case final value?)
+        'alternateUnitsOfMeasure': value,
+      if (instance.thirdPartyReviews case final value?)
+        'thirdPartyReviews': value,
+      if (instance.defaultViewType case final value?) 'defaultViewType': value,
+      if (instance.showSavingsAmount case final value?)
+        'showSavingsAmount': value,
+      if (instance.showSavingsPercent case final value?)
+        'showSavingsPercent': value,
+      if (instance.realTimePricing case final value?) 'realTimePricing': value,
+      if (instance.realTimeInventory case final value?)
+        'realTimeInventory': value,
+      if (instance.inventoryIncludedWithPricing case final value?)
+        'inventoryIncludedWithPricing': value,
+      if (instance.storefrontAccess case final value?)
+        'storefrontAccess': value,
+      if (instance.canShowPriceFilters case final value?)
+        'canShowPriceFilters': value,
+      if (instance.canSeeProducts case final value?) 'canSeeProducts': value,
+      if (instance.canSeePrices case final value?) 'canSeePrices': value,
+      if (instance.canAddToCart case final value?) 'canAddToCart': value,
+      if (instance.pricingService case final value?) 'pricingService': value,
+      if (instance.displayAttributesintabs case final value?)
+        'displayAttributesintabs': value,
+      if (instance.attributesTabSortOrder case final value?)
+        'attributesTabSortOrder': value,
+      if (instance.displayDocumentsintabs case final value?)
+        'displayDocumentsintabs': value,
+      if (instance.documentsTabSortOrder case final value?)
+        'documentsTabSortOrder': value,
+      if (instance.displayInventoryPerWarehouse case final value?)
+        'displayInventoryPerWarehouse': value,
+      if (instance.displayInventoryPerWarehouseOnlyOnProductDetail
+          case final value?)
+        'displayInventoryPerWarehouseOnlyOnProductDetail': value,
+      if (instance.displayFacetsForStockedItems case final value?)
+        'displayFacetsForStockedItems': value,
+      if (instance.imageProvider case final value?) 'imageProvider': value,
+      if (instance.catalogUrlPath case final value?) 'catalogUrlPath': value,
+      if (instance.enableVat case final value?) 'enableVat': value,
+      if (instance.vatPriceDisplay case final value?) 'vatPriceDisplay': value,
+    };
 
 SearchSettings _$SearchSettingsFromJson(Map<String, dynamic> json) =>
     SearchSettings(
@@ -326,27 +331,23 @@ SearchSettings _$SearchSettingsFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$SearchSettingsToJson(SearchSettings instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('autocompleteEnabled', instance.autocompleteEnabled);
-  writeNotNull('searchHistoryEnabled', instance.searchHistoryEnabled);
-  writeNotNull('searchHistoryLimit', instance.searchHistoryLimit);
-  writeNotNull('enableBoostingByPurchaseHistory',
-      instance.enableBoostingByPurchaseHistory);
-  writeNotNull('allowFilteringForPreviouslyPurchasedProducts',
-      instance.allowFilteringForPreviouslyPurchasedProducts);
-  writeNotNull('searchPath', instance.searchPath);
-  return val;
-}
+Map<String, dynamic> _$SearchSettingsToJson(SearchSettings instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.autocompleteEnabled case final value?)
+        'autocompleteEnabled': value,
+      if (instance.searchHistoryEnabled case final value?)
+        'searchHistoryEnabled': value,
+      if (instance.searchHistoryLimit case final value?)
+        'searchHistoryLimit': value,
+      if (instance.enableBoostingByPurchaseHistory case final value?)
+        'enableBoostingByPurchaseHistory': value,
+      if (instance.allowFilteringForPreviouslyPurchasedProducts
+          case final value?)
+        'allowFilteringForPreviouslyPurchasedProducts': value,
+      if (instance.searchPath case final value?) 'searchPath': value,
+    };
 
 CustomerSettings _$CustomerSettingsFromJson(Map<String, dynamic> json) =>
     CustomerSettings(
@@ -371,35 +372,39 @@ CustomerSettings _$CustomerSettingsFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$CustomerSettingsToJson(CustomerSettings instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('allowBillToAddressEdit', instance.allowBillToAddressEdit);
-  writeNotNull('allowShipToAddressEdit', instance.allowShipToAddressEdit);
-  writeNotNull(
-      'allowCreateNewShipToAddress', instance.allowCreateNewShipToAddress);
-  writeNotNull('billToCompanyRequired', instance.billToCompanyRequired);
-  writeNotNull('billToFirstNameRequired', instance.billToFirstNameRequired);
-  writeNotNull('billToLastNameRequired', instance.billToLastNameRequired);
-  writeNotNull('shipToCompanyRequired', instance.shipToCompanyRequired);
-  writeNotNull('shipToFirstNameRequired', instance.shipToFirstNameRequired);
-  writeNotNull('shipToLastNameRequired', instance.shipToLastNameRequired);
-  writeNotNull('budgetsFromOnlineOnly', instance.budgetsFromOnlineOnly);
-  writeNotNull('billToStateRequired', instance.billToStateRequired);
-  writeNotNull('shipToStateRequired', instance.shipToStateRequired);
-  writeNotNull('displayAccountsReceivableBalances',
-      instance.displayAccountsReceivableBalances);
-  writeNotNull('allowOneTimeAddresses', instance.allowOneTimeAddresses);
-  return val;
-}
+Map<String, dynamic> _$CustomerSettingsToJson(CustomerSettings instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.allowBillToAddressEdit case final value?)
+        'allowBillToAddressEdit': value,
+      if (instance.allowShipToAddressEdit case final value?)
+        'allowShipToAddressEdit': value,
+      if (instance.allowCreateNewShipToAddress case final value?)
+        'allowCreateNewShipToAddress': value,
+      if (instance.billToCompanyRequired case final value?)
+        'billToCompanyRequired': value,
+      if (instance.billToFirstNameRequired case final value?)
+        'billToFirstNameRequired': value,
+      if (instance.billToLastNameRequired case final value?)
+        'billToLastNameRequired': value,
+      if (instance.shipToCompanyRequired case final value?)
+        'shipToCompanyRequired': value,
+      if (instance.shipToFirstNameRequired case final value?)
+        'shipToFirstNameRequired': value,
+      if (instance.shipToLastNameRequired case final value?)
+        'shipToLastNameRequired': value,
+      if (instance.budgetsFromOnlineOnly case final value?)
+        'budgetsFromOnlineOnly': value,
+      if (instance.billToStateRequired case final value?)
+        'billToStateRequired': value,
+      if (instance.shipToStateRequired case final value?)
+        'shipToStateRequired': value,
+      if (instance.displayAccountsReceivableBalances case final value?)
+        'displayAccountsReceivableBalances': value,
+      if (instance.allowOneTimeAddresses case final value?)
+        'allowOneTimeAddresses': value,
+    };
 
 InvoiceSettings _$InvoiceSettingsFromJson(Map<String, dynamic> json) =>
     InvoiceSettings(
@@ -407,19 +412,11 @@ InvoiceSettings _$InvoiceSettingsFromJson(Map<String, dynamic> json) =>
       showInvoices: json['showInvoices'] as bool?,
     );
 
-Map<String, dynamic> _$InvoiceSettingsToJson(InvoiceSettings instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('lookBackDays', instance.lookBackDays);
-  writeNotNull('showInvoices', instance.showInvoices);
-  return val;
-}
+Map<String, dynamic> _$InvoiceSettingsToJson(InvoiceSettings instance) =>
+    <String, dynamic>{
+      if (instance.lookBackDays case final value?) 'lookBackDays': value,
+      if (instance.showInvoices case final value?) 'showInvoices': value,
+    };
 
 OrderSettings _$OrderSettingsFromJson(Map<String, dynamic> json) =>
     OrderSettings(
@@ -443,33 +440,28 @@ OrderSettings _$OrderSettingsFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$OrderSettingsToJson(OrderSettings instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('allowCancellationRequest', instance.allowCancellationRequest);
-  writeNotNull('allowQuickOrder', instance.allowQuickOrder);
-  writeNotNull('canReorderItems', instance.canReorderItems);
-  writeNotNull('canOrderUpload', instance.canOrderUpload);
-  writeNotNull('allowRma', instance.allowRma);
-  writeNotNull('showCostCode', instance.showCostCode);
-  writeNotNull('showPoNumber', instance.showPoNumber);
-  writeNotNull('showTermsCode', instance.showTermsCode);
-  writeNotNull('showErpOrderNumber', instance.showErpOrderNumber);
-  writeNotNull('showWebOrderNumber', instance.showWebOrderNumber);
-  writeNotNull('showOrderStatus', instance.showOrderStatus);
-  writeNotNull('showOrders', instance.showOrders);
-  writeNotNull('lookBackDays', instance.lookBackDays);
-  writeNotNull('vmiEnabled', instance.vmiEnabled);
-  return val;
-}
+Map<String, dynamic> _$OrderSettingsToJson(OrderSettings instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.allowCancellationRequest case final value?)
+        'allowCancellationRequest': value,
+      if (instance.allowQuickOrder case final value?) 'allowQuickOrder': value,
+      if (instance.canReorderItems case final value?) 'canReorderItems': value,
+      if (instance.canOrderUpload case final value?) 'canOrderUpload': value,
+      if (instance.allowRma case final value?) 'allowRma': value,
+      if (instance.showCostCode case final value?) 'showCostCode': value,
+      if (instance.showPoNumber case final value?) 'showPoNumber': value,
+      if (instance.showTermsCode case final value?) 'showTermsCode': value,
+      if (instance.showErpOrderNumber case final value?)
+        'showErpOrderNumber': value,
+      if (instance.showWebOrderNumber case final value?)
+        'showWebOrderNumber': value,
+      if (instance.showOrderStatus case final value?) 'showOrderStatus': value,
+      if (instance.showOrders case final value?) 'showOrders': value,
+      if (instance.lookBackDays case final value?) 'lookBackDays': value,
+      if (instance.vmiEnabled case final value?) 'vmiEnabled': value,
+    };
 
 QuoteSettings _$QuoteSettingsFromJson(Map<String, dynamic> json) =>
     QuoteSettings(
@@ -481,21 +473,13 @@ QuoteSettings _$QuoteSettingsFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$QuoteSettingsToJson(QuoteSettings instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('jobQuoteEnabled', instance.jobQuoteEnabled);
-  writeNotNull('quoteExpireDays', instance.quoteExpireDays);
-  return val;
-}
+Map<String, dynamic> _$QuoteSettingsToJson(QuoteSettings instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.jobQuoteEnabled case final value?) 'jobQuoteEnabled': value,
+      if (instance.quoteExpireDays case final value?) 'quoteExpireDays': value,
+    };
 
 WishListSettings _$WishListSettingsFromJson(Map<String, dynamic> json) =>
     WishListSettings(
@@ -511,25 +495,22 @@ WishListSettings _$WishListSettingsFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$WishListSettingsToJson(WishListSettings instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('allowMultipleWishLists', instance.allowMultipleWishLists);
-  writeNotNull('allowEditingOfWishLists', instance.allowEditingOfWishLists);
-  writeNotNull('allowWishListsByCustomer', instance.allowWishListsByCustomer);
-  writeNotNull('allowListSharing', instance.allowListSharing);
-  writeNotNull('productsPerPage', instance.productsPerPage);
-  writeNotNull('enableWishListReminders', instance.enableWishListReminders);
-  return val;
-}
+Map<String, dynamic> _$WishListSettingsToJson(WishListSettings instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.allowMultipleWishLists case final value?)
+        'allowMultipleWishLists': value,
+      if (instance.allowEditingOfWishLists case final value?)
+        'allowEditingOfWishLists': value,
+      if (instance.allowWishListsByCustomer case final value?)
+        'allowWishListsByCustomer': value,
+      if (instance.allowListSharing case final value?)
+        'allowListSharing': value,
+      if (instance.productsPerPage case final value?) 'productsPerPage': value,
+      if (instance.enableWishListReminders case final value?)
+        'enableWishListReminders': value,
+    };
 
 WebsiteSettings _$WebsiteSettingsFromJson(Map<String, dynamic> json) =>
     WebsiteSettings(
@@ -576,58 +557,67 @@ WebsiteSettings _$WebsiteSettingsFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$WebsiteSettingsToJson(WebsiteSettings instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('mobileAppEnabled', instance.mobileAppEnabled);
-  writeNotNull('useTokenExGateway', instance.useTokenExGateway);
-  writeNotNull('useECheckTokenExGateway', instance.useECheckTokenExGateway);
-  writeNotNull('tokenExTestMode', instance.tokenExTestMode);
-  writeNotNull('usePaymetricGateway', instance.usePaymetricGateway);
-  writeNotNull('useAdyenDropIn', instance.useAdyenDropIn);
-  writeNotNull('useSpreedlyDropIn', instance.useSpreedlyDropIn);
-  writeNotNull('paymentGatewayRequiresAuthentication',
-      instance.paymentGatewayRequiresAuthentication);
-  writeNotNull('defaultPageSize', instance.defaultPageSize);
-  writeNotNull('enableCookiePrivacyPolicyPopup',
-      instance.enableCookiePrivacyPolicyPopup);
-  writeNotNull(
-      'enableDynamicRecommendations', instance.enableDynamicRecommendations);
-  writeNotNull('googleMapsApiKey', instance.googleMapsApiKey);
-  writeNotNull(
-      'googleTrackingTypeComputed', instance.googleTrackingTypeComputed);
-  writeNotNull('googleTrackingAccountId', instance.googleTrackingAccountId);
-  writeNotNull('cmsType', _$CmsTypeEnumMap[instance.cmsType]);
-  writeNotNull(
-      'includeSiteNameInPageTitle', instance.includeSiteNameInPageTitle);
-  writeNotNull('pageTitleDelimiter', instance.pageTitleDelimiter);
-  writeNotNull('siteNameAfterTitle', instance.siteNameAfterTitle);
-  writeNotNull('reCaptchaSiteKey', instance.reCaptchaSiteKey);
-  writeNotNull(
-      'reCaptchaEnabledForContactUs', instance.reCaptchaEnabledForContactUs);
-  writeNotNull('reCaptchaEnabledForCreateAccount',
-      instance.reCaptchaEnabledForCreateAccount);
-  writeNotNull('reCaptchaEnabledForForgotPassword',
-      instance.reCaptchaEnabledForForgotPassword);
-  writeNotNull('reCaptchaEnabledForShareProduct',
-      instance.reCaptchaEnabledForShareProduct);
-  writeNotNull('advancedSpireCmsFeatures', instance.advancedSpireCmsFeatures);
-  writeNotNull('previewLoginEnabled', instance.previewLoginEnabled);
-  writeNotNull('maintenanceModeEnabled', instance.maintenanceModeEnabled);
-  writeNotNull('useSquareGateway', instance.useSquareGateway);
-  writeNotNull('squareApplicationId', instance.squareApplicationId);
-  writeNotNull('squareLocationId', instance.squareLocationId);
-  writeNotNull('squareLive', instance.squareLive);
-  return val;
-}
+Map<String, dynamic> _$WebsiteSettingsToJson(WebsiteSettings instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.mobileAppEnabled case final value?)
+        'mobileAppEnabled': value,
+      if (instance.useTokenExGateway case final value?)
+        'useTokenExGateway': value,
+      if (instance.useECheckTokenExGateway case final value?)
+        'useECheckTokenExGateway': value,
+      if (instance.tokenExTestMode case final value?) 'tokenExTestMode': value,
+      if (instance.usePaymetricGateway case final value?)
+        'usePaymetricGateway': value,
+      if (instance.useAdyenDropIn case final value?) 'useAdyenDropIn': value,
+      if (instance.useSpreedlyDropIn case final value?)
+        'useSpreedlyDropIn': value,
+      if (instance.paymentGatewayRequiresAuthentication case final value?)
+        'paymentGatewayRequiresAuthentication': value,
+      if (instance.defaultPageSize case final value?) 'defaultPageSize': value,
+      if (instance.enableCookiePrivacyPolicyPopup case final value?)
+        'enableCookiePrivacyPolicyPopup': value,
+      if (instance.enableDynamicRecommendations case final value?)
+        'enableDynamicRecommendations': value,
+      if (instance.googleMapsApiKey case final value?)
+        'googleMapsApiKey': value,
+      if (instance.googleTrackingTypeComputed case final value?)
+        'googleTrackingTypeComputed': value,
+      if (instance.googleTrackingAccountId case final value?)
+        'googleTrackingAccountId': value,
+      if (_$CmsTypeEnumMap[instance.cmsType] case final value?)
+        'cmsType': value,
+      if (instance.includeSiteNameInPageTitle case final value?)
+        'includeSiteNameInPageTitle': value,
+      if (instance.pageTitleDelimiter case final value?)
+        'pageTitleDelimiter': value,
+      if (instance.siteNameAfterTitle case final value?)
+        'siteNameAfterTitle': value,
+      if (instance.reCaptchaSiteKey case final value?)
+        'reCaptchaSiteKey': value,
+      if (instance.reCaptchaEnabledForContactUs case final value?)
+        'reCaptchaEnabledForContactUs': value,
+      if (instance.reCaptchaEnabledForCreateAccount case final value?)
+        'reCaptchaEnabledForCreateAccount': value,
+      if (instance.reCaptchaEnabledForForgotPassword case final value?)
+        'reCaptchaEnabledForForgotPassword': value,
+      if (instance.reCaptchaEnabledForShareProduct case final value?)
+        'reCaptchaEnabledForShareProduct': value,
+      if (instance.advancedSpireCmsFeatures case final value?)
+        'advancedSpireCmsFeatures': value,
+      if (instance.previewLoginEnabled case final value?)
+        'previewLoginEnabled': value,
+      if (instance.maintenanceModeEnabled case final value?)
+        'maintenanceModeEnabled': value,
+      if (instance.useSquareGateway case final value?)
+        'useSquareGateway': value,
+      if (instance.squareApplicationId case final value?)
+        'squareApplicationId': value,
+      if (instance.squareLocationId case final value?)
+        'squareLocationId': value,
+      if (instance.squareLive case final value?) 'squareLive': value,
+    };
 
 const _$CmsTypeEnumMap = {
   CmsType.classic: 'Classic',
@@ -639,18 +629,10 @@ SpreedlyDto _$SpreedlyDtoFromJson(Map<String, dynamic> json) => SpreedlyDto(
       environmentKey: json['environmentKey'] as String?,
     );
 
-Map<String, dynamic> _$SpreedlyDtoToJson(SpreedlyDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('environmentKey', instance.environmentKey);
-  return val;
-}
+Map<String, dynamic> _$SpreedlyDtoToJson(SpreedlyDto instance) =>
+    <String, dynamic>{
+      if (instance.environmentKey case final value?) 'environmentKey': value,
+    };
 
 TokenExDto _$TokenExDtoFromJson(Map<String, dynamic> json) => TokenExDto(
       tokenExId: json['tokenExId'] as String?,
@@ -661,23 +643,16 @@ TokenExDto _$TokenExDtoFromJson(Map<String, dynamic> json) => TokenExDto(
       token: json['token'] as String?,
     );
 
-Map<String, dynamic> _$TokenExDtoToJson(TokenExDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('tokenExId', instance.tokenExId);
-  writeNotNull('origin', instance.origin);
-  writeNotNull('timestamp', instance.timestamp);
-  writeNotNull('tokenScheme', instance.tokenScheme);
-  writeNotNull('authenticationKey', instance.authenticationKey);
-  writeNotNull('token', instance.token);
-  return val;
-}
+Map<String, dynamic> _$TokenExDtoToJson(TokenExDto instance) =>
+    <String, dynamic>{
+      if (instance.tokenExId case final value?) 'tokenExId': value,
+      if (instance.origin case final value?) 'origin': value,
+      if (instance.timestamp case final value?) 'timestamp': value,
+      if (instance.tokenScheme case final value?) 'tokenScheme': value,
+      if (instance.authenticationKey case final value?)
+        'authenticationKey': value,
+      if (instance.token case final value?) 'token': value,
+    };
 
 TokenExStyleDto _$TokenExStyleDtoFromJson(Map<String, dynamic> json) =>
     TokenExStyleDto(
@@ -688,22 +663,14 @@ TokenExStyleDto _$TokenExStyleDtoFromJson(Map<String, dynamic> json) =>
       borderWidth: json['borderWidth'] as String?,
     );
 
-Map<String, dynamic> _$TokenExStyleDtoToJson(TokenExStyleDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('baseColor', instance.baseColor);
-  writeNotNull('focusColor', instance.focusColor);
-  writeNotNull('errorColor', instance.errorColor);
-  writeNotNull('textColor', instance.textColor);
-  writeNotNull('borderWidth', instance.borderWidth);
-  return val;
-}
+Map<String, dynamic> _$TokenExStyleDtoToJson(TokenExStyleDto instance) =>
+    <String, dynamic>{
+      if (instance.baseColor case final value?) 'baseColor': value,
+      if (instance.focusColor case final value?) 'focusColor': value,
+      if (instance.errorColor case final value?) 'errorColor': value,
+      if (instance.textColor case final value?) 'textColor': value,
+      if (instance.borderWidth case final value?) 'borderWidth': value,
+    };
 
 PickUpSettings _$PickUpSettingsFromJson(Map<String, dynamic> json) =>
     PickUpSettings(
@@ -715,21 +682,14 @@ PickUpSettings _$PickUpSettingsFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$PickUpSettingsToJson(PickUpSettings instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('warehousesPageSize', instance.warehousesPageSize);
-  writeNotNull('searchRadius', instance.searchRadius);
-  return val;
-}
+Map<String, dynamic> _$PickUpSettingsToJson(PickUpSettings instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.warehousesPageSize case final value?)
+        'warehousesPageSize': value,
+      if (instance.searchRadius case final value?) 'searchRadius': value,
+    };
 
 MobileAppSettings _$MobileAppSettingsFromJson(Map<String, dynamic> json) =>
     MobileAppSettings(
@@ -745,23 +705,16 @@ MobileAppSettings _$MobileAppSettingsFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$MobileAppSettingsToJson(MobileAppSettings instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull(
-      'startingCategoryForBrowsing', instance.startingCategoryForBrowsing);
-  writeNotNull('hasCheckout', instance.hasCheckout);
-  writeNotNull(
-      'overrideCheckoutNavigation', instance.overrideCheckoutNavigation);
-  writeNotNull('checkoutUrl', instance.checkoutUrl);
-  writeNotNull('addToCartInProductList', instance.addToCartInProductList);
-  return val;
-}
+Map<String, dynamic> _$MobileAppSettingsToJson(MobileAppSettings instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.startingCategoryForBrowsing case final value?)
+        'startingCategoryForBrowsing': value,
+      if (instance.hasCheckout case final value?) 'hasCheckout': value,
+      if (instance.overrideCheckoutNavigation case final value?)
+        'overrideCheckoutNavigation': value,
+      if (instance.checkoutUrl case final value?) 'checkoutUrl': value,
+      if (instance.addToCartInProductList case final value?)
+        'addToCartInProductList': value,
+    };

@@ -17,22 +17,14 @@ SalesRepRequesteAQuoteParameters _$SalesRepRequesteAQuoteParametersFromJson(
     );
 
 Map<String, dynamic> _$SalesRepRequesteAQuoteParametersToJson(
-    SalesRepRequesteAQuoteParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('quoteId', instance.quoteId);
-  writeNotNull('jobName', instance.jobName);
-  writeNotNull('note', instance.note);
-  writeNotNull('isJobQuote', instance.isJobQuote);
-  writeNotNull('userId', instance.userId);
-  return val;
-}
+        SalesRepRequesteAQuoteParameters instance) =>
+    <String, dynamic>{
+      if (instance.quoteId case final value?) 'quoteId': value,
+      if (instance.jobName case final value?) 'jobName': value,
+      if (instance.note case final value?) 'note': value,
+      if (instance.isJobQuote case final value?) 'isJobQuote': value,
+      if (instance.userId case final value?) 'userId': value,
+    };
 
 RequesteAQuoteParameters _$RequesteAQuoteParametersFromJson(
         Map<String, dynamic> json) =>
@@ -44,18 +36,10 @@ RequesteAQuoteParameters _$RequesteAQuoteParametersFromJson(
     );
 
 Map<String, dynamic> _$RequesteAQuoteParametersToJson(
-    RequesteAQuoteParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('quoteId', instance.quoteId);
-  writeNotNull('jobName', instance.jobName);
-  writeNotNull('note', instance.note);
-  writeNotNull('isJobQuote', instance.isJobQuote);
-  return val;
-}
+        RequesteAQuoteParameters instance) =>
+    <String, dynamic>{
+      if (instance.quoteId case final value?) 'quoteId': value,
+      if (instance.jobName case final value?) 'jobName': value,
+      if (instance.note case final value?) 'note': value,
+      if (instance.isJobQuote case final value?) 'isJobQuote': value,
+    };

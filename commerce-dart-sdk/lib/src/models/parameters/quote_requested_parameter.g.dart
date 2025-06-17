@@ -17,17 +17,10 @@ QuoteRequestedParameter _$QuoteRequestedParameterFromJson(
     );
 
 Map<String, dynamic> _$QuoteRequestedParameterToJson(
-    QuoteRequestedParameter instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('quoteId', instance.quoteId);
-  writeNotNull('status', instance.status);
-  writeNotNull('expirationDate', instance.expirationDate?.toIso8601String());
-  return val;
-}
+        QuoteRequestedParameter instance) =>
+    <String, dynamic>{
+      if (instance.quoteId case final value?) 'quoteId': value,
+      if (instance.status case final value?) 'status': value,
+      if (instance.expirationDate?.toIso8601String() case final value?)
+        'expirationDate': value,
+    };

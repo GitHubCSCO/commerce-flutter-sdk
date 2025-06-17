@@ -92,91 +92,105 @@ Order _$OrderFromJson(Map<String, dynamic> json) => Order(
       webOrderNumber: json['webOrderNumber'] as String?,
     );
 
-Map<String, dynamic> _$OrderToJson(Order instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('erpOrderNumber', instance.erpOrderNumber);
-  writeNotNull('webOrderNumber', instance.webOrderNumber);
-  writeNotNull('orderDate', instance.orderDate?.toIso8601String());
-  writeNotNull('status', instance.status);
-  writeNotNull('statusDisplay', instance.statusDisplay);
-  writeNotNull('customerNumber', instance.customerNumber);
-  writeNotNull('customerSequence', instance.customerSequence);
-  writeNotNull('customerPO', instance.customerPO);
-  writeNotNull('currencyCode', instance.currencyCode);
-  writeNotNull('currencySymbol', instance.currencySymbol);
-  writeNotNull('terms', instance.terms);
-  writeNotNull('shipCode', instance.shipCode);
-  writeNotNull('salesperson', instance.salesperson);
-  writeNotNull('btCompanyName', instance.btCompanyName);
-  writeNotNull('btAddress1', instance.btAddress1);
-  writeNotNull('btAddress2', instance.btAddress2);
-  writeNotNull('billToCity', instance.billToCity);
-  writeNotNull('billToState', instance.billToState);
-  writeNotNull('billToPostalCode', instance.billToPostalCode);
-  writeNotNull('btCountry', instance.btCountry);
-  writeNotNull('stCompanyName', instance.stCompanyName);
-  writeNotNull('stAddress1', instance.stAddress1);
-  writeNotNull('stAddress2', instance.stAddress2);
-  writeNotNull('stAddress3', instance.stAddress3);
-  writeNotNull('stAddress4', instance.stAddress4);
-  writeNotNull('shipToCity', instance.shipToCity);
-  writeNotNull('shipToState', instance.shipToState);
-  writeNotNull('shipToPostalCode', instance.shipToPostalCode);
-  writeNotNull('stCountry', instance.stCountry);
-  writeNotNull('notes', instance.notes);
-  writeNotNull('productTotal', instance.productTotal);
-  writeNotNull('orderSubTotal', instance.orderSubTotal);
-  writeNotNull('orderDiscountAmount', instance.orderDiscountAmount);
-  writeNotNull('productDiscountAmount', instance.productDiscountAmount);
-  writeNotNull('shippingAndHandling', instance.shippingAndHandling);
-  writeNotNull('shippingCharges', instance.shippingCharges);
-  writeNotNull('handlingCharges', instance.handlingCharges);
-  writeNotNull('otherCharges', instance.otherCharges);
-  writeNotNull('taxAmount', instance.taxAmount);
-  writeNotNull('orderTotal', instance.orderTotal);
-  writeNotNull('modifyDate', instance.modifyDate?.toIso8601String());
-  writeNotNull('requestedDeliveryDateDisplay',
-      instance.requestedDeliveryDateDisplay?.toIso8601String());
-  writeNotNull(
-      'orderLines', instance.orderLines?.map((e) => e.toJson()).toList());
-  writeNotNull('orderPromotions',
-      instance.orderPromotions?.map((e) => e.toJson()).toList());
-  writeNotNull('shipmentPackages',
-      instance.shipmentPackages?.map((e) => e.toJson()).toList());
-  writeNotNull('returnReasons', instance.returnReasons);
-  writeNotNull('orderHistoryTaxes',
-      instance.orderHistoryTaxes?.map((e) => e.toJson()).toList());
-  writeNotNull('productTotalDisplay', instance.productTotalDisplay);
-  writeNotNull('orderSubTotalDisplay', instance.orderSubTotalDisplay);
-  writeNotNull('orderGrandTotalDisplay', instance.orderGrandTotalDisplay);
-  writeNotNull(
-      'orderDiscountAmountDisplay', instance.orderDiscountAmountDisplay);
-  writeNotNull(
-      'productDiscountAmountDisplay', instance.productDiscountAmountDisplay);
-  writeNotNull('taxAmountDisplay', instance.taxAmountDisplay);
-  writeNotNull('totalTaxDisplay', instance.totalTaxDisplay);
-  writeNotNull(
-      'shippingAndHandlingDisplay', instance.shippingAndHandlingDisplay);
-  writeNotNull('shippingChargesDisplay', instance.shippingChargesDisplay);
-  writeNotNull('handlingChargesDisplay', instance.handlingChargesDisplay);
-  writeNotNull('otherChargesDisplay', instance.otherChargesDisplay);
-  writeNotNull('canAddToCart', instance.canAddToCart);
-  writeNotNull('canAddAllToCart', instance.canAddAllToCart);
-  writeNotNull('showTaxAndShipping', instance.showTaxAndShipping);
-  writeNotNull('shipViaDescription', instance.shipViaDescription);
-  writeNotNull('fulfillmentMethod', instance.fulfillmentMethod);
-  writeNotNull('vmiLocationId', instance.vmiLocationId);
-  writeNotNull('vmiLocationName', instance.vmiLocationName);
-  return val;
-}
+Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
+      if (instance.id case final value?) 'id': value,
+      if (instance.erpOrderNumber case final value?) 'erpOrderNumber': value,
+      if (instance.webOrderNumber case final value?) 'webOrderNumber': value,
+      if (instance.orderDate?.toIso8601String() case final value?)
+        'orderDate': value,
+      if (instance.status case final value?) 'status': value,
+      if (instance.statusDisplay case final value?) 'statusDisplay': value,
+      if (instance.customerNumber case final value?) 'customerNumber': value,
+      if (instance.customerSequence case final value?)
+        'customerSequence': value,
+      if (instance.customerPO case final value?) 'customerPO': value,
+      if (instance.currencyCode case final value?) 'currencyCode': value,
+      if (instance.currencySymbol case final value?) 'currencySymbol': value,
+      if (instance.terms case final value?) 'terms': value,
+      if (instance.shipCode case final value?) 'shipCode': value,
+      if (instance.salesperson case final value?) 'salesperson': value,
+      if (instance.btCompanyName case final value?) 'btCompanyName': value,
+      if (instance.btAddress1 case final value?) 'btAddress1': value,
+      if (instance.btAddress2 case final value?) 'btAddress2': value,
+      if (instance.billToCity case final value?) 'billToCity': value,
+      if (instance.billToState case final value?) 'billToState': value,
+      if (instance.billToPostalCode case final value?)
+        'billToPostalCode': value,
+      if (instance.btCountry case final value?) 'btCountry': value,
+      if (instance.stCompanyName case final value?) 'stCompanyName': value,
+      if (instance.stAddress1 case final value?) 'stAddress1': value,
+      if (instance.stAddress2 case final value?) 'stAddress2': value,
+      if (instance.stAddress3 case final value?) 'stAddress3': value,
+      if (instance.stAddress4 case final value?) 'stAddress4': value,
+      if (instance.shipToCity case final value?) 'shipToCity': value,
+      if (instance.shipToState case final value?) 'shipToState': value,
+      if (instance.shipToPostalCode case final value?)
+        'shipToPostalCode': value,
+      if (instance.stCountry case final value?) 'stCountry': value,
+      if (instance.notes case final value?) 'notes': value,
+      if (instance.productTotal case final value?) 'productTotal': value,
+      if (instance.orderSubTotal case final value?) 'orderSubTotal': value,
+      if (instance.orderDiscountAmount case final value?)
+        'orderDiscountAmount': value,
+      if (instance.productDiscountAmount case final value?)
+        'productDiscountAmount': value,
+      if (instance.shippingAndHandling case final value?)
+        'shippingAndHandling': value,
+      if (instance.shippingCharges case final value?) 'shippingCharges': value,
+      if (instance.handlingCharges case final value?) 'handlingCharges': value,
+      if (instance.otherCharges case final value?) 'otherCharges': value,
+      if (instance.taxAmount case final value?) 'taxAmount': value,
+      if (instance.orderTotal case final value?) 'orderTotal': value,
+      if (instance.modifyDate?.toIso8601String() case final value?)
+        'modifyDate': value,
+      if (instance.requestedDeliveryDateDisplay?.toIso8601String()
+          case final value?)
+        'requestedDeliveryDateDisplay': value,
+      if (instance.orderLines?.map((e) => e.toJson()).toList()
+          case final value?)
+        'orderLines': value,
+      if (instance.orderPromotions?.map((e) => e.toJson()).toList()
+          case final value?)
+        'orderPromotions': value,
+      if (instance.shipmentPackages?.map((e) => e.toJson()).toList()
+          case final value?)
+        'shipmentPackages': value,
+      if (instance.returnReasons case final value?) 'returnReasons': value,
+      if (instance.orderHistoryTaxes?.map((e) => e.toJson()).toList()
+          case final value?)
+        'orderHistoryTaxes': value,
+      if (instance.productTotalDisplay case final value?)
+        'productTotalDisplay': value,
+      if (instance.orderSubTotalDisplay case final value?)
+        'orderSubTotalDisplay': value,
+      if (instance.orderGrandTotalDisplay case final value?)
+        'orderGrandTotalDisplay': value,
+      if (instance.orderDiscountAmountDisplay case final value?)
+        'orderDiscountAmountDisplay': value,
+      if (instance.productDiscountAmountDisplay case final value?)
+        'productDiscountAmountDisplay': value,
+      if (instance.taxAmountDisplay case final value?)
+        'taxAmountDisplay': value,
+      if (instance.totalTaxDisplay case final value?) 'totalTaxDisplay': value,
+      if (instance.shippingAndHandlingDisplay case final value?)
+        'shippingAndHandlingDisplay': value,
+      if (instance.shippingChargesDisplay case final value?)
+        'shippingChargesDisplay': value,
+      if (instance.handlingChargesDisplay case final value?)
+        'handlingChargesDisplay': value,
+      if (instance.otherChargesDisplay case final value?)
+        'otherChargesDisplay': value,
+      if (instance.canAddToCart case final value?) 'canAddToCart': value,
+      if (instance.canAddAllToCart case final value?) 'canAddAllToCart': value,
+      if (instance.showTaxAndShipping case final value?)
+        'showTaxAndShipping': value,
+      if (instance.shipViaDescription case final value?)
+        'shipViaDescription': value,
+      if (instance.fulfillmentMethod case final value?)
+        'fulfillmentMethod': value,
+      if (instance.vmiLocationId case final value?) 'vmiLocationId': value,
+      if (instance.vmiLocationName case final value?) 'vmiLocationName': value,
+    };
 
 OrderHistoryTaxDto _$OrderHistoryTaxDtoFromJson(Map<String, dynamic> json) =>
     OrderHistoryTaxDto(
@@ -188,23 +202,16 @@ OrderHistoryTaxDto _$OrderHistoryTaxDtoFromJson(Map<String, dynamic> json) =>
       sortOrder: (json['sortOrder'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$OrderHistoryTaxDtoToJson(OrderHistoryTaxDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('taxCode', instance.taxCode);
-  writeNotNull('taxDescription', instance.taxDescription);
-  writeNotNull('taxRate', instance.taxRate);
-  writeNotNull('taxAmount', instance.taxAmount);
-  writeNotNull('taxAmountDisplay', instance.taxAmountDisplay);
-  writeNotNull('sortOrder', instance.sortOrder);
-  return val;
-}
+Map<String, dynamic> _$OrderHistoryTaxDtoToJson(OrderHistoryTaxDto instance) =>
+    <String, dynamic>{
+      if (instance.taxCode case final value?) 'taxCode': value,
+      if (instance.taxDescription case final value?) 'taxDescription': value,
+      if (instance.taxRate case final value?) 'taxRate': value,
+      if (instance.taxAmount case final value?) 'taxAmount': value,
+      if (instance.taxAmountDisplay case final value?)
+        'taxAmountDisplay': value,
+      if (instance.sortOrder case final value?) 'sortOrder': value,
+    };
 
 ShipmentPackageDto _$ShipmentPackageDtoFromJson(Map<String, dynamic> json) =>
     ShipmentPackageDto(
@@ -219,24 +226,17 @@ ShipmentPackageDto _$ShipmentPackageDtoFromJson(Map<String, dynamic> json) =>
       packSlip: json['packSlip'] as String?,
     );
 
-Map<String, dynamic> _$ShipmentPackageDtoToJson(ShipmentPackageDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('shipmentDate', instance.shipmentDate?.toIso8601String());
-  writeNotNull('carrier', instance.carrier);
-  writeNotNull('shipVia', instance.shipVia);
-  writeNotNull('trackingUrl', instance.trackingUrl);
-  writeNotNull('trackingNumber', instance.trackingNumber);
-  writeNotNull('packSlip', instance.packSlip);
-  return val;
-}
+Map<String, dynamic> _$ShipmentPackageDtoToJson(ShipmentPackageDto instance) =>
+    <String, dynamic>{
+      if (instance.id case final value?) 'id': value,
+      if (instance.shipmentDate?.toIso8601String() case final value?)
+        'shipmentDate': value,
+      if (instance.carrier case final value?) 'carrier': value,
+      if (instance.shipVia case final value?) 'shipVia': value,
+      if (instance.trackingUrl case final value?) 'trackingUrl': value,
+      if (instance.trackingNumber case final value?) 'trackingNumber': value,
+      if (instance.packSlip case final value?) 'packSlip': value,
+    };
 
 OrderStatusMapping _$OrderStatusMappingFromJson(Map<String, dynamic> json) =>
     OrderStatusMapping(
@@ -252,22 +252,15 @@ OrderStatusMapping _$OrderStatusMappingFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$OrderStatusMappingToJson(OrderStatusMapping instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('id', instance.id);
-  writeNotNull('erpOrderStatus', instance.erpOrderStatus);
-  writeNotNull('displayName', instance.displayName);
-  writeNotNull('isDefault', instance.isDefault);
-  writeNotNull('allowRma', instance.allowRma);
-  writeNotNull('allowCancellation', instance.allowCancellation);
-  return val;
-}
+Map<String, dynamic> _$OrderStatusMappingToJson(OrderStatusMapping instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.erpOrderStatus case final value?) 'erpOrderStatus': value,
+      if (instance.displayName case final value?) 'displayName': value,
+      if (instance.isDefault case final value?) 'isDefault': value,
+      if (instance.allowRma case final value?) 'allowRma': value,
+      if (instance.allowCancellation case final value?)
+        'allowCancellation': value,
+    };

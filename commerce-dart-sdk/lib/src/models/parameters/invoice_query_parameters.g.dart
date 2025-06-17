@@ -7,64 +7,43 @@ part of 'invoice_query_parameters.dart';
 // **************************************************************************
 
 Map<String, dynamic> _$InvoiceQueryParametersToJson(
-    InvoiceQueryParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('showOpenOnly', instance.showOpenOnly);
-  writeNotNull('invoiceNumber', instance.invoiceNumber);
-  writeNotNull('orderNumber', instance.orderNumber);
-  writeNotNull('poNumber', instance.poNumber);
-  writeNotNull('fromDate', instance.fromDate?.toIso8601String());
-  writeNotNull('toDate', instance.toDate?.toIso8601String());
-  writeNotNull('customerSequence', instance.customerSequence);
-  return val;
-}
+        InvoiceQueryParameters instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.showOpenOnly case final value?) 'showOpenOnly': value,
+      if (instance.invoiceNumber case final value?) 'invoiceNumber': value,
+      if (instance.orderNumber case final value?) 'orderNumber': value,
+      if (instance.poNumber case final value?) 'poNumber': value,
+      if (instance.fromDate?.toIso8601String() case final value?)
+        'fromDate': value,
+      if (instance.toDate?.toIso8601String() case final value?) 'toDate': value,
+      if (instance.customerSequence case final value?)
+        'customerSequence': value,
+    };
 
 Map<String, dynamic> _$InvoiceDetailParameterToJson(
-    InvoiceDetailParameter instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull(
-      'expand', JsonEncodingMethods.commaSeparatedJson(instance.expand));
-  return val;
-}
+        InvoiceDetailParameter instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (JsonEncodingMethods.commaSeparatedJson(instance.expand)
+          case final value?)
+        'expand': value,
+    };
 
 Map<String, dynamic> _$InvoiceEmailParameterToJson(
-    InvoiceEmailParameter instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('emailTo', instance.emailTo);
-  writeNotNull('emailFrom', instance.emailFrom);
-  writeNotNull('subject', instance.subject);
-  writeNotNull('message', instance.message);
-  writeNotNull('entityId', instance.entityId);
-  writeNotNull('entityName', instance.entityName);
-  return val;
-}
+        InvoiceEmailParameter instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.emailTo case final value?) 'emailTo': value,
+      if (instance.emailFrom case final value?) 'emailFrom': value,
+      if (instance.subject case final value?) 'subject': value,
+      if (instance.message case final value?) 'message': value,
+      if (instance.entityId case final value?) 'entityId': value,
+      if (instance.entityName case final value?) 'entityName': value,
+    };

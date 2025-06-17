@@ -20,23 +20,15 @@ Document _$DocumentFromJson(Map<String, dynamic> json) => Document(
       fileUrl: json['fileUrl'] as String?,
     );
 
-Map<String, dynamic> _$DocumentToJson(Document instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
-  writeNotNull('createdOn', instance.createdOn?.toIso8601String());
-  writeNotNull('filePath', instance.filePath);
-  writeNotNull('fileUrl', instance.fileUrl);
-  writeNotNull('documentType', instance.documentType);
-  writeNotNull('languageId', instance.languageId);
-  writeNotNull('fileTypeString', instance.fileTypeString);
-  return val;
-}
+Map<String, dynamic> _$DocumentToJson(Document instance) => <String, dynamic>{
+      if (instance.id case final value?) 'id': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.description case final value?) 'description': value,
+      if (instance.createdOn?.toIso8601String() case final value?)
+        'createdOn': value,
+      if (instance.filePath case final value?) 'filePath': value,
+      if (instance.fileUrl case final value?) 'fileUrl': value,
+      if (instance.documentType case final value?) 'documentType': value,
+      if (instance.languageId case final value?) 'languageId': value,
+      if (instance.fileTypeString case final value?) 'fileTypeString': value,
+    };

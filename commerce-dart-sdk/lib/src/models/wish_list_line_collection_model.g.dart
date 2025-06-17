@@ -18,17 +18,10 @@ WishListLineCollectionModel _$WishListLineCollectionModelFromJson(
     );
 
 Map<String, dynamic> _$WishListLineCollectionModelToJson(
-    WishListLineCollectionModel instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(
-      'wishListLines', instance.wishListLines?.map((e) => e.toJson()).toList());
-  writeNotNull('pagination', instance.pagination?.toJson());
-  return val;
-}
+        WishListLineCollectionModel instance) =>
+    <String, dynamic>{
+      if (instance.wishListLines?.map((e) => e.toJson()).toList()
+          case final value?)
+        'wishListLines': value,
+      if (instance.pagination?.toJson() case final value?) 'pagination': value,
+    };

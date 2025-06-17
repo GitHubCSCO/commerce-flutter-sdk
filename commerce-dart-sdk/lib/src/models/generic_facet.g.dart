@@ -13,18 +13,10 @@ GenericFacet _$GenericFacetFromJson(Map<String, dynamic> json) => GenericFacet(
       selected: json['selected'] as bool?,
     );
 
-Map<String, dynamic> _$GenericFacetToJson(GenericFacet instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  writeNotNull('name', instance.name);
-  writeNotNull('count', instance.count);
-  writeNotNull('selected', instance.selected);
-  return val;
-}
+Map<String, dynamic> _$GenericFacetToJson(GenericFacet instance) =>
+    <String, dynamic>{
+      if (instance.id case final value?) 'id': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.count case final value?) 'count': value,
+      if (instance.selected case final value?) 'selected': value,
+    };

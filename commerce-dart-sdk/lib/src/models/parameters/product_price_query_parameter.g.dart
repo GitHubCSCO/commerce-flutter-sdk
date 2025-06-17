@@ -7,18 +7,10 @@ part of 'product_price_query_parameter.dart';
 // **************************************************************************
 
 Map<String, dynamic> _$ProductPriceQueryParameterToJson(
-    ProductPriceQueryParameter instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('productId', instance.productId);
-  writeNotNull('unitOfMeasure', instance.unitOfMeasure);
-  writeNotNull('qtyOrdered', instance.qtyOrdered);
-  writeNotNull('configuration', instance.configuration);
-  return val;
-}
+        ProductPriceQueryParameter instance) =>
+    <String, dynamic>{
+      if (instance.productId case final value?) 'productId': value,
+      if (instance.unitOfMeasure case final value?) 'unitOfMeasure': value,
+      if (instance.qtyOrdered case final value?) 'qtyOrdered': value,
+      if (instance.configuration case final value?) 'configuration': value,
+    };

@@ -15,16 +15,9 @@ GetSiteMessageCollectionResult _$GetSiteMessageCollectionResultFromJson(
     );
 
 Map<String, dynamic> _$GetSiteMessageCollectionResultToJson(
-    GetSiteMessageCollectionResult instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(
-      'siteMessages', instance.siteMessages?.map((e) => e.toJson()).toList());
-  return val;
-}
+        GetSiteMessageCollectionResult instance) =>
+    <String, dynamic>{
+      if (instance.siteMessages?.map((e) => e.toJson()).toList()
+          case final value?)
+        'siteMessages': value,
+    };

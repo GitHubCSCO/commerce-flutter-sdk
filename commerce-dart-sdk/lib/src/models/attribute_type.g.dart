@@ -26,28 +26,22 @@ AttributeType _$AttributeTypeFromJson(Map<String, dynamic> json) =>
       sortOrder: (json['sortOrder'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$AttributeTypeToJson(AttributeType instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('attributeTypeId', instance.attributeTypeId);
-  writeNotNull('name', instance.name);
-  writeNotNull('nameDisplay', instance.nameDisplay);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('attributeValueFacets',
-      instance.attributeValueFacets?.map((e) => e.toJson()).toList());
-  writeNotNull('id', instance.id);
-  writeNotNull('label', instance.label);
-  writeNotNull('isFilter', instance.isFilter);
-  writeNotNull('isComparable', instance.isComparable);
-  writeNotNull('isActive', instance.isActive);
-  writeNotNull('sortOrder', instance.sortOrder);
-  writeNotNull('attributeValues',
-      instance.attributeValues?.map((e) => e.toJson()).toList());
-  return val;
-}
+Map<String, dynamic> _$AttributeTypeToJson(AttributeType instance) =>
+    <String, dynamic>{
+      if (instance.attributeTypeId case final value?) 'attributeTypeId': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.nameDisplay case final value?) 'nameDisplay': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.attributeValueFacets?.map((e) => e.toJson()).toList()
+          case final value?)
+        'attributeValueFacets': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.label case final value?) 'label': value,
+      if (instance.isFilter case final value?) 'isFilter': value,
+      if (instance.isComparable case final value?) 'isComparable': value,
+      if (instance.isActive case final value?) 'isActive': value,
+      if (instance.sortOrder case final value?) 'sortOrder': value,
+      if (instance.attributeValues?.map((e) => e.toJson()).toList()
+          case final value?)
+        'attributeValues': value,
+    };

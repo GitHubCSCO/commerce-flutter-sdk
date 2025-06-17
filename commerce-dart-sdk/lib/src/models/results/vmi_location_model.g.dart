@@ -25,25 +25,17 @@ VmiLocationModel _$VmiLocationModelFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$VmiLocationModelToJson(VmiLocationModel instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  val['id'] = instance.id;
-  writeNotNull('customerId', instance.customerId);
-  writeNotNull('billToId', instance.billToId);
-  writeNotNull('shipToId', instance.shipToId);
-  val['name'] = instance.name;
-  val['useBins'] = instance.useBins;
-  val['isPrimaryLocation'] = instance.isPrimaryLocation;
-  val['note'] = instance.note;
-  writeNotNull('customer', instance.customer?.toJson());
-  return val;
-}
+Map<String, dynamic> _$VmiLocationModelToJson(VmiLocationModel instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      'id': instance.id,
+      if (instance.customerId case final value?) 'customerId': value,
+      if (instance.billToId case final value?) 'billToId': value,
+      if (instance.shipToId case final value?) 'shipToId': value,
+      'name': instance.name,
+      'useBins': instance.useBins,
+      'isPrimaryLocation': instance.isPrimaryLocation,
+      'note': instance.note,
+      if (instance.customer?.toJson() case final value?) 'customer': value,
+    };

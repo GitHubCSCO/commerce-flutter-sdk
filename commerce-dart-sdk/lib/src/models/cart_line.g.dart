@@ -22,27 +22,21 @@ AddCartLine _$AddCartLineFromJson(Map<String, dynamic> json) => AddCartLine(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$AddCartLineToJson(AddCartLine instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('productId', instance.productId);
-  writeNotNull('qtyOrdered', instance.qtyOrdered);
-  writeNotNull('unitOfMeasure', instance.unitOfMeasure);
-  writeNotNull('notes', instance.notes);
-  writeNotNull('vmiBinId', instance.vmiBinId);
-  writeNotNull('allowZeroPricing', instance.allowZeroPricing);
-  writeNotNull('sectionOptions',
-      instance.sectionOptions?.map((e) => e.toJson()).toList());
-  return val;
-}
+Map<String, dynamic> _$AddCartLineToJson(AddCartLine instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.productId case final value?) 'productId': value,
+      if (instance.qtyOrdered case final value?) 'qtyOrdered': value,
+      if (instance.unitOfMeasure case final value?) 'unitOfMeasure': value,
+      if (instance.notes case final value?) 'notes': value,
+      if (instance.vmiBinId case final value?) 'vmiBinId': value,
+      if (instance.allowZeroPricing case final value?)
+        'allowZeroPricing': value,
+      if (instance.sectionOptions?.map((e) => e.toJson()).toList()
+          case final value?)
+        'sectionOptions': value,
+    };
 
 CartLineList _$CartLineListFromJson(Map<String, dynamic> json) => CartLineList(
       cartLines: (json['cartLines'] as List<dynamic>?)
@@ -54,21 +48,13 @@ CartLineList _$CartLineListFromJson(Map<String, dynamic> json) => CartLineList(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$CartLineListToJson(CartLineList instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull(
-      'cartLines', instance.cartLines?.map((e) => e.toJson()).toList());
-  return val;
-}
+Map<String, dynamic> _$CartLineListToJson(CartLineList instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.cartLines?.map((e) => e.toJson()).toList() case final value?)
+        'cartLines': value,
+    };
 
 CartLine _$CartLineFromJson(Map<String, dynamic> json) => CartLine(
       altText: json['altText'] as String?,
@@ -133,64 +119,69 @@ CartLine _$CartLineFromJson(Map<String, dynamic> json) => CartLine(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$CartLineToJson(CartLine instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('productId', instance.productId);
-  writeNotNull('qtyOrdered', instance.qtyOrdered);
-  writeNotNull('unitOfMeasure', instance.unitOfMeasure);
-  writeNotNull('notes', instance.notes);
-  writeNotNull('vmiBinId', instance.vmiBinId);
-  writeNotNull('allowZeroPricing', instance.allowZeroPricing);
-  writeNotNull('sectionOptions',
-      instance.sectionOptions?.map((e) => e.toJson()).toList());
-  writeNotNull('productUri', instance.productUri);
-  writeNotNull('id', instance.id);
-  writeNotNull('line', instance.line);
-  writeNotNull('requisitionId', instance.requisitionId);
-  writeNotNull('smallImagePath', instance.smallImagePath);
-  writeNotNull('altText', instance.altText);
-  writeNotNull('productName', instance.productName);
-  writeNotNull('manufacturerItem', instance.manufacturerItem);
-  writeNotNull('customerName', instance.customerName);
-  writeNotNull('shortDescription', instance.shortDescription);
-  writeNotNull('erpNumber', instance.erpNumber);
-  writeNotNull('unitOfMeasureDisplay', instance.unitOfMeasureDisplay);
-  writeNotNull('unitOfMeasureDescription', instance.unitOfMeasureDescription);
-  writeNotNull('baseUnitOfMeasure', instance.baseUnitOfMeasure);
-  writeNotNull('baseUnitOfMeasureDisplay', instance.baseUnitOfMeasureDisplay);
-  writeNotNull('qtyPerBaseUnitOfMeasure', instance.qtyPerBaseUnitOfMeasure);
-  writeNotNull('costCode', instance.costCode);
-  writeNotNull('qtyLeft', instance.qtyLeft);
-  writeNotNull('pricing', instance.pricing?.toJson());
-  writeNotNull('isPromotionItem', instance.isPromotionItem);
-  writeNotNull('isDiscounted', instance.isDiscounted);
-  writeNotNull('isFixedConfiguration', instance.isFixedConfiguration);
-  writeNotNull('quoteRequired', instance.quoteRequired);
-  writeNotNull(
-      'breakPrices', instance.breakPrices?.map((e) => e.toJson()).toList());
-  writeNotNull('availability', instance.availability?.toJson());
-  writeNotNull('qtyOnHand', instance.qtyOnHand);
-  writeNotNull('canAddToCart', instance.canAddToCart);
-  writeNotNull('isQtyAdjusted', instance.isQtyAdjusted);
-  writeNotNull('hasInsufficientInventory', instance.hasInsufficientInventory);
-  writeNotNull('canBackOrder', instance.canBackOrder);
-  writeNotNull('salePriceLabel', instance.salePriceLabel);
-  writeNotNull('isSubscription', instance.isSubscription);
-  writeNotNull('productSubscription', instance.productSubscription?.toJson());
-  writeNotNull('isRestricted', instance.isRestricted);
-  writeNotNull('isActive', instance.isActive);
-  writeNotNull('brand', instance.brand?.toJson());
-  return val;
-}
+Map<String, dynamic> _$CartLineToJson(CartLine instance) => <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.productId case final value?) 'productId': value,
+      if (instance.qtyOrdered case final value?) 'qtyOrdered': value,
+      if (instance.unitOfMeasure case final value?) 'unitOfMeasure': value,
+      if (instance.notes case final value?) 'notes': value,
+      if (instance.vmiBinId case final value?) 'vmiBinId': value,
+      if (instance.allowZeroPricing case final value?)
+        'allowZeroPricing': value,
+      if (instance.sectionOptions?.map((e) => e.toJson()).toList()
+          case final value?)
+        'sectionOptions': value,
+      if (instance.productUri case final value?) 'productUri': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.line case final value?) 'line': value,
+      if (instance.requisitionId case final value?) 'requisitionId': value,
+      if (instance.smallImagePath case final value?) 'smallImagePath': value,
+      if (instance.altText case final value?) 'altText': value,
+      if (instance.productName case final value?) 'productName': value,
+      if (instance.manufacturerItem case final value?)
+        'manufacturerItem': value,
+      if (instance.customerName case final value?) 'customerName': value,
+      if (instance.shortDescription case final value?)
+        'shortDescription': value,
+      if (instance.erpNumber case final value?) 'erpNumber': value,
+      if (instance.unitOfMeasureDisplay case final value?)
+        'unitOfMeasureDisplay': value,
+      if (instance.unitOfMeasureDescription case final value?)
+        'unitOfMeasureDescription': value,
+      if (instance.baseUnitOfMeasure case final value?)
+        'baseUnitOfMeasure': value,
+      if (instance.baseUnitOfMeasureDisplay case final value?)
+        'baseUnitOfMeasureDisplay': value,
+      if (instance.qtyPerBaseUnitOfMeasure case final value?)
+        'qtyPerBaseUnitOfMeasure': value,
+      if (instance.costCode case final value?) 'costCode': value,
+      if (instance.qtyLeft case final value?) 'qtyLeft': value,
+      if (instance.pricing?.toJson() case final value?) 'pricing': value,
+      if (instance.isPromotionItem case final value?) 'isPromotionItem': value,
+      if (instance.isDiscounted case final value?) 'isDiscounted': value,
+      if (instance.isFixedConfiguration case final value?)
+        'isFixedConfiguration': value,
+      if (instance.quoteRequired case final value?) 'quoteRequired': value,
+      if (instance.breakPrices?.map((e) => e.toJson()).toList()
+          case final value?)
+        'breakPrices': value,
+      if (instance.availability?.toJson() case final value?)
+        'availability': value,
+      if (instance.qtyOnHand case final value?) 'qtyOnHand': value,
+      if (instance.canAddToCart case final value?) 'canAddToCart': value,
+      if (instance.isQtyAdjusted case final value?) 'isQtyAdjusted': value,
+      if (instance.hasInsufficientInventory case final value?)
+        'hasInsufficientInventory': value,
+      if (instance.canBackOrder case final value?) 'canBackOrder': value,
+      if (instance.salePriceLabel case final value?) 'salePriceLabel': value,
+      if (instance.isSubscription case final value?) 'isSubscription': value,
+      if (instance.productSubscription?.toJson() case final value?)
+        'productSubscription': value,
+      if (instance.isRestricted case final value?) 'isRestricted': value,
+      if (instance.isActive case final value?) 'isActive': value,
+      if (instance.brand?.toJson() case final value?) 'brand': value,
+    };
 
 SectionOptionDto _$SectionOptionDtoFromJson(Map<String, dynamic> json) =>
     SectionOptionDto(
@@ -199,20 +190,12 @@ SectionOptionDto _$SectionOptionDtoFromJson(Map<String, dynamic> json) =>
       sectionOptionId: json['sectionOptionId'] as String?,
     );
 
-Map<String, dynamic> _$SectionOptionDtoToJson(SectionOptionDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('sectionOptionId', instance.sectionOptionId);
-  writeNotNull('sectionName', instance.sectionName);
-  writeNotNull('optionName', instance.optionName);
-  return val;
-}
+Map<String, dynamic> _$SectionOptionDtoToJson(SectionOptionDto instance) =>
+    <String, dynamic>{
+      if (instance.sectionOptionId case final value?) 'sectionOptionId': value,
+      if (instance.sectionName case final value?) 'sectionName': value,
+      if (instance.optionName case final value?) 'optionName': value,
+    };
 
 ProductSubscriptionDto _$ProductSubscriptionDtoFromJson(
         Map<String, dynamic> json) =>
@@ -242,35 +225,43 @@ ProductSubscriptionDto _$ProductSubscriptionDtoFromJson(
     );
 
 Map<String, dynamic> _$ProductSubscriptionDtoToJson(
-    ProductSubscriptionDto instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(
-      'subscriptionAddToInitialOrder', instance.subscriptionAddToInitialOrder);
-  writeNotNull('subscriptionAllMonths', instance.subscriptionAllMonths);
-  writeNotNull('subscriptionApril', instance.subscriptionApril);
-  writeNotNull('subscriptionAugust', instance.subscriptionAugust);
-  writeNotNull('subscriptionCyclePeriod', instance.subscriptionCyclePeriod);
-  writeNotNull('subscriptionDecember', instance.subscriptionDecember);
-  writeNotNull('subscriptionFebruary', instance.subscriptionFebruary);
-  writeNotNull('subscriptionFixedPrice', instance.subscriptionFixedPrice);
-  writeNotNull('subscriptionJanuary', instance.subscriptionJanuary);
-  writeNotNull('subscriptionJuly', instance.subscriptionJuly);
-  writeNotNull('subscriptionJune', instance.subscriptionJune);
-  writeNotNull('subscriptionMarch', instance.subscriptionMarch);
-  writeNotNull('subscriptionMay', instance.subscriptionMay);
-  writeNotNull('subscriptionNovember', instance.subscriptionNovember);
-  writeNotNull('subscriptionOctober', instance.subscriptionOctober);
-  writeNotNull(
-      'subscriptionPeriodsPerCycle', instance.subscriptionPeriodsPerCycle);
-  writeNotNull('subscriptionSeptember', instance.subscriptionSeptember);
-  writeNotNull('subscriptionShipViaId', instance.subscriptionShipViaId);
-  writeNotNull('subscriptionTotalCycles', instance.subscriptionTotalCycles);
-  return val;
-}
+        ProductSubscriptionDto instance) =>
+    <String, dynamic>{
+      if (instance.subscriptionAddToInitialOrder case final value?)
+        'subscriptionAddToInitialOrder': value,
+      if (instance.subscriptionAllMonths case final value?)
+        'subscriptionAllMonths': value,
+      if (instance.subscriptionApril case final value?)
+        'subscriptionApril': value,
+      if (instance.subscriptionAugust case final value?)
+        'subscriptionAugust': value,
+      if (instance.subscriptionCyclePeriod case final value?)
+        'subscriptionCyclePeriod': value,
+      if (instance.subscriptionDecember case final value?)
+        'subscriptionDecember': value,
+      if (instance.subscriptionFebruary case final value?)
+        'subscriptionFebruary': value,
+      if (instance.subscriptionFixedPrice case final value?)
+        'subscriptionFixedPrice': value,
+      if (instance.subscriptionJanuary case final value?)
+        'subscriptionJanuary': value,
+      if (instance.subscriptionJuly case final value?)
+        'subscriptionJuly': value,
+      if (instance.subscriptionJune case final value?)
+        'subscriptionJune': value,
+      if (instance.subscriptionMarch case final value?)
+        'subscriptionMarch': value,
+      if (instance.subscriptionMay case final value?) 'subscriptionMay': value,
+      if (instance.subscriptionNovember case final value?)
+        'subscriptionNovember': value,
+      if (instance.subscriptionOctober case final value?)
+        'subscriptionOctober': value,
+      if (instance.subscriptionPeriodsPerCycle case final value?)
+        'subscriptionPeriodsPerCycle': value,
+      if (instance.subscriptionSeptember case final value?)
+        'subscriptionSeptember': value,
+      if (instance.subscriptionShipViaId case final value?)
+        'subscriptionShipViaId': value,
+      if (instance.subscriptionTotalCycles case final value?)
+        'subscriptionTotalCycles': value,
+    };

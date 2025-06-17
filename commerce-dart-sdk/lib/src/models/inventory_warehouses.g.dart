@@ -14,17 +14,11 @@ InventoryWarehouses _$InventoryWarehousesFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$InventoryWarehousesToJson(InventoryWarehouses instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('unitOfMeasure', instance.unitOfMeasure);
-  writeNotNull(
-      'warehouseDtos', instance.warehouseDtos?.map((e) => e.toJson()).toList());
-  return val;
-}
+Map<String, dynamic> _$InventoryWarehousesToJson(
+        InventoryWarehouses instance) =>
+    <String, dynamic>{
+      if (instance.unitOfMeasure case final value?) 'unitOfMeasure': value,
+      if (instance.warehouseDtos?.map((e) => e.toJson()).toList()
+          case final value?)
+        'warehouseDtos': value,
+    };

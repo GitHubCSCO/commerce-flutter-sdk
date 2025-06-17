@@ -18,21 +18,15 @@ CategoryFacet _$CategoryFacetFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$CategoryFacetToJson(CategoryFacet instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('categoryId', instance.categoryId);
-  writeNotNull('websiteId', instance.websiteId);
-  writeNotNull('shortDescription', instance.shortDescription);
-  writeNotNull('count', instance.count);
-  writeNotNull('selected', instance.selected);
-  writeNotNull('subCategoryDtos',
-      instance.subCategoryDtos?.map((e) => e.toJson()).toList());
-  return val;
-}
+Map<String, dynamic> _$CategoryFacetToJson(CategoryFacet instance) =>
+    <String, dynamic>{
+      if (instance.categoryId case final value?) 'categoryId': value,
+      if (instance.websiteId case final value?) 'websiteId': value,
+      if (instance.shortDescription case final value?)
+        'shortDescription': value,
+      if (instance.count case final value?) 'count': value,
+      if (instance.selected case final value?) 'selected': value,
+      if (instance.subCategoryDtos?.map((e) => e.toJson()).toList()
+          case final value?)
+        'subCategoryDtos': value,
+    };

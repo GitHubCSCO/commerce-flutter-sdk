@@ -15,17 +15,10 @@ QuoteAllQueryParameters _$QuoteAllQueryParametersFromJson(
     );
 
 Map<String, dynamic> _$QuoteAllQueryParametersToJson(
-    QuoteAllQueryParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('calculationMethod', instance.calculationMethod);
-  writeNotNull('percent', instance.percent);
-  writeNotNull('quoteId', instance.quoteId);
-  return val;
-}
+        QuoteAllQueryParameters instance) =>
+    <String, dynamic>{
+      if (instance.calculationMethod case final value?)
+        'calculationMethod': value,
+      if (instance.percent case final value?) 'percent': value,
+      if (instance.quoteId case final value?) 'quoteId': value,
+    };

@@ -7,195 +7,116 @@ part of 'vmi_location_query_parameters.dart';
 // **************************************************************************
 
 Map<String, dynamic> _$BaseVmiLocationQueryParametersToJson(
-    BaseVmiLocationQueryParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('vmiLocationId', instance.vmiLocationId);
-  return val;
-}
+        BaseVmiLocationQueryParameters instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.vmiLocationId case final value?) 'vmiLocationId': value,
+    };
 
 Map<String, dynamic> _$VmiLocationQueryParametersToJson(
-    VmiLocationQueryParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('userId', instance.userId);
-  writeNotNull('filter', instance.filter);
-  writeNotNull(
-      'expand', JsonEncodingMethods.commaSeparatedJson(instance.expand));
-  return val;
-}
+        VmiLocationQueryParameters instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.userId case final value?) 'userId': value,
+      if (instance.filter case final value?) 'filter': value,
+      if (JsonEncodingMethods.commaSeparatedJson(instance.expand)
+          case final value?)
+        'expand': value,
+    };
 
 Map<String, dynamic> _$VmiBinQueryParametersToJson(
-    VmiBinQueryParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('vmiLocationId', instance.vmiLocationId);
-  writeNotNull('filter', instance.filter);
-  writeNotNull('searchCriteria', instance.searchCriteria);
-  writeNotNull('binNumberFrom', instance.binNumberFrom);
-  writeNotNull('binNumberTo', instance.binNumberTo);
-  writeNotNull('previousCountFromDate',
-      instance.previousCountFromDate?.toIso8601String());
-  writeNotNull(
-      'previousCountToDate', instance.previousCountToDate?.toIso8601String());
-  val['expand'] = instance.expand;
-  return val;
-}
+        VmiBinQueryParameters instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.vmiLocationId case final value?) 'vmiLocationId': value,
+      if (instance.filter case final value?) 'filter': value,
+      if (instance.searchCriteria case final value?) 'searchCriteria': value,
+      if (instance.binNumberFrom case final value?) 'binNumberFrom': value,
+      if (instance.binNumberTo case final value?) 'binNumberTo': value,
+      if (instance.previousCountFromDate?.toIso8601String() case final value?)
+        'previousCountFromDate': value,
+      if (instance.previousCountToDate?.toIso8601String() case final value?)
+        'previousCountToDate': value,
+      'expand': instance.expand,
+    };
 
 Map<String, dynamic> _$VmiCountQueryParametersToJson(
-    VmiCountQueryParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('vmiLocationId', instance.vmiLocationId);
-  val['vmiBinId'] = instance.vmiBinId;
-  return val;
-}
+        VmiCountQueryParameters instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.vmiLocationId case final value?) 'vmiLocationId': value,
+      'vmiBinId': instance.vmiBinId,
+    };
 
 Map<String, dynamic> _$VmiNoteQueryParametersToJson(
-    VmiNoteQueryParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('vmiLocationId', instance.vmiLocationId);
-  val['vmiBinId'] = instance.vmiBinId;
-  writeNotNull('vmiNoteId', instance.vmiNoteId);
-  return val;
-}
+        VmiNoteQueryParameters instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.vmiLocationId case final value?) 'vmiLocationId': value,
+      'vmiBinId': instance.vmiBinId,
+      if (instance.vmiNoteId case final value?) 'vmiNoteId': value,
+    };
 
 Map<String, dynamic> _$VmiLocationDetailParametersToJson(
-    VmiLocationDetailParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('vmiLocationId', instance.vmiLocationId);
-  val['expand'] = instance.expand;
-  return val;
-}
+        VmiLocationDetailParameters instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.vmiLocationId case final value?) 'vmiLocationId': value,
+      'expand': instance.expand,
+    };
 
 Map<String, dynamic> _$VmiBinDetailParametersToJson(
-    VmiBinDetailParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('vmiLocationId', instance.vmiLocationId);
-  val['vmiBinId'] = instance.vmiBinId;
-  return val;
-}
+        VmiBinDetailParameters instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.vmiLocationId case final value?) 'vmiLocationId': value,
+      'vmiBinId': instance.vmiBinId,
+    };
 
 Map<String, dynamic> _$VmiCountDetailParametersToJson(
-    VmiCountDetailParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('vmiLocationId', instance.vmiLocationId);
-  val['vmiBinId'] = instance.vmiBinId;
-  val['vmiCountId'] = instance.vmiCountId;
-  return val;
-}
+        VmiCountDetailParameters instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.vmiLocationId case final value?) 'vmiLocationId': value,
+      'vmiBinId': instance.vmiBinId,
+      'vmiCountId': instance.vmiCountId,
+    };
 
 Map<String, dynamic> _$VmiNoteDetailParametersToJson(
-    VmiNoteDetailParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('vmiLocationId', instance.vmiLocationId);
-  val['vmiBinId'] = instance.vmiBinId;
-  val['vmiNoteId'] = instance.vmiNoteId;
-  return val;
-}
+        VmiNoteDetailParameters instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.vmiLocationId case final value?) 'vmiLocationId': value,
+      'vmiBinId': instance.vmiBinId,
+      'vmiNoteId': instance.vmiNoteId,
+    };
 
 Map<String, dynamic> _$VmiLocationProductParametersToJson(
-    VmiLocationProductParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('vmiLocationId', instance.vmiLocationId);
-  val['searchCriteria'] = instance.searchCriteria;
-  val['expand'] = instance.expand;
-  val['filter'] = instance.filter;
-  return val;
-}
+        VmiLocationProductParameters instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.vmiLocationId case final value?) 'vmiLocationId': value,
+      'searchCriteria': instance.searchCriteria,
+      'expand': instance.expand,
+      'filter': instance.filter,
+    };

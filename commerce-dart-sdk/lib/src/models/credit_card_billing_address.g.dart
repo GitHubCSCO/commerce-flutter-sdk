@@ -18,20 +18,14 @@ CreditCardBillingAddress _$CreditCardBillingAddressFromJson(
     );
 
 Map<String, dynamic> _$CreditCardBillingAddressToJson(
-    CreditCardBillingAddress instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('address1', instance.address1);
-  writeNotNull('address2', instance.address2);
-  writeNotNull('city', instance.city);
-  writeNotNull('stateAbbreviation', instance.stateAbbreviation);
-  writeNotNull('countryAbbreviation', instance.countryAbbreviation);
-  writeNotNull('postalCode', instance.postalCode);
-  return val;
-}
+        CreditCardBillingAddress instance) =>
+    <String, dynamic>{
+      if (instance.address1 case final value?) 'address1': value,
+      if (instance.address2 case final value?) 'address2': value,
+      if (instance.city case final value?) 'city': value,
+      if (instance.stateAbbreviation case final value?)
+        'stateAbbreviation': value,
+      if (instance.countryAbbreviation case final value?)
+        'countryAbbreviation': value,
+      if (instance.postalCode case final value?) 'postalCode': value,
+    };

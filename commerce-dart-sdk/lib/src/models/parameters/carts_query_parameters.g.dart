@@ -7,28 +7,23 @@ part of 'carts_query_parameters.dart';
 // **************************************************************************
 
 Map<String, dynamic> _$CartsQueryParametersToJson(
-    CartsQueryParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('billToId', instance.billToId);
-  writeNotNull('shipToId', instance.shipToId);
-  writeNotNull('status', instance.status);
-  writeNotNull('orderNumber', instance.orderNumber);
-  writeNotNull('fromDate', instance.fromDate?.toIso8601String());
-  writeNotNull('toDate', instance.toDate?.toIso8601String());
-  writeNotNull('orderTotalOperator', instance.orderTotalOperator);
-  writeNotNull('orderTotal', instance.orderTotal);
-  writeNotNull('orderSubtotalOperator', instance.orderSubtotalOperator);
-  writeNotNull('orderSubtotal', instance.orderSubtotal);
-  writeNotNull('vmiLocationId', instance.vmiLocationId);
-  return val;
-}
+        CartsQueryParameters instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.billToId case final value?) 'billToId': value,
+      if (instance.shipToId case final value?) 'shipToId': value,
+      if (instance.status case final value?) 'status': value,
+      if (instance.orderNumber case final value?) 'orderNumber': value,
+      if (instance.fromDate?.toIso8601String() case final value?)
+        'fromDate': value,
+      if (instance.toDate?.toIso8601String() case final value?) 'toDate': value,
+      if (instance.orderTotalOperator case final value?)
+        'orderTotalOperator': value,
+      if (instance.orderTotal case final value?) 'orderTotal': value,
+      if (instance.orderSubtotalOperator case final value?)
+        'orderSubtotalOperator': value,
+      if (instance.orderSubtotal case final value?) 'orderSubtotal': value,
+      if (instance.vmiLocationId case final value?) 'vmiLocationId': value,
+    };

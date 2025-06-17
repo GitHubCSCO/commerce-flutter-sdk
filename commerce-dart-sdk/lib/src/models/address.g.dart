@@ -39,38 +39,30 @@ Address _$AddressFromJson(Map<String, dynamic> json) => Address(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$AddressToJson(Address instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('id', instance.id);
-  writeNotNull('customerNumber', instance.customerNumber);
-  writeNotNull('customerSequence', instance.customerSequence);
-  writeNotNull('customerName', instance.customerName);
-  writeNotNull('label', instance.label);
-  writeNotNull('firstName', instance.firstName);
-  writeNotNull('lastName', instance.lastName);
-  writeNotNull('companyName', instance.companyName);
-  writeNotNull('attention', instance.attention);
-  writeNotNull('address1', instance.address1);
-  writeNotNull('address2', instance.address2);
-  writeNotNull('address3', instance.address3);
-  writeNotNull('address4', instance.address4);
-  writeNotNull('city', instance.city);
-  writeNotNull('postalCode', instance.postalCode);
-  writeNotNull('state', instance.state?.toJson());
-  writeNotNull('country', instance.country?.toJson());
-  writeNotNull('phone', instance.phone);
-  writeNotNull('fullAddress', instance.fullAddress);
-  writeNotNull('email', instance.email);
-  writeNotNull('fax', instance.fax);
-  writeNotNull('isVmiLocation', instance.isVmiLocation);
-  return val;
-}
+Map<String, dynamic> _$AddressToJson(Address instance) => <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.customerNumber case final value?) 'customerNumber': value,
+      if (instance.customerSequence case final value?)
+        'customerSequence': value,
+      if (instance.customerName case final value?) 'customerName': value,
+      if (instance.label case final value?) 'label': value,
+      if (instance.firstName case final value?) 'firstName': value,
+      if (instance.lastName case final value?) 'lastName': value,
+      if (instance.companyName case final value?) 'companyName': value,
+      if (instance.attention case final value?) 'attention': value,
+      if (instance.address1 case final value?) 'address1': value,
+      if (instance.address2 case final value?) 'address2': value,
+      if (instance.address3 case final value?) 'address3': value,
+      if (instance.address4 case final value?) 'address4': value,
+      if (instance.city case final value?) 'city': value,
+      if (instance.postalCode case final value?) 'postalCode': value,
+      if (instance.state?.toJson() case final value?) 'state': value,
+      if (instance.country?.toJson() case final value?) 'country': value,
+      if (instance.phone case final value?) 'phone': value,
+      if (instance.fullAddress case final value?) 'fullAddress': value,
+      if (instance.email case final value?) 'email': value,
+      if (instance.fax case final value?) 'fax': value,
+      if (instance.isVmiLocation case final value?) 'isVmiLocation': value,
+    };

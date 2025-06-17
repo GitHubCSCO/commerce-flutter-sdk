@@ -44,38 +44,37 @@ StyledProduct _$StyledProductFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$StyledProductToJson(StyledProduct instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('productId', instance.productId);
-  writeNotNull('name', instance.name);
-  writeNotNull('shortDescription', instance.shortDescription);
-  writeNotNull('erpNumber', instance.erpNumber);
-  writeNotNull('mediumImagePath', instance.mediumImagePath);
-  writeNotNull('smallImagePath', instance.smallImagePath);
-  writeNotNull('largeImagePath', instance.largeImagePath);
-  writeNotNull('qtyOnHand', instance.qtyOnHand);
-  writeNotNull('numberInCart', instance.numberInCart);
-  writeNotNull('pricing', instance.pricing?.toJson());
-  writeNotNull('quoteRequired', instance.quoteRequired);
-  writeNotNull(
-      'styleValues', instance.styleValues?.map((e) => e.toJson()).toList());
-  writeNotNull('availability', instance.availability?.toJson());
-  writeNotNull('productUnitOfMeasures',
-      instance.productUnitOfMeasures?.map((e) => e.toJson()).toList());
-  writeNotNull(
-      'productImages', instance.productImages?.map((e) => e.toJson()).toList());
-  writeNotNull(
-      'warehouses', instance.warehouses?.map((e) => e.toJson()).toList());
-  writeNotNull('trackInventory', instance.trackInventory);
-  writeNotNull('allowZeroPricing', instance.allowZeroPricing);
-  return val;
-}
+Map<String, dynamic> _$StyledProductToJson(StyledProduct instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.productId case final value?) 'productId': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.shortDescription case final value?)
+        'shortDescription': value,
+      if (instance.erpNumber case final value?) 'erpNumber': value,
+      if (instance.mediumImagePath case final value?) 'mediumImagePath': value,
+      if (instance.smallImagePath case final value?) 'smallImagePath': value,
+      if (instance.largeImagePath case final value?) 'largeImagePath': value,
+      if (instance.qtyOnHand case final value?) 'qtyOnHand': value,
+      if (instance.numberInCart case final value?) 'numberInCart': value,
+      if (instance.pricing?.toJson() case final value?) 'pricing': value,
+      if (instance.quoteRequired case final value?) 'quoteRequired': value,
+      if (instance.styleValues?.map((e) => e.toJson()).toList()
+          case final value?)
+        'styleValues': value,
+      if (instance.availability?.toJson() case final value?)
+        'availability': value,
+      if (instance.productUnitOfMeasures?.map((e) => e.toJson()).toList()
+          case final value?)
+        'productUnitOfMeasures': value,
+      if (instance.productImages?.map((e) => e.toJson()).toList()
+          case final value?)
+        'productImages': value,
+      if (instance.warehouses?.map((e) => e.toJson()).toList()
+          case final value?)
+        'warehouses': value,
+      if (instance.trackInventory case final value?) 'trackInventory': value,
+      if (instance.allowZeroPricing case final value?)
+        'allowZeroPricing': value,
+    };

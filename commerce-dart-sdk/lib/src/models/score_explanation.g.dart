@@ -17,19 +17,13 @@ ScoreExplanation _$ScoreExplanationFromJson(Map<String, dynamic> json) =>
       totalBoost: (json['totalBoost'] as num?)?.toDouble(),
     );
 
-Map<String, dynamic> _$ScoreExplanationToJson(ScoreExplanation instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('totalBoost', instance.totalBoost);
-  writeNotNull('aggregateFieldScores',
-      instance.aggregateFieldScores?.map((e) => e.toJson()).toList());
-  writeNotNull('detailedFieldScores',
-      instance.detailedFieldScores?.map((e) => e.toJson()).toList());
-  return val;
-}
+Map<String, dynamic> _$ScoreExplanationToJson(ScoreExplanation instance) =>
+    <String, dynamic>{
+      if (instance.totalBoost case final value?) 'totalBoost': value,
+      if (instance.aggregateFieldScores?.map((e) => e.toJson()).toList()
+          case final value?)
+        'aggregateFieldScores': value,
+      if (instance.detailedFieldScores?.map((e) => e.toJson()).toList()
+          case final value?)
+        'detailedFieldScores': value,
+    };

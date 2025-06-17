@@ -11,16 +11,8 @@ FieldScore _$FieldScoreFromJson(Map<String, dynamic> json) => FieldScore(
       score: (json['score'] as num?)?.toDouble(),
     );
 
-Map<String, dynamic> _$FieldScoreToJson(FieldScore instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('name', instance.name);
-  writeNotNull('score', instance.score);
-  return val;
-}
+Map<String, dynamic> _$FieldScoreToJson(FieldScore instance) =>
+    <String, dynamic>{
+      if (instance.name case final value?) 'name': value,
+      if (instance.score case final value?) 'score': value,
+    };

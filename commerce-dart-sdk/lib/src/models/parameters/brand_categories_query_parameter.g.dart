@@ -7,21 +7,14 @@ part of 'brand_categories_query_parameter.dart';
 // **************************************************************************
 
 Map<String, dynamic> _$BrandCategoriesQueryParameterToJson(
-    BrandCategoriesQueryParameter instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('brandId', instance.brandId);
-  writeNotNull('categoryId', instance.categoryId);
-  writeNotNull('productListPagePath', instance.productListPagePath);
-  val['maximumDepth'] = instance.maximumDepth;
-  return val;
-}
+        BrandCategoriesQueryParameter instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.brandId case final value?) 'brandId': value,
+      if (instance.categoryId case final value?) 'categoryId': value,
+      if (instance.productListPagePath case final value?)
+        'productListPagePath': value,
+      'maximumDepth': instance.maximumDepth,
+    };

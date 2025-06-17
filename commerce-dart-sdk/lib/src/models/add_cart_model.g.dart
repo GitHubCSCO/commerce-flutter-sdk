@@ -13,18 +13,10 @@ AddCartModel _$AddCartModelFromJson(Map<String, dynamic> json) => AddCartModel(
       vmiLocationId: json['vmiLocationId'] as String?,
     );
 
-Map<String, dynamic> _$AddCartModelToJson(AddCartModel instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('billToId', instance.billToId);
-  writeNotNull('shipToId', instance.shipToId);
-  writeNotNull('notes', instance.notes);
-  writeNotNull('vmiLocationId', instance.vmiLocationId);
-  return val;
-}
+Map<String, dynamic> _$AddCartModelToJson(AddCartModel instance) =>
+    <String, dynamic>{
+      if (instance.billToId case final value?) 'billToId': value,
+      if (instance.shipToId case final value?) 'shipToId': value,
+      if (instance.notes case final value?) 'notes': value,
+      if (instance.vmiLocationId case final value?) 'vmiLocationId': value,
+    };

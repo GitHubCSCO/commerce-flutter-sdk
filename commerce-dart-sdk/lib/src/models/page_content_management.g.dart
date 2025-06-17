@@ -26,27 +26,25 @@ PageContentManagement _$PageContentManagementFromJson(
     );
 
 Map<String, dynamic> _$PageContentManagementToJson(
-    PageContentManagement instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page?.toJson());
-  writeNotNull('statusCode', instance.statusCode);
-  writeNotNull('redirectTo', instance.redirectTo);
-  writeNotNull('authorizationFailed', instance.authorizationFailed);
-  writeNotNull('isAuthenticatedOnServer', instance.isAuthenticatedOnServer);
-  writeNotNull('bypassedAuthorization', instance.bypassedAuthorization);
-  writeNotNull('requiresAuthorization', instance.requiresAuthorization);
-  writeNotNull('alternateLanguageUrls', instance.alternateLanguageUrls);
-  writeNotNull(
-      'widgets', instance.pageClassicWidget?.map((e) => e.toJson()).toList());
-  return val;
-}
+        PageContentManagement instance) =>
+    <String, dynamic>{
+      if (instance.page?.toJson() case final value?) 'page': value,
+      if (instance.statusCode case final value?) 'statusCode': value,
+      if (instance.redirectTo case final value?) 'redirectTo': value,
+      if (instance.authorizationFailed case final value?)
+        'authorizationFailed': value,
+      if (instance.isAuthenticatedOnServer case final value?)
+        'isAuthenticatedOnServer': value,
+      if (instance.bypassedAuthorization case final value?)
+        'bypassedAuthorization': value,
+      if (instance.requiresAuthorization case final value?)
+        'requiresAuthorization': value,
+      if (instance.alternateLanguageUrls case final value?)
+        'alternateLanguageUrls': value,
+      if (instance.pageClassicWidget?.map((e) => e.toJson()).toList()
+          case final value?)
+        'widgets': value,
+    };
 
 PageInformation _$PageInformationFromJson(Map<String, dynamic> json) =>
     PageInformation(
@@ -74,31 +72,27 @@ PageInformation _$PageInformationFromJson(Map<String, dynamic> json) =>
       contextualFields: json['contextualFields'] as Map<String, dynamic>?,
     );
 
-Map<String, dynamic> _$PageInformationToJson(PageInformation instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('nodeId', instance.nodeId);
-  writeNotNull('name', instance.name);
-  writeNotNull('type', instance.type);
-  writeNotNull('parentId', instance.parentId);
-  writeNotNull('sortOrder', instance.sortOrder);
-  writeNotNull('websiteId', instance.websiteId);
-  writeNotNull('variantName', instance.variantName);
-  writeNotNull('layoutPageId', instance.layoutPageId);
-  writeNotNull('templateHash', instance.templateHash);
-  writeNotNull('widgets', instance.widgets?.map((e) => e.toJson()).toList());
-  writeNotNull('id', instance.id);
-  writeNotNull('generalFields', instance.generalFields?.toJson());
-  writeNotNull('translatableFields', instance.translatableFields?.toJson());
-  writeNotNull('contextualFields', instance.contextualFields);
-  return val;
-}
+Map<String, dynamic> _$PageInformationToJson(PageInformation instance) =>
+    <String, dynamic>{
+      if (instance.nodeId case final value?) 'nodeId': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.type case final value?) 'type': value,
+      if (instance.parentId case final value?) 'parentId': value,
+      if (instance.sortOrder case final value?) 'sortOrder': value,
+      if (instance.websiteId case final value?) 'websiteId': value,
+      if (instance.variantName case final value?) 'variantName': value,
+      if (instance.layoutPageId case final value?) 'layoutPageId': value,
+      if (instance.templateHash case final value?) 'templateHash': value,
+      if (instance.widgets?.map((e) => e.toJson()).toList() case final value?)
+        'widgets': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.generalFields?.toJson() case final value?)
+        'generalFields': value,
+      if (instance.translatableFields?.toJson() case final value?)
+        'translatableFields': value,
+      if (instance.contextualFields case final value?)
+        'contextualFields': value,
+    };
 
 PageSettings _$PageSettingsFromJson(Map<String, dynamic> json) => PageSettings(
       hideHeader: json['hideHeader'] as bool?,
@@ -113,27 +107,23 @@ PageSettings _$PageSettingsFromJson(Map<String, dynamic> json) => PageSettings(
       tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
-Map<String, dynamic> _$PageSettingsToJson(PageSettings instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('hideHeader', instance.hideHeader);
-  writeNotNull('hideFooter', instance.hideFooter);
-  writeNotNull('hideFromSearchEngines', instance.hideFromSearchEngines);
-  writeNotNull('hideFromSiteSearch', instance.hideFromSiteSearch);
-  writeNotNull('hideBreadcrumbs', instance.hideBreadcrumbs);
-  writeNotNull('excludeFromNavigation', instance.excludeFromNavigation);
-  writeNotNull('excludeFromSignInRequired', instance.excludeFromSignInRequired);
-  writeNotNull('variantName', instance.variantName);
-  writeNotNull('horizontalRule', instance.horizontalRule);
-  writeNotNull('tags', instance.tags);
-  return val;
-}
+Map<String, dynamic> _$PageSettingsToJson(PageSettings instance) =>
+    <String, dynamic>{
+      if (instance.hideHeader case final value?) 'hideHeader': value,
+      if (instance.hideFooter case final value?) 'hideFooter': value,
+      if (instance.hideFromSearchEngines case final value?)
+        'hideFromSearchEngines': value,
+      if (instance.hideFromSiteSearch case final value?)
+        'hideFromSiteSearch': value,
+      if (instance.hideBreadcrumbs case final value?) 'hideBreadcrumbs': value,
+      if (instance.excludeFromNavigation case final value?)
+        'excludeFromNavigation': value,
+      if (instance.excludeFromSignInRequired case final value?)
+        'excludeFromSignInRequired': value,
+      if (instance.variantName case final value?) 'variantName': value,
+      if (instance.horizontalRule case final value?) 'horizontalRule': value,
+      if (instance.tags case final value?) 'tags': value,
+    };
 
 PageClassicChildWidget _$PageClassicChildWidgetFromJson(
         Map<String, dynamic> json) =>
@@ -160,33 +150,30 @@ PageClassicChildWidget _$PageClassicChildWidgetFromJson(
     );
 
 Map<String, dynamic> _$PageClassicChildWidgetToJson(
-    PageClassicChildWidget instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('contentKey', instance.contentKey);
-  writeNotNull('className', instance.className);
-  writeNotNull(
-      'childWidgets', instance.childWidgets?.map((e) => e.toJson()).toList());
-  writeNotNull('type', instance.type);
-  writeNotNull('icon', instance.icon);
-  writeNotNull('text', instance.text);
-  writeNotNull('url', instance.url);
-  writeNotNull('secondaryTextColor', instance.secondaryTextColor);
-  writeNotNull('primaryTextColor', instance.primaryTextColor);
-  writeNotNull('imageUrl', instance.imageUrl);
-  writeNotNull('textJustification', instance.textJustification);
-  writeNotNull('applyDarkOverlayToImage', instance.applyDarkOverlayToImage);
-  writeNotNull('primaryText', instance.primaryText);
-  writeNotNull('secondaryText', instance.secondaryText);
-  writeNotNull('link', instance.link);
-  return val;
-}
+        PageClassicChildWidget instance) =>
+    <String, dynamic>{
+      if (instance.contentKey case final value?) 'contentKey': value,
+      if (instance.className case final value?) 'className': value,
+      if (instance.childWidgets?.map((e) => e.toJson()).toList()
+          case final value?)
+        'childWidgets': value,
+      if (instance.type case final value?) 'type': value,
+      if (instance.icon case final value?) 'icon': value,
+      if (instance.text case final value?) 'text': value,
+      if (instance.url case final value?) 'url': value,
+      if (instance.secondaryTextColor case final value?)
+        'secondaryTextColor': value,
+      if (instance.primaryTextColor case final value?)
+        'primaryTextColor': value,
+      if (instance.imageUrl case final value?) 'imageUrl': value,
+      if (instance.textJustification case final value?)
+        'textJustification': value,
+      if (instance.applyDarkOverlayToImage case final value?)
+        'applyDarkOverlayToImage': value,
+      if (instance.primaryText case final value?) 'primaryText': value,
+      if (instance.secondaryText case final value?) 'secondaryText': value,
+      if (instance.link case final value?) 'link': value,
+    };
 
 PageClassicWidget _$PageClassicWidgetFromJson(Map<String, dynamic> json) =>
     PageClassicWidget(
@@ -219,40 +206,43 @@ PageClassicWidget _$PageClassicWidgetFromJson(Map<String, dynamic> json) =>
       addDiscount: json['addDiscount'] as bool?,
     );
 
-Map<String, dynamic> _$PageClassicWidgetToJson(PageClassicWidget instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('contentKey', instance.id);
-  writeNotNull('class', instance.type);
-  writeNotNull(
-      'childWidgets', instance.childWidgets?.map((e) => e.toJson()).toList());
-  writeNotNull('displayThumbnailImage', instance.displayThumbnailImage);
-  writeNotNull('displayTopSellersFrom', instance.displayTopSellersFrom);
-  writeNotNull('displayAddToCart', instance.displayAddToCart);
-  writeNotNull('numberOfProductsToDisplay', instance.numberOfProductsToDisplay);
-  writeNotNull('displayPartNumbers', instance.displayPartNumbers);
-  writeNotNull('selectedCategoryIds', instance.selectedCategoryIds);
-  writeNotNull('title', instance.title);
-  writeNotNull('carouselType', instance.carouselType);
-  writeNotNull('displayAddToMyLists', instance.displayAddToMyLists);
-  writeNotNull('displayDescription', instance.displayDescription);
-  writeNotNull('displayPrice', instance.displayPrice);
-  writeNotNull('seedWithManuallyAssigned', instance.seedWithManuallyAssigned);
-  writeNotNull('cssClass', instance.cssClass);
-  writeNotNull('timerSpeed', instance.timerSpeed);
-  writeNotNull('animationSpeed', instance.animationSpeed);
-  writeNotNull('addToList', instance.addToList);
-  writeNotNull('saveOrder', instance.saveOrder);
-  writeNotNull('addDiscount', instance.addDiscount);
-  writeNotNull('numberOfPreviousSearches', instance.numberOfPreviousSearches);
-  return val;
-}
+Map<String, dynamic> _$PageClassicWidgetToJson(PageClassicWidget instance) =>
+    <String, dynamic>{
+      if (instance.id case final value?) 'contentKey': value,
+      if (instance.type case final value?) 'class': value,
+      if (instance.childWidgets?.map((e) => e.toJson()).toList()
+          case final value?)
+        'childWidgets': value,
+      if (instance.displayThumbnailImage case final value?)
+        'displayThumbnailImage': value,
+      if (instance.displayTopSellersFrom case final value?)
+        'displayTopSellersFrom': value,
+      if (instance.displayAddToCart case final value?)
+        'displayAddToCart': value,
+      if (instance.numberOfProductsToDisplay case final value?)
+        'numberOfProductsToDisplay': value,
+      if (instance.displayPartNumbers case final value?)
+        'displayPartNumbers': value,
+      if (instance.selectedCategoryIds case final value?)
+        'selectedCategoryIds': value,
+      if (instance.title case final value?) 'title': value,
+      if (instance.carouselType case final value?) 'carouselType': value,
+      if (instance.displayAddToMyLists case final value?)
+        'displayAddToMyLists': value,
+      if (instance.displayDescription case final value?)
+        'displayDescription': value,
+      if (instance.displayPrice case final value?) 'displayPrice': value,
+      if (instance.seedWithManuallyAssigned case final value?)
+        'seedWithManuallyAssigned': value,
+      if (instance.cssClass case final value?) 'cssClass': value,
+      if (instance.timerSpeed case final value?) 'timerSpeed': value,
+      if (instance.animationSpeed case final value?) 'animationSpeed': value,
+      if (instance.addToList case final value?) 'addToList': value,
+      if (instance.saveOrder case final value?) 'saveOrder': value,
+      if (instance.addDiscount case final value?) 'addDiscount': value,
+      if (instance.numberOfPreviousSearches case final value?)
+        'numberOfPreviousSearches': value,
+    };
 
 PageWidget _$PageWidgetFromJson(Map<String, dynamic> json) => PageWidget(
       parentId: json['parentId'] as String?,
@@ -271,25 +261,20 @@ PageWidget _$PageWidgetFromJson(Map<String, dynamic> json) => PageWidget(
       contextualFields: json['contextualFields'] as Map<String, dynamic>?,
     );
 
-Map<String, dynamic> _$PageWidgetToJson(PageWidget instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('parentId', instance.parentId);
-  writeNotNull('type', instance.type);
-  writeNotNull('zone', instance.zone);
-  writeNotNull('isLayout', instance.isLayout);
-  writeNotNull('id', instance.id);
-  writeNotNull('generalFields', instance.generalFields?.toJson());
-  writeNotNull('translatableFields', instance.translatableFields?.toJson());
-  writeNotNull('contextualFields', instance.contextualFields);
-  return val;
-}
+Map<String, dynamic> _$PageWidgetToJson(PageWidget instance) =>
+    <String, dynamic>{
+      if (instance.parentId case final value?) 'parentId': value,
+      if (instance.type case final value?) 'type': value,
+      if (instance.zone case final value?) 'zone': value,
+      if (instance.isLayout case final value?) 'isLayout': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.generalFields?.toJson() case final value?)
+        'generalFields': value,
+      if (instance.translatableFields?.toJson() case final value?)
+        'translatableFields': value,
+      if (instance.contextualFields case final value?)
+        'contextualFields': value,
+    };
 
 TranslatableFields _$TranslatableFieldsFromJson(Map<String, dynamic> json) =>
     TranslatableFields(
@@ -298,20 +283,12 @@ TranslatableFields _$TranslatableFieldsFromJson(Map<String, dynamic> json) =>
       links: json['links'] as Map<String, dynamic>?,
     );
 
-Map<String, dynamic> _$TranslatableFieldsToJson(TranslatableFields instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('title', instance.title);
-  writeNotNull('slides', instance.slides);
-  writeNotNull('links', instance.links);
-  return val;
-}
+Map<String, dynamic> _$TranslatableFieldsToJson(TranslatableFields instance) =>
+    <String, dynamic>{
+      if (instance.title case final value?) 'title': value,
+      if (instance.slides case final value?) 'slides': value,
+      if (instance.links case final value?) 'links': value,
+    };
 
 Localization _$LocalizationFromJson(Map<String, dynamic> json) => Localization(
       title: json['title'] as Map<String, dynamic>?,
@@ -319,20 +296,12 @@ Localization _$LocalizationFromJson(Map<String, dynamic> json) => Localization(
       slides: json['slides'] as Map<String, dynamic>?,
     );
 
-Map<String, dynamic> _$LocalizationToJson(Localization instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('title', instance.title);
-  writeNotNull('links', instance.links);
-  writeNotNull('slides', instance.slides);
-  return val;
-}
+Map<String, dynamic> _$LocalizationToJson(Localization instance) =>
+    <String, dynamic>{
+      if (instance.title case final value?) 'title': value,
+      if (instance.links case final value?) 'links': value,
+      if (instance.slides case final value?) 'slides': value,
+    };
 
 PageWidgetFields _$PageWidgetFieldsFromJson(Map<String, dynamic> json) =>
     PageWidgetFields(
@@ -357,30 +326,27 @@ PageWidgetFields _$PageWidgetFieldsFromJson(Map<String, dynamic> json) =>
       layout: json['layout'] as String?,
     );
 
-Map<String, dynamic> _$PageWidgetFieldsToJson(PageWidgetFields instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('previousSearches', instance.previousSearches);
-  writeNotNull('timerSpeed', instance.timerSpeed);
-  writeNotNull('animationSpeed', instance.animationSpeed);
-  writeNotNull('carouselType', instance.carouselType);
-  writeNotNull('displayProductsFrom', instance.displayProductsFrom);
-  writeNotNull('selectedCategoryIds', instance.selectedCategoryIds);
-  writeNotNull('showImage', instance.showImage);
-  writeNotNull('showTitle', instance.showTitle);
-  writeNotNull('showPrice', instance.showPrice);
-  writeNotNull('layout', instance.layout);
-  writeNotNull('slides', instance.slides?.map((e) => e.toJson()).toList());
-  writeNotNull('links', instance.links?.map((e) => e.toJson()).toList());
-  writeNotNull('showPartNumbers', instance.showPartNumbers);
-  return val;
-}
+Map<String, dynamic> _$PageWidgetFieldsToJson(PageWidgetFields instance) =>
+    <String, dynamic>{
+      if (instance.previousSearches case final value?)
+        'previousSearches': value,
+      if (instance.timerSpeed case final value?) 'timerSpeed': value,
+      if (instance.animationSpeed case final value?) 'animationSpeed': value,
+      if (instance.carouselType case final value?) 'carouselType': value,
+      if (instance.displayProductsFrom case final value?)
+        'displayProductsFrom': value,
+      if (instance.selectedCategoryIds case final value?)
+        'selectedCategoryIds': value,
+      if (instance.showImage case final value?) 'showImage': value,
+      if (instance.showTitle case final value?) 'showTitle': value,
+      if (instance.showPrice case final value?) 'showPrice': value,
+      if (instance.layout case final value?) 'layout': value,
+      if (instance.slides?.map((e) => e.toJson()).toList() case final value?)
+        'slides': value,
+      if (instance.links?.map((e) => e.toJson()).toList() case final value?)
+        'links': value,
+      if (instance.showPartNumbers case final value?) 'showPartNumbers': value,
+    };
 
 PageSlide _$PageSlideFromJson(Map<String, dynamic> json) => PageSlide(
       slide: json['fields'] == null
@@ -388,18 +354,9 @@ PageSlide _$PageSlideFromJson(Map<String, dynamic> json) => PageSlide(
           : Slide.fromJson(json['fields'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$PageSlideToJson(PageSlide instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('fields', instance.slide?.toJson());
-  return val;
-}
+Map<String, dynamic> _$PageSlideToJson(PageSlide instance) => <String, dynamic>{
+      if (instance.slide?.toJson() case final value?) 'fields': value,
+    };
 
 Slide _$SlideFromJson(Map<String, dynamic> json) => Slide(
       image: json['image'] as String?,
@@ -414,27 +371,19 @@ Slide _$SlideFromJson(Map<String, dynamic> json) => Slide(
       textAlignment: json['textAlignment'] as String?,
     );
 
-Map<String, dynamic> _$SlideToJson(Slide instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('image', instance.image);
-  writeNotNull('link', instance.link);
-  writeNotNull('background', instance.background);
-  writeNotNull('heading', instance.heading);
-  writeNotNull('subheading', instance.subheading);
-  writeNotNull('applyDarkOverlayToImage', instance.applyDarkOverlayToImage);
-  writeNotNull('backgroundColor', instance.backgroundColor);
-  writeNotNull('headingColor', instance.headingColor);
-  writeNotNull('subheadingColor', instance.subheadingColor);
-  writeNotNull('textAlignment', instance.textAlignment);
-  return val;
-}
+Map<String, dynamic> _$SlideToJson(Slide instance) => <String, dynamic>{
+      if (instance.image case final value?) 'image': value,
+      if (instance.link case final value?) 'link': value,
+      if (instance.background case final value?) 'background': value,
+      if (instance.heading case final value?) 'heading': value,
+      if (instance.subheading case final value?) 'subheading': value,
+      if (instance.applyDarkOverlayToImage case final value?)
+        'applyDarkOverlayToImage': value,
+      if (instance.backgroundColor case final value?) 'backgroundColor': value,
+      if (instance.headingColor case final value?) 'headingColor': value,
+      if (instance.subheadingColor case final value?) 'subheadingColor': value,
+      if (instance.textAlignment case final value?) 'textAlignment': value,
+    };
 
 PageLink _$PageLinkFromJson(Map<String, dynamic> json) => PageLink(
       fields: json['fields'] == null
@@ -442,18 +391,9 @@ PageLink _$PageLinkFromJson(Map<String, dynamic> json) => PageLink(
           : Fields.fromJson(json['fields'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$PageLinkToJson(PageLink instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('fields', instance.fields?.toJson());
-  return val;
-}
+Map<String, dynamic> _$PageLinkToJson(PageLink instance) => <String, dynamic>{
+      if (instance.fields?.toJson() case final value?) 'fields': value,
+    };
 
 Fields _$FieldsFromJson(Map<String, dynamic> json) => Fields(
       icon: json['icon'] as String?,
@@ -463,19 +403,10 @@ Fields _$FieldsFromJson(Map<String, dynamic> json) => Fields(
       requiresAuth: json['requires_auth'] as bool?,
     );
 
-Map<String, dynamic> _$FieldsToJson(Fields instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('icon', instance.icon);
-  writeNotNull('type', instance.type);
-  writeNotNull('url', instance.url);
-  writeNotNull('text', instance.text);
-  writeNotNull('requires_auth', instance.requiresAuth);
-  return val;
-}
+Map<String, dynamic> _$FieldsToJson(Fields instance) => <String, dynamic>{
+      if (instance.icon case final value?) 'icon': value,
+      if (instance.type case final value?) 'type': value,
+      if (instance.url case final value?) 'url': value,
+      if (instance.text case final value?) 'text': value,
+      if (instance.requiresAuth case final value?) 'requires_auth': value,
+    };
