@@ -342,7 +342,8 @@ void main() {
             .thenThrow(Exception('Session service error'));
 
         // Act & Assert
-        expect(() => billingAddressUsecase.getCurrentSession(), throwsException);
+        expect(
+            () => billingAddressUsecase.getCurrentSession(), throwsException);
 
         verify(() => mockSessionService.getCurrentSession()).called(1);
       });
@@ -378,7 +379,8 @@ void main() {
     });
 
     group('integration tests', () {
-      test('should handle complete workflow for billing address setup', () async {
+      test('should handle complete workflow for billing address setup',
+          () async {
         // Arrange
         final mockCountries = CountryCollection(
           countries: [
@@ -413,7 +415,8 @@ void main() {
         final sessionResponse = await billingAddressUsecase.getCurrentSession();
 
         // Assert
-        expect(countriesResponse, isA<Success<CountryCollection, ErrorResponse>>());
+        expect(countriesResponse,
+            isA<Success<CountryCollection, ErrorResponse>>());
         expect(sessionResponse, isA<Success<Session, ErrorResponse>>());
 
         switch (countriesResponse) {
@@ -458,7 +461,8 @@ void main() {
         final sessionResponse = await billingAddressUsecase.getCurrentSession();
 
         // Assert
-        expect(countriesResponse, isA<Success<CountryCollection, ErrorResponse>>());
+        expect(countriesResponse,
+            isA<Success<CountryCollection, ErrorResponse>>());
         expect(sessionResponse, isA<Failure<Session, ErrorResponse>>());
 
         switch (sessionResponse) {
@@ -469,7 +473,8 @@ void main() {
         }
       });
 
-      test('should handle multiple consecutive calls to the same methods', () async {
+      test('should handle multiple consecutive calls to the same methods',
+          () async {
         // Arrange
         final mockCountries = CountryCollection(countries: []);
         final mockSession = Session(isAuthenticated: true);
@@ -519,15 +524,19 @@ void main() {
             .thenAnswer((_) async => sessionResult);
 
         // Act - Make multiple rapid calls
-        final countriesFutures = List.generate(3, (index) => billingAddressUsecase.getCountries());
-        final sessionFutures = List.generate(3, (index) => billingAddressUsecase.getCurrentSession());
+        final countriesFutures =
+            List.generate(3, (index) => billingAddressUsecase.getCountries());
+        final sessionFutures = List.generate(
+            3, (index) => billingAddressUsecase.getCurrentSession());
 
         final countriesResults = await Future.wait(countriesFutures);
         final sessionResults = await Future.wait(sessionFutures);
 
         // Assert
-        expect(countriesResults, everyElement(isA<Success<CountryCollection, ErrorResponse>>()));
-        expect(sessionResults, everyElement(isA<Success<Session, ErrorResponse>>()));
+        expect(countriesResults,
+            everyElement(isA<Success<CountryCollection, ErrorResponse>>()));
+        expect(sessionResults,
+            everyElement(isA<Success<Session, ErrorResponse>>()));
         expect(countriesResults, hasLength(3));
         expect(sessionResults, hasLength(3));
 

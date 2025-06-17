@@ -24,7 +24,7 @@ class MockLocalAuthentication extends Mock implements LocalAuthentication {}
 // Create a testable version of BiometricUsecase that allows mocking LocalAuthentication
 class TestableBiometricUsecase extends BiometricUsecase {
   final LocalAuthentication? mockLocalAuth;
-  
+
   TestableBiometricUsecase({this.mockLocalAuth}) : super();
 
   @override
@@ -115,7 +115,8 @@ void main() {
 
   group('BiometricUsecase Tests', () {
     group('getBiometricOptions', () {
-      test('should return DeviceAuthenticationOption when service succeeds', () async {
+      test('should return DeviceAuthenticationOption when service succeeds',
+          () async {
         // Arrange
         const expectedOption = DeviceAuthenticationOption.touchID;
         when(() => mockDeviceService.authenticationOption())
@@ -169,12 +170,13 @@ void main() {
     });
 
     group('authenticateWithBiometrics', () {
-      test('should return true when biometric authentication succeeds', () async {
+      test('should return true when biometric authentication succeeds',
+          () async {
         // Arrange
         when(() => mockLocalAuthentication.authenticate(
-          localizedReason: any(named: 'localizedReason'),
-          options: any(named: 'options'),
-        )).thenAnswer((_) async => true);
+              localizedReason: any(named: 'localizedReason'),
+              options: any(named: 'options'),
+            )).thenAnswer((_) async => true);
 
         // Act
         final result = await biometricUsecase.authenticateWithBiometrics();
@@ -182,17 +184,17 @@ void main() {
         // Assert
         expect(result, isTrue);
         verify(() => mockLocalAuthentication.authenticate(
-          localizedReason: 'Authenticate for biometric login',
-          options: any(named: 'options'),
-        )).called(1);
+              localizedReason: 'Authenticate for biometric login',
+              options: any(named: 'options'),
+            )).called(1);
       });
 
       test('should return false when biometric authentication fails', () async {
         // Arrange
         when(() => mockLocalAuthentication.authenticate(
-          localizedReason: any(named: 'localizedReason'),
-          options: any(named: 'options'),
-        )).thenAnswer((_) async => false);
+              localizedReason: any(named: 'localizedReason'),
+              options: any(named: 'options'),
+            )).thenAnswer((_) async => false);
 
         // Act
         final result = await biometricUsecase.authenticateWithBiometrics();
@@ -200,17 +202,19 @@ void main() {
         // Assert
         expect(result, isFalse);
         verify(() => mockLocalAuthentication.authenticate(
-          localizedReason: 'Authenticate for biometric login',
-          options: any(named: 'options'),
-        )).called(1);
+              localizedReason: 'Authenticate for biometric login',
+              options: any(named: 'options'),
+            )).called(1);
       });
 
       test('should return false when PlatformException is thrown', () async {
         // Arrange
         when(() => mockLocalAuthentication.authenticate(
-          localizedReason: any(named: 'localizedReason'),
-          options: any(named: 'options'),
-        )).thenThrow(PlatformException(code: 'error', message: 'Biometric failed'));
+                  localizedReason: any(named: 'localizedReason'),
+                  options: any(named: 'options'),
+                ))
+            .thenThrow(
+                PlatformException(code: 'error', message: 'Biometric failed'));
 
         // Act
         final result = await biometricUsecase.authenticateWithBiometrics();
@@ -218,26 +222,26 @@ void main() {
         // Assert
         expect(result, isFalse);
         verify(() => mockLocalAuthentication.authenticate(
-          localizedReason: 'Authenticate for biometric login',
-          options: any(named: 'options'),
-        )).called(1);
+              localizedReason: 'Authenticate for biometric login',
+              options: any(named: 'options'),
+            )).called(1);
       });
 
       test('should use correct authentication options', () async {
         // Arrange
         when(() => mockLocalAuthentication.authenticate(
-          localizedReason: any(named: 'localizedReason'),
-          options: any(named: 'options'),
-        )).thenAnswer((_) async => true);
+              localizedReason: any(named: 'localizedReason'),
+              options: any(named: 'options'),
+            )).thenAnswer((_) async => true);
 
         // Act
         await biometricUsecase.authenticateWithBiometrics();
 
         // Assert
         final captured = verify(() => mockLocalAuthentication.authenticate(
-          localizedReason: 'Authenticate for biometric login',
-          options: captureAny(named: 'options'),
-        )).captured.single as AuthenticationOptions;
+              localizedReason: 'Authenticate for biometric login',
+              options: captureAny(named: 'options'),
+            )).captured.single as AuthenticationOptions;
 
         expect(captured.biometricOnly, isTrue);
         expect(captured.stickyAuth, isTrue);
@@ -245,98 +249,113 @@ void main() {
     });
 
     group('enableBiometricsWithPassword', () {
-      test('should return true when biometric auth succeeds and service enables biometrics', () async {
+      test(
+          'should return true when biometric auth succeeds and service enables biometrics',
+          () async {
         // Arrange
         const password = 'testpassword';
         when(() => mockLocalAuthentication.authenticate(
-          localizedReason: any(named: 'localizedReason'),
-          options: any(named: 'options'),
-        )).thenAnswer((_) async => true);
-        when(() => mockBiometricAuthenticationService.enableBiometricAuthentication(password))
+              localizedReason: any(named: 'localizedReason'),
+              options: any(named: 'options'),
+            )).thenAnswer((_) async => true);
+        when(() => mockBiometricAuthenticationService
+                .enableBiometricAuthentication(password))
             .thenAnswer((_) async => true);
 
         // Act
-        final result = await biometricUsecase.enableBiometricsWithPassword(password);
+        final result =
+            await biometricUsecase.enableBiometricsWithPassword(password);
 
         // Assert
         expect(result, isTrue);
         verify(() => mockLocalAuthentication.authenticate(
-          localizedReason: 'Authenticate for biometric login',
-          options: any(named: 'options'),
-        )).called(1);
-        verify(() => mockBiometricAuthenticationService.enableBiometricAuthentication(password))
-            .called(1);
+              localizedReason: 'Authenticate for biometric login',
+              options: any(named: 'options'),
+            )).called(1);
+        verify(() => mockBiometricAuthenticationService
+            .enableBiometricAuthentication(password)).called(1);
       });
 
       test('should return false when biometric authentication fails', () async {
         // Arrange
         const password = 'testpassword';
         when(() => mockLocalAuthentication.authenticate(
-          localizedReason: any(named: 'localizedReason'),
-          options: any(named: 'options'),
-        )).thenAnswer((_) async => false);
+              localizedReason: any(named: 'localizedReason'),
+              options: any(named: 'options'),
+            )).thenAnswer((_) async => false);
 
         // Act
-        final result = await biometricUsecase.enableBiometricsWithPassword(password);
+        final result =
+            await biometricUsecase.enableBiometricsWithPassword(password);
 
         // Assert
         expect(result, isFalse);
         verify(() => mockLocalAuthentication.authenticate(
-          localizedReason: 'Authenticate for biometric login',
-          options: any(named: 'options'),
-        )).called(1);
-        verifyNever(() => mockBiometricAuthenticationService.enableBiometricAuthentication(any()));
+              localizedReason: 'Authenticate for biometric login',
+              options: any(named: 'options'),
+            )).called(1);
+        verifyNever(() => mockBiometricAuthenticationService
+            .enableBiometricAuthentication(any()));
       });
 
-      test('should return false when biometric auth succeeds but service fails to enable', () async {
+      test(
+          'should return false when biometric auth succeeds but service fails to enable',
+          () async {
         // Arrange
         const password = 'testpassword';
         when(() => mockLocalAuthentication.authenticate(
-          localizedReason: any(named: 'localizedReason'),
-          options: any(named: 'options'),
-        )).thenAnswer((_) async => true);
-        when(() => mockBiometricAuthenticationService.enableBiometricAuthentication(password))
+              localizedReason: any(named: 'localizedReason'),
+              options: any(named: 'options'),
+            )).thenAnswer((_) async => true);
+        when(() => mockBiometricAuthenticationService
+                .enableBiometricAuthentication(password))
             .thenAnswer((_) async => false);
 
         // Act
-        final result = await biometricUsecase.enableBiometricsWithPassword(password);
+        final result =
+            await biometricUsecase.enableBiometricsWithPassword(password);
 
         // Assert
         expect(result, isFalse);
         verify(() => mockLocalAuthentication.authenticate(
-          localizedReason: 'Authenticate for biometric login',
-          options: any(named: 'options'),
-        )).called(1);
-        verify(() => mockBiometricAuthenticationService.enableBiometricAuthentication(password))
-            .called(1);
+              localizedReason: 'Authenticate for biometric login',
+              options: any(named: 'options'),
+            )).called(1);
+        verify(() => mockBiometricAuthenticationService
+            .enableBiometricAuthentication(password)).called(1);
       });
     });
 
     group('enableBiometricsWhileLoggedIn', () {
-      test('should return true when password auth and biometric enabling both succeed', () async {
+      test(
+          'should return true when password auth and biometric enabling both succeed',
+          () async {
         // Arrange
         const password = 'testpassword';
         when(() => mockBiometricAuthenticationService.authenticate(password))
             .thenAnswer((_) async => true);
         when(() => mockLocalAuthentication.authenticate(
-          localizedReason: any(named: 'localizedReason'),
-          options: any(named: 'options'),
-        )).thenAnswer((_) async => true);
-        when(() => mockBiometricAuthenticationService.enableBiometricAuthentication(password))
+              localizedReason: any(named: 'localizedReason'),
+              options: any(named: 'options'),
+            )).thenAnswer((_) async => true);
+        when(() => mockBiometricAuthenticationService
+                .enableBiometricAuthentication(password))
             .thenAnswer((_) async => true);
 
         // Act
-        final result = await biometricUsecase.enableBiometricsWhileLoggedIn(password);
+        final result =
+            await biometricUsecase.enableBiometricsWhileLoggedIn(password);
 
         // Assert
         expect(result, isTrue);
-        verify(() => mockBiometricAuthenticationService.authenticate(password)).called(1);
-        verify(() => mockLocalAuthentication.authenticate(
-          localizedReason: 'Authenticate for biometric login',
-          options: any(named: 'options'),
-        )).called(1);
-        verify(() => mockBiometricAuthenticationService.enableBiometricAuthentication(password))
+        verify(() => mockBiometricAuthenticationService.authenticate(password))
             .called(1);
+        verify(() => mockLocalAuthentication.authenticate(
+              localizedReason: 'Authenticate for biometric login',
+              options: any(named: 'options'),
+            )).called(1);
+        verify(() => mockBiometricAuthenticationService
+            .enableBiometricAuthentication(password)).called(1);
       });
 
       test('should return true when password authentication fails', () async {
@@ -346,47 +365,56 @@ void main() {
             .thenAnswer((_) async => false);
 
         // Act
-        final result = await biometricUsecase.enableBiometricsWhileLoggedIn(password);
+        final result =
+            await biometricUsecase.enableBiometricsWhileLoggedIn(password);
 
         // Assert
         expect(result, isFalse);
-        verify(() => mockBiometricAuthenticationService.authenticate(password)).called(1);
+        verify(() => mockBiometricAuthenticationService.authenticate(password))
+            .called(1);
         verifyNever(() => mockLocalAuthentication.authenticate(
-          localizedReason: any(named: 'localizedReason'),
-          options: any(named: 'options'),
-        ));
-        verifyNever(() => mockBiometricAuthenticationService.enableBiometricAuthentication(any()));
+              localizedReason: any(named: 'localizedReason'),
+              options: any(named: 'options'),
+            ));
+        verifyNever(() => mockBiometricAuthenticationService
+            .enableBiometricAuthentication(any()));
       });
 
-      test('should return false when password auth succeeds but biometric enabling fails', () async {
+      test(
+          'should return false when password auth succeeds but biometric enabling fails',
+          () async {
         // Arrange
         const password = 'testpassword';
         when(() => mockBiometricAuthenticationService.authenticate(password))
             .thenAnswer((_) async => true);
         when(() => mockLocalAuthentication.authenticate(
-          localizedReason: any(named: 'localizedReason'),
-          options: any(named: 'options'),
-        )).thenAnswer((_) async => false);
+              localizedReason: any(named: 'localizedReason'),
+              options: any(named: 'options'),
+            )).thenAnswer((_) async => false);
 
         // Act
-        final result = await biometricUsecase.enableBiometricsWhileLoggedIn(password);
+        final result =
+            await biometricUsecase.enableBiometricsWhileLoggedIn(password);
 
         // Assert
         expect(result, isFalse);
-        verify(() => mockBiometricAuthenticationService.authenticate(password)).called(1);
+        verify(() => mockBiometricAuthenticationService.authenticate(password))
+            .called(1);
         verify(() => mockLocalAuthentication.authenticate(
-          localizedReason: 'Authenticate for biometric login',
-          options: any(named: 'options'),
-        )).called(1);
-        verifyNever(() => mockBiometricAuthenticationService.enableBiometricAuthentication(any()));
+              localizedReason: 'Authenticate for biometric login',
+              options: any(named: 'options'),
+            )).called(1);
+        verifyNever(() => mockBiometricAuthenticationService
+            .enableBiometricAuthentication(any()));
       });
     });
 
     group('cancelBiometricSignIn', () {
-      test('should call all required services to cancel biometric sign in', () async {
+      test('should call all required services to cancel biometric sign in',
+          () async {
         // Arrange
-        when(() => mockBiometricAuthenticationService.logoutWithStoredCredentials())
-            .thenAnswer((_) async {});
+        when(() => mockBiometricAuthenticationService
+            .logoutWithStoredCredentials()).thenAnswer((_) async {});
         when(() => mockCacheService.invalidateAllObjectsExcept(any()))
             .thenAnswer((_) async {});
         when(() => mockAuthenticationService.logoutAsync())
@@ -396,14 +424,17 @@ void main() {
         await biometricUsecase.cancelBiometricSignIn();
 
         // Assert
-        verify(() => mockBiometricAuthenticationService.logoutWithStoredCredentials()).called(1);
-        verify(() => mockCacheService.invalidateAllObjectsExcept([CoreConstants.domainKey])).called(1);
+        verify(() => mockBiometricAuthenticationService
+            .logoutWithStoredCredentials()).called(1);
+        verify(() => mockCacheService
+            .invalidateAllObjectsExcept([CoreConstants.domainKey])).called(1);
         verify(() => mockAuthenticationService.logoutAsync()).called(1);
       });
 
       test('should handle exceptions during cancellation gracefully', () async {
         // Arrange
-        when(() => mockBiometricAuthenticationService.logoutWithStoredCredentials())
+        when(() => mockBiometricAuthenticationService
+                .logoutWithStoredCredentials())
             .thenThrow(Exception('Logout failed'));
         when(() => mockCacheService.invalidateAllObjectsExcept(any()))
             .thenAnswer((_) async {});
@@ -412,112 +443,135 @@ void main() {
 
         // Act & Assert
         expect(() => biometricUsecase.cancelBiometricSignIn(), throwsException);
-        verify(() => mockBiometricAuthenticationService.logoutWithStoredCredentials()).called(1);
+        verify(() => mockBiometricAuthenticationService
+            .logoutWithStoredCredentials()).called(1);
       });
     });
 
     group('markCurrentUserHasSeenBiometricOptions', () {
-      test('should call biometric service to mark user as seen options', () async {
+      test('should call biometric service to mark user as seen options',
+          () async {
         // Arrange
-        when(() => mockBiometricAuthenticationService.markCurrentUserAsSeenEnableBiometricOptionView())
+        when(() => mockBiometricAuthenticationService
+                .markCurrentUserAsSeenEnableBiometricOptionView())
             .thenAnswer((_) async {});
 
         // Act
         await biometricUsecase.markCurrentUserHasSeenBiometricOptions();
 
         // Assert
-        verify(() => mockBiometricAuthenticationService.markCurrentUserAsSeenEnableBiometricOptionView())
-            .called(1);
+        verify(() => mockBiometricAuthenticationService
+            .markCurrentUserAsSeenEnableBiometricOptionView()).called(1);
       });
 
       test('should handle exceptions from biometric service', () async {
         // Arrange
-        when(() => mockBiometricAuthenticationService.markCurrentUserAsSeenEnableBiometricOptionView())
+        when(() => mockBiometricAuthenticationService
+                .markCurrentUserAsSeenEnableBiometricOptionView())
             .thenThrow(Exception('Service error'));
 
         // Act & Assert
-        expect(() => biometricUsecase.markCurrentUserHasSeenBiometricOptions(), throwsException);
-        verify(() => mockBiometricAuthenticationService.markCurrentUserAsSeenEnableBiometricOptionView())
-            .called(1);
+        expect(() => biometricUsecase.markCurrentUserHasSeenBiometricOptions(),
+            throwsException);
+        verify(() => mockBiometricAuthenticationService
+            .markCurrentUserAsSeenEnableBiometricOptionView()).called(1);
       });
     });
 
     group('isBiometricAuthenticationEnableForCurrentUser', () {
-      test('should return true when biometric authentication is enabled', () async {
+      test('should return true when biometric authentication is enabled',
+          () async {
         // Arrange
-        when(() => mockBiometricAuthenticationService.isBiometricAuthenticationEnableForCurrentUser())
+        when(() => mockBiometricAuthenticationService
+                .isBiometricAuthenticationEnableForCurrentUser())
             .thenAnswer((_) async => true);
 
         // Act
-        final result = await biometricUsecase.isBiometricAuthenticationEnableForCurrentUser();
+        final result = await biometricUsecase
+            .isBiometricAuthenticationEnableForCurrentUser();
 
         // Assert
         expect(result, isTrue);
-        verify(() => mockBiometricAuthenticationService.isBiometricAuthenticationEnableForCurrentUser())
-            .called(1);
+        verify(() => mockBiometricAuthenticationService
+            .isBiometricAuthenticationEnableForCurrentUser()).called(1);
       });
 
-      test('should return false when biometric authentication is disabled', () async {
+      test('should return false when biometric authentication is disabled',
+          () async {
         // Arrange
-        when(() => mockBiometricAuthenticationService.isBiometricAuthenticationEnableForCurrentUser())
+        when(() => mockBiometricAuthenticationService
+                .isBiometricAuthenticationEnableForCurrentUser())
             .thenAnswer((_) async => false);
 
         // Act
-        final result = await biometricUsecase.isBiometricAuthenticationEnableForCurrentUser();
+        final result = await biometricUsecase
+            .isBiometricAuthenticationEnableForCurrentUser();
 
         // Assert
         expect(result, isFalse);
-        verify(() => mockBiometricAuthenticationService.isBiometricAuthenticationEnableForCurrentUser())
-            .called(1);
+        verify(() => mockBiometricAuthenticationService
+            .isBiometricAuthenticationEnableForCurrentUser()).called(1);
       });
 
       test('should handle exceptions from biometric service', () async {
         // Arrange
-        when(() => mockBiometricAuthenticationService.isBiometricAuthenticationEnableForCurrentUser())
+        when(() => mockBiometricAuthenticationService
+                .isBiometricAuthenticationEnableForCurrentUser())
             .thenThrow(Exception('Service error'));
 
         // Act & Assert
-        expect(() => biometricUsecase.isBiometricAuthenticationEnableForCurrentUser(), throwsException);
-        verify(() => mockBiometricAuthenticationService.isBiometricAuthenticationEnableForCurrentUser())
-            .called(1);
+        expect(
+            () => biometricUsecase
+                .isBiometricAuthenticationEnableForCurrentUser(),
+            throwsException);
+        verify(() => mockBiometricAuthenticationService
+            .isBiometricAuthenticationEnableForCurrentUser()).called(1);
       });
     });
 
     group('disableBiometricAuthentication', () {
-      test('should return true when disabling biometric authentication succeeds', () async {
+      test(
+          'should return true when disabling biometric authentication succeeds',
+          () async {
         // Arrange
-        when(() => mockBiometricAuthenticationService.disableBiometricAuthentication())
-            .thenAnswer((_) async => true);
+        when(() => mockBiometricAuthenticationService
+            .disableBiometricAuthentication()).thenAnswer((_) async => true);
 
         // Act
         final result = await biometricUsecase.disableBiometricAuthentication();
 
         // Assert
         expect(result, isTrue);
-        verify(() => mockBiometricAuthenticationService.disableBiometricAuthentication()).called(1);
+        verify(() => mockBiometricAuthenticationService
+            .disableBiometricAuthentication()).called(1);
       });
 
-      test('should return false when disabling biometric authentication fails', () async {
+      test('should return false when disabling biometric authentication fails',
+          () async {
         // Arrange
-        when(() => mockBiometricAuthenticationService.disableBiometricAuthentication())
-            .thenAnswer((_) async => false);
+        when(() => mockBiometricAuthenticationService
+            .disableBiometricAuthentication()).thenAnswer((_) async => false);
 
         // Act
         final result = await biometricUsecase.disableBiometricAuthentication();
 
         // Assert
         expect(result, isFalse);
-        verify(() => mockBiometricAuthenticationService.disableBiometricAuthentication()).called(1);
+        verify(() => mockBiometricAuthenticationService
+            .disableBiometricAuthentication()).called(1);
       });
 
       test('should handle exceptions from biometric service', () async {
         // Arrange
-        when(() => mockBiometricAuthenticationService.disableBiometricAuthentication())
+        when(() => mockBiometricAuthenticationService
+                .disableBiometricAuthentication())
             .thenThrow(Exception('Service error'));
 
         // Act & Assert
-        expect(() => biometricUsecase.disableBiometricAuthentication(), throwsException);
-        verify(() => mockBiometricAuthenticationService.disableBiometricAuthentication()).called(1);
+        expect(() => biometricUsecase.disableBiometricAuthentication(),
+            throwsException);
+        verify(() => mockBiometricAuthenticationService
+            .disableBiometricAuthentication()).called(1);
       });
     });
 
@@ -530,18 +584,22 @@ void main() {
         when(() => mockBiometricAuthenticationService.authenticate(password))
             .thenAnswer((_) async => true);
         when(() => mockLocalAuthentication.authenticate(
-          localizedReason: any(named: 'localizedReason'),
-          options: any(named: 'options'),
-        )).thenAnswer((_) async => true);
-        when(() => mockBiometricAuthenticationService.enableBiometricAuthentication(password))
+              localizedReason: any(named: 'localizedReason'),
+              options: any(named: 'options'),
+            )).thenAnswer((_) async => true);
+        when(() => mockBiometricAuthenticationService
+                .enableBiometricAuthentication(password))
             .thenAnswer((_) async => true);
-        when(() => mockBiometricAuthenticationService.isBiometricAuthenticationEnableForCurrentUser())
+        when(() => mockBiometricAuthenticationService
+                .isBiometricAuthenticationEnableForCurrentUser())
             .thenAnswer((_) async => true);
 
         // Act
         final biometricOptions = await biometricUsecase.getBiometricOptions();
-        final enableResult = await biometricUsecase.enableBiometricsWhileLoggedIn(password);
-        final isEnabled = await biometricUsecase.isBiometricAuthenticationEnableForCurrentUser();
+        final enableResult =
+            await biometricUsecase.enableBiometricsWhileLoggedIn(password);
+        final isEnabled = await biometricUsecase
+            .isBiometricAuthenticationEnableForCurrentUser();
 
         // Assert
         expect(biometricOptions, equals(DeviceAuthenticationOption.touchID));
@@ -550,31 +608,39 @@ void main() {
 
         // Verify all service calls
         verify(() => mockDeviceService.authenticationOption()).called(1);
-        verify(() => mockBiometricAuthenticationService.authenticate(password)).called(1);
+        verify(() => mockBiometricAuthenticationService.authenticate(password))
+            .called(1);
         verify(() => mockLocalAuthentication.authenticate(
-          localizedReason: 'Authenticate for biometric login',
-          options: any(named: 'options'),
-        )).called(1);
-        verify(() => mockBiometricAuthenticationService.enableBiometricAuthentication(password)).called(1);
-        verify(() => mockBiometricAuthenticationService.isBiometricAuthenticationEnableForCurrentUser()).called(1);
+              localizedReason: 'Authenticate for biometric login',
+              options: any(named: 'options'),
+            )).called(1);
+        verify(() => mockBiometricAuthenticationService
+            .enableBiometricAuthentication(password)).called(1);
+        verify(() => mockBiometricAuthenticationService
+            .isBiometricAuthenticationEnableForCurrentUser()).called(1);
       });
 
       test('should handle complete biometric disablement workflow', () async {
         // Arrange
-        when(() => mockBiometricAuthenticationService.isBiometricAuthenticationEnableForCurrentUser())
+        when(() => mockBiometricAuthenticationService
+                .isBiometricAuthenticationEnableForCurrentUser())
             .thenAnswer((_) async => true);
-        when(() => mockBiometricAuthenticationService.disableBiometricAuthentication())
-            .thenAnswer((_) async => true);
+        when(() => mockBiometricAuthenticationService
+            .disableBiometricAuthentication()).thenAnswer((_) async => true);
 
         // Act
-        final initiallyEnabled = await biometricUsecase.isBiometricAuthenticationEnableForCurrentUser();
-        final disableResult = await biometricUsecase.disableBiometricAuthentication();
+        final initiallyEnabled = await biometricUsecase
+            .isBiometricAuthenticationEnableForCurrentUser();
+        final disableResult =
+            await biometricUsecase.disableBiometricAuthentication();
 
         // Change mock behavior for final check
-        when(() => mockBiometricAuthenticationService.isBiometricAuthenticationEnableForCurrentUser())
+        when(() => mockBiometricAuthenticationService
+                .isBiometricAuthenticationEnableForCurrentUser())
             .thenAnswer((_) async => false);
 
-        final finallyEnabled = await biometricUsecase.isBiometricAuthenticationEnableForCurrentUser();
+        final finallyEnabled = await biometricUsecase
+            .isBiometricAuthenticationEnableForCurrentUser();
 
         // Assert
         expect(initiallyEnabled, isTrue);
@@ -582,19 +648,22 @@ void main() {
         expect(finallyEnabled, isFalse);
 
         // Verify service calls
-        verify(() => mockBiometricAuthenticationService.isBiometricAuthenticationEnableForCurrentUser()).called(2);
-        verify(() => mockBiometricAuthenticationService.disableBiometricAuthentication()).called(1);
+        verify(() => mockBiometricAuthenticationService
+            .isBiometricAuthenticationEnableForCurrentUser()).called(2);
+        verify(() => mockBiometricAuthenticationService
+            .disableBiometricAuthentication()).called(1);
       });
 
       test('should handle complete cancellation workflow', () async {
         // Arrange
-        when(() => mockBiometricAuthenticationService.logoutWithStoredCredentials())
-            .thenAnswer((_) async {});
+        when(() => mockBiometricAuthenticationService
+            .logoutWithStoredCredentials()).thenAnswer((_) async {});
         when(() => mockCacheService.invalidateAllObjectsExcept(any()))
             .thenAnswer((_) async {});
         when(() => mockAuthenticationService.logoutAsync())
             .thenAnswer((_) async => const Success(true));
-        when(() => mockBiometricAuthenticationService.markCurrentUserAsSeenEnableBiometricOptionView())
+        when(() => mockBiometricAuthenticationService
+                .markCurrentUserAsSeenEnableBiometricOptionView())
             .thenAnswer((_) async {});
 
         // Act
@@ -602,10 +671,13 @@ void main() {
         await biometricUsecase.markCurrentUserHasSeenBiometricOptions();
 
         // Assert
-        verify(() => mockBiometricAuthenticationService.logoutWithStoredCredentials()).called(1);
-        verify(() => mockCacheService.invalidateAllObjectsExcept([CoreConstants.domainKey])).called(1);
+        verify(() => mockBiometricAuthenticationService
+            .logoutWithStoredCredentials()).called(1);
+        verify(() => mockCacheService
+            .invalidateAllObjectsExcept([CoreConstants.domainKey])).called(1);
         verify(() => mockAuthenticationService.logoutAsync()).called(1);
-        verify(() => mockBiometricAuthenticationService.markCurrentUserAsSeenEnableBiometricOptionView()).called(1);
+        verify(() => mockBiometricAuthenticationService
+            .markCurrentUserAsSeenEnableBiometricOptionView()).called(1);
       });
     });
 
@@ -613,45 +685,46 @@ void main() {
       test('should handle multiple rapid authentication attempts', () async {
         // Arrange
         when(() => mockLocalAuthentication.authenticate(
-          localizedReason: any(named: 'localizedReason'),
-          options: any(named: 'options'),
-        )).thenAnswer((_) async => true);
+              localizedReason: any(named: 'localizedReason'),
+              options: any(named: 'options'),
+            )).thenAnswer((_) async => true);
 
         // Act - Make multiple rapid calls
-        final futures = List.generate(3, (index) => biometricUsecase.authenticateWithBiometrics());
+        final futures = List.generate(
+            3, (index) => biometricUsecase.authenticateWithBiometrics());
         final results = await Future.wait(futures);
 
         // Assert
         expect(results, everyElement(isTrue));
         expect(results, hasLength(3));
         verify(() => mockLocalAuthentication.authenticate(
-          localizedReason: 'Authenticate for biometric login',
-          options: any(named: 'options'),
-        )).called(3);
+              localizedReason: 'Authenticate for biometric login',
+              options: any(named: 'options'),
+            )).called(3);
       });
 
       test('should handle mixed authentication results', () async {
         // Arrange
         when(() => mockLocalAuthentication.authenticate(
-          localizedReason: any(named: 'localizedReason'),
-          options: any(named: 'options'),
-        )).thenAnswer((_) async => true);
+              localizedReason: any(named: 'localizedReason'),
+              options: any(named: 'options'),
+            )).thenAnswer((_) async => true);
 
         final result1 = await biometricUsecase.authenticateWithBiometrics();
 
         // Change mock behavior for second call
         when(() => mockLocalAuthentication.authenticate(
-          localizedReason: any(named: 'localizedReason'),
-          options: any(named: 'options'),
-        )).thenAnswer((_) async => false);
+              localizedReason: any(named: 'localizedReason'),
+              options: any(named: 'options'),
+            )).thenAnswer((_) async => false);
 
         final result2 = await biometricUsecase.authenticateWithBiometrics();
 
         // Change mock behavior for third call to throw exception
         when(() => mockLocalAuthentication.authenticate(
-          localizedReason: any(named: 'localizedReason'),
-          options: any(named: 'options'),
-        )).thenThrow(PlatformException(code: 'error'));
+              localizedReason: any(named: 'localizedReason'),
+              options: any(named: 'options'),
+            )).thenThrow(PlatformException(code: 'error'));
 
         final result3 = await biometricUsecase.authenticateWithBiometrics();
 
@@ -660,30 +733,36 @@ void main() {
         expect(result2, isFalse);
         expect(result3, isFalse);
         verify(() => mockLocalAuthentication.authenticate(
-          localizedReason: 'Authenticate for biometric login',
-          options: any(named: 'options'),
-        )).called(3);
+              localizedReason: 'Authenticate for biometric login',
+              options: any(named: 'options'),
+            )).called(3);
       });
 
       test('should handle empty password in enable methods', () async {
         // Arrange
         const emptyPassword = '';
-        when(() => mockBiometricAuthenticationService.authenticate(emptyPassword))
+        when(() =>
+                mockBiometricAuthenticationService.authenticate(emptyPassword))
             .thenAnswer((_) async => false);
 
         // Act
-        final result = await biometricUsecase.enableBiometricsWhileLoggedIn(emptyPassword);
+        final result =
+            await biometricUsecase.enableBiometricsWhileLoggedIn(emptyPassword);
 
         // Assert
         expect(result, isFalse);
-        verify(() => mockBiometricAuthenticationService.authenticate(emptyPassword)).called(1);
+        verify(() =>
+                mockBiometricAuthenticationService.authenticate(emptyPassword))
+            .called(1);
         verifyNever(() => mockLocalAuthentication.authenticate(
-          localizedReason: any(named: 'localizedReason'),
-          options: any(named: 'options'),
-        ));
+              localizedReason: any(named: 'localizedReason'),
+              options: any(named: 'options'),
+            ));
       });
 
-      test('should handle device service returning different authentication options', () async {
+      test(
+          'should handle device service returning different authentication options',
+          () async {
         // Arrange & Act & Assert for touchID
         when(() => mockDeviceService.authenticationOption())
             .thenAnswer((_) async => DeviceAuthenticationOption.touchID);

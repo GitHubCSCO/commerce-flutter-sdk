@@ -488,16 +488,16 @@ void main() {
     });
 
     group('Error Handling Edge Cases', () {
-      test('should handle null query parameter gracefully', () async {
+      test('should handle invalid query parameter gracefully', () async {
         // Arrange
-        const BrandCategoriesQueryParameter? nullParameter = null;
+        final invalidParameter = BrandCategoriesQueryParameter();
 
-        when(() => mockBrandService.getBrandCategories(any()))
-            .thenThrow(ArgumentError('Query parameter cannot be null'));
+        when(() => mockBrandService.getBrandCategories(invalidParameter))
+            .thenThrow(ArgumentError('Invalid query parameter'));
 
         // Act & Assert
         expect(
-          () => brandCategoryUseCase.getBrandCategories(nullParameter!),
+          () => brandCategoryUseCase.getBrandCategories(invalidParameter),
           throwsArgumentError,
         );
       });

@@ -73,7 +73,8 @@ void main() {
         // Arrange
         final isAuthenticatedResult = Success<bool, ErrorResponse>(true);
         final mockAccount = Account(userName: 'testuser');
-        final getCurrentAccountResult = Success<Account, ErrorResponse>(mockAccount);
+        final getCurrentAccountResult =
+            Success<Account, ErrorResponse>(mockAccount);
 
         when(() => mockAuthenticationService.isAuthenticatedAsync())
             .thenAnswer((_) async => isAuthenticatedResult);
@@ -85,7 +86,8 @@ void main() {
 
         // Assert
         expect(result, isTrue);
-        verify(() => mockAuthenticationService.isAuthenticatedAsync()).called(1);
+        verify(() => mockAuthenticationService.isAuthenticatedAsync())
+            .called(1);
         verify(() => mockAccountService.getCurrentAccountAsync()).called(1);
       });
 
@@ -93,7 +95,8 @@ void main() {
         // Arrange
         final isAuthenticatedResult = Success<bool, ErrorResponse>(false);
         final mockAccount = Account(userName: 'testuser');
-        final getCurrentAccountResult = Success<Account, ErrorResponse>(mockAccount);
+        final getCurrentAccountResult =
+            Success<Account, ErrorResponse>(mockAccount);
 
         when(() => mockAuthenticationService.isAuthenticatedAsync())
             .thenAnswer((_) async => isAuthenticatedResult);
@@ -105,14 +108,16 @@ void main() {
 
         // Assert
         expect(result, isFalse);
-        verify(() => mockAuthenticationService.isAuthenticatedAsync()).called(1);
+        verify(() => mockAuthenticationService.isAuthenticatedAsync())
+            .called(1);
         verify(() => mockAccountService.getCurrentAccountAsync()).called(1);
       });
 
       test('should return false when authentication service fails', () async {
         // Arrange
         final errorResponse = ErrorResponse(message: 'Authentication failed');
-        final isAuthenticatedResult = Failure<bool, ErrorResponse>(errorResponse);
+        final isAuthenticatedResult =
+            Failure<bool, ErrorResponse>(errorResponse);
 
         when(() => mockAuthenticationService.isAuthenticatedAsync())
             .thenAnswer((_) async => isAuthenticatedResult);
@@ -122,15 +127,19 @@ void main() {
 
         // Assert
         expect(result, isFalse);
-        verify(() => mockAuthenticationService.isAuthenticatedAsync()).called(1);
+        verify(() => mockAuthenticationService.isAuthenticatedAsync())
+            .called(1);
         verifyNever(() => mockAccountService.getCurrentAccountAsync());
       });
 
-      test('should still return true when getCurrentAccount fails but user is authenticated', () async {
+      test(
+          'should still return true when getCurrentAccount fails but user is authenticated',
+          () async {
         // Arrange
         final isAuthenticatedResult = Success<bool, ErrorResponse>(true);
         final errorResponse = ErrorResponse(message: 'Account fetch failed');
-        final getCurrentAccountResult = Failure<Account, ErrorResponse>(errorResponse);
+        final getCurrentAccountResult =
+            Failure<Account, ErrorResponse>(errorResponse);
 
         when(() => mockAuthenticationService.isAuthenticatedAsync())
             .thenAnswer((_) async => isAuthenticatedResult);
@@ -142,7 +151,8 @@ void main() {
 
         // Assert
         expect(result, isTrue);
-        verify(() => mockAuthenticationService.isAuthenticatedAsync()).called(1);
+        verify(() => mockAuthenticationService.isAuthenticatedAsync())
+            .called(1);
         verify(() => mockAccountService.getCurrentAccountAsync()).called(1);
       });
 
@@ -150,7 +160,8 @@ void main() {
         // Arrange
         final isAuthenticatedResult = Success<bool, ErrorResponse>(null);
         final mockAccount = Account(userName: 'testuser');
-        final getCurrentAccountResult = Success<Account, ErrorResponse>(mockAccount);
+        final getCurrentAccountResult =
+            Success<Account, ErrorResponse>(mockAccount);
 
         when(() => mockAuthenticationService.isAuthenticatedAsync())
             .thenAnswer((_) async => isAuthenticatedResult);
@@ -164,8 +175,9 @@ void main() {
         } catch (e) {
           expect(e, isA<TypeError>());
         }
-        
-        verify(() => mockAuthenticationService.isAuthenticatedAsync()).called(1);
+
+        verify(() => mockAuthenticationService.isAuthenticatedAsync())
+            .called(1);
         verify(() => mockAccountService.getCurrentAccountAsync()).called(1);
       });
 
@@ -176,8 +188,9 @@ void main() {
 
         // Act & Assert
         expect(() => authUsecase.isAuthenticated(), throwsException);
-        
-        verify(() => mockAuthenticationService.isAuthenticatedAsync()).called(1);
+
+        verify(() => mockAuthenticationService.isAuthenticatedAsync())
+            .called(1);
         verifyNever(() => mockAccountService.getCurrentAccountAsync());
       });
 
@@ -197,14 +210,16 @@ void main() {
         } catch (e) {
           expect(e, isA<Exception>());
         }
-        
-        verify(() => mockAuthenticationService.isAuthenticatedAsync()).called(1);
+
+        verify(() => mockAuthenticationService.isAuthenticatedAsync())
+            .called(1);
         verify(() => mockAccountService.getCurrentAccountAsync()).called(1);
       });
     });
 
     group('integration tests', () {
-      test('should handle complete authentication flow with valid user', () async {
+      test('should handle complete authentication flow with valid user',
+          () async {
         // Arrange
         final isAuthenticatedResult = Success<bool, ErrorResponse>(true);
         final mockAccount = Account(
@@ -213,7 +228,8 @@ void main() {
           firstName: 'Test',
           lastName: 'User',
         );
-        final getCurrentAccountResult = Success<Account, ErrorResponse>(mockAccount);
+        final getCurrentAccountResult =
+            Success<Account, ErrorResponse>(mockAccount);
 
         when(() => mockAuthenticationService.isAuthenticatedAsync())
             .thenAnswer((_) async => isAuthenticatedResult);
@@ -225,17 +241,20 @@ void main() {
 
         // Assert
         expect(result, isTrue);
-        
+
         // Verify the complete flow
-        verify(() => mockAuthenticationService.isAuthenticatedAsync()).called(1);
+        verify(() => mockAuthenticationService.isAuthenticatedAsync())
+            .called(1);
         verify(() => mockAccountService.getCurrentAccountAsync()).called(1);
       });
 
-      test('should handle authentication flow when user is not authenticated', () async {
+      test('should handle authentication flow when user is not authenticated',
+          () async {
         // Arrange
         final isAuthenticatedResult = Success<bool, ErrorResponse>(false);
         final mockAccount = Account(userName: 'testuser');
-        final getCurrentAccountResult = Success<Account, ErrorResponse>(mockAccount);
+        final getCurrentAccountResult =
+            Success<Account, ErrorResponse>(mockAccount);
 
         when(() => mockAuthenticationService.isAuthenticatedAsync())
             .thenAnswer((_) async => isAuthenticatedResult);
@@ -247,17 +266,20 @@ void main() {
 
         // Assert
         expect(result, isFalse);
-        
+
         // Verify that getCurrentAccount is still called even when not authenticated
-        verify(() => mockAuthenticationService.isAuthenticatedAsync()).called(1);
+        verify(() => mockAuthenticationService.isAuthenticatedAsync())
+            .called(1);
         verify(() => mockAccountService.getCurrentAccountAsync()).called(1);
       });
 
-      test('should handle multiple consecutive authentication checks', () async {
+      test('should handle multiple consecutive authentication checks',
+          () async {
         // Arrange
         final isAuthenticatedResult = Success<bool, ErrorResponse>(true);
         final mockAccount = Account(userName: 'testuser');
-        final getCurrentAccountResult = Success<Account, ErrorResponse>(mockAccount);
+        final getCurrentAccountResult =
+            Success<Account, ErrorResponse>(mockAccount);
 
         when(() => mockAuthenticationService.isAuthenticatedAsync())
             .thenAnswer((_) async => isAuthenticatedResult);
@@ -273,9 +295,10 @@ void main() {
         expect(result1, isTrue);
         expect(result2, isTrue);
         expect(result3, isTrue);
-        
+
         // Verify services are called for each check
-        verify(() => mockAuthenticationService.isAuthenticatedAsync()).called(3);
+        verify(() => mockAuthenticationService.isAuthenticatedAsync())
+            .called(3);
         verify(() => mockAccountService.getCurrentAccountAsync()).called(3);
       });
     });
@@ -285,7 +308,8 @@ void main() {
         // Arrange
         final isAuthenticatedResult = Success<bool, ErrorResponse>(true);
         final mockAccount = Account(userName: 'testuser');
-        final getCurrentAccountResult = Success<Account, ErrorResponse>(mockAccount);
+        final getCurrentAccountResult =
+            Success<Account, ErrorResponse>(mockAccount);
 
         when(() => mockAuthenticationService.isAuthenticatedAsync())
             .thenAnswer((_) async => isAuthenticatedResult);
@@ -293,25 +317,30 @@ void main() {
             .thenAnswer((_) async => getCurrentAccountResult);
 
         // Act - Make multiple rapid calls
-        final futures = List.generate(5, (index) => authUsecase.isAuthenticated());
+        final futures =
+            List.generate(5, (index) => authUsecase.isAuthenticated());
         final results = await Future.wait(futures);
 
         // Assert
         expect(results, everyElement(isTrue));
         expect(results, hasLength(5));
-        
+
         // Verify all calls were made
-        verify(() => mockAuthenticationService.isAuthenticatedAsync()).called(5);
+        verify(() => mockAuthenticationService.isAuthenticatedAsync())
+            .called(5);
         verify(() => mockAccountService.getCurrentAccountAsync()).called(5);
       });
 
-      test('should handle different authentication states in sequence', () async {
+      test('should handle different authentication states in sequence',
+          () async {
         // Arrange
         final authenticatedResult = Success<bool, ErrorResponse>(true);
         final notAuthenticatedResult = Success<bool, ErrorResponse>(false);
-        final errorResult = Failure<bool, ErrorResponse>(ErrorResponse(message: 'Error'));
+        final errorResult =
+            Failure<bool, ErrorResponse>(ErrorResponse(message: 'Error'));
         final mockAccount = Account(userName: 'testuser');
-        final getCurrentAccountResult = Success<Account, ErrorResponse>(mockAccount);
+        final getCurrentAccountResult =
+            Success<Account, ErrorResponse>(mockAccount);
 
         when(() => mockAuthenticationService.isAuthenticatedAsync())
             .thenAnswer((_) async => authenticatedResult);
@@ -337,15 +366,18 @@ void main() {
         expect(result3, isFalse);
 
         // Verify all calls were made
-        verify(() => mockAuthenticationService.isAuthenticatedAsync()).called(3);
-        verify(() => mockAccountService.getCurrentAccountAsync()).called(2); // Not called on error
+        verify(() => mockAuthenticationService.isAuthenticatedAsync())
+            .called(3);
+        verify(() => mockAccountService.getCurrentAccountAsync())
+            .called(2); // Not called on error
       });
 
       test('should handle slow authentication service response', () async {
         // Arrange
         final isAuthenticatedResult = Success<bool, ErrorResponse>(true);
         final mockAccount = Account(userName: 'testuser');
-        final getCurrentAccountResult = Success<Account, ErrorResponse>(mockAccount);
+        final getCurrentAccountResult =
+            Success<Account, ErrorResponse>(mockAccount);
 
         when(() => mockAuthenticationService.isAuthenticatedAsync())
             .thenAnswer((_) async {
@@ -363,8 +395,9 @@ void main() {
         // Assert
         expect(result, isTrue);
         expect(stopwatch.elapsedMilliseconds, greaterThanOrEqualTo(100));
-        
-        verify(() => mockAuthenticationService.isAuthenticatedAsync()).called(1);
+
+        verify(() => mockAuthenticationService.isAuthenticatedAsync())
+            .called(1);
         verify(() => mockAccountService.getCurrentAccountAsync()).called(1);
       });
     });
