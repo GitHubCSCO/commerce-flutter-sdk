@@ -7,20 +7,12 @@ part of 'token_ex_config_query_parameters.dart';
 // **************************************************************************
 
 Map<String, dynamic> _$TokenExConfigQueryParametersToJson(
-    TokenExConfigQueryParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('token', instance.token);
-  writeNotNull('origin', instance.origin);
-  writeNotNull('isECheck', instance.isECheck);
-  return val;
-}
+        TokenExConfigQueryParameters instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.token case final value?) 'token': value,
+      if (instance.origin case final value?) 'origin': value,
+      if (instance.isECheck case final value?) 'isECheck': value,
+    };

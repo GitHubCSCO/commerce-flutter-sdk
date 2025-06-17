@@ -20,25 +20,20 @@ StyleValue _$StyleValueFromJson(Map<String, dynamic> json) => StyleValue(
       swatchType: json['swatchType'] as String?,
     );
 
-Map<String, dynamic> _$StyleValueToJson(StyleValue instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('styleTraitName', instance.styleTraitName);
-  writeNotNull('styleTraitId', instance.styleTraitId);
-  writeNotNull('styleTraitValueId', instance.styleTraitValueId);
-  writeNotNull('value', instance.value);
-  writeNotNull('valueDisplay', instance.valueDisplay);
-  writeNotNull('sortOrder', instance.sortOrder);
-  writeNotNull('isDefault', instance.isDefault);
-  writeNotNull('swatchColorValue', instance.swatchColorValue);
-  writeNotNull('swatchImageValue', instance.swatchImageValue);
-  writeNotNull('swatchType', instance.swatchType);
-  writeNotNull('id', instance.id);
-  return val;
-}
+Map<String, dynamic> _$StyleValueToJson(StyleValue instance) =>
+    <String, dynamic>{
+      if (instance.styleTraitName case final value?) 'styleTraitName': value,
+      if (instance.styleTraitId case final value?) 'styleTraitId': value,
+      if (instance.styleTraitValueId case final value?)
+        'styleTraitValueId': value,
+      if (instance.value case final value?) 'value': value,
+      if (instance.valueDisplay case final value?) 'valueDisplay': value,
+      if (instance.sortOrder case final value?) 'sortOrder': value,
+      if (instance.isDefault case final value?) 'isDefault': value,
+      if (instance.swatchColorValue case final value?)
+        'swatchColorValue': value,
+      if (instance.swatchImageValue case final value?)
+        'swatchImageValue': value,
+      if (instance.swatchType case final value?) 'swatchType': value,
+      if (instance.id case final value?) 'id': value,
+    };

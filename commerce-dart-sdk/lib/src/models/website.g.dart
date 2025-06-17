@@ -40,32 +40,26 @@ Website _$WebsiteFromJson(Map<String, dynamic> json) => Website(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$WebsiteToJson(Website instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('countriesUri', instance.countriesUri);
-  writeNotNull('statesUri', instance.statesUri);
-  writeNotNull('languagesUri', instance.languagesUri);
-  writeNotNull('currenciesUri', instance.currenciesUri);
-  writeNotNull('id', instance.id);
-  writeNotNull('name', instance.name);
-  writeNotNull('description', instance.description);
-  writeNotNull('isActive', instance.isActive);
-  writeNotNull('isRestricted', instance.isRestricted);
-  writeNotNull('countries', instance.countries?.toJson());
-  writeNotNull('states', instance.states?.toJson());
-  writeNotNull('languages', instance.languages?.toJson());
-  writeNotNull('currencies', instance.currencies?.toJson());
-  writeNotNull('mobilePrimaryColor', instance.mobilePrimaryColor);
-  writeNotNull('mobilePrivacyPolicyUrl', instance.mobilePrivacyPolicyUrl);
-  writeNotNull('mobileTermsOfUseUrl', instance.mobileTermsOfUseUrl);
-  return val;
-}
+Map<String, dynamic> _$WebsiteToJson(Website instance) => <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.countriesUri case final value?) 'countriesUri': value,
+      if (instance.statesUri case final value?) 'statesUri': value,
+      if (instance.languagesUri case final value?) 'languagesUri': value,
+      if (instance.currenciesUri case final value?) 'currenciesUri': value,
+      if (instance.id case final value?) 'id': value,
+      if (instance.name case final value?) 'name': value,
+      if (instance.description case final value?) 'description': value,
+      if (instance.isActive case final value?) 'isActive': value,
+      if (instance.isRestricted case final value?) 'isRestricted': value,
+      if (instance.countries?.toJson() case final value?) 'countries': value,
+      if (instance.states?.toJson() case final value?) 'states': value,
+      if (instance.languages?.toJson() case final value?) 'languages': value,
+      if (instance.currencies?.toJson() case final value?) 'currencies': value,
+      if (instance.mobilePrimaryColor case final value?)
+        'mobilePrimaryColor': value,
+      if (instance.mobilePrivacyPolicyUrl case final value?)
+        'mobilePrivacyPolicyUrl': value,
+      if (instance.mobileTermsOfUseUrl case final value?)
+        'mobileTermsOfUseUrl': value,
+    };

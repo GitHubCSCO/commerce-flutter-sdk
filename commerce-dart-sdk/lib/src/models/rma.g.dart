@@ -19,23 +19,15 @@ Rma _$RmaFromJson(Map<String, dynamic> json) => Rma(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$RmaToJson(Rma instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('orderNumber', instance.orderNumber);
-  writeNotNull('notes', instance.notes);
-  writeNotNull('message', instance.message);
-  writeNotNull('rmaLines', instance.rmaLines?.map((e) => e.toJson()).toList());
-  return val;
-}
+Map<String, dynamic> _$RmaToJson(Rma instance) => <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.orderNumber case final value?) 'orderNumber': value,
+      if (instance.notes case final value?) 'notes': value,
+      if (instance.message case final value?) 'message': value,
+      if (instance.rmaLines?.map((e) => e.toJson()).toList() case final value?)
+        'rmaLines': value,
+    };
 
 RmaLine _$RmaLineFromJson(Map<String, dynamic> json) => RmaLine(
       line: json['line'] as num?,
@@ -43,17 +35,8 @@ RmaLine _$RmaLineFromJson(Map<String, dynamic> json) => RmaLine(
       rmaReasonCode: json['rmaReasonCode'] as String?,
     );
 
-Map<String, dynamic> _$RmaLineToJson(RmaLine instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('line', instance.line);
-  writeNotNull('rmaQtyRequested', instance.rmaQtyRequested);
-  writeNotNull('rmaReasonCode', instance.rmaReasonCode);
-  return val;
-}
+Map<String, dynamic> _$RmaLineToJson(RmaLine instance) => <String, dynamic>{
+      if (instance.line case final value?) 'line': value,
+      if (instance.rmaQtyRequested case final value?) 'rmaQtyRequested': value,
+      if (instance.rmaReasonCode case final value?) 'rmaReasonCode': value,
+    };

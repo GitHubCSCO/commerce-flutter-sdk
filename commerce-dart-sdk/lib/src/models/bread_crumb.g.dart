@@ -12,17 +12,9 @@ BreadCrumb _$BreadCrumbFromJson(Map<String, dynamic> json) => BreadCrumb(
       categoryId: json['categoryId'] as String?,
     );
 
-Map<String, dynamic> _$BreadCrumbToJson(BreadCrumb instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('text', instance.text);
-  writeNotNull('url', instance.url);
-  writeNotNull('categoryId', instance.categoryId);
-  return val;
-}
+Map<String, dynamic> _$BreadCrumbToJson(BreadCrumb instance) =>
+    <String, dynamic>{
+      if (instance.text case final value?) 'text': value,
+      if (instance.url case final value?) 'url': value,
+      if (instance.categoryId case final value?) 'categoryId': value,
+    };

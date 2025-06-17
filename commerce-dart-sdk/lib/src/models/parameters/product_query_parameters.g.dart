@@ -7,29 +7,26 @@ part of 'product_query_parameters.dart';
 // **************************************************************************
 
 Map<String, dynamic> _$ProductQueryParametersToJson(
-    ProductQueryParameters instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('page', instance.page);
-  writeNotNull('pageSize', instance.pageSize);
-  writeNotNull('sort', instance.sort);
-  writeNotNull('productId', instance.productId);
-  writeNotNull('categoryId', instance.categoryId);
-  writeNotNull('replaceProducts', instance.replaceProducts);
-  writeNotNull('unitOfMeasure', instance.unitOfMeasure);
-  writeNotNull('qtyOrdered', instance.qtyOrdered);
-  writeNotNull('addToRecentlyViewed', instance.addToRecentlyViewed);
-  writeNotNull('applyPersonalization', instance.applyPersonalization);
-  writeNotNull('alsoPurchasedMaxResults', instance.alsoPurchasedMaxResults);
-  writeNotNull('includeAlternateInventory', instance.includeAlternateInventory);
-  writeNotNull('includeAttributes', instance.includeAttributes);
-  writeNotNull('expand', instance.expand);
-  writeNotNull('configuration', instance.configuration);
-  return val;
-}
+        ProductQueryParameters instance) =>
+    <String, dynamic>{
+      if (instance.page case final value?) 'page': value,
+      if (instance.pageSize case final value?) 'pageSize': value,
+      if (instance.sort case final value?) 'sort': value,
+      if (instance.productId case final value?) 'productId': value,
+      if (instance.categoryId case final value?) 'categoryId': value,
+      if (instance.replaceProducts case final value?) 'replaceProducts': value,
+      if (instance.unitOfMeasure case final value?) 'unitOfMeasure': value,
+      if (instance.qtyOrdered case final value?) 'qtyOrdered': value,
+      if (instance.addToRecentlyViewed case final value?)
+        'addToRecentlyViewed': value,
+      if (instance.applyPersonalization case final value?)
+        'applyPersonalization': value,
+      if (instance.alsoPurchasedMaxResults case final value?)
+        'alsoPurchasedMaxResults': value,
+      if (instance.includeAlternateInventory case final value?)
+        'includeAlternateInventory': value,
+      if (instance.includeAttributes case final value?)
+        'includeAttributes': value,
+      if (instance.expand case final value?) 'expand': value,
+      if (instance.configuration case final value?) 'configuration': value,
+    };

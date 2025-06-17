@@ -24,7 +24,7 @@ The Optimizely Configured Commerce Mobile UI SDK is the foundation of a customiz
 
 Before running the Flutter application, ensure that you have the following prerequisites installed:
 
-- **Flutter SDK 3.27.0:** Visit [Flutter Installation Guide](https://flutter.dev/docs/get-started/install) for installation instructions.
+- **Flutter SDK 3.32.0:** Visit [Flutter Installation Guide](https://flutter.dev/docs/get-started/install) for installation instructions.
 - **Flutter compatible IDE:** Install Android Studio, Visual Studio Code, or any other IDE compatible with Flutter development.
 - **Device Emulator or Physical Device:** You can use either an Android emulator, iOS simulator, or a physical device connected to your development machine. But to test some of the features such as barcode scanning you need real device.
 - **Xcode 15.4**
