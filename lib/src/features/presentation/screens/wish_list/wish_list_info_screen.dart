@@ -502,12 +502,15 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                     _disposeFocusNode();
                                     _initFocusNode();
 
+                                    final currentTags = (context
+                                            .read<WishListTagsControllerCubit>()
+                                            .state as WishListTagsControllerEditing)
+                                        .wishListTags;
+
                                     context
                                         .read<WishListTagsControllerCubit>()
                                         .initialize(
-                                          wishListTags:
-                                              widget.wishList.wishListTags ??
-                                                  [],
+                                          wishListTags: currentTags ?? [],
                                         );
                                   },
                                 ),
