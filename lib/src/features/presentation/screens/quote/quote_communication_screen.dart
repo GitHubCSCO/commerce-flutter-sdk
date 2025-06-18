@@ -3,6 +3,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/extensions/date_time_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_communication/quote_communication_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_communication/quote_communication_event.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_communication/quote_communication_state.dart';
@@ -169,8 +170,7 @@ class QuoteMessageItem extends StatelessWidget {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Text(
-                    message!.createdDate
-                        .formatDate(format: CoreConstants.dateFormatFullString),
+                    formatDateByLocale(message!.createdDate),
                     style: OptiTextStyles.bodyFade,
                   ),
                 ),

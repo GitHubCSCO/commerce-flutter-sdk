@@ -1,39 +1,34 @@
+import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
+import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/localization_interface.dart';
 import 'package:intl/intl.dart';
 
-String formatDateByLocale(DateTime date) {
-  var languageService = sl<ILocalizationService>();
-  var locale = languageService.getCurrentLanguage();
-  var languageCodeStr =
+const _formatMap = {
+  LanguageCode.enUs: CoreConstants.enUsDateFormatString,
+  LanguageCode.enCa: CoreConstants.enCaDateFormatString,
+  LanguageCode.frCa: CoreConstants.frCaDateFormatString,
+  LanguageCode.deDe: CoreConstants.deDeDateFormatString,
+};
+
+String formatDateByLocale(DateTime? date, {bool isDateAndTime = false}) {
+  final languageService = sl<ILocalizationService>();
+  final locale = languageService.getCurrentLanguage();
+  final languageCodeStr =
       locale?.languageCode?.toLowerCase() ?? LanguageCode.enUs.code;
 
-  // Find the matching LanguageCode enum
-  var languageCode = LanguageCode.values.firstWhere(
+  final languageCode = LanguageCode.values.firstWhere(
     (e) => e.code == languageCodeStr,
     orElse: () => LanguageCode.enUs,
   );
 
-  String format;
+  var format = _formatMap[languageCode] ?? CoreConstants.enUsDateFormatString;
 
-  switch (languageCode) {
-    case LanguageCode.enUs:
-      format = 'MM/dd/yyyy'; // US format
-      break;
-    case LanguageCode.enCa:
-      format = 'yyyy-MM-dd'; // Canadian format
-      break;
-    case LanguageCode.frCa:
-      format = 'dd/MM/yyyy'; // French Canadian format
-      break;
-    case LanguageCode.deDe:
-      format = 'dd.MM.yyyy'; // German format
-      break;
-    default:
-      format = 'MM/dd/yyyy'; // Default to US format
+  if (isDateAndTime) {
+    format = CoreConstants.localizedDateFormatFullString.format([format]);
   }
 
-  return DateFormat(format).format(date);
+  return DateFormat(format).format(date ?? DateTime.now());
 }
 
 enum LanguageCode {

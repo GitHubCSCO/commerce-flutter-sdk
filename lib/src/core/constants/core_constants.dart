@@ -24,6 +24,13 @@ class CoreConstants {
   static const String dateFormatShortString = "MM/dd/yy";
   static const String dateFormatFullMonthString = "MMMM dd, yyyy";
   static const String dateFormatFullString = "MM/dd/yyyy HH:mm:ss";
+
+  static const String enUsDateFormatString = "MM/dd/yy";
+  static const String enCaDateFormatString = "yyyy/MM/dd";
+  static const String frCaDateFormatString = "dd/MM/yy";
+  static const String deDeDateFormatString = "dd/MM/yy";
+  static const String localizedDateFormatFullString = "%s HH:mm:ss";
+
   static const String savedPaymentsShouldReloadKey =
       "SavedPaymentsShouldReloadKey";
   static const String checkoutPaymentsShouldReloadKey =

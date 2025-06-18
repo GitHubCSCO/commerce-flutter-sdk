@@ -2,6 +2,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart
 import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.dart';
+import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/settings/order_settings_entity.dart';
@@ -162,8 +163,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       : null;
 
   String? get orderDate => state.order.orderDate != null
-      ? DateFormat(CoreConstants.dateFormatShortString)
-          .format(state.order.orderDate!)
+      ? formatDateByLocale(state.order.orderDate!)
       : null;
 
   String? get orderStatus => state.order.statusDisplay;
