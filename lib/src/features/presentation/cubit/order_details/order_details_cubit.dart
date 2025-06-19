@@ -193,8 +193,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
       : null;
 
   String? get requestedDeliveryDate => _requestedDeliveryDateVisible
-      ? DateFormat(CoreConstants.dateFormatString)
-          .format(state.order.requestedDeliveryDateDisplay!)
+      ? formatDateByLocale(state.order.requestedDeliveryDateDisplay!)
       : null;
 
   bool get isShippingAddressVisible =>

@@ -4,6 +4,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/converter/discount_value_convertert.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/checkout/review_order_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/buttons.dart';
@@ -211,7 +212,7 @@ class CheckoutSuccessPage extends StatelessWidget {
             const SizedBox(height: 8.0),
             if (checkoutSuccessEntity.cart.orderDate != null)
               Text(
-                "${isOrderApproval ? '${LocalizationConstants.orderDate.localized()}:' : 'Order Placed:'} ${DateFormat(CoreConstants.dateFormatString).format(checkoutSuccessEntity.cart.orderDate!)}",
+                "${isOrderApproval ? '${LocalizationConstants.orderDate.localized()}:' : 'Order Placed:'} ${formatDateByLocale(checkoutSuccessEntity.cart.orderDate!)}",
                 style: OptiTextStyles.body,
               ),
             if (checkoutSuccessEntity.cart.orderDate != null)
