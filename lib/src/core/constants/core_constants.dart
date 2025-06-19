@@ -20,11 +20,8 @@ class CoreConstants {
   static const String pickupWareHouseChangeReloadKey =
       "PickupWareHouseChangeReloadKey";
   static const String currencySymbol = "\$";
-  static const String dateFormatString = "MM/dd/yyyy";
-  static const String dateFormatShortString = "MM/dd/yy";
-  static const String dateFormatFullMonthString = "MMMM dd, yyyy";
-  static const String dateFormatFullString = "MM/dd/yyyy HH:mm:ss";
 
+  //Localized date format strings
   static const String enUsDateFormatString = "MM/dd/yy";
   static const String enCaDateFormatString = "yyyy/MM/dd";
   static const String frCaDateFormatString = "dd/MM/yy";
