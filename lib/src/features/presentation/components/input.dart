@@ -153,7 +153,8 @@ class _InputState extends State<Input> {
                 boxShadow: (_focusNode.hasFocus && widget.maxLength == null)
                     ? [
                         BoxShadow(
-                          color: OptiAppColors.primaryColor.withOpacity(0.3),
+                          color:
+                              OptiAppColors.primaryColor.withValues(alpha: 0.3),
                           spreadRadius: AppStyle.inputDropShadowSpreadRadius,
                         ),
                       ]
