@@ -28,7 +28,7 @@ String formatDateByLocale(DateTime? date, {bool isDateAndTime = false}) {
     format = CoreConstants.localizedDateFormatFullString.format([format]);
   }
 
-  return DateFormat(format).format(date ?? DateTime.now());
+  return date != null ? DateFormat(format).format(date) : '';
 }
 
 enum LanguageCode {
