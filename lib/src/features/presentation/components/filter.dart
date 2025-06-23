@@ -463,6 +463,7 @@ class FilterListPicker extends StatelessWidget {
                           selectedIndex: selectedIndex,
                           items: items,
                           callback: callback,
+                          isActionEnabled: true,
                         ),
                       ),
                     ),
