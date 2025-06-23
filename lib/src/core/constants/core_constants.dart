@@ -21,13 +21,6 @@ class CoreConstants {
       "PickupWareHouseChangeReloadKey";
   static const String currencySymbol = "\$";
 
-  //Localized date format strings
-  static const String enUsDateFormatString = "MM/dd/yy";
-  static const String enCaDateFormatString = "yyyy/MM/dd";
-  static const String frCaDateFormatString = "dd/MM/yy";
-  static const String deDeDateFormatString = "dd/MM/yy";
-  static const String localizedDateFormatFullString = "%s HH:mm:ss a";
-
   static const String savedPaymentsShouldReloadKey =
       "SavedPaymentsShouldReloadKey";
   static const String checkoutPaymentsShouldReloadKey =
