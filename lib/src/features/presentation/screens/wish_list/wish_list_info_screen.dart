@@ -189,6 +189,18 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                     context.read<WishListTagsControllerCubit>().initialize(
                           wishListTags: state.wishListTags ?? [],
                         );
+
+                    final wishListInfoState =
+                        context.read<WishListInformationCubit>().state;
+
+                    unawaited(
+                      context.read<WishListInformationCubit>().initialize(
+                            wishList: wishListInfoState.wishList.copyWith(
+                              wishListTags: state.wishListTags,
+                            ),
+                          ),
+                    );
+
                     Navigator.of(context, rootNavigator: true).pop();
                     CustomSnackBar.showSnackBarMessage(
                       context,
@@ -502,15 +514,16 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                     _disposeFocusNode();
                                     _initFocusNode();
 
-                                    final currentTags = (context
-                                            .read<WishListTagsControllerCubit>()
-                                            .state as WishListTagsControllerEditing)
-                                        .wishListTags;
-
                                     context
                                         .read<WishListTagsControllerCubit>()
                                         .initialize(
-                                          wishListTags: currentTags ?? [],
+                                          wishListTags: context
+                                                  .read<
+                                                      WishListInformationCubit>()
+                                                  .state
+                                                  .wishList
+                                                  .wishListTags ??
+                                              [],
                                         );
                                   },
                                 ),
