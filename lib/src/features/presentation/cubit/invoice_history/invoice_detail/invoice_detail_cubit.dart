@@ -1,5 +1,6 @@
 import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
+import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/invoice_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/invoice_usecase/invoice_usecase.dart';
 import 'package:equatable/equatable.dart';
@@ -67,12 +68,10 @@ class InvoiceDetailCubit extends Cubit<InvoiceDetailState> {
   String get orderNotesTitle => LocalizationConstants.orderNotes.localized();
 
   String get invoiceDateValue => state.invoice.invoiceDate != null
-      ? DateFormat(CoreConstants.dateFormatString)
-          .format(state.invoice.invoiceDate!)
+      ? formatDateByLocale(state.invoice.invoiceDate!)
       : '';
   String get invoiceDueDateValue => state.invoice.dueDate != null
-      ? DateFormat(CoreConstants.dateFormatString)
-          .format(state.invoice.dueDate!)
+      ? formatDateByLocale(state.invoice.dueDate!)
       : '';
   String get termsValue => state.invoice.terms ?? '';
   String get poNumberValue => state.invoice.customerPO ?? '';
