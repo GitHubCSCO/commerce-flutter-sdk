@@ -621,7 +621,7 @@ enum LocalizationConstants {
   saveTags(keyword: "Save Tags"),
   tagDeleted(keyword: "Tag Deleted"),
   tagUpdated(keyword: "Tag Updated"),
-  addTag(keyword: "Add \"%s\"Tag"),
+  addTag(keyword: "Add \"%s\" Tag"),
   assignedTags(keyword: "Assigned Tags"),
   searchOrAddTag(keyword: "Search or add a new tag"),
   minimum(keyword: "Minimum"),
