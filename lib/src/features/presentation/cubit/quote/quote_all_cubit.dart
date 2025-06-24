@@ -26,7 +26,10 @@ class QuoteAllCubit extends Cubit<QuoteAllState> {
         ? (titleMsgResponse as Success).value
         : SiteMessageConstants.defaultValueRfqQuoteOrderHeader;
 
-    selectedCalculationMethod = quoteDto.calculationMethods?.first;
+    selectedCalculationMethod =
+        (quoteDto.calculationMethods?.isNotEmpty ?? false)
+            ? quoteDto.calculationMethods!.first
+            : null;
     emit(QuoteAllLoadedState(quoteDto: quoteDto, titleMsg: titleMsg));
   }
 

@@ -11,20 +11,22 @@ import 'package:commerce_flutter_sdk/src/features/presentation/components/style.
 class NumberTextField extends StatefulWidget {
   final TextEditingController? controller;
   final FocusNode? focusNode;
-  final int min;
-  final int max;
-  final int step;
+  final num min;
+  final num max;
+  final num step;
   final double arrowsWidth;
   final double arrowsHeight;
   final EdgeInsets contentPadding;
   final double borderWidth;
-  final ValueChanged<int?>? onChanged;
-  final ValueChanged<int?>? onSubmitted;
+  final ValueChanged<num?>? onChanged;
+  final ValueChanged<num?>? onSubmitted;
   final String? initialText;
   final bool shouldShowIncrementDecrementIcon;
   final void Function(bool hasFocus)? focusListener;
   final bool? isEnabled;
   final bool? showWarningHighlighted;
+  final bool decimal;
+  final bool signed;
 
   const NumberTextField({
     super.key,
@@ -44,6 +46,8 @@ class NumberTextField extends StatefulWidget {
     this.isEnabled = true,
     this.onSubmitted,
     this.showWarningHighlighted = false,
+    this.decimal = false,
+    this.signed = false,
   });
 
   @override
@@ -65,7 +69,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
     _focusNode = widget.focusNode ?? FocusNode();
     _controller.text = widget.initialText ?? "1";
     _shouldShowIncrementDecrementIcon = widget.shouldShowIncrementDecrementIcon;
-    _updateArrows(int.tryParse(_controller.text));
+    _updateArrows(num.tryParse(_controller.text.replaceAll(',', '.')));
     _focusNode.addListener(_onFocusChange);
     if (widget.focusListener != null) {
       _focusNode.addListener(() {
@@ -150,7 +154,7 @@ class _NumberTextFieldState extends State<NumberTextField> {
     }
     _controller.text = widget.initialText ?? _controller.text;
     _shouldShowIncrementDecrementIcon = widget.shouldShowIncrementDecrementIcon;
-    _updateArrows(int.tryParse(_controller.text));
+    _updateArrows(num.tryParse(_controller.text.replaceAll(',', '.')));
   }
 
   @override
@@ -190,7 +194,10 @@ class _NumberTextFieldState extends State<NumberTextField> {
               focusNode: _focusNode,
               textAlign: TextAlign.center,
               textInputAction: TextInputAction.done,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.numberWithOptions(
+                decimal: widget.decimal,
+                signed: widget.signed,
+              ),
               maxLength: widget.max.toString().length +
                   (widget.min.isNegative ? 1 : 0),
               decoration: InputDecoration(
@@ -233,9 +240,9 @@ class _NumberTextFieldState extends State<NumberTextField> {
                 _focusNode.unfocus();
               },
               onChanged: (value) {
-                final intValue = int.tryParse(value);
-                widget.onChanged?.call(intValue);
-                _updateArrows(intValue);
+                final numValue = num.tryParse(value.replaceAll(',', '.'));
+                widget.onChanged?.call(numValue);
+                _updateArrows(numValue);
               },
               inputFormatters: [
                 _NumberTextInputFormatter(widget.min, widget.max)
@@ -272,22 +279,22 @@ class _NumberTextFieldState extends State<NumberTextField> {
       );
 
   void _handleSubmitted(String value) {
-    final intValue = int.tryParse(value);
-    widget.onSubmitted?.call(intValue);
-    _updateArrows(intValue);
+    final numValue = num.tryParse(value.replaceAll(',', '.'));
+    widget.onSubmitted?.call(numValue);
+    _updateArrows(numValue);
   }
 
   void _update(bool up) {
-    var intValue = int.tryParse(_controller.text);
-    intValue == null
-        ? intValue = 1
-        : intValue += up ? widget.step : -widget.step;
-    _controller.text = intValue.toString();
-    widget.onSubmitted?.call(intValue); // Fire onChanged event
-    _updateArrows(intValue);
+    var numValue = num.tryParse(_controller.text.replaceAll(',', '.'));
+    numValue == null
+        ? numValue = 1
+        : numValue += up ? widget.step : -widget.step;
+    _controller.text = numValue.toString();
+    widget.onSubmitted?.call(numValue); // Fire onChanged event
+    _updateArrows(numValue);
   }
 
-  void _updateArrows(int? value) {
+  void _updateArrows(num? value) {
     final canGoUp = value == null || value < widget.max;
     final canGoDown = value == null || value > widget.min;
     if (_canGoUp != canGoUp || _canGoDown != canGoDown) {
@@ -300,8 +307,8 @@ class _NumberTextFieldState extends State<NumberTextField> {
 }
 
 class _NumberTextInputFormatter extends TextInputFormatter {
-  final int min;
-  final int max;
+  final num min;
+  final num max;
 
   _NumberTextInputFormatter(this.min, this.max);
 
@@ -311,16 +318,16 @@ class _NumberTextInputFormatter extends TextInputFormatter {
     if (const ['-', ''].contains(newValue.text)) {
       return newValue;
     }
-    final intValue = int.tryParse(newValue.text);
-    if (intValue == null) {
+    final numValue = num.tryParse(newValue.text.replaceAll(',', '.'));
+    if (numValue == null) {
       return newValue;
     }
-    if (intValue < min) {
+    if (numValue < min) {
       return newValue.copyWith(text: min.toString());
     }
-    if (intValue > max) {
+    if (numValue > max) {
       return newValue.copyWith(text: max.toString());
     }
-    return newValue.copyWith(text: intValue.toString());
+    return newValue.copyWith(text: numValue.toString());
   }
 }
