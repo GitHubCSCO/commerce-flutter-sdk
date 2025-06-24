@@ -52,6 +52,18 @@ class QuotePage extends StatefulWidget {
 class QuotePageState extends State<QuotePage> {
   int selectedIndex = 0;
 
+  void _switchTab(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+
+    final type = index == 1 ? QuotePageType.activejobs : QuotePageType.pending;
+
+    context
+        .read<QuoteBloc>()
+        .add(QuoteLoadEvent(quotePageType: type, quoteParameters: null));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,6 +111,7 @@ class QuotePageState extends State<QuotePage> {
           ),
           Expanded(
             child: TabSwitchWidget(
+              key: ValueKey(selectedIndex),
               tabTitle0: LocalizationConstants.pending.localized(),
               tabTitle1: LocalizationConstants.activeJobs.localized(),
               tabWidget0: Expanded(
@@ -191,15 +204,7 @@ class QuotePageState extends State<QuotePage> {
               ),
               selectedIndex: selectedIndex,
               onTabSelectionChange: (index) {
-                setState(() {
-                  selectedIndex = index;
-                });
-                final type = index == 1
-                    ? QuotePageType.activejobs
-                    : QuotePageType.pending;
-
-                context.read<QuoteBloc>().add(
-                    QuoteLoadEvent(quotePageType: type, quoteParameters: null));
+                _switchTab(index);
               },
             ),
           ),
@@ -218,8 +223,12 @@ class QuotePageState extends State<QuotePage> {
     }
 
     if (result != null) {
-      context.read<QuoteBloc>().add(QuoteLoadEvent(
-          quotePageType: QuotePageType.pending, quoteParameters: null));
+      if (result == true) {
+        context.read<QuoteBloc>().add(QuoteLoadEvent(
+            quotePageType: QuotePageType.pending, quoteParameters: null));
+      } else {
+        _switchTab(1);
+      }
     }
   }
 

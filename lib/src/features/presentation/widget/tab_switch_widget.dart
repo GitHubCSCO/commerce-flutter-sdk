@@ -35,6 +35,16 @@ class _TabSwitchWidgetState extends State<TabSwitchWidget> {
   }
 
   @override
+  void didUpdateWidget(TabSwitchWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedIndex != widget.selectedIndex) {
+      setState(() {
+        selectedIndex = widget.selectedIndex;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
