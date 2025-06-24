@@ -25,11 +25,13 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/order_appro
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/search_history/search_history_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/wish_list/wish_list_handler/wish_list_handler_cubit.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class CommerceFlutterSDK {
   static Future<void> initialize({required CommerceConfig config}) async {
     WidgetsFlutterBinding.ensureInitialized();
+    await initializeDateFormatting();
 
     await AssetPathResolver.setRunningAsPackage(
         config.isRunningAsPackage ?? false);

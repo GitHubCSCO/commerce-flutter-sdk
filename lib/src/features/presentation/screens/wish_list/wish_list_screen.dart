@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -493,8 +494,7 @@ class _WishListItem extends StatelessWidget {
                     LocalizationConstants.updateBy.localized().format(
                       [
                         wishList.updatedOn != null
-                            ? DateFormat(CoreConstants.dateFormatString)
-                                .format(wishList.updatedOn!)
+                            ? formatDateByLocale(wishList.updatedOn!)
                             : '',
                         wishList.updatedByDisplayName ?? '',
                       ],
