@@ -7,6 +7,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/order_status.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/saved_order/saved_order_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/saved_order_handler/saved_order_handler_cubit.dart';
@@ -258,9 +259,7 @@ class _SavedOrderItem extends StatelessWidget {
             ),
             Text(
               cart.orderDate != null
-                  ? DateFormat(CoreConstants.dateFormatString)
-                      .add_jms()
-                      .format(cart.orderDate!)
+                  ? formatDateByLocale(cart.orderDate!, isDateAndTime: true)
                   : '',
               style: OptiTextStyles.bodySmall.copyWith(
                 color: OptiAppColors.textSecondary,

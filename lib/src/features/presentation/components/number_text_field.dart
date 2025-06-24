@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
@@ -34,7 +35,7 @@ class NumberTextField extends StatefulWidget {
     this.controller,
     this.focusNode,
     this.min = 1,
-    this.max = 999,
+    this.max = CoreConstants.maximumOrderQuantity,
     this.step = 1,
     this.arrowsWidth = 24,
     this.arrowsHeight = kMinInteractiveDimension,

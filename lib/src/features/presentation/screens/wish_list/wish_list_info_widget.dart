@@ -4,6 +4,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/extensions/context.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/components/input.dart';
 import 'package:flutter/material.dart';
@@ -109,8 +110,7 @@ class ListDetailsWidget extends StatelessWidget {
           value: LocalizationConstants.updateOnBy.localized().format(
             [
               wishList.updatedOn != null
-                  ? DateFormat(CoreConstants.dateFormatString)
-                      .format(wishList.updatedOn!)
+                  ? formatDateByLocale(wishList.updatedOn!)
                   : '',
               wishList.updatedByDisplayName ?? '',
             ],
