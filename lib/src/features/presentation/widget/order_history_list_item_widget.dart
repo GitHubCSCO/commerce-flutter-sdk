@@ -1,6 +1,7 @@
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -41,8 +42,9 @@ class OrderHistoryListItem extends StatelessWidget {
                 ),
                 Text(
                   orderEntity.orderDate != null
-                      ? DateFormat(CoreConstants.dateFormatShortString)
-                          .format(orderEntity.orderDate!)
+                      ? formatDateByLocale(
+                          orderEntity.orderDate!,
+                        )
                       : '',
                   style: OptiTextStyles.body,
                 ),

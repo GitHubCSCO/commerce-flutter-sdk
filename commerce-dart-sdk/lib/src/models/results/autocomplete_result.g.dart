@@ -17,26 +17,31 @@ AutocompleteResult _$AutocompleteResultFromJson(Map<String, dynamic> json) =>
       categories: (json['categories'] as List<dynamic>?)
           ?.map((e) => AutocompleteCategory.fromJson(e as Map<String, dynamic>))
           .toList(),
+      attributeResults: json['attributeResults'] == null
+          ? null
+          : AttributeResults.fromJson(
+              json['attributeResults'] as Map<String, dynamic>),
+      isRetailSearchCompletionResults:
+          json['isRetailSearchCompletionResults'] as bool?,
     )
       ..uri = json['uri'] as String?
       ..properties = (json['properties'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String?),
       );
 
-Map<String, dynamic> _$AutocompleteResultToJson(AutocompleteResult instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('uri', instance.uri);
-  writeNotNull('properties', instance.properties);
-  writeNotNull('products', instance.products?.map((e) => e.toJson()).toList());
-  writeNotNull('brands', instance.brands?.map((e) => e.toJson()).toList());
-  writeNotNull(
-      'categories', instance.categories?.map((e) => e.toJson()).toList());
-  return val;
-}
+Map<String, dynamic> _$AutocompleteResultToJson(AutocompleteResult instance) =>
+    <String, dynamic>{
+      if (instance.uri case final value?) 'uri': value,
+      if (instance.properties case final value?) 'properties': value,
+      if (instance.products?.map((e) => e.toJson()).toList() case final value?)
+        'products': value,
+      if (instance.brands?.map((e) => e.toJson()).toList() case final value?)
+        'brands': value,
+      if (instance.categories?.map((e) => e.toJson()).toList()
+          case final value?)
+        'categories': value,
+      if (instance.attributeResults?.toJson() case final value?)
+        'attributeResults': value,
+      if (instance.isRetailSearchCompletionResults case final value?)
+        'isRetailSearchCompletionResults': value,
+    };

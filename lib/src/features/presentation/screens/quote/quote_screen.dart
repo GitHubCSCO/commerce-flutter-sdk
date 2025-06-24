@@ -3,9 +3,9 @@ import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
-import 'package:commerce_flutter_sdk/src/core/extensions/date_time_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/quote_page_type.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_bloc.dart';
@@ -258,12 +258,10 @@ class QuotePageState extends State<QuotePage> {
             address: jobQuotes?[index].shipToFullAddress ?? '',
             status: jobQuotes?[index].status ?? '',
             requestDate: jobQuotes?[index].orderDate != null
-                ? jobQuotes![index].orderDate.formatDate(format: 'MM/dd/yyyy')
+                ? formatDateByLocale(jobQuotes![index].orderDate!)
                 : '',
             expiryDate: jobQuotes?[index].expirationDate != null
-                ? jobQuotes![index]
-                    .expirationDate!
-                    .formatDate(format: 'MM/dd/yyyy')
+                ? formatDateByLocale(jobQuotes![index].expirationDate!)
                 : '',
           ),
         );
@@ -363,12 +361,11 @@ class __PendingQuotesWidgetState extends State<_PendingQuotesWidget> {
                 companyName: (state.quotes ?? [])[index].customerName ?? '',
                 address: (state.quotes ?? [])[index].shipToFullAddress ?? '',
                 status: (state.quotes ?? [])[index].status ?? '',
-                requestDate: (state.quotes ?? [])[index]
-                    .orderDate
-                    .formatDate(format: 'MM/dd/yyyy'),
-                expiryDate: (state.quotes ?? [])[index]
-                    .expirationDate
-                    .formatDate(format: 'MM/dd/yyyy'),
+                requestDate: formatDateByLocale(
+                  (state.quotes ?? [])[index].orderDate,
+                ),
+                expiryDate: formatDateByLocale(
+                    (state.quotes ?? [])[index].expirationDate),
               ),
             );
           },

@@ -1,11 +1,10 @@
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
-import 'package:commerce_flutter_sdk/src/core/constants/core_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
-import 'package:commerce_flutter_sdk/src/core/extensions/date_time_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/string_format_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/quote_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_details/quote_details_bloc.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/bloc/quote/quote_details/quote_details_event.dart';
@@ -547,11 +546,9 @@ class QuoteDetailsPage extends StatelessWidget {
                             quoteDto.messageCollection?.last.displayName ?? ""),
                         Row(
                           children: [
-                            Text(quoteDto.messageCollection?.last.createdDate
-                                    .formatDate(
-                                        format: CoreConstants
-                                            .dateFormatFullString) ??
-                                ""),
+                            Text(formatDateByLocale(
+                                quoteDto.messageCollection?.last.createdDate,
+                                isDateAndTime: true)),
                             const SizedBox(width: 10.0),
                             Container(
                               alignment: Alignment.center,
