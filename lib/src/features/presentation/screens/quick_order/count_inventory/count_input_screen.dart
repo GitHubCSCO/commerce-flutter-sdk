@@ -193,7 +193,7 @@ class _CountInputPageState extends State<CountInputPage> {
             shouldShowIncrementDecrementIcon: false,
             controller: _qtyController,
             onChanged: (value) {
-              qty = value;
+              qty = value?.toInt();
             },
             focusListener: (hasFocus) {
               if (!hasFocus) {
