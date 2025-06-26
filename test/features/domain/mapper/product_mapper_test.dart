@@ -1,8 +1,14 @@
 import 'package:commerce_flutter_sdk/src/features/domain/entity/availability_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/brand.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/cart_line_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/legacy_configuration_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/product_content_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/product_detail_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/product_line_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_price_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_unit_of_measure_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/score_explanation_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/mapper/product_mapper.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
@@ -39,6 +45,7 @@ void main() {
           id: 'brand1',
           name: 'Test Brand',
         ),
+        scoreExplanation: ScoreExplanation(),
       )..properties = {'key1': 'value1'};
 
       // Act
@@ -72,6 +79,14 @@ void main() {
       expect(entity.canAddToCart, equals(model.canAddToCart));
       expect(entity.canViewDetails, equals(model.canViewDetails));
       expect(entity.properties, equals(model.properties));
+
+      // Check score explanation
+      expect(entity.scoreExplanation?.totalBoost,
+          equals(model.scoreExplanation?.totalBoost));
+      expect(entity.scoreExplanation?.aggregateFieldScores?.length,
+          equals(model.scoreExplanation?.aggregateFieldScores?.length));
+      expect(entity.scoreExplanation?.detailedFieldScores?.length,
+          equals(model.scoreExplanation?.detailedFieldScores?.length));
 
       // Check brand
       expect(entity.brand?.id, equals(model.brand?.id));
@@ -708,6 +723,24 @@ void main() {
           id: 'brand1',
           name: 'Test Brand',
         ),
+        configurationDto: const LegacyConfigurationEntity(
+          sections: [
+            ConfigSectionEntity(
+              id: 'section1',
+              sectionName: 'Section 1',
+              sortOrder: 1,
+            ),
+          ],
+          hasDefaults: true,
+          isKit: false,
+        ),
+        unitOfMeasures: const [
+          ProductUnitOfMeasureEntity(
+            unitOfMeasure: 'EA',
+            qtyPerBaseUnitOfMeasure: 1,
+            roundingRule: 'round',
+          ),
+        ],
       );
 
       // Act
@@ -741,6 +774,31 @@ void main() {
       expect(model.canAddToCart, equals(entity.canAddToCart));
       expect(model.canViewDetails, equals(entity.canViewDetails));
       expect(model.properties, equals(entity.properties));
+
+      // Check configuration
+      expect(model.configurationDto, isNotNull);
+      expect(model.configurationDto?.hasDefaults,
+          equals(entity.configurationDto?.hasDefaults));
+      expect(model.configurationDto?.isKit,
+          equals(entity.configurationDto?.isKit));
+      expect(model.configurationDto?.sections?.length,
+          equals(entity.configurationDto?.sections?.length));
+      expect(model.configurationDto?.sections?[0].id,
+          equals(entity.configurationDto?.sections?[0].id));
+      expect(model.configurationDto?.sections?[0].sectionName,
+          equals(entity.configurationDto?.sections?[0].sectionName));
+      expect(model.configurationDto?.sections?[0].sortOrder,
+          equals(entity.configurationDto?.sections?[0].sortOrder));
+
+      // Check unit of measures
+      expect(
+          model.unitOfMeasures?.length, equals(entity.unitOfMeasures?.length));
+      expect(model.unitOfMeasures?[0].unitOfMeasure,
+          equals(entity.unitOfMeasures?[0].unitOfMeasure));
+      expect(model.unitOfMeasures?[0].qtyPerBaseUnitOfMeasure,
+          equals(entity.unitOfMeasures?[0].qtyPerBaseUnitOfMeasure));
+      expect(model.unitOfMeasures?[0].roundingRule,
+          equals(entity.unitOfMeasures?[0].roundingRule));
 
       // Check brand
       expect(model.brand?.id, equals(entity.brand?.id));
@@ -1095,6 +1153,42 @@ void main() {
           equals(originalModel.productSubscription?.subscriptionCyclePeriod));
       expect(resultModel.productSubscription?.subscriptionTotalCycles,
           equals(originalModel.productSubscription?.subscriptionTotalCycles));
+    });
+
+    test('toModel should handle minimal non-null nested objects correctly', () {
+      // Arrange - This test specifically targets the fallback scenarios in toModel
+      final entity = ProductEntity(
+        id: 'minimal_nested_test',
+        name: 'Minimal Nested Test',
+        pricing: const ProductPriceEntity(), // Non-null but minimal
+        availability: const AvailabilityEntity(), // Non-null but minimal
+        brand: const BrandEntity(), // Non-null but minimal
+        productLine: const ProductLineEntity(), // Non-null but minimal
+        scoreExplanation:
+            const ScoreExplanationEntity(), // Non-null but minimal
+        detail: const ProductDetailEntity(), // Non-null but minimal
+        content: const ProductContentEntity(), // Non-null but minimal
+        productSubscription:
+            ProductSubscriptionEntity(), // Non-null but minimal
+        unitOfMeasures: const [
+          ProductUnitOfMeasureEntity(), // Non-null but minimal
+        ],
+      );
+
+      // Act
+      final model = ProductEntityMapper.toModel(entity);
+
+      // Assert - Verify all nested objects are properly converted
+      expect(model.pricing, isNotNull);
+      expect(model.availability, isNotNull);
+      expect(model.brand, isNotNull);
+      expect(model.productLine, isNotNull);
+      expect(model.scoreExplanation, isNotNull);
+      expect(model.detail, isNotNull);
+      expect(model.content, isNotNull);
+      expect(model.productSubscription, isNotNull);
+      expect(model.unitOfMeasures, isNotNull);
+      expect(model.unitOfMeasures?.length, equals(1));
     });
   });
 }
