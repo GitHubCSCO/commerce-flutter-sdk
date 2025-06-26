@@ -24,8 +24,8 @@ void main() {
       final entity = mapper.toEntity(model);
 
       // Assert
-      expect(entity.name, isNull); // Changed from 'fieldName'
-      expect(entity.score, isNull); // Changed from 0.75
+      expect(entity.name, 'fieldName');
+      expect(entity.score, 0.75);
       expect(entity.boost, 1.5);
       expect(entity.matchText, 'matched text');
       expect(entity.termFrequencyNormalized, 0.5);
@@ -50,8 +50,8 @@ void main() {
       final model = mapper.toModel(entity);
 
       // Assert
-      expect(model.name, isNull); // This was already changed to isNull
-      expect(model.score, isNull); // This was already changed to isNull
+      expect(model.name, 'fieldName');
+      expect(model.score, 0.75);
       expect(model.boost, 1.5);
       expect(model.matchText, 'matched text');
       expect(model.termFrequencyNormalized, 0.5);
