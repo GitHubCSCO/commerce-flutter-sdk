@@ -4,6 +4,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart
 import 'package:commerce_flutter_sdk/src/core/constants/site_message_constants.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/settings/wish_list_settings_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list/wish_list_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list/wish_list_line_collection_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/wish_list/wish_list_line_entity.dart';
@@ -251,6 +252,32 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
           );
 
       _wishListDetailsUsecase.trackEvent(analyticsEvent);
+
+      var viewTelemetryEvent = TelemetryEvent(
+        screenName: AnalyticsConstants.screenNameListDetail,
+      )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertySearchTerm,
+            strValue: state.searchQuery,
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceId,
+            strValue: wishList.id ?? '',
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyReferenceName,
+            strValue: wishList.name ?? '',
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyResultsCount,
+            strValue:
+                wishListLines?.pagination?.totalItemCount?.toString() ?? '0',
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertySuccessful,
+            boolValue: wishListLines != null,
+          );
+      _wishListDetailsUsecase.trackTelemetryScreenEvent(viewTelemetryEvent);
     }
   }
 

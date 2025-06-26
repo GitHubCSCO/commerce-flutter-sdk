@@ -5,35 +5,16 @@ part 'user_event.g.dart';
 @JsonSerializable()
 class UserEvent {
   final String? eventName;
-  final String? emailAddress;
-  final String? fullName;
-  final EventProperties? properties;
+  final Map<String, dynamic>? properties;
 
   UserEvent({
     this.eventName,
-    this.emailAddress,
-    this.fullName,
     this.properties,
   });
 
   factory UserEvent.fromJson(Map<String, dynamic> json) =>
       _$UserEventFromJson(json);
   Map<String, dynamic> toJson() => _$UserEventToJson(this);
-}
-
-@JsonSerializable()
-class EventProperties {
-  final String? appVersion;
-  final int? customTrait2;
-
-  EventProperties({
-    this.appVersion,
-    this.customTrait2,
-  });
-
-  factory EventProperties.fromJson(Map<String, dynamic> json) =>
-      _$EventPropertiesFromJson(json);
-  Map<String, dynamic> toJson() => _$EventPropertiesToJson(this);
 }
 
 @JsonSerializable()

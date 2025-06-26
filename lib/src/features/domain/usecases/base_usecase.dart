@@ -1,5 +1,7 @@
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/mapper/telemetry_event_mapper.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/service/interfaces/core_service_provider_interface.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
@@ -10,6 +12,47 @@ class BaseUseCase {
   BaseUseCase()
       : commerceAPIServiceProvider = sl<ICommerceAPIServiceProvider>(),
         coreServiceProvider = sl<ICoreServiceProvider>();
+
+  void trackTelemetryEvent(
+    TelemetryEvent telemetryEvent,
+  ) async {
+    // Add device and environment properties
+    final deviceProperties = await coreServiceProvider
+        .getDeviceService()
+        .getDeviceEnvironmentProperties();
+    for (final entry in deviceProperties.entries) {
+      telemetryEvent.properties[entry.key] = entry.value;
+    }
+
+    if (telemetryEvent.screenName != null) {
+      var screenViewEvent = TelemetryEventMapper.toScreenView(telemetryEvent);
+      coreServiceProvider
+          .getTelemetryService()
+          .sceenView(screenViewEvent)
+          .ignore();
+    } else {
+      var userEvent = TelemetryEventMapper.toUserEvent(telemetryEvent);
+      coreServiceProvider.getTelemetryService().trackEvent(userEvent).ignore();
+    }
+  }
+
+  void trackTelemetryScreenEvent(
+    TelemetryEvent telemetryEvent,
+  ) async {
+    // Add device and environment properties
+    final deviceProperties = await coreServiceProvider
+        .getDeviceService()
+        .getDeviceEnvironmentProperties();
+    for (final entry in deviceProperties.entries) {
+      telemetryEvent.properties[entry.key] = entry.value;
+    }
+
+    var screenViewEvent = TelemetryEventMapper.toScreenView(telemetryEvent);
+    coreServiceProvider
+        .getTelemetryService()
+        .sceenView(screenViewEvent)
+        .ignore();
+  }
 
   void trackEvent(AnalyticsEvent analyticsEvent) async {
     coreServiceProvider

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -72,6 +73,13 @@ class WishListsScreen extends BaseStatelessWidget {
     return AnalyticsEvent(
       AnalyticsConstants.eventViewScreen,
       AnalyticsConstants.screenNameLists,
+    );
+  }
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() {
+    return TelemetryEvent(
+      screenName: AnalyticsConstants.screenNameLists,
     );
   }
 }

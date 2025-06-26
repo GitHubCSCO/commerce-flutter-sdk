@@ -1,4 +1,5 @@
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/root_usecase/root_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,6 +32,10 @@ class RootBloc extends Bloc<RootEvent, RootState> {
     });
     on<RootAnalyticsEvent>((event, emit) {
       _rootUsecase.trackEvent(event.analyticsEvent);
+    });
+
+    on<RootTelemetryEvent>((event, emit) {
+      _rootUsecase.trackTelemetryEvent(event.telemetryEvent);
     });
   }
 }

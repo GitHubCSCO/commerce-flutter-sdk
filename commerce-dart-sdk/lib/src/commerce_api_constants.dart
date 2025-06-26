@@ -138,6 +138,9 @@ class CommerceAPIConstants {
 
   static const String telemetryUrl = "/api/v1/admin/telemetry/track-event";
 
+  static const String telemetryScreenViewUrl =
+      "/api/v1/admin/telemetry/screen-event";
+
   static const String translationUrl = "/api/v1/translationdictionaries";
 
   static const String vmiLocationsUrl = "/api/v1/vmilocations";

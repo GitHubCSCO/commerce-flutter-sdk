@@ -7,6 +7,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/invoice_sort_order.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/invoice_status.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/invoice_history/invoice_history_cubit.dart';
@@ -34,6 +35,11 @@ class InvoiceHistoryScreen extends BaseStatelessWidget {
   AnalyticsEvent getAnalyticsEvent() => AnalyticsEvent(
         AnalyticsConstants.eventViewScreen,
         AnalyticsConstants.screenNameInvoiceHistory,
+      );
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() => TelemetryEvent(
+        screenName: AnalyticsConstants.screenNameInvoiceHistory,
       );
 }
 
