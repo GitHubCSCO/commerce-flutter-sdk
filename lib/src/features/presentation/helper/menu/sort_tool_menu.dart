@@ -1,3 +1,4 @@
+import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/asset_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
@@ -117,7 +118,7 @@ class SortToolMenu extends StatelessWidget {
           cancelButton: CupertinoActionSheetAction(
             child: Text(
               LocalizationConstants.cancel.localized(),
-              style: TextStyle(color: Colors.blue),
+              style: TextStyle(color: OptiAppColors.primaryColor),
             ),
             onPressed: () => Navigator.pop(context, isMenuCloseManually),
           ),
@@ -155,7 +156,17 @@ class SortToolMenu extends StatelessWidget {
               return value.sortOrder?.groupTitle ?? '';
             }
           }(),
-          style: const TextStyle(color: Colors.blue),
+          style: TextStyle(
+            color: () {
+              if (value.sortOrder == selectedSortOrder) {
+                return OptiAppColors.primaryColor;
+              } else if (value.oppositeSortOrder == selectedSortOrder) {
+                return OptiAppColors.primaryColor;
+              } else {
+                return Colors.black;
+              }
+            }(),
+          ),
         ),
       );
     }));

@@ -1,8 +1,8 @@
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
-import 'package:commerce_flutter_sdk/src/core/extensions/date_time_extension.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/order/order_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/vmi_bin_model_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
@@ -193,7 +193,7 @@ class _CountInputPageState extends State<CountInputPage> {
             shouldShowIncrementDecrementIcon: false,
             controller: _qtyController,
             onChanged: (value) {
-              qty = value;
+              qty = value?.toInt();
             },
             focusListener: (hasFocus) {
               if (!hasFocus) {
@@ -226,8 +226,8 @@ class _CountInputPageState extends State<CountInputPage> {
     final date = _buildRow(
         LocalizationConstants.dateSign.localized(),
         OptiTextStyles.subtitle,
-        widget.countInventoryEntity.vmiBinEntity.previousCountDate
-            .formatDate(format: 'dd/MM/yyyy'),
+        formatDateByLocale(
+            widget.countInventoryEntity.vmiBinEntity.previousCountDate),
         OptiTextStyles.body);
     final countQty = _buildRow(
         LocalizationConstants.countQTYSign.localized(),
@@ -263,9 +263,8 @@ class _CountInputPageState extends State<CountInputPage> {
     final date = _buildRow(
         LocalizationConstants.dateSign.localized(),
         OptiTextStyles.subtitle,
-        widget.countInventoryEntity.previousOrder?.orderDate
-                .formatDate(format: 'dd/MM/yyyy') ??
-            '',
+        formatDateByLocale(
+            widget.countInventoryEntity.previousOrder?.orderDate),
         OptiTextStyles.body);
     final countQty = _buildRow(
         LocalizationConstants.orderQTYSign.localized(),
