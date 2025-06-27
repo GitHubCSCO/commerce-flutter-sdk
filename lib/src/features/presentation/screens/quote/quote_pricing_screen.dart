@@ -269,6 +269,7 @@ class PriceBreakwidget extends StatelessWidget {
               child: NumberTextField(
                 max: CoreConstants.maximumOrderQuantity,
                 initialText: priceDisplay,
+                decimal: true,
                 shouldShowIncrementDecrementIcon: false,
                 onSubmitted: (p0) {
                   if (p0 != null) {

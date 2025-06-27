@@ -200,6 +200,18 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                     context.read<WishListTagsControllerCubit>().initialize(
                           wishListTags: state.wishListTags ?? [],
                         );
+
+                    final wishListInfoState =
+                        context.read<WishListInformationCubit>().state;
+
+                    unawaited(
+                      context.read<WishListInformationCubit>().initialize(
+                            wishList: wishListInfoState.wishList.copyWith(
+                              wishListTags: state.wishListTags,
+                            ),
+                          ),
+                    );
+
                     Navigator.of(context, rootNavigator: true).pop();
                     CustomSnackBar.showSnackBarMessage(
                       context,
@@ -371,6 +383,7 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                             .localized(),
                                         autoFocusNode: _tagInputFocusNode,
                                         controller: _tagInputEditingController,
+                                        maxLength: 50,
                                         onTapOutside: (p0) {
                                           _tagInputFocusNode.unfocus();
                                         },
@@ -403,11 +416,16 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                                 AssetConstants.iconPlusCircle,
                                               ),
                                               const SizedBox(width: 16),
-                                              Text(
-                                                LocalizationConstants.addTag
-                                                    .localized()
-                                                    .format(
-                                                  [tagSearchInputString],
+                                              Expanded(
+                                                child: Text(
+                                                  LocalizationConstants.addTag
+                                                      .localized()
+                                                      .format(
+                                                    [tagSearchInputString],
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
                                               ),
                                             ],
@@ -516,9 +534,13 @@ class _WishListInformationPageState extends State<WishListInformationPage> {
                                     context
                                         .read<WishListTagsControllerCubit>()
                                         .initialize(
-                                          wishListTags:
-                                              widget.wishList.wishListTags ??
-                                                  [],
+                                          wishListTags: context
+                                                  .read<
+                                                      WishListInformationCubit>()
+                                                  .state
+                                                  .wishList
+                                                  .wishListTags ??
+                                              [],
                                         );
                                   },
                                 ),
@@ -625,17 +647,21 @@ class _TagItem extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SvgPicture.asset(AssetConstants.iconTag),
-              const SizedBox(width: 16),
-              Text(
-                tag,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+          Expanded(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SvgPicture.asset(AssetConstants.iconTag),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    tag,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
           ),
           InkWell(
             onTap: onDelete,
