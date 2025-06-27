@@ -2,7 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'screen_view.g.dart';
 
-
 @JsonSerializable()
 class ScreenView {
   final String? screenName;
