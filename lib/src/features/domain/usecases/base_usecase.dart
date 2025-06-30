@@ -16,19 +16,13 @@ class BaseUseCase {
   void trackTelemetryEvent(
     TelemetryEvent telemetryEvent,
   ) async {
-    // Add device and environment properties
-    final deviceProperties = await coreServiceProvider
-        .getDeviceService()
-        .getDeviceEnvironmentProperties();
-    for (final entry in deviceProperties.entries) {
-      telemetryEvent.properties[entry.key] = entry.value;
-    }
+    await _enrichTelemetryEventWithDeviceProperties(telemetryEvent);
 
     if (telemetryEvent.screenName != null) {
       var screenViewEvent = TelemetryEventMapper.toScreenView(telemetryEvent);
       coreServiceProvider
           .getTelemetryService()
-          .sceenView(screenViewEvent)
+          .screenView(screenViewEvent)
           .ignore();
     } else {
       var userEvent = TelemetryEventMapper.toUserEvent(telemetryEvent);
@@ -36,22 +30,15 @@ class BaseUseCase {
     }
   }
 
-  void trackTelemetryScreenEvent(
+  Future<void> _enrichTelemetryEventWithDeviceProperties(
     TelemetryEvent telemetryEvent,
   ) async {
-    // Add device and environment properties
     final deviceProperties = await coreServiceProvider
         .getDeviceService()
         .getDeviceEnvironmentProperties();
     for (final entry in deviceProperties.entries) {
       telemetryEvent.properties[entry.key] = entry.value;
     }
-
-    var screenViewEvent = TelemetryEventMapper.toScreenView(telemetryEvent);
-    coreServiceProvider
-        .getTelemetryService()
-        .sceenView(screenViewEvent)
-        .ignore();
   }
 
   void trackEvent(AnalyticsEvent analyticsEvent) async {

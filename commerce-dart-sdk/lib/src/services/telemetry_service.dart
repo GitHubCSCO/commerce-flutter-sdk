@@ -10,7 +10,7 @@ class TelemetryTrackingService extends ServiceBase
       required super.networkService});
 
   @override
-  Future<Result<EventResponse, ErrorResponse>> sceenView(ScreenView screenView,
+  Future<Result<EventResponse, ErrorResponse>> screenView(ScreenView screenView,
       {Map<String, dynamic>? properties}) async {
     var urlStringTelemetry = CommerceAPIConstants.telemetryScreenViewUrl;
 

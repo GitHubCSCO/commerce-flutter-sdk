@@ -134,7 +134,7 @@ class WishListCubit extends Cubit<WishListState> {
             name: AnalyticsConstants.eventPropertySuccessful,
             boolValue: result != null,
           );
-      wishListUsecase.trackTelemetryScreenEvent(viewScreenTelemetry);
+      wishListUsecase.trackTelemetryEvent(viewScreenTelemetry);
     }
   }
 

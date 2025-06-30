@@ -291,7 +291,7 @@ class OrderHistoryCubit extends Cubit<OrderHistoryState> {
             strValue: result != null ? 'true' : 'false',
           );
 
-      _orderUsecase.trackTelemetryScreenEvent(screenTelemetryEvent);
+      _orderUsecase.trackTelemetryEvent(screenTelemetryEvent);
     }
   }
 

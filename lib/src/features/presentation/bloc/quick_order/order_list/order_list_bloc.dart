@@ -187,7 +187,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
                 name: AnalyticsConstants.eventPropertySuccessful,
                 strValue: scanState.name);
 
-    _quickOrderUseCase.trackTelemetryScreenEvent(
+    _quickOrderUseCase.trackTelemetryEvent(
         TelemetryEvent(eventName: AnalyticsConstants.eventScanBarcode)
             .withProperty(
                 name: AnalyticsConstants.eventPropertyBarcode,
