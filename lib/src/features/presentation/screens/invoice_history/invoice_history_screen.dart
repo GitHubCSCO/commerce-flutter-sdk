@@ -6,6 +6,7 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/core/constants/website_paths.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/src/core/utils/date_provider_utils.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/invoice_sort_order.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/invoice_status.dart';
@@ -239,8 +240,7 @@ class _InvoiceItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final invoiceDate = invoice.invoiceDate != null
-        ? DateFormat(CoreConstants.dateFormatString)
-            .format(invoice.invoiceDate!)
+        ? formatDateByLocale(invoice.invoiceDate!)
         : '';
     final invoiceNumber = invoice.invoiceNumber ?? '';
     final poNumber =
@@ -248,7 +248,7 @@ class _InvoiceItem extends StatelessWidget {
     final invoiceTotal =
         '${LocalizationConstants.total.localized()} ${invoice.invoiceTotalDisplay ?? ''}';
     final dueDate =
-        '${LocalizationConstants.due.localized()} ${invoice.dueDate != null ? DateFormat(CoreConstants.dateFormatString).format(invoice.dueDate!) : ''}';
+        '${LocalizationConstants.due.localized()} ${invoice.dueDate != null ? formatDateByLocale(invoice.dueDate!) : ''}';
     final stCompany = invoice.stCompanyName ?? '';
     final balance = invoice.currentBalanceDisplay ?? '';
     final balanceTitle = LocalizationConstants.balance.localized();
