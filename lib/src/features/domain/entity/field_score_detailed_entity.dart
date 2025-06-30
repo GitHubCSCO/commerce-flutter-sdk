@@ -16,7 +16,7 @@ class FieldScoreDetailedEntity extends FieldScoreEntity {
     this.matchText,
     this.scoreUsed,
     this.termFrequencyNormalized,
-  });
+  }) : super(name: name, score: score);
 
   @override
   FieldScoreDetailedEntity copyWith({
