@@ -312,7 +312,7 @@ void main() {
         // Arrange
         final mockSession = MockSession();
         final mockLanguage = MockLanguage();
-        final mockPage = MockPageInformation();
+        final mockPage = MockPageInformationEntity();
 
         when(() => mockLanguage.id).thenReturn('en');
         when(() => mockSession.language).thenReturn(mockLanguage);
@@ -320,7 +320,7 @@ void main() {
 
         // Mock page data with spire widgets (pageClassicWidget is null)
         final mockPageData = PageContentManagementEntity();
-        mockPageData.page = mockPage as PageInformationEntity;
+        mockPageData.page = mockPage;
 
         when(() => mockContentConfigurationService
                 .loadAndPersistLiveContentManagement(PageContentType.cart))
@@ -413,3 +413,5 @@ void main() {
 
 // Additional mock classes needed for comprehensive testing
 class MockPageInformation extends Mock implements PageInformation {}
+
+class MockPageInformationEntity extends Mock implements PageInformationEntity {}
