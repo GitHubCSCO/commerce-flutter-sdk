@@ -3,9 +3,6 @@ import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.d
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/base_usecase.dart';
 
 class SearchHistoryUseCase extends BaseUseCase {
-  //TODO we  need to place this someplace else so anyone can modify without effecting the core codebase
-  int searchQueryHistoryCount = 5;
-
   SearchHistoryUseCase() : super();
 
   Future<List<String>> getSearchHistory() async {
@@ -32,8 +29,6 @@ class SearchHistoryUseCase extends BaseUseCase {
     } finally {
       list?.removeWhere((q) => q.toLowerCase() == query.toLowerCase());
       list?.insert(0, query);
-      var max = list?.length.clamp(0, searchQueryHistoryCount) ?? 0;
-      list = list?.sublist(0, max);
       await commerceAPIServiceProvider
           .getCacheService()
           .persistData<List<String>>(
