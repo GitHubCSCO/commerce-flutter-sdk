@@ -1,8 +1,10 @@
 import 'package:commerce_flutter_sdk/src/core/colors/app_colors.dart';
+import 'package:commerce_flutter_sdk/src/core/constants/analytics_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/app_route.dart';
 import 'package:commerce_flutter_sdk/src/core/constants/localization_constants.dart';
 import 'package:commerce_flutter_sdk/src/core/injection/injection_container.dart';
 import 'package:commerce_flutter_sdk/src/core/themes/theme.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/analytics_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/content_management/widget_entity/product_carousel_widget_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_detail_item_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_add_to_cart_entity.dart';
@@ -16,6 +18,7 @@ import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_standard_configuration_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_details/product_details_style_traits_entity.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/entity/product_entity.dart';
+import 'package:commerce_flutter_sdk/src/features/domain/entity/telemetry_event.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/enums/auth_status.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/extensions/product_extensions.dart';
 import 'package:commerce_flutter_sdk/src/features/domain/usecases/porduct_details_usecase/product_details_usecase.dart';
@@ -34,6 +37,7 @@ import 'package:commerce_flutter_sdk/src/features/presentation/cubit/product_car
 import 'package:commerce_flutter_sdk/src/features/presentation/cubit/style_trait/style_trait_cubit.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/helper/callback/wish_list_callback_helpers.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/helper/menu/tool_menu.dart';
+import 'package:commerce_flutter_sdk/src/features/presentation/screens/base_screen.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/product_details/product_details_add_to_cart_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/product_details/product_details_attributes_widget.dart';
 import 'package:commerce_flutter_sdk/src/features/presentation/screens/product_details/product_details_documents_widget.dart';
@@ -51,7 +55,7 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:commerce_flutter_sdk/src/core/extensions/html_string_extension.dart';
 import 'package:optimizely_commerce_api/optimizely_commerce_api.dart';
 
-class ProductDetailsScreen extends StatelessWidget {
+class ProductDetailsScreen extends BaseStatelessWidget {
   final String productId;
   final ProductEntity? product;
   final bool shouldEagerReloadCart;
@@ -64,7 +68,7 @@ class ProductDetailsScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildContent(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ProductDetailsBloc>(
@@ -84,6 +88,19 @@ class ProductDetailsScreen extends StatelessWidget {
       ],
       child: ProductDetailsPage(productId, product,
           shouldEagerReloadCart: shouldEagerReloadCart),
+    );
+  }
+
+  @override
+  AnalyticsEvent getAnalyticsEvent() {
+    return AnalyticsEvent(AnalyticsConstants.eventViewScreen,
+        AnalyticsConstants.screenNameProductDetail);
+  }
+
+  @override
+  TelemetryEvent getTelemetryScreenEvent() {
+    return TelemetryEvent(
+      screenName: AnalyticsConstants.screenNameProductDetail,
     );
   }
 }
