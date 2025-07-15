@@ -411,6 +411,17 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
             strValue: wishListLine.erpNumber,
           );
 
+      var telemetryEvent = TelemetryEvent(
+        eventName: AnalyticsConstants.eventAddToCart,
+        properties: {
+          AnalyticsConstants.eventPropertyListId: state.wishList.id ?? '',
+          AnalyticsConstants.eventPropertyProductNumber:
+              wishListLine.erpNumber ?? '',
+        },
+      );
+
+      _wishListDetailsUsecase.trackTelemetryEvent(telemetryEvent);
+
       _wishListDetailsUsecase.trackEvent(analyticsEvent);
     }
   }
