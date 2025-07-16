@@ -128,26 +128,27 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
               ?.totalItemCount ??
           0;
 
+      _searchUseCase.trackTelemetryEvent(
+          TelemetryEvent(eventName: AnalyticsConstants.eventScanBarcode)
+              .withProperty(
+                  name: AnalyticsConstants.eventPropertyBarcode,
+                  strValue: searchQuery)
+              .withProperty(
+                  name: AnalyticsConstants.eventPropertyBarcodeFormat,
+                  strValue: barcodeFormat?.name));
+
+      _searchUseCase.trackEvent(AnalyticsEvent(
+              AnalyticsConstants.eventScanBarcode,
+              AnalyticsConstants.screenNameSearch)
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyBarcode,
+              strValue: searchQuery)
+          .withProperty(
+              name: AnalyticsConstants.eventPropertyBarcodeFormat,
+              strValue: barcodeFormat?.name));
+
       //This is a workaround for ICM-4422 where leading 0 in EAN-13 code gets dropped by the MLKit
       if (totalItemCount == 0 && barcodeFormat != null) {
-        _searchUseCase.trackTelemetryEvent(
-            TelemetryEvent(eventName: AnalyticsConstants.eventScanBarcode)
-                .withProperty(
-                    name: AnalyticsConstants.eventPropertyBarcode,
-                    strValue: searchQuery)
-                .withProperty(
-                    name: AnalyticsConstants.eventPropertyBarcodeFormat,
-                    strValue: barcodeFormat?.name));
-
-        _searchUseCase.trackEvent(AnalyticsEvent(
-                AnalyticsConstants.eventScanBarcode,
-                AnalyticsConstants.screenNameSearch)
-            .withProperty(
-                name: AnalyticsConstants.eventPropertyBarcode,
-                strValue: searchQuery)
-            .withProperty(
-                name: AnalyticsConstants.eventPropertyBarcodeFormat,
-                strValue: barcodeFormat?.name));
         /*
         For example we have a product: 012546011099
         It's UPC-A will be: 0-12546-01109-9
