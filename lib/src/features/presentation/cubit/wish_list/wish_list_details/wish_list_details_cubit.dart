@@ -395,8 +395,6 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       wishListLineEntity: wishListLine,
     );
 
-    emit(state.copyWith(status: result));
-
     if (result == WishListStatus.listLineAddToCartSuccess) {
       final analyticsEvent = AnalyticsEvent(
         AnalyticsConstants.eventAddToCart,
@@ -409,10 +407,29 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
           .withProperty(
             name: AnalyticsConstants.eventPropertyProductNumber,
             strValue: wishListLine.erpNumber,
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyQty,
+            strValue: wishListLine.qtyOrdered.toString(),
           );
+
+      var telemetryEvent = TelemetryEvent(
+        eventName: AnalyticsConstants.eventAddToCart,
+        properties: {
+          AnalyticsConstants.eventPropertyListId: state.wishList.id ?? '',
+          AnalyticsConstants.eventPropertyProductNumber:
+              wishListLine.erpNumber ?? '',
+          AnalyticsConstants.eventPropertyQty:
+              wishListLine.qtyOrdered.toString(),
+        },
+      );
+
+      _wishListDetailsUsecase.trackTelemetryEvent(telemetryEvent);
 
       _wishListDetailsUsecase.trackEvent(analyticsEvent);
     }
+
+    emit(state.copyWith(status: result));
   }
 
   Future<void> deleteWishListLine(WishListLineEntity wishListLine) async {
