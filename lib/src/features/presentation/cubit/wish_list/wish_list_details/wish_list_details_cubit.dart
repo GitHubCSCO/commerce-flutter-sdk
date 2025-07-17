@@ -407,6 +407,10 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
           .withProperty(
             name: AnalyticsConstants.eventPropertyProductNumber,
             strValue: wishListLine.erpNumber,
+          )
+          .withProperty(
+            name: AnalyticsConstants.eventPropertyQty,
+            strValue: wishListLine.qtyOrdered.toString(),
           );
 
       var telemetryEvent = TelemetryEvent(
@@ -415,6 +419,8 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
           AnalyticsConstants.eventPropertyListId: state.wishList.id ?? '',
           AnalyticsConstants.eventPropertyProductNumber:
               wishListLine.erpNumber ?? '',
+          AnalyticsConstants.eventPropertyQty:
+              wishListLine.qtyOrdered.toString(),
         },
       );
 

@@ -45,15 +45,21 @@ class AddToCartCubit extends Cubit<AddToCartState> {
         var analyticsEvent = AnalyticsEvent(
           AnalyticsConstants.eventAddToCart,
           AnalyticsConstants.screenNameProductList,
-        ).withProperty(
-            name: AnalyticsConstants.eventPropertyProductNumber,
-            strValue: product.erpNumber);
+        )
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyProductNumber,
+                strValue: product.erpNumber)
+            .withProperty(
+                name: AnalyticsConstants.eventPropertyQty,
+                strValue: data?.qtyOrdered.toString());
 
         var telemetryEvent = TelemetryEvent(
           eventName: AnalyticsConstants.eventAddToCart,
           properties: {
             AnalyticsConstants.eventPropertyProductNumber:
                 product.erpNumber ?? '',
+            AnalyticsConstants.eventPropertyQty:
+                data?.qtyOrdered.toString() ?? '',
           },
         );
 
