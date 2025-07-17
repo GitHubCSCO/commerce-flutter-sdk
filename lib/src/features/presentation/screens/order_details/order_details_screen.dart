@@ -119,7 +119,9 @@ class OrderDetailsScreen extends BaseStatelessWidget {
   TelemetryEvent getTelemetryScreenEvent() {
     return TelemetryEvent(
       screenName: AnalyticsConstants.screenNameOrderDetail,
-    );
+    ).withProperty(
+        name: AnalyticsConstants.eventPropertyErpOrderNumber,
+        strValue: orderNumber);
   }
 }
 

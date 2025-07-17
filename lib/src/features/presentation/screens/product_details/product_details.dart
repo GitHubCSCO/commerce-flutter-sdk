@@ -101,7 +101,9 @@ class ProductDetailsScreen extends BaseStatelessWidget {
   TelemetryEvent getTelemetryScreenEvent() {
     return TelemetryEvent(
       screenName: AnalyticsConstants.screenNameProductDetail,
-    );
+    ).withProperty(
+        name: AnalyticsConstants.eventPropertyErpNumber,
+        strValue: product?.getProductNumber());
   }
 }
 
