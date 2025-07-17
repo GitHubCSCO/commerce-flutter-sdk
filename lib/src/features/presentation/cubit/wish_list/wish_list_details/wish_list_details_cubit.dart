@@ -395,8 +395,6 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
       wishListLineEntity: wishListLine,
     );
 
-    emit(state.copyWith(status: result));
-
     if (result == WishListStatus.listLineAddToCartSuccess) {
       final analyticsEvent = AnalyticsEvent(
         AnalyticsConstants.eventAddToCart,
@@ -424,6 +422,8 @@ class WishListDetailsCubit extends Cubit<WishListDetailsState> {
 
       _wishListDetailsUsecase.trackEvent(analyticsEvent);
     }
+
+    emit(state.copyWith(status: result));
   }
 
   Future<void> deleteWishListLine(WishListLineEntity wishListLine) async {
