@@ -94,7 +94,12 @@ class ProductDetailsScreen extends BaseStatelessWidget {
   @override
   AnalyticsEvent getAnalyticsEvent() {
     return AnalyticsEvent(AnalyticsConstants.eventViewScreen,
-        AnalyticsConstants.screenNameProductDetail);
+            AnalyticsConstants.screenNameProductDetail)
+        .withProperty(
+            name: AnalyticsConstants.eventPropertyErpNumber,
+            strValue: (product?.getProductNumber().isEmpty ?? true)
+                ? productId
+                : product?.getProductNumber());
   }
 
   @override
