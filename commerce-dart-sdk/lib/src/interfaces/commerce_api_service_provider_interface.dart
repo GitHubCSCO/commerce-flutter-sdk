@@ -41,4 +41,5 @@ abstract class ICommerceAPIServiceProvider {
   IWishListService getWishListService();
   IRealTimePricingService getRealTimePricingService();
   IRealTimeInventoryService getRealTimeInventoryService();
+  IPushNotificationService getPushNotificationService();
 }
