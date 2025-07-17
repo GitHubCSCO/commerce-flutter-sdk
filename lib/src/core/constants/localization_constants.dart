@@ -33,6 +33,8 @@ enum LocalizationConstants {
   savedOrders(keyword: "Saved Orders"),
   saveOrder(keyword: "Save Order"),
   orderSaved(keyword: "Order Saved"),
+  cancelOrder(keyword: "Cancel Order"),
+  returnOrder(keyword: "Return Order"),
   errorLoadingAccount(keyword: "Error Loading Account"),
   mySavedPayments(keyword: "My Saved Payments"),
   edit(keyword: "Edit"),

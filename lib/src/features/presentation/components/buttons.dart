@@ -121,7 +121,12 @@ class SecondaryButton extends StatelessWidget {
         width: double.infinity,
         child: Center(
           child: Text(text,
-              style: style ?? TextStyle(color: OptiAppColors.primaryColor)),
+              style: style ??
+                  TextStyle(
+                      color: isEnabled
+                          ? OptiAppColors.primaryColor
+                          : OptiAppColors.primaryColor
+                              .withOpacity(AppStyle.disabledButtonOpacity))),
         ),
       ),
     );
@@ -176,7 +181,11 @@ class TertiaryButton extends StatelessWidget {
         child: Center(
           child: Text(
             text,
-            style: TextStyle(color: OptiAppColors.primaryColor),
+            style: TextStyle(
+                color: isEnabled
+                    ? OptiAppColors.primaryColor
+                    : OptiAppColors.primaryColor
+                        .withOpacity(AppStyle.disabledButtonOpacity)),
           ),
         ),
       ),

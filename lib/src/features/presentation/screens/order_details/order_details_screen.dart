@@ -247,6 +247,45 @@ class OrderDetailsPage extends StatelessWidget {
                 if (state.isReorderViewVisible)
                   OrderBottomSectionWidget(
                     actions: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: TertiaryBlackButton(
+                                isEnabled: state.order.status == 'Processing'
+                                    ? true
+                                    : false,
+                                text: LocalizationConstants.cancelOrder
+                                    .localized(),
+                                onPressed: () {
+                                  // Add your cancel order logic here
+                                  CustomSnackBar.showSnackBarMessage(
+                                    context,
+                                    'Cancel Order functionality coming soon',
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: SecondaryButton(
+                                isEnabled: true,
+                                text: LocalizationConstants.returnOrder
+                                    .localized(),
+                                onPressed: () {
+                                  // Add your return order logic here
+                                  CustomSnackBar.showSnackBarMessage(
+                                    context,
+                                    'Return Order functionality coming soon',
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       PrimaryButton(
                         text: LocalizationConstants.reorder.localized(),
                         onPressed: () {
